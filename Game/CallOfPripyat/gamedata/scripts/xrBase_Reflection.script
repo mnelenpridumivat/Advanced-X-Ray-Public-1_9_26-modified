@@ -1,0 +1,58 @@
+-- # DESC: Скрипт подмены ГГ
+-- # EDIT: 10/07/2023
+-- # AUTH: BASE1707
+
+local CharacterNames = 
+{
+	-- Имя ГГ
+	"st_name_gg",
+	
+	-- Имя второго ГГ
+	"st_name_gg_2"
+}
+
+local CharacterIcons = 
+{
+	-- Иконка ГГ
+	"ui_inGame2_Hero",
+	
+	-- Иконка второго ГГ
+	"ui_inGame2_Hero_2"
+}
+
+local CharacterDefaultVisuals = 
+{
+	-- Визуал ГГ
+	"actors\\hero\\stalker_novice.ogf",
+	
+	-- Визуал второго ГГ
+	"actors\\hero\\stalker_novice2.ogf"
+}
+
+function UpdateMind()
+	local actor = db.actor
+	if not actor then
+		return
+	end
+	
+	local index = 1
+	if has_alife_info("second_gg_activated") then
+		index = 2
+	end
+	
+	if (index ~= nil) then
+		actor:SetName(CharacterNames[index])
+		actor:SetCharacterIcon(CharacterIcons[index])
+		actor:SetDefaultVisual(CharacterDefaultVisuals[index])
+	end
+end
+
+function SetFirstActor()
+	disable_info("second_gg_activated")
+	UpdateMind()
+end
+
+function SetSecondActor()
+	give_info("second_gg_activated")
+	UpdateMind()
+end

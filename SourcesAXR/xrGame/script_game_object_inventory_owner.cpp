@@ -670,27 +670,6 @@ void CScriptGameObject::SetCharacterCommunity	(LPCSTR comm, int squad, int group
 	entity->ChangeTeam(community.team(), squad, group);
 }
 
-void CScriptGameObject::SetCharacterName(LPCSTR name)
-{
-	CInventoryOwner* pOurOwner = smart_cast<CInventoryOwner*>(&object()); VERIFY(pOurOwner);
-
-	pOurOwner->SetName(name);
-}
-
-void CScriptGameObject::SetCharacterIcon(LPCSTR icon)
-{
-	CInventoryOwner* pOurOwner = smart_cast<CInventoryOwner*>(&object());
-
-	if (!pOurOwner)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError,
-			"SetCharacterIcon available only for InventoryOwner");
-		return;
-	}
-
-	return pOurOwner->SetIcon(icon);
-}
-
 LPCSTR CScriptGameObject::sound_voice_prefix () const
 {
 	CInventoryOwner* pInventoryOwner = smart_cast<CInventoryOwner*>(&object());
@@ -1673,3 +1652,43 @@ float CScriptGameObject::Weight() const
 	return				(inventory_item->Weight());
 }
 /*added by Ray Twitty (aka Shadows) END*/
+
+void CScriptGameObject::SetCharacterName(LPCSTR name)
+{
+	if (CInventoryOwner* pInventoryOwner = smart_cast<CInventoryOwner*>(&object()))
+		pInventoryOwner->SetName(name);
+	else
+		Msg("! SetCharacterName(...): pInventoryOwner is nullptr!");
+}
+
+void CScriptGameObject::SetCharacterIcon(LPCSTR name)
+{
+	if (CInventoryOwner* pInventoryOwner = smart_cast<CInventoryOwner*>(&object()))
+		pInventoryOwner->SetIcon(name);
+	else
+		Msg("! SetCharacterIcon(...): pInventoryOwner is nullptr!");
+}
+
+void CScriptGameObject::SetCharacterDefaultVisual(LPCSTR name)
+{
+	if (!name)
+	{
+		Msg("! SetCharacterDefaultVisual(...): empty visual name!");
+		return;
+	}
+
+	CActor* pActor = smart_cast<CActor*>(&object());
+	if (!pActor)
+	{
+		Msg("! SetCharacterDefaultVisual(...): method applicable only for actor!");
+		return;
+	}
+
+	pActor->SetDefaultVisualOutfit(name);
+
+	// Update right now!
+	if (!pActor->GetOutfit())
+	{
+		pActor->ChangeVisual(pActor->GetDefaultVisualOutfit());
+	}
+}

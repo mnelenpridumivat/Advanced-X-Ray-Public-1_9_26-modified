@@ -418,8 +418,6 @@ public:
 			void ChangeCharacterRank		(int);
 			void ChangeCharacterReputation	(int);
 			void SetCharacterCommunity		(LPCSTR,int,int);
-			void SetCharacterName			(LPCSTR name);
-			void SetCharacterIcon			(LPCSTR icon);
 		
 
 			u32					GetInventoryObjectCount() const;
@@ -801,6 +799,10 @@ public:
 			float				GetTotalWeight							() const;
 			float				Weight									() const;
 			/*added by Ray Twitty (aka Shadows) END*/
+			
+			void				SetCharacterName						(LPCSTR name);
+			void				SetCharacterIcon						(LPCSTR name);
+			void				SetCharacterDefaultVisual				(LPCSTR name);
 
 	doors::door*				m_door;
 
