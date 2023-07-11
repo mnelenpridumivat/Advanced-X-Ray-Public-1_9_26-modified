@@ -169,11 +169,7 @@ public:
 	virtual void			ChangeReputation(CHARACTER_REPUTATION_VALUE);
 
 	virtual void			SetName			(LPCSTR name);
-
-	virtual void SetIcon(const shared_str& icon)
-	{
-		CharacterInfo().m_SpecificCharacter.data()->m_icon_name = icon;
-	};
+	virtual void 			SetIcon			(const shared_str& icon);
 
 	//для работы с relation system
 	u16								object_id	() const;

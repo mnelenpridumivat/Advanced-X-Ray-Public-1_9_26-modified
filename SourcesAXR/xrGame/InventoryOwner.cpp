@@ -461,7 +461,30 @@ void CInventoryOwner::SetRank			(CHARACTER_RANK_VALUE rank)
 
 void CInventoryOwner::SetName(LPCSTR name)
 {
+	if (!name) return;
+
+	// # Update m_game_name
 	m_game_name = name;
+
+	CEntityAlive* pE = smart_cast<CEntityAlive*>(this);
+	if (!pE) return;
+
+	CSE_Abstract* pA = ai().alife().objects().object(pE->ID(), false);
+	if (!pA) return;
+
+	CSE_ALifeTraderAbstract* pT = smart_cast<CSE_ALifeTraderAbstract*>(pA);
+	if (!pT) return;
+
+	// # Update m_character_name
+	pT->m_character_name = name;
+}
+
+void CInventoryOwner::SetIcon(const shared_str& name)
+{
+	if (auto* pData = CharacterInfo().m_SpecificCharacter.data())
+		pData->m_icon_name = name;
+	else
+		Msg("! SetIcon(...): pData is nullptr!");
 }
 
 void CInventoryOwner::ChangeRank			(CHARACTER_RANK_VALUE delta)

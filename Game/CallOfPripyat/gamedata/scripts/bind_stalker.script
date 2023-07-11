@@ -58,6 +58,10 @@ function actor_binder:net_spawn(data)
 	self.already_jumped = false
 	self.loaded = false
 	benchmark.main()							          --' Distemper 06.2008 --
+	
+	-- # BASE1707
+	xrBase_Reflection.UpdateMind() 
+	
 	return true
 end
 ----------------------------------------------------------------------------------------------------------------------
