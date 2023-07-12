@@ -1,3 +1,4 @@
+#include "alife_time_manager.h"
 ////////////////////////////////////////////////////////////////////////////
 //	Module 		: alife_time_manager_inline.h
 //	Created 	: 05.01.2003
@@ -45,5 +46,12 @@ IC void CALifeTimeManager::set_game_time_factor(ALife::_TIME_ID gameTime, const 
 	m_game_time = gameTime;
 	m_start_time = Device.dwTimeGlobal;
 	m_time_factor = timeFactor;
+}
+
+IC void CALifeTimeManager::set_date_time(u64 date_time)
+{
+	m_start_game_time = date_time;
+	m_game_time = m_start_game_time;
+	m_start_time = Device.dwTimeGlobal;
 }
 
