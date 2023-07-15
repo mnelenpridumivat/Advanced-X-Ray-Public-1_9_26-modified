@@ -828,6 +828,18 @@ void CScriptGameObject::SetAnomalyPower(float p)
 	zone->SetMaxPower(p);
 }
 
+void CScriptGameObject::SetAnomalyVisibleForAI()
+{
+	CCustomZone* zone = smart_cast<CCustomZone*>(&object()); THROW(zone);
+	zone->SetAIVisibility(true);
+}
+
+void CScriptGameObject::SetAnomalyInvisibleForAI()
+{
+	CCustomZone* zone = smart_cast<CCustomZone*>(&object()); THROW(zone);
+	zone->SetAIVisibility(false);
+}
+
 bool CScriptGameObject::weapon_strapped	() const
 {
 	CAI_Stalker		*stalker = smart_cast<CAI_Stalker*>(&object());

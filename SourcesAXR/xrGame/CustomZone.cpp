@@ -1201,11 +1201,15 @@ bool CCustomZone::Disable()
 void CCustomZone::ZoneEnable()
 {
 	SwitchZoneState(eZoneStateIdle);
+	//ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeInfo, "CCustomZone : set anomaly enabled");
+	//spatial.type |= STYPE_VISIBLEFORAI; //anomaly visible for NPC
 };
 
 void CCustomZone::ZoneDisable()
 {
 	SwitchZoneState(eZoneStateDisabled);
+	//ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeInfo, "CCustomZone : set anomaly disabled");
+	//spatial.type &= ~STYPE_VISIBLEFORAI; //anomaly not visible for NPC
 };
 
 void CCustomZone::StartWind()
@@ -1397,6 +1401,18 @@ void CCustomZone::GoDisabledState()
 	
 	m_ObjectInfoMap.clear		();
 	feel_touch.clear			();
+
+	//spatial.type &= ~STYPE_VISIBLEFORAI; //блокирование воздействия аномалий на НПС
+}
+
+void CCustomZone::SetAIVisibility(bool IsVisible)
+{
+	if (IsVisible) {
+		spatial.type |= STYPE_VISIBLEFORAI;
+	}
+	else {
+		spatial.type &= ~STYPE_VISIBLEFORAI;
+	}
 }
 
 void CCustomZone::GoEnabledState()
@@ -1406,10 +1422,21 @@ void CCustomZone::GoEnabledState()
 		u_EventGen		(P,GE_ZONE_STATE_CHANGE,ID());
 		P.w_u8			(u8(eZoneStateIdle));
 		u_EventSend		(P);
+
+		//spatial.type |= ~STYPE_VISIBLEFORAI; //блокирование воздействия аномалий на НПС
 }
 
 BOOL CCustomZone::feel_touch_on_contact	(CObject *O)
 {
+	//if (m_eZoneState == EZoneState::eZoneStateDisabled && (spatial.type | STYPE_VISIBLEFORAI) != spatial.type)
+
+	//if (m_eZoneState == EZoneState::eZoneStateDisabled) {
+	//	ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeInfo, "CCustomZone : state disabled");
+	//}
+	//else {
+	//	ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeInfo, "CCustomZone : state enabled");
+	//}
+
 	if ((spatial.type | STYPE_VISIBLEFORAI) != spatial.type)
 		return			(FALSE);
 

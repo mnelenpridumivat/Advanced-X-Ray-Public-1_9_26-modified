@@ -67,7 +67,30 @@ BOOL CSpaceRestrictor::net_Spawn	(CSE_Abstract* data)
 	if (!result)
 		return						(FALSE);
 
-	spatial.type					&= ~STYPE_VISIBLEFORAI;
+	// section = NameObject
+
+	spatial.type					&= ~STYPE_VISIBLEFORAI; //блокирование воздействия аномалий на НПС
+	
+	// Lex Addon (correct by Suhar_) 19.08.2018		(begin)
+	// Включаем воздействие аномалий на НПС (в зависимости от настроек конфига)
+	// Автор идеи: Shredder, доработано: Suhar_
+	/*bool AnomalyCanDamageStalker = false;
+	// Если есть нужная секция
+	if (pSettings->section_exist("npc_additional_engine_options"))
+	{
+		// Если в секции есть нужный параметр
+		if (pSettings->line_exist("npc_additional_engine_options", "anomaly_can_damage_stalker"))
+		{
+			// Если параметр положительный
+			if (pSettings->r_bool("npc_additional_engine_options", "anomaly_can_damage_stalker"))
+				// Запоминаем
+				AnomalyCanDamageStalker = true;
+		}
+	}
+	// Если нужные параметры отсутствуют или установлено отрицательное значение, то запрещаем аномалиям бить сталкеров
+	if (!AnomalyCanDamageStalker)
+		spatial.type &= ~STYPE_VISIBLEFORAI;*/
+	// Lex Addon (correct by Suhar_) 19.08.2018		(end)
 
 	setEnabled						(FALSE);
 	setVisible						(FALSE);
