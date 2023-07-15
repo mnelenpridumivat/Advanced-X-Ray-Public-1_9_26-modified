@@ -243,6 +243,8 @@ class_<CScriptGameObject> script_register_game_object2(class_<CScriptGameObject>
 		.def("disable_anomaly",             &CScriptGameObject::DisableAnomaly)
 		.def("get_anomaly_power",			&CScriptGameObject::GetAnomalyPower)
 		.def("set_anomaly_power",			&CScriptGameObject::SetAnomalyPower)
+		.def("set_anomaly_visible_for_ai", &CScriptGameObject::SetAnomalyVisibleForAI)
+		.def("set_anomaly_invisible_for_ai", &CScriptGameObject::SetAnomalyInvisibleForAI)
 
 		//HELICOPTER
 		.def("get_helicopter",              &CScriptGameObject::get_helicopter)

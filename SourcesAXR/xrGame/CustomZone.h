@@ -69,6 +69,8 @@ public:
 				float	GetMaxPower						()							{return m_fMaxPower;}
 				void	SetMaxPower						(float p)					{m_fMaxPower = p;}
 
+	virtual		void	SetAIVisibility					(bool IsVisible);
+
 	//вычисление силы хита в зависимости от расстояния до центра зоны
 	//относительный размер силы (от 0 до 1)
 				float	RelativePower					(float dist, float nearest_shape_radius);
