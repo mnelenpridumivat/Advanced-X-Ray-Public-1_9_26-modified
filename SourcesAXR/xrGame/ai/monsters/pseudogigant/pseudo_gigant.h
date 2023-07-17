@@ -11,7 +11,7 @@ class CPseudoGigant : public CBaseMonster,
 	typedef		CControlledEntity<CPseudoGigant>	CControlled;
 
 private:
-	xr_vector<CObject*>		m_nearest;
+	xr_vector<CObject*>		m_nearest_pseudogig_kick;
 
 	// step_effector
 	struct {
@@ -60,9 +60,9 @@ public:
 	virtual void	TranslateActionToPathParams	();
 	virtual	char*	get_monster_class_name () { return "pseudogigant"; }
 
-	DECLARE_SCRIPT_REGISTER_FUNCTION
+	//DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 
-add_to_type_list(CPseudoGigant)
-#undef script_type_list
-#define script_type_list save_type_list(CPseudoGigant)
+//add_to_type_list(CPseudoGigant)
+//#undef script_type_list
+//#define script_type_list save_type_list(CPseudoGigant)

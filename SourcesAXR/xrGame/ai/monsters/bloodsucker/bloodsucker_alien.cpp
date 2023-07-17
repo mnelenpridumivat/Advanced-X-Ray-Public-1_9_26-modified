@@ -45,7 +45,7 @@ CAlienEffectorPP::~CAlienEffectorPP()
 {
 }
 
-#define PERIOD_SPEED	0.3f
+constexpr auto PERIOD_SPEED = 0.3f;
 
 BOOL CAlienEffectorPP::Process(SPPInfo& pp)
 {
