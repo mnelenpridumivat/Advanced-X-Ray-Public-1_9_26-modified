@@ -18,6 +18,13 @@ class CAnomalPseudoGigant : public CPseudoGigant,
 	float					m_detection_max_level;
 
 public:
+	CAnomalPseudoGigant();
+	virtual			~CAnomalPseudoGigant();
+
+	virtual void	Load(LPCSTR section);
+
+	virtual void	UpdateCL();
+	virtual	void	shedule_Update(u32 dt);
 
 	virtual	char* get_monster_class_name() { return "anomalpseudogigant"; }
 
@@ -31,6 +38,14 @@ public:
 
 
 	// Poltergeist ability
+
+private:
+
+	CAnomalGigPolterSpecialAbility* m_flame = nullptr;
+	CAnomalGigPolterSpecialAbility* m_tele = nullptr;
+
+public:
+
 	void	PhysicalImpulse(const Fvector& position);
 	void	StrangeSounds(const Fvector& position);
 
@@ -38,11 +53,28 @@ public:
 
 	float	get_detection_success_level();
 
+	//IC		CAnomalGigPolterSpecialAbility* ability() { return (m_flame ? m_flame : m_tele); } // remake: tele on 66% hp, flame +tele on 33% hp
+	IC		bool use_tele_ability() { return true; }
+	IC		bool use_fire_ability() { return true; }
+
+	// burer shield
+
+	void	ActivateShield();
+	void	DeactivateShield();
+
+	TTime	m_shield_cooldown;
+	TTime	m_shield_time;
+	bool	m_shield_active;
+	LPCSTR	m_shield_keep_particle;
+	TTime	m_shield_keep_particle_period;
+
 	ref_sound m_strange_sound;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 
 };
+
+bool   actor_is_reloading_weapon();
 
 add_to_type_list(CAnomalPseudoGigant)
 #undef script_type_list

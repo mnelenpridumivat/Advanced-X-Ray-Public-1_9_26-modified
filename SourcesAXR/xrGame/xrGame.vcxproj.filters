@@ -2503,6 +2503,9 @@
     <Filter Include="AI\AMonsters\monsters\AnomalPseudoGigant\Script">
       <UniqueIdentifier>{a6d9347d-f6a8-47b0-93f1-70f1f3664bef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\AMonsters\monsters\AnomalPseudoGigant\Attack">
+      <UniqueIdentifier>{5001d048-60b7-4390-8d35-3b8e3e35ec04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">
@@ -7445,6 +7448,21 @@
     <ClInclude Include="ai\monsters\pseudogigant\pseudo_gigant_orig.h">
       <Filter>AI\AMonsters\monsters\PseudoGigant</Filter>
     </ClInclude>
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_manager.h">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack.h">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack_inline.h">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack_shield.h">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack_shield_inline.h">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Attack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -11146,6 +11164,9 @@
     </ClCompile>
     <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_script.cpp">
       <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_manager.cpp">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

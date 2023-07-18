@@ -678,7 +678,7 @@ bool CScriptStorage::object	(LPCSTR identifier, int type)
 	int						start = lua_gettop(lua());
 	lua_pushnil				(lua()); 
 	while (lua_next(lua(), -2)) {
-
+		//Msg("[LUA reg] for identifier [%s] check if type [%d]: current type = [%d] (tostring = [%s])", identifier, type, lua_type(lua(), -1), lua_tostring(lua(), -2));
 		if ((lua_type(lua(), -1) == type) && !xr_strcmp(identifier,lua_tostring(lua(), -2))) { 
 			VERIFY			(lua_gettop(lua()) >= 3);
 			lua_pop			(lua(), 3); 
