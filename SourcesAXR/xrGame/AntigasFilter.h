@@ -26,6 +26,13 @@ public:
 	void					ChangeInSecondHelmet();
 	void					ChangeFilterCondition(float val);
 	float					GetFilterCondition(void) const;
+
+	DECLARE_SCRIPT_REGISTER_FUNCTION
+
 protected:
 	int						m_iPortionsNum;
 };
+
+add_to_type_list(CAntigasFilter)
+#undef script_type_list
+#define script_type_list save_type_list(CAntigasFilter)

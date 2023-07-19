@@ -261,7 +261,7 @@ void CObjectFactory::register_classes	()
 	ADD(CPsyDog					,CSE_ALifeMonsterBase			,CLSID_AI_DOG_PSY				,"psy_dog");
 	ADD(CPsyDogPhantom			,CSE_ALifePsyDogPhantom			,CLSID_AI_DOG_PSY_PHANTOM		,"psy_dog_phantom");
 	ADD(CBurer					,CSE_ALifeMonsterBase			,CLSID_AI_BURER					,"burer");
-	ADD(CPseudoGigant_orig		,CSE_ALifeMonsterBase			,CLSID_AI_GIANT					,"pseudo_gigant");
+	ADD(CPseudoGigant		,CSE_ALifeMonsterBase			,CLSID_AI_GIANT					,"pseudo_gigant");
 	ADD(CAnomalPseudoGigant		,CSE_ALifeMonsterBase			,CLSID_AI_ANOMAL_GIANT			,"anomal_pseudo_gigant");
 	ADD(CController				,CSE_ALifeMonsterBase			,CLSID_AI_CONTROLLER			,"controller");
 	ADD(CPoltergeist			,CSE_ALifeMonsterBase			,CLSID_AI_POLTERGEIST			,"poltergeist");
@@ -347,6 +347,7 @@ void CObjectFactory::register_classes	()
 	ADD(CFoodItem				,CSE_ALifeItem					,CLSID_IITEM_FOOD				,"obj_food");
 	ADD(CBottleItem				,CSE_ALifeItem					,CLSID_IITEM_BOTTLE				,"obj_bottle");
 	ADD(CExplosiveItem			,CSE_ALifeItemExplosive			,CLSID_IITEM_EXPLOSIVE			,"obj_explosive");
+	ADD(CEatableItemObject		,CSE_ALifeItem					,CLSID_IITEM_EATABLE			,"obj_eatable");
 	ADD(CBattery				,CSE_ALifeItem					,CLSID_IITEM_BATTERY			,"obj_battery");
 	ADD(CAntigasFilter			,CSE_ALifeItem					,CLSID_IITEM_AFILTER			,"obj_filter");
 	ADD(CRepairKit				,CSE_ALifeItem					,CLSID_IITEM_DREPKIT			,"obj_repair_kit");

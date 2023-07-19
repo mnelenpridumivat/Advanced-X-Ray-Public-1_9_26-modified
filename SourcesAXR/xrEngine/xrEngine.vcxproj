@@ -162,6 +162,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IntDir>..\..\OutputDirectory\Intermediate\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>..\..\OutputDirectory\Binaries\$(Configuration)\</OutDir>
+    <IncludePath>D:\Advanced-X-Ray\SDK\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\..\OutputDirectory\Binaries\$(Configuration)\</OutDir>

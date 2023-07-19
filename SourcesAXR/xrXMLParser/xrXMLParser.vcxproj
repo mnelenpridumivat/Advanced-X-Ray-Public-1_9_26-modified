@@ -363,7 +363,8 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
+      <ImportLibrary>..\..\OutputDirectory\Libraries\$(Configuration)\$(ProjectName).lib</ImportLibrary>
+      <AdditionalLibraryDirectories>..\..\OutputDirectory\Libraries\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

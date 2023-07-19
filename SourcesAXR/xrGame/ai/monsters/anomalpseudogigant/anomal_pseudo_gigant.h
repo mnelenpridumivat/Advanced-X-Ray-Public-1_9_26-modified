@@ -1,7 +1,11 @@
 #pragma once
+#include "../BaseMonster/base_monster.h"
 #include "../xrGame/ai/monsters/pseudogigant/pseudo_gigant.h"
 #include "../telekinesis.h"
 #include "../../../../xrGame/Hit.h"
+#include "../../../../xrServerEntities/script_export_space.h"
+
+//#define SCRIPT_REGISTRATOR
 
 class CAnomalGigPolterSpecialAbility;
 

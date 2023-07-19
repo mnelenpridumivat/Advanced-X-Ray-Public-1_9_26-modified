@@ -4405,6 +4405,7 @@
     <ClCompile Include="animation_utils.cpp" />
     <ClCompile Include="AnomalyDetector.cpp" />
     <ClCompile Include="AntigasFilter.cpp" />
+    <ClCompile Include="AntigasFilter_script.cpp" />
     <ClCompile Include="antirad.cpp" />
     <ClCompile Include="Artefact.cpp" />
     <ClCompile Include="artefact_activation.cpp" />
@@ -4470,6 +4471,7 @@
     </ClCompile>
     <ClCompile Include="BastArtifact.cpp" />
     <ClCompile Include="Battery.cpp" />
+    <ClCompile Include="Battery_script.cpp" />
     <ClCompile Include="best_scores_helper.cpp" />
     <ClCompile Include="best_scores_store.cpp" />
     <ClCompile Include="BlackDrops.cpp" />
@@ -4733,6 +4735,7 @@
     <ClCompile Include="dynamic_obstacles_avoider.cpp" />
     <ClCompile Include="eatable_item.cpp" />
     <ClCompile Include="eatable_item_object.cpp" />
+    <ClCompile Include="eatable_item_object_script.cpp" />
     <ClCompile Include="EffectorBobbing.cpp" />
     <ClCompile Include="EffectorFall.cpp" />
     <ClCompile Include="EffectorShot.cpp" />
@@ -6376,6 +6379,7 @@
     </ClCompile>
     <ClCompile Include="relation_registry_fights.cpp" />
     <ClCompile Include="RepairKit.cpp" />
+    <ClCompile Include="RepairKit_script.cpp" />
     <ClCompile Include="restricted_object.cpp" />
     <ClCompile Include="restricted_object_obstacle.cpp" />
     <ClCompile Include="rewarding_events_handlers.cpp" />
@@ -9652,11 +9656,6 @@
       <Project>{94a1c366-3d19-48e6-8170-4adc2e70df98}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
