@@ -13,6 +13,8 @@
 
 struct lua_State;
 
+//#define SCRIPT_REGISTRATOR
+
 #ifdef SCRIPT_REGISTRATOR
 #	define	script_type_list		Loki::NullType
 #	define	add_to_type_list(type)	typedef Loki::Typelist<type,script_type_list> TypeList_##type;

@@ -22,8 +22,17 @@
 //#include "character_rank.h"
 //#include "character_reputation.h"
 
-#include <lua/library_linkage.h>
-#include <luabind/library_linkage.h>
+//#include "../../../SDK/include/lua/"
+
+//#include "pch_script.h"
+
+#	pragma warning(push)
+#	pragma warning(disable:4995)
+#		include <luabind/luabind.hpp>
+#	pragma warning(pop)
+
+//#include <lua/library_linkage.h>
+//#include <luabind/library_linkage.h>
 
 #pragma comment(lib,"xrCore.lib")
 

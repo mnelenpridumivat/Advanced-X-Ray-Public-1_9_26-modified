@@ -2,9 +2,11 @@
 #include "anomal_pseudo_gigant.h"
 #include "../../../sound_player.h"
 #include "../burer/burer.h"
+#include "anomal_pseudo_gigant_state_manager.h"
 
 CAnomalPseudoGigant::CAnomalPseudoGigant()
 {
+	StateMan = xr_new<CStateManagerAnomalPseudoGigant>(this);
 }
 
 CAnomalPseudoGigant::~CAnomalPseudoGigant()

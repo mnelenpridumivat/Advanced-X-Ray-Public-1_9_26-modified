@@ -15,6 +15,9 @@
 #include "script_engine.h"
 #include "object_item_script.h"
 
+// debug only - delete after
+#include "script_storage.h"
+
 void CObjectFactory::register_script_class	(LPCSTR client_class, LPCSTR server_class, LPCSTR clsid, LPCSTR script_clsid)
 {
 #ifndef NO_XR_GAME

@@ -181,6 +181,7 @@
 #define CLSID_IITEM_BOTTLE			MK_CLSID('I','I','_','B','O','T','T','L')
 #define CLSID_IITEM_ANTIRAD			MK_CLSID('I','I','_','A','N','T','I','R')
 #define CLSID_IITEM_EXPLOSIVE		MK_CLSID('I','I','_','E','X','P','L','O')
+#define CLSID_IITEM_EATABLE			MK_CLSID('I','I','_','E','A','T',' ',' ')
 #define CLSID_IITEM_BATTERY			MK_CLSID('I','I','_','B','A','T','T','E')
 #define CLSID_IITEM_AFILTER			MK_CLSID('D','_','F','I','L','T','E','R')
 #define CLSID_IITEM_DREPKIT			MK_CLSID('D','_','R','E','P','K','I','T')

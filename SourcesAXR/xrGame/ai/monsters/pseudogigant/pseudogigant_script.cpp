@@ -4,11 +4,11 @@
 using namespace luabind;
 
 #pragma optimize("s",on)
-void CPseudoGigant_orig::script_register(lua_State *L)
+void CPseudoGigant::script_register(lua_State *L)
 {
 	module(L)
 	[
-		class_<CPseudoGigant_orig,CGameObject>("CPseudoGigant")
+		class_<CPseudoGigant,CGameObject>("CPseudoGigant")
 			.def(constructor<>())
 	];
 }
