@@ -12,7 +12,7 @@ void CAntigasFilter::script_register(lua_State* L)
 {
 	module(L)
 		[
-			class_<CAntigasFilter, CGameObject>("CAntigasFilter")
+			class_<CAntigasFilter, CEatableItemObject>("CAntigasFilter")
 				.def(constructor<>())
 		];
 }

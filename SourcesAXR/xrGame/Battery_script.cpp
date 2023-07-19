@@ -12,7 +12,7 @@ void CBattery::script_register(lua_State* L)
 {
 	module(L)
 		[
-			class_<CBattery, CGameObject>("CBattery")
+			class_<CBattery, CEatableItemObject>("CBattery")
 				.def(constructor<>())
 		];
 }
