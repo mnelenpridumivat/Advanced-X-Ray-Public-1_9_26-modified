@@ -23,6 +23,8 @@ void CAnomalGigPolterFlame::load(LPCSTR section)
 	inherited::load(section);
 
 	m_sound.create		(pSettings->r_string(section,"flame_sound"), st_Effect,SOUND_TYPE_WORLD);
+
+	m_max_hp_to_activate = pSettings->r_u32(section, "flame_max_hp_to_activate");
 		
 	m_particles_prepare	= pSettings->r_string(section,"flame_particles_prepare");
 	m_particles_fire	= pSettings->r_string(section,"flame_particles_fire");

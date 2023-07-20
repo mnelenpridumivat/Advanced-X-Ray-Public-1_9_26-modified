@@ -4,6 +4,11 @@
 #include "../../../sound_player.h"
 #include "../burer/burer.h"
 #include "../../../GamePersistent.h"
+#include "script_callback_ex.h"
+#include "script_game_object.h"
+#include "../monster_velocity_space.h"
+#include "../control_animation_base.h"
+#include "../control_movement_base.h"
 #include "anomal_pseudo_gigant_state_manager.h"
 
 CAnomalPseudoGigant::CAnomalPseudoGigant()
@@ -29,6 +34,11 @@ void CAnomalPseudoGigant::Load(LPCSTR section)
 	m_shield_time = READ_IF_EXISTS(pSettings, r_u32, section, "shield_time", 3000);
 	m_shield_keep_particle = READ_IF_EXISTS(pSettings, r_string, section, "shield_keep_particle", 0);
 	m_shield_keep_particle_period = READ_IF_EXISTS(pSettings, r_u32, section, "shield_keep_particle_period", 1000);
+
+	SVelocityParam& velocity_turn = move().get_velocity(MonsterMovement::eVelocityParameterStand);
+
+	anim().AddAnim(eAnimShieldStart, "stand_lie_down_", -1, &velocity_turn, PS_STAND, 	"fx_stand_f", "fx_stand_b", "fx_stand_l", "fx_stand_r");
+	anim().AddAnim(eAnimShieldContinue, "stand_sleep_", -1, &velocity_turn, PS_LIE, 	"fx_stand_f", "fx_stand_b", "fx_stand_l", "fx_stand_r");
 
 	particle_fire_shield = pSettings->r_string(section, "Particle_Shield");
 }
@@ -61,14 +71,16 @@ float	CAnomalPseudoGigant::get_detection_success_level()
 void CAnomalPseudoGigant::ActivateShield()
 {
 	m_shield_active = true;
+	callback(GameObject::eShieldOn)(lua_game_object());
 }
 
 void CAnomalPseudoGigant::DeactivateShield()
 {
 	m_shield_active = false;
+	callback(GameObject::eShieldOff)(lua_game_object());
 }
 
-void CAnomalPseudoGigant::on_shield_on()
+/*void CAnomalPseudoGigant::on_shield_on()
 {
 	//luabind::call_member<void>(this, "on_shield_on");
 }
@@ -81,15 +93,20 @@ void CAnomalPseudoGigant::on_shield_off()
 void CAnomalPseudoGigant::on_hit()
 {
 	//luabind::call_member<void>(this, "on_hit");
-}
+}*/
 
 void CAnomalPseudoGigant::on_jump()
 {
+	callback(GameObject::eJump)(lua_game_object());
 	//luabind::call_member<void>(this, "on_jump");
 }
 
 void	CAnomalPseudoGigant::Hit(SHit* pHDS)
 {
+	inherited::Hit(pHDS);
+	if (conditions().GetHealth() <= 0.0f) {
+		return;
+	}
 	if (m_shield_active &&
 		pHDS->hit_type == ALife::eHitTypeFireWound &&
 		Device.dwFrame != last_hit_frame)

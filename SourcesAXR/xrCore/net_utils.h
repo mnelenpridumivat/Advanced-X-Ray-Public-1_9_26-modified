@@ -209,7 +209,9 @@ public:
 		VERIFY		(p && count);
 		CopyMemory	(p,&B.data[r_pos],count);
 		r_pos		+= count;
+#ifdef FS_DEBUG
 		VERIFY		(r_pos<=B.count);
+#endif
 	}
 	BOOL		r_eof			();
 	u32			r_elapsed		();

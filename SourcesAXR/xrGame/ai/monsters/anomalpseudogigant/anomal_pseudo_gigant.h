@@ -81,9 +81,9 @@ public:
 	// delegates on events
 public:
 
-	virtual void on_shield_on();
+	/*virtual void on_shield_on();
 	virtual void on_shield_off();
-	virtual void on_hit();
+	virtual void on_hit();*/
 	virtual void on_jump();
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
@@ -157,6 +157,8 @@ class CAnomalGigPolterFlame : public CAnomalGigPolterSpecialAbility {
 	u32						m_delay;	// between 2 flames
 
 	u32						m_time_flame_started;
+
+	u32						m_max_hp_to_activate;
 
 	float					m_min_flame_dist;
 	float					m_max_flame_dist;
@@ -245,6 +247,8 @@ class CAnomalGigPolterTele : public CAnomalGigPolterSpecialAbility {
 	float				m_pmt_fly_velocity;
 
 	float				m_pmt_object_collision_damage;
+
+	u32					m_max_hp_to_activate;
 
 	ref_sound			m_sound_tele_hold;
 	ref_sound			m_sound_tele_throw;

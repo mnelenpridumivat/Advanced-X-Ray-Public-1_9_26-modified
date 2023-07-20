@@ -17,6 +17,8 @@ void CAnomalGigPolterTele::load(LPCSTR section)
 {
 	inherited::load(section);
 
+	m_max_hp_to_activate = pSettings->r_u32(section, "Tele_max_hp_to_activate");
+
 	m_pmt_radius						= READ_IF_EXISTS(pSettings,r_float,section,	"Tele_Find_Radius",					10.f);
 	m_pmt_object_min_mass				= READ_IF_EXISTS(pSettings,r_float,section,	"Tele_Object_Min_Mass",				40.f);
 	m_pmt_object_max_mass				= READ_IF_EXISTS(pSettings,r_float,section,	"Tele_Object_Max_Mass",				500.f);

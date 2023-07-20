@@ -18,7 +18,7 @@
 
 namespace anomal_pseudogigant
 {
-	float const health_delta				=	100.0f;
+	float const health_delta				=	0.3f;
 
 } // namespace detail
 
@@ -84,14 +84,37 @@ void   CStateAnomalPseudoGigantAttack<Object>::execute ()
 
 	bool	can_attack_on_move = object->can_attack_on_move();
 
-	if (check_home_point())		select_state(eStateAttack_MoveToHomePoint);
-	else if (check_steal_state())		select_state(eStateAttack_Steal);
-	else if (check_camp_state()) 		select_state(eStateAttackCamp);
-	else if (check_find_enemy_state()) 	select_state(eStateAttack_FindEnemy);
-	else if (check_run_away_state()) 	select_state(eStateAttack_RunAway);
+	if (object->conditions().GetHealth() <= m_last_health - anomal_pseudogigant::health_delta)
+	{
+		m_last_health = object->conditions().GetHealth();
+		m_lost_delta_health = true;
+	}
+
+	if (check_shield_state()) {
+		select_state(eStateBurerAttack_Shield);
+	}
+	else if (check_home_point()) {
+		select_state(eStateAttack_MoveToHomePoint); 
+	}
+	else if (check_steal_state()) { 
+		select_state(eStateAttack_Steal); 
+	}
+	else if (check_camp_state()) { 
+		select_state(eStateAttackCamp); 
+	}
+	else if (check_find_enemy_state()) { 
+		select_state(eStateAttack_FindEnemy); 
+	}
+	else if (check_run_away_state()) { 
+		select_state(eStateAttack_RunAway); 
+	}
 	else if (!can_attack_on_move &&
-		check_run_attack_state())	select_state(eStateAttack_RunAttack);
-	else if (can_attack_on_move)			select_state(eStateAttack_Attack_On_Run);
+		check_run_attack_state()) {
+		select_state(eStateAttack_RunAttack);
+	}
+	else if (can_attack_on_move) { 
+		select_state(eStateAttack_Attack_On_Run); 
+	}
 	else
 	{
 		// определить тип атаки
@@ -313,7 +336,7 @@ bool CStateAnomalPseudoGigantAttack<Object>::check_run_away_state()
 template <typename Object>
 bool CStateAnomalPseudoGigantAttack<Object>::check_home_point()
 {
-	if (m_lost_delta_health && shield_ready)
+	if (m_lost_delta_health)
 	{
 		m_lost_delta_health = false;
 		select_state(eStateBurerAttack_Shield);
@@ -351,8 +374,8 @@ bool CStateAnomalPseudoGigantAttack<Object>::check_run_attack_state()
 template <typename Object>
 bool CStateAnomalPseudoGigantAttack<Object>::check_shield_state()
 {
-
-	if (prev_substate == eStateAttack_Run) {
+	return m_lost_delta_health;
+	/*if (prev_substate == eStateAttack_Run) {
 		if (get_state(eStateAttack_RunAttack)->check_start_conditions())
 			return true;
 	}
@@ -361,7 +384,7 @@ bool CStateAnomalPseudoGigantAttack<Object>::check_shield_state()
 			return true;
 	}
 
-	return false;
+	return false;*/
 }
 
 template <typename Object>

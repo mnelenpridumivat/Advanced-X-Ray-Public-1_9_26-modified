@@ -17,7 +17,6 @@ public:
 	virtual void		finalize					();
 	virtual void		critical_finalize			();
 	virtual void		setup_substates();
-	virtual bool		check_control_start_conditions	(ControlCom::EControlType type);
 
 private:
 	bool				m_wait_state_end;

@@ -47,6 +47,8 @@ void   CStateAnomalPseudoGigantShield<Object>::execute()
 	object->set_action					(ACT_STAND_IDLE);
 
 	object->anim().set_override_animation	(m_started ? eAnimShieldContinue : eAnimShieldStart);
+
+	inherited::execute();
 }
 
 template <class Object>
@@ -80,6 +82,12 @@ bool   CStateAnomalPseudoGigantShield<Object>::check_start_conditions()
 template <class Object>
 bool   CStateAnomalPseudoGigantShield<Object>::check_completion()
 {
+	Msg("CStateAnomalPseudoGigantShield: shield active, start time = [%f], duration = [%f], current time = [%f], left = [%f]",
+		m_last_shield_started,
+		object->m_shield_time,
+		current_time(),
+		m_last_shield_started + object->m_shield_time - current_time()
+	);
 	if ( current_time() > m_last_shield_started + object->m_shield_time )
 		return							true;
 

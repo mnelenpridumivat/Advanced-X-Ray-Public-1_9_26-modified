@@ -68,7 +68,9 @@ void CShootingObject::Load	(LPCSTR section)
 
 	//время затрачиваемое на выстрел
 	fOneShotTime			= pSettings->r_float		(section,"rpm");
+#ifdef FS_DEBUG
 	VERIFY(fOneShotTime>0.f);
+#endif
 	fOneShotTime			= 60.f / fOneShotTime;
 
 	LoadFireParams		(section);

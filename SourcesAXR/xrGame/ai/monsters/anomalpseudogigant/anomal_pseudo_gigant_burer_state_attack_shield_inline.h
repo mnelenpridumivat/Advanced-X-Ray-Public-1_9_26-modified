@@ -43,7 +43,7 @@ void   CStateAnomalGigBurerShield<Object>::execute()
 		m_next_particle_allowed		=	current_time() + object->m_shield_keep_particle_period;
 	}
 
-	object->face_enemy					();
+	//object->face_enemy					();
 	object->set_action					(ACT_STAND_IDLE);
 
 	object->anim().set_override_animation	(m_started ? eAnimShieldContinue : eAnimShieldStart);

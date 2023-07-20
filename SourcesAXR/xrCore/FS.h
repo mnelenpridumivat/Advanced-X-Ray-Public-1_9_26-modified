@@ -277,7 +277,12 @@ public:
 	IC void			seek		(int ptr)		{	Pos=ptr; VERIFY((Pos<=Size) && (Pos>=0));};
 	IC int			length		()	const		{	return Size;			};
 	IC void*		pointer		()	const		{	return &(data[Pos]);	};
-	IC void			advance		(int cnt)		{	Pos+=cnt;VERIFY((Pos<=Size) && (Pos>=0));};
+	IC void			advance		(int cnt)		{	
+		Pos+=cnt;
+#ifdef FS_DEBUG
+		VERIFY((Pos<=Size) && (Pos>=0));
+#endif
+	};
 
 public:
 	void			r			(void *p,int cnt);

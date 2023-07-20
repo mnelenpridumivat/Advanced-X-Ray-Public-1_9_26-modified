@@ -91,6 +91,11 @@ void CScriptGameObject::script_register(lua_State *L)
 				value("task_state",					int(GameObject::eTaskStateChange)),
 				value("take_item_from_box",			int(GameObject::eInvBoxItemTake)),
 				value("weapon_no_ammo",				int(GameObject::eWeaponNoAmmoAvailable)),
+
+				// for anomal pseudogiant
+				value("shield_on", int(GameObject::eShieldOn)),
+				value("shield_off", int(GameObject::eShieldOff)),
+				value("jump", int(GameObject::eJump)),
 				
 				value("map_location_added",			int(GameObject::eMapLocationAdded))
 			],

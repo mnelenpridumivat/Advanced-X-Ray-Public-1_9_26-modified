@@ -11201,4 +11201,7 @@
       <Filter>UI\Common\PDA\Statistics &amp; Rankings</Filter>
     </CustomBuild>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
 </Project>
