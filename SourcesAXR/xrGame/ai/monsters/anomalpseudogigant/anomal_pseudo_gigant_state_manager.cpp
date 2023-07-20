@@ -14,47 +14,71 @@
 #include "../states/monster_state_hear_danger_sound.h"
 #include "../states/monster_state_hitted.h"
 #include "../states/state_custom_action.h"
+#include "../states/monster_state_controlled.h"
+#include "../states/monster_state_help_sound.h"
 
 #include "anomal_pseudo_gigant_state_attack.h"
 
 
 CStateManagerAnomalPseudoGigant::CStateManagerAnomalPseudoGigant(CAnomalPseudoGigant*monster) : inherited(monster)
 {
-	add_state(eStateRest,					xr_new<CStateMonsterRest<CAnomalPseudoGigant> >					(monster));
+	add_state(eStateRest, xr_new<CStateMonsterRest<CAnomalPseudoGigant> >(monster));
+	add_state(eStatePanic, xr_new<CStateMonsterPanic<CAnomalPseudoGigant> >(monster));
+	add_state(eStateAttack, xr_new<CStateAnomalPseudoGigantAttack<CAnomalPseudoGigant> >(monster));
+	add_state(eStateEat, xr_new<CStateMonsterEat<CAnomalPseudoGigant> >(monster));
+	add_state(eStateHearInterestingSound, xr_new<CStateMonsterHearInterestingSound<CAnomalPseudoGigant> >(monster));
+	add_state(eStateHearDangerousSound, xr_new<CStateMonsterHearDangerousSound<CAnomalPseudoGigant> >(monster));
+	add_state(eStateHitted, xr_new<CStateMonsterHitted<CAnomalPseudoGigant> >(monster));
+	add_state(eStateControlled, xr_new<CStateMonsterControlled<CAnomalPseudoGigant> >(monster));
+	add_state(eStateHearHelpSound, xr_new<CStateMonsterHearHelpSound<CAnomalPseudoGigant> >(monster));
+
+	/*add_state(eStateRest, xr_new<CStateMonsterRest<CAnomalPseudoGigant> >(monster));
 	add_state(eStatePanic,					xr_new<CStateMonsterPanic<CAnomalPseudoGigant> >					(monster));
 	add_state(eStateAttack,					xr_new<CStateAnomalPseudoGigantAttack<CAnomalPseudoGigant> >					(monster));
 	add_state(eStateEat,					xr_new<CStateMonsterEat<CAnomalPseudoGigant> >					(monster));
 	add_state(eStateHearInterestingSound,	xr_new<CStateMonsterHearInterestingSound<CAnomalPseudoGigant> >	(monster));
 	add_state(eStateHearDangerousSound,		xr_new<CStateMonsterHearDangerousSound<CAnomalPseudoGigant> >	(monster));
 	add_state(eStateHitted,					xr_new<CStateMonsterHitted<CAnomalPseudoGigant> >				(monster));
-	add_state(eStateBurerScanning,			xr_new<CStateMonsterCustomAction<CAnomalPseudoGigant> >				(monster));
+	add_state(eStateBurerScanning,			xr_new<CStateMonsterCustomAction<CAnomalPseudoGigant> >				(monster));*/
 }
 
 #define SCAN_STATE_TIME 4000
 
 void CStateManagerAnomalPseudoGigant::execute()
 {
-	u32 state = u32(-1);
+	u32 state_id = u32(-1);
 
-	if (object->EnemyMan.get_enemy()) {
-		switch (object->EnemyMan.get_danger_type()) {
-				case eStrong:	state = eStatePanic; break;
-				case eWeak:		state = eStateAttack; break;
+	if (!object->is_under_control()) {
+		const CEntityAlive* enemy = object->EnemyMan.get_enemy();
+
+		if (enemy) {
+			switch (object->EnemyMan.get_danger_type()) {
+			case eStrong:	state_id = eStatePanic; break;
+			case eWeak:		state_id = eStateAttack; break;
+			}
+
 		}
-	} else if (object->HitMemory.is_hit() && (object->HitMemory.get_last_hit_time() + 10000 > Device.dwTimeGlobal)) 
-		state = eStateHitted;
-	 else if (object->hear_interesting_sound)
-		state = eStateHearInterestingSound;
-	 else if (object->hear_dangerous_sound )
-		state = eStateHearDangerousSound;
-	 //else if (object->time_last_scan + SCAN_STATE_TIME > Device.dwTimeGlobal)
-	  //state = eStateBurerScanning;
-	 else if (can_eat())
-			state = eStateEat;
-	 else	state = eStateRest;
+		else if (object->HitMemory.is_hit()) {
+			state_id = eStateHitted;
+		}
+		else if (check_state(eStateHearHelpSound)) {
+			state_id = eStateHearHelpSound;
+		}
+		else if (object->hear_interesting_sound) {
+			state_id = eStateHearInterestingSound;
+		}
+		else if (object->hear_dangerous_sound) {
+			state_id = eStateHearDangerousSound;
+		}
+		else {
+			if (can_eat())	state_id = eStateEat;
+			else			state_id = eStateRest;
+		}
+	}
+	else state_id = eStateControlled;
 
-	select_state(state); 
-	
+	select_state(state_id);
+
 	// выполнить текущее состояние
 	get_state_current()->execute();
 
@@ -63,7 +87,7 @@ void CStateManagerAnomalPseudoGigant::execute()
 
 void CStateManagerAnomalPseudoGigant::setup_substates()
 {
-	if (current_substate == eStateBurerScanning) {
+	/*if (current_substate == eStateBurerScanning) {
 		SStateDataAction	data;
 		
 		data.action			= ACT_LOOK_AROUND;
@@ -72,5 +96,5 @@ void CStateManagerAnomalPseudoGigant::setup_substates()
 		
 		get_state_current()->fill_data_with(&data, sizeof(SStateDataAction));
 		return;
-	}
+	}*/
 }

@@ -29,6 +29,7 @@ public:
 
 	virtual void	UpdateCL();
 	virtual	void	shedule_Update(u32 dt);
+	virtual	void	Hit(SHit* pHDS);
 
 	virtual	char* get_monster_class_name() { return "anomalpseudogigant"; }
 
@@ -72,7 +73,18 @@ public:
 	LPCSTR	m_shield_keep_particle;
 	TTime	m_shield_keep_particle_period;
 
+	LPCSTR	particle_fire_shield;
+	u32		last_hit_frame;
+
 	ref_sound m_strange_sound;
+
+	// delegates on events
+public:
+
+	virtual void on_shield_on();
+	virtual void on_shield_off();
+	virtual void on_hit();
+	virtual void on_jump();
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 

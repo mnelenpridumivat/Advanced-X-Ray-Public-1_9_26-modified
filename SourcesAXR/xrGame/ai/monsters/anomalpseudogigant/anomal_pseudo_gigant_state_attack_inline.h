@@ -18,7 +18,7 @@
 
 namespace anomal_pseudogigant
 {
-	float const health_delta				=	0.2f;
+	float const health_delta				=	100.0f;
 
 } // namespace detail
 
@@ -34,6 +34,7 @@ CStateAnomalPseudoGigantAttack<Object>::CStateAnomalPseudoGigantAttack(Object *o
 	add_state(eStateAttack_Steal, xr_new<CStateMonsterSteal<Object> >(obj));
 	add_state(eStateAttackCamp, xr_new<CStateMonsterAttackCamp<Object> >(obj));
 	add_state(eStateAttack_MoveToHomePoint, xr_new<CStateMonsterAttackMoveToHomePoint<Object> >(obj));
+	add_state(eStateCustomMoveToRestrictor, xr_new<CStateMonsterMoveToRestrictor<Object> >(obj));
 
 	add_state(eStateBurerAttack_Shield, xr_new<CStateAnomalPseudoGigantShield<Object> >(obj));
 	//add_state(eStateAttack_AttackHidden, xr_new<CStateAnomalPseudoGigantAttackHidden<CAnomalPseudoGigant> >(obj));
@@ -56,7 +57,12 @@ CStateAnomalPseudoGigantAttack<Object>::CStateAnomalPseudoGigantAttack(Object *o
 template <typename Object>
 void CStateAnomalPseudoGigantAttack<Object>::initialize()
 {
-	inherited::initialize						();
+	inherited::initialize();
+	object->MeleeChecker.init_attack();
+
+	m_time_next_run_away = 0;
+	m_time_start_check_behinder = 0;
+	m_time_start_behinder = 0;
 
 	m_last_health							=	object->conditions().GetHealth();
 	m_lost_delta_health						=	false;
@@ -75,7 +81,53 @@ void CStateAnomalPseudoGigantAttack<Object>::initialize()
 template <typename Object>
 void   CStateAnomalPseudoGigantAttack<Object>::execute ()
 {
-	CEntityAlive*		enemy				=	const_cast<CEntityAlive*>( object->EnemyMan.get_enemy() );
+
+	bool	can_attack_on_move = object->can_attack_on_move();
+
+	if (check_home_point())		select_state(eStateAttack_MoveToHomePoint);
+	else if (check_steal_state())		select_state(eStateAttack_Steal);
+	else if (check_camp_state()) 		select_state(eStateAttackCamp);
+	else if (check_find_enemy_state()) 	select_state(eStateAttack_FindEnemy);
+	else if (check_run_away_state()) 	select_state(eStateAttack_RunAway);
+	else if (!can_attack_on_move &&
+		check_run_attack_state())	select_state(eStateAttack_RunAttack);
+	else if (can_attack_on_move)			select_state(eStateAttack_Attack_On_Run);
+	else
+	{
+		// определить тип атаки
+		bool b_melee = false;
+		if (prev_substate == eStateAttack_Melee)
+		{
+			if (!get_state_current()->check_completion())
+			{
+				b_melee = true;
+			}
+		}
+		else if (get_state(eStateAttack_Melee)->check_start_conditions())
+		{
+			b_melee = true;
+		}
+
+		// установить целевое состояние
+		select_state(b_melee ? eStateAttack_Melee : eStateAttack_Run);
+	}
+
+	get_state_current()->execute();
+
+	prev_substate = current_substate;
+
+	// Notify squad	
+	CMonsterSquad* squad = monster_squad().get_squad(object);
+	if (squad) {
+		SMemberGoal				goal;
+		goal.type = MG_AttackEnemy;
+		goal.entity = const_cast<CEntityAlive*>(object->EnemyMan.get_enemy());
+
+		squad->UpdateGoal(object, goal);
+	}
+	//////////////////////////////////////////////////////////////////////////
+
+	/*CEntityAlive* enemy = const_cast<CEntityAlive*>(object->EnemyMan.get_enemy());
 
 	// Notify squad	
 	CMonsterSquad *squad					=	monster_squad().get_squad(object);
@@ -121,24 +173,11 @@ void   CStateAnomalPseudoGigantAttack<Object>::execute ()
 
 	bool		selected_state				=	true;
 
-	//if ( gravi_ready )
-	//{
-	//	select_state							(eStateBurerAttack_Gravi);
-	//}
-	/*else*/ 
 	if (m_lost_delta_health && shield_ready)
 	{
 		m_lost_delta_health					=	false;
 		select_state							(eStateBurerAttack_Shield);
 	}
-	//else if ( anti_aim_ready )
-	//{
-	//	select_state							(eStateBurerAttack_AntiAim);
-	//}
-	//else if ( tele_ready && current_substate != eStateBurerAttack_RunAround )
-	//{
-	//	select_state							(eStateBurerAttack_Tele);
-	//}
 	else
 	{
 		selected_state						=	false;
@@ -178,55 +217,8 @@ void   CStateAnomalPseudoGigantAttack<Object>::execute ()
 		return;
 	}
 
-	/*if (current_substate == eStateBurerAttack_RunAround)
-	{
-		if ( get_state_current()->check_completion() )
-		{
-			if ( in_runaway_range )
-			{
-				m_next_runaway_allowed_tick	=	current_time() + 5000;
-			}
-		}
-		else
-		{
-			get_state_current()->execute		();
-			prev_substate					=	current_substate;
-			return;
-		}
-	}*/
-
-	/*if (m_lost_delta_health ||
-		(in_runaway_range && current_time() > m_next_runaway_allowed_tick) )
-	{
-		m_lost_delta_health					=	false;
-		select_state							(eStateBurerAttack_RunAround);		
-	}
-	else if ( !in_normal_range )
-	{
-		select_state							(eStateAttack_Run);
-	}
-	else */
-	{
-		Fvector	const	self2enemy			=	enemy_pos - self_pos;
-		bool  	const 	good_aiming			=	angle_between_vectors(self2enemy, object->Direction()) 
-												< deg2rad(20.f);
-
-		select_state							(eStateBurerAttack_FaceEnemy);
-
-		if ( !good_aiming )
-		{
-			bool const rotate_right			=	object->control().direction().is_from_right(enemy_pos);
-			object->anim().set_override_animation
-												(rotate_right ? eAnimStandTurnRight : eAnimStandTurnLeft, 0);
-			object->dir().face_target			(enemy_pos);
-		}
-
-		object->set_action						(ACT_STAND_IDLE);
-		return;
-	}
-
 	get_state_current()->execute				();
-	prev_substate							=	current_substate;
+	prev_substate							=	current_substate;*/
 }
 
 template <typename Object>
@@ -252,7 +244,7 @@ void CStateAnomalPseudoGigantAttack<Object>::critical_finalize()
 }
 
 
-template <typename Object>
+/*template <typename Object>
 bool   CStateAnomalPseudoGigantAttack<Object>::check_control_start_conditions (ControlCom::EControlType type)
 {
 	if ( type == ControlCom::eAntiAim )
@@ -261,4 +253,137 @@ bool   CStateAnomalPseudoGigantAttack<Object>::check_control_start_conditions (C
 	}
 
 	return										true;
+}*/
+
+template <typename Object>
+bool CStateAnomalPseudoGigantAttack<Object>::check_steal_state()
+{
+	if (prev_substate == u32(-1)) {
+		if (get_state(eStateAttack_Steal)->check_start_conditions())
+			return true;
+	}
+	else if (prev_substate == eStateAttack_Steal) {
+		if (!get_state(eStateAttack_Steal)->check_completion())
+			return true;
+	}
+	return false;
+}
+
+template <typename Object>
+bool CStateAnomalPseudoGigantAttack<Object>::check_camp_state()
+{
+	if (prev_substate == u32(-1)) {
+		if (get_state(eStateAttackCamp)->check_start_conditions())
+			return true;
+	}
+	else if (prev_substate == eStateAttackCamp) {
+		if (!get_state(eStateAttackCamp)->check_completion())
+			return true;
+	}
+	return false;
+}
+
+template <typename Object>
+bool CStateAnomalPseudoGigantAttack<Object>::check_find_enemy_state()
+{
+	// check state find enemy
+	if (object->EnemyMan.get_enemy_time_last_seen() + FIND_ENEMY_DELAY < Device.dwTimeGlobal)
+		return true;
+	return false;
+}
+
+template <typename Object>
+bool CStateAnomalPseudoGigantAttack<Object>::check_run_away_state()
+{
+	if (m_time_start_behinder != 0)
+		return false;
+
+	if (prev_substate == eStateAttack_RunAway) {
+		if (!get_state(eStateAttack_RunAway)->check_completion())
+			return true;
+		else m_time_next_run_away = Device.dwTimeGlobal + 10000;
+	}
+	else if ((object->EnemyMan.get_enemy() != Actor()) && object->Morale.is_despondent() && (m_time_next_run_away < Device.dwTimeGlobal)) {
+		return true;
+	}
+
+	return false;
+}
+
+template <typename Object>
+bool CStateAnomalPseudoGigantAttack<Object>::check_home_point()
+{
+	if (m_lost_delta_health && shield_ready)
+	{
+		m_lost_delta_health = false;
+		select_state(eStateBurerAttack_Shield);
+	}
+
+	if (prev_substate != eStateAttack_MoveToHomePoint) {
+		if (get_state(eStateAttack_MoveToHomePoint)->check_start_conditions())
+			return true;
+	}
+	else {
+		if (!get_state(eStateAttack_MoveToHomePoint)->check_completion())
+			return true;
+	}
+
+	return false;
+}
+
+template <typename Object>
+bool CStateAnomalPseudoGigantAttack<Object>::check_run_attack_state()
+{
+	if (!object->ability_run_attack()) return false;
+
+	if (prev_substate == eStateAttack_Run) {
+		if (get_state(eStateAttack_RunAttack)->check_start_conditions())
+			return true;
+	}
+	else if (prev_substate == eStateAttack_RunAttack) {
+		if (!get_state(eStateAttack_RunAttack)->check_completion())
+			return true;
+	}
+
+	return false;
+}
+
+template <typename Object>
+bool CStateAnomalPseudoGigantAttack<Object>::check_shield_state()
+{
+
+	if (prev_substate == eStateAttack_Run) {
+		if (get_state(eStateAttack_RunAttack)->check_start_conditions())
+			return true;
+	}
+	else if (prev_substate == eStateAttack_RunAttack) {
+		if (!get_state(eStateAttack_RunAttack)->check_completion())
+			return true;
+	}
+
+	return false;
+}
+
+template <typename Object>
+void CStateAnomalPseudoGigantAttack<Object>::setup_substates()
+{
+	state_ptr state = get_state_current();
+
+	if (current_substate == eStateAttack_RunAway) {
+
+		SStateHideFromPoint		data;
+		data.point = object->EnemyMan.get_enemy_position();
+		data.accelerated = true;
+		data.braking = false;
+		data.accel_type = eAT_Aggressive;
+		data.distance = 20.f;
+		data.action.action = ACT_RUN;
+		data.action.sound_type = MonsterSound::eMonsterSoundAggressive;
+		data.action.sound_delay = object->db().m_dwAttackSndDelay;
+		data.action.time_out = 5000;
+
+		state->fill_data_with(&data, sizeof(SStateHideFromPoint));
+
+		return;
+	}
 }

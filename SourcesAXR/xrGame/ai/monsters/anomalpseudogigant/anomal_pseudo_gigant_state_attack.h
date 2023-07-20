@@ -16,6 +16,7 @@ public:
 
 	virtual void		finalize					();
 	virtual void		critical_finalize			();
+	virtual void		setup_substates();
 	virtual bool		check_control_start_conditions	(ControlCom::EControlType type);
 
 private:
@@ -24,6 +25,20 @@ private:
 	bool				m_allow_anti_aim;
 	float				m_last_health;
 	TTime				m_next_runaway_allowed_tick;
+
+protected:
+
+	u32					m_time_next_run_away;
+	u32					m_time_start_check_behinder;
+	u32					m_time_start_behinder;
+
+	bool		check_steal_state();
+	bool		check_find_enemy_state();
+	bool		check_run_away_state();
+	bool		check_run_attack_state();
+	bool		check_camp_state();
+	bool		check_home_point();
+	bool		check_shield_state();
 };
 
 #include "anomal_pseudo_gigant_state_attack_inline.h"
