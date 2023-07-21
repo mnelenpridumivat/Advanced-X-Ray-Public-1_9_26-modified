@@ -8,6 +8,8 @@
 #include "script_game_object.h"
 #include "../monster_velocity_space.h"
 #include "../control_animation_base.h"
+#include "Inventory.h"
+#include "Actor.h"
 #include "../control_movement_base.h"
 #include "anomal_pseudo_gigant_state_manager.h"
 
@@ -16,6 +18,7 @@ CAnomalPseudoGigant::CAnomalPseudoGigant()
 	StateMan = xr_new<CStateManagerAnomalPseudoGigant>(this);
 	m_shield_active = false;
 	m_actor_ignore = false;
+	com_man().add_ability(ControlCom::eControlJump);
 }
 
 CAnomalPseudoGigant::~CAnomalPseudoGigant()
@@ -45,6 +48,15 @@ void CAnomalPseudoGigant::Load(LPCSTR section)
 	particle_fire_shield = pSettings->r_string(section, "Particle_Shield");
 }
 
+void CAnomalPseudoGigant::reinit()
+{
+	inherited::reinit();
+
+	move().load_velocity(*cNameSect(), "Velocity_JumpGround", MonsterMovement::eSnorkVelocityParameterJumpGround);
+	//com_man().load_jump_data("stand_attack_2_0", 0, "stand_attack_2_1", "stand_somersault_0", u32(-1), MonsterMovement::eSnorkVelocityParameterJumpGround, 0);
+	com_man().load_jump_data("stand_kick_0", 0, "stand_kick_0", "stand_kick_0", u32(-1), MonsterMovement::eSnorkVelocityParameterJumpGround, 0);
+}
+
 void CAnomalPseudoGigant::UpdateCL()
 {
 	inherited::UpdateCL();
@@ -55,8 +67,116 @@ void CAnomalPseudoGigant::UpdateCL()
 void CAnomalPseudoGigant::shedule_Update(u32 dt)
 {
 	inherited::shedule_Update(dt);
+	CTelekinesis::schedule_update();
 	if (use_fire_ability()) m_flame->update_schedule();
 	if (use_tele_ability()) m_tele->update_schedule();
+}
+
+void CAnomalPseudoGigant::HitEntityInJump(const CEntity* pEntity)
+{
+	//SAAParam& params = anim().AA_GetParams("stand_kick_0");
+	//HitEntity(pEntity, params.hit_power, params.impulse, params.impulse_dir);
+	int drop_item_chance = ::Random.randI(1, 100);
+
+	if (Actor() && this->m_bDropItemAfterSuperAttack && drop_item_chance <= this->m_iSuperAttackDropItemPer)
+	{
+		CInventoryItem* active_item = Actor()->inventory().ActiveItem();
+		active_item->SetDropManual(true);
+	}
+}
+
+#define JUMP_DISTANCE 20.f
+bool CAnomalPseudoGigant::find_geometry(Fvector& dir)
+{
+	// 1. trace direction
+	dir = Direction();
+	float	range;
+
+	if (trace_geometry(dir, range)) {
+		if (range < JUMP_DISTANCE) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+#define TRACE_RANGE 40.f
+float CAnomalPseudoGigant::trace(const Fvector& dir)
+{
+	float ret_val = flt_max;
+
+	collide::rq_result	l_rq;
+
+	Fvector		trace_from;
+	Center(trace_from);
+
+	float		trace_dist = Radius() + TRACE_RANGE;
+
+	if (Level().ObjectSpace.RayPick(trace_from, dir, trace_dist, collide::rqtStatic, l_rq, this)) {
+		if ((l_rq.range < trace_dist))
+			ret_val = l_rq.range;
+	}
+
+	return		ret_val;
+}
+
+bool CAnomalPseudoGigant::trace_geometry(const Fvector& d, float& range)
+{
+	Fvector				dir;
+	float				h, p;
+
+	Fvector				Pl, Pc, Pr;
+	Fvector				center;
+	Center(center);
+
+	range = trace(d);
+	if (range > TRACE_RANGE) return false;
+
+	float angle = asin(1.f / range);
+
+	// trace center ray
+	dir = d;
+
+	dir.getHP(h, p);
+	p += angle;
+	dir.setHP(h, p);
+	dir.normalize_safe();
+
+	range = trace(dir);
+	if (range > TRACE_RANGE) return false;
+
+	Pc.mad(center, dir, range);
+
+	// trace left ray
+	Fvector				temp_p;
+	temp_p.mad(Pc, XFORM().i, Radius() / 2);
+	dir.sub(temp_p, center);
+	dir.normalize_safe();
+
+	range = trace(dir);
+	if (range > TRACE_RANGE) return false;
+
+	Pl.mad(center, dir, range);
+
+	// trace right ray
+	Fvector inv = XFORM().i;
+	inv.invert();
+	temp_p.mad(Pc, inv, Radius() / 2);
+	dir.sub(temp_p, center);
+	dir.normalize_safe();
+
+	range = trace(dir);
+	if (range > TRACE_RANGE) return false;
+
+	Pr.mad(center, dir, range);
+
+	float				h1, p1, h2, p2;
+
+	Fvector().sub(Pl, Pc).getHP(h1, p1);
+	Fvector().sub(Pc, Pr).getHP(h2, p2);
+
+	return (fsimilar(h1, h2, 0.1f) && fsimilar(p1, p2, 0.1f));
 }
 
 void CAnomalPseudoGigant::jump(const Fvector& position, float factor)

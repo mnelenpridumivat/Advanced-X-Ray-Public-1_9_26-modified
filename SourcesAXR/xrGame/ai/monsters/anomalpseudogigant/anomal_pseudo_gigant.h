@@ -26,6 +26,7 @@ public:
 	virtual			~CAnomalPseudoGigant();
 
 	virtual void	Load(LPCSTR section);
+	virtual void	reinit();
 
 	virtual void	UpdateCL();
 	virtual	void	shedule_Update(u32 dt);
@@ -39,6 +40,13 @@ public:
 	bool	get_actor_ignore() const { return m_actor_ignore; }
 
 	// snork jump
+
+	virtual void	HitEntityInJump(const CEntity* pEntity);
+
+	bool	find_geometry(Fvector& dir);
+	float	trace(const Fvector& dir);
+
+	bool	trace_geometry(const Fvector& d, float& range);
 
 	virtual void	jump(const Fvector& position, float factor);
 	virtual bool	ability_jump_over_physics() { return true; }
@@ -293,6 +301,7 @@ private:
 	void	tele_fire_objects();
 
 	bool	trace_object(CObject* obj, const Fvector& target);
+	bool	is_not_valid_object_for_carring(CPhysicsShellHolder* obj, CCustomMonster* custom_monster);
 
 protected:
 

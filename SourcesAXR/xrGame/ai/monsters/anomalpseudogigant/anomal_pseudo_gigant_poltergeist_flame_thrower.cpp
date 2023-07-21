@@ -221,7 +221,7 @@ void CAnomalGigPolterFlame::update_schedule()
 
 	CEntityAlive const* enemy	=	Actor();
 	// check if we can create another flame
-	Msg("flames ability: ignore = [%s]", m_object->get_actor_ignore() ? "true" : "false");
+	//Msg("flames ability: ignore = [%s]", m_object->get_actor_ignore() ? "true" : "false");
 	if ( m_object->g_Alive() && 
 		 enemy && 
 		 m_flames.size() < select_amount() &&

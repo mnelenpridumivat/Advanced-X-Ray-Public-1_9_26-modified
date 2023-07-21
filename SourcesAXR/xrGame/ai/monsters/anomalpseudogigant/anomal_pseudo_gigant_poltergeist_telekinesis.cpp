@@ -61,7 +61,7 @@ void CAnomalGigPolterTele::update_schedule()
 {
 	inherited::update_schedule();
 
-	Msg("telekinesis: ignore = [%s]", m_object->get_actor_ignore() ? "true" : "false");
+	//Msg("telekinesis: ignore = [%s]", m_object->get_actor_ignore() ? "true" : "false");
 	if (!m_object->g_Alive() || m_object->get_actor_ignore())
 	//if (!m_object->g_Alive())
 		return;
@@ -113,7 +113,8 @@ void CAnomalGigPolterTele::update_schedule()
 			m_time			= time();
 		}
 		break;
-	case eWait:				
+	case eWait:	
+		Msg("Telekinesis wait: perv time = [%u], m_pmt_time_to_wait = [%u], current time = [%u]", m_time, m_pmt_time_to_wait, time());
 		if (m_time + m_pmt_time_to_wait < time()) {
 			m_time_next	= 0;
 			m_state		= eStartRaiseObjects;
@@ -190,6 +191,38 @@ bool CAnomalGigPolterTele::trace_object(CObject *obj, const Fvector &target)
 	return false;
 }
 
+bool CAnomalGigPolterTele::is_not_valid_object_for_carring(CPhysicsShellHolder* obj, CCustomMonster* custom_monster)
+{
+#ifdef DEBUG
+	bool cond1 = !obj;
+	if (cond1) return true;
+	bool cond2 = !obj->PPhysicsShell();
+	if (cond2) return true;
+	bool cond3 = !obj->PPhysicsShell()->isActive();
+	bool cond4 = custom_monster;
+	bool cond5 = (obj->spawn_ini() && obj->spawn_ini()->section_exist("ph_heavy"));
+	bool cond6 = (obj->m_pPhysicsShell->getMass() < m_pmt_object_min_mass);
+	bool cond7 = (obj->m_pPhysicsShell->getMass() > m_pmt_object_max_mass);
+	bool cond8 = (obj == m_object);
+	bool cond9 = m_object->CTelekinesis::is_active_object(obj);
+	bool cond10 = (pSettings->line_exist(obj->cNameSect().c_str(), "quest_item") && pSettings->r_bool(obj->cNameSect().c_str(), "quest_item"));
+	bool cond11 = !obj->m_pPhysicsShell->get_ApplyByGravity();
+	return cond3 || cond4 || cond5 || cond6 || cond7 || cond8 || cond9 || cond10 || cond11;
+#else
+	return (!obj ||
+		!obj->PPhysicsShell() ||
+		!obj->PPhysicsShell()->isActive() ||
+		custom_monster ||
+		(obj->spawn_ini() && obj->spawn_ini()->section_exist("ph_heavy")) ||
+		(obj->m_pPhysicsShell->getMass() < m_pmt_object_min_mass) ||
+		(obj->m_pPhysicsShell->getMass() > m_pmt_object_max_mass) ||
+		(obj == m_object) ||
+		m_object->CTelekinesis::is_active_object(obj) || 
+		(pSettings->line_exist(obj->cNameSect().c_str(), "quest_item") && pSettings->r_bool(obj->cNameSect().c_str(), "quest_item")) ||
+		!obj->m_pPhysicsShell->get_ApplyByGravity());
+#endif
+}
+
 u32 CAnomalGigPolterTele::select_amount()
 {
 	return m_object->m_shield_active ? m_pmt_object_count : m_pmt_object_count_rage;
@@ -203,7 +236,8 @@ void CAnomalGigPolterTele::tele_find_objects(xr_vector<CObject*> &objects, const
 	for (u32 i=0;i<m_nearest.size();i++) {
 		CPhysicsShellHolder *obj			= smart_cast<CPhysicsShellHolder *>(m_nearest[i]);
 		CCustomMonster		*custom_monster	= smart_cast<CCustomMonster *>(m_nearest[i]);
-		if (!obj || 
+		if (is_not_valid_object_for_carring(obj, custom_monster)) continue;
+		/*if (!obj ||
 			!obj->PPhysicsShell() || 
 			!obj->PPhysicsShell()->isActive()|| 
 			custom_monster ||
@@ -213,7 +247,7 @@ void CAnomalGigPolterTele::tele_find_objects(xr_vector<CObject*> &objects, const
 			(obj == m_object) || 
 			m_object->CTelekinesis::is_active_object(obj) || (pSettings->line_exist(obj->cNameSect().c_str(), "quest_item") &&
 				pSettings->r_bool(obj->cNameSect().c_str(), "quest_item")) ||
-			!obj->m_pPhysicsShell->get_ApplyByGravity()) continue;
+			!obj->m_pPhysicsShell->get_ApplyByGravity()) continue;*/
 
 		
 		Fvector center;
@@ -231,20 +265,20 @@ bool CAnomalGigPolterTele::tele_raise_objects()
 	tele_objects.reserve	(20);
 
 	// получить список объектов вокруг врага
-	tele_find_objects	(tele_objects, Actor()->Position());
+	//tele_find_objects	(tele_objects, Actor()->Position());
 
 	// получить список объектов вокруг монстра
 	tele_find_objects	(tele_objects, m_object->Position());
 
 	// получить список объектов между монстром и врагом
-	float dist			= Actor()->Position().distance_to(m_object->Position());
+	/*float dist = Actor()->Position().distance_to(m_object->Position());
 	Fvector dir;
 	dir.sub				(Actor()->Position(), m_object->Position());
 	dir.normalize		();
 
 	Fvector pos;
 	pos.mad				(m_object->Position(), dir, dist / 2.f);
-	tele_find_objects	(tele_objects, pos);	
+	tele_find_objects	(tele_objects, pos);	*/
 
 	// сортировать и оставить только необходимое количество объектов
 	std::sort(tele_objects.begin(),tele_objects.end(),best_object_predicate2(m_object->Position(), Actor()->Position()));
