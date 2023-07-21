@@ -35,7 +35,7 @@ public:
 
 	virtual	char* get_monster_class_name() { return "anomalpseudogigant"; }
 
-	void	set_actor_ignore(bool const actor_ignore) { m_actor_ignore = actor_ignore; }
+	void	set_actor_ignore(bool const actor_ignore) { m_actor_ignore = actor_ignore; } // can be used for diabling abilities when no combat
 	bool	get_actor_ignore() const { return m_actor_ignore; }
 
 	// snork jump
@@ -164,6 +164,7 @@ class CAnomalGigPolterFlame : public CAnomalGigPolterSpecialAbility {
 	u32						m_count;
 	u32						m_count_rage;
 	u32						m_delay;	// between 2 flames
+	u32						m_delay_rage;	// between 2 flames
 
 	u32						m_time_flame_started;
 
@@ -228,6 +229,7 @@ public:
 protected:
 
 	virtual u32 select_amount();
+	virtual u32 select_delay();
 
 private:
 	void	select_state(SFlameElement* elem, EFlameState state);

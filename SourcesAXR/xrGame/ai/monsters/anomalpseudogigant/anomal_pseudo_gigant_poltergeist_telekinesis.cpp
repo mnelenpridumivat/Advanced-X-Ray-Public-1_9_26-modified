@@ -60,8 +60,10 @@ bool CAnomalGigPolterTele::is_avalable()
 void CAnomalGigPolterTele::update_schedule()
 {
 	inherited::update_schedule();
-	
+
+	Msg("telekinesis: ignore = [%s]", m_object->get_actor_ignore() ? "true" : "false");
 	if (!m_object->g_Alive() || m_object->get_actor_ignore())
+	//if (!m_object->g_Alive())
 		return;
 
 	Fvector const actor_pos				=	Actor()->Position();
@@ -70,8 +72,8 @@ void CAnomalGigPolterTele::update_schedule()
 	if ( dist2actor > m_pmt_distance ) 
 		return;
 
-	if ( m_object->get_current_detection_level() < m_object->get_detection_success_level() )
-		return;
+	//if ( m_object->get_current_detection_level() < m_object->get_detection_success_level() )
+	//	return;
 
 	switch (m_state) {
 	case eStartRaiseObjects:	

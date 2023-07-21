@@ -13,6 +13,7 @@
 #include "../states/monster_state_find_enemy.h"
 #include "../states/monster_state_steal.h"
 #include "../states/monster_state_attack_camp.h"
+#include "anomal_pseudo_gigant_state_attack.h"
 //#include "burer_state_attack_run_around.h"
 //#include "burer_state_attack_antiaim.h"
 
@@ -82,7 +83,7 @@ template <typename Object>
 void   CStateAnomalPseudoGigantAttack<Object>::execute()
 {
 
-	bool	can_attack_on_move = object->can_attack_on_move();
+	//bool	can_attack_on_move = object->can_attack_on_move();
 
 	if(!object->m_shield_active){
 
@@ -95,50 +96,15 @@ void   CStateAnomalPseudoGigantAttack<Object>::execute()
 		if (check_shield_state()) {
 			select_state(eStateBurerAttack_Shield);
 		}
-		else if (check_home_point()) {
-			select_state(eStateAttack_MoveToHomePoint);
-		}
-		else if (check_steal_state()) {
-			select_state(eStateAttack_Steal);
-		}
-		else if (check_camp_state()) {
-			select_state(eStateAttackCamp);
-		}
-		else if (check_find_enemy_state()) {
-			select_state(eStateAttack_FindEnemy);
-		}
-		else if (check_run_away_state()) {
-			select_state(eStateAttack_RunAway);
-		}
-		else if (!can_attack_on_move &&
-			check_run_attack_state()) {
-			select_state(eStateAttack_RunAttack);
-		}
-		else if (can_attack_on_move) {
-			select_state(eStateAttack_Attack_On_Run);
-		}
-		else
-		{
-			// определить тип атаки
-			bool b_melee = false;
-			if (prev_substate == eStateAttack_Melee)
-			{
-				if (!get_state_current()->check_completion())
-				{
-					b_melee = true;
-				}
-			}
-			else if (get_state(eStateAttack_Melee)->check_start_conditions())
-			{
-				b_melee = true;
-			}
-
-			// установить целевое состояние
-			select_state(b_melee ? eStateAttack_Melee : eStateAttack_Run);
+		else { 
+			switch_original_states();
 		}
 	}
-	else {
-		get_state_current()->check_completion();
+	else if(get_state_current()->check_completion()) {
+		get_state_current()->finalize();
+		current_substate = u32(-1);
+		prev_substate = current_substate;
+		switch_original_states();
 	}
 	/*if (check_home_point()) {
 		select_state(eStateAttack_MoveToHomePoint);
@@ -324,6 +290,53 @@ bool   CStateAnomalPseudoGigantAttack<Object>::check_control_start_conditions (C
 
 	return										true;
 }*/
+
+template<typename Object>
+void CStateAnomalPseudoGigantAttack<Object>::switch_original_states()
+{
+	bool	can_attack_on_move = object->can_attack_on_move();
+	if (check_home_point()) {
+		select_state(eStateAttack_MoveToHomePoint);
+	}
+	else if (check_steal_state()) {
+		select_state(eStateAttack_Steal);
+	}
+	else if (check_camp_state()) {
+		select_state(eStateAttackCamp);
+	}
+	else if (check_find_enemy_state()) {
+		select_state(eStateAttack_FindEnemy);
+	}
+	else if (check_run_away_state()) {
+		select_state(eStateAttack_RunAway);
+	}
+	else if (!can_attack_on_move &&
+		check_run_attack_state()) {
+		select_state(eStateAttack_RunAttack);
+	}
+	else if (can_attack_on_move) {
+		select_state(eStateAttack_Attack_On_Run);
+	}
+	else
+	{
+		// определить тип атаки
+		bool b_melee = false;
+		if (prev_substate == eStateAttack_Melee)
+		{
+			if (!get_state_current()->check_completion())
+			{
+				b_melee = true;
+			}
+		}
+		else if (get_state(eStateAttack_Melee)->check_start_conditions())
+		{
+			b_melee = true;
+		}
+
+		// установить целевое состояние
+		select_state(b_melee ? eStateAttack_Melee : eStateAttack_Run);
+	}
+}
 
 template <typename Object>
 bool CStateAnomalPseudoGigantAttack<Object>::check_steal_state()

@@ -25,6 +25,8 @@ private:
 	float				m_last_health;
 	TTime				m_next_runaway_allowed_tick;
 
+	void				switch_original_states();
+
 protected:
 
 	u32					m_time_next_run_away;

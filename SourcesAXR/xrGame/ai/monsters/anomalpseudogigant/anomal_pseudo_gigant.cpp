@@ -15,6 +15,7 @@ CAnomalPseudoGigant::CAnomalPseudoGigant()
 {
 	StateMan = xr_new<CStateManagerAnomalPseudoGigant>(this);
 	m_shield_active = false;
+	m_actor_ignore = false;
 }
 
 CAnomalPseudoGigant::~CAnomalPseudoGigant()

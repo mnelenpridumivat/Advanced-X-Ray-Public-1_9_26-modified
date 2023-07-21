@@ -40,6 +40,7 @@ void CAnomalGigPolterFlame::load(LPCSTR section)
 	m_count				= pSettings->r_u32(section,"flames_count");
 	m_count_rage		= pSettings->r_u32(section,"flames_count_rage");
 	m_delay				= pSettings->r_u32(section,"flames_delay");
+	m_delay_rage		= pSettings->r_u32(section, "flames_delay_rage");
 
 	m_min_flame_dist	= pSettings->r_float(section,"flame_min_dist");
 	m_max_flame_dist	= pSettings->r_float(section,"flame_max_dist");
@@ -110,7 +111,12 @@ void CAnomalGigPolterFlame::create_flame(const CObject *target_object)
 
 u32 CAnomalGigPolterFlame::select_amount()
 {
-	return m_object->m_shield_active ? m_count : m_count_rage;
+	return m_object->m_shield_active ? m_count_rage : m_count;
+}
+
+u32 CAnomalGigPolterFlame::select_delay()
+{
+	return m_object->m_shield_active ? m_delay_rage : m_delay;
 }
 
 void CAnomalGigPolterFlame::select_state(SFlameElement *elem, EFlameState state)
@@ -211,20 +217,22 @@ void CAnomalGigPolterFlame::update_schedule()
 		m_flames.end()
 	);
 	
-	bool const detected	=	m_object->get_current_detection_level() >= m_object->get_detection_success_level();
+	//bool const detected	=	m_object->get_current_detection_level() >= m_object->get_detection_success_level();
 
 	CEntityAlive const* enemy	=	Actor();
 	// check if we can create another flame
+	Msg("flames ability: ignore = [%s]", m_object->get_actor_ignore() ? "true" : "false");
 	if ( m_object->g_Alive() && 
 		 enemy && 
 		 m_flames.size() < select_amount() &&
-		 !m_object->get_actor_ignore() && 
-		 detected ) {
+		 !m_object->get_actor_ignore()// && 
+		// detected 
+		) {
 		// check aura radius and accessibility
 		float dist = enemy->Position().distance_to(m_object->Position());
 		if ((dist < m_pmt_aura_radius) && m_object->control().path_builder().accessible(enemy->Position())) {
 			// check timing
-			if (m_time_flame_started + m_delay < time()) {
+			if (m_time_flame_started + select_delay() < time()) {
 				create_flame(enemy);
 			}
 		}

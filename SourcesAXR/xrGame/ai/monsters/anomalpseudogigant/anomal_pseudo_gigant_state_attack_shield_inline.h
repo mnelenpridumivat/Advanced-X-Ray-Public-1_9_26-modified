@@ -1,3 +1,4 @@
+#include "anomal_pseudo_gigant_state_attack_shield.h"
 #pragma once
 
 template <class Object>
@@ -56,6 +57,8 @@ void   CStateAnomalPseudoGigantShield<Object>::finalize()
 {
 	inherited::finalize();
 	object->DeactivateShield			();
+	object->anim().clear_override_animation();
+	//object->set_action(ACT_RUN);
 	object->set_script_capture			(true);
 }
 
@@ -64,6 +67,8 @@ void   CStateAnomalPseudoGigantShield<Object>::critical_finalize()
 {
 	inherited::critical_finalize		();
 	object->DeactivateShield			();
+	//object->set_action(ACT_RUN);
+	object->anim().clear_override_animation();
 	object->set_script_capture			(false);
 }
 
@@ -82,13 +87,17 @@ bool   CStateAnomalPseudoGigantShield<Object>::check_start_conditions()
 template <class Object>
 bool   CStateAnomalPseudoGigantShield<Object>::check_completion()
 {
-	Msg("CStateAnomalPseudoGigantShield: shield active, start time = [%f], duration = [%f], current time = [%f], left = [%f]",
+	/*Msg("CStateAnomalPseudoGigantShield: shield active, start time = [%d], duration = [%d], current time = [%d], left = [%d]",
 		m_last_shield_started,
 		object->m_shield_time,
 		current_time(),
-		m_last_shield_started + object->m_shield_time - current_time()
+		(int)(m_last_shield_started + object->m_shield_time) - (int)current_time()
+	);*/
+	Msg("CStateAnomalPseudoGigantShield: shield active time = [%d], duration = [%d]",
+		current_time() - m_last_shield_started,
+		object->m_shield_time
 	);
-	if ( current_time() >= m_last_shield_started + object->m_shield_time )
+	if ( current_time() - m_last_shield_started >= object->m_shield_time )
 		return							true;
 
 	CEntityAlive const* enemy		=	object->EnemyMan.get_enemy();
