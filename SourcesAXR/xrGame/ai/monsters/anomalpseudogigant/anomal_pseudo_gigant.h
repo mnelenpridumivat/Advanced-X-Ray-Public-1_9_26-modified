@@ -31,6 +31,8 @@ public:
 	virtual	void	shedule_Update(u32 dt);
 	virtual	void	Hit(SHit* pHDS);
 
+	virtual bool	check_start_conditions(ControlCom::EControlType type);
+
 	virtual	char* get_monster_class_name() { return "anomalpseudogigant"; }
 
 	void	set_actor_ignore(bool const actor_ignore) { m_actor_ignore = actor_ignore; }
@@ -59,8 +61,8 @@ public:
 	float	get_detection_success_level();
 
 	//IC		CAnomalGigPolterSpecialAbility* ability() { return (m_flame ? m_flame : m_tele); } // remake: tele on 66% hp, flame +tele on 33% hp
-	IC		bool use_tele_ability() { return true; }
-	IC		bool use_fire_ability() { return true; }
+	bool use_tele_ability();
+	bool use_fire_ability();
 
 	// burer shield
 
@@ -117,6 +119,10 @@ class CAnomalGigPolterSpecialAbility {
 protected:
 	CAnomalPseudoGigant* m_object;
 
+	float				m_max_hp_to_activate;
+
+	virtual u32 select_amount();
+
 public:
 	CAnomalGigPolterSpecialAbility(CAnomalPseudoGigant* gigant);
 	virtual			~CAnomalGigPolterSpecialAbility();
@@ -129,6 +135,8 @@ public:
 	virtual void	on_destroy() {}
 	//virtual void	on_die();
 	virtual void	on_hit(SHit* pHDS);
+
+	virtual bool	is_avalable();
 };
 
 
@@ -154,11 +162,10 @@ class CAnomalGigPolterFlame : public CAnomalGigPolterSpecialAbility {
 	u32						m_hit_delay;
 
 	u32						m_count;
+	u32						m_count_rage;
 	u32						m_delay;	// between 2 flames
 
 	u32						m_time_flame_started;
-
-	u32						m_max_hp_to_activate;
 
 	float					m_min_flame_dist;
 	float					m_max_flame_dist;
@@ -216,6 +223,12 @@ public:
 	virtual void	on_destroy();
 	//virtual void	on_die();
 
+	virtual bool	is_avalable();
+
+protected:
+
+	virtual u32 select_amount();
+
 private:
 	void	select_state(SFlameElement* elem, EFlameState state);
 	bool	get_valid_flame_position(const CObject* target_object, Fvector& res_pos);
@@ -236,6 +249,7 @@ class CAnomalGigPolterTele : public CAnomalGigPolterSpecialAbility {
 	float				m_pmt_object_min_mass;
 	float				m_pmt_object_max_mass;
 	u32					m_pmt_object_count;
+	u32					m_pmt_object_count_rage;
 	u32					m_pmt_time_to_hold;
 	u32					m_pmt_time_to_wait;
 	u32					m_pmt_time_to_wait_in_objects;
@@ -247,8 +261,6 @@ class CAnomalGigPolterTele : public CAnomalGigPolterSpecialAbility {
 	float				m_pmt_fly_velocity;
 
 	float				m_pmt_object_collision_damage;
-
-	u32					m_max_hp_to_activate;
 
 	ref_sound			m_sound_tele_hold;
 	ref_sound			m_sound_tele_throw;
@@ -271,10 +283,16 @@ public:
 	virtual void	update_schedule();
 	virtual void	update_frame();
 
+	virtual bool	is_avalable();
+
 private:
 	void	tele_find_objects(xr_vector<CObject*>& objects, const Fvector& pos);
 	bool	tele_raise_objects();
 	void	tele_fire_objects();
 
 	bool	trace_object(CObject* obj, const Fvector& target);
+
+protected:
+
+	virtual u32 select_amount();
 };

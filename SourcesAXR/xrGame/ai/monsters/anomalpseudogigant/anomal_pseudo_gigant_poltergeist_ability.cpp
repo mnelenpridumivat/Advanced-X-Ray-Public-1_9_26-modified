@@ -6,6 +6,11 @@
 #include "../../../level_debug.h"
 
 
+u32 CAnomalGigPolterSpecialAbility::select_amount()
+{
+	return 0;
+}
+
 CAnomalGigPolterSpecialAbility::CAnomalGigPolterSpecialAbility(CAnomalPseudoGigant* gigant)
 {
 	m_object					= gigant;
@@ -92,6 +97,11 @@ void CAnomalGigPolterSpecialAbility::on_hit(SHit* pHDS)
 	} 
 
 	m_last_hit_frame = Device.dwFrame;
+}
+
+bool CAnomalGigPolterSpecialAbility::is_avalable()
+{
+	return true;
 }
 
 

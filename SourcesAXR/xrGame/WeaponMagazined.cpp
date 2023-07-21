@@ -1982,7 +1982,7 @@ bool CWeaponMagazined::WeaponSoundExist(LPCSTR section, LPCSTR sound_name) const
 	bool sec_exist = process_if_exists_set(section, sound_name, &CInifile::r_string, str, true);
 	if (sec_exist)
 		return true;
-#ifdef DEBUG
+#ifdef FS_DEBUG
 	Msg("~ [WARNING] ------ Sound [%s] does not exist in [%s]", sound_name, section);
 #endif
 	return false;

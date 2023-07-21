@@ -14,6 +14,7 @@
 CAnomalPseudoGigant::CAnomalPseudoGigant()
 {
 	StateMan = xr_new<CStateManagerAnomalPseudoGigant>(this);
+	m_shield_active = false;
 }
 
 CAnomalPseudoGigant::~CAnomalPseudoGigant()
@@ -68,6 +69,16 @@ float	CAnomalPseudoGigant::get_detection_success_level()
 	return override_if_debug("detection_success_level", m_detection_success_level);
 }
 
+//IC		CAnomalGigPolterSpecialAbility* ability() { return (m_flame ? m_flame : m_tele); } // remake: tele on 66% hp, flame +tele on 33% hp
+
+bool CAnomalPseudoGigant::use_tele_ability() { 
+	return m_tele->is_avalable(); 
+}
+
+bool CAnomalPseudoGigant::use_fire_ability() { 
+	return m_flame->is_avalable(); 
+}
+
 void CAnomalPseudoGigant::ActivateShield()
 {
 	m_shield_active = true;
@@ -103,7 +114,7 @@ void CAnomalPseudoGigant::on_jump()
 
 void	CAnomalPseudoGigant::Hit(SHit* pHDS)
 {
-	inherited::Hit(pHDS);
+	//inherited::Hit(pHDS);
 	if (conditions().GetHealth() <= 0.0f) {
 		return;
 	}
@@ -129,4 +140,12 @@ void	CAnomalPseudoGigant::Hit(SHit* pHDS)
 	}
 
 	last_hit_frame = Device.dwFrame;
+}
+
+bool CAnomalPseudoGigant::check_start_conditions(ControlCom::EControlType type)
+{
+	if (m_shield_active) {
+		return false;
+	}
+	inherited::check_start_conditions(type);
 }

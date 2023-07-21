@@ -24,7 +24,7 @@ void CAnomalGigPolterFlame::load(LPCSTR section)
 
 	m_sound.create		(pSettings->r_string(section,"flame_sound"), st_Effect,SOUND_TYPE_WORLD);
 
-	m_max_hp_to_activate = pSettings->r_u32(section, "flame_max_hp_to_activate");
+	m_max_hp_to_activate = pSettings->r_float(section, "flame_max_hp_to_activate");
 		
 	m_particles_prepare	= pSettings->r_string(section,"flame_particles_prepare");
 	m_particles_fire	= pSettings->r_string(section,"flame_particles_fire");
@@ -38,6 +38,7 @@ void CAnomalGigPolterFlame::load(LPCSTR section)
 	m_hit_delay			= pSettings->r_u32(section,"flame_hit_delay");
 
 	m_count				= pSettings->r_u32(section,"flames_count");
+	m_count_rage		= pSettings->r_u32(section,"flames_count_rage");
 	m_delay				= pSettings->r_u32(section,"flames_delay");
 
 	m_min_flame_dist	= pSettings->r_float(section,"flame_min_dist");
@@ -105,6 +106,11 @@ void CAnomalGigPolterFlame::create_flame(const CObject *target_object)
 	select_state					(element, ePrepare);
 
 	m_time_flame_started			= time();
+}
+
+u32 CAnomalGigPolterFlame::select_amount()
+{
+	return m_object->m_shield_active ? m_count : m_count_rage;
 }
 
 void CAnomalGigPolterFlame::select_state(SFlameElement *elem, EFlameState state)
@@ -211,7 +217,7 @@ void CAnomalGigPolterFlame::update_schedule()
 	// check if we can create another flame
 	if ( m_object->g_Alive() && 
 		 enemy && 
-		 m_flames.size() < m_count &&
+		 m_flames.size() < select_amount() &&
 		 !m_object->get_actor_ignore() && 
 		 detected ) {
 		// check aura radius and accessibility
@@ -243,6 +249,16 @@ void CAnomalGigPolterFlame::on_destroy()
 	m_flames.clear();
 
 	if (m_scan_sound._feedback()) m_scan_sound.stop();
+}
+
+bool CAnomalGigPolterFlame::is_avalable()
+{
+#ifdef DEBUG
+	float ObjHP = m_object->GetfHealth();
+	return m_max_hp_to_activate > ObjHP;
+#else
+	return m_max_hp_to_activate > m_object->GetfHealth();
+#endif
 }
 
 /*void CAnomalGigPolterFlame::on_die()

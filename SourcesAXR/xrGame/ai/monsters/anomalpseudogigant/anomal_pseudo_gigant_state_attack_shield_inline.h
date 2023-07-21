@@ -14,7 +14,7 @@ void   CStateAnomalPseudoGigantShield<Object>::initialize()
 	inherited::initialize				();
 	object->set_script_capture			(false);
 	m_last_shield_started			=	current_time();
-	m_next_particle_allowed			=	0;
+	m_next_particle_allowed			=	-1;
 	m_started						=	false;
 
 	MotionID	motion;
@@ -48,7 +48,7 @@ void   CStateAnomalPseudoGigantShield<Object>::execute()
 
 	object->anim().set_override_animation	(m_started ? eAnimShieldContinue : eAnimShieldStart);
 
-	inherited::execute();
+	//inherited::execute();
 }
 
 template <class Object>
@@ -88,18 +88,18 @@ bool   CStateAnomalPseudoGigantShield<Object>::check_completion()
 		current_time(),
 		m_last_shield_started + object->m_shield_time - current_time()
 	);
-	if ( current_time() > m_last_shield_started + object->m_shield_time )
+	if ( current_time() >= m_last_shield_started + object->m_shield_time )
 		return							true;
 
 	CEntityAlive const* enemy		=	object->EnemyMan.get_enemy();
 	if ( !enemy )
 		return							true;
 
-	if ( enemy == Actor() )
+	/*if (enemy == Actor())
 	{
 		if ( actor_is_reloading_weapon () )
 			return						true;
-	}
+	}*/
 
 	if ( !object->EnemyMan.get_enemy() )
 		return							true;

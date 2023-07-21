@@ -17,12 +17,13 @@ void CAnomalGigPolterTele::load(LPCSTR section)
 {
 	inherited::load(section);
 
-	m_max_hp_to_activate = pSettings->r_u32(section, "Tele_max_hp_to_activate");
+	m_max_hp_to_activate = pSettings->r_float(section, "Tele_max_hp_to_activate");
 
 	m_pmt_radius						= READ_IF_EXISTS(pSettings,r_float,section,	"Tele_Find_Radius",					10.f);
 	m_pmt_object_min_mass				= READ_IF_EXISTS(pSettings,r_float,section,	"Tele_Object_Min_Mass",				40.f);
 	m_pmt_object_max_mass				= READ_IF_EXISTS(pSettings,r_float,section,	"Tele_Object_Max_Mass",				500.f);
 	m_pmt_object_count					= READ_IF_EXISTS(pSettings,r_u32,section,	"Tele_Object_Count",				10);
+	m_pmt_object_count_rage				 = READ_IF_EXISTS(pSettings, r_u32, section, "Tele_Object_Count_Rage", 10);
 	m_pmt_time_to_hold					= READ_IF_EXISTS(pSettings,r_u32,section,	"Tele_Hold_Time",					3000);
 	m_pmt_time_to_wait					= READ_IF_EXISTS(pSettings,r_u32,section,	"Tele_Wait_Time",					3000);
 	m_pmt_time_to_wait_in_objects		= READ_IF_EXISTS(pSettings,r_u32,section,	"Tele_Delay_Between_Objects_Time",	500);
@@ -44,6 +45,16 @@ void CAnomalGigPolterTele::load(LPCSTR section)
 void CAnomalGigPolterTele::update_frame()
 {
 	inherited::update_frame();
+}
+
+bool CAnomalGigPolterTele::is_avalable()
+{
+#ifdef DEBUG
+	float ObjHP = m_object->GetfHealth();
+	return m_max_hp_to_activate > ObjHP;
+#else
+	return m_max_hp_to_activate > m_object->GetfHealth();
+#endif
 }
 
 void CAnomalGigPolterTele::update_schedule()
@@ -73,7 +84,7 @@ void CAnomalGigPolterTele::update_schedule()
 		}
 
 		if (m_state == eStartRaiseObjects) {
-			if (m_object->CTelekinesis::get_objects_count() >= m_pmt_object_count) {
+			if (m_object->CTelekinesis::get_objects_count() >= select_amount()) {
 				m_state		= eRaisingObjects;
 				m_time		= time();
 			}
@@ -175,6 +186,11 @@ bool CAnomalGigPolterTele::trace_object(CObject *obj, const Fvector &target)
 	}
 
 	return false;
+}
+
+u32 CAnomalGigPolterTele::select_amount()
+{
+	return m_object->m_shield_active ? m_pmt_object_count : m_pmt_object_count_rage;
 }
 
 void CAnomalGigPolterTele::tele_find_objects(xr_vector<CObject*> &objects, const Fvector &pos)
