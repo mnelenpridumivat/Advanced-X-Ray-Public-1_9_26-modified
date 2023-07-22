@@ -143,7 +143,9 @@ Property* Manager::add_property( shared_str const& property_id )
 
 bool Manager::item_upgrades_exist( shared_str const& item_id )
 {
+#ifdef FS_DEBUG
 	VERIFY2( pSettings->section_exist( item_id ), make_string( "Inventory item [%s] does not exist!", item_id.c_str() ) );
+#endif
 	if( !pSettings->line_exist( item_id, "upgrades" ) || !pSettings->r_string( item_id, "upgrades" ) )
 	{
 		return false;

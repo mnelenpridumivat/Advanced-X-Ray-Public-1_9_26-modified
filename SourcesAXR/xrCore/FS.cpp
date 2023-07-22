@@ -391,7 +391,9 @@ IReader*	IReader::open_chunk_iterator	(u32& ID, IReader* _prev)
 
 void	IReader::r	(void *p,int cnt)
 {
+#ifdef FS_DEBUG
 	VERIFY			(Pos+cnt<=Size);
+#endif
 	CopyMemory		(p,pointer(),cnt);
 	advance			(cnt);
 #ifdef DEBUG

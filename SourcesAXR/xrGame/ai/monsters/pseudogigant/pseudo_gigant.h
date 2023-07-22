@@ -11,7 +11,7 @@ class CPseudoGigant : public CBaseMonster,
 	typedef		CControlledEntity<CPseudoGigant>	CControlled;
 
 private:
-	xr_vector<CObject*>		m_nearest;
+	xr_vector<CObject*>		m_nearest_pseudogig_kick;
 
 	// step_effector
 	struct {

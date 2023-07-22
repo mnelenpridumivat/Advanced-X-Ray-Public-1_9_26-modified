@@ -407,7 +407,9 @@ void CWeapon::Load		(LPCSTR section)
 	}
 	temp_f						= pSettings->r_float( section, "cam_max_angle" );
 	cam_recoil.MaxAngleVert		= _abs( deg2rad( temp_f ) );
+#ifdef FS_DEBUG
 	VERIFY( !fis_zero(cam_recoil.MaxAngleVert) );
+#endif
 	if ( fis_zero(cam_recoil.MaxAngleVert) )
 	{
 		cam_recoil.MaxAngleVert = EPS;
@@ -415,7 +417,9 @@ void CWeapon::Load		(LPCSTR section)
 	
 	temp_f						= pSettings->r_float( section, "cam_max_angle_horz" );
 	cam_recoil.MaxAngleHorz		= _abs( deg2rad( temp_f ) );
+#ifdef FS_DEBUG
 	VERIFY( !fis_zero(cam_recoil.MaxAngleHorz) );
+#endif
 	if ( fis_zero(cam_recoil.MaxAngleHorz) )
 	{
 		cam_recoil.MaxAngleHorz = EPS;

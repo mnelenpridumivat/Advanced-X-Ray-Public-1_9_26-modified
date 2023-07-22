@@ -1162,6 +1162,7 @@ void CCustomZone::SwitchZoneState(EZoneState new_state)
 
 bool CCustomZone::Enable()
 {
+	//Msg("Enabling [%s], is enabled = [%s], particles enabled = [%s]", Name(), IsEnabled() ? "true" : "false", m_pIdleParticles ? (m_pIdleParticles->IsPlaying() ? "true" : "false") : "false");
 	if (IsEnabled()) return false;
 
 	o_switch_2_fast();
@@ -1180,6 +1181,7 @@ bool CCustomZone::Enable()
 
 bool CCustomZone::Disable()
 {
+	//Msg("Disabling [%s], is enabled = [%s], particles enabled = [%s]", Name(), IsEnabled() ? "true" : "false", m_pIdleParticles ? (m_pIdleParticles->IsPlaying() ? "true" : "false") : "false");
 	if (!IsEnabled()) return false;
 	o_switch_2_slow();
 

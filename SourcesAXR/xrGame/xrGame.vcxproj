@@ -865,6 +865,14 @@
     <ClInclude Include="ai\Monsters\ai_monster_squad_manager_inline.h" />
     <ClInclude Include="ai\Monsters\ai_monster_utils.h" />
     <ClInclude Include="ai\Monsters\anim_triple.h" />
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant.h" />
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_burer_state_attack_shield.h" />
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_burer_state_attack_shield_inline.h" />
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack.h" />
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack_inline.h" />
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack_shield.h" />
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack_shield_inline.h" />
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_manager.h" />
     <ClInclude Include="ai\Monsters\anomaly_detector.h" />
     <ClInclude Include="ai\monsters\anti_aim_ability.h" />
     <ClInclude Include="ai\Monsters\BaseMonster\base_monster.h" />
@@ -1052,6 +1060,7 @@
     <ClInclude Include="ai\Monsters\Pseudodog\psy_dog_state_psy_attack_inline.h" />
     <ClInclude Include="ai\Monsters\PseudoGigant\pseudogigant_state_manager.h" />
     <ClInclude Include="ai\Monsters\PseudoGigant\pseudo_gigant.h" />
+    <ClInclude Include="ai\monsters\pseudogigant\pseudo_gigant_orig.h" />
     <ClInclude Include="ai\Monsters\PseudoGigant\pseudo_gigant_step_effector.h" />
     <ClInclude Include="ai\Monsters\psy_aura.h" />
     <ClInclude Include="ai\monsters\rats\ai_rat.h" />
@@ -3385,6 +3394,12 @@
     <ClCompile Include="ai\Monsters\ai_monster_squad_rest.cpp" />
     <ClCompile Include="ai\Monsters\ai_monster_utils.cpp" />
     <ClCompile Include="ai\Monsters\anim_triple.cpp" />
+    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant.cpp" />
+    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_ability.cpp" />
+    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_flame_thrower.cpp" />
+    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_telekinesis.cpp" />
+    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_script.cpp" />
+    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_manager.cpp" />
     <ClCompile Include="ai\Monsters\anomaly_detector.cpp" />
     <ClCompile Include="ai\monsters\anti_aim_ability.cpp" />
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster.cpp">
@@ -4390,6 +4405,7 @@
     <ClCompile Include="animation_utils.cpp" />
     <ClCompile Include="AnomalyDetector.cpp" />
     <ClCompile Include="AntigasFilter.cpp" />
+    <ClCompile Include="AntigasFilter_script.cpp" />
     <ClCompile Include="antirad.cpp" />
     <ClCompile Include="Artefact.cpp" />
     <ClCompile Include="artefact_activation.cpp" />
@@ -4455,6 +4471,7 @@
     </ClCompile>
     <ClCompile Include="BastArtifact.cpp" />
     <ClCompile Include="Battery.cpp" />
+    <ClCompile Include="Battery_script.cpp" />
     <ClCompile Include="best_scores_helper.cpp" />
     <ClCompile Include="best_scores_store.cpp" />
     <ClCompile Include="BlackDrops.cpp" />
@@ -4718,6 +4735,7 @@
     <ClCompile Include="dynamic_obstacles_avoider.cpp" />
     <ClCompile Include="eatable_item.cpp" />
     <ClCompile Include="eatable_item_object.cpp" />
+    <ClCompile Include="eatable_item_object_script.cpp" />
     <ClCompile Include="EffectorBobbing.cpp" />
     <ClCompile Include="EffectorFall.cpp" />
     <ClCompile Include="EffectorShot.cpp" />
@@ -6361,6 +6379,7 @@
     </ClCompile>
     <ClCompile Include="relation_registry_fights.cpp" />
     <ClCompile Include="RepairKit.cpp" />
+    <ClCompile Include="RepairKit_script.cpp" />
     <ClCompile Include="restricted_object.cpp" />
     <ClCompile Include="restricted_object_obstacle.cpp" />
     <ClCompile Include="rewarding_events_handlers.cpp" />
@@ -9637,6 +9656,9 @@
       <Project>{94a1c366-3d19-48e6-8170-4adc2e70df98}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

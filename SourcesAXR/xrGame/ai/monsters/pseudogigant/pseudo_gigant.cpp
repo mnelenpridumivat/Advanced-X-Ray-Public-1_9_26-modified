@@ -246,11 +246,11 @@ void CPseudoGigant::on_activate_control(ControlCom::EControlType type)
 void CPseudoGigant::on_threaten_execute()
 {
 	// נאחבנמסטעü מבתוךעû
-	m_nearest.clear_not_free		();
-	Level().ObjectSpace.GetNearest	(m_nearest,Position(), 15.f, NULL); 
-	for (u32 i=0;i<m_nearest.size();i++) 
+	m_nearest_pseudogig_kick.clear_not_free		();
+	Level().ObjectSpace.GetNearest	(m_nearest_pseudogig_kick,Position(), 15.f, NULL); 
+	for (u32 i=0;i<m_nearest_pseudogig_kick.size();i++) 
 	{
-		CPhysicsShellHolder  *obj = smart_cast<CPhysicsShellHolder *>(m_nearest[i]);
+		CPhysicsShellHolder  *obj = smart_cast<CPhysicsShellHolder *>(m_nearest_pseudogig_kick[i]);
 		if (!obj || !obj->m_pPhysicsShell || 
 			(obj->spawn_ini() && obj->spawn_ini()->section_exist("ph_heavy")) || 
 			(pSettings->line_exist(obj->cNameSect().c_str(), "ph_heavy") && pSettings->r_bool(obj->cNameSect().c_str(), "ph_heavy")) ||

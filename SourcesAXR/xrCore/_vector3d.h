@@ -186,7 +186,9 @@ public:
 
 	ICF	SelfRef normalize(void) 
 	{
+#ifdef FS_DEBUG
 		VERIFY(square_magnitude() > std::numeric_limits<T>::min());
+#endif
 		T mag=_sqrt(T(1)/(x*x + y*y + z*z));
 		x *= mag;
 		y *= mag;

@@ -52,6 +52,11 @@ namespace GameObject {
 		eInvBoxItemTake,
 		eWeaponNoAmmoAvailable,
 
+		// for anomal pseudogiant
+		eShieldOn,
+		eShieldOff,
+		eJump,
+
 		eDummy = u32(-1),
 	};
 };

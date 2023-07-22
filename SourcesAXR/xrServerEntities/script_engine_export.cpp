@@ -11,6 +11,10 @@
 #define SCRIPT_REGISTRATOR
 #include "script_export_space.h"
 #include "script_engine_export.h"
+#include <vector>
+#include <functional>
+
+//#define _DEBUG
 
 #pragma optimize("s",on)
 template <typename TList> struct Register
@@ -28,6 +32,8 @@ template <typename TList> struct Register
 		TList::Head::script_register(L);
 	}
 };
+
+#undef _DEBUG
 
 template <> struct Register<Loki::NullType>
 {
@@ -97,9 +103,13 @@ template <typename TFullList> struct DynamicCast
 	}
 };
 
+//#define EXPORT_CLASS(Class) Class::script_register(lua_State *L)
+
 void export_classes	(lua_State *L)
 {
+
 	Register<script_type_list>::_Register(L);
+
 //	DynamicCast<script_type_list>::Register(L);
 //	Register<Loki::TL::DerivedToFrontAll<script_type_list>::Result>::_Register(L);
 }

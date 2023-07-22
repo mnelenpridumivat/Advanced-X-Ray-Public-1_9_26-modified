@@ -130,7 +130,9 @@ float	CIKLimbsController::StaticObjectShift			( const SCalculateData cd[max_size
 		else
 			shift = shift_up;
 
+#ifdef FS_DEBUG
 		VERIFY( _valid( shift ) );
+#endif
 		_object_shift.set_taget( shift , _abs( current_shift - shift ) / static_shift_object_speed );
 		return shift;
 }
