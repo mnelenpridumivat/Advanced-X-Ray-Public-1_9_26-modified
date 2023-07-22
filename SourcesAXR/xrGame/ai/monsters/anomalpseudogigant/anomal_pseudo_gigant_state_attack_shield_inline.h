@@ -93,10 +93,12 @@ bool   CStateAnomalPseudoGigantShield<Object>::check_completion()
 		current_time(),
 		(int)(m_last_shield_started + object->m_shield_time) - (int)current_time()
 	);*/
+#ifdef DEBUG
 	Msg("CStateAnomalPseudoGigantShield: shield active time = [%d], duration = [%d]",
 		current_time() - m_last_shield_started,
 		object->m_shield_time
 	);
+#endif
 	if ( current_time() - m_last_shield_started >= object->m_shield_time )
 		return							true;
 

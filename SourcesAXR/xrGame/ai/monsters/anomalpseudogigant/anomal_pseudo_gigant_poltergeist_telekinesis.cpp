@@ -113,8 +113,10 @@ void CAnomalGigPolterTele::update_schedule()
 			m_time			= time();
 		}
 		break;
-	case eWait:	
+	case eWait:
+#ifdef DEBUG
 		Msg("Telekinesis wait: perv time = [%u], m_pmt_time_to_wait = [%u], current time = [%u]", m_time, m_pmt_time_to_wait, time());
+#endif
 		if (m_time + m_pmt_time_to_wait < time()) {
 			m_time_next	= 0;
 			m_state		= eStartRaiseObjects;
