@@ -312,7 +312,7 @@ void CPhraseDialog::AddPhrase	(CUIXml* pXml, XML_NODE* phrase_node, const shared
 	LPCSTR sText		= pXml->Read		(phrase_node, "text", 0, "");
 	int		gw			= pXml->ReadInt		(phrase_node, "goodwill", 0, -10000);
 	bool	switch_speaker	= !strcmp		(pXml->Read	(phrase_node, "switch", 0, "false"), "true");
-	LPCSTR sOverrideName = pXml->Read(phrase_node, "speaker", 0, "speaker");
+	LPCSTR sOverrideName = pXml->Read(phrase_node, "speaker", 0, "");
 	CPhrase* ph			= AddPhrase			(sText, phrase_id, prev_phrase_id, gw, switch_speaker, sOverrideName);
 	if(!ph)				return;
 	
