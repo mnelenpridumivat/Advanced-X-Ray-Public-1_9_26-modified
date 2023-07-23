@@ -30,6 +30,12 @@ public:
 	int						GetGoodwillLevel() const				{return m_iGoodwillLevel;}
 	void					SetGoodwillLevel(int v)					{m_iGoodwillLevel = v;}
 
+	void SetSwitchingSpeaker(bool Switching) {m_switching_speaker = Switching;}
+	bool GetSwitchingSpeaker() { return m_switching_speaker; }
+
+	void SetSpeakerNameOverride(LPCSTR name) { m_speaker_name_override = name; }
+	LPCSTR GetSpeakerNameOverride() { return m_speaker_name_override.c_str(); }
+
 protected:
 	//уникальный индекс в списке фраз диалога
 	shared_str		m_ID;
@@ -43,4 +49,7 @@ protected:
 	bool			m_b_finalizer;
 	//для вызова скриптовых функций
 	CDialogScriptHelper	m_ScriptHelper;
+
+	bool			m_switching_speaker;
+	xr_string		m_speaker_name_override;
 };

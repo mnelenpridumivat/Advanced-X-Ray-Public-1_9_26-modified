@@ -282,17 +282,20 @@ void CPhraseDialog::SetPriority	(int val)
 	data()->m_iPriority = val;
 }
 
-CPhrase* CPhraseDialog::AddPhrase	(LPCSTR text, const shared_str& phrase_id, const shared_str& prev_phrase_id, int goodwil_level)
+CPhrase* CPhraseDialog::AddPhrase	(LPCSTR text, const shared_str& phrase_id, const shared_str& prev_phrase_id, int goodwil_level, bool switching_speaker, LPCSTR OverrideName)
 {
 	CPhrase* phrase					= NULL;
 	CPhraseGraph::CVertex* _vertex	= data()->m_PhraseGraph.vertex(phrase_id);
 	if(!_vertex) 
 	{
-		phrase						= xr_new<CPhrase>(); VERIFY(phrase);
-		phrase->SetID				(phrase_id);
+		phrase							= xr_new<CPhrase>(); VERIFY(phrase);
+		phrase->SetID					(phrase_id);
 
-		phrase->SetText				(text);
-		phrase->SetGoodwillLevel	(goodwil_level);
+		phrase->SetText					(text);
+		phrase->SetGoodwillLevel		(goodwil_level);
+
+		phrase->SetSwitchingSpeaker		(switching_speaker);
+		phrase->SetSpeakerNameOverride	(OverrideName);
 
 		data()->m_PhraseGraph.add_vertex	(phrase, phrase_id);
 	}
@@ -308,7 +311,9 @@ void CPhraseDialog::AddPhrase	(CUIXml* pXml, XML_NODE* phrase_node, const shared
 
 	LPCSTR sText		= pXml->Read		(phrase_node, "text", 0, "");
 	int		gw			= pXml->ReadInt		(phrase_node, "goodwill", 0, -10000);
-	CPhrase* ph			= AddPhrase			(sText, phrase_id, prev_phrase_id, gw);
+	bool	switch_speaker	= !strcmp		(pXml->Read	(phrase_node, "switch", 0, "false"), "true");
+	LPCSTR sOverrideName = pXml->Read(phrase_node, "speaker", 0, "speaker");
+	CPhrase* ph			= AddPhrase			(sText, phrase_id, prev_phrase_id, gw, switch_speaker, sOverrideName);
 	if(!ph)				return;
 	
 	int fin					= pXml->ReadInt		(phrase_node, "is_final", 0, 0);

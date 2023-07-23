@@ -324,7 +324,7 @@ void CUITalkWnd::AddAnswer(const shared_str& text, LPCSTR SpeakerName)
 	PlaySnd			(text.c_str());
 
 	bool i_am = (0 == xr_strcmp(SpeakerName, m_pOurInvOwner->Name()));
-	UITalkDialogWnd->AddAnswer(SpeakerName,*CStringTable().translate(text),i_am);
+	UITalkDialogWnd->AddAnswer(*CStringTable().translate(SpeakerName),*CStringTable().translate(text),i_am);
 }
 
 void CUITalkWnd::SwitchToTrade()
