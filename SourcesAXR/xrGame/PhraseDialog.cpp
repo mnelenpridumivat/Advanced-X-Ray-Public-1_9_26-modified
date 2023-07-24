@@ -82,14 +82,18 @@ static bool PhraseGoodwillPred(const CPhrase* phrase1, const CPhrase* phrase2)
 	return phrase1->GoodwillLevel()>phrase2->GoodwillLevel();
 }
 
-bool CPhraseDialog::SayPhrase (DIALOG_SHARED_PTR& phrase_dialog, const shared_str& phrase_id)
+bool CPhraseDialog::SayPhrase (DIALOG_SHARED_PTR& phrase_dialog, const shared_str& phrase_id, bool& dont_switch_speaker)
 {
 	THROW(phrase_dialog->IsInited());
 
 	phrase_dialog->m_SaidPhraseID = phrase_id;
 
+	dont_switch_speaker = phrase_dialog->GetPhrase(phrase_id)->GetSwitchingSpeaker();
+
 	bool first_is_speaking = phrase_dialog->FirstIsSpeaking();
+	//if (phrase_dialog->GetPhrase(phrase_id)->GetSwitchingSpeaker()) {
 	phrase_dialog->m_bFirstIsSpeaking = !phrase_dialog->m_bFirstIsSpeaking;
+	//}
 
 	const CGameObject*	pSpeakerGO1 = smart_cast<const CGameObject*>(phrase_dialog->FirstSpeaker());	VERIFY(pSpeakerGO1);
 	const CGameObject*	pSpeakerGO2 = smart_cast<const CGameObject*>(phrase_dialog->SecondSpeaker());	VERIFY(pSpeakerGO2);
@@ -311,7 +315,7 @@ void CPhraseDialog::AddPhrase	(CUIXml* pXml, XML_NODE* phrase_node, const shared
 
 	LPCSTR sText		= pXml->Read		(phrase_node, "text", 0, "");
 	int		gw			= pXml->ReadInt		(phrase_node, "goodwill", 0, -10000);
-	bool	switch_speaker	= !strcmp		(pXml->Read	(phrase_node, "switch", 0, "false"), "true");
+	bool	switch_speaker	= !strcmp		(pXml->Read	(phrase_node, "switch", 0, "true"), "true");
 	LPCSTR sOverrideName = pXml->Read(phrase_node, "speaker", 0, "");
 	CPhrase* ph			= AddPhrase			(sText, phrase_id, prev_phrase_id, gw, switch_speaker, sOverrideName);
 	if(!ph)				return;

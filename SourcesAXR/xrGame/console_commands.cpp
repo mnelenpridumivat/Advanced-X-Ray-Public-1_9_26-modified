@@ -67,6 +67,8 @@
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "AdvancedXrayGameConstants.h"
 
+#include "game_news.h"
+
 // Hud Type
 xr_token			qhud_type_token[] = {
 	{ "hud_1",					1},
@@ -328,12 +330,21 @@ class CCC_Giveinfo : public IConsole_Command {
 public:
 	CCC_Giveinfo(LPCSTR N) : IConsole_Command(N) { };
 	virtual void Execute(LPCSTR info_id) {
+#ifdef DEBUG
 		if (!g_pGameLevel) return;
 
 		char	Name[128];	Name[0] = 0;
 		CActor* actor = smart_cast<CActor*>(Level().CurrentEntity());
 		if (actor)
 			actor->OnReceiveInfo(info_id);
+#else
+		GAME_NEWS_DATA				news_data;
+		news_data.m_type = (GAME_NEWS_DATA::eNewsType)0;
+		news_data.news_caption = Actor()->Name();
+		news_data.news_text = *CStringTable().translate("st_console_InfoManipulation");
+		news_data.texture_name = Actor()->IconName();
+		Actor()->AddGameNews(news_data);
+#endif
 
 	}
 };
@@ -342,12 +353,21 @@ class CCC_Disinfo : public IConsole_Command {
 public:
 	CCC_Disinfo(LPCSTR N) : IConsole_Command(N) { };
 	virtual void Execute(LPCSTR info_id) {
+#ifdef DEBUG
 		if (!g_pGameLevel) return;
 
 		char	Name[128];	Name[0] = 0;
 		CActor* actor = smart_cast<CActor*>(Level().CurrentEntity());
 		if (actor)
 			actor->OnDisableInfo(info_id);
+#else
+		GAME_NEWS_DATA				news_data;
+		news_data.m_type = (GAME_NEWS_DATA::eNewsType)0;
+		news_data.news_caption = Actor()->Name();
+		news_data.news_text = *CStringTable().translate("st_console_InfoManipulation");
+		news_data.texture_name = Actor()->IconName();
+		Actor()->AddGameNews(news_data);
+#endif
 
 	}
 };
@@ -356,6 +376,7 @@ class CCC_Spawn_to_inv : public IConsole_Command {
 public:
 	CCC_Spawn_to_inv(LPCSTR N) : IConsole_Command(N) { };
 	virtual void Execute(LPCSTR args) {
+#ifdef DEBUG
 		if (!g_pGameLevel)
 		{
 			Log("Error: No game level!");
@@ -386,6 +407,14 @@ public:
 
 		for (int i = 0; i < count; ++i)
 			Level().spawn_item(Name, Actor()->Position(), false, Actor()->ID());
+#else
+		GAME_NEWS_DATA				news_data;
+		news_data.m_type = (GAME_NEWS_DATA::eNewsType)0;
+		news_data.news_caption = Actor()->Name();
+		news_data.news_text = *CStringTable().translate("st_console_SpawnInInv");
+		news_data.texture_name = Actor()->IconName();
+		Actor()->AddGameNews(news_data);
+#endif
 	}
 
 	virtual void	Info(TInfo& I)
@@ -408,6 +437,7 @@ public:
 	CCC_GiveTask(LPCSTR N) : IConsole_Command(N) { };
 	virtual void Execute(LPCSTR task) 
 	{
+#ifdef DEBUG
 		if (!g_pGameLevel)
 		{
 			Log("Error: No game level!");
@@ -419,6 +449,14 @@ public:
 			Level().GameTaskManager().GiveTaskScript(task);
 		else
 			Msg("! [g_task] : Actor not found!");
+#else
+		GAME_NEWS_DATA				news_data;
+		news_data.m_type = (GAME_NEWS_DATA::eNewsType)0;
+		news_data.news_caption = Actor()->Name();
+		news_data.news_text = *CStringTable().translate("st_console_GiveTask");
+		news_data.texture_name = Actor()->IconName();
+		Actor()->AddGameNews(news_data);
+#endif
 	}
 };
 
@@ -428,6 +466,7 @@ public:
 	CCC_GiveMoney(LPCSTR N) : IConsole_Command(N) { };
 	virtual void Execute(LPCSTR money)
 	{
+#ifdef DEBUG
 		if (!g_pGameLevel)
 		{
 			Log("Error: No game level!");
@@ -442,6 +481,14 @@ public:
 		}
 		else
 			Msg("! [g_money] : Actor not found!");
+#else
+		GAME_NEWS_DATA				news_data;
+		news_data.m_type = (GAME_NEWS_DATA::eNewsType)0;
+		news_data.news_caption = Actor()->Name();
+		news_data.news_text = *CStringTable().translate("st_console_AddMoney");
+		news_data.texture_name = Actor()->IconName();
+		Actor()->AddGameNews(news_data);
+#endif
 	}
 };
 
@@ -627,13 +674,14 @@ public:
 
 	CCC_DemoRecord(LPCSTR N) : IConsole_Command(N) {};
 	virtual void Execute(LPCSTR args) {
-		#ifndef	DEBUG
+		//#ifndef	DEBUG
 		//if (GameID() != eGameIDSingle) 
 		//{
 		//	Msg("For this game type Demo Record is disabled.");
 		//	return;
 		//};
-		#endif
+		//#endif
+#ifdef DEBUG
 		Console->Hide	();
 
 		LPSTR			fn_; 
@@ -642,6 +690,14 @@ public:
 		FS.update_path	(fn, "$game_saves$", fn_);
 
 		g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoRecord>(fn));
+#else
+		GAME_NEWS_DATA				news_data;
+		news_data.m_type = (GAME_NEWS_DATA::eNewsType)0;
+		news_data.news_caption = Actor()->Name();
+		news_data.news_text = *CStringTable().translate("st_console_DemoRecord");
+		news_data.texture_name = Actor()->IconName();
+		Actor()->AddGameNews(news_data);
+#endif
 	}
 };
 
@@ -1453,6 +1509,7 @@ struct CCC_JumpToLevel : public IConsole_Command {
 
 	virtual void Execute(LPCSTR level)
 	{
+#ifdef DEBUG
 		if ( !ai().get_alife() )
 		{
 			Msg				("! ALife simulator is needed to perform specified command!");
@@ -1468,6 +1525,12 @@ struct CCC_JumpToLevel : public IConsole_Command {
 				return;
 			}
 		Msg							("! There is no level \"%s\" in the game graph!",level);
+#else
+		CInventoryOwner* pInventoryOwner = smart_cast<CInventoryOwner*>(Actor());
+		if (pInventoryOwner) {
+			pInventoryOwner->TransferInfo("easter_egg_JumpToLevel", true);
+		}
+#endif
 	}
 
 	virtual void	Save	(IWriter *F)	{};

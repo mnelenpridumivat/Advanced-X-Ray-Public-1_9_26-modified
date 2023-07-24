@@ -93,10 +93,21 @@ public		:
 	  const BOOL GetValue()const{ return value->test(mask); }
 	virtual void	Execute	(LPCSTR args)
 	{
-		if (EQ(args,"on"))			value->set(mask,TRUE);
-		else if (EQ(args,"off"))	value->set(mask,FALSE);
-		else if (EQ(args,"1"))		value->set(mask,TRUE);
-		else if (EQ(args,"0"))		value->set(mask,FALSE);
+#ifndef DEBUG
+		if (mask == AF_GODMODE || mask == AF_UNLIMITEDAMMO) {
+			GAME_NEWS_DATA				news_data;
+			news_data.m_type = (GAME_NEWS_DATA::eNewsType)0;
+			news_data.news_caption = Actor()->Name();
+			news_data.news_text = *CStringTable().translate("st_console_Cheating");
+			news_data.texture_name = Actor()->IconName();
+			Actor()->AddGameNews(news_data);
+			return;
+		}
+#endif
+		if (EQ(args, "on"))			value->set(mask, TRUE);
+		else if (EQ(args, "off"))	value->set(mask, FALSE);
+		else if (EQ(args, "1"))		value->set(mask, TRUE);
+		else if (EQ(args, "0"))		value->set(mask, FALSE);
 		else InvalidSyntax();
 	}
 	virtual void	Status	(TStatus& S)

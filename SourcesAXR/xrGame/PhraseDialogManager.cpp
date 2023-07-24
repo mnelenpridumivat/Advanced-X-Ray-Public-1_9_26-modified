@@ -74,7 +74,8 @@ void CPhraseDialogManager::SayPhrase(DIALOG_SHARED_PTR& phrase_dialog, const sha
 	THROW(m_ActiveDialogs.end() != it);
 
 	THROW(phrase_dialog->IsWeSpeaking		(this));
-	bool coninue_talking = CPhraseDialog::SayPhrase(phrase_dialog, phrase_id);
+	bool switch_speaker;
+	bool coninue_talking = CPhraseDialog::SayPhrase(phrase_dialog, phrase_id, switch_speaker);
 
 	if(!coninue_talking)
 		m_ActiveDialogs.erase(it);

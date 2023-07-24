@@ -73,7 +73,7 @@ public:
 	//если вернули false, то считаем, что диалог закончился
 	//(сделано статическим, так как мы должны передавать имеенно DIALOG_SHARED_PTR&,
 	//а не обычный указатель)
-	static bool				SayPhrase			(DIALOG_SHARED_PTR& phrase_dialog, const shared_str& phrase_id);
+	static bool				SayPhrase			(DIALOG_SHARED_PTR& phrase_dialog, const shared_str& phrase_id, bool& dont_switch_speaker);
 
 		LPCSTR				GetPhraseText		(const shared_str& phrase_id, bool current_speaking = true);
 		LPCSTR				GetLastPhraseText	() {return GetPhraseText(m_SaidPhraseID, false);}
