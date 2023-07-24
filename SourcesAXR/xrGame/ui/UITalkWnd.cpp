@@ -128,7 +128,7 @@ void CUITalkWnd::UpdateQuestions()
 		{
 			//если в списке допустимых фраз только одна фраза пустышка, то просто
 			//сказать (игрок сам не производит никаких действий)
-			if( !m_pCurrentDialog->PhraseList().empty() && m_pCurrentDialog->allIsDummy() ){
+			if( !m_pCurrentDialog->PhraseList().empty() &&( m_pCurrentDialog->allIsDummy()) ){
 				CPhrase* phrase = m_pCurrentDialog->PhraseList()[Random.randI(m_pCurrentDialog->PhraseList().size())];
 				SayPhrase(phrase->GetID());
 			};
@@ -323,8 +323,10 @@ void CUITalkWnd::AddAnswer(const shared_str& text, LPCSTR SpeakerName)
 	}
 	PlaySnd			(text.c_str());
 
+	Msg("Speaker is [%s]", SpeakerName);
+
 	bool i_am = (0 == xr_strcmp(SpeakerName, m_pOurInvOwner->Name()));
-	UITalkDialogWnd->AddAnswer(SpeakerName,*CStringTable().translate(text),i_am);
+	UITalkDialogWnd->AddAnswer(*CStringTable().translate(SpeakerName),*CStringTable().translate(text),i_am);
 }
 
 void CUITalkWnd::SwitchToTrade()
