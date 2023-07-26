@@ -4411,7 +4411,6 @@
     <ClCompile Include="animation_utils.cpp" />
     <ClCompile Include="AnomalyDetector.cpp" />
     <ClCompile Include="AntigasFilter.cpp" />
-    <ClCompile Include="AntigasFilter_script.cpp" />
     <ClCompile Include="antirad.cpp" />
     <ClCompile Include="Artefact.cpp" />
     <ClCompile Include="ArtefactContainer.cpp" />
@@ -4478,7 +4477,6 @@
     </ClCompile>
     <ClCompile Include="BastArtifact.cpp" />
     <ClCompile Include="Battery.cpp" />
-    <ClCompile Include="Battery_script.cpp" />
     <ClCompile Include="best_scores_helper.cpp" />
     <ClCompile Include="best_scores_store.cpp" />
     <ClCompile Include="BlackDrops.cpp" />
@@ -6391,7 +6389,6 @@
     </ClCompile>
     <ClCompile Include="relation_registry_fights.cpp" />
     <ClCompile Include="RepairKit.cpp" />
-    <ClCompile Include="RepairKit_script.cpp" />
     <ClCompile Include="restricted_object.cpp" />
     <ClCompile Include="restricted_object_obstacle.cpp" />
     <ClCompile Include="rewarding_events_handlers.cpp" />
