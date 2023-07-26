@@ -13,10 +13,12 @@
 #define				TALK_XML				"talk.xml"
 
 CUITalkDialogWnd::CUITalkDialogWnd()
-	:	m_pNameTextFont		(NULL)
+	:	m_pNameTextFont		(nullptr)
 {
 	m_ClickedQuestionID = "";
 	mechanic_mode = false;
+	m_pOurInvOwner = nullptr;
+	m_pOthersInvOwner = nullptr;
 }
 CUITalkDialogWnd::~CUITalkDialogWnd()
 {
@@ -109,6 +111,12 @@ void CUITalkDialogWnd::Show()
 	ResetAll();
 }
 
+void CUITalkDialogWnd::Show(bool status) // Hrust: made different func for disabling drawing without "ui_talk_hide" message
+{
+	inherited::Show(status);
+	inherited::Enable(status);
+}
+
 void CUITalkDialogWnd::Hide()
 {
 	InventoryUtilities::SendInfoToActor				("ui_talk_hide");
@@ -175,11 +183,16 @@ void CUITalkDialogWnd::AddQuestion(LPCSTR str, LPCSTR value, int number, bool b_
 	itm->Init						(value, str);
 
 	++number; // zero-based index
-	if (number <= 10)
+
+	string16 buff;
+	xr_sprintf(buff, "%d.", number);
+	itm->m_num_text->SetText(buff);
+	if (number > 9)
 	{
-		string16 buff;
-		sprintf(buff, "%d.", (number == 10) ? 0 : number);
-		itm->m_num_text->SetText(buff);
+		itm->m_text->SetTextX( itm->m_fOffset);
+	}
+	if (number < 10)
+	{
 		itm->m_text->SetAccelerator(DIK_ESCAPE + number, 0);
 	}
 	if (b_finalizer)
@@ -216,7 +229,12 @@ void CUITalkDialogWnd::AddAnswer(LPCSTR SpeakerName, LPCSTR str, bool bActor)
 	news_data.m_type				= GAME_NEWS_DATA::eTalk;
 	CUICharacterInfo& ci			= bActor ? UICharacterInfoLeft : UICharacterInfoRight; 
 
-	news_data.texture_name			= ci.IconName();
+	m_pOurInvOwner = smart_cast<CInventoryOwner*>(Actor());
+	m_pOthersInvOwner = Actor()->GetTalkPartner();
+
+	auto owner = bActor ? m_pOurInvOwner->IconName() : (m_pOthersInvOwner ? m_pOthersInvOwner->IconName() : m_pOurInvOwner->IconName());
+
+	news_data.texture_name			= (bActor) ? owner : ci.IconName();
 	news_data.receive_time			= Level().GetGameTime();
 
 	Actor()->game_news_registry->registry().objects().push_back(news_data);
@@ -299,6 +317,7 @@ CUIQuestionItem::CUIQuestionItem			(CUIXml* xml_doc, LPCSTR path)
 
 	strconcat						(sizeof(str),str,path,":content_text");
 	xml_init.Init3tButtonEx			(*xml_doc, str, 0, m_text);
+	m_fOffset						= xml_doc->ReadAttribFlt(str, 0, "offset", 0);
 
 	Register						(m_text);
 	m_text->SetWindowName			("text_button");

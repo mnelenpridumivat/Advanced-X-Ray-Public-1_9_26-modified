@@ -65,6 +65,7 @@ public:
 	float 					m_fSleepenessRestoreSpeed;
 	float 					m_fAlcoholismRestoreSpeed;
 	float 					m_fNarcotismRestoreSpeed;
+	float 					m_fPsyHealthRestoreSpeed;
 
 	float					m_fJumpSpeed;
 	float					m_fWalkAccel;
@@ -75,6 +76,7 @@ public:
 
 	shared_str				m_NightVisionSect;
 	shared_str				m_BonesProtectionSect;
+	shared_str				m_PlayerHudSection;
 
 	xr_vector<shared_str>	m_SuitableFilters;
 	xr_vector<shared_str>	m_SuitableRepairKits;
@@ -100,4 +102,10 @@ public:
 	HitImmunity::HitTypeSVec m_HitTypeProtection;
 protected:
 	virtual bool			install_upgrade_impl( LPCSTR section, bool test );
+
+	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
+
+add_to_type_list(CCustomOutfit)
+#undef script_type_list
+#define script_type_list save_type_list(CCustomOutfit)

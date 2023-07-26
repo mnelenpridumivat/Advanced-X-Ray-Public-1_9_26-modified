@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////
 //	Module 		: UIInventoryItemParams.cpp
 //	Created 	: 08.04.2021
-//  Modified 	: 19.04.2021
+//  Modified 	: 21.05.2021
 //	Author		: Dance Maniac (M.F.S. Team)
 //	Description : Inventory Item Window Class
 ////////////////////////////////////////////////////////////////////////////
@@ -16,6 +16,9 @@
 #include "UIXmlInit.h"
 #include "UIHelper.h"
 #include "../string_table.h"
+#include "../inventory_item.h"
+#include "clsid_game.h"
+#include "UIActorMenu.h"
 
 #include "../Torch.h"
 #include "../CustomDetector.h"
@@ -95,12 +98,13 @@ void CUIInventoryItem::InitFromXml(CUIXml& xml)
 	xml.SetLocalRoot(base_node);
 }
 
-void CUIInventoryItem::SetInfo(shared_str const& section)
+void CUIInventoryItem::SetInfo(CInventoryItem& pInvItem)
 {
 	DetachAll();
 	AttachChild(m_Prop_line);
-
 	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
+	shared_str section = pInvItem.object().cNameSect();
+	CCustomDetector* pDet = smart_cast<CCustomDetector*>(&pInvItem);
 	if (!actor)
 	{
 		return;
@@ -114,7 +118,7 @@ void CUIInventoryItem::SetInfo(shared_str const& section)
 
 	if (pSettings->line_exist(section.c_str(), "af_radius"))
 	{
-		val = pSettings->r_float(section, "af_radius");
+		val = pDet->GetAfDetectRadius();
 		if (!fis_zero(val))
 		{
 			m_af_radius->SetValue(val);
@@ -129,7 +133,7 @@ void CUIInventoryItem::SetInfo(shared_str const& section)
 
 	if (pSettings->line_exist(section.c_str(), "af_vis_radius"))
 	{
-		val = pSettings->r_float(section, "af_vis_radius");
+		val = pDet->GetAfVisRadius();
 		if (!fis_zero(val))
 		{
 			m_af_vis_radius->SetValue(val);
@@ -185,8 +189,7 @@ CUIInventoryItemInfo::CUIInventoryItemInfo()
 	m_show_sign = false;
 
 	m_unit_str._set("");
-	m_texture_minus._set("");
-	m_texture_plus._set("");
+	m_texture._set("");
 }
 
 CUIInventoryItemInfo::~CUIInventoryItemInfo()
@@ -199,22 +202,40 @@ void CUIInventoryItemInfo::Init(CUIXml& xml, LPCSTR section)
 	xml.SetLocalRoot(xml.NavigateToNode(section));
 
 	m_caption = UIHelper::CreateStatic(xml, "caption", this);
-	m_value = UIHelper::CreateTextWnd(xml, "value", this);
+	m_value	= UIHelper::CreateTextWnd(xml, "value", this);
 	m_magnitude = xml.ReadAttribFlt("value", 0, "magnitude", 1.0f);
 	m_show_sign = (xml.ReadAttribInt("value", 0, "show_sign", 1) == 1);
 
 	LPCSTR unit_str = xml.ReadAttrib("value", 0, "unit_str", "");
 	m_unit_str._set(CStringTable().translate(unit_str));
 
-	LPCSTR texture_minus = xml.Read("texture_minus", 0, "");
-	if (texture_minus && xr_strlen(texture_minus))
+	if (xml.NavigateToNode("caption:texture", 0))
 	{
-		m_texture_minus._set(texture_minus);
-
-		LPCSTR texture_plus = xml.Read("caption:texture", 0, "");
-		m_texture_plus._set(texture_plus);
-		VERIFY(m_texture_plus.size());
+		use_color = xml.ReadAttribInt("caption:texture", 0, "use_color", 0);
+		clr_invert = xml.ReadAttribInt("caption:texture", 0, "clr_invert", 0);
+		clr_dynamic = xml.ReadAttribInt("caption:texture", 0, "clr_dynamic", 0);
+		LPCSTR texture = xml.Read("caption:texture", 0, "");
+		m_texture._set(texture);
 	}
+
+	Fvector4 red = GameConstants::GetRedColor();
+	Fvector4 green = GameConstants::GetGreenColor();
+	Fvector4 neutral = GameConstants::GetNeutralColor();
+
+	if (xml.NavigateToNode("caption:min_color", 0))
+		m_negative_color = CUIXmlInit::GetColor(xml, "caption:min_color", 0, color_rgba(red.x, red.y, red.z, red.w));
+	else
+		m_negative_color = color_rgba(red.x, red.y, red.z, red.w);
+
+	if (xml.NavigateToNode("caption:middle_color", 0))
+		m_neutral_color = CUIXmlInit::GetColor(xml, "caption:middle_color", 0, color_rgba(neutral.x, neutral.y, neutral.z, neutral.w));
+	else
+		m_neutral_color = color_rgba(neutral.x, neutral.y, neutral.z, neutral.w);
+
+	if (xml.NavigateToNode("caption:max_color", 0))
+		m_positive_color = CUIXmlInit::GetColor(xml, "caption:max_color", 0, color_rgba(green.x, green.y, green.z, green.w));
+	else
+		m_positive_color = color_rgba(green.x, green.y, green.z, green.w);
 }
 
 void CUIInventoryItemInfo::SetCaption(LPCSTR name)
@@ -239,39 +260,64 @@ void CUIInventoryItemInfo::SetValue(float value, int vle)
 
 	m_value->SetText(str);
 
-	bool positive = (value >= 0.0f);
-	Fvector4 red = GameConstants::GetRedColor();
-	Fvector4 green = GameConstants::GetGreenColor();
-	Fvector4 neutral = GameConstants::GetNeutralColor();
-	u32 red_color = color_rgba(red.x, red.y, red.z, red.w);
-	u32 green_color = color_rgba(green.x, green.y, green.z, green.w);
-	u32 neutral_color = color_rgba(neutral.x, neutral.y, neutral.z, neutral.w);
-	u32 color = (positive) ? green_color : red_color;
+	bool is_positive = (value >= 0.0f);
+	Fcolor current{}, negative{}, middle{}, positive{};
+
+	value /= m_magnitude;
+	clamp(value, 0.01f, 1.0f);
 
 	if (GameConstants::GetColorizeValues())
 	{
 		if (vle == 0)
 		{
-			m_value->SetTextColor(neutral_color);
+			m_value->SetTextColor(m_neutral_color);
 		}
 		else if (vle == 1)
 		{
-			positive ? m_value->SetTextColor(red_color) : m_value->SetTextColor(green_color);
+			if (is_positive)
+				current.lerp(negative.set(m_negative_color), middle.set(m_neutral_color), positive.set(m_positive_color), value);
+			else
+				current.lerp(negative.set(m_positive_color), middle.set(m_neutral_color), positive.set(m_negative_color), value);
 		}
 		else if (vle == 2)
 		{
-			positive ? m_value->SetTextColor(green_color) : m_value->SetTextColor(red_color);
+			if (is_positive)
+				current.lerp(negative.set(m_positive_color), middle.set(m_neutral_color), positive.set(m_negative_color), 0.25f);
+			else
+				current.lerp(negative.set(m_negative_color), middle.set(m_neutral_color), positive.set(m_positive_color), 0.25f);
 		}
+
+		if (vle == 1 || vle == 2)
+			m_value->SetTextColor(current.get());
 	}
 	else
 		m_value->SetTextColor(color_rgba(170, 170, 170, 255));
 
-	if (m_texture_minus.size())
+	m_caption->InitTexture(m_texture.c_str());
+
+	if (GameConstants::GetColorizeValues() || use_color)
 	{
-		if (vle > 2)
-			positive ? m_caption->InitTexture(m_texture_plus.c_str()) : m_caption->InitTexture(m_texture_minus.c_str());
+		if (clr_dynamic)
+		{
+			if (vle >= 2 || !clr_invert)
+			{
+				if (is_positive)
+					current.lerp(negative.set(m_negative_color), positive.set(m_positive_color), value);
+				else
+					current.lerp(negative.set(m_positive_color), positive.set(m_negative_color), value);
+			}
+			else
+			{
+				if (is_positive)
+					current.lerp(negative.set(m_positive_color), positive.set(m_negative_color), value);
+				else
+					current.lerp(negative.set(m_negative_color), positive.set(m_positive_color), value);
+			}
+
+			m_caption->SetTextureColor(current.get());
+		}
 		else
-			positive ? m_caption->InitTexture(m_texture_minus.c_str()) : m_caption->InitTexture(m_texture_plus.c_str());
+			m_caption->SetTextureColor(m_neutral_color);
 	}
 }
 

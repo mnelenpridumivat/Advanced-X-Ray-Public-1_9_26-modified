@@ -19,6 +19,7 @@
 #include "alife_registry_container.h"
 #include "xrServer.h"
 #include "level.h"
+#include "Actor.h"
 
 using namespace luabind;
 
@@ -319,6 +320,44 @@ bool dont_has_info								(const CALifeSimulator *self, const ALife::_OBJECT_ID 
 //	THROW								(self);
 //}
 
+void set_start_position(Fvector& pos)
+{
+	g_start_position = pos;
+}
+
+void set_start_game_vertex_id(int id)
+{
+	g_start_game_vertex_id = id;
+}
+
+//Alundaio: teleport object
+void teleport_object(CALifeSimulator* alife, ALife::_OBJECT_ID id, GameGraph::_GRAPH_ID game_vertex_id, u32 level_vertex_id, const Fvector& position)
+{
+    alife->teleport_object(id, game_vertex_id, level_vertex_id, position);
+}
+//-Alundaio
+
+void iterate_objects(const CALifeSimulator* self, luabind::functor<bool> functor)
+{
+    THROW(self);
+    for (const auto& it : self->objects().objects())
+    {
+        CSE_ALifeDynamicObject* obj = it.second;
+        if (functor(obj))
+            return;
+    }
+}
+
+void IterateInfo(const CALifeSimulator* alife, const ALife::_OBJECT_ID& id, const luabind::functor<void>& functor)
+{
+    const auto known_info = registry(alife, id);
+    if (!known_info)
+        return;
+
+    for (shared_str& it : *known_info)
+        functor(id, it);
+}
+
 #pragma optimize("s",on)
 void CALifeSimulator::script_register			(lua_State *L)
 {
@@ -349,12 +388,19 @@ void CALifeSimulator::script_register			(lua_State *L)
 			.def("release",					&CALifeSimulator__release)
 			.def("spawn_id",				&CALifeSimulator__spawn_id)
 			.def("actor",					&get_actor)
+			//Alundaio: extend alife simulator exports
+            .def("teleport_object", 		&teleport_object)
+            //Alundaio: END
+            .def("iterate_objects", 		&iterate_objects)
+			.def("iterate_info", 			&IterateInfo)
 			.def("has_info",				&has_info)
 			.def("dont_has_info",			&dont_has_info)
 			.def("switch_distance",			&CALifeSimulator::switch_distance)
-			.def("switch_distance",			&CALifeSimulator::set_switch_distance)
+			.def("switch_distance",			&CALifeSimulator::set_switch_distance),
 
-		,def("alife",						&alife)
+			def("alife",					&alife),
+			def("set_start_position",		&set_start_position),
+			def("set_start_game_vertex_id", &set_start_game_vertex_id)
 	];
 
 	{

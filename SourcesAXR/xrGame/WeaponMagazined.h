@@ -183,10 +183,7 @@ protected:
 	virtual void	PlayAnimIdleMoving	();
 	virtual void	PlayAnimFireMode	();
 
-private:
-	string64 guns_aim_anm;
 protected:
-	const	char*	GetAnimAimName		();
 
 	virtual void    SetAnimFlag(u32 flag, LPCSTR anim_name);
 
@@ -210,7 +207,7 @@ protected:
 
 	Flags32 psWpnAnimsFlag;
 
-	bool WeaponSoundExist(LPCSTR section, LPCSTR sound_name) const;
+	bool WeaponSoundExist(LPCSTR section, LPCSTR sound_name, bool log = false) const;
 
 	virtual	int		ShotsFired			() { return m_iShotNum; }
 	virtual float	GetWeaponDeterioration	();

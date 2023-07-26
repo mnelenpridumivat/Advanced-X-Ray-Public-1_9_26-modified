@@ -69,6 +69,7 @@ public:
 			void		TextureOff					()							{ m_bTextureEnable = false; }
 
 
+
 	// own
 	virtual void		SetHighlightColor			(const u32 uColor)	{ m_HighlightColor = uColor; }
 			void		EnableTextHighlighting		(bool value)		{ m_bEnableTextHighlighting = value; }
@@ -143,6 +144,8 @@ public:
 	void	SetConstHeading					(bool b)				{m_bConstHeading = b;};
 	bool	GetConstHeading					()						{return m_bConstHeading;}
 
+	void	SetHint							(LPCSTR hint_text); //MNP
+
 	// will be need by CUI3tButton
 	// Don't change order!!!!!
 	typedef enum {
@@ -154,7 +157,9 @@ public:
 
 	void SetTextColor(u32 color, E4States state);
 
-	CUILines*				m_pLines;
+	CUILines*		m_pLines;
+
+	shared_str		m_stat_hint_text;
 protected:
 	bool			m_bEnableTextHighlighting;
 		// ���� ���������
@@ -180,8 +185,8 @@ protected:
 	Fvector2		m_TextureOffset;
 
 	Frect	m_ClipRect;
-
 public:
+
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 

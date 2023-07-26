@@ -31,12 +31,18 @@ protected:
 
 	CUIDragDropListEx*		m_pParentList;
 	CUIProgressBar*			m_pConditionState;
+	CUIProgressBar*			m_pPortionsState;
+	CUIProgressBar*			m_pChargeState;
 	Ivector2				m_grid_size;
 	ICustomDrawCellItem*	m_custom_draw;
 	int						m_accelerator;
-	CUIStatic*				m_text; 
+	CUIStatic*				m_text;
+	CUIStatic*				m_custom_text;
+	Fvector2				m_custom_text_pos;
 	CUIStatic*				m_upgrade;
 	Fvector2				m_upgrade_pos;
+	CUIStatic*				m_qmark;
+	Fvector2				m_qmark_pos;
 
 	virtual void			UpdateItemText			();
 			void			init					();
@@ -64,7 +70,11 @@ public:
 
 	CUIDragDropListEx*		OwnerList				()						{return m_pParentList;}
 				void		SetOwnerList			(CUIDragDropListEx* p);
+				void		UpdateIndicators();
+				void		UpdateCellItemProgressBars();
 				void		UpdateConditionProgressBar();
+				void		UpdatePortionsProgressBar();
+				void		UpdateChargeLevelProgressBar();
 				void		SetCustomDraw			(ICustomDrawCellItem* c);
 				void		Mark					(bool status);
 	CUIStatic&				get_ui_text				() const { return *m_text; }
@@ -81,7 +91,9 @@ public:
 				bool		m_selected;
 				bool		m_select_armament;
 				bool		m_cur_mark;
+				bool		m_with_custom_text;
 				bool		m_has_upgrade;
+				bool		m_is_quest;
 };
 
 class CUIDragItem: public CUIWindow, public pureRender, public pureFrame

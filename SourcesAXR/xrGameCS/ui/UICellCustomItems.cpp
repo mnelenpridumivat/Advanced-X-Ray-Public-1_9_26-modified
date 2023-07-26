@@ -10,9 +10,10 @@
 #include "../CustomDetector.h"
 #include "../Torch.h"
 #include "../AnomalyDetector.h"
+#include "../AdvancedXrayGameConstants.h"
 
-#define INV_GRID_WIDTHF			50.0f
-#define INV_GRID_HEIGHTF		50.0f
+#define INV_GRID_WIDTHF(HQ_ICONS) ((HQ_ICONS) ? (100.0f) : (50.0f))
+#define INV_GRID_HEIGHTF(HQ_ICONS) ((HQ_ICONS) ? (100.0f) : (50.0f))
 
 namespace detail 
 {
@@ -37,11 +38,11 @@ CUIInventoryCellItem::CUIInventoryCellItem(CInventoryItem* itm)
 
 	m_grid_size.set									(itm->GetInvGridRect().rb);
 	Frect rect; 
-	rect.lt.set										(	INV_GRID_WIDTHF*itm->GetInvGridRect().x1, 
-														INV_GRID_HEIGHTF*itm->GetInvGridRect().y1 );
+	rect.lt.set										(	INV_GRID_WIDTHF(GameConstants::GetUseHQ_Icons()) * itm->GetInvGridRect().x1,
+														INV_GRID_HEIGHTF(GameConstants::GetUseHQ_Icons()) * itm->GetInvGridRect().y1 );
 
-	rect.rb.set										(	rect.lt.x+INV_GRID_WIDTHF*m_grid_size.x, 
-														rect.lt.y+INV_GRID_HEIGHTF*m_grid_size.y);
+	rect.rb.set										(	rect.lt.x+INV_GRID_WIDTHF(GameConstants::GetUseHQ_Icons()) * m_grid_size.x,
+														rect.lt.y+INV_GRID_HEIGHTF(GameConstants::GetUseHQ_Icons()) * m_grid_size.y);
 
 	inherited::SetOriginalRect						(rect);
 	inherited::SetStretchTexture					(true);
@@ -285,6 +286,34 @@ CUIStatic* CUIWeaponCellItem::GetIcon(eAddonType t)
 	return m_addons[t];
 }
 
+void CUIWeaponCellItem::RefreshOffset()
+{
+	if (object()->SilencerAttachable())
+	{
+		m_addon_offset[eSilencer].set(object()->GetSilencerX(), object()->GetSilencerY());
+	}
+
+	if (object()->ScopeAttachable())
+	{
+		m_addon_offset[eScope].set(object()->GetScopeX(), object()->GetScopeY());
+	}
+
+	if (object()->GrenadeLauncherAttachable())
+	{
+		m_addon_offset[eLauncher].set(object()->GetGrenadeLauncherX(), object()->GetGrenadeLauncherY());
+	}
+}
+
+void CUIWeaponCellItem::Draw()
+{
+	inherited::Draw();
+
+	if (m_upgrade && m_upgrade->IsShown())
+	{
+		m_upgrade->Draw();
+	}
+}
+
 void CUIWeaponCellItem::Update()
 {
 	bool b						= Heading();
@@ -299,6 +328,7 @@ void CUIWeaponCellItem::Update()
 			if (!GetIcon(eSilencer) || bForceReInitAddons)
 			{
 				CreateIcon	(eSilencer);
+				RefreshOffset();
 				InitAddon	(GetIcon(eSilencer), *object()->GetSilencerName(), m_addon_offset[eSilencer], Heading());
 			}
 		}
@@ -315,6 +345,7 @@ void CUIWeaponCellItem::Update()
 			if (!GetIcon(eScope) || bForceReInitAddons)
 			{
 				CreateIcon	(eScope);
+				RefreshOffset();
 				InitAddon	(GetIcon(eScope), *object()->GetScopeName(), m_addon_offset[eScope], Heading());
 			}
 		}
@@ -331,6 +362,7 @@ void CUIWeaponCellItem::Update()
 			if (!GetIcon(eLauncher) || bForceReInitAddons)
 			{
 				CreateIcon	(eLauncher);
+				RefreshOffset();
 				InitAddon	(GetIcon(eLauncher), *object()->GetGrenadeLauncherName(), m_addon_offset[eLauncher], Heading());
 			}
 		}
@@ -371,7 +403,7 @@ void CUIWeaponCellItem::OnAfterChild(CUIDragDropListEx* parent_list)
 		InitAddon	(GetIcon(eLauncher), *object()->GetGrenadeLauncherName(),m_addon_offset[eLauncher], parent_list->GetVerticalPlacement());
 }
 
-void CUIWeaponCellItem::InitAddon(CUIStatic* s, LPCSTR section, Fvector2 addon_offset, bool b_rotate)
+void CUIWeaponCellItem::InitAddon(CUIStatic* s, LPCSTR section, Fvector2 addon_offset, bool b_rotate, bool is_dragging, bool is_scope, bool is_silencer, bool is_gl)
 {
 	
 		Frect					tex_rect;
@@ -379,35 +411,76 @@ void CUIWeaponCellItem::InitAddon(CUIStatic* s, LPCSTR section, Fvector2 addon_o
 
 		if(Heading())
 		{
-			base_scale.x			= GetHeight()/(INV_GRID_WIDTHF*m_grid_size.x);
-			base_scale.y			= GetWidth()/(INV_GRID_HEIGHTF*m_grid_size.y);
-		}else
+			base_scale.x			= GetHeight()/(INV_GRID_WIDTHF(GameConstants::GetUseHQ_Icons()) * m_grid_size.x);
+			base_scale.y			= GetWidth()/(INV_GRID_HEIGHTF(GameConstants::GetUseHQ_Icons()) * m_grid_size.y);
+		}
+		else
 		{
-			base_scale.x			= GetWidth()/(INV_GRID_WIDTHF*m_grid_size.x);
-			base_scale.y			= GetHeight()/(INV_GRID_HEIGHTF*m_grid_size.y);
+			base_scale.x			= GetWidth()/(INV_GRID_WIDTHF(GameConstants::GetUseHQ_Icons()) * m_grid_size.x);
+			base_scale.y			= GetHeight()/(INV_GRID_HEIGHTF(GameConstants::GetUseHQ_Icons()) * m_grid_size.y);
 		}
 		Fvector2				cell_size;
-		cell_size.x				= pSettings->r_u32(section, "inv_grid_width")*INV_GRID_WIDTHF;
-		cell_size.y				= pSettings->r_u32(section, "inv_grid_height")*INV_GRID_HEIGHTF;
+		cell_size.x				= pSettings->r_u32(section, "inv_grid_width") * INV_GRID_WIDTHF(GameConstants::GetUseHQ_Icons());
+		cell_size.y				= pSettings->r_u32(section, "inv_grid_height") * INV_GRID_HEIGHTF(GameConstants::GetUseHQ_Icons());
 
-		tex_rect.x1				= pSettings->r_u32(section, "inv_grid_x")*INV_GRID_WIDTHF;
-		tex_rect.y1				= pSettings->r_u32(section, "inv_grid_y")*INV_GRID_HEIGHTF;
+		tex_rect.x1				= pSettings->r_u32(section, "inv_grid_x") * INV_GRID_WIDTHF(GameConstants::GetUseHQ_Icons());
+		tex_rect.y1				= pSettings->r_u32(section, "inv_grid_y") * INV_GRID_HEIGHTF(GameConstants::GetUseHQ_Icons());
 
 		tex_rect.rb.add			(tex_rect.lt,cell_size);
 
 		cell_size.mul			(base_scale);
 
-		if(b_rotate)
+		if (is_dragging && Heading() && UI()->is_16_9_mode())
 		{
-			s->SetWndSize		(Fvector2().set(cell_size.y, cell_size.x) );
-			Fvector2 new_offset;
-			new_offset.x		= addon_offset.y*base_scale.x;
-			new_offset.y		= GetHeight() - addon_offset.x*base_scale.x - cell_size.x;
-			addon_offset		= new_offset;
-		}else
+			if (is_scope)
+			{
+				addon_offset.y *= UI()->get_current_kx();
+			}
+			if (is_silencer)
+			{
+				addon_offset.y *= UI()->get_current_kx() * 1.8f;
+			}
+			if (is_gl)
+			{
+				addon_offset.y *= UI()->get_current_kx() * 1.5f;
+			}
+			addon_offset.x *= UI()->get_current_kx() / 0.9f;
+			cell_size.x /= UI()->get_current_kx() * 1.6f;
+			cell_size.y *= UI()->get_current_kx() * 1.6f;
+		}
+		if (!is_dragging)
 		{
-			s->SetWndSize		(cell_size);
-			addon_offset.mul	(base_scale);
+			if (b_rotate)
+			{
+				s->SetWndSize(Fvector2().set(cell_size.y, cell_size.x));
+				Fvector2 new_offset;
+				new_offset.x = addon_offset.y * base_scale.x;
+				new_offset.y = GetHeight() - addon_offset.x * base_scale.x - cell_size.x;
+				addon_offset = new_offset;
+				addon_offset.x *= UI()->get_current_kx();
+			}
+			else
+			{
+				s->SetWndSize(cell_size);
+				addon_offset.mul(base_scale);
+			}
+		}
+		else
+		{
+			if (b_rotate)
+			{
+				s->SetWndSize(Fvector2().set(cell_size.y, cell_size.x));
+				Fvector2 new_offset;
+				new_offset.x = addon_offset.y * base_scale.x;
+				new_offset.y = GetHeight() - addon_offset.x * base_scale.x - cell_size.x;
+				addon_offset = new_offset;
+				addon_offset.x *= UI()->get_current_kx();
+			}
+			else
+			{
+				s->SetWndSize(cell_size);
+				addon_offset.mul(base_scale);
+			}
 		}
 
 		s->SetWndPos			(addon_offset);
@@ -434,7 +507,7 @@ CUIDragItem* CUIWeaponCellItem::CreateDragItem()
 	{
 		s				= xr_new<CUIStatic>(); s->SetAutoDelete(true);
 		s->SetShader	(InventoryUtilities::GetEquipmentIconsShader());
-		InitAddon		(s, *object()->GetSilencerName(), m_addon_offset[eSilencer], false);
+		InitAddon		(s, *object()->GetSilencerName(), m_addon_offset[eSilencer], false, true, is_scope(), is_silencer(), is_launcher());
 		s->SetColor		(i->wnd()->GetColor());
 		i->wnd			()->AttachChild	(s);
 	}
@@ -443,7 +516,7 @@ CUIDragItem* CUIWeaponCellItem::CreateDragItem()
 	{
 		s				= xr_new<CUIStatic>(); s->SetAutoDelete(true);
 		s->SetShader	(InventoryUtilities::GetEquipmentIconsShader());
-		InitAddon		(s,	*object()->GetScopeName(),		m_addon_offset[eScope], false);
+		InitAddon		(s,	*object()->GetScopeName(),		m_addon_offset[eScope], false, true, is_scope(), is_silencer(), is_launcher());
 		s->SetColor		(i->wnd()->GetColor());
 		i->wnd			()->AttachChild	(s);
 	}
@@ -452,7 +525,7 @@ CUIDragItem* CUIWeaponCellItem::CreateDragItem()
 	{
 		s				= xr_new<CUIStatic>(); s->SetAutoDelete(true);
 		s->SetShader	(InventoryUtilities::GetEquipmentIconsShader());
-		InitAddon		(s, *object()->GetGrenadeLauncherName(),m_addon_offset[eLauncher], false);
+		InitAddon		(s, *object()->GetGrenadeLauncherName(),m_addon_offset[eLauncher], false, true, is_scope(), is_silencer(), is_launcher());
 		s->SetColor		(i->wnd()->GetColor());
 		i->wnd			()->AttachChild	(s);
 	}

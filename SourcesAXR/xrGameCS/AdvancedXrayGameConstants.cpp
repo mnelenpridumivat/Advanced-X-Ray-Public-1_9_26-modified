@@ -30,16 +30,20 @@ bool	m_bArtefactsRanks = false;
 bool	m_bUseFilters = false;
 bool	m_bHideHudOnMaster = false;
 bool	m_bActorSkills = false;
+bool	m_bSleepInfluenceOnPsyHealth = false;
+bool	m_bUseHQ_Icons = false;
 int		m_iArtefactsCount = 5;
 int		m_i_CMD_Count = 1;
 int		m_B_CMD_Count = 1;
+float	m_fDistantSndDistance = 150.f;
 Fvector4 m_FV4RedColor = Fvector4().set(255, 0, 0, 255);
 Fvector4 m_FV4GreenColor = Fvector4().set(0, 255, 255, 255);
 Fvector4 m_FV4NeutralColor = Fvector4().set(170, 170, 170, 255);
+LPCSTR	m_sAfInfluenceMode = "from_belt";
 //SSFX DoF
 Fvector4 m_FV4DefaultDoF = Fvector4().set(0.1f, 0.25f, 0.0f, 0.0f);
 Fvector4 m_FV4FocusDoF = Fvector4().set(0.1f, 0.25f, 0.0f, 0.0f);
-LPCSTR	m_sAfInfluenceMode = "from_belt";
+bool	m_bEnableBoreDoF = true;
 
 namespace GameConstants
 {
@@ -71,16 +75,20 @@ namespace GameConstants
 		m_bUseFilters = READ_IF_EXISTS(pAdvancedSettings, r_bool, "gameplay", "enable_antigas_filters", false);
 		m_bHideHudOnMaster = READ_IF_EXISTS(pAdvancedSettings, r_bool, "gameplay", "hide_hud_on_master", false);
 		m_bActorSkills = READ_IF_EXISTS(pAdvancedSettings, r_bool, "gameplay", "actor_skills_enabled", false);
+		m_bSleepInfluenceOnPsyHealth = READ_IF_EXISTS(pAdvancedSettings, r_bool, "gameplay", "sleepeness_infl_on_psy_health", false);
 		m_iArtefactsCount = READ_IF_EXISTS(pAdvancedSettings, r_u32, "inventory", "artefacts_count", 5);
 		m_i_CMD_Count = READ_IF_EXISTS(pAdvancedSettings, r_u32, "custom_commands", "integer_cmd_count", 1);
 		m_B_CMD_Count = READ_IF_EXISTS(pAdvancedSettings, r_u32, "custom_commands", "bool_cmd_count", 1);
+		m_fDistantSndDistance = READ_IF_EXISTS(pAdvancedSettings, r_float, "gameplay", "distant_snd_distance", 150.f);
 		m_bColorizeValues = READ_IF_EXISTS(pAdvancedSettings, r_bool, "ui_settings", "colorize_values", false);
 		m_FV4RedColor = READ_IF_EXISTS(pAdvancedSettings, r_fvector4, "ui_settings", "colorize_values_red", Fvector4().set(255, 0, 0, 255));
 		m_FV4GreenColor = READ_IF_EXISTS(pAdvancedSettings, r_fvector4, "ui_settings", "colorize_values_green", Fvector4().set(0, 255, 0, 255));
 		m_FV4NeutralColor = READ_IF_EXISTS(pAdvancedSettings, r_fvector4, "ui_settings", "colorize_values_neutral", Fvector4().set(170, 170, 170, 255));
+		m_bUseHQ_Icons = READ_IF_EXISTS(pAdvancedSettings, r_bool, "ui_settings", "hq_icons", false);
+		m_sAfInfluenceMode = READ_IF_EXISTS(pAdvancedSettings, r_string, "gameplay", "artefacts_infl_mode", "from_belt"); //from_belt|from_ruck|from_ruck_only_rad
 		m_FV4DefaultDoF = READ_IF_EXISTS(pAdvancedSettings, r_fvector4, "ssfx_dof", "default_dof", Fvector4().set(0.1f, 0.25f, 0.0f, 0.0f));
 		m_FV4FocusDoF = READ_IF_EXISTS(pAdvancedSettings, r_fvector4, "ssfx_dof", "focus_dof", Fvector4().set(0.1f, 0.25f, 0.0f, 0.0f));
-		m_sAfInfluenceMode = READ_IF_EXISTS(pAdvancedSettings, r_string, "gameplay", "artefacts_infl_mode", "from_belt"); //from_belt|from_ruck|from_ruck_only_rad
+		m_bEnableBoreDoF = READ_IF_EXISTS(pAdvancedSettings, r_bool, "ssfx_dof", "bore_dof_enabled", true);
 
 		Msg("# Advanced X-Ray GameConstants are loaded");
 	}
@@ -220,6 +228,11 @@ namespace GameConstants
 		return m_bActorSkills;
 	}
 
+	bool GetSleepInfluenceOnPsyHealth()
+	{
+		return m_bSleepInfluenceOnPsyHealth;
+	}
+
 	int GetArtefactsCount()
 	{
 		return m_iArtefactsCount;
@@ -233,6 +246,16 @@ namespace GameConstants
 	int GetBOOLScriptCMDCount()
 	{
 		return m_B_CMD_Count;
+	}
+
+	float GetDistantSndDistance()
+	{
+		return m_fDistantSndDistance;
+	}
+
+	bool GetUseHQ_Icons()
+	{
+		return m_bUseHQ_Icons;
 	}
 
 	Fvector4 GetRedColor()
@@ -258,6 +281,11 @@ namespace GameConstants
 	Fvector4 GetSSFX_FocusDoF()
 	{
 		return m_FV4FocusDoF;
+	}
+
+	bool GetSSFX_EnableBoreDoF()
+	{
+		return m_bEnableBoreDoF;
 	}
 
 	LPCSTR GetAfInfluenceMode()

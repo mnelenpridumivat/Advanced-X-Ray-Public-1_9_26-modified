@@ -286,6 +286,8 @@ static const float	ik_cam_shift_tolerance = 0.2f;
 static const float	ik_cam_shift_speed = 0.01f;
 #endif
 
+u16 eyeID;
+
 void CActor::cam_Update(float dt, float fFOV)
 {
 	if (m_holder)
@@ -294,9 +296,18 @@ void CActor::cam_Update(float dt, float fFOV)
 	// HUD FOV Update
 	if (this == Level().CurrentControlEntity())
 	{
-		CWeapon* pWeapon = smart_cast<CWeapon*>(this->inventory().ActiveItem());
-		if (eacFirstEye == cam_active && pWeapon)
-			psHUD_FOV = pWeapon->GetHudFov();
+		auto pItem = smart_cast<CHudItem*>(inventory().ActiveItem());
+		auto pDet = smart_cast<CHudItem*>(inventory().ItemFromSlot(DETECTOR_SLOT));
+
+		if (eacFirstEye == cam_active)
+		{
+			if (pItem)
+				psHUD_FOV = pItem->GetHudFov();
+			else if (pDet)
+				psHUD_FOV = pDet->GetHudFov();
+			else
+				psHUD_FOV = psHUD_FOV_def;
+		}
 		else
 			psHUD_FOV = psHUD_FOV_def;
 	}
@@ -366,10 +377,23 @@ void CActor::cam_Update(float dt, float fFOV)
 	}else{
 		fPrevCamPos			= flCurrentPlayerY;
 	}
-
+	
 	float _viewport_near			= VIEWPORT_NEAR;
 	// calc point
 	xform.transform_tiny			(point);
+	
+	if(!g_Alive() && eacFirstEye == cam_active && !Level().Cameras().GetCamEffector(cefDemo)) //Arkada: First Person Death
+	{
+		IKinematics* k = Visual()->dcast_PKinematics();
+		if(eyeID == NULL)
+			eyeID = k->LL_BoneID("eye_left");
+		Fmatrix m;
+		m.mul_43(XFORM(),k->LL_GetTransform(eyeID));
+		point = m.c; //Head position
+
+		m.mul_43(XFORM(),k->LL_GetTransform(eyeID));
+		m.getHPB(dangle); //Head direction
+	}
 
 	CCameraBase* C					= cam_Active();
 
@@ -380,7 +404,8 @@ void CActor::cam_Update(float dt, float fFOV)
 	{
 		cameras[eacFirstEye]->Update	(point,dangle);
 		cameras[eacFirstEye]->f_fov		= fFOV;
-	} 
+	}
+	
 	if (Level().CurrentEntity() == this)
 	{
 		collide_camera( *cameras[eacFirstEye], _viewport_near, this );
@@ -423,7 +448,8 @@ void CActor::cam_Update(float dt, float fFOV)
 	if (Level().CurrentEntity() == this)
 	{
 		Level().Cameras().UpdateFromCamera	(C);
-		if(eacFirstEye == cam_active && !Level().Cameras().GetCamEffector(cefDemo)){
+		if(eacFirstEye == cam_active && !Level().Cameras().GetCamEffector(cefDemo))
+		{
 			Cameras().ApplyDevice	(_viewport_near);
 		}
 	}

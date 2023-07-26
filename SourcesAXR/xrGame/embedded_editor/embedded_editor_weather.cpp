@@ -5,11 +5,13 @@
 #include "../../xrEngine/IGame_Level.h"
 #include "../../xrEngine/thunderbolt.h"
 #include "../../xrEngine/xr_efflensflare.h"
+#include "../../xrEngine/x_ray.h"
 #include "../GamePersistent.h"
 #include "../Level.h"
 #include "../ai_space.h"
 #include "../xrServerEntities/script_engine.h"
 #include <imgui.h>
+#include "imgui_internal.h"
 
 float editor_longitude = 0.0;
 float editor_altitude = 0.0;
@@ -118,6 +120,7 @@ void saveWeather(shared_str name, const xr_vector<CEnvDescriptor*>& env)
 		f.w_float(el->m_identifier.c_str(), "swing_fast_rot1", el->m_cSwingDesc[1].rot1);
 		f.w_float(el->m_identifier.c_str(), "swing_fast_rot2", el->m_cSwingDesc[1].rot2);
 		f.w_float(el->m_identifier.c_str(), "swing_fast_speed", el->m_cSwingDesc[1].speed);
+		f.w_fvector4(el->m_identifier.c_str(), "color_dragging", el->color_dragging);
 		f.w_fvector3(el->m_identifier.c_str(), "dof", el->dof_value);
 		f.w_float(el->m_identifier.c_str(), "dof_kernel", el->dof_kernel);
 		f.w_float(el->m_identifier.c_str(), "dof_sky", el->dof_sky);
@@ -282,7 +285,7 @@ void ShowWeatherEditor(bool& show)
     u64 time = Level().GetEnvironmentGameTime() / 1000;
     ImGui::Text("Time: %02d:%02d:%02d", int(time / (60 * 60) % 24), int(time / 60 % 60), int(time % 60));
     float tf = Level().GetEnvironmentTimeFactor();
-    if (ImGui::SliderFloat("Time factor", &tf, 0.0f, 1000.0f, "%.3f", 2.0f))
+    if (ImGui::SliderFloat("Time factor", &tf, 0.0f, 1000.0f, "%.3f", ImGuiSliderFlags_Logarithmic))
         Level().SetEnvironmentTimeFactor(tf);
     xr_vector<shared_str> cycles;
     int iCycle = -1;
@@ -366,11 +369,9 @@ void ShowWeatherEditor(bool& show)
 
 	ImGui::Text(u8"Sky parameters");
 
-	Fvector temp;
-	temp = convert(cur->sky_color);
-	if (ImGui::ColorEdit3("sky_color", (float*)&temp))
+	if (ImGui::ColorEdit3("sky_color", (float*)&cur->sky_color))
 		changed = true;
-	cur->sky_color = convert(temp);
+
 	if (ImGui::SliderFloat("sky_rotation", &cur->sky_rotation, 0.0f, 6.28318f))
 		changed = true;
 	if (editTexture("sky_texture", cur->sky_texture_name)) {
@@ -470,14 +471,25 @@ void ShowWeatherEditor(bool& show)
 	if (ImGui::SliderFloat("swing_fast_speed", &cur->m_cSwingDesc[1].speed, 0.0f, 10.0f))
 		changed = true;
 
-	ImGui::Text(u8"DoF parameters");
+	if (bWeatherColorDragging)
+	{
+		ImGui::Text(u8"Color Dragging Parameters");
 
-	if (ImGui::InputFloat3("dof", (float*)&cur->dof_value), 3)
-		changed = true;
-	if (ImGui::SliderFloat("dof_kernel", &cur->dof_kernel, 0.0f, 10.0f))
-		changed = true;
-	if (ImGui::SliderFloat("dof_sky", &cur->dof_sky, -10000.0f, 10000.0f))
-		changed = true;
+		if (ImGui::ColorEdit4("color_dragging", (float*)&cur->color_dragging))
+			changed = true;
+	}
+
+	if (bDofWeather)
+	{
+		ImGui::Text(u8"DoF parameters");
+
+		if (ImGui::InputFloat3("dof", (float*)&cur->dof_value), 3)
+			changed = true;
+		if (ImGui::SliderFloat("dof_kernel", &cur->dof_kernel, 0.0f, 10.0f))
+			changed = true;
+		if (ImGui::SliderFloat("dof_sky", &cur->dof_sky, -10000.0f, 10000.0f))
+			changed = true;
+	}
 
 	if (changed)
 		modifiedWeathers.insert(env.CurrentWeatherName);
@@ -488,3 +500,27 @@ void ShowWeatherEditor(bool& show)
 	}
     ImGui::End();
 } 
+
+bool WeatherEditor_MouseWheel(float wheel)
+{
+	ImGui::Begin(modifiedWeathers.empty() ? "Weather###Weather" : "Weather*###Weather");
+
+	if (!ImGui::IsWindowFocused())
+	{
+		ImGui::End();
+		return false;
+	}
+
+	ImGuiWindow* window = ImGui::GetCurrentWindow();
+
+	if (wheel != 0.0f)
+	{
+		float scroll{};
+		scroll -= wheel * 35;
+		ImGui::SetScrollY(window, window->Scroll.y - scroll);
+	}
+
+	ImGui::End();
+
+	return true;
+}

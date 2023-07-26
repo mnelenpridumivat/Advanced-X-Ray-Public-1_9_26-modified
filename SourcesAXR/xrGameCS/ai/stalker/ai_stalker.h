@@ -269,6 +269,7 @@ public:
 			bool						ready_to_kill			();
 			bool						ready_to_detour			();
 			void						update_best_item_info	();
+			void						ResetBoneProtections	(pcstr imm_sect, pcstr bone_sect);
 	virtual float						GetWeaponAccuracy		() const;
 	virtual	void						spawn_supplies			();
 	IC		CAgentManager				&agent_manager			() const;
@@ -284,6 +285,7 @@ public:
 private:
 	bool				m_can_kill_member;
 	bool				m_can_kill_enemy;
+	bool				m_can_select_weapon;
 	float				m_pick_distance;
 	u32					m_pick_frame_id;
 	collide::rq_results	rq_storage;
@@ -296,6 +298,8 @@ private:
 public:
 			bool						can_kill_member			();
 			bool						can_kill_enemy			();
+	bool								can_select_weapon				() {return m_can_select_weapon;};
+	void								can_select_weapon				(bool can) {m_can_select_weapon = can;};
 			float						pick_distance			();
 	IC		float						start_pick_distance		() const;
 			bool						fire_make_sense			();

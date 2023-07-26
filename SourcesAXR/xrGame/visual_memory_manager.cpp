@@ -27,6 +27,7 @@
 #include "client_spawn_manager.h"
 #include "memory_manager.h"
 #include "ai/monsters/basemonster/base_monster.h"
+#include "ai/monsters/zombie/zombie.h"
 #include "inventory.h"
 #include "torch.h"
 
@@ -442,25 +443,25 @@ bool CVisualMemoryManager::visible				(const CGameObject *game_object, float tim
 
 bool   CVisualMemoryManager::should_ignore_object (CObject const* object) const
 {
-	if ( !object )
-	{
+	if (!object)
 		return true;
-	}
 
 #ifndef MASTER_GOLD
-	if ( smart_cast<CActor const*>(object) && psAI_Flags.test(aiIgnoreActor) )
-	{
+	if (smart_cast<CActor const*>(object) && psAI_Flags.test(aiIgnoreActor))
 		return	true;
-	}
-	else
 #endif // MASTER_GOLD
 	
-	if ( CBaseMonster const* const monster = smart_cast<CBaseMonster const*>(object) )
+	CBaseMonster const* monster = smart_cast<CBaseMonster const*>(object);
+
+	if (monster)
 	{
-		if ( !monster->can_be_seen() )
-		{
+		if (!monster->can_be_seen())
 			return true;
-		}
+
+		CZombie const* zombie = smart_cast<CZombie const*>(object);
+
+		if (zombie && zombie->fake_death_is_active())
+			return true;
 	}
 
 	return false;
@@ -602,21 +603,31 @@ struct CVisibleObjectPredicateEx {
 	bool		operator()			(const MemorySpace::CVisibleObject &visible_object) const
 	{
 		if (!m_object)
-			return			(!visible_object.m_object);
+			return false;
 		if (!visible_object.m_object)
-			return			(false);
+			return false;
 		return				(m_object->ID() == visible_object.m_object->ID());
 	}
 
 	bool		operator()			(const MemorySpace::CNotYetVisibleObject &not_yet_visible_object) const
 	{
 		if (!m_object)
-			return			(!not_yet_visible_object.m_object);
+			return false;
 		if (!not_yet_visible_object.m_object)
-			return			(false);
+			return false;
 		return				(m_object->ID() == not_yet_visible_object.m_object->ID());
 	}
 };
+
+void CVisualMemoryManager::remove(const MemorySpace::CVisibleObject* visible_object)
+{
+	VISIBLES::iterator I = std::find_if(m_objects->begin(), m_objects->end(), [&](const MemorySpace::CVisibleObject& object)
+		{
+			return visible_object == &object;
+		});
+	if (I != m_objects->end())
+		m_objects->erase(I);
+}
 
 void CVisualMemoryManager::remove_links	(CObject *object)
 {

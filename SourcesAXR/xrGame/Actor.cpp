@@ -77,6 +77,8 @@
 #include "DynamicHudGlass.h"
 #include "ActorNightVision.h"
 #include "AdvancedXrayGameConstants.h"
+#include "../xrphysics/actorcameracollision.h"
+#include "../../xrCore/_detail_collision_point.h"
 
 const u32		patch_frames	= 50;
 const float		respawn_delay	= 1.f;
@@ -85,6 +87,8 @@ const float		respawn_auto	= 7.f;
 static float IReceived = 0;
 static float ICoincidenced = 0;
 extern float cammera_into_collision_shift ;
+
+u32	death_camera_mode = READ_IF_EXISTS(pAdvancedSettings, r_u32, "gameplay", "death_camera_mode", 1);;
 
 string32		ACTOR_DEFS::g_quick_use_slots[4]={NULL, NULL, NULL, NULL};
 //skeleton
@@ -221,6 +225,8 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 
 	m_location_manager		= xr_new<CLocationManager>(this);
 	m_block_sprint_counter	= 0;
+
+	m_iBaseArtefactCount	= 0;
 
 	m_disabled_hitmarks		= false;
 	m_inventory_disabled	= false;
@@ -481,6 +487,8 @@ if(!g_dedicated_server)
 
 	if (!ActorSkills && GameConstants::GetActorSkillsEnabled())
 		ActorSkills = xr_new<CActorSkills>();
+
+	m_iBaseArtefactCount = READ_IF_EXISTS(pSettings, r_u32, section, "base_artefacts_count", 0);
 }
 
 void CActor::PHHit(SHit &H)
@@ -851,13 +859,11 @@ void CActor::Die	(CObject* who)
 
 	if	(IsGameTypeSingle())
 	{
-		pcstr m_sDeathCamera = READ_IF_EXISTS(pAdvancedSettings, r_string, "gameplay", "death_camera_mode", "freelook");
-
-		if (xr_strcmp("freelook", m_sDeathCamera) == 0)
+		if (death_camera_mode == 1)
 			cam_Set				(eacFreeLook);
-		else if (xr_strcmp("fixedlook", m_sDeathCamera) == 0)
+		else if (death_camera_mode == 2)
 			cam_Set				(eacFixedLookAt);
-		else if (xr_strcmp("firsteye", m_sDeathCamera) == 0)
+		else if (death_camera_mode == 3)
 			cam_Set				(eacFirstEye);
 
 		CurrentGameUI()->HideShownDialogs();
@@ -957,7 +963,8 @@ void CActor::g_Physics			(Fvector& _accel, float jump, float dt)
 		}
 	}
 }
-float g_fov = 55.0f;
+
+float g_fov = READ_IF_EXISTS(pAdvancedSettings, r_float, "start_settings", "Camera_FOV", 55.0f);
 
 float CActor::currentFOV()
 {
@@ -1001,6 +1008,9 @@ void CActor::UpdateCL	()
 	}
 
 	UpdateInventoryOwner			(Device.dwTimeDelta);
+
+	if (load_screen_renderer.IsActive() && inventory().GetActiveSlot() == PDA_SLOT)
+		inventory().Activate(NO_ACTIVE_SLOT);
 
 	if(m_feel_touch_characters>0)
 	{
@@ -1058,7 +1068,7 @@ void CActor::UpdateCL	()
 			fire_disp_full = m_fdisp_controller.GetCurrentDispertion();
 
 			//--#SM+#-- +SecondVP+        FOV (Sin!) [fix for crosshair shaking while SecondVP]
-			if (!Device.m_SecondViewport.IsSVPFrame())
+			if (!Device.m_SecondViewport.IsSVPActive())
 				HUD().SetCrosshairDisp(fire_disp_full, 0.02f);
 
 			HUD().ShowCrosshair(pWeapon->use_crosshair());
@@ -1081,14 +1091,13 @@ void CActor::UpdateCL	()
 			//      [Update SecondVP with weapon data]
 			pWeapon->UpdateSecondVP(); //--#SM+#-- +SecondVP+
 			bool bUseMark = !!pWeapon->bMarkCanShow();
-			bool bInZoom = !!(pWeapon->bInZoomRightNow() && pWeapon->bIsSecondVPZoomPresent() && psActorFlags.test(AF_3DSCOPE_ENABLE));
 
 			//float fVPRotFactor = pWeapon->bNVsecondVPstatus ? pWeapon->GetZRotatingFactor() : 0.0f;
 
 			bool bNVEnbl = !!pWeapon->bNVsecondVPstatus;
 
 			//      
-			g_pGamePersistent->m_pGShaderConstants->hud_params.x = bInZoom;  //--#SM+#--
+			g_pGamePersistent->m_pGShaderConstants->hud_params.x = pWeapon->GetZRotatingFactor();  //--#SM+#--
 			g_pGamePersistent->m_pGShaderConstants->hud_params.y = pWeapon->GetSecondVPFov(); //--#SM+#--
 			g_pGamePersistent->m_pGShaderConstants->hud_params.z = bUseMark; //--#SM+#--
 			g_pGamePersistent->m_pGShaderConstants->m_blender_mode.x = bNVEnbl;  //--#SM+#--
@@ -1150,6 +1159,7 @@ void CActor::UpdateCL	()
 }
 
 float	NET_Jump = 0;
+ENGINE_API extern Fvector actor_position;
 
 #include "ai\monsters\ai_monster_utils.h"
 
@@ -1477,6 +1487,8 @@ void CActor::shedule_Update	(u32 DT)
 
 	if (GameConstants::GetActorSkillsEnabled())
 		UpdateSkills();
+
+	actor_position.set(Position());
 };
 #include "debug_renderer.h"
 void CActor::renderable_Render	()
@@ -1846,6 +1858,7 @@ void CActor::UpdateArtefactsOnBeltAndOutfit()
 		conditions().ChangeSleepeness	(outfit->m_fSleepenessRestoreSpeed * f_update_time);
 		conditions().ChangeAlcoholism	(outfit->m_fAlcoholismRestoreSpeed * f_update_time);
 		conditions().ChangeNarcotism	(outfit->m_fNarcotismRestoreSpeed * f_update_time);
+		conditions().ChangePsyHealth	(outfit->m_fPsyHealthRestoreSpeed * f_update_time);
 	}
 	else
 	{
@@ -1915,6 +1928,7 @@ void CActor::UpdateArtefactsOnBelt()
 			conditions().ChangeSleepeness(artefact->m_fSleepenessRestoreSpeed * f_update_time);
 			conditions().ChangeAlcoholism(artefact->m_fAlcoholismRestoreSpeed * f_update_time);
 			conditions().ChangeNarcotism(artefact->m_fNarcotismRestoreSpeed * f_update_time);
+			conditions().ChangePsyHealth(artefact->m_fPsyHealthRestoreSpeed * f_update_time);
 
 			if (GameConstants::GetArtefactsDegradation())
 				artefact->UpdateDegradation();
@@ -1965,6 +1979,7 @@ void CActor::UpdateArtefactsInRuck()
 			conditions().ChangeSleepeness(artefact->m_fSleepenessRestoreSpeed * f_update_time);
 			conditions().ChangeAlcoholism(artefact->m_fAlcoholismRestoreSpeed * f_update_time);
 			conditions().ChangeNarcotism(artefact->m_fNarcotismRestoreSpeed * f_update_time);
+			conditions().ChangePsyHealth(artefact->m_fPsyHealthRestoreSpeed * f_update_time);
 
 			if (GameConstants::GetArtefactsDegradation())
 				artefact->UpdateDegradation();
@@ -2443,6 +2458,25 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 		}
 		break;
 	}
+	case ALife::ePsyHealthRestoreSpeed:
+	{
+		TIItemContainer::iterator itb = inventory().m_belt.begin();
+		TIItemContainer::iterator ite = inventory().m_belt.end();
+		for (; itb != ite; ++itb)
+		{
+			CArtefact* artefact = smart_cast<CArtefact*>(*itb);
+			if (artefact)
+			{
+				res += artefact->m_fPsyHealthRestoreSpeed;
+			}
+		}
+		CCustomOutfit* outfit = GetOutfit();
+		if (outfit)
+		{
+			res += outfit->m_fPsyHealthRestoreSpeed;
+		}
+		break;
+	}
 	}//switch
 
 	return res;
@@ -2465,6 +2499,22 @@ bool CActor::unlimited_ammo()
 
 void CActor::SwitchNightVision(bool vision_on, bool use_sounds, bool send_event)
 {
+	CWeapon* wpn1{}, *wpn2{}, *wpn3{};
+
+	if (inventory().ItemFromSlot(PISTOL_SLOT))
+		wpn1 = smart_cast<CWeapon*>(inventory().ItemFromSlot(PISTOL_SLOT));
+	if (inventory().ItemFromSlot(INV_SLOT_2))
+		wpn2 = smart_cast<CWeapon*>(inventory().ItemFromSlot(INV_SLOT_2));
+	if (inventory().ItemFromSlot(INV_SLOT_3))
+		wpn3 = smart_cast<CWeapon*>(inventory().ItemFromSlot(INV_SLOT_3));
+
+	if (wpn1 && wpn1->IsZoomed())
+		return;
+	if (wpn2 && wpn2->IsZoomed())
+		return;
+	if (wpn3 && wpn3->IsZoomed())
+		return;
+
 	m_bNightVisionOn = vision_on;
 
 	if (!m_night_vision)
@@ -2541,4 +2591,124 @@ void CActor::unblock_action(EGameActions cmd)
 	{
 		m_blocked_actions.erase(iter);
 	}
+}
+
+bool CActor::use_HolderEx(CHolderCustom* object, bool bForce)
+{
+	if (m_holder)
+	{
+		/*
+		CCar* car = smart_cast<CCar*>(m_holder);
+		if (car)
+		{
+			detach_Vehicle();
+			return true;
+		}
+		*/
+		if (!m_holder->ExitLocked() || bForce)
+		{
+			if (!object || (m_holder == object)) {
+
+				CGameObject* go = smart_cast<CGameObject*>(m_holder);
+				CPhysicsShellHolder* pholder = smart_cast<CPhysicsShellHolder*>(go);
+				if (pholder)
+				{
+					pholder->PPhysicsShell()->SplitterHolderDeactivate();
+					if (!character_physics_support()->movement()->ActivateBoxDynamic(0))
+					{
+						pholder->PPhysicsShell()->SplitterHolderActivate();
+						return true;
+					}
+					pholder->PPhysicsShell()->SplitterHolderActivate();
+				}
+
+				SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
+
+				if (go)
+					this->callback(GameObject::eDetachVehicle)(go->lua_game_object());
+
+				m_holder->detach_Actor();
+
+				character_physics_support()->movement()->CreateCharacter();
+				character_physics_support()->movement()->SetPosition(m_holder->ExitPosition());
+				character_physics_support()->movement()->SetVelocity(m_holder->ExitVelocity());
+
+				r_model_yaw = -m_holder->Camera()->yaw;
+				r_torso.yaw = r_model_yaw;
+				r_model_yaw_dest = r_model_yaw;
+
+				cam_Active()->Direction().set(m_holder->Camera()->Direction());
+
+				SetCallbacks();
+
+				m_holder = NULL;
+				m_holderID = u16(-1);
+
+				IKinematicsAnimated* V = smart_cast<IKinematicsAnimated*>(Visual()); R_ASSERT(V);
+				V->PlayCycle(m_anims->m_normal.legs_idle);
+				V->PlayCycle(m_anims->m_normal.m_torso_idle);
+
+				IKinematics* pK = smart_cast<IKinematics*>(Visual());
+				u16 head_bone = pK->LL_BoneID("bip01_head");
+				pK->LL_GetBoneInstance(u16(head_bone)).set_callback(bctPhysics, HeadCallback, this);
+			}
+		}
+		return true;
+	}
+	else
+	{
+		/*
+		CCar* car = smart_cast<CCar*>(object);
+		if (car)
+		{
+			attach_Vehicle(object);
+			return true;
+		}
+		*/
+		if (object && (!object->EnterLocked() || bForce))
+		{
+			Fvector center;	Center(center);
+			if ((bForce || object->Use(Device.vCameraPosition, Device.vCameraDirection, center)) && object->attach_Actor(this))
+			{
+				inventory().SetActiveSlot(NO_ACTIVE_SLOT);
+				SetWeaponHideState(INV_STATE_BLOCK_ALL, true);
+
+				// destroy actor character
+				character_physics_support()->movement()->DestroyCharacter();
+
+				m_holder = object;
+				CGameObject* oHolder = smart_cast<CGameObject*>(object);
+				m_holderID = oHolder->ID();
+
+				if (pCamBobbing) {
+					Cameras().RemoveCamEffector(eCEBobbing);
+					pCamBobbing = NULL;
+				}
+
+				if (actor_camera_shell)
+					destroy_physics_shell(actor_camera_shell);
+
+				IKinematics* pK = smart_cast<IKinematics*>(Visual());
+				u16 head_bone = pK->LL_BoneID("bip01_head");
+				pK->LL_GetBoneInstance(u16(head_bone)).set_callback(bctPhysics, VehicleHeadCallback, this);
+
+				CCar* car = smart_cast<CCar*>(object);
+				if (car)
+				{
+					u16 anim_type = car->DriverAnimationType();
+					SVehicleAnimCollection& anims = m_vehicle_anims->m_vehicles_type_collections[anim_type];
+					IKinematicsAnimated* V = smart_cast<IKinematicsAnimated*>(Visual()); R_ASSERT(V);
+					V->PlayCycle(anims.idles[0], FALSE);
+					CStepManager::on_animation_start(MotionID(), 0);
+				}
+
+				CGameObject* go = smart_cast<CGameObject*>(object);
+				if (go)
+					this->callback(GameObject::eAttachVehicle)(go->lua_game_object());
+
+				return true;
+			}
+		}
+	}
+	return false;
 }

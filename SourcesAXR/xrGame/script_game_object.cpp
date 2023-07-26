@@ -40,6 +40,12 @@
 #include "smart_cover_description.h"
 #include "physics_shell_scripted.h"
 #include "PDA.h"
+#include "ai/phantom/phantom.h"
+#include "UIGameCustom.h"
+#include "ui/UIActorMenu.h"
+#include "InventoryBox.h"
+#include "player_hud.h"
+#include "ai/stalker/ai_stalker.h"
 
 class CScriptBinderObject;
 
@@ -136,7 +142,7 @@ CGameObject &CScriptGameObject::object	() const
 	}
 
 	ai().script_engine().script_log(eLuaMessageTypeError,"you are trying to use a destroyed object [%x]",m_game_object);
-	THROW2			(m_game_object && m_game_object->lua_game_object() == this,"Probably, you are trying to use a destroyed object!");
+	R_ASSERT(m_game_object && m_game_object->lua_game_object() == this,"Probably, you are trying to use a destroyed object!");
 #endif // #ifdef DEBUG
 	return			(*m_game_object);
 }
@@ -331,17 +337,71 @@ u32 CScriptGameObject::get_current_patrol_point_index()
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-Fvector	CScriptGameObject::bone_position	(LPCSTR bone_name) const
+Fvector CScriptGameObject::bone_position(LPCSTR bone_name, bool bHud) const
 {
-	u16					bone_id;
-	if (xr_strlen(bone_name))
-		bone_id			= smart_cast<IKinematics*>(object().Visual())->LL_BoneID(bone_name);
-	else
-		bone_id			= smart_cast<IKinematics*>(object().Visual())->LL_GetBoneRoot();
+	IKinematics* k = nullptr;
 
-	Fmatrix				matrix;
-	matrix.mul_43		(object().XFORM(),smart_cast<IKinematics*>(object().Visual())->LL_GetBoneInstance(bone_id).mTransform);
-	return				(matrix.c);
+	CHudItem* itm = smart_cast<CHudItem*>(&object());
+	if (bHud && itm && itm->HudItemData())
+		k = itm->HudItemData()->m_model;
+	else
+		k = object().Visual()->dcast_PKinematics();
+
+	u16 bone_id;
+	if (xr_strlen(bone_name))
+	{
+		bone_id = k->LL_BoneID(bone_name);
+		if (bone_id == BI_NONE)
+			bone_id = k->LL_GetBoneRoot();
+	}
+	else
+		bone_id = k->LL_GetBoneRoot();
+
+	Fmatrix matrix;
+	matrix.mul_43((bHud && itm && itm->HudItemData()) ? itm->HudItemData()->m_item_transform : object().XFORM(),
+	              k->LL_GetBoneInstance(bone_id).mTransform);
+	return (matrix.c);
+}
+
+Fvector CScriptGameObject::bone_direction(LPCSTR bone_name, bool bHud) const
+{
+    IKinematics* k = nullptr;
+
+    CHudItem* itm = smart_cast<CHudItem*>(&object());
+    if (bHud && itm)
+        k = itm->HudItemData()->m_model;
+    else
+        k = object().Visual()->dcast_PKinematics();
+
+    u16 bone_id;
+    if (xr_strlen(bone_name))
+    {
+        bone_id = k->LL_BoneID(bone_name);
+        if (bone_id == BI_NONE)
+            bone_id = k->LL_GetBoneRoot();
+    }
+    else
+        bone_id = k->LL_GetBoneRoot();
+
+    Fmatrix matrix;
+    Fvector res;
+    matrix.mul_43((bHud && itm) ? itm->HudItemData()->m_item_transform : object().XFORM(),
+                  k->LL_GetTransform(bone_id));
+    matrix.getHPB(res);
+    return (res);
+}
+
+LPCSTR CScriptGameObject::bone_name(u16 id, bool bHud)
+{
+	IKinematics* k = nullptr;
+
+	CHudItem* itm = smart_cast<CHudItem*>(&object());
+	if (bHud && itm && itm->HudItemData())
+		k = itm->HudItemData()->m_model;
+	else
+		k = object().Visual()->dcast_PKinematics();
+
+	return (k->LL_BoneName_dbg(id));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -363,41 +423,90 @@ void CScriptGameObject::SetAmmoElapsed(int ammo_elapsed)
 	weapon->SetAmmoElapsed(ammo_elapsed);
 }
 
+//Alundaio
+int CScriptGameObject::GetAmmoCount(u8 type)
+{
+	CWeapon* weapon = smart_cast<CWeapon*>(&object());
+	if (!weapon) return 0;
+
+	if (type < weapon->m_ammoTypes.size())
+		return weapon->GetAmmoCount_forType(weapon->m_ammoTypes[type]);
+
+	return 0;
+}
+
+void CScriptGameObject::SetAmmoType(u8 type)
+{
+	CWeapon* weapon = smart_cast<CWeapon*>(&object());
+	if (!weapon) return;
+
+	weapon->SetAmmoType(type);
+}
+
+u8 CScriptGameObject::GetAmmoType()
+{
+	CWeapon* weapon = smart_cast<CWeapon*>(&object());
+	if (!weapon) return 255;
+
+	return weapon->GetAmmoType();
+}
+
+void CScriptGameObject::SetMainWeaponType(u32 type)
+{
+	CWeapon* weapon = smart_cast<CWeapon*>(&object());
+	if (!weapon) return;
+
+	weapon->set_ef_main_weapon_type(type);
+}
+
+void CScriptGameObject::SetWeaponType(u32 type)
+{
+	CWeapon* weapon = smart_cast<CWeapon*>(&object());
+	if (!weapon) return;
+
+	weapon->set_ef_weapon_type(type);
+}
+
+u32 CScriptGameObject::GetMainWeaponType()
+{
+	CWeapon* weapon = smart_cast<CWeapon*>(&object());
+	if (!weapon) return 255;
+
+	return weapon->ef_main_weapon_type();
+}
+
+u32 CScriptGameObject::GetWeaponType()
+{
+	CWeapon* weapon = smart_cast<CWeapon*>(&object());
+	if (!weapon) return 255;
+
+	return weapon->ef_weapon_type();
+}
+
+bool CScriptGameObject::HasAmmoType(u8 type)
+{
+	CWeapon* weapon = smart_cast<CWeapon*>(&object());
+	if (!weapon) return false;
+
+	return type < weapon->m_ammoTypes.size();
+}
+
+u8 CScriptGameObject::GetWeaponSubstate()
+{
+	CWeapon* weapon = smart_cast<CWeapon*>(&object());
+	if (!weapon) return 255;
+
+	return weapon->m_sub_state;
+}
+
+//-Alundaio
+
 u32 CScriptGameObject::GetSuitableAmmoTotal() const
 {
 	const CWeapon	*weapon = smart_cast<const CWeapon*>(&object());
 	if (!weapon)
 		return		(0);
 	return			(weapon->GetSuitableAmmoTotal(true));
-}
-
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-#include "eatable_item.h"
-
-void CScriptGameObject::SetPortionsNum(u32 num)
-{
-	CEatableItem	*item = smart_cast<CEatableItem*>(&object());
-	if (!item)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CEatableItem : cannot access class member SetPortionsNum!");
-		return;
-	}
-
-	item->SetPortionsNum(num);
-}
-
-u32 CScriptGameObject::GetPortionsNum() const
-{
-	const CEatableItem	*item = smart_cast<const CEatableItem*>(&object());
-	if (!item)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CEatableItem : cannot access class member GetPortionsNum!");
-		return 0;
-	}
-
-	return			(item->GetPortionsNum());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -637,10 +746,15 @@ LPCSTR CScriptGameObject::get_smart_cover_description	() const {
 	return smart_cover_object->cover().description()->table_id().c_str();
 }
 
-void CScriptGameObject::set_visual_name						(LPCSTR visual)
+#include "stalker_animation_manager.h"
+#include "CharacterPhysicsSupport.h"
+#include "PhysicsShellHolder.h"
+
+void CScriptGameObject::set_visual_name(LPCSTR visual)
 {
 	object().cNameVisual_set(visual);
 }
+
 LPCSTR CScriptGameObject::get_visual_name				() const {
 	return object().cNameVisual().c_str();
 }
@@ -656,4 +770,112 @@ bool CScriptGameObject::addon_IsActorHideout() const
 	}
 
 	return actorInhideout;
+}
+
+void CScriptGameObject::PhantomSetEnemy(CScriptGameObject* enemy)
+{
+	CPhantom* phant = smart_cast<CPhantom*>(&object());
+	if (!phant)
+		return;
+
+	phant->SetEnemy(&enemy->object());
+}
+
+//Allows to force use an object if passed obj is the actor
+bool CScriptGameObject::Use(CScriptGameObject* obj)
+{
+	bool ret = object().use(&obj->object());
+
+	CActor* actor = smart_cast<CActor*>(&obj->object());
+	if (!actor)
+		return ret;
+
+	CInventoryOwner* pActorInv = smart_cast<CInventoryOwner*>(actor);
+	if (!pActorInv)
+		return ret;
+
+	CUIActorMenu& ActorMenu = CurrentGameUI()->ActorMenu();
+
+	CInventoryBox* pBox = smart_cast<CInventoryBox*>(&object());
+	if (pBox)
+	{
+		ActorMenu.SetActor(pActorInv);
+		ActorMenu.SetInvBox(pBox);
+
+		ActorMenu.SetMenuMode(mmDeadBodySearch);
+		ActorMenu.ShowDialog(true);
+
+		return true;
+	}
+	else
+	{
+		CInventoryOwner* pOtherOwner = smart_cast<CInventoryOwner*>(&object());
+		if (!pOtherOwner)
+			return ret;
+
+		/*
+		CEntityAlive* e = smart_cast<CEntityAlive*>(pOtherOwner);
+		if (e && e->g_Alive())
+		{
+			actor->RunTalkDialog(pOtherOwner, false);
+			return true;
+		}
+		*/
+
+		ActorMenu.SetActor(pActorInv);
+		ActorMenu.SetPartner(pOtherOwner);
+
+		ActorMenu.SetMenuMode(mmDeadBodySearch);
+		ActorMenu.ShowDialog(true);
+
+		return true;
+	}
+
+	return false;
+}
+
+void CScriptGameObject::StartTrade(CScriptGameObject* obj)
+{
+	CActor* actor = smart_cast<CActor*>(&obj->object());
+	if (!actor)
+		return;
+
+	CInventoryOwner* pActorInv = smart_cast<CInventoryOwner*>(actor);
+	if (!pActorInv)
+		return;
+
+	CInventoryOwner* pOtherOwner = smart_cast<CInventoryOwner*>(&object());
+	if (!pOtherOwner)
+		return;
+
+	CUIActorMenu& ActorMenu = CurrentGameUI()->ActorMenu();
+
+	ActorMenu.SetActor(pActorInv);
+	ActorMenu.SetPartner(pOtherOwner);
+
+	ActorMenu.SetMenuMode(mmTrade);
+	ActorMenu.ShowDialog(true);
+}
+
+void CScriptGameObject::StartUpgrade(CScriptGameObject* obj)
+{
+	CActor* actor = smart_cast<CActor*>(&obj->object());
+	if (!actor)
+		return;
+
+	CInventoryOwner* pActorInv = smart_cast<CInventoryOwner*>(actor);
+	if (!pActorInv)
+		return;
+
+	CInventoryOwner* pOtherOwner = smart_cast<CInventoryOwner*>(&object());
+	if (!pOtherOwner)
+		return;
+
+	CUIActorMenu& ActorMenu = CurrentGameUI()->ActorMenu();
+
+	ActorMenu.SetActor(pActorInv);
+	ActorMenu.SetPartner(pOtherOwner);
+
+	ActorMenu.SetMenuMode(mmUpgrade);
+	ActorMenu.ShowDialog(true);
 }

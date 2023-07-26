@@ -53,6 +53,8 @@
 #include "game_cl_capture_the_artefact.h"
 #include "UIHudStatesWnd.h"
 #include "UIActorMenu.h"
+#include "UICellItem.h"
+#include "UICellItemFactory.h"
 
 #include "Torch.h"
 #include "CustomDetector.h"
@@ -81,13 +83,17 @@ const u32	g_clWhite					= 0xffffffff;
 #define				MAININGAME_XML				"maingame.xml"
 
 CUIMainIngameWnd::CUIMainIngameWnd()
-	:/*m_pGrenade(NULL),m_pItem(NULL),*/m_pPickUpItem(NULL), m_pMPChatWnd(NULL), UIArtefactIcon(NULL), m_pMPLogWnd(NULL)
 {
-	UIZoneMap = xr_new<CUIZoneMap>();
-	m_UIIcons = nullptr;
-
-	UIMotionIcon = nullptr;
-	m_ui_hud_states = nullptr;
+	UIZoneMap					= xr_new<CUIZoneMap>();
+	m_UIIcons					= nullptr;
+	m_pPickUpItem				= nullptr;
+	m_pMPChatWnd				= nullptr;
+	m_pMPLogWnd					= nullptr;
+	UIMotionIcon				= nullptr;
+	m_ui_hud_states				= nullptr;
+	uiPickUpItemIconNew_		= nullptr;
+	UIArtefactIcon				= nullptr;
+	fuzzyShowInfo_				= 0.f;
 }
 
 #include "UIProgressShape.h"
@@ -128,19 +134,15 @@ void CUIMainIngameWnd::Init()
 	UIWeaponIcon.SetShader		(GetEquipmentIconsShader());
 	UIWeaponIcon_rect			= UIWeaponIcon.GetWndRect();
 */	//---------------------------------------------------------
-	UIPickUpItemIcon			= UIHelper::CreateStatic		(uiXml, "pick_up_item", this);
-	UIPickUpItemIcon->SetShader	(GetEquipmentIconsShader());
-
-	m_iPickUpItemIconWidth		= UIPickUpItemIcon->GetWidth();
-	m_iPickUpItemIconHeight		= UIPickUpItemIcon->GetHeight();
-	m_iPickUpItemIconX			= UIPickUpItemIcon->GetWndRect().left;
-	m_iPickUpItemIconY			= UIPickUpItemIcon->GetWndRect().top;
+	m_iPickUpItemIconX		= uiXml.ReadAttribFlt("pick_up_item", 0, "x", 512.f);
+	m_iPickUpItemIconY		= uiXml.ReadAttribFlt("pick_up_item", 0, "y", 550.f);
+	m_iPickUpItemIconScale	= uiXml.ReadAttribFlt("pick_up_item", 0, "scale", 1.0f);
 	//---------------------------------------------------------
 
-	//индикаторы 
+	//РёРЅРґРёРєР°С‚РѕСЂС‹ 
 	UIZoneMap->Init				();
 
-	// Подсказки, которые возникают при наведении прицела на объект
+	// РџРѕРґСЃРєР°Р·РєРё, РєРѕС‚РѕСЂС‹Рµ РІРѕР·РЅРёРєР°СЋС‚ РїСЂРё РЅР°РІРµРґРµРЅРёРё РїСЂРёС†РµР»Р° РЅР° РѕР±СЉРµРєС‚
 	UIStaticQuickHelp			= UIHelper::CreateTextWnd(uiXml, "quick_info", this);
 
 	uiXml.SetLocalRoot			(uiXml.GetRoot());
@@ -162,6 +164,7 @@ void CUIMainIngameWnd::Init()
 	m_ind_sleepeness		= UIHelper::CreateStatic(uiXml, "indicator_sleepeness", this);
 	m_ind_alcoholism		= UIHelper::CreateStatic(uiXml, "indicator_alcoholism", this);
 	m_ind_narcotism			= UIHelper::CreateStatic(uiXml, "indicator_narcotism", this);
+	m_ind_psy_health		= UIHelper::CreateStatic(uiXml, "indicator_psy_health", this);
 	m_ind_filter_dirty		= UIHelper::CreateStatic(uiXml, "indicator_filter", this);
 	m_ind_weapon_broken		= UIHelper::CreateStatic(uiXml, "indicator_weapon_broken", this);
 	m_ind_helmet_broken		= UIHelper::CreateStatic(uiXml, "indicator_helmet_broken", this);
@@ -186,7 +189,7 @@ void CUIMainIngameWnd::Init()
 	m_ind_boost_power		->Show(false);
 	m_ind_boost_rad			->Show(false);
 	
-	// Загружаем иконки 
+	// Р—Р°РіСЂСѓР¶Р°РµРј РёРєРѕРЅРєРё 
 /*	if ( IsGameTypeSingle() )
 	{
 		xml_init.InitStatic		(uiXml, "starvation_static", 0, &UIStarvationIcon);
@@ -208,6 +211,29 @@ void CUIMainIngameWnd::Init()
 	UIInvincibleIcon			= UIHelper::CreateStatic(uiXml, "invincible_static", NULL);
 	UIInvincibleIcon->Show		(false);
 
+	hud_info_x					= uiXml.ReadAttribFlt("hud_info:position",		0, "x", 0.f);
+	hud_info_y					= uiXml.ReadAttribFlt("hud_info:position",		0, "y", 0.f);
+
+	hud_info_item_x				= uiXml.ReadAttribFlt("hud_info:item_name",		0, "x", 0.f);
+	hud_info_item_y1			= uiXml.ReadAttribFlt("hud_info:item_name",		0, "y1",0.25f);
+	hud_info_item_y2			= uiXml.ReadAttribFlt("hud_info:item_name",		0, "y2",0.3f);
+	hud_info_item_y3			= uiXml.ReadAttribFlt("hud_info:item_name",		0, "y3",0.32f);
+
+	hud_info_r_e 				= uiXml.ReadAttribInt("hud_info_color:enemy",   0, "r", 0xff);
+	hud_info_g_e 				= uiXml.ReadAttribInt("hud_info_color:enemy",   0, "g", 0);
+	hud_info_b_e 				= uiXml.ReadAttribInt("hud_info_color:enemy",   0, "b", 0);
+	hud_info_a_e 				= uiXml.ReadAttribInt("hud_info_color:enemy",   0, "a", 0x80);
+
+	hud_info_r_n 				= uiXml.ReadAttribInt("hud_info_color:neutral", 0, "r", 0xff);
+	hud_info_g_n 				= uiXml.ReadAttribInt("hud_info_color:neutral", 0, "g", 0xff);
+	hud_info_b_n 				= uiXml.ReadAttribInt("hud_info_color:neutral", 0, "b", 0x80);
+	hud_info_a_n 				= uiXml.ReadAttribInt("hud_info_color:neutral", 0, "a", 0x80);
+
+	hud_info_r_f 				= uiXml.ReadAttribInt("hud_info_color:friend",  0, "r", 0);
+	hud_info_g_f 				= uiXml.ReadAttribInt("hud_info_color:friend",  0, "g", 0xff);
+	hud_info_b_f 				= uiXml.ReadAttribInt("hud_info_color:friend",  0, "b", 0);
+	hud_info_a_f 				= uiXml.ReadAttribInt("hud_info_color:friend",  0, "a", 0x80);
+
 
 	if ( (GameID() == eGameIDArtefactHunt) || (GameID() == eGameIDCaptureTheArtefact) )
 	{
@@ -226,11 +252,11 @@ void CUIMainIngameWnd::Init()
 		"artefact"
 	};
 
-	// Загружаем пороговые значения для индикаторов
+	// Р—Р°РіСЂСѓР¶Р°РµРј РїРѕСЂРѕРіРѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РґР»СЏ РёРЅРґРёРєР°С‚РѕСЂРѕРІ
 	EWarningIcons j = ewiWeaponJammed;
 	while (j < ewiInvincible)
 	{
-		// Читаем данные порогов для каждого индикатора
+		// Р§РёС‚Р°РµРј РґР°РЅРЅС‹Рµ РїРѕСЂРѕРіРѕРІ РґР»СЏ РєР°Р¶РґРѕРіРѕ РёРЅРґРёРєР°С‚РѕСЂР°
 		shared_str cfgRecord = pSettings->r_string("main_ingame_indicators_thresholds", *warningStrings[static_cast<int>(j) - 1]);
 		u32 count = _GetItemCount(*cfgRecord);
 
@@ -346,7 +372,10 @@ void CUIMainIngameWnd::Draw()
 	CUIWindow::Draw();
 	UIMotionIcon->Show(tmp);
 
-	RenderQuickInfos();		
+	RenderQuickInfos();;
+
+	if (uiPickUpItemIconNew_)
+		uiPickUpItemIconNew_->Draw();
 }
 
 
@@ -374,7 +403,12 @@ void CUIMainIngameWnd::Update()
 //	UIHealthBar.SetProgressPos	(m_pActor->GetfHealth()*100.0f);
 //	UIMotionIcon->SetPower		(m_pActor->conditions().GetPower()*100.0f);
 	
-	UpdatePickUpItem			();
+	fuzzyShowInfo_ += SHOW_INFO_SPEED * Device.fTimeDelta;
+
+	if (uiPickUpItemIconNew_ && fuzzyShowInfo_ > 0.f)
+	{
+		uiPickUpItemIconNew_->Update();
+	}
 
 	if( Device.dwFrame % 10 )
 		return;
@@ -496,7 +530,7 @@ void CUIMainIngameWnd::SetWarningIconColor(EWarningIcons icon, const u32 cl)
 {
 	bool bMagicFlag = true;
 
-	// Задаем цвет требуемой иконки
+	// Р—Р°РґР°РµРј С†РІРµС‚ С‚СЂРµР±СѓРµРјРѕР№ РёРєРѕРЅРєРё
 	switch(icon)
 	{
 	case ewiAll:
@@ -539,7 +573,7 @@ void CUIMainIngameWnd::TurnOffWarningIcon(EWarningIcons icon)
 
 void CUIMainIngameWnd::SetFlashIconState_(EFlashingIcons type, bool enable)
 {
-	// Включаем анимацию требуемой иконки
+	// Р’РєР»СЋС‡Р°РµРј Р°РЅРёРјР°С†РёСЋ С‚СЂРµР±СѓРµРјРѕР№ РёРєРѕРЅРєРё
 	FlashingIcons_it icon = m_FlashingIcons.find(type);
 	R_ASSERT2(icon != m_FlashingIcons.end(), "Flashing icon with this type not existed");
 	icon->second->Show(enable);
@@ -554,14 +588,14 @@ void CUIMainIngameWnd::InitFlashingIcons(CUIXml* node)
 
 	CUIXmlInit xml_init;
 	CUIStatic *pIcon = NULL;
-	// Пробегаемся по всем нодам и инициализируем из них статики
+	// РџСЂРѕР±РµРіР°РµРјСЃСЏ РїРѕ РІСЃРµРј РЅРѕРґР°Рј Рё РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РёР· РЅРёС… СЃС‚Р°С‚РёРєРё
 	for (int i = 0; i < staticsCount; ++i)
 	{
 		pIcon = xr_new<CUIStatic>();
 		xml_init.InitStatic(*node, flashingIconNodeName, i, pIcon);
 		shared_str iconType = node->ReadAttrib(flashingIconNodeName, i, "type", "none");
 
-		// Теперь запоминаем иконку и ее тип
+		// РўРµРїРµСЂСЊ Р·Р°РїРѕРјРёРЅР°РµРј РёРєРѕРЅРєСѓ Рё РµРµ С‚РёРї
 		EFlashingIcons type = efiPdaTask;
 
 		if		(iconType == "pda")		type = efiPdaTask;
@@ -619,55 +653,26 @@ void CUIMainIngameWnd::AnimateContacts(bool b_snd)
 
 void CUIMainIngameWnd::SetPickUpItem	(CInventoryItem* PickUpItem)
 {
-	m_pPickUpItem = PickUpItem;
-};
+	if (m_pPickUpItem != PickUpItem)
+		xr_delete(uiPickUpItemIconNew_);
 
-void CUIMainIngameWnd::UpdatePickUpItem	()
-{
-	if (!m_pPickUpItem || !Level().CurrentViewEntity() || !smart_cast<CActor*>(Level().CurrentViewEntity())) 
-	{
-		UIPickUpItemIcon->Show(false);
+	if (m_pPickUpItem == PickUpItem)
 		return;
-	};
 
+	m_pPickUpItem = PickUpItem;
 
-	shared_str sect_name	= m_pPickUpItem->object().cNameSect();
+	if (!m_pPickUpItem)
+		return;
 
-	//properties used by inventory menu
-	int m_iGridWidth	= pSettings->r_u32(sect_name, "inv_grid_width");
-	int m_iGridHeight	= pSettings->r_u32(sect_name, "inv_grid_height");
+	uiPickUpItemIconNew_ = create_cell_item(m_pPickUpItem); // use inventory cell item class
 
-	int m_iXPos			= pSettings->r_u32(sect_name, "inv_grid_x");
-	int m_iYPos			= pSettings->r_u32(sect_name, "inv_grid_y");
-
-	float scale_x = m_iPickUpItemIconWidth/
-		float(m_iGridWidth*INV_GRID_WIDTH);
-
-	float scale_y = m_iPickUpItemIconHeight/
-		float(m_iGridHeight*INV_GRID_HEIGHT);
-
-	scale_x = (scale_x>1) ? 1.0f : scale_x;
-	scale_y = (scale_y>1) ? 1.0f : scale_y;
-
-	float scale = scale_x<scale_y?scale_x:scale_y;
-
-	Frect					texture_rect;
-	texture_rect.lt.set		(m_iXPos*INV_GRID_WIDTH, m_iYPos*INV_GRID_HEIGHT);
-	texture_rect.rb.set		(m_iGridWidth*INV_GRID_WIDTH, m_iGridHeight*INV_GRID_HEIGHT);
-	texture_rect.rb.add		(texture_rect.lt);
-	UIPickUpItemIcon->GetStaticItem()->SetTextureRect(texture_rect);
-	UIPickUpItemIcon->SetStretchTexture(true);
-
-
-	UIPickUpItemIcon->SetWidth(m_iGridWidth*INV_GRID_WIDTH*scale*UI().get_current_kx());
-	UIPickUpItemIcon->SetHeight(m_iGridHeight*INV_GRID_HEIGHT*scale);
-
-	UIPickUpItemIcon->SetWndPos(Fvector2().set(	m_iPickUpItemIconX+(m_iPickUpItemIconWidth-UIPickUpItemIcon->GetWidth())/2.0f,
-												m_iPickUpItemIconY+(m_iPickUpItemIconHeight-UIPickUpItemIcon->GetHeight())/2.0f) );
-
-	UIPickUpItemIcon->SetTextureColor(color_rgba(255,255,255,192));
-	UIPickUpItemIcon->Show(true);
-};
+	float x_size = m_pPickUpItem->GetInvGridRect().x2 * (UI().is_widescreen() ? 30.f : 40.f);
+	float y_size = m_pPickUpItem->GetInvGridRect().y2 * 40.f;
+	uiPickUpItemIconNew_->SetAlignment(waCenter);
+	uiPickUpItemIconNew_->SetWndPos(Fvector2().set(m_iPickUpItemIconX, m_iPickUpItemIconY));
+	uiPickUpItemIconNew_->SetWndSize(Fvector2().set(x_size * m_iPickUpItemIconScale, y_size * m_iPickUpItemIconScale));
+	fuzzyShowInfo_ = 0.f;
+}
 
 void CUIMainIngameWnd::OnConnected()
 {
@@ -945,6 +950,29 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 		}
 	}
 
+	// M.F.S. Team Psy Health Icon
+	float psy_health = pActor->conditions().GetPsy();
+	if (psy_health < 0.5)
+	{
+		m_ind_psy_health->Show(false);
+	}
+	else
+	{
+		m_ind_psy_health->Show(true);
+		if (psy_health >= 0.5f && psy_health <= 0.75f)
+		{
+			m_ind_psy_health->InitTexture("ui_inGame2_circle_psy_health_green");
+		}
+		else if (psy_health >= 0.75f && psy_health <= 0.85f)
+		{
+			m_ind_psy_health->InitTexture("ui_inGame2_circle_psy_health_yellow");
+		}
+		else if (psy_health >= 0.85f)
+		{
+			m_ind_psy_health->InitTexture("ui_inGame2_circle_psy_health_red");
+		}
+	}
+
 // Armor broken icon
 	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(pActor->inventory().ItemFromSlot(OUTFIT_SLOT));
 	m_ind_outfit_broken->Show(false);
@@ -1044,7 +1072,7 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 // Weapon broken icon
 	u16 slot = pActor->inventory().GetActiveSlot();
 	m_ind_weapon_broken->Show(false);
-	if(slot==INV_SLOT_2 || slot==INV_SLOT_3)
+	if(slot==INV_SLOT_2 || slot==INV_SLOT_3 || slot==PISTOL_SLOT)
 	{
 		CWeapon* weapon = smart_cast<CWeapon*>(pActor->inventory().ItemFromSlot(slot));
 		if(weapon)
@@ -1165,10 +1193,10 @@ void CUIMainIngameWnd::UpdateQuickSlots()
 				CUIStatic* main_slot = m_quick_slots_icons[i];
 				main_slot->SetShader(InventoryUtilities::GetEquipmentIconsShader());
 				Frect texture_rect;
-				texture_rect.x1	= pSettings->r_float(item_name, "inv_grid_x")		*INV_GRID_WIDTH;
-				texture_rect.y1	= pSettings->r_float(item_name, "inv_grid_y")		*INV_GRID_HEIGHT;
-				texture_rect.x2	= pSettings->r_float(item_name, "inv_grid_width")	*INV_GRID_WIDTH;
-				texture_rect.y2	= pSettings->r_float(item_name, "inv_grid_height")*INV_GRID_HEIGHT;
+				texture_rect.x1	= pSettings->r_float(item_name, "inv_grid_x")		*INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons());
+				texture_rect.y1	= pSettings->r_float(item_name, "inv_grid_y")		*INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons());
+				texture_rect.x2	= pSettings->r_float(item_name, "inv_grid_width")	*INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons());
+				texture_rect.y2	= pSettings->r_float(item_name, "inv_grid_height")*INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons());
 				texture_rect.rb.add(texture_rect.lt);
 				main_slot->SetTextureRect(texture_rect);
 				main_slot->TextureOn();

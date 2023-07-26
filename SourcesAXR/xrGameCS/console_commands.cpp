@@ -59,6 +59,7 @@
 #	include "game_graph.h"
 #endif // DEBUG
 
+#include "clsid_game.h"
 #include "HUDManager.h"
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "AdvancedXrayGameConstants.h"
@@ -76,6 +77,14 @@ xr_token							crosshair_type_token[] = {
 	{ "default_crosshair",			1												},
 	{ "builds_crosshair",			2												},
 	{ "point_crosshair",			3												},
+	{ 0,							0												}
+};
+
+extern u32	death_camera_mode;
+xr_token							death_camera_mode_token[] = {
+	{ "freelook",					1												},
+	{ "fixedlook",					2												},
+	{ "firsteye",					3												},
 	{ 0,							0												}
 };
 
@@ -245,7 +254,7 @@ public:
 
 		if (count > 50)
 		{
-			Msg("! [g_spawn]: Cancel the command. Maximum value of the second argument: 50. Cound is: %d", count);
+			Msg("! [g_spawn]: Cancel the command. Maximum value of the second argument: 50. Count is: %d", count);
 			return;
 		}
 
@@ -281,7 +290,9 @@ public:
 	{
 		for (auto sect : pSettings->sections())
 		{
-			if (sect->line_exist("class") && sect->line_exist("inv_weight") || sect->line_exist("class") && sect->line_exist("$spawn") && sect->line_exist("Spawn_Inventory_Item_Section"))
+			if (sect->line_exist("class") && sect->line_exist("inv_weight") 
+				|| sect->line_exist("class") && sect->line_exist("$spawn") && sect->line_exist("Spawn_Inventory_Item_Section") 
+				|| sect->line_exist("class") && (pSettings->r_clsid(sect->Name.c_str(), "class") == CLSID_CAR))
 				tips.push_back(sect->Name.c_str());
 		}
 	}
@@ -410,6 +421,15 @@ public:
 		}
 		else
 			Msg("! [g_money] : Actor not found!");
+	}
+};
+
+struct DumpTxrsForPrefetching : public IConsole_Command {
+	DumpTxrsForPrefetching(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+
+	virtual void Execute(LPCSTR args)
+	{
+		MainMenu()->ReportTxrsForPrefetching();
 	}
 };
 
@@ -814,7 +834,7 @@ public:
 		CSavedGameWrapper			wrapper(args);
 		if (wrapper.level_id() == ai().level_graph().level_id()) {
 			if (Device.Paused())
-				Device.Pause		(FALSE, TRUE, TRUE, "CCC_ALifeLoadFrom");
+				GAME_PAUSE		(FALSE, TRUE, TRUE, "CCC_ALifeLoadFrom");
 
 			Level().remove_objects	();
 
@@ -829,7 +849,7 @@ public:
 			MainMenu()->Activate(false);
 
 		if (Device.Paused())
-			Device.Pause			(FALSE, TRUE, TRUE, "CCC_ALifeLoadFrom");
+			GAME_PAUSE(FALSE, TRUE, TRUE, "CCC_ALifeLoadFrom");
 
 		NET_Packet					net_packet;
 		net_packet.w_begin			(M_LOAD_GAME);
@@ -2092,6 +2112,7 @@ CMD4(CCC_Integer,			"hit_anims_tune",						&tune_hit_anims,		0, 1);
 		CMD1(CCC_Disinfo,		"d_info");
 		CMD1(CCC_GiveTask,		"g_task");
 		CMD1(CCC_GiveMoney,		"g_money");
+		CMD1(DumpTxrsForPrefetching, "ui_textures_for_prefetching");//Prints the list of UI textures, which caused stutterings during game
 		CMD3(CCC_Mask,			"g_god",			&psActorFlags,	AF_GODMODE);
 		CMD3(CCC_Mask,			"g_unlimitedammo",	&psActorFlags,	AF_UNLIMITEDAMMO);
 		CMD4(CCC_Integer,		"hud_adjust_mode",	&hud_adj_mode,	0, 5);
@@ -2102,8 +2123,6 @@ CMD4(CCC_Integer,			"hit_anims_tune",						&tune_hit_anims,		0, 1);
 
 	CMD3(CCC_Mask,		"g_autopickup",			&psActorFlags,	AF_AUTOPICKUP);
 	CMD3(CCC_Mask,		"g_dynamic_music",		&psActorFlags,	AF_DYNAMIC_MUSIC);
-	CMD3(CCC_Mask,		"g_right_shoulder",		&psActorFlags,	AF_RIGHT_SHOULDER);
-
 
 #ifdef DEBUG
 	CMD1(CCC_LuaHelp,				"lua_help");
@@ -2303,6 +2322,8 @@ extern BOOL dbg_moving_bones_snd_player;
 	//M.F.S. Crosshair Type
 	CMD3(CCC_Token,		"g_crosshair_type",			&crosshair_type, crosshair_type_token);
 	CMD4(CCC_Integer,	"g_advanced_crosshair",		&g_advanced_crosshair,	0, 1);
+
+	CMD3(CCC_Token,		"g_death_cam_mode",			&death_camera_mode, death_camera_mode_token);
 
 	CMD4(CCC_Integer,	"quick_save_counter",		&quick_save_counter,	0, 25);
 	CMD4(CCC_Integer,	"keypress_on_start",		&g_keypress_on_start,	0, 1);

@@ -30,6 +30,7 @@ public:
 	
 	virtual void SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
 
+	virtual void Show(bool status);
 	virtual void Show();
 	virtual void Hide();
 	CUITalkWnd*	m_pParent;
@@ -57,6 +58,9 @@ public:
 	CUIStatic			UIOthersIcon;
 	CUICharacterInfo	UICharacterInfoLeft;
 	CUICharacterInfo	UICharacterInfoRight;
+
+	CInventoryOwner*	m_pOurInvOwner;
+	CInventoryOwner*	m_pOthersInvOwner;
 
 	void                AddQuestion			(LPCSTR str, LPCSTR value, int number, bool b_finalizer);
 	void				AddAnswer			(LPCSTR SpeakerName, const char* str, bool bActor);
@@ -93,6 +97,7 @@ public:
 	CUIStatic*		m_num_text;
 	CUI3tButtonEx*	m_text;
 	shared_str		m_s_value;
+	float			m_fOffset;
 					CUIQuestionItem			(CUIXml* xml_doc, LPCSTR path);
 	void			Init					(LPCSTR val, LPCSTR text);
 

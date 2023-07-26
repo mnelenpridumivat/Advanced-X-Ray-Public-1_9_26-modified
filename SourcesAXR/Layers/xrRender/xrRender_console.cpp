@@ -23,9 +23,9 @@ xr_token							r2_aa_mode_token[] = {
 	{ "opt_noaa",					1												},
 	{ "opt_fxaa",					2												},
 	{ "opt_dlaa",					3												},
-//#if defined(USE_DX10) || defined(USE_DX11)
-	//{ "opt_smaa",					4												}, //Бывают вылеты, надо чинить
-//#endif
+#ifdef USE_DX11
+	{ "opt_smaa",					4												},
+#endif
 	{ 0,							0												}
 };
 
@@ -99,7 +99,7 @@ xr_token							qssao_token									[ ]={
 	{ "st_opt_low",					1												},
 	{ "st_opt_medium",				2												},
 	{ "st_opt_high",				3												},
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	{ "st_opt_ultra",				4												},
 #endif
 	{ 0,							0												}
@@ -110,10 +110,10 @@ xr_token							qsun_quality_token							[ ]={
 	{ "st_opt_low",					0												},
 	{ "st_opt_medium",				1												},
 	{ "st_opt_high",				2												},
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	{ "st_opt_ultra",				3												},
 	{ "st_opt_extreme",				4												},
-#endif	//	USE_DX10
+#endif	//	USE_DX11
 	{ 0,							0												}
 };
 
@@ -144,17 +144,8 @@ xr_token							qminmax_sm_token					[ ]={
 };
 
 //M.F.S. Team Color Drag Preset
-u32			ps_clr_preset			=	0	;
-xr_token							qclrdrag_token						[ ]={
-	{ "Default_clr",				0											},
-	{ "Sepia",						1											},
-	{ "Gray_moss",					2											},
-	{ "Graphite_gray",				3											},
-	{ "Zone",						4											},
-	{ "Warm_tone",					5											},
-	{ "Blue",						6											},
-	{ 0,							0											}
-};
+u32 ps_clr_preset;
+xr_vector <xr_token> qclrdrag_token;
 
 u32			ps_r2_flares = 2;			//	=	0;
 xr_token							qflares_token[] = {
@@ -337,28 +328,21 @@ float		ps_r2_ss_sunshafts_length = 1.f;
 float		ps_r2_ss_sunshafts_radius = 1.f;
 float		droplets_power_debug = 0.f;
 
-float 		ps_rcol = 1;
-float 		ps_gcol = 1;
-float 		ps_bcol = 1;
+Fvector4	ps_color_dragging = { 1.0f, 1.0f, 1.0f, 0.0f };
 
 float		ps_r2_rain_drops_intensity = 0.00025f;
 float		ps_r2_rain_drops_speed = 1.25f;
 
-float 		ps_saturation = 0;
-
 Flags32		ps_actor_shadow_flags = { 0 };
 
-Flags32		ps_r2_rain_drops_flags = { R2FLAG_RAIN_DROPS };
-
-Flags32		ps_r2_vignette_flags = { 0 };
-
-Flags32		ps_r2_hud_mask_flags = { R_FLAG_HUD_MASK
+Flags32		ps_r2_postscreen_flags = { R_FLAG_HUD_MASK
 	| R_FLAG_HUD_DYN_EFFECTS
-	};
+	| R2FLAG_RAIN_DROPS
+	| R_FLAG_CHROMATIC_ABERRATION
+};
 
 Flags32		ps_r_textures_flags = { R3_NO_RAM_TEXTURES };
 
-int ps_rs_loading_stages = 0;
 int ps_force_enable_lens_flares = 0;
 
 float ps_r2_gloss_factor = 10.0f;
@@ -377,11 +361,6 @@ Fvector4 ps_dev_param_6 = { .0f, .0f, .0f, .0f };
 Fvector4 ps_dev_param_7 = { .0f, .0f, .0f, .0f };
 Fvector4 ps_dev_param_8 = { .0f, .0f, .0f, .0f };
 
-//Pseudopbr
-float ps_r3_pbr_intensity = 25.0f;
-float ps_r3_pbr_roughness = 0.5f;
-Flags32	ps_r3_pbr_flags = { 0 };
-
 //Geometry optimization from Anomaly
 int opt_static = 0;
 int opt_dynamic = 0;
@@ -392,26 +371,58 @@ int ps_r2_lfx = 1;
 //Многопоточная загрузка текстур
 int ps_mt_texture_load = 1;
 
+//AO Debug
+int ps_r2_ao_debug = 0;
+
+float ps_r2_reflections_distance = 300.0f;
+
 Flags32 psDeviceFlags2 = { 0 };
 
 //Static on R2+
-Flags32	ps_r2_static_flags = { R2FLAG_USE_BUMP
-	| R2FLAG_STATIC_SUN
-	};
+Flags32	ps_r2_static_flags = { R2FLAG_USE_BUMP };
 
 //Screen Space Shaders Stuff
-//Fvector4 ps_ssfx_wpn_dof_1 = { .0f, .0f, .0f, .0f };
+Fvector3 ps_ssfx_shadow_cascades = Fvector3().set(20, 40, 160);
+Fvector4 ps_ssfx_grass_shadows = Fvector4().set(.0f, .35f, 30.0f, .0f);
+//Fvector4 ps_ssfx_wpn_dof_1 = Fvector4().set(.0f, .0f, .0f, .0f);
 //extern float ps_ssfx_wpn_dof_2 = 1.0f;
 
 #ifndef _EDITOR
 #include	"../../xrEngine/xr_ioconsole.h"
 #include	"../../xrEngine/xr_ioc_cmd.h"
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 #include "../xrRenderDX10/StateManager/dx10SamplerStateCache.h"
-#endif	//	USE_DX10
+#endif	//	USE_DX11
 
 //-----------------------------------------------------------------------
+
+class CCC_ssfx_cascades : public CCC_Vector3
+{
+public:
+	void apply()
+	{
+#if defined(USE_DX11)
+		RImplementation.init_cacades();
+#endif
+	}
+
+	CCC_ssfx_cascades(LPCSTR N, Fvector3 * V, const Fvector3 _min, const Fvector3 _max) : CCC_Vector3(N, V, _min, _max)
+	{
+	};
+
+	virtual void Execute(LPCSTR args)
+	{
+		CCC_Vector3::Execute(args);
+		apply();
+	}
+
+	virtual void Status(TStatus & S)
+	{
+		CCC_Vector3::Status(S);
+		apply();
+	}
+};
 
 class CCC_detail_radius : public CCC_Integer
 {
@@ -443,12 +454,12 @@ public:
 	void	apply	()	{
 		if (0==HW.pDevice)	return	;
 		int	val = *value;	clamp(val,1,16);
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		SSManager.SetMaxAnisotropy(val);
-#else	//	USE_DX10
+#else	//	USE_DX11
 		for (u32 i=0; i<HW.Caps.raster.dwStages; i++)
 			CHK_DX(HW.pDevice->SetSamplerState( i, D3DSAMP_MAXANISOTROPY, val	));
-#endif	//	USE_DX10
+#endif	//	USE_DX11
 	}
 	CCC_tf_Aniso(LPCSTR N, int*	v) : CCC_Integer(N, v, 1, 16)		{ };
 	virtual void Execute	(LPCSTR args)
@@ -468,13 +479,13 @@ public:
 	void	apply	()	{
 		if (0==HW.pDevice)	return	;
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		//	TODO: DX10: Implement mip bias control
 		//VERIFY(!"apply not implmemented.");
-#else	//	USE_DX10
+#else	//	USE_DX11
 		for (u32 i=0; i<HW.Caps.raster.dwStages; i++)
 			CHK_DX(HW.pDevice->SetSamplerState( i, D3DSAMP_MIPMAPLODBIAS, *((LPDWORD) value)));
-#endif	//	USE_DX10
+#endif	//	USE_DX11
 	}
 
 	CCC_tf_MipBias(LPCSTR N, float*	v) : CCC_Float(N, v, -0.5f, +0.5f)	{ };
@@ -646,22 +657,17 @@ class	CCC_ps_clr_preset		: public CCC_Token
 public:
 	CCC_ps_clr_preset(LPCSTR N, u32* V, xr_token* T) : CCC_Token(N,V,T)	{}	;
 
-	virtual void	Execute	(LPCSTR args)	{
+	virtual void	Execute	(LPCSTR args)
+	{
 		CCC_Token::Execute	(args);
-		string_path		_cfg;
+		string256		file_name;
+		string_path		_cfg = "mfs_team\\color_drag_settings\\";
 		string_path		cmd;
-		
-		switch	(*value)	{
-			case 0:		xr_strcpy(_cfg, "clr_default.ltx");			break;
-			case 1:		xr_strcpy(_cfg, "clr_sepia.ltx");			break;
-			case 2:		xr_strcpy(_cfg, "clr_gray_moss.ltx");		break;
-			case 3:		xr_strcpy(_cfg, "clr_graphite_gray.ltx");	break;
-			case 4:		xr_strcpy(_cfg, "clr_zone.ltx");			break;
-			case 5:		xr_strcpy(_cfg, "clr_misery.ltx");			break;
-			case 6:		xr_strcpy(_cfg, "clr_warm_tone.ltx");		break;
-			case 7:		xr_strcpy(_cfg, "clr_blue.ltx");			break;
-		}
-		FS.update_path			(_cfg,"$game_config$",_cfg);
+
+		strconcat(sizeof(file_name), file_name, args, ".ltx");
+		strconcat(sizeof(_cfg), _cfg, _cfg, file_name);
+
+		FS.update_path			(_cfg,"$game_config$", _cfg);
 		strconcat				(sizeof(cmd),cmd,"cfg_load", " ", _cfg);
 		Console->Execute		(cmd);
 	}
@@ -721,11 +727,11 @@ public:
 	CCC_BuildSSA(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = TRUE; };
 	virtual void Execute(LPCSTR args) 
 	{
-#if !defined(USE_DX10) && !defined(USE_DX11)
+#ifndef USE_DX11
 		//	TODO: DX10: Implement pixel calculator
 		r_pixel_calculator	c;
 		c.run				();
-#endif	//	USE_DX10
+#endif	//	USE_DX11
 	}
 };
 #endif
@@ -873,7 +879,7 @@ public:
 };
 
 //	Allow real-time fog config reload
-#if	(RENDER == R_R3) || (RENDER == R_R4)
+#if	(RENDER == R_R4)
 #ifdef	DEBUG
 
 #include "../xrRenderDX10/3DFluid/dx103DFluidManager.h"
@@ -888,13 +894,26 @@ public:
 	}
 };
 #endif	//	DEBUG
-#endif	//	(RENDER == R_R3) || (RENDER == R_R4)
+#endif	//	(RENDER == R_R4)
+
+static void LoadTokensFromIni(xr_vector<xr_token>& tokens, LPCSTR section)
+{
+	tokens.clear();
+
+	for (auto& item : pAdvancedSettings->r_section(section).Data)
+	{
+		tokens.push_back({item.first.c_str(), atoi(item.second.c_str())});
+	}
+	tokens.push_back({nullptr, 0});
+}
 
 //-----------------------------------------------------------------------
 void		xrRender_initconsole	()
 {
 	CMD3(CCC_Preset,	"_preset",				&ps_Preset,	qpreset_token	);
-	CMD3(CCC_ps_clr_preset,	"r2_clr_preset",	&ps_clr_preset,	qclrdrag_token	);
+
+	LoadTokensFromIni(qclrdrag_token, "color_drag_presets");
+	CMD3(CCC_ps_clr_preset,	"r2_clr_preset", &ps_clr_preset, qclrdrag_token.data());
 
 	CMD4(CCC_Integer,	"rs_skeleton_update",	&psSkeletonUpdate,	2,		128	);
 #ifdef	DEBUG
@@ -1000,21 +1019,29 @@ void		xrRender_initconsole	()
 	CMD3(CCC_Mask,		"r__actor_shadow",		&ps_actor_shadow_flags,		RFLAG_ACTOR_SHADOW);  //Swartz
     CMD3(CCC_Token, 	"r2_smap_size", 		&ps_r2_smapsize, 			qsmapsize_token	);
 	
-	CMD4(CCC_Float,		"r_color_r",			&ps_rcol,					0.0f,	2.55f	);
-	CMD4(CCC_Float,		"r_color_g",			&ps_gcol,					0.0f,	2.55f	);
-	CMD4(CCC_Float,		"r_color_b",			&ps_bcol,					0.0f,	2.55f	);
-	
-	CMD4(CCC_Float,		"r_saturation",			&ps_saturation,				-1.0f,	+1.0f	);
-	CMD3(CCC_Mask,		"r2_raindrops",			&ps_r2_rain_drops_flags,	R2FLAG_RAIN_DROPS	);	
+	CMD4(CCC_Float,		"r_color_r",			&ps_color_dragging.x,		0.0f,	2.55f	);
+	CMD4(CCC_Float,		"r_color_g",			&ps_color_dragging.y,		0.0f,	2.55f	);
+	CMD4(CCC_Float,		"r_color_b",			&ps_color_dragging.z,		0.0f,	2.55f	);	
+	CMD4(CCC_Float,		"r_saturation",			&ps_color_dragging.w,		-1.0f,	+1.0f	);
+
+	Fvector4 clr_drag_min = { 0.f, 0.f, 0.f, -1.0f };
+	Fvector4 clr_drag_max = { 2.55f, 2.55f, 2.55f, 1.f };
+	CMD4(CCC_Vector4,	"r_color_drag",			&ps_color_dragging,			clr_drag_min, clr_drag_max);
+
+	CMD3(CCC_Mask,		"r2_raindrops",			&ps_r2_postscreen_flags,	R2FLAG_RAIN_DROPS	);
 	CMD4(CCC_Float,		"r2_rain_drops_intensity",	&ps_r2_rain_drops_intensity, 0.f,	1.f	);
 	CMD4(CCC_Float,		"r2_rain_drops_speed",	&ps_r2_rain_drops_speed, 	0.8f,	5.f		);
 	// Vignette
-	CMD3(CCC_Mask,		"r2_vignette",			&ps_r2_vignette_flags,		R_FLAG_VIGNETTE);
+	CMD3(CCC_Mask,		"r2_vignette",			&ps_r2_postscreen_flags,	R_FLAG_VIGNETTE);
 	// No Ram Textures
 	CMD3(CCC_Mask,		"r3_no_ram_textures",	&ps_r_textures_flags,		R3_NO_RAM_TEXTURES);
 	// Hud Mask
-	CMD3(CCC_Mask,		"r2_hud_mask",			&ps_r2_hud_mask_flags,		R_FLAG_HUD_MASK);
-	CMD3(CCC_Mask,		"r2_hud_dyn_effects",	&ps_r2_hud_mask_flags,		R_FLAG_HUD_DYN_EFFECTS);
+	CMD3(CCC_Mask,		"r2_hud_mask",			&ps_r2_postscreen_flags,	R_FLAG_HUD_MASK);
+	CMD3(CCC_Mask,		"r2_hud_dyn_effects",	&ps_r2_postscreen_flags,	R_FLAG_HUD_DYN_EFFECTS);
+	//Chromatic Aberration
+	CMD3(CCC_Mask,		"r4_chromatic_aberration", &ps_r2_postscreen_flags,	R_FLAG_CHROMATIC_ABERRATION);
+	//Film Grain
+	CMD3(CCC_Mask,		"r4_film_grain",		&ps_r2_postscreen_flags,	R_FLAG_FILM_GRAIN);
 
 	CMD4(CCC_Float,		"r2_gloss_factor",		&ps_r2_gloss_factor,		.0f,	50.f	);
 	CMD4(CCC_Float,		"r2_gloss_min",			&ps_r2_gloss_min,			.001f,	1.0f	);
@@ -1107,11 +1134,6 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_ss_sunshafts_length",		&ps_r2_ss_sunshafts_length, .2f, 1.5f);
 	CMD4(CCC_Float,		"r2_ss_sunshafts_radius",		&ps_r2_ss_sunshafts_radius, .5f, 2.f);
 	//end ogse sunshafts 
-
-	// PseudoPBR
-	//CMD4(CCC_Float,		"r3_pbr_intensity",				&ps_r3_pbr_intensity,		.5f, 25.f);
-	//CMD4(CCC_Float,		"r3_pbr_roughness",				&ps_r3_pbr_roughness,		.0f, 1.f);
-	//CMD3(CCC_Mask,		"r3_pbr",						&ps_r3_pbr_flags,			R_FLAG_PSEUDOPBR);
 	
 	CMD3(CCC_Mask,		"r2_volumetric_lights",			&ps_r2_ls_flags,			R2FLAG_VOLUMETRIC_LIGHTS);
 //	CMD3(CCC_Mask,		"r2_sun_shafts",				&ps_r2_ls_flags,			R2FLAG_SUN_SHAFTS);
@@ -1163,6 +1185,9 @@ void		xrRender_initconsole	()
 		CMD4(CCC_Vector4,	"shader_param_6",				&ps_dev_param_6,			tw2_min, tw2_max);
 		CMD4(CCC_Vector4,	"shader_param_7",				&ps_dev_param_7,			tw2_min, tw2_max);
 		CMD4(CCC_Vector4,	"shader_param_8",				&ps_dev_param_8,			tw2_min, tw2_max);
+
+		//AO Debug
+		CMD4(CCC_Integer,	"r2_ao_gebug",					&ps_r2_ao_debug,			0, 1);
 	}
 
 	//	Igor: need restart
@@ -1174,19 +1199,17 @@ void		xrRender_initconsole	()
 	//CMD3(CCC_Mask,		"r3_msaa_hybrid",				&ps_r2_ls_flags,			R3FLAG_MSAA_HYBRID);
 	//CMD3(CCC_Mask,		"r3_msaa_opt",					&ps_r2_ls_flags,			R3FLAG_MSAA_OPT);
 	CMD3(CCC_Mask,		"r3_gbuffer_opt",				&ps_r2_ls_flags,			R3FLAG_GBUFFER_OPT);
-	//CMD3(CCC_Mask,		"r3_use_dx10_1",				&ps_r2_ls_flags,			(u32)R3FLAG_USE_DX10_1);
 	//CMD3(CCC_Token,		"r3_msaa_alphatest",			&ps_r3_msaa_atest,			qmsaa__atest_token);
 	CMD3(CCC_Token,		"r3_minmax_sm",					&ps_r3_minmax_sm,			qminmax_sm_token);
 	CMD4(CCC_detail_radius, "r__detail_radius",			&ps_r__detail_radius,		49, 300				);
 	CMD4(CCC_Integer, "r__no_scale_on_fade",			&ps_no_scale_on_fade,		0, 1				); //Alundaio
-	CMD4(CCC_Integer, "rs_loadingstages",				&ps_rs_loading_stages,		0, 1				);
 
 	//	Allow real-time fog config reload
-#if	(RENDER == R_R3) || (RENDER == R_R4)
+#if	(RENDER == R_R4)
 #ifdef	DEBUG
 	CMD1(CCC_Fog_Reload,"r3_fog_reload");
 #endif	//	DEBUG
-#endif	//	(RENDER == R_R3) || (RENDER == R_R4)
+#endif	//	(RENDER == R_R4)
 
 	CMD3(CCC_Mask,		"r3_dynamic_wet_surfaces",		&ps_r2_ls_flags,			R3FLAG_DYN_WET_SURF);
 	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_near",	&ps_r3_dyn_wet_surf_near,	10,	70		);
@@ -1208,9 +1231,13 @@ void		xrRender_initconsole	()
 	// Screen Space Shaders
 	CMD4(CCC_Vector4,		"ssfx_wpn_dof_1",				&ps_ssfx_wpn_dof_1,			tw2_min, tw2_max);
 	CMD4(CCC_Float,			"ssfx_wpn_dof_2",				&ps_ssfx_wpn_dof_2,			0.0f, 1.0f);
+	CMD4(CCC_Vector4,		"ssfx_grass_shadows",			&ps_ssfx_grass_shadows,		Fvector4().set(0, 0, 0, 0), Fvector4().set(3, 1, 100, 100));
+	CMD4(CCC_ssfx_cascades, "ssfx_shadow_cascades",			&ps_ssfx_shadow_cascades,	Fvector3().set(1.0f, 1.0f, 1.0f), Fvector3().set(300, 300, 300));
 
 	CMD4(CCC_Integer,		"r__mt_textures_load",			&ps_mt_texture_load,		0, 1); //Многопоточная загрузка текстур
 	CMD3(CCC_Token,			"r3_lowland_fog_type",			&ps_lowland_fog_type,		lowland_fog_type_token); //Тип низинного тумана
+
+	CMD4(CCC_Float,			"r3_reflections_dist",			&ps_r2_reflections_distance, 100.f, 1000.f); //Дальность отражений
 
 //	CMD3(CCC_Mask,		"r2_sun_ignore_portals",		&ps_r2_ls_flags,			R2FLAG_SUN_IGNORE_PORTALS);
 }

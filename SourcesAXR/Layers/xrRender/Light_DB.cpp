@@ -3,8 +3,37 @@
 #include "../../xrEngine/xrLevel.h"
 #include "../../xrEngine/igame_persistent.h"
 #include "../../xrEngine/environment.h"
-#include "../../utils/xrLC_Light/R_light.h"
 #include "light_db.h"
+
+#define LT_DIRECT 0
+#define LT_POINT 1
+#define LT_SECONDARY 2
+
+struct R_Light
+{
+	std::uint16_t type;  // Type of light source
+	std::uint16_t level; // GI level
+	Fvector diffuse;     // Diffuse color of light
+	Fvector position;    // Position in world space
+	Fvector direction;   // Direction in world space
+	float range;         // Cutoff range
+	float range2;        // ^2
+	float falloff;       // precalc to make light aqal to zero at light range
+	float attenuation0;  // Constant attenuation
+	float attenuation1;  // Linear attenuation
+	float attenuation2;  // Quadratic attenuation
+	float energy;        // For radiosity ONLY
+
+	Fvector tri[3];
+
+	R_Light()
+	{
+		tri[0].set(0, 0, 0);
+		tri[1].set(0, 0, EPS_S);
+		tri[2].set(EPS_S, 0, 0);
+	}
+};
+
 
 CLight_DB::CLight_DB()
 {
@@ -183,16 +212,17 @@ void			CLight_DB::add_light		(light* L)
 }
 #endif
 
-#if (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
+#if (RENDER==R_R2) || (RENDER==R_R4)
 void			CLight_DB::add_light		(light* L)
 {
-	if (Device.dwFrame==L->frame_render)	return;
-	L->frame_render							=	Device.dwFrame		;
-	if (RImplementation.o.noshadows)		L->flags.bShadow		= FALSE;
+	if (Device.dwFrame == L->frame_render && L->vp_render == RImplementation.currentViewPort)	return;
+	L->frame_render = Device.dwFrame;
+	L->vp_render = RImplementation.currentViewPort;
+	if (RImplementation.o.noshadows)		L->flags.bShadow = FALSE;
 	if (L->flags.bStatic && !ps_r2_ls_flags.test(R2FLAG_R1LIGHTS))	return;
-	L->export_to							(package);
+	L->export_to							(package[RImplementation.getVP()]);
 }
-#endif // (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
+#endif // (RENDER==R_R2) || (RENDER==R_R4)
 
 void			CLight_DB::Update			()
 {
@@ -252,5 +282,5 @@ void			CLight_DB::Update			()
 	}
 
 	// Clear selection
-	package.clear	();
+	package[RImplementation.getVP()].clear();
 }

@@ -65,7 +65,7 @@ void CActor::IR_OnKeyboardPress(int cmd)
 			if( (mstate_wishful & mcLookout) && !IsGameTypeSingle() ) return;
 
 			u16 slot = inventory().GetActiveSlot();
-			if(inventory().ActiveItem() && (slot==INV_SLOT_3 || slot==INV_SLOT_2) )
+			if(inventory().ActiveItem() && (slot==INV_SLOT_3 || slot==INV_SLOT_2 || slot == PISTOL_SLOT) )
 				mstate_wishful &=~mcSprint;
 			//-----------------------------
 			if (OnServer())
@@ -308,8 +308,18 @@ void CActor::IR_OnKeyboardHold(int cmd)
 	case kACCEL:	mstate_wishful |= mcAccel;									break;
 	case kL_STRAFE:	mstate_wishful |= mcLStrafe;								break;
 	case kR_STRAFE:	mstate_wishful |= mcRStrafe;								break;
-	case kL_LOOKOUT:mstate_wishful |= mcLLookout;								break;
-	case kR_LOOKOUT:mstate_wishful |= mcRLookout;								break;
+	case kL_LOOKOUT:
+		if (eacLookAt != cam_active)
+			mstate_wishful |= mcLLookout;
+		else
+			psActorFlags.set(AF_RIGHT_SHOULDER, true);
+		break;
+	case kR_LOOKOUT:
+		if (eacLookAt != cam_active)
+			mstate_wishful |= mcRLookout;
+		else
+			psActorFlags.set(AF_RIGHT_SHOULDER, false);
+		break;
 	case kFWD:		mstate_wishful |= mcFwd;									break;
 	case kBACK:		mstate_wishful |= mcBack;									break;
 	case kCROUCH:
@@ -517,6 +527,7 @@ static	u16 SlotsToCheck [] = {
 		GRENADE_SLOT	,		// 3
 		ARTEFACT_SLOT	,		// 10
 		PDA_SLOT		,
+		PISTOL_SLOT		,
 };
 
 void	CActor::OnNextWeaponSlot()

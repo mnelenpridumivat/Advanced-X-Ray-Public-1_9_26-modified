@@ -43,6 +43,7 @@ private:
 			void 		UpdateSleepeness			();
 			void 		UpdateAlcoholism			();
 			void 		UpdateNarcotism				();
+			void 		UpdatePsyHealth				();
 	virtual void		UpdateRadiation				();
 public:
 						CActorCondition				(CActor *object);
@@ -67,27 +68,32 @@ public:
 	virtual void 		ChangeNarcotism				(const float value);
 	virtual void 		ChangeWithdrawal			(const float value);
 	virtual void 		ChangeDrugs					(const float value);
+	virtual void 		ChangePsyHealth				(const float value);
 
 	void 				BoostParameters				(const SBooster& B, bool need_change_tf = true);
 	void 				DisableBoostParameters		(const SBooster& B);
-	IC void				BoostMaxWeight				(const float value);
-	IC void				BoostHpRestore				(const float value);
-	IC void				BoostPowerRestore			(const float value);
-	IC void				BoostRadiationRestore		(const float value);
-	IC void				BoostBleedingRestore		(const float value);
-	IC void				BoostBurnImmunity			(const float value);
-	IC void				BoostShockImmunity			(const float value);
-	IC void				BoostRadiationImmunity		(const float value);
-	IC void				BoostTelepaticImmunity		(const float value);
-	IC void				BoostChemicalBurnImmunity	(const float value);
-	IC void				BoostExplImmunity			(const float value);
-	IC void				BoostStrikeImmunity			(const float value);
-	IC void				BoostFireWoundImmunity		(const float value);
-	IC void				BoostWoundImmunity			(const float value);
-	IC void				BoostRadiationProtection	(const float value);
-	IC void				BoostTelepaticProtection	(const float value);
-	IC void				BoostChemicalBurnProtection	(const float value);
-	IC void				BoostTimeFactor				(const float value);
+	void				WoundForEach				(const luabind::functor<bool>& funct);
+	void				BoosterForEach				(const luabind::functor<bool>& funct);
+	bool				ApplyBooster_script			(const SBooster& B, LPCSTR sect);
+	void				ClearAllBoosters			();
+	void				BoostMaxWeight				(const float value);
+	void				BoostHpRestore				(const float value);
+	void				BoostPowerRestore			(const float value);
+	void				BoostRadiationRestore		(const float value);
+	void				BoostBleedingRestore		(const float value);
+	void				BoostBurnImmunity			(const float value);
+	void				BoostShockImmunity			(const float value);
+	void				BoostRadiationImmunity		(const float value);
+	void				BoostTelepaticImmunity		(const float value);
+	void				BoostChemicalBurnImmunity	(const float value);
+	void				BoostExplImmunity			(const float value);
+	void				BoostStrikeImmunity			(const float value);
+	void				BoostFireWoundImmunity		(const float value);
+	void				BoostWoundImmunity			(const float value);
+	void				BoostRadiationProtection	(const float value);
+	void				BoostTelepaticProtection	(const float value);
+	void				BoostChemicalBurnProtection	(const float value);
+	void				BoostTimeFactor				(const float value);
 	BOOSTER_MAP			GetCurBoosterInfluences		() {return m_booster_influences;};
 
 	// хромание при потере сил и здоровья
@@ -143,6 +149,7 @@ public:
 	IC		float const&	IntoxicationCritical	() { return m_fIntoxicationCritical; }
 	IC		float const&	V_Sleepeness			() { return m_fV_Sleepeness; }
 	IC		float const&	V_SleepenessPower		() { return m_fV_SleepenessPower; }
+	IC		float const&	V_SleepenessPsyHealth	() { return m_fV_SleepenessPsyHealth; }
 	IC		float const&	SleepenessCritical		() { return m_fSleepenessCritical; }
 	IC		float const&	Sleepeness_V_Sleep		() { return m_fSleepeness_V_Sleep; }
 	IC		float const&	V_Alcoholism			() { return m_fV_Alcoholism; }
@@ -185,6 +192,7 @@ public:
 
 	float m_fV_Sleepeness;
 	float m_fV_SleepenessPower;
+	float m_fV_SleepenessPsyHealth;
 	float m_fSleepenessCritical;
 	float m_fSleepeness_V_Sleep;
 
@@ -200,6 +208,9 @@ public:
 	float m_fWithdrawalCritical;
 	float m_fDrugs;
 	float m_fV_Drugs;
+
+	float m_fV_PsyHealth_Health;
+	bool m_bPsyHealthKillActor;
 
 	//Skills System
 	float m_fV_SatietySkill;
@@ -255,7 +266,13 @@ public:
 	//typedef xr_vector<SMedicineInfluenceValues>::iterator BOOSTS_VECTOR_ITER;
 	//BOOSTS_VECTOR m_vecBoosts;
 	ref_sound m_use_sound;
+
+	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
+
+add_to_type_list(CActorCondition)
+#undef script_type_list
+#define script_type_list save_type_list(CActorCondition)
 
 class CActorDeathEffector
 {

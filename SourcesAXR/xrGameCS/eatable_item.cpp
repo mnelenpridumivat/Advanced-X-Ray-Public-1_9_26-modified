@@ -43,6 +43,7 @@ CEatableItem::CEatableItem()
 	m_fHangoverInfluence = 0;
 	m_fNarcotismInfluence = 0;
 	m_fWithdrawalInfluence = 0;
+	m_fPsyHealthInfluence = 0;
 	m_iPortionsNum = 1;
 	anim_sect = nullptr;
 	use_cam_effector = nullptr;
@@ -54,6 +55,7 @@ CEatableItem::CEatableItem()
 	m_iAnimLength = 0;
 	m_bActivated = false;
 	m_bItmStartAnim = false;
+	m_bNeedDestroyNotUseful = true;
 }
 
 CEatableItem::~CEatableItem()
@@ -81,6 +83,7 @@ void CEatableItem::Load(LPCSTR section)
 	m_fHangoverInfluence		= pSettings->r_float(section, "eat_hangover");
 	m_fNarcotismInfluence		= pSettings->r_float(section, "eat_narcotism");
 	m_fWithdrawalInfluence		= pSettings->r_float(section, "eat_withdrawal");
+	m_fPsyHealthInfluence		= pSettings->r_float(section, "eat_psy_health");
 	m_fWoundsHealPerc			= pSettings->r_float(section, "wounds_heal_perc");
 	clamp						(m_fWoundsHealPerc, 0.f, 1.f);
 	
@@ -95,6 +98,8 @@ void CEatableItem::Load(LPCSTR section)
 	anim_sect = READ_IF_EXISTS(pSettings, r_string, section, "hud_section", nullptr);
 	m_fEffectorIntensity = READ_IF_EXISTS(pSettings, r_float, section, "cam_effector_intensity", 1.0f);
 	use_cam_effector = READ_IF_EXISTS(pSettings, r_string, section, "use_cam_effector", nullptr);
+
+	m_bNeedDestroyNotUseful = READ_IF_EXISTS(pSettings, r_bool, section, "need_destroy_if_not_useful", true);
 }
 
 BOOL CEatableItem::net_Spawn				(CSE_Abstract* DC)
@@ -169,6 +174,9 @@ void CEatableItem::StartAnimation()
 
 void CEatableItem::OnH_A_Independent() 
 {
+
+	if (!m_bNeedDestroyNotUseful) return;
+
 	inherited::OnH_A_Independent();
 
 	if(!Useful() && this->m_bCanUse) 
@@ -180,7 +188,7 @@ void CEatableItem::OnH_A_Independent()
 
 void CEatableItem::OnH_B_Independent(bool just_before_destroy)
 {
-	if(!Useful()) 
+	if (m_bNeedDestroyNotUseful && !Useful())
 	{
 		object().setVisible(FALSE);
 		object().setEnabled(FALSE);
@@ -215,8 +223,11 @@ void CEatableItem::UpdateUseAnim()
 	CCustomDetector* pDet = smart_cast<CCustomDetector*>(Actor()->inventory().ItemFromSlot(DETECTOR_SLOT));
 	bool IsActorAlive = g_pGamePersistent->GetActorAliveStatus();
 
-	if (m_bItmStartAnim && Actor()->inventory().GetActiveSlot() == NO_ACTIVE_SLOT && pDet->IsHidden())
+	if (m_bItmStartAnim && Actor()->inventory().GetActiveSlot() == NO_ACTIVE_SLOT && (!pDet || pDet->IsHidden()))
 		StartAnimation();
+
+	if (!IsActorAlive)
+		m_using_sound.stop();
 
 	if (m_bActivated)
 	{
@@ -259,6 +270,7 @@ void CEatableItem::UseBy (CEntityAlive* entity_alive)
 	entity_alive->conditions().ChangeHangover	(m_fHangoverInfluence);
 	entity_alive->conditions().ChangeNarcotism	(m_fNarcotismInfluence);
 	entity_alive->conditions().ChangeWithdrawal	(m_fWithdrawalInfluence);
+	entity_alive->conditions().ChangePsyHealth	(m_fPsyHealthInfluence);
 
 	entity_alive->conditions().SetMaxPower( entity_alive->conditions().GetMaxPower()+m_fMaxPowerUpInfluence );
 	

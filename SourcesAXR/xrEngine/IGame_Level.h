@@ -67,6 +67,10 @@ public:
 	BOOL						bReady;
 
 	CInifile*					pLevel;
+
+	fastdelegate::FastDelegate1<float>		lastApplyCamera;
+	float									lastApplyCameraVPNear;
+
 public:	// deferred sound events
 	struct	_esound_delegate	{
 		Feel::Sound*			dest	;
@@ -91,10 +95,13 @@ public:
 	virtual BOOL				Load					( u32 dwNum );
 	virtual BOOL				Load_GameSpecific_Before( )										{ return TRUE; };		// before object loading
 	virtual BOOL				Load_GameSpecific_After	( )										{ return TRUE; };		// after object loading
+	virtual void				Load_GameSpecific_CFORM_Serialize(IWriter& writer)				= 0;
+	virtual bool				Load_GameSpecific_CFORM_Deserialize(IReader& reader)			= 0;
 	virtual void				Load_GameSpecific_CFORM	( CDB::TRI* T, u32 count )				= 0;
 
 	virtual void	_BCL		OnFrame					( void );
 	virtual void				OnRender				( void );
+	virtual void				ApplyCamera				();
 
 	virtual	shared_str			OpenDemoFile			(LPCSTR demo_file_name) = 0;
 	virtual void				net_StartPlayDemo		() = 0;
@@ -116,6 +123,7 @@ public:
 	virtual float				GetEnvironmentTimeFactor	() const = 0;
 	virtual void				SetEnvironmentTimeFactor	(const float fTimeFactor) = 0;
 	virtual u64					GetEnvironmentGameTime		() const = 0;
+	virtual void				OnDestroyObject				(std::uint16_t id) = 0;
 };
 
 //-----------------------------------------------------------------------------------------------------------

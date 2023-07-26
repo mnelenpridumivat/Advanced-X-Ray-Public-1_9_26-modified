@@ -104,6 +104,9 @@ bool CUISequenceItem::Stop(bool bForce)
 
 CUISequencer::CUISequencer()
 {
+	m_UIWindow = nullptr;
+	m_pStoredInputReceiver = nullptr;
+	m_name = nullptr;
 	m_flags.zero();
 }
 
@@ -113,7 +116,7 @@ void CUISequencer::Start(LPCSTR tutor_name)
 	VERIFY						(m_sequencer_items.size()==0);
 	Device.seqFrame.Add			(this, REG_PRIORITY_LOW-10000);
 	
-	
+	m_name						= tutor_name;
 	m_UIWindow					= xr_new<CUIWindow>();
 
 	CUIXml uiXml;
@@ -183,12 +186,12 @@ void CUISequencer::Start(LPCSTR tutor_name)
 	
 	if(m_flags.test(etsNeedPauseOn) && !m_flags.test(etsStoredPauseState))
 	{
-		Device.Pause			(TRUE, TRUE, TRUE, "tutorial_start");
+		GAME_PAUSE			(TRUE, TRUE, TRUE, "tutorial_start");
 		bShowPauseString		= FALSE;
 	}
 
 	if(m_flags.test(etsNeedPauseOff) && m_flags.test(etsStoredPauseState))
-		Device.Pause			(FALSE, TRUE, FALSE, "tutorial_start");
+		GAME_PAUSE			(FALSE, TRUE, FALSE, "tutorial_start");
 
 	if (m_global_sound._handle())		
 		m_global_sound.play(NULL, sm_2D);
@@ -234,6 +237,8 @@ extern CUISequencer * g_tutorial2;
 
 void CUISequencer::Destroy()
 {
+	m_name = nullptr;
+
 	if(m_stop_lua_function.size())
 		CallFunction(m_stop_lua_function);
 
@@ -275,10 +280,10 @@ void CUISequencer::Stop()
 	}
 	{
 	if(m_flags.test(etsNeedPauseOn) && !m_flags.test(etsStoredPauseState))
-		Device.Pause			(FALSE, TRUE, TRUE, "tutorial_stop");
+		GAME_PAUSE			(FALSE, TRUE, TRUE, "tutorial_stop");
 
 	if(m_flags.test(etsNeedPauseOff) && m_flags.test(etsStoredPauseState))
-		Device.Pause			(TRUE, TRUE, FALSE, "tutorial_stop");
+		GAME_PAUSE			(TRUE, TRUE, FALSE, "tutorial_stop");
 	}
 	Destroy			();
 }

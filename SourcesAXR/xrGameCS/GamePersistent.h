@@ -69,6 +69,7 @@ public:
 						CGamePersistent			();
 	virtual				~CGamePersistent		();
 
+			void		PreStart				(LPCSTR op) override;
 	virtual void		Start					(LPCSTR op);
 	virtual void		Disconnect				();
 
@@ -113,8 +114,12 @@ public:
 			float		GetActorMaxPower		() override;
 			float		GetActorPower			() override;
 			float		GetActorBleeding		() override;
+			float		GetActorIntoxication	() override;
 			bool		GetActorAliveStatus		();
 			bool		GetActor				();
+			bool		IsCamFirstEye			();
+
+	virtual void		EditorOnFrame			();
 
 	xr_vector<fastdelegate::FastDelegate0<>>    GameLoadedCallback;
 };

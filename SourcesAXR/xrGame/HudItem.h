@@ -113,6 +113,7 @@ public:
 	bool						TryPlayAnimIdle		();
 	virtual bool				MovingAnimAllowedNow() { return true; }
 	virtual bool				IsMisfireNow		() { return false; }
+	virtual bool				IsMagazineEmpty		() { return false; }
 	virtual bool				NeedBlendAnm		();
 
 	virtual void				PlayAnimIdleMoving	();
@@ -130,10 +131,10 @@ public:
 
 	virtual	void				UpdateXForm			()						= 0;
 
-	u32							PlayHUDMotion			(const shared_str& M, BOOL bMixIn, CHudItem*  W, u32 state);
-	u32							PlayHUDMotionNew			(const shared_str& M, const bool bMixIn, const u32 state, const bool randomAnim = true);
-	u32							PlayHUDMotionIfExists	(std::initializer_list<const char*>, const bool bMixIn, const u32 state, const bool randomAnim = true);
-	u32							PlayHUDMotion_noCB		(const shared_str& M, const bool bMixIn, const bool randomAnim = true);
+	u32							PlayHUDMotion			(const shared_str& M, BOOL bMixIn, CHudItem*  W, u32 state, float speed = 1.f);
+	u32							PlayHUDMotionNew			(const shared_str& M, const bool bMixIn, const u32 state, const bool randomAnim = true, float speed = 1.f);
+	u32							PlayHUDMotionIfExists	(std::initializer_list<const char*>, const bool bMixIn, const u32 state, const bool randomAnim = true, float speed = 1.f);
+	u32							PlayHUDMotion_noCB		(const shared_str& M, const bool bMixIn, const bool randomAnim = true, float speed = 1.f);
 	bool						isHUDAnimationExist		(LPCSTR anim_name);
 	void						StopCurrentAnimWithoutCallback();
 
@@ -158,6 +159,7 @@ protected:
 
 	IC		void				SetPending			(BOOL H)			{ m_huditem_flags.set(fl_pending, H);}
 	shared_str					hud_sect;
+	shared_str					item_sect;
 
 	//кадры момента пересчета XFORM и FirePos
 	u32							dwFP_Frame;
@@ -184,5 +186,16 @@ public:
 	virtual void				debug_draw_firedeps		() {};
 
 	virtual CHudItem*			cast_hud_item			()				{ return this; }
+
+	float						GetHudFov				();
+
+	bool  m_nearwall_enabled;
+	float m_hud_fov_add_mod;
+	float m_nearwall_last_hud_fov;
+	float m_nearwall_dist_max		= 0.f;
+	float m_nearwall_dist_min		= 0.f;
+	float m_nearwall_target_hud_fov = 0.f;
+	float m_nearwall_speed_mod		= 0.f;
+	float m_base_fov				= 0.f;
 };
 

@@ -92,10 +92,10 @@ void CScriptGameObject::script_register(lua_State *L)
 				value("take_item_from_box",			int(GameObject::eInvBoxItemTake)),
 				value("weapon_no_ammo",				int(GameObject::eWeaponNoAmmoAvailable)),
 
-				// for anomal pseudogiant
-				value("shield_on", int(GameObject::eShieldOn)),
-				value("shield_off", int(GameObject::eShieldOff)),
-				value("jump", int(GameObject::eJump)),
+				// vehicle
+				value("on_attach_vehicle",			int(GameObject::eAttachVehicle)),
+				value("on_detach_vehicle",			int(GameObject::eDetachVehicle)),
+				value("on_use_vehicle",				int(GameObject::eUseVehicle)),
 				
 				value("map_location_added",			int(GameObject::eMapLocationAdded))
 			],

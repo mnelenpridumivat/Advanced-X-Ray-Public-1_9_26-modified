@@ -6,12 +6,20 @@
 class CUIDragItem;
 class CUIDragDropListEx;
 class CUICellItem;
+class CUIProgressBar;
 
-class ICustomDrawCell
+class ICustomDrawCellItem
 {
 public:
-	virtual				~ICustomDrawCell	()	{};
-	virtual void		OnDraw				(CUICellItem* cell)	= 0;
+	virtual				~ICustomDrawCellItem	()	{};
+	virtual void		OnDraw					(CUICellItem* cell)	= 0;
+};
+
+class ICustomDrawDragItem
+{
+public:
+	virtual				~ICustomDrawDragItem	()	{};
+	virtual void		OnDraw					(CUIDragItem* drag_item)	= 0;
 };
 
 class CUICellItem :public CUIStatic
@@ -23,14 +31,22 @@ protected:
 
 	CUIDragDropListEx*		m_pParentList;
 	Ivector2				m_grid_size;
-	ICustomDrawCell*		m_custom_draw;
+	ICustomDrawCellItem*	m_custom_draw;
 	int						m_accelerator;
-	CUIStatic*				m_text; 
-	//CUIStatic*				m_mark; 
+	CUIStatic*				m_text;
+	CUIStatic*				m_custom_text;
+	Fvector2				m_custom_text_pos;
 	CUIStatic*				m_upgrade;
 	Fvector2				m_upgrade_pos;
+	CUIStatic*				m_qmark;
+	Fvector2				m_qmark_pos;
 
 	virtual void			UpdateItemText			();
+
+	CUIProgressBar*			m_pConditionState;
+	CUIProgressBar*			m_pPortionsState;
+
+
 			void			init					();
 public:
 							CUICellItem				();
@@ -41,6 +57,8 @@ public:
 	virtual		void		Draw					();
 	virtual		void		Update					();
 	virtual		void		SetOriginalRect			(const Frect& r);
+
+				void		UpdateIndicators();
 				
 	virtual		void		OnAfterChild			(CUIDragDropListEx* parent_list)						{};
 
@@ -58,7 +76,10 @@ public:
 
 	CUIDragDropListEx*		OwnerList				()						{return m_pParentList;}
 				void		SetOwnerList			(CUIDragDropListEx* p);
-				void		SetCustomDraw			(ICustomDrawCell* c);
+				void		UpdateCellItemProgressBars();
+				void		UpdateConditionProgressBar();
+				void		UpdatePortionsProgressBar();
+				void		SetCustomDraw			(ICustomDrawCellItem* c);
 				void		Mark					(bool status);
 	CUIStatic&				get_ui_text				() const { return *m_text; }
 
@@ -72,22 +93,26 @@ public:
 				u32			m_drawn_frame;
 				bool		m_b_destroy_childs;
 				bool		m_selected;
+				bool		m_select_armament;
 				bool		m_cur_mark;
 				bool		m_has_upgrade;
+				bool		m_is_quest;
+				bool		m_with_custom_text;
 };
 
 class CUIDragItem: public CUIWindow, public pureRender, public pureFrame
 {
-private:
 	typedef		CUIWindow	inherited;
 	CUIStatic				m_static;
 	CUICellItem*			m_pParent;
 	Fvector2				m_pos_offset;
 	CUIDragDropListEx*		m_back_list;
+	ICustomDrawDragItem*	m_custom_draw;
 public:
 							CUIDragItem(CUICellItem* parent);
 	virtual		void		Init(const ui_shader& sh, const Frect& rect, const Frect& text_rect);
 	virtual					~CUIDragItem();
+				void		SetCustomDraw			(ICustomDrawDragItem* c);
 			CUIStatic*		wnd						() {return &m_static;}
 	virtual		bool		OnMouse					(float x, float y, EUIMessages mouse_action);
 	virtual		void		Draw					();

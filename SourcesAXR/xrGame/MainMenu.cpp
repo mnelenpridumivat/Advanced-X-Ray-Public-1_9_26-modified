@@ -127,10 +127,14 @@ CMainMenu::CMainMenu	()
 	}
 	
 	Device.seqFrame.Add		(this,REG_PRIORITY_LOW-1000);
+
+	Msg("*Start prefetching UI textures");
+	Device.m_pRender->RenderPrefetchUITextures();
 }
 
 CMainMenu::~CMainMenu	()
 {
+	ReportTxrsForPrefetching		();
 	Device.seqFrame.Remove			(this);
 	xr_delete						(g_btnHint);
 	xr_delete						(g_statHint);
@@ -185,7 +189,7 @@ void CMainMenu::Activate	(bool bActivate)
 	if(bActivate)
 	{
 		b_shniaganeed_pp			= true;
-		Device.Pause				(TRUE, FALSE, TRUE, "mm_activate1");
+		GAME_PAUSE				(TRUE, FALSE, TRUE, "mm_activate1");
 		m_Flags.set					(flActive|flNeedChangeCapture,TRUE);
 
 		m_Flags.set					(flRestoreCursor,GetUICursor().IsVisible());
@@ -204,7 +208,7 @@ void CMainMenu::Activate	(bool bActivate)
 			m_Flags.set					(flRestorePauseStr, bShowPauseString);
 			bShowPauseString			= FALSE;
 			if(!m_Flags.test(flRestorePause))
-				Device.Pause			(TRUE, TRUE, FALSE, "mm_activate2");
+				GAME_PAUSE			(TRUE, TRUE, FALSE, "mm_activate2");
 		}
 
 		if(g_pGameLevel)
@@ -259,7 +263,7 @@ void CMainMenu::Activate	(bool bActivate)
 		if(b_is_single)
 		{
 			if(!m_Flags.test(flRestorePause))
-				Device.Pause			(FALSE, TRUE, FALSE, "mm_deactivate1");
+				GAME_PAUSE			(FALSE, TRUE, FALSE, "mm_deactivate1");
 
 			bShowPauseString			= m_Flags.test(flRestorePauseStr);
 		}	
@@ -267,7 +271,7 @@ void CMainMenu::Activate	(bool bActivate)
 		if(m_Flags.test(flRestoreCursor))
 			GetUICursor().Show			();
 
-		Device.Pause					(FALSE, TRUE, TRUE, "mm_deactivate2");
+		GAME_PAUSE					(FALSE, TRUE, TRUE, "mm_deactivate2");
 
 		if(m_Flags.test(flNeedVidRestart))
 		{
@@ -395,6 +399,11 @@ void CMainMenu::OnRender	()
 {
 	if(m_Flags.test(flGameSaveScreenshot))
 		return;
+
+	Render->firstViewPort = MAIN_VIEWPORT;
+	Render->lastViewPort = MAIN_VIEWPORT;
+	Render->currentViewPort = MAIN_VIEWPORT;
+	Render->needPresenting = true;
 
 	if(g_pGameLevel)
 		Render->Calculate			();
@@ -878,4 +887,15 @@ demo_info const * CMainMenu::GetDemoInfo(LPCSTR file_name)
 		m_demo_info_loader = xr_new<demo_info_loader>();
 	}
 	return m_demo_info_loader->get_demofile_info(file_name);
+}
+
+void CMainMenu::ReportTxrsForPrefetching()
+{
+	if (SuggestedForPrefetching.size() > 0)
+	{
+		Msg("---These UI textures are suggested to be prefetched since they caused stutterings when some UI window was loading");
+		Msg("---Add this list to prefetch_ui_textures.ltx (wisely)");
+		for (u32 i = 0; i < SuggestedForPrefetching.size(); i++)
+			Msg("%s", SuggestedForPrefetching[i].c_str());
+	}
 }

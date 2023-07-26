@@ -48,6 +48,8 @@ private:
 		stt_hangover,
 		stt_narcotism,
 		stt_withdrawal,
+		stt_psy_health,
+		stt_cur_power,
 		stt_count
 	};
 	ui_actor_state_item*	m_state[stt_count];
@@ -84,6 +86,14 @@ protected:
 	UI_Arrow*				m_arrow;
 	UI_Arrow*				m_arrow_shadow;
 	float					m_magnitude;
+
+	//color
+	u32						m_negative_color;
+	u32						m_neutral_color;
+	u32						m_positive_color;
+	bool					clr_invert;
+	bool					use_color;
+	bool					clr_dynamic;
 
 public:
 					ui_actor_state_item		();

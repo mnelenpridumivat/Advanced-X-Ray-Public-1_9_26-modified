@@ -14,6 +14,7 @@
 #include "../string_table.h"
 
 #include "../actor.h"
+#include "../CustomOutfit.h"
 #include "../../XrServerEntitiesCS/script_process.h"
 #include "../inventory.h"
 
@@ -99,7 +100,7 @@ void CUIInventoryUpgradeWnd::Init()
 void CUIInventoryUpgradeWnd::InitInventory( CInventoryItem* item, bool can_upgrade )
 {
 	m_inv_item = item;
-	m_item_info->InitItem( item );
+	m_item_info->InitItemUpgrade(item);
 	
 	m_scheme_wnd->DetachAll();
 	m_scheme_wnd->Show( false );
@@ -282,7 +283,6 @@ void CUIInventoryUpgradeWnd::OnMesBoxYes()
 	{
 //-		OnUpgradeItem();
 //-		UpdateAllUpgrades();
-		
 		VERIFY( m_pParentWnd );
 		CUIActorMenu* parent_wnd = smart_cast<CUIActorMenu*>( m_pParentWnd );
 		if ( parent_wnd )

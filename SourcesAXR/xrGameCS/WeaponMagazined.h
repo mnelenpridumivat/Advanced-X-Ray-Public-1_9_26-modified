@@ -31,6 +31,7 @@ protected:
 	ESoundTypes		m_eSoundReload;
 	ESoundTypes		m_eSoundClose;
 	ESoundTypes		m_eSoundReflect;
+	bool			m_sounds_enabled;
 	// General
 	//кадр момента пересчета UpdateSounds
 	u32				dwUpdateSounds_Frame;
@@ -177,10 +178,7 @@ protected:
 
 	virtual void    SetAnimFlag(u32 flag, LPCSTR anim_name);
 
-private:
-	string64 guns_aim_anm;
 protected:
-	const	char*	GetAnimAimName		();
 
 	enum {
 		ANM_SHOW_EMPTY = (1 << 0),
@@ -201,7 +199,7 @@ protected:
 
 	Flags32 psWpnAnimsFlag;
 
-	bool WeaponSoundExist(LPCSTR section, LPCSTR sound_name) const;
+	bool WeaponSoundExist(LPCSTR section, LPCSTR sound_name, bool log = false) const;
 
 	virtual	int		ShotsFired			() { return m_iShotNum; }
 	virtual float	GetWeaponDeterioration	();

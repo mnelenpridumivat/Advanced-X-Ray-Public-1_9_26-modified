@@ -1,13 +1,15 @@
-﻿#pragma once
+#pragma once
 
 #include "UIDialogWnd.h"
 #include "UIWndCallback.h"
 #include "../../XrServerEntitiesCS/inventory_space.h"
 #include "UIHint.h"
+#include "script_game_object.h" //Alundaio
 
 class CUICharacterInfo;
 class CUIDragDropListEx;
 class CUICellItem;
+class CUIDragItem;
 class ui_actor_state_wnd;
 class CUIItemInfo;
 class CUIFrameLineWnd;
@@ -36,6 +38,7 @@ enum EDDListType{
 		iPartnerTradeBag,
 		iPartnerTrade,
 		iDeadBodyBag,
+		iTrashSlot,
 		iListTypeMax
 };
 
@@ -95,6 +98,7 @@ protected:
 	CUIDragDropListEx*			m_pTradePartnerBagList;
 	CUIDragDropListEx*			m_pTradePartnerList;
 	CUIDragDropListEx*			m_pDeadBodyBagList;
+	CUIDragDropListEx*			m_pTrashList;
 	CUIDragDropListEx*			m_pInventoryKnifeList;
 	CUIDragDropListEx*			m_pInventoryBinocularList;
 	CUIDragDropListEx*			m_pInventoryTorchList;
@@ -104,6 +108,19 @@ protected:
 	CUIDragDropListEx*			m_pInventoryPdaList;
 
 	xr_vector<CUIStatic*>		m_belt_list_over;
+	
+	CUIStatic*					m_PistolSlotHighlight;
+	CUIStatic*					m_RiffleSlotHighlight;
+	CUIStatic*					m_OutfitSlotHighlight;
+	CUIStatic*					m_DetectorSlotHighlight;
+	xr_vector<CUIStatic*>		m_ArtefactSlotsHighlight;
+	CUIStatic*					m_KnifeSlotHighlight;
+	CUIStatic*					m_BinocularSlotHighlight;
+	CUIStatic*					m_TorchSlotHighlight;
+	CUIStatic*					m_BackpackSlotHighlight;
+	CUIStatic*					m_DosimeterSlotHighlight;
+	CUIStatic*					m_PantsSlotHighlight;
+	CUIStatic*					m_PdaSlotHighlight;
 
 	CUIInventoryUpgradeWnd*		m_pUpgradeWnd;
 	
@@ -152,7 +169,10 @@ protected:
 
 	u32							m_last_time;
 	bool						m_repair_mode;
+	bool						m_highlight_clear;
+	bool						m_item_info_view;
 	u32							m_trade_partner_inventory_state;
+	bool						m_bNeedMoveAfsToBag;
 public:
 	void						SetMenuMode					(EMenuMode mode);
 	EMenuMode					GetMenuMode					() {return m_currMenuMode;};
@@ -167,8 +187,19 @@ private:
 	void						PropertiesBoxForWeapon		(CUICellItem* cell_item, PIItem item, bool& b_show);
 	void						PropertiesBoxForAddon		(PIItem item, bool& b_show);
 	void						PropertiesBoxForUsing		(PIItem item, bool& b_show);
+	void						PropertiesBoxForPlaying		(PIItem item, bool& b_show);
 	void						PropertiesBoxForDrop		(CUICellItem* cell_item, PIItem item, bool& b_show);
 	void						PropertiesBoxForRepair		(PIItem item, bool& b_show);
+
+private:
+	void						clear_highlight_lists		();
+	void						set_highlight_item			(CUICellItem* cell_item);
+	void						highlight_item_slot			(CUICellItem* cell_item);
+	void						highlight_armament			(PIItem item, CUIDragDropListEx* ddlist);
+	void						highlight_ammo_for_weapon	(PIItem weapon_item, CUIDragDropListEx* ddlist);
+	void						highlight_weapons_for_ammo	(PIItem ammo_item, CUIDragDropListEx* ddlist);
+	bool						highlight_addons_for_weapon	(PIItem weapon_item, CUICellItem* ci);
+	void						highlight_weapons_for_addon	(PIItem addon_item, CUIDragDropListEx* ddlist);
 
 protected:			
 	void						Construct					();
@@ -191,9 +222,11 @@ protected:
 	bool		__stdcall		OnItemDbClick				(CUICellItem* itm);
 	bool		__stdcall		OnItemSelected				(CUICellItem* itm);
 	bool		__stdcall		OnItemRButtonClick			(CUICellItem* itm);
+	bool		__stdcall		OnItemMButtonClick			(CUICellItem* itm);
 	bool		__stdcall		OnItemFocusReceive			(CUICellItem* itm);
 	bool		__stdcall		OnItemFocusLost				(CUICellItem* itm);
 	bool		__stdcall		OnItemFocusedUpdate			(CUICellItem* itm);
+	void		__stdcall		OnDragItemOnTrash			(CUIDragItem* item, bool b_receive);
 	bool						OnItemDropped				(PIItem itm, CUIDragDropListEx* new_owner, CUIDragDropListEx* old_owner);
 
 	void						ResetMode					();
@@ -209,10 +242,12 @@ protected:
 	void						CurModeToScript				();
 	void						RepairEffect_CurItem		();
 
+public:
 	void						SetCurrentItem				(CUICellItem* itm);
 	CUICellItem*				CurrentItem					();
 	PIItem						CurrentIItem				();
 
+protected:
 	void						InfoCurItem					(CUICellItem* cell_item); //on update item
 
 	void						ActivatePropertiesBox		();
@@ -301,6 +336,14 @@ public:
 	void		__stdcall		TakeAllFromPartner			(CUIWindow* w, void* d);
 	void						TakeAllFromInventoryBox		();
 
+	CScriptGameObject*			GetCurrentItemAsGameObject	();
+	void						RefreshCurrentItemCell		();
+
 	IC	UIHint*					get_hint_wnd				() { return m_hint_wnd; }
 
+	DECLARE_SCRIPT_REGISTER_FUNCTION
 }; // class CUIActorMenu
+
+add_to_type_list(CUIActorMenu)
+#undef script_type_list
+#define script_type_list save_type_list(CUIActorMenu)

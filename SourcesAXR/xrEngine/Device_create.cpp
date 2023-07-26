@@ -8,8 +8,10 @@
 #include "../xrcdb/xrxrc.h"
 
 #include "securom_api.h"
+#include <imgui.h>
 
 extern XRCDB_API BOOL *cdb_bDebug;
+extern ENGINE_API float psSVPImageSizeK;
 
 void	SetupGPU(IRenderDeviceRender *pRender)
 {
@@ -30,7 +32,7 @@ void	SetupGPU(IRenderDeviceRender *pRender)
 	pRender->SetupGPU(bForceGPU_SW, bForceGPU_NonPure, bForceGPU_REF);
 }
 
-void CRenderDevice::_SetupStates	()
+void CRenderDevice::_SetupStates()
 {
 	// General Render States
 	mView.identity			();
@@ -42,73 +44,7 @@ void CRenderDevice::_SetupStates	()
 	vCameraRight.set		(1,0,0);
 
 	m_pRender->SetupStates();
-
-	/*
-	HW.Caps.Update			();
-	for (u32 i=0; i<HW.Caps.raster.dwStages; i++)				{
-		float fBias = -.5f	;
-		CHK_DX(HW.pDevice->SetSamplerState	( i, D3DSAMP_MAXANISOTROPY, 4				));
-		CHK_DX(HW.pDevice->SetSamplerState	( i, D3DSAMP_MIPMAPLODBIAS, *((LPDWORD) (&fBias))));
-		CHK_DX(HW.pDevice->SetSamplerState	( i, D3DSAMP_MINFILTER,	D3DTEXF_LINEAR 		));
-		CHK_DX(HW.pDevice->SetSamplerState	( i, D3DSAMP_MAGFILTER,	D3DTEXF_LINEAR 		));
-		CHK_DX(HW.pDevice->SetSamplerState	( i, D3DSAMP_MIPFILTER,	D3DTEXF_LINEAR		));
-	}
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_DITHERENABLE,		TRUE				));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_COLORVERTEX,		TRUE				));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_ZENABLE,			TRUE				));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_SHADEMODE,			D3DSHADE_GOURAUD	));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_CULLMODE,			D3DCULL_CCW			));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_ALPHAFUNC,			D3DCMP_GREATER		));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_LOCALVIEWER,		TRUE				));
-
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_MATERIAL	));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_SPECULARMATERIALSOURCE,D3DMCS_MATERIAL	));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_AMBIENTMATERIALSOURCE, D3DMCS_MATERIAL	));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_EMISSIVEMATERIALSOURCE,D3DMCS_COLOR1	));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_MULTISAMPLEANTIALIAS,	FALSE			));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_NORMALIZENORMALS,		TRUE			));
-
-	if (psDeviceFlags.test(rsWireframe))	{ CHK_DX(HW.pDevice->SetRenderState( D3DRS_FILLMODE,			D3DFILL_WIREFRAME	)); }
-	else									{ CHK_DX(HW.pDevice->SetRenderState( D3DRS_FILLMODE,			D3DFILL_SOLID		)); }
-
-	// ******************** Fog parameters
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_FOGCOLOR,			0					));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_RANGEFOGENABLE,	FALSE				));
-	if (HW.Caps.bTableFog)	{
-		CHK_DX(HW.pDevice->SetRenderState( D3DRS_FOGTABLEMODE,	D3DFOG_LINEAR		));
-		CHK_DX(HW.pDevice->SetRenderState( D3DRS_FOGVERTEXMODE,	D3DFOG_NONE			));
-	} else {
-		CHK_DX(HW.pDevice->SetRenderState( D3DRS_FOGTABLEMODE,	D3DFOG_NONE			));
-		CHK_DX(HW.pDevice->SetRenderState( D3DRS_FOGVERTEXMODE,	D3DFOG_LINEAR		));
-	}
-	*/
 }
-/*
-void CRenderDevice::_Create	(LPCSTR shName)
-{
-	Memory.mem_compact			();
-
-	// after creation
-	b_is_Ready					= TRUE;
-	_SetupStates				();
-
-	// Signal everyone - device created
-	RCache.OnDeviceCreate		();
-	Gamma.Update				();
-	Resources->OnDeviceCreate	(shName);
-	::Render->create			();
-	Statistic->OnDeviceCreate	();
-
-#ifndef DEDICATED_SERVER
-	m_WireShader.create			("editor\\wire");
-	m_SelectionShader.create	("editor\\selection");
-
-	DU.OnDeviceCreate			();
-#endif
-
-	dwFrame						= 0;
-}
-*/
 
 void CRenderDevice::_Create	(LPCSTR shName)
 {
@@ -122,37 +58,6 @@ void CRenderDevice::_Create	(LPCSTR shName)
 
 	dwFrame						= 0;
 }
-
-/*
-void CRenderDevice::Create	() 
-{
-	if (b_is_Ready)		return;		// prevent double call
-	Statistic			= xr_new<CStats>();
-	Log					("Starting RENDER device...");
-
-#ifdef _EDITOR
-	psCurrentVidMode[0]	= dwWidth;
-	psCurrentVidMode[1] = dwHeight;
-#endif
-
-	HW.CreateDevice		(m_hWnd);
-	dwWidth				= HW.DevPP.BackBufferWidth	;
-	dwHeight			= HW.DevPP.BackBufferHeight	;
-	fWidth_2			= float(dwWidth/2)			;
-	fHeight_2			= float(dwHeight/2)			;
-	fFOV				= 90.f;
-	fASPECT				= 1.f;
-
-	string_path			fname; 
-	FS.update_path		(fname,"$game_data$","shaders.xr");
-
-	//////////////////////////////////////////////////////////////////////////
-	Resources			= xr_new<CResourceManager>		();
-	_Create				(fname);
-
-	PreCache			(0);
-}
-*/
 
 void CRenderDevice::ConnectToRender()
 {
@@ -179,24 +84,20 @@ cdb_bDebug		= &bDebug;
 	SetupGPU(m_pRender);
 	Log					("Starting RENDER device...");
 
-#ifdef _EDITOR
-	psCurrentVidMode[0]	= dwWidth;
-	psCurrentVidMode[1] = dwHeight;
-#endif // #ifdef _EDITOR
-
 	fFOV				= 90.f;
 	fASPECT				= 1.f;
-	m_pRender->Create	(
-		m_hWnd,
-		dwWidth,
-		dwHeight,
-		fWidth_2,
-		fHeight_2,
-#ifdef INGAME_EDITOR
-		editor() ? false :
-#endif // #ifdef INGAME_EDITOR
-		true
-	);
+	m_pRender->Create(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2, true);
+
+	if (psDeviceFlags.test(rsR4))
+	{
+		m_SecondViewport.screenWidth = u32((dwWidth / 32) * psSVPImageSizeK) * 32;
+		m_SecondViewport.screenHeight = u32((dwHeight / 32) * psSVPImageSizeK) * 32;
+	}
+	else
+	{
+		m_SecondViewport.screenWidth = dwWidth;
+		m_SecondViewport.screenHeight = dwHeight;
+	}
 
 	string_path			fname; 
 	FS.update_path		(fname,"$game_data$","shaders.xr");
@@ -205,6 +106,24 @@ cdb_bDebug		= &bDebug;
 	_Create				(fname);
 
 	PreCache			(0, false, false);
+
+	std::string userDir = FS.get_path("$app_data_root$")->m_Path, fileToWrite = "\\imgui.ini";
+	std::size_t lastSlashPos = userDir.find_last_of("/\\");
+
+	if (lastSlashPos != std::string::npos)
+	{
+		std::size_t secondLastSlashPos = userDir.find_last_of("/\\", lastSlashPos - 1);
+
+		if (secondLastSlashPos != std::string::npos)
+		{
+			std::string secondLastFolder = userDir.substr(secondLastSlashPos + 1, lastSlashPos - secondLastSlashPos - 1);
+			userDir = secondLastFolder;
+		}
+	}
+
+	std::string path = userDir + fileToWrite;
+
+	ImGui::GetIO().IniFilename = xr_strdup(path.c_str());//path.c_str();
 
 	SECUROM_MARKER_SECURITY_OFF(4)
 }

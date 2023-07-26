@@ -325,10 +325,11 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\..\sdk\libraries;..\..\..\libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
       <GenerateMapFile>false</GenerateMapFile>
       <MapFileName>
@@ -507,7 +508,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>..\..\sdk\libraries;..\..\..\libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\sdk\libraries;..\..\OutputDirectory\Libraries\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <GenerateMapFile>false</GenerateMapFile>
       <MapFileName>$(OutDir)$(ProjectName).map</MapFileName>
@@ -650,6 +651,7 @@
     </ClCompile>
     <ClCompile Include="stream_reader.cpp" />
     <ClCompile Include="string_concatenations.cpp" />
+    <ClCompile Include="Threading\Event.cpp" />
     <ClCompile Include="xrCore.cpp" />
     <ClCompile Include="xrDebug.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -772,7 +774,9 @@
     <ClInclude Include="string_concatenations.h" />
     <ClInclude Include="string_concatenations_inline.h" />
     <ClInclude Include="SubAlloc.hpp" />
+    <ClInclude Include="Threading\Event.hpp" />
     <ClInclude Include="vector.h" />
+    <ClInclude Include="xalloc.h" />
     <ClInclude Include="xrCore.h" />
     <ClInclude Include="xrCore_platform.h" />
     <ClInclude Include="xrDebug.h" />
@@ -789,6 +793,7 @@
     <ClInclude Include="xrstring.h" />
     <ClInclude Include="xrSyncronize.h" />
     <ClInclude Include="xr_ini.h" />
+    <ClInclude Include="xr_map.h" />
     <ClInclude Include="xr_resource.h" />
     <ClInclude Include="xr_shared.h" />
     <ClInclude Include="xr_trims.h" />
@@ -796,6 +801,7 @@
     <ClInclude Include="_color.h" />
     <ClInclude Include="_compressed_normal.h" />
     <ClInclude Include="_cylinder.h" />
+    <ClInclude Include="_detail_collision_point.h" />
     <ClInclude Include="_fbox.h" />
     <ClInclude Include="_fbox2.h" />
     <ClInclude Include="_flags.h" />

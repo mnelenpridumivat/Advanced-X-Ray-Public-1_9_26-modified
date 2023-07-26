@@ -25,6 +25,7 @@
 #include "purchase_list.h"
 #include "alife_object_registry.h"
 #include "CustomOutfit.h"
+#include "ActorHelmet.h"
 #include "Bolt.h"
 #include "AdvancedXrayGameConstants.h"
 
@@ -145,6 +146,7 @@ BOOL CInventoryOwner::net_Spawn		(CSE_Abstract* DC)
 			dialog_manager->SetDefaultStartDialog(CharacterInfo().StartDialog());
 		}
 		m_game_name			= pTrader->m_character_name;
+		m_character_icon	= pTrader->m_character_icon;
 		
 		m_deadbody_can_take = pTrader->m_deadbody_can_take;
 		m_deadbody_closed   = pTrader->m_deadbody_closed;
@@ -184,6 +186,7 @@ void	CInventoryOwner::save	(NET_Packet &output_packet)
 
 	CharacterInfo().save(output_packet);
 	save_data	(m_game_name, output_packet);
+	save_data	(m_character_icon, output_packet);
 	save_data	(m_money,	output_packet);
 }
 void	CInventoryOwner::load	(IReader &input_packet)
@@ -198,6 +201,7 @@ void	CInventoryOwner::load	(IReader &input_packet)
 
 	CharacterInfo().load(input_packet);
 	load_data		(m_game_name, input_packet);
+	load_data		(m_character_icon, input_packet);
 	load_data		(m_money,	input_packet);
 }
 
@@ -325,6 +329,16 @@ void CInventoryOwner::renderable_Render		()
 	if (inventory().ActiveItem())
 		inventory().ActiveItem()->renderable_Render();
 
+	auto rWeapon = inventory().ItemFromSlot(INV_SLOT_3);
+	bool rValid = rWeapon ? rWeapon->BaseSlot() == INV_SLOT_3 : false;
+	if (rWeapon && rValid && rWeapon != inventory().ActiveItem())
+		rWeapon->renderable_Render();
+
+	auto lWeapon = inventory().ItemFromSlot(INV_SLOT_2);
+	bool lValid = lWeapon ? lWeapon->BaseSlot() == INV_SLOT_3 : false;
+	if (lWeapon && lValid && lWeapon != inventory().ActiveItem())
+		lWeapon->renderable_Render();
+
 	CAttachmentOwner::renderable_Render();
 }
 
@@ -406,7 +420,7 @@ LPCSTR	CInventoryOwner::Name () const
 
 LPCSTR	CInventoryOwner::IconName () const
 {
-	return CharacterInfo().IconName().c_str();
+	return m_character_icon.c_str();
 }
 
 
@@ -540,6 +554,11 @@ void CInventoryOwner::OnItemSlot	(CInventoryItem *inventory_item, const SInvItem
 CCustomOutfit* CInventoryOwner::GetOutfit() const
 {
     return smart_cast<CCustomOutfit*>(inventory().ItemFromSlot(OUTFIT_SLOT));
+}
+
+CHelmet* CInventoryOwner::GetHelmet() const
+{
+	return smart_cast<CHelmet*>(inventory().ItemFromSlot(HELMET_SLOT));
 }
 
 void CInventoryOwner::on_weapon_shot_start		(CWeapon *weapon)

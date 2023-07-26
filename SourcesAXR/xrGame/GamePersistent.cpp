@@ -35,6 +35,10 @@
 #include "DynamicHudGlass.h"
 #include "CustomOutfit.h"
 #include "ActorHelmet.h"
+#include "string_table.h"
+#include "../xrEngine/x_ray.h"
+#include "ui/UILoadingScreen.h"
+#include "embedded_editor/embedded_editor_main.h"
 
 #ifndef MASTER_GOLD
 #	include "custommonster.h"
@@ -115,6 +119,12 @@ CGamePersistent::~CGamePersistent(void)
 	Device.seqFrame.Remove		(this);
 	Engine.Event.Handler_Detach	(eDemoStart,this);
 	Engine.Event.Handler_Detach	(eQuickLoad,this);
+}
+
+void CGamePersistent::PreStart(LPCSTR op)
+{
+	pApp->SetLoadingScreen(new UILoadingScreen());
+	__super::PreStart(op);
 }
 
 void CGamePersistent::RegisterModel(IRenderVisual* V)
@@ -715,7 +725,7 @@ void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 	if(E==eQuickLoad)
 	{
 		if (Device.Paused())
-			Device.Pause		(FALSE, TRUE, TRUE, "eQuickLoad");
+			GAME_PAUSE		(FALSE, TRUE, TRUE, "eQuickLoad");
 		
 		if(CurrentGameUI())
 		{
@@ -774,10 +784,10 @@ void CGamePersistent::OnAppActivate		()
 
 	if( !bIsMP )
 	{
-		Device.Pause			(FALSE, !bRestorePause, TRUE, "CGP::OnAppActivate");
+		GAME_PAUSE			(FALSE, !bRestorePause, TRUE, "CGP::OnAppActivate");
 	}else
 	{
-		Device.Pause			(FALSE, TRUE, TRUE, "CGP::OnAppActivate MP");
+		GAME_PAUSE			(FALSE, TRUE, TRUE, "CGP::OnAppActivate MP");
 	}
 
 	bEntryFlag = TRUE;
@@ -794,10 +804,10 @@ void CGamePersistent::OnAppDeactivate	()
 	if ( !bIsMP )
 	{
 		bRestorePause			= Device.Paused();
-		Device.Pause			(TRUE, TRUE, TRUE, "CGP::OnAppDeactivate");
+		GAME_PAUSE			(TRUE, TRUE, TRUE, "CGP::OnAppDeactivate");
 	}else
 	{
-		Device.Pause			(TRUE, FALSE, TRUE, "CGP::OnAppDeactivate MP");
+		GAME_PAUSE			(TRUE, FALSE, TRUE, "CGP::OnAppDeactivate MP");
 	}
 	bEntryFlag = FALSE;
 }
@@ -821,8 +831,6 @@ void CGamePersistent::OnRenderPPUI_PP()
 {
 	MainMenu()->OnRenderPPUI_PP();
 }
-#include "string_table.h"
-#include "../xrEngine/x_ray.h"
 
 void CGamePersistent::SetLoadStageTitle(const char* ls_title)
 {
@@ -924,6 +932,14 @@ float CGamePersistent::GetActorBleeding()
 	return	(Actor()->conditions().BleedingSpeed());
 }
 
+float CGamePersistent::GetActorIntoxication()
+{
+	if (GameConstants::GetActorIntoxication())
+		return	(Actor()->conditions().GetIntoxication());
+
+	return 0.0f;
+}
+
 bool CGamePersistent::GetActorNightvision()
 {
 	return	(Actor()->GetNightVisionStatus());
@@ -939,9 +955,20 @@ bool CGamePersistent::GetActorAliveStatus()
 	return	(Actor()->g_Alive());
 }
 
+bool CGamePersistent::IsCamFirstEye()
+{
+	return	(Actor()->active_cam() == eacFirstEye);
+}
+
 bool CGamePersistent::GetActor()
 {
 	return	(Actor());
+}
+
+void CGamePersistent::EditorOnFrame()
+{
+	extern void Editor_OnFrame();
+	Editor_OnFrame();
 }
 
 void CGamePersistent::SetEffectorDOF(const Fvector& needed_dof)

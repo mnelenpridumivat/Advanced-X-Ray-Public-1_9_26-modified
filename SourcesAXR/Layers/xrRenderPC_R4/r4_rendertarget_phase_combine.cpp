@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "../../xrEngine/igame_persistent.h"
 #include "../../xrEngine/environment.h"
 #include "../xrRender/dxEnvironmentRender.h"
@@ -55,7 +55,7 @@ void	CRenderTarget::phase_combine	()
 
 	//*** exposure-pipeline
 	u32			gpu_id	= Device.dwFrame%HW.Caps.iGPUNum;
-	if (Device.m_SecondViewport.IsSVPActive()) //--#SM+#-- +SecondVP+
+	if (RImplementation.currentViewPort == SECONDARY_WEAPON_SCOPE) //--#SM+#-- +SecondVP+
 	{
 		// clang-format off
 		gpu_id = (Device.dwFrame - 1) % HW.Caps.iGPUNum;	//  "" tonemapping (HDR)    . 
@@ -388,26 +388,36 @@ void	CRenderTarget::phase_combine	()
 
 
 	// Vignette effect
-	if (ps_r2_vignette_flags.test(R_FLAG_VIGNETTE))
+	if (ps_r2_postscreen_flags.test(R_FLAG_VIGNETTE))
 	{
 		//PIX_EVENT(phase_vignette);
 		PhaseVignette();
 	}
 
+	// Chromatic Aberration
+	if (ps_r2_postscreen_flags.test(R_FLAG_CHROMATIC_ABERRATION))
+		phase_chrom_aberration();
+
+	// Film Grain
+	if (ps_r2_postscreen_flags.test(R_FLAG_FILM_GRAIN))
+		phase_film_grain();
+
 	//Hud Effects, Hud Mask, Nightvision
-	if (!_menu_pp && g_pGamePersistent->GetActor())
+	if (!_menu_pp && g_pGamePersistent->GetActor() && g_pGamePersistent->IsCamFirstEye())
 	{
 		bool IsActorAlive = g_pGamePersistent->GetActorAliveStatus();
 		int NightVisionType = g_pGamePersistent->GetNightvisionType();
 		bool NightVisionEnabled = g_pGamePersistent->GetActorNightvision();
-		if (ps_r2_hud_mask_flags.test(R_FLAG_HUD_DYN_EFFECTS) && IsActorAlive)
+
+		if (ps_r2_postscreen_flags.test(R_FLAG_HUD_DYN_EFFECTS) && IsActorAlive)
 		{
 			phase_hud_blood();
 			phase_hud_power();
 			phase_hud_bleeding();
+			phase_hud_intoxication();
 		}
 
-		if (ps_r2_hud_mask_flags.test(R_FLAG_HUD_MASK) && HudGlassEnabled && IsActorAlive)
+		if (ps_r2_postscreen_flags.test(R_FLAG_HUD_MASK) && HudGlassEnabled && IsActorAlive)
 			phase_hud_mask();
 
 		if (IsActorAlive && NightVisionEnabled && NightVisionType > 0 && ps_r__ShaderNVG == 1)
@@ -428,7 +438,7 @@ void	CRenderTarget::phase_combine	()
 	BOOL	PP_Complex		= u_need_PP	() | (BOOL)RImplementation.m_bMakeAsyncSS;
 	if (_menu_pp)			PP_Complex	= FALSE;
 
-	if (ps_r2_rain_drops_flags.test(R2FLAG_RAIN_DROPS) && !bWinterMode)
+	if (ps_r2_postscreen_flags.test(R2FLAG_RAIN_DROPS) && !bWinterMode)
 		PhaseRainDrops();
 			
    // HOLGER - HACK
@@ -515,8 +525,22 @@ void	CRenderTarget::phase_combine	()
 		RCache.set_c				("m_current",	m_current);
 		RCache.set_c				("m_previous",	m_previous);
 		RCache.set_c				("m_blur",		m_blur_scale.x,m_blur_scale.y, 0,0);
-		RCache.set_c				("r_color_drag",ps_rcol, ps_gcol, ps_bcol, ps_saturation);
-		//RCache.set_c				("saturation",	ps_saturation, 0, 0, 0);
+
+		float red_color = ps_color_dragging.x;
+		float green_color = ps_color_dragging.y;
+		float blue_color = ps_color_dragging.z;
+		float saturation = ps_color_dragging.w;
+
+		if (bWeatherColorDragging)
+		{
+			red_color += g_pGamePersistent->Environment().CurrentEnv->color_dragging.x;
+			green_color += g_pGamePersistent->Environment().CurrentEnv->color_dragging.y;
+			blue_color += g_pGamePersistent->Environment().CurrentEnv->color_dragging.z;
+			saturation += g_pGamePersistent->Environment().CurrentEnv->color_dragging.w;
+		}
+
+		RCache.set_c				("r_color_drag", red_color, green_color, blue_color, saturation);
+
 		Fvector3					dof;
 		g_pGamePersistent->GetCurrentDof(dof);
 		RCache.set_c				("dof_params", dof.x, dof.y, dof.z, dof_sky);
@@ -529,7 +553,7 @@ void	CRenderTarget::phase_combine	()
 
 	//	if FP16-BLEND !not! supported - draw flares here, overwise they are already in the bloom target
 
-	if (HudGlassEnabled && ps_r2_hud_mask_flags.test(R_FLAG_HUD_MASK) && ps_r2_flares != 0 || ps_r2_flares == 1)
+	if (HudGlassEnabled && ps_r2_postscreen_flags.test(R_FLAG_HUD_MASK) && ps_r2_flares != 0 || ps_r2_flares == 1)
 	{
 		g_pGamePersistent->Environment().RenderFlares();// lens-flares
 

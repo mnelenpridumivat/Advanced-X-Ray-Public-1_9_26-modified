@@ -160,9 +160,6 @@
     <Filter Include="Interfase implementations\UI\UISequenceVideoItem">
       <UniqueIdentifier>{36276a7f-f712-4328-b134-8f6485cfa872}</UniqueIdentifier>
     </Filter>
-    <Filter Include="imgui_render">
-      <UniqueIdentifier>{51d720e3-210b-4767-afa6-af4b01394302}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cl_intersect.h">
@@ -549,12 +546,6 @@
     <ClInclude Include="..\..\Include\xrRender\FactoryPtr.h">
       <Filter>Interfase implementations\FactoryPtr</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\xrRender\ApplicationRender.h">
-      <Filter>Interfase implementations\ApplicationRender</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrRender\dxApplicationRender.h">
-      <Filter>Interfase implementations\ApplicationRender</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrRender\dxRainRender.h">
       <Filter>Interfase implementations\RainRender</Filter>
     </ClInclude>
@@ -654,9 +645,6 @@
     <ClInclude Include="blender_hud_mask.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrRenderDX9\imgui_impl_dx9.h">
-      <Filter>imgui_render</Filter>
-    </ClInclude>
     <ClInclude Include="blender_hud_blood.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
@@ -664,6 +652,9 @@
       <Filter>Shading templates</Filter>
     </ClInclude>
     <ClInclude Include="blender_hud_bleeding.h">
+      <Filter>Shading templates</Filter>
+    </ClInclude>
+    <ClInclude Include="blender_hud_intoxication.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1139,9 +1130,6 @@
     <ClCompile Include="..\xrRender\dxLensFlareRender.cpp">
       <Filter>Interfase implementations\LensFlare</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrRender\dxApplicationRender.cpp">
-      <Filter>Interfase implementations\ApplicationRender</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrRender\dxRainRender.cpp">
       <Filter>Interfase implementations\RainRender</Filter>
     </ClCompile>
@@ -1202,9 +1190,6 @@
     <ClCompile Include="blender_hud_mask.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrRenderDX9\imgui_impl_dx9.cpp">
-      <Filter>imgui_render</Filter>
-    </ClCompile>
     <ClCompile Include="blender_hud_blood.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
@@ -1220,8 +1205,14 @@
     <ClCompile Include="..\xrRender\rendertarget_phase_hud_mask.cpp">
       <Filter>Core_Target</Filter>
     </ClCompile>
+    <ClCompile Include="blender_hud_intoxication.cpp">
+      <Filter>Shading templates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="todo.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

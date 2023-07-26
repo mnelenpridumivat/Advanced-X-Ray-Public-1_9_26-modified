@@ -1,4 +1,4 @@
-// ActorCondition.h: класс состояния игрока
+// ActorCondition.h: РєР»Р°СЃСЃ СЃРѕСЃС‚РѕСЏРЅРёСЏ РёРіСЂРѕРєР°
 //
 
 #pragma once
@@ -41,6 +41,7 @@ private:
 			void 		UpdateIntoxication			();
 			void 		UpdateAlcoholism			();
 			void 		UpdateNarcotism				();
+			void 		UpdatePsyHealth				();
 	virtual void		UpdateRadiation				();
 public:
 						CActorCondition				(CActor *object);
@@ -62,8 +63,9 @@ public:
 	virtual void 		ChangeNarcotism				(const float value);
 	virtual void 		ChangeWithdrawal			(const float value);
 	virtual void 		ChangeDrugs					(const float value);
+	virtual void 		ChangePsyHealth				(const float value);
 
-	// хромание при потере сил и здоровья
+	// С…СЂРѕРјР°РЅРёРµ РїСЂРё РїРѕС‚РµСЂРµ СЃРёР» Рё Р·РґРѕСЂРѕРІСЊСЏ
 	virtual	bool		IsLimping					() const;
 	virtual bool		IsCantWalk					() const;
 	virtual bool		IsCantWalkWeight			();
@@ -76,6 +78,7 @@ public:
 			
 			float	xr_stdcall	GetAlcohol			()	{return m_fAlcohol;}
 			float	xr_stdcall	GetPsy				()	{return 1.0f-GetPsyHealth();}
+			float	xr_stdcall	GetSatietyPower		() const { return m_fV_SatietyPower * m_fSatiety; };
 			float	xr_stdcall	GetIntoxication		()	{return m_fIntoxication;}
 			float	xr_stdcall	GetSleepeness		()	{return m_fSleepeness;}
 			float	xr_stdcall	GetAlcoholism		()	{return m_fAlcoholism;}
@@ -84,7 +87,7 @@ public:
 			float	xr_stdcall	GetHangover			()	{return m_fHangover;}
 			float	xr_stdcall	GetDrugs			()	{return m_fDrugs;}
 
-			void		AffectDamage_InjuriousMaterial();
+			void		AffectDamage_InjuriousMaterialAndMonstersInfluence();
 			float		GetInjuriousMaterialDamage	();
 			
 			void		SetZoneDanger				(float danger, ALife::EInfluenceType type);
@@ -101,6 +104,7 @@ public:
 	IC		float const&	V_Satiety				()	{ return m_fV_Satiety; }
 	IC		float const&	V_SatietyPower			()	{ return m_fV_SatietyPower; }
 	IC		float const&	V_SatietyHealth			()	{ return m_fV_SatietyHealth; }
+	IC		float const&	SatietyCritical			()	{ return m_fSatietyCritical; }
 	IC		float const&	V_Thirst				()  { return m_fV_Thirst; }
 	IC		float const&	V_ThirstPower			()  { return m_fV_ThirstPower; }
 	IC		float const&	V_ThirstHealth			()  { return m_fV_ThirstHealth; }
@@ -109,6 +113,7 @@ public:
 	IC		float const&	IntoxicationCritical	() { return m_fIntoxicationCritical; }
 	IC		float const&	V_Sleepeness			() { return m_fV_Sleepeness; }
 	IC		float const&	V_SleepenessPower		() { return m_fV_SleepenessPower; }
+	IC		float const&	V_SleepenessPsyHealth	() { return m_fV_SleepenessPsyHealth; }
 	IC		float const&	SleepenessCritical		() { return m_fSleepenessCritical; }
 	IC		float const&	Sleepeness_V_Sleep		() { return m_fSleepeness_V_Sleep; }
 	IC		float const&	V_Alcoholism			() { return m_fV_Alcoholism; }
@@ -123,6 +128,7 @@ public:
 	bool	PlayHitSound							(SHit* pHDS);
 	float	HitSlowmo								(SHit* pHDS);
 
+	void	WoundForEach							(const luabind::functor<bool>& funct);
 public:
 	float m_fAlcohol;
 	float m_fV_Alcohol;
@@ -130,6 +136,7 @@ public:
 	float m_fV_Satiety;
 	float m_fV_SatietyPower;
 	float m_fV_SatietyHealth;
+	float m_fSatietyCritical;
 //--
 
 //--M.F.S. Team
@@ -141,6 +148,7 @@ public:
 	float m_fIntoxicationCritical;
 	float m_fV_Sleepeness;
 	float m_fV_SleepenessPower;
+	float m_fV_SleepenessPsyHealth;
 	float m_fSleepenessCritical;
 	float m_fSleepeness_V_Sleep;
 	float m_fV_Alcoholism;
@@ -154,6 +162,9 @@ public:
 	float m_fWithdrawalCritical;
 	float m_fDrugs;
 	float m_fV_Drugs;
+
+	float m_fV_PsyHealth_Health;
+	bool m_bPsyHealthKillActor;
 
 	//Skills System
 	float m_fV_SatietySkill;
@@ -190,7 +201,7 @@ public:
 	mutable bool m_bCantWalk;
 	mutable bool m_bCantSprint;
 
-	//порог силы и здоровья меньше которого актер начинает хромать
+	//РїРѕСЂРѕРі СЃРёР»С‹ Рё Р·РґРѕСЂРѕРІСЊСЏ РјРµРЅСЊС€Рµ РєРѕС‚РѕСЂРѕРіРѕ Р°РєС‚РµСЂ РЅР°С‡РёРЅР°РµС‚ С…СЂРѕРјР°С‚СЊ
 	float m_fLimpingPowerBegin;
 	float m_fLimpingPowerEnd;
 	float m_fCantWalkPowerBegin;
@@ -201,7 +212,13 @@ public:
 
 	float m_fLimpingHealthBegin;
 	float m_fLimpingHealthEnd;
+
+	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
+
+add_to_type_list(CActorCondition)
+#undef script_type_list
+#define script_type_list save_type_list(CActorCondition)
 
 class CActorDeathEffector
 {

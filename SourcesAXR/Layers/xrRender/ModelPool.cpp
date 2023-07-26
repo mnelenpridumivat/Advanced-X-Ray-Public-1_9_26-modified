@@ -257,7 +257,7 @@ dxRender_Visual* CModelPool::Create(const char* name, IReader* data)
 		}
         // 3. If found - return (cloned) reference
         dxRender_Visual*		Model	= Instance_Duplicate(Base);
-        Registry.insert		( mk_pair(Model,low_name) );
+        Registry.insert		( std::make_pair(Model,low_name) );
         return				Model;
 	}
 }
@@ -295,7 +295,7 @@ void	CModelPool::DeleteInternal	(dxRender_Visual* &V, BOOL bDiscard)
 		if (it!=Registry.end())
 		{
 			// Registry entry found - move it to pool
-			Pool.insert			(mk_pair(it->second,V));
+			Pool.insert			(std::make_pair(it->second,V));
 		} else {
 			// Registry entry not-found - just special type of visual / particles / etc.
 			xr_delete			(V);
@@ -460,7 +460,7 @@ void CModelPool::memory_stats		( u32& vb_mem_video, u32& vb_mem_system, u32& ib_
 
 		if( vis_ptr == NULL )
 			continue;
-#if !defined(USE_DX10) && !defined(USE_DX11)
+#ifndef USE_DX11
 		D3DINDEXBUFFER_DESC IB_desc;
 		D3DVERTEXBUFFER_DESC VB_desc;
 

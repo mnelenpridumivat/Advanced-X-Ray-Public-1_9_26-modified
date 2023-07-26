@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 //	Module 		: ai_stalker.cpp
 //	Created 	: 25.02.2003
 //  Modified 	: 25.02.2003
@@ -280,6 +280,8 @@ void CAI_Stalker::reload			(LPCSTR section)
 	m_max_queue_interval_close		= pSettings->r_u32(*cNameSect(),"weapon_max_queue_interval_close");	// 500;
 
 	m_power_fx_factor				= pSettings->r_float(section,"power_fx_factor");
+	
+	m_can_select_weapon				= true;
 }
 
 void CAI_Stalker::Die				(CObject* who)
@@ -606,8 +608,8 @@ void CAI_Stalker::update_object_handler	()
 			CObjectHandler::update	();
 		}
 #ifdef DEBUG
-		catch (luabind::cast_failed &message) {
-			Msg						("! Expression \"%s\" from luabind::object to %s",message.what(),message.info()->name());
+		catch (const luabind::cast_failed& message) {
+			Msg						("! Expression \"%s\" from luabind::object to %s",message.what(),message.info().name());
 			throw;
 		}
 #endif
@@ -1167,4 +1169,24 @@ BOOL	CAI_Stalker::AlwaysTheCrow	()
 {
 	VERIFY					( character_physics_support	()	);
 	return					(character_physics_support()->interactive_motion());
+}
+
+void CAI_Stalker::ResetBoneProtections(pcstr imm_sect, pcstr bone_sect)
+{
+	IKinematics* pKinematics = smart_cast<IKinematics*>(Visual());
+	CInifile* ini = pKinematics->LL_UserData();
+	if (ini)
+	{
+		if (imm_sect || ini->section_exist("immunities"))
+		{
+			imm_sect = imm_sect ? imm_sect : ini->r_string("immunities", "immunities_sect");
+			conditions().LoadImmunities(imm_sect, pSettings);
+		}
+
+		if (bone_sect || ini->line_exist("bone_protection", "bones_protection_sect"))
+		{
+			bone_sect = ini->r_string("bone_protection", "bones_protection_sect");
+			m_boneHitProtection->reload(bone_sect, pKinematics);
+		}
+	}
 }

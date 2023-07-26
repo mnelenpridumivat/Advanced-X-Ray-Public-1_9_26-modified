@@ -261,6 +261,13 @@ bool CUIActorMenu::OnItemRButtonClick(CUICellItem* itm)
 	return false;
 }
 
+bool CUIActorMenu::OnItemMButtonClick(CUICellItem* itm)
+{
+	InfoCurItem(NULL);
+	m_item_info_view = false;
+	return false;
+}
+
 bool CUIActorMenu::OnItemFocusReceive(CUICellItem* itm)
 {
 	InfoCurItem( NULL );
@@ -318,8 +325,9 @@ bool CUIActorMenu::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 	InfoCurItem( NULL );
 	if ( is_binded(kDROP, dik) )
 	{
-		if ( WINDOW_KEY_PRESSED == keyboard_action && CurrentIItem() && !CurrentIItem()->IsQuestItem()
-			&& CurrentIItem()->parent_id()==m_pActorInvOwner->object_id() )
+		bool isDroppableItem = WINDOW_KEY_PRESSED == keyboard_action && CurrentIItem() && !CurrentIItem()->IsQuestItem()
+			&& CurrentIItem()->parent_id() == m_pActorInvOwner->object_id();
+		if (isDroppableItem)
 		{
 
 			SendEvent_Item_Drop		(CurrentIItem(), m_pActorInvOwner->object_id());
@@ -337,17 +345,7 @@ bool CUIActorMenu::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 		return true;
 	}	
 
-	if ( is_binded(kUSE, dik) || is_binded(kINVENTORY, dik) )
-	{
-		if ( WINDOW_KEY_PRESSED == keyboard_action )
-		{
-			g_btnHint->Discard();
-			HideDialog();
-		}
-		return true;
-	}	
-
-	if ( is_binded(kQUIT, dik) )
+	if ( is_binded(kUSE, dik) || is_binded(kINVENTORY, dik) || is_binded(kQUIT, dik)  )
 	{
 		if ( WINDOW_KEY_PRESSED == keyboard_action )
 		{
@@ -356,6 +354,7 @@ bool CUIActorMenu::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 		}
 		return true;
 	}
+
 	if (WINDOW_KEY_PRESSED == keyboard_action && bDeveloperMode)
 	{
 		CAntigasFilter* pFilter = smart_cast<CAntigasFilter*>(CurrentIItem());
@@ -364,25 +363,25 @@ bool CUIActorMenu::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 			{
 				CurrentIItem()->ChangeCondition(-0.05f);
 				UpdateConditionProgressBars();
-				m_pCurrentCellItem->UpdateConditionProgressBar();
+				m_pCurrentCellItem->UpdateCellItemProgressBars();
 			}
 			else if (DIK_NUMPAD8 == dik && CurrentIItem() && CurrentIItem()->IsUsingCondition() && !pFilter)
 			{
 				CurrentIItem()->ChangeCondition(0.05f);
 				UpdateConditionProgressBars();
-				m_pCurrentCellItem->UpdateConditionProgressBar();
+				m_pCurrentCellItem->UpdateCellItemProgressBars();
 			}
 			else if (DIK_NUMPAD7 == dik && CurrentIItem() && pFilter)
 			{
 				pFilter->ChangeFilterCondition(-0.05f);
 				UpdateConditionProgressBars();
-				m_pCurrentCellItem->UpdateConditionProgressBar();
+				m_pCurrentCellItem->UpdateCellItemProgressBars();
 			}
 			else if (DIK_NUMPAD8 == dik && CurrentIItem() && pFilter)
 			{
 				pFilter->ChangeFilterCondition(0.05f);
 				UpdateConditionProgressBars();
-				m_pCurrentCellItem->UpdateConditionProgressBar();
+				m_pCurrentCellItem->UpdateCellItemProgressBars();
 			}
 		}
 	}

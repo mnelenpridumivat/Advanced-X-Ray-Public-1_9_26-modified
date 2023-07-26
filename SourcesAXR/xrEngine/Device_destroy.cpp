@@ -4,6 +4,9 @@
 #include "render.h"
 #include "IGame_Persistent.h"
 #include "xr_IOConsole.h"
+#include <imgui.h>
+
+extern ENGINE_API float psSVPImageSizeK;
 
 void CRenderDevice::_Destroy	(BOOL bKeepTextures)
 {
@@ -29,6 +32,8 @@ void CRenderDevice::Destroy	(void) {
 	m_pRender->ValidateHW();
 
 	_Destroy					(FALSE);
+
+	xr_free(ImGui::GetIO().IniFilename);
 
 	// real destroy
 	m_pRender->DestroyHW();
@@ -69,6 +74,17 @@ void CRenderDevice::Reset		(bool precache)
 	}
 
 	m_pRender->Reset( m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);
+
+	if (psDeviceFlags.test(rsR4))
+	{
+		m_SecondViewport.screenWidth = u32((dwWidth / 32) * psSVPImageSizeK) * 32;
+		m_SecondViewport.screenHeight = u32((dwHeight / 32) * psSVPImageSizeK) * 32;
+	}
+	else
+	{
+		m_SecondViewport.screenWidth = dwWidth;
+		m_SecondViewport.screenHeight = dwHeight;
+	}
 
 	if (g_pGamePersistent)
 	{

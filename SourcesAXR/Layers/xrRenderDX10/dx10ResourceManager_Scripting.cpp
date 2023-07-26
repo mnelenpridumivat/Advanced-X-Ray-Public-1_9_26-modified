@@ -101,6 +101,7 @@ public:
 	adopt_compiler&			_dx10color_write_enable (bool cR, bool cG, bool cB, bool cA)		{	C->r_ColorWriteEnable(cR, cG, cB, cA);		return	*this;		}
 	adopt_compiler&			_dx10Stencil	(bool Enable, u32 Func, u32 Mask, u32 WriteMask, u32 Fail, u32 Pass, u32 ZFail) {C->r_Stencil(Enable, Func, Mask, WriteMask, Fail, Pass, ZFail);		return	*this;		}
 	adopt_compiler&			_dx10StencilRef	(u32 Ref) {C->r_StencilRef(Ref);		return	*this;		}
+	adopt_compiler&			_dx10CullMode	(u32 Ref)								{	C->r_CullMode((D3DCULL)Ref); return *this; }
 	adopt_compiler&			_dx10ATOC		(bool Enable)							{	C->RS.SetRS( XRDX10RS_ALPHATOCOVERAGE, Enable);	return *this;	}
 	adopt_compiler&			_dx10ZFunc		(u32 Func)								{	C->RS.SetRS	( D3DRS_ZFUNC, Func);			return	*this;		}
 	//adopt_dx10texture		_dx10texture	(LPCSTR _name)							{	u32 s = C->r_dx10Texture(_name,0);			return	adopt_dx10sampler(C,s);	}
@@ -141,67 +142,17 @@ void LuaError(lua_State* L)
 //#	endif // USE_MEMORY_MONITOR
 #endif // PURE_ALLOC
 
-#ifndef USE_DL_ALLOCATOR
-static void *lua_alloc	(void *ud, void *ptr, size_t osize, size_t nsize) {
+static void* lua_alloc(void* ud, void* ptr, size_t osize, size_t nsize) {
 	(void)ud;
 	(void)osize;
-	if (nsize == 0) {
-		xr_free	(ptr);
+	if (!nsize)
+	{
+		xr_free(ptr);
 		return	NULL;
 	}
 	else
-#ifdef DEBUG_MEMORY_NAME
-		return Memory.mem_realloc		(ptr, nsize, "LUA");
-#else // DEBUG_MEMORY_MANAGER
-		return Memory.mem_realloc		(ptr, nsize);
-#endif // DEBUG_MEMORY_MANAGER
+		return xr_realloc(ptr, nsize);
 }
-#else // USE_DL_ALLOCATOR
-
-#include "../../xrCore/memory_allocator_options.h"
-
-#ifdef USE_ARENA_ALLOCATOR
-	static const u32	s_arena_size = 8*1024*1024;
-	static char			s_fake_array[s_arena_size];
-	doug_lea_allocator	g_render_lua_allocator( s_fake_array, s_arena_size, "render:lua" );
-#else // #ifdef USE_ARENA_ALLOCATOR
-	doug_lea_allocator	g_render_lua_allocator( 0, 0, "render:lua" );
-#endif // #ifdef USE_ARENA_ALLOCATOR
-
-static void *lua_alloc		(void *ud, void *ptr, size_t osize, size_t nsize) {
-#ifndef USE_MEMORY_MONITOR
-	(void)ud;
-	(void)osize;
-	if ( !nsize )	{
-		g_render_lua_allocator.free_impl	(ptr);
-		return					0;
-	}
-
-	if ( !ptr )
-		return					g_render_lua_allocator.malloc_impl((u32)nsize);
-
-	return g_render_lua_allocator.realloc_impl(ptr, (u32)nsize);
-#else // #ifndef USE_MEMORY_MONITOR
-	if ( !nsize )	{
-		memory_monitor::monitor_free(ptr);
-		g_render_lua_allocator.free_impl		(ptr);
-		return						NULL;
-	}
-
-	if ( !ptr ) {
-		void* const result			= 
-			g_render_lua_allocator.malloc_impl((u32)nsize);
-		memory_monitor::monitor_alloc (result,nsize,"render:LUA");
-		return						result;
-	}
-
-	memory_monitor::monitor_free	(ptr);
-	void* const result				= g_render_lua_allocator.realloc_impl(ptr, (u32)nsize);
-	memory_monitor::monitor_alloc	(result,nsize,"render:LUA");
-	return							result;
-#endif // #ifndef USE_MEMORY_MONITOR
-}
-#endif // USE_DL_ALLOCATOR
 
 // export
 void	CResourceManager::LS_Load			()
@@ -276,6 +227,7 @@ void	CResourceManager::LS_Load			()
 			.def("dx10texture",					&adopt_compiler::_dx10texture	,return_reference_to<1>())
 			.def("dx10stencil",					&adopt_compiler::_dx10Stencil	,return_reference_to<1>())
 			.def("dx10stencil_ref",				&adopt_compiler::_dx10StencilRef,return_reference_to<1>())
+			.def("dx10cullmode",				&adopt_compiler::_dx10CullMode	,return_reference_to<1>())
 			.def("dx10atoc",					&adopt_compiler::_dx10ATOC		,return_reference_to<1>())
 			.def("dx10zfunc",					&adopt_compiler::_dx10ZFunc		,return_reference_to<1>())			
 

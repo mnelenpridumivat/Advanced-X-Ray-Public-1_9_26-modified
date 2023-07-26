@@ -34,6 +34,8 @@
 #include "../Artefact.h"
 #include "../string_table.h"
 
+#include "../AdvancedXrayGameConstants.h"
+
 LPCSTR ef_states_names[] =
 {
 	"health_state",
@@ -55,6 +57,8 @@ LPCSTR ef_states_names[] =
 	"hangover_state",
 	"narcotism_state",
 	"withdrawal_state",
+	"psy_health_state",
+	"current_power_state",
 };
 
 ui_actor_state_wnd::ui_actor_state_wnd()
@@ -167,6 +171,14 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	value = actor->conditions().GetWithdrawal();
 	m_state[stt_withdrawal]->set_progress(value);
 	m_state[stt_withdrawal]->set_value(value);
+
+	value = actor->conditions().GetPsyHealth();
+	m_state[stt_psy_health]->set_progress(value);
+	m_state[stt_psy_health]->set_value(value);
+
+	value = actor->conditions().GetPower();
+	m_state[stt_cur_power]->set_progress(value);
+	m_state[stt_cur_power]->set_value(value);
 
 	CCustomOutfit* outfit = actor->GetOutfit();
 	CCustomOutfit* pants = smart_cast<CCustomOutfit*>(actor->inventory().ItemFromSlot(PANTS_SLOT));
@@ -365,13 +377,6 @@ void ui_actor_state_wnd::update_round_states( CActor* actor, ALife::EHitType hit
 
 void ui_actor_state_wnd::UpdateHitZone()
 {
-	CUIHudStatesWnd* wnd = CurrentGameUI()->UIMainIngameWnd->get_hud_states(); //некрасиво слишком
-	VERIFY( wnd );
-	if ( !wnd )
-	{
-		return;
-	}
-	wnd->UpdateZones();
 }
 
 void ui_actor_state_wnd::Draw()
@@ -423,20 +428,46 @@ void ui_actor_state_item::init_from_xml( CUIXml& xml, LPCSTR path )
 	{
 		m_progress = UIHelper::CreateProgressBar( xml, "state_progress", this );
 	}
+
 	if (xml.NavigateToNode("state_caption", 0))
 	{
 		m_caption = UIHelper::CreateStatic(xml, "state_caption", this);
 	}
+
 	if (xml.NavigateToNode("state_caption:texture", 0))
 	{
+		use_color = xml.ReadAttribInt("state_caption:texture", 0, "use_color", 0);
+		clr_invert = xml.ReadAttribInt("state_caption:texture", 0, "clr_invert", 0);
+		clr_dynamic = xml.ReadAttribInt("state_caption:texture", 0, "clr_dynamic", 0);
 		LPCSTR texture = xml.Read("state_caption:texture", 0, "");
 		m_texture._set(texture);
 	}
+
+	Fvector4 red = GameConstants::GetRedColor();
+	Fvector4 green = GameConstants::GetGreenColor();
+	Fvector4 neutral = GameConstants::GetNeutralColor();
+
+	if (xml.NavigateToNode("state_caption:negative_color", 0))
+		m_negative_color = CUIXmlInit::GetColor(xml, "state_caption:negative_color", 0, color_rgba(red.x, red.y, red.z, red.w));
+	else
+		m_negative_color = color_rgba(red.x, red.y, red.z, red.w);
+
+	if (xml.NavigateToNode("state_caption:neutral_color", 0))
+		m_neutral_color = CUIXmlInit::GetColor(xml, "state_caption:neutral_color", 0, color_rgba(neutral.x, neutral.y, neutral.z, neutral.w));
+	else
+		m_neutral_color = color_rgba(neutral.x, neutral.y, neutral.z, neutral.w);
+
+	if (xml.NavigateToNode("state_caption:positive_color", 0))
+		m_positive_color = CUIXmlInit::GetColor(xml, "state_caption:positive_color", 0, color_rgba(green.x, green.y, green.z, green.w));
+	else
+		m_positive_color = color_rgba(green.x, green.y, green.z, green.w);
+
 	if (xml.NavigateToNode("state_caption:state_value", 0))
 	{
 		m_magnitude = xml.ReadAttribFlt("state_caption:state_value", 0, "magnitude", 1.0f);
 		m_value = UIHelper::CreateTextWnd(xml, "state_caption:state_value", this);
 	}
+
 	if ( xml.NavigateToNode( "progress_shape", 0 ) )	
 	{
 		m_sensor = xr_new<CUIProgressShape>();
@@ -444,32 +475,38 @@ void ui_actor_state_item::init_from_xml( CUIXml& xml, LPCSTR path )
 		m_sensor->SetAutoDelete( true );
 		CUIXmlInit::InitProgressShape( xml, "progress_shape", 0, m_sensor );
 	}
+
 	if ( xml.NavigateToNode( "arrow", 0 ) )	
 	{
 		m_arrow = xr_new<UI_Arrow>();
 		m_arrow->init_from_xml( xml, "arrow", this );
 	}
+
 	if ( xml.NavigateToNode( "arrow_shadow", 0 ) )	
 	{
 		m_arrow_shadow = xr_new<UI_Arrow>();
 		m_arrow_shadow->init_from_xml( xml, "arrow_shadow", this );
 	}
+
 	if ( xml.NavigateToNode( "icon", 0 ) )	
 	{
 		m_static = UIHelper::CreateStatic( xml, "icon", this );
 //		m_magnitude = xml.ReadAttribFlt( "icon", 0, "magnitude", 1.0f );
 		m_static->TextItemControl()->SetText("");
 	}
+
 	if ( xml.NavigateToNode( "icon2", 0 ) )	
 	{
 		m_static2 = UIHelper::CreateStatic( xml, "icon2", this );
 		m_static2->TextItemControl()->SetText("");
 	}
+
 	if ( xml.NavigateToNode( "icon3", 0 ) )	
 	{
 		m_static3 = UIHelper::CreateStatic( xml, "icon3", this );
 		m_static3->TextItemControl()->SetText("");
 	}
+
 	set_arrow( 0.0f );
 	xml.SetLocalRoot( stored_root );
 }
@@ -521,6 +558,26 @@ void ui_actor_state_item::set_value(float value)
 	m_value->SetText(str);
 
 	m_caption->InitTexture(m_texture.c_str());
+
+	if (GameConstants::GetColorizeValues() || use_color)
+	{
+		if (clr_dynamic)
+		{
+			Fcolor current{}, negative{}, middle{}, positive{};
+
+			value /= m_magnitude;
+			clamp(value, 0.01f, 1.0f);
+
+			if (!clr_invert)
+				current.lerp(negative.set(m_negative_color), middle.set(m_neutral_color), positive.set(m_positive_color), value);
+			else
+				current.lerp(positive.set(m_positive_color), middle.set(m_neutral_color), negative.set(m_negative_color), value);
+
+			m_caption->SetTextureColor(current.get());
+		}
+		else
+			m_caption->SetTextureColor(m_neutral_color);
+	}
 }
 
 void ui_actor_state_item::SetCaption(LPCSTR name)

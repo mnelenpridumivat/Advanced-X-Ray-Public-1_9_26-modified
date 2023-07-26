@@ -256,6 +256,7 @@ public:
 	void					detach_Vehicle			();
 	void					steer_Vehicle			(float angle);
 	void					attach_Vehicle			(CHolderCustom* vehicle);
+	bool					use_HolderEx			(CHolderCustom* object, bool bForce);
 
 	virtual bool			can_attach				(const CInventoryItem *inventory_item) const;
 protected:
@@ -436,6 +437,8 @@ public:
 	float					m_fWalk_StrafeFactor;
 	float					m_fRun_StrafeFactor;
 
+	u32						m_iBaseArtefactCount;
+
 public:
 	Fvector					GetMovementSpeed		() {return NET_SavedAccel;};
 	//////////////////////////////////////////////////////////////////////////
@@ -461,6 +464,7 @@ public:
 	virtual float						MaxCarryWeight		() const;
 			float						MaxWalkWeight		() const;
 			float						get_additional_weight() const;
+			u32							GetBaseArtefactCount() const { return m_iBaseArtefactCount; }
 
 protected:
 	CFireDispertionController			m_fdisp_controller;
@@ -811,6 +815,8 @@ extern bool		isActorAccelerated			(u32 mstate, bool ZoomMode);
 
 IC	CActorCondition	&CActor::conditions	() const{ VERIFY(m_entity_condition); return(*m_entity_condition);}
 
+extern Fvector		g_start_position;
+extern int			g_start_game_vertex_id;
 extern CActor*		g_actor;
 CActor*				Actor		();
 extern const float	s_fFallTime;

@@ -27,6 +27,7 @@ class CTradeParameters;
 class CPurchaseList;
 class CWeapon;
 class CCustomOutfit;
+class CHelmet;
 
 class CInventoryOwner : public CAttachmentOwner {							
 public:
@@ -98,7 +99,7 @@ public:
 	virtual void	 LostPdaContact		(CInventoryOwner*);
 
 	//игровое имя 
-	virtual LPCSTR	Name        () const;
+	virtual LPCSTR		Name			() const;
 	LPCSTR				IconName		() const;
 	u32					get_money		() const				{return m_money;}
 	void				set_money		(u32 amount, bool bSendEvent);
@@ -150,7 +151,8 @@ public:
 	//максимальный переносимы вес
 	virtual float MaxCarryWeight			() const;
 
-	CCustomOutfit* GetOutfit				() const;
+	CCustomOutfit*	GetOutfit				() const;
+	CHelmet*		GetHelmet				() const;
 
 	bool CanPlayShHdRldSounds				() const {return m_play_show_hide_reload_sounds;};
 	void SetPlayShHdRldSounds				(bool play) {m_play_show_hide_reload_sounds = play;};
@@ -169,7 +171,7 @@ public:
 	virtual void			ChangeReputation(CHARACTER_REPUTATION_VALUE);
 
 	virtual void			SetName			(LPCSTR name);
-	virtual void 			SetIcon			(const shared_str& icon);
+	virtual void			SetIcon			(const shared_str& icon) { m_character_icon = icon; }
 
 	//для работы с relation system
 	u16								object_id	() const;
@@ -181,6 +183,7 @@ public:
 protected:
 	CCharacterInfo*			m_pCharacterInfo;
 	xr_string				m_game_name;
+	shared_str				m_character_icon;
 
 public:
 	virtual void			renderable_Render		();

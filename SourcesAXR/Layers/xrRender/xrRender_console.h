@@ -154,11 +154,7 @@ extern ECORE_API float			ps_r2_ss_sunshafts_length;
 extern ECORE_API float			ps_r2_ss_sunshafts_radius;
 extern u32						ps_sunshafts_mode;
 
-extern ECORE_API float			ps_rcol;
-extern ECORE_API float			ps_gcol;
-extern ECORE_API float			ps_bcol;
-
-extern ECORE_API float			ps_saturation;
+extern ECORE_API Fvector4		ps_color_dragging;
 
 extern ECORE_API float			ps_r2_rain_drops_intensity;
 extern ECORE_API float			ps_r2_rain_drops_speed;
@@ -174,6 +170,11 @@ extern ECORE_API int			ps_mt_texture_load;
 //Тип низинного тумана
 extern ECORE_API	u32			ps_lowland_fog_type;
 extern ECORE_API	xr_token	lowland_fog_type_token[];
+
+extern ECORE_API float			ps_r2_reflections_distance;
+
+//AO Debug
+extern ECORE_API int			ps_r2_ao_debug;
 
 enum
 {
@@ -219,7 +220,6 @@ enum
 	R3FLAG_MSAA_HYBRID			= (1<<28),
 	R3FLAG_MSAA_OPT				= (1<<29),
 	R3FLAG_GBUFFER_OPT			= (1<<30),
-	R3FLAG_USE_DX10_1			= (1<<31),
 	//R3FLAG_MSAA_ALPHATEST		= (1<<31),
 };
 
@@ -254,26 +254,16 @@ enum
 	RFLAG_ACTOR_SHADOW = (1 << 0),
 };
 
-extern ECORE_API Flags32 ps_r2_rain_drops_flags;
+extern ECORE_API Flags32 ps_r2_postscreen_flags;
 
 enum
 {
-	R2FLAG_RAIN_DROPS 			= (1 << 0),
-};
-
-extern ECORE_API Flags32 ps_r2_vignette_flags;
-
-enum
-{
-	R_FLAG_VIGNETTE = (1 << 0),
-};
-
-extern ECORE_API Flags32 ps_r2_hud_mask_flags;
-
-enum
-{
-	R_FLAG_HUD_MASK = (1 << 0),
-	R_FLAG_HUD_DYN_EFFECTS = (1 << 1),
+	R_FLAG_VIGNETTE				= (1<<0),
+	R_FLAG_HUD_MASK				= (1<<1),
+	R_FLAG_HUD_DYN_EFFECTS		= (1<<2),
+	R2FLAG_RAIN_DROPS			= (1<<3),
+	R_FLAG_CHROMATIC_ABERRATION = (1<<4),
+	R_FLAG_FILM_GRAIN			= (1<<5),
 };
 
 extern ECORE_API Flags32 ps_r_textures_flags;
@@ -283,25 +273,16 @@ enum
 	R3_NO_RAM_TEXTURES = (1 << 0),
 };
 
-extern ECORE_API Flags32 ps_r3_pbr_flags;
-
-enum
-{
-	R_FLAG_PSEUDOPBR = (1 << 0),
-};
-
 extern ECORE_API Flags32 ps_r2_static_flags;
 
 enum
 {
 	R2FLAG_USE_BUMP		= (1 << 0),
-	R2FLAG_STATIC_SUN	= (0 << 1),
+	R2FLAG_STATIC_SUN	= (1 << 1),
 };
 
 //Rezy: cleanup flags
 extern Flags32 psDeviceFlags2;
-
-extern ECORE_API int ps_rs_loading_stages;
 
 extern void						xrRender_initconsole	();
 extern BOOL						xrRender_test_hw		();
@@ -311,5 +292,9 @@ extern ECORE_API float			droplets_power_debug;
 // M.F.S. Team: Flares Render
 extern ECORE_API	u32			ps_r2_flares;
 extern ECORE_API	xr_token	qflares_token[];
+
+// Screen Space Shaders
+extern ECORE_API Fvector4 ps_ssfx_grass_shadows;
+extern ECORE_API Fvector3 ps_ssfx_shadow_cascades;
 
 #endif

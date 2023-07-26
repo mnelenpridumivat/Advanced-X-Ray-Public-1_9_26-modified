@@ -184,9 +184,6 @@
     <Filter Include="Debug">
       <UniqueIdentifier>{9406e67a-1a53-40b3-8e77-f5ce38166f72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="imgui_render">
-      <UniqueIdentifier>{7c74773a-ef3c-4d85-8757-98df76dc3d66}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cl_intersect.h">
@@ -600,12 +597,6 @@
     <ClInclude Include="..\..\Include\xrRender\FactoryPtr.h">
       <Filter>Interfase implementations\FactoryPtr</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\xrRender\ApplicationRender.h">
-      <Filter>Interfase implementations\ApplicationRender</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrRender\dxApplicationRender.h">
-      <Filter>Interfase implementations\ApplicationRender</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrRender\dxRainRender.h">
       <Filter>Interfase implementations\RainRender</Filter>
     </ClInclude>
@@ -756,14 +747,11 @@
     <ClInclude Include="..\xrRender\blender_smaa.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrRenderPC_R3\blender_vignette.h">
+    <ClInclude Include="..\xrRenderPC_R4\blender_vignette.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
     <ClInclude Include="blender_hud_mask.h">
       <Filter>Shading templates</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrRenderDX10\imgui_impl_dx11.h">
-      <Filter>imgui_render</Filter>
     </ClInclude>
     <ClInclude Include="blender_hud_blood.h">
       <Filter>Shading templates</Filter>
@@ -787,6 +775,18 @@
       <Filter>Shading templates</Filter>
     </ClInclude>
     <ClInclude Include="blender_dof.h">
+      <Filter>Shading templates</Filter>
+    </ClInclude>
+    <ClInclude Include="blender_chromatic_aberration.h">
+      <Filter>Shading templates</Filter>
+    </ClInclude>
+    <ClInclude Include="blender_film_grain.h">
+      <Filter>Shading templates</Filter>
+    </ClInclude>
+    <ClInclude Include="blender_cut.h">
+      <Filter>Shading templates</Filter>
+    </ClInclude>
+    <ClInclude Include="blender_hud_intoxication.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1316,9 +1316,6 @@
     <ClCompile Include="..\xrRender\dxLensFlareRender.cpp">
       <Filter>Interfase implementations\LensFlare</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrRender\dxApplicationRender.cpp">
-      <Filter>Interfase implementations\ApplicationRender</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrRender\dxRainRender.cpp">
       <Filter>Interfase implementations\RainRender</Filter>
     </ClCompile>
@@ -1430,14 +1427,11 @@
     <ClCompile Include="..\xrRender\RenderTargetPhaseVignette.cpp">
       <Filter>Core_Target</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrRenderPC_R3\blender_vignette.cpp">
+    <ClCompile Include="..\xrRenderPC_R4\blender_vignette.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
     <ClCompile Include="blender_hud_mask.cpp">
       <Filter>Shading templates</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrRenderDX10\imgui_impl_dx11.cpp">
-      <Filter>imgui_render</Filter>
     </ClCompile>
     <ClCompile Include="blender_hud_blood.cpp">
       <Filter>Shading templates</Filter>
@@ -1484,5 +1478,29 @@
     <ClCompile Include="blender_dof.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
+    <ClCompile Include="blender_chromatic_aberration.cpp">
+      <Filter>Shading templates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\rendertarget_phase_chromatic_aberration.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\rendertarget_phase_film_grain.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="blender_film_grain.cpp">
+      <Filter>Shading templates</Filter>
+    </ClCompile>
+    <ClCompile Include="blender_cut.cpp">
+      <Filter>Shading templates</Filter>
+    </ClCompile>
+    <ClCompile Include="r4_rendertarget_phase_cut.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="blender_hud_intoxication.cpp">
+      <Filter>Shading templates</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

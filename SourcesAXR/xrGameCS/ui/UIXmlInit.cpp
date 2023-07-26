@@ -34,7 +34,7 @@
 
 extern int keyname_to_dik(LPCSTR);
 
-#define ARIAL_FONT_NAME			"arial"
+#define ARIAL_FONT_NAME			"arial_14"
 
 #define MEDIUM_FONT_NAME		"medium"
 #define SMALL_FONT_NAME			"small"
@@ -224,6 +224,8 @@ bool CUIXmlInit::InitStatic(CUIXml& xml_doc, LPCSTR path,
 	bool bComplexMode = xml_doc.ReadAttribInt(path, index, "complex_mode",0)?true:false;
 	if(bComplexMode)
 		pWnd->SetTextComplexMode(bComplexMode);
+
+	pWnd->m_stat_hint_text = xml_doc.ReadAttrib(path, index, "hint", "");
 	
 	return true;
 }
@@ -492,7 +494,20 @@ bool CUIXmlInit::InitDragDropListEx(CUIXml& xml_doc, const char* path, int index
 	tmp						= xml_doc.ReadAttribInt(path, index, "always_show_scroll", 0);
 	pWnd->SetAlwaysShowScroll(tmp!=0);
 
+	tmp						= xml_doc.ReadAttribInt(path, index, "virtual_cells", 0);
+	pWnd->SetVirtualCells(tmp!=0);
+
+	if(tmp!=0)
+	{
+		xr_string vc_vert_align = xml_doc.ReadAttrib(path, index, "vc_vert_align", "");
+		pWnd->SetCellsVertAlignment(vc_vert_align);
+		xr_string vc_horiz_align = xml_doc.ReadAttrib(path, index, "vc_horiz_align", "");
+		pWnd->SetCellsHorizAlignment(vc_horiz_align);
+	}
 	pWnd->back_color		= GetColor( xml_doc, path, index, 0xFFFFFFFF );
+
+	tmp = xml_doc.ReadAttribInt(path, index, "condition_progress_bar", 0);
+	pWnd->SetConditionProgBarVisibility(tmp != 0);
 
 	return true;
 }
@@ -759,7 +774,7 @@ bool CUIXmlInit::InitFont(CUIXml &xml_doc, LPCSTR path, int index, u32 &color, C
 		{
 			pFnt = UI()->Font()->pFontGraffiti50Russian;
 		}
-		else if(!xr_strcmp(*font_name, "arial_14"))
+		else if(!xr_strcmp(*font_name, ARIAL_FONT_NAME))
 		{
 			pFnt = UI()->Font()->pFontArial14;
 		}

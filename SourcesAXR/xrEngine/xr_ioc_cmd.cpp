@@ -547,8 +547,7 @@ public:
 		//	4 - r3
 		psDeviceFlags.set		(rsR1, renderer_value == 0);
 		psDeviceFlags.set		(rsR2, ((renderer_value>0) && renderer_value<4) );
-		psDeviceFlags.set		(rsR3, (renderer_value==4) );
-		psDeviceFlags.set		(rsR4, (renderer_value>=5) );
+		psDeviceFlags.set		(rsR4, (renderer_value>=4) );
 
 		r2_sun_static	= (renderer_value<2);
 
@@ -670,6 +669,10 @@ public		:
 ENGINE_API float psHUD_FOV_def = 0.45f;
 ENGINE_API float psHUD_FOV = psHUD_FOV_def;
 
+ENGINE_API float psSVPImageSizeK = 0.7f;
+ENGINE_API int psSVPFrameDelay = 1;
+ENGINE_API float fps_limit = 60.0f;
+
 //extern int			psSkeletonUpdate;
 extern int			rsDVB_Size;
 extern int			rsDIB_Size;
@@ -683,11 +686,28 @@ extern Flags32		psEnvFlags;
 //extern float		r__dtex_range;
 
 extern int			g_ErrorLineCount;
+extern int			ps_rs_loading_stages;
+
+ENGINE_API BOOL		debugSecondVP = FALSE;
 
 ENGINE_API int			ps_r__Supersample			= 1;
 ENGINE_API int			ps_r__WallmarksOnSkeleton	= 0;
 
 ENGINE_API int			ps_r__ShaderNVG				= 0;
+
+ENGINE_API float		ps_detail_collision_dist	= 1.f;
+ENGINE_API float		ps_detail_collision_time	= 0.25f;
+ENGINE_API Fvector		ps_detail_collision_angle	= { 0, 50, 0 };
+ENGINE_API int			ps_detail_enable_collision	= 1;
+
+ENGINE_API float		ps_detail_collision_radius	= 40.f;
+ENGINE_API xr_vector<DetailCollisionPoint> level_detailcoll_points;
+ENGINE_API Fvector		actor_position{};
+
+//Screen Space Shaders Stuff
+ENGINE_API Fvector4		ps_ssfx_grass_interactive = Fvector4().set(.0f, .0f, 2000.0f, 1.0f);
+ENGINE_API Fvector4		ps_ssfx_int_grass_params_1 = Fvector4().set(1.0f, 1.0f, 1.0f, 1.0f);
+ENGINE_API Fvector4		ps_ssfx_int_grass_params_2 = Fvector4().set(1.0f, 5.0f, 1.0f, 1.0f);
 
 void CCC_Register()
 {
@@ -740,10 +760,24 @@ void CCC_Register()
 	//Bloodmarks on Skeleton
 	CMD4(CCC_Integer,	"r__wallmarks_on_skeleton", &ps_r__WallmarksOnSkeleton,		0, 1	);
 	//Nightvision Type (PPE/Shader)
-	CMD4(CCC_Integer,	"r__shader_nvg",		&ps_r__ShaderNVG, 0, 1);
+	CMD4(CCC_Integer,	"r__shader_nvg",		&ps_r__ShaderNVG,			0, 1	);
+	CMD4(CCC_Integer,	"rs_loadingstages",		&ps_rs_loading_stages,		0, 1	);
 
+	CMD4(CCC_Integer,	"r__detail_collision_enabled",			&ps_detail_enable_collision,	0, 1);
+	CMD4(CCC_Float,		"r__detail_collision_radius",			&ps_detail_collision_dist,		0.1f, 3.5f);
+	CMD4(CCC_Float,		"r__detail_collision_visible_radius",	&ps_detail_collision_radius,	5.f, 70.f);
+	CMD4(CCC_Float,		"r__detail_collision_time",				&ps_detail_collision_time,		0.1f, 3.f);
+	CMD4(CCC_Vector3,	"r__detail_collision_angles",			&ps_detail_collision_angle,		Fvector({ -90.f, -90.f, -90.f }), Fvector({ 90.f, 90.f, 90.f }));
 
-	CMD3(CCC_Mask,		"rs_v_sync",			&psDeviceFlags,		rsVSync				);
+	CMD4(CCC_Vector4,	"ssfx_grass_interactive",				&ps_ssfx_grass_interactive, Fvector4().set(0, 0, 0, 0), Fvector4().set(1, 15, 5000, 1));
+	CMD4(CCC_Vector4,	"ssfx_int_grass_params_1",				&ps_ssfx_int_grass_params_1, Fvector4().set(0, 0, 0, 0), Fvector4().set(5, 5, 5, 5));
+	CMD4(CCC_Vector4,	"ssfx_int_grass_params_2",				&ps_ssfx_int_grass_params_2, Fvector4().set(0, 0, 0, 0), Fvector4().set(5, 20, 1, 5));
+
+	CMD4(CCC_Float,		"svp_image_size_k",		&psSVPImageSizeK,	0.1f,	2.f				);
+	CMD4(CCC_Integer,	"svp_frame_delay",		&psSVPFrameDelay,	1,		3				);
+	CMD4(CCC_Integer,	"rs_debug_second_vp",	&debugSecondVP,		FALSE,	TRUE			);
+
+	CMD3(CCC_Mask,		"rs_v_sync",			&psDeviceFlags,		rsVSync					);
 //	CMD3(CCC_Mask,		"rs_disable_objects_as_crows",&psDeviceFlags,	rsDisableObjectsAsCrows	);
 	CMD3(CCC_Mask,		"rs_fullscreen",		&psDeviceFlags,		rsFullscreen			);
 	CMD3(CCC_Mask,		"rs_refresh_60hz",		&psDeviceFlags,		rsRefresh60hz			);

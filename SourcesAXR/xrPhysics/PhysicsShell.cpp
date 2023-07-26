@@ -87,7 +87,7 @@ void	fix_bones( LPCSTR	fixed_bones, CPhysicsShell* shell )
 			string64					fixed_bone							;
 			_GetItem					(fixed_bones,i,fixed_bone)			;
 			u16 fixed_bone_id=pKinematics->LL_BoneID(fixed_bone)			;
-			R_ASSERT2(BI_NONE!=fixed_bone_id,"wrong fixed bone")			;
+			R_ASSERT2(BI_NONE != fixed_bone_id, make_string("wrong fixed bone [%s] for object with visual [%s]", fixed_bone, pKinematics->getDebugName().c_str()));
 			CPhysicsElement* E = shell->get_Element(fixed_bone_id)			;
 			if(E)
 				E->Fix();
@@ -108,8 +108,8 @@ CPhysicsShell*	P_build_Shell( IPhysicsShellHolder* obj, bool not_active_state,BO
 			string64					fixed_bone							;
 			_GetItem					(fixed_bones,i,fixed_bone)			;
 			u16 fixed_bone_id=pKinematics->LL_BoneID(fixed_bone)			;
-			R_ASSERT2(BI_NONE!=fixed_bone_id,"wrong fixed bone")			;
-			p_bone_map->insert(mk_pair(fixed_bone_id,physicsBone()))			;
+			R_ASSERT2(BI_NONE != fixed_bone_id, make_string("wrong fixed bone [%s] for object [%s] with visual [%s]", fixed_bone, obj->ObjectName(), obj->ObjectNameVisual()));
+			p_bone_map->insert(std::make_pair(fixed_bone_id,physicsBone()))			;
 		}
 
 		pPhysicsShell=P_build_Shell(obj,not_active_state,p_bone_map);
@@ -144,7 +144,7 @@ CPhysicsShell*	P_build_Shell( IPhysicsShellHolder* obj, bool not_active_state, L
 			string64		fixed_bone;
 			_GetItem		(fixed_bones,i,fixed_bone);
 			f_bones.push_back(K->LL_BoneID(fixed_bone));
-			R_ASSERT2(BI_NONE!=f_bones.back(),"wrong fixed bone")			;
+			R_ASSERT2(BI_NONE != f_bones.back(), make_string("wrong fixed bone [%s] for object [%s] with visual [%s]", fixed_bone, obj->ObjectName(), obj->ObjectNameVisual()));
 		}
 	}
 	return P_build_Shell	(obj,not_active_state,f_bones);
@@ -157,7 +157,7 @@ CPhysicsShell*	P_build_Shell	( IPhysicsShellHolder* obj, bool not_active_state, 
 	CPhysicsShell*			pPhysicsShell = 0;
 	if(!fixed_bones.empty())
 		for ( U16It it=fixed_bones.begin(); it!=fixed_bones.end(); it++ )
-			bone_map.insert( mk_pair( *it, physicsBone() ) );
+			bone_map.insert( std::make_pair( *it, physicsBone() ) );
 	pPhysicsShell=P_build_Shell( obj, not_active_state, &bone_map );
 
 	// fix bones

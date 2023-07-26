@@ -15,7 +15,9 @@
 #include "../../xrEngine/x_ray.h"
 #include "D3DX10Core.h"
 
-CRender										RImplementation;
+CRender RImplementation;
+
+ENGINE_API extern Fvector4 ps_ssfx_grass_interactive;
 
 //////////////////////////////////////////////////////////////////////////
 class CGlow				: public IRender_Glow
@@ -289,7 +291,6 @@ void					CRender::create					()
 	o.ssao_hdao			= ps_r2_ls_flags_ext.test(R2FLAGEXT_SSAO_HDAO) && (ps_r_ssao != 0);
 	o.ssao_hbao			= !o.ssao_hdao && ps_r2_ls_flags_ext.test(R2FLAGEXT_SSAO_HBAO) && (ps_r_ssao != 0);
 	o.ssao_ssdo			= !o.ssao_hdao && !o.ssao_hbao && ps_r2_ls_flags_ext.test(R2FLAGEXT_SSAO_SSDO) && (ps_r_ssao != 0);
-	o.pseudo_pbr		= ps_r3_pbr_flags.test(R_FLAG_PSEUDOPBR);
 
 	//	TODO: fix hbao shader to allow to perform per-subsample effect!
 	o.hbao_vectorized = false;
@@ -312,7 +313,6 @@ void					CRender::create					()
 	o.dx10_msaa_opt		= o.dx10_msaa_opt && o.dx10_msaa && ( HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1 )
 			|| o.dx10_msaa && (HW.FeatureLevel >= D3D_FEATURE_LEVEL_11_0);
 
-	o.dx10_sm4_1 = o.dx10_msaa_opt;
 	o.dx10_msaa_hybrid = o.dx10_msaa_opt;
 
 	//	Allow alpha test MSAA for DX10.0
@@ -527,6 +527,9 @@ void CRender::OnFrame()
 		Device.seqParallel.insert	(Device.seqParallel.begin(),
 			fastdelegate::FastDelegate0<>(&HOM,&CHOM::MT_RENDER));
 	}
+
+	if (Details)
+		g_pGamePersistent->GrassBendersUpdateExplosions();
 }
 
 
@@ -771,11 +774,9 @@ static HRESULT create_shader				(
 	HRESULT		_result = E_FAIL;
 	if (pTarget[0] == 'p') {
 		SPS* sps_result = (SPS*)result;
-#ifdef USE_DX11
+
 		_result			= HW.pDevice->CreatePixelShader(buffer, buffer_size, 0, &sps_result->ps);
-#else // #ifdef USE_DX11
-		_result			= HW.pDevice->CreatePixelShader(buffer, buffer_size, &sps_result->ps);
-#endif // #ifdef USE_DX11
+
 		if ( !SUCCEEDED(_result) ) {
 			Log			("! PS: ", file_name);
 			Msg			("! CreatePixelShader hr == 0x%08x", _result);
@@ -784,11 +785,7 @@ static HRESULT create_shader				(
 
 		ID3DShaderReflection *pReflection = 0;
 
-#ifdef USE_DX11
 		_result			= D3DReflect(buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
-#else
-		_result			= D3D10ReflectShader( buffer, buffer_size, &pReflection);
-#endif
 
 		//	Parse constant, texture, sampler binding
 		//	Store input signature blob
@@ -807,11 +804,8 @@ static HRESULT create_shader				(
 	}
 	else if (pTarget[0] == 'v') {
 		SVS* svs_result = (SVS*)result;
-#ifdef USE_DX11
+
 		_result			= HW.pDevice->CreateVertexShader(buffer, buffer_size, 0, &svs_result->vs);
-#else // #ifdef USE_DX11
-		_result			= HW.pDevice->CreateVertexShader(buffer, buffer_size, &svs_result->vs);
-#endif // #ifdef USE_DX11
 
 		if ( !SUCCEEDED(_result) ) {
 			Log			("! VS: ", file_name);
@@ -820,11 +814,8 @@ static HRESULT create_shader				(
 		}
 
 		ID3DShaderReflection *pReflection = 0;
-#ifdef USE_DX11
+
 		_result			= D3DReflect(buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
-#else
-		_result			= D3D10ReflectShader( buffer, buffer_size, &pReflection);
-#endif
 		
 		//	Parse constant, texture, sampler binding
 		//	Store input signature blob
@@ -855,11 +846,9 @@ static HRESULT create_shader				(
 	}
 	else if (pTarget[0] == 'g') {
 		SGS* sgs_result = (SGS*)result;
-#ifdef USE_DX11
+
 		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, 0, &sgs_result->gs);
-#else // #ifdef USE_DX11
-		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, &sgs_result->gs);
-#endif // #ifdef USE_DX11
+
 		if ( !SUCCEEDED(_result) ) {
 			Log			("! GS: ", file_name);
 			Msg			("! CreateGeometryShaderhr == 0x%08x", _result);
@@ -868,11 +857,7 @@ static HRESULT create_shader				(
 
 		ID3DShaderReflection *pReflection = 0;
 
-#ifdef USE_DX11
 		_result			= D3DReflect(buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
-#else
-		_result			= D3D10ReflectShader( buffer, buffer_size, &pReflection);
-#endif
 
 		//	Parse constant, texture, sampler binding
 		//	Store input signature blob
@@ -889,42 +874,6 @@ static HRESULT create_shader				(
 			Msg	("! D3DReflectShader hr == 0x%08x", _result);
 		}
 	}
-//	else if (pTarget[0] == 'c') {
-//		SCS* scs_result = (SCS*)result;
-//#ifdef USE_DX11
-//		_result			= HW.pDevice->CreateComputeShader(buffer, buffer_size, 0, &scs_result->sh);
-//#else // #ifdef USE_DX11
-//		_result			= HW.pDevice->CreateComputeShader(buffer, buffer_size, &scs_result->sh);
-//#endif // #ifdef USE_DX11
-//		if ( !SUCCEEDED(_result) ) {
-//			Log			("! CS: ", file_name);
-//			Msg			("! CreateComputeShaderhr == 0x%08x", _result);
-//			return		E_FAIL;
-//		}
-//
-//		ID3DShaderReflection *pReflection = 0;
-//
-//#ifdef USE_DX11
-//		_result			= D3DReflect( buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
-//#else
-//		_result			= D3D10ReflectShader( buffer, buffer_size, &pReflection);
-//#endif
-//
-//		//	Parse constant, texture, sampler binding
-//		//	Store input signature blob
-//		if (SUCCEEDED(_result) && pReflection)
-//		{
-//			//	Let constant table parse it's data
-//			scs_result->constants.parse(pReflection,RC_dest_pixel);
-//
-//			_RELEASE(pReflection);
-//		}
-//		else
-//		{
-//			Log	("! PS: ", file_name);
-//			Msg	("! D3DReflectShader hr == 0x%08x", _result);
-//		}
-//	}
 	else if (pTarget[0] == 'c') {
 		_result = create_shader	( pTarget, buffer, buffer_size, file_name, (SCS*&)result, disasm );
 	}
@@ -1012,6 +961,8 @@ HRESULT	CRender::shader_compile			(
 	char							c_aa			[32];
 	//For lowland fog type
 	char							c_low_fog_type	[32];
+	// Screen Space Shaders
+	char							c_inter_grass	[32];
 
 	char	sh_name[MAX_PATH] = "";
 	
@@ -1100,14 +1051,6 @@ HRESULT	CRender::shader_compile			(
 		def_it						++	;
 	}
 	sh_name[len]='0'+char(o.mblur); ++len;
-
-	if (o.pseudo_pbr)
-	{
-		defines[def_it].Name = "USE_PBR";
-		defines[def_it].Definition = "1";
-		def_it++;
-	}
-	sh_name[len] = '0' + char(o.pseudo_pbr); ++len;
 
 	if (o.sunfilter)		{
 		defines[def_it].Name		=	"USE_SUNFILTER";
@@ -1390,30 +1333,28 @@ HRESULT	CRender::shader_compile			(
 		sh_name[len] = '0' + char(dt_ssr_samp); ++len;
 	}
 
-   //R_ASSERT						( !o.dx10_sm4_1 );
-   if( o.dx10_sm4_1 )
-   {
-	   defines[def_it].Name		=	"SM_4_1";
-	   defines[def_it].Definition	=	"1";
-	   def_it++;
-   }
-   sh_name[len]='0'+char(o.dx10_sm4_1); ++len;
+	if (HW.FeatureLevel == D3D_FEATURE_LEVEL_10_1)
+	{
+		defines[def_it].Name		=	"SM_4_1";
+		defines[def_it].Definition	=	"1";
+		def_it++;
+	}
+	sh_name[len]='0'+0*char(HW.FeatureLevel == D3D_FEATURE_LEVEL_10_1); ++len;
 
-   R_ASSERT						( HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 );
-   if( HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 )
-   {
-	   defines[def_it].Name		=	"SM_5";
-	   defines[def_it].Definition	=	"1";
-	   def_it++;
-   }
+	if( HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 )
+	{
+		defines[def_it].Name		=	"SM_5";
+		defines[def_it].Definition	=	"1";
+		def_it++;
+	}
 	sh_name[len]='0'+char(HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0); ++len;
 
-   if (o.dx10_minmax_sm)
-   {
-	   defines[def_it].Name		=	"USE_MINMAX_SM";
-	   defines[def_it].Definition	=	"1";
-	   def_it++;
-   }
+	if (o.dx10_minmax_sm)
+	{
+		defines[def_it].Name		=	"USE_MINMAX_SM";
+		defines[def_it].Definition	=	"1";
+		def_it++;
+	}
 	sh_name[len]='0'+char(o.dx10_minmax_sm!=0); ++len;
 
 	if (o.dx10_winter_mode)
@@ -1439,6 +1380,21 @@ HRESULT	CRender::shader_compile			(
 		defines[def_it].Definition = c_low_fog_type;
 		def_it++;
 		sh_name[len] = '0' + char(ps_lowland_fog_type); ++len;
+	}
+
+	if (ps_ssfx_grass_interactive.y > 0)
+	{
+		xr_sprintf(c_inter_grass, "%d", u8(ps_ssfx_grass_interactive.y));
+		defines[def_it].Name = "SSFX_INT_GRASS";
+		defines[def_it].Definition = c_inter_grass;
+		def_it++;
+		xr_strcat(sh_name, c_inter_grass);
+		len += xr_strlen(c_inter_grass);
+	}
+	else
+	{
+		sh_name[len] = '0';
+		++len;
 	}
 
 	//Be carefull!!!!! this should be at the end to correctly generate

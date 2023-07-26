@@ -5,6 +5,7 @@
 
 #include "stdafx.h"
 #include "uidialogwnd.h"
+#include "UIBtnHint.h"
 #include "../hudmanager.h"
 #include "../xr_level_controller.h"
 #include "../../xrEngine/xr_ioconsole.h"
@@ -187,6 +188,9 @@ void CUIDialogWnd::ShowDialog(bool bDoHideIndicators)
 
 void CUIDialogWnd::HideDialog()
 {
-	R_ASSERT2(IsShown(), "dialog already hidden");
-	GetHolder()->StopDialog(this);
+	if (g_statHint->IsShown())
+		g_statHint->Discard();
+
+	if (IsShown() && GetHolder())
+		GetHolder()->StopDialog(this);
 }

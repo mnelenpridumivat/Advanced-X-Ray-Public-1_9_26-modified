@@ -17,8 +17,7 @@ public:
 	virtual BOOL			net_Spawn(CSE_Abstract* DC);
 
 	virtual	bool			UseBy(CEntityAlive* npc);
-	virtual	bool			Empty() { return PortionsNum() == 0; };
-	int						PortionsNum()	const { return m_iPortionsNum; }
+	virtual	bool			Empty() { return m_iPortionsNum == 0; };
 	int						m_iUseFor;
 	float					m_fRestoreCondition;
 	void					ChangeInOutfit();
@@ -27,15 +26,10 @@ public:
 	void					ChangeInKnife();
 	void					ChangeInWpn1();
 	void					ChangeInWpn2();
+	void					ChangeInWpn3();
 	void					ChangeRepairKitCondition(float val);
 	float					GetRepairKitCondition(void) const;
-
-	DECLARE_SCRIPT_REGISTER_FUNCTION
-
+	bool					UseAllowed();
 protected:
 	int						m_iPortionsNum;
 };
-
-add_to_type_list(CRepairKit)
-#undef script_type_list
-#define script_type_list save_type_list(CRepairKit)

@@ -16,15 +16,15 @@
 #endif
 
 //	Warning: duplicated in dxRainRender
-static const int	max_desired_items	= 2500;
-static const float	source_radius		= 12.5f;
-static const float	source_offset		= 40.f;
-static const float	max_distance		= source_offset*1.25f;
+static const int	max_desired_items	= rain_max_desired_items;
+static const float	source_radius		= rain_source_radius;
+static const float	source_offset		= rain_source_offset;
+static const float	max_distance		= source_offset * rain_max_distance_koef;
 static const float	sink_offset			= -(max_distance-source_offset);
 
-const int	max_particles		= 1000;
-const int	particles_cache		= 400;
-const float particles_time		= .3f;
+const int	max_particles		= rain_max_particles;
+const int	particles_cache		= rain_particles_cache;
+const float particles_time		= rain_particles_time;
  
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -37,6 +37,8 @@ CEffect_Rain::CEffect_Rain()
 	snd_Wind.create("mfs_team\\ambient\\weather\\wind", st_Effect, sg_Undefined);
 	m_bWindWorking = false;
 	
+	m_fWindVolumeKoef = READ_IF_EXISTS(pAdvancedSettings, r_float, "environment", "wind_volume_koef", 0.0f);
+
 	if (!bWinterMode)
 	{
 		snd_Ambient.create("mfs_team\\ambient\\weather\\rain", st_Effect, sg_Undefined);
@@ -141,7 +143,7 @@ void	CEffect_Rain::OnFrame	()
 
 	// Parse states
 	float	factor				= g_pGamePersistent->Environment().CurrentEnv->rain_density;
-	float	wind_volume			= g_pGamePersistent->Environment().CurrentEnv->wind_velocity/6;
+	float	wind_volume			= (g_pGamePersistent->Environment().CurrentEnv->wind_velocity/100) * m_fWindVolumeKoef;
 	bool	wind_enabled		= (wind_volume >= EPS_L);
 	static float hemi_factor	= 0.f;
 #ifndef _EDITOR

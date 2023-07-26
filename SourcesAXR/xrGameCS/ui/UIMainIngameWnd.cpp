@@ -53,6 +53,8 @@
 #include "game_cl_capture_the_artefact.h"
 #include "UIHudStatesWnd.h"
 #include "UIActorMenu.h"
+#include "UICellItem.h"
+#include "UICellItemFactory.h"
 
 void test_draw	();
 void test_key	(int dik);
@@ -85,6 +87,8 @@ CUIMainIngameWnd::CUIMainIngameWnd()
 	m_pPickUpItem				= NULL;
 	m_pMPChatWnd				= NULL;
 	m_pMPLogWnd					= NULL;	
+	uiPickUpItemIconNew_		= NULL;	
+	fuzzyShowInfo_				= 0.f;
 }
 
 #include "UIProgressShape.h"
@@ -122,21 +126,16 @@ void CUIMainIngameWnd::Init()
 	UIWeaponIcon.SetShader		(GetEquipmentIconsShader());
 	UIWeaponIcon_rect			= UIWeaponIcon.GetWndRect();
 */	//---------------------------------------------------------
-	AttachChild					(&UIPickUpItemIcon);
-	xml_init.InitStatic			(uiXml, "pick_up_item", 0, &UIPickUpItemIcon);
-	UIPickUpItemIcon.SetShader	(GetEquipmentIconsShader());
-	UIPickUpItemIcon.ClipperOn	();
+	m_iPickUpItemIconX = uiXml.ReadAttribFlt("pick_up_item", 0, "x", 512.f);
+	m_iPickUpItemIconY = uiXml.ReadAttribFlt("pick_up_item", 0, "y", 550.f);
 
-	m_iPickUpItemIconWidth		= UIPickUpItemIcon.GetWidth();
-	m_iPickUpItemIconHeight		= UIPickUpItemIcon.GetHeight();
-	m_iPickUpItemIconX			= UIPickUpItemIcon.GetWndRect().left;
-	m_iPickUpItemIconY			= UIPickUpItemIcon.GetWndRect().top;
+	m_iPickUpItemIconScale = uiXml.ReadAttribFlt("pick_up_item", 0, "scale", 1.f);
 	//---------------------------------------------------------
 
-	//���������� 
+	//индикаторы 
 	UIZoneMap->Init				();
 
-	// ���������, ������� ��������� ��� ��������� ������� �� ������
+	// Подсказки, которые возникают при наведении прицела на объект
 	AttachChild					(&UIStaticQuickHelp);
 	xml_init.InitStatic			(uiXml, "quick_info", 0, &UIStaticQuickHelp);
 
@@ -146,8 +145,8 @@ void CUIMainIngameWnd::Init()
 	xml_init.InitScrollView		(uiXml, "icons_scroll_view", 0, m_UIIcons);
 	AttachChild					(m_UIIcons);
 
-	// ��������� ������ 
-/*	if ( IsGameTypeSingle() )
+	// Загружаем иконки 
+	if ( IsGameTypeSingle() )
 	{
 		xml_init.InitStatic		(uiXml, "starvation_static", 0, &UIStarvationIcon);
 		UIStarvationIcon.Show	(false);
@@ -155,7 +154,6 @@ void CUIMainIngameWnd::Init()
 //		xml_init.InitStatic		(uiXml, "psy_health_static", 0, &UIPsyHealthIcon);
 //		UIPsyHealthIcon.Show	(false);
 	}
-*/
 	xml_init.InitStatic			(uiXml, "weapon_jammed_static", 0, &UIWeaponJammedIcon);
 	UIWeaponJammedIcon.Show		(false);
 
@@ -167,6 +165,29 @@ void CUIMainIngameWnd::Init()
 
 	xml_init.InitStatic			(uiXml, "invincible_static", 0, &UIInvincibleIcon);
 	UIInvincibleIcon.Show		(false);
+
+	hud_info_x					= uiXml.ReadAttribFlt("hud_info:position",		0, "x", 0.f);
+	hud_info_y					= uiXml.ReadAttribFlt("hud_info:position",		0, "y", 0.f);
+
+	hud_info_item_x				= uiXml.ReadAttribFlt("hud_info:item_name",		0, "x", 0.f);
+	hud_info_item_y1			= uiXml.ReadAttribFlt("hud_info:item_name",		0, "y1",0.25f);
+	hud_info_item_y2			= uiXml.ReadAttribFlt("hud_info:item_name",		0, "y2",0.3f);
+	hud_info_item_y3			= uiXml.ReadAttribFlt("hud_info:item_name",		0, "y3",0.32f);
+
+	hud_info_r_e 				= uiXml.ReadAttribInt("hud_info_color:enemy",   0, "r", 0xff);
+	hud_info_g_e 				= uiXml.ReadAttribInt("hud_info_color:enemy",   0, "g", 0);
+	hud_info_b_e 				= uiXml.ReadAttribInt("hud_info_color:enemy",   0, "b", 0);
+	hud_info_a_e 				= uiXml.ReadAttribInt("hud_info_color:enemy",   0, "a", 0x80);
+
+	hud_info_r_n 				= uiXml.ReadAttribInt("hud_info_color:neutral", 0, "r", 0xff);
+	hud_info_g_n 				= uiXml.ReadAttribInt("hud_info_color:neutral", 0, "g", 0xff);
+	hud_info_b_n 				= uiXml.ReadAttribInt("hud_info_color:neutral", 0, "b", 0x80);
+	hud_info_a_n 				= uiXml.ReadAttribInt("hud_info_color:neutral", 0, "a", 0x80);
+
+	hud_info_r_f 				= uiXml.ReadAttribInt("hud_info_color:friend",  0, "r", 0);
+	hud_info_g_f 				= uiXml.ReadAttribInt("hud_info_color:friend",  0, "g", 0xff);
+	hud_info_b_f 				= uiXml.ReadAttribInt("hud_info_color:friend",  0, "b", 0);
+	hud_info_a_f 				= uiXml.ReadAttribInt("hud_info_color:friend",  0, "a", 0x80);
 
 
 	if ( (GameID() == eGameIDArtefactHunt) || (GameID() == eGameIDCaptureTheArtefact) )
@@ -187,11 +208,11 @@ void CUIMainIngameWnd::Init()
 		"artefact"
 	};
 
-	// ��������� ��������� �������� ��� �����������
-	EWarningIcons j = ewiWeaponJammed;
+	// Загружаем пороговые значения для индикаторов
+	EWarningIcons j = ewiStarvation;
 	while (j < ewiInvincible)
 	{
-		// ������ ������ ������� ��� ������� ����������
+		// Читаем данные порогов для каждого индикатора
 		shared_str cfgRecord = pSettings->r_string("main_ingame_indicators_thresholds", *warningStrings[static_cast<int>(j) - 1]);
 		u32 count = _GetItemCount(*cfgRecord);
 
@@ -269,7 +290,10 @@ void CUIMainIngameWnd::Draw()
 	UIZoneMap->visible = true;
 	UIZoneMap->Render();
 
-	RenderQuickInfos();		
+	RenderQuickInfos();
+
+	if (uiPickUpItemIconNew_)
+		uiPickUpItemIconNew_->Draw();
 }
 
 
@@ -305,8 +329,13 @@ void CUIMainIngameWnd::Update()
 	
 //	UIHealthBar.SetProgressPos	(m_pActor->GetfHealth()*100.0f);
 	UIMotionIcon.SetPower		(m_pActor->conditions().GetPower()*100.0f);
-	
-	UpdatePickUpItem			();
+
+	fuzzyShowInfo_ += SHOW_INFO_SPEED * Device.fTimeDelta;
+
+	if (uiPickUpItemIconNew_ && fuzzyShowInfo_ > 0.f)
+	{
+		uiPickUpItemIconNew_->Update();
+	}
 
 	if( Device.dwFrame % 10 )
 	{
@@ -327,14 +356,9 @@ void CUIMainIngameWnd::Update()
 	{
 		SetWarningIconColor( ewiInvincible, 0x00ffffff );
 	}
-	
-	if ( IsGameTypeSingle() )
-	{
-		return;
-	}
 
 	// ewiArtefact
-	if ( GameID() == eGameIDArtefactHunt )
+	if ( GameID() == eGameIDArtefactHunt && !IsGameTypeSingle())
 	{
 		bool b_Artefact = !!( m_pActor->inventory().ItemFromSlot(ARTEFACT_SLOT) );
 		if ( b_Artefact )
@@ -346,7 +370,7 @@ void CUIMainIngameWnd::Update()
 			SetWarningIconColor( ewiArtefact, 0x00ffffff );
 		}
 	}
-	else if ( GameID() == eGameIDCaptureTheArtefact )
+	else if ( GameID() == eGameIDCaptureTheArtefact && !IsGameTypeSingle())
 	{
 		//this is a bad style... It left for backward compatibility
 		//need to move this logic into UIGameCTA class
@@ -372,8 +396,8 @@ void CUIMainIngameWnd::Update()
 
 	//	UpdateActiveItemInfo();
 
-	EWarningIcons i	= ewiWeaponJammed;
-	while ( i <= ewiWeaponJammed ) // ewiInvincible
+	EWarningIcons i	= ewiStarvation;
+	while ( i <= ewiStarvation) // ewiInvincible
 	{
 		float value = 0;
 		switch (i)
@@ -399,10 +423,9 @@ void CUIMainIngameWnd::Update()
 				}
 				break;
 			}
-		/*case ewiStarvation:
+		case ewiStarvation:
 			value =  _max( 0.0f, 1.0f - m_pActor->conditions().GetSatiety() );
 			break;
-		*/
 		/*case ewiPsyHealth:
 			value = 1 - m_pActor->conditions().GetPsyHealth();
 			break;
@@ -414,16 +437,16 @@ void CUIMainIngameWnd::Update()
 
 		xr_vector<float>::reverse_iterator	rit;
 
-		// ������� ��������� �� ������ �����������
+		// Сначала проверяем на точное соответсвие
 		rit  = std::find( m_Thresholds[i].rbegin(), m_Thresholds[i].rend(), value );
 
-		// ���� ��� ���, �� ����� ��������� ������� �������� ()
+		// Если его нет, то берем последнее меньшее значение ()
 		if ( rit == m_Thresholds[i].rend() )
 		{
 			rit = std::find_if(m_Thresholds[i].rbegin(), m_Thresholds[i].rend(), [&value](float a) {return a < value; });
 		}
 
-		// ����������� � ������������ �������� �������
+		// Минимальное и максимальное значения границы
 		float min = m_Thresholds[i].front();
 		float max = m_Thresholds[i].back();
 
@@ -547,7 +570,7 @@ void CUIMainIngameWnd::SetWarningIconColor(EWarningIcons icon, const u32 cl)
 {
 	bool bMagicFlag = true;
 
-	// ������ ���� ��������� ������
+	// Задаем цвет требуемой иконки
 	switch(icon)
 	{
 	case ewiAll:
@@ -561,15 +584,14 @@ void CUIMainIngameWnd::SetWarningIconColor(EWarningIcons icon, const u32 cl)
 		if (bMagicFlag) break;
 	case ewiWound:
 		SetWarningIconColorUI	(&UIWoundIcon, cl);
-		if (bMagicFlag) break;
+		if (bMagicFlag) break;*/
 
 	case ewiStarvation:
 		SetWarningIconColorUI	(&UIStarvationIcon, cl);
 		if (bMagicFlag) break;	
-	case ewiPsyHealth:
+	/*case ewiPsyHealth:
 		SetWarningIconColorUI	(&UIPsyHealthIcon, cl);
-		if (bMagicFlag) break;
-*/
+		if (bMagicFlag) break;*/
 	case ewiInvincible:
 		SetWarningIconColorUI	(&UIInvincibleIcon, cl);
 		if (bMagicFlag) break;
@@ -590,7 +612,7 @@ void CUIMainIngameWnd::TurnOffWarningIcon(EWarningIcons icon)
 
 void CUIMainIngameWnd::SetFlashIconState_(EFlashingIcons type, bool enable)
 {
-	// �������� �������� ��������� ������
+	// Включаем анимацию требуемой иконки
 	FlashingIcons_it icon = m_FlashingIcons.find(type);
 	R_ASSERT2(icon != m_FlashingIcons.end(), "Flashing icon with this type not existed");
 	icon->second->Show(enable);
@@ -603,14 +625,14 @@ void CUIMainIngameWnd::InitFlashingIcons(CUIXml* node)
 
 	CUIXmlInit xml_init;
 	CUIStatic *pIcon = NULL;
-	// ����������� �� ���� ����� � �������������� �� ��� �������
+	// Пробегаемся по всем нодам и инициализируем из них статики
 	for (int i = 0; i < staticsCount; ++i)
 	{
 		pIcon = xr_new<CUIStatic>();
 		xml_init.InitStatic(*node, flashingIconNodeName, i, pIcon);
 		shared_str iconType = node->ReadAttrib(flashingIconNodeName, i, "type", "none");
 
-		// ������ ���������� ������ � �� ���
+		// Теперь запоминаем иконку и ее тип
 		EFlashingIcons type = efiPdaTask;
 
 		if		(iconType == "pda")		type = efiPdaTask;
@@ -658,55 +680,26 @@ void CUIMainIngameWnd::AnimateContacts(bool b_snd)
 
 void CUIMainIngameWnd::SetPickUpItem	(CInventoryItem* PickUpItem)
 {
-	m_pPickUpItem = PickUpItem;
-};
+	if (m_pPickUpItem != PickUpItem)
+		xr_delete(uiPickUpItemIconNew_);
 
-void CUIMainIngameWnd::UpdatePickUpItem	()
-{
-	if (!m_pPickUpItem || !Level().CurrentViewEntity() || !smart_cast<CActor*>(Level().CurrentViewEntity())) 
-	{
-		UIPickUpItemIcon.Show(false);
+	if (m_pPickUpItem == PickUpItem)
 		return;
-	};
 
+	m_pPickUpItem = PickUpItem;
 
-	shared_str sect_name	= m_pPickUpItem->object().cNameSect();
+	if (!m_pPickUpItem)
+		return;
 
-	//properties used by inventory menu
-	int m_iGridWidth	= pSettings->r_u32(sect_name, "inv_grid_width");
-	int m_iGridHeight	= pSettings->r_u32(sect_name, "inv_grid_height");
+	uiPickUpItemIconNew_ = create_cell_item(m_pPickUpItem); // use inventory cell item class
 
-	int m_iXPos			= pSettings->r_u32(sect_name, "inv_grid_x");
-	int m_iYPos			= pSettings->r_u32(sect_name, "inv_grid_y");
-
-	float scale_x = m_iPickUpItemIconWidth/
-		float(m_iGridWidth*INV_GRID_WIDTH);
-
-	float scale_y = m_iPickUpItemIconHeight/
-		float(m_iGridHeight*INV_GRID_HEIGHT);
-
-	scale_x = (scale_x>1) ? 1.0f : scale_x;
-	scale_y = (scale_y>1) ? 1.0f : scale_y;
-
-	float scale = scale_x<scale_y?scale_x:scale_y;
-
-	UIPickUpItemIcon.GetUIStaticItem().SetOriginalRect(
-		float(m_iXPos * INV_GRID_WIDTH),
-		float(m_iYPos * INV_GRID_HEIGHT),
-		float(m_iGridWidth * INV_GRID_WIDTH),
-		float(m_iGridHeight * INV_GRID_HEIGHT));
-
-	UIPickUpItemIcon.SetStretchTexture(true);
-
-	UIPickUpItemIcon.SetWidth(m_iGridWidth*INV_GRID_WIDTH*scale);
-	UIPickUpItemIcon.SetHeight(m_iGridHeight*INV_GRID_HEIGHT*scale);
-
-	UIPickUpItemIcon.SetWndPos(Fvector2().set(	m_iPickUpItemIconX+(m_iPickUpItemIconWidth-UIPickUpItemIcon.GetWidth())/2.0f,
-												m_iPickUpItemIconY+(m_iPickUpItemIconHeight-UIPickUpItemIcon.GetHeight())/2.0f) );
-
-	UIPickUpItemIcon.SetColor(color_rgba(255,255,255,192));
-	UIPickUpItemIcon.Show(true);
-};
+	float x_size = m_pPickUpItem->GetInvGridRect().x2 * (UI()->is_16_9_mode() ? 30.f : 40.f);
+	float y_size = m_pPickUpItem->GetInvGridRect().y2 * 40.f;
+	uiPickUpItemIconNew_->SetAlignment(waCenter);
+	uiPickUpItemIconNew_->SetWndPos(Fvector2().set(m_iPickUpItemIconX, m_iPickUpItemIconY));
+	uiPickUpItemIconNew_->SetWndSize(Fvector2().set(x_size * m_iPickUpItemIconScale, y_size * m_iPickUpItemIconScale));
+	fuzzyShowInfo_ = 0.f;
+}
 
 void CUIMainIngameWnd::OnConnected()
 {

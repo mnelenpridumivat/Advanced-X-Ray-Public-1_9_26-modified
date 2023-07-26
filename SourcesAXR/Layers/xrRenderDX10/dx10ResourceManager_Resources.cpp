@@ -21,7 +21,6 @@
 
 #include "../xrRender/ShaderResourceTraits.h"
 
-#ifdef USE_DX11
 	SHS*	CResourceManager::_CreateHS			(LPCSTR Name)
 	{
 		return CreateShader<SHS>(Name);
@@ -51,7 +50,6 @@
 	{
 		DestroyShader(CS);
 	}
-#endif	//	USE_DX10
 
 void fix_texture_name(LPSTR fn);
 
@@ -79,11 +77,7 @@ SState*		CResourceManager::_CreateState		(SimulatorStates& state_code)
 	// Create New
 	v_states.push_back				(xr_new<SState>());
 	v_states.back()->dwFlags		|= xr_resource_flagged::RF_REGISTERED;
-#if defined(USE_DX10) || defined(USE_DX11)
 	v_states.back()->state			= ID3DState::Create(state_code);
-#else	//	USE_DX10
-	v_states.back()->state			= state_code.record();
-#endif	//	USE_DX10
 	v_states.back()->state_code		= state_code;
 	return v_states.back();
 }
@@ -107,11 +101,9 @@ SPass*		CResourceManager::_CreatePass			(const SPass& proto)
 	P->ps						=	proto.ps;
 	P->vs						=	proto.vs;
 	P->gs						=	proto.gs;
-#ifdef USE_DX11
 	P->hs						=	proto.hs;
 	P->ds						=	proto.ds;
 	P->cs						=	proto.cs;
-#endif
 	P->constants				=	proto.constants;
 	P->T						=	proto.T;
 #ifdef _EDITOR
@@ -147,7 +139,7 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 	{
 		SVS*	_vs					= xr_new<SVS>	();
 		_vs->dwFlags				|= xr_resource_flagged::RF_REGISTERED;
-		m_vs.insert					(mk_pair(_vs->set_name(name),_vs));
+		m_vs.insert					(std::make_pair(_vs->set_name(name),_vs));
 		//_vs->vs				= NULL;
 		//_vs->signature		= NULL;
 		if (0==stricmp(_name,"null"))	{
@@ -252,7 +244,7 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR _name)
 	{
 		SPS*	_ps					=	xr_new<SPS>	();
 		_ps->dwFlags				|=	xr_resource_flagged::RF_REGISTERED;
-		m_ps.insert					(mk_pair(_ps->set_name(name),_ps));
+		m_ps.insert					(std::make_pair(_ps->set_name(name),_ps));
 		if (0==stricmp(_name,"null"))	{
 			_ps->ps				= NULL;
 			return _ps;
@@ -336,7 +328,7 @@ SGS*	CResourceManager::_CreateGS			(LPCSTR name)
 	{
 		SGS*	_gs					=	xr_new<SGS>	();
 		_gs->dwFlags				|=	xr_resource_flagged::RF_REGISTERED;
-		m_gs.insert					(mk_pair(_gs->set_name(name),_gs));
+		m_gs.insert					(std::make_pair(_gs->set_name(name),_gs));
 		if (0==stricmp(name,"null"))	{
 			_gs->gs				= NULL;
 			return _gs;
@@ -451,13 +443,10 @@ void				CResourceManager::_DeleteConstantTable	(const R_constant_table* C)
 }
 
 //--------------------------------------------------------------------------------------------------------------
-#ifdef USE_DX11
-CRT*	CResourceManager::_CreateRT		(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount, bool useUAV )
-#else
-CRT*	CResourceManager::_CreateRT		(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount )
-#endif
+
+CRT*	CResourceManager::_CreateRT(LPCSTR Name, xr_vector<RtCreationParams>& vp_params, D3DFORMAT f, u32 SampleCount, bool useUAV)
 {
-	R_ASSERT(Name && Name[0] && w && h);
+	R_ASSERT(Name && Name[0]);
 
 	// ***** first pass - search already created RT
 	LPSTR N = LPSTR(Name);
@@ -467,12 +456,10 @@ CRT*	CResourceManager::_CreateRT		(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 S
 	{
 		CRT *RT					=	xr_new<CRT>();
 		RT->dwFlags				|=	xr_resource_flagged::RF_REGISTERED;
-		m_rtargets.insert		(mk_pair(RT->set_name(Name),RT));
-#ifdef USE_DX11
-		if (Device.b_is_Ready)	RT->create	(Name,w,h,f, SampleCount, useUAV );
-#else
-		if (Device.b_is_Ready)	RT->create	(Name,w,h,f, SampleCount );
-#endif
+		m_rtargets.insert		(std::make_pair(RT->set_name(Name),RT));
+
+		if (Device.b_is_Ready)	RT->create(Name, vp_params, f, SampleCount, useUAV);
+
 		return					RT;
 	}
 }
@@ -501,7 +488,7 @@ CRTC*	CResourceManager::_CreateRTC		(LPCSTR Name, u32 size,	D3DFORMAT f)
 	{
 		CRTC *RT				=	xr_new<CRTC>();
 		RT->dwFlags				|=	xr_resource_flagged::RF_REGISTERED;
-		m_rtargets_c.insert		(mk_pair(RT->set_name(Name),RT));
+		m_rtargets_c.insert		(std::make_pair(RT->set_name(Name),RT));
 		if (Device.b_is_Ready)	RT->create	(Name,size,f);
 		return					RT;
 	}
@@ -591,7 +578,7 @@ CTexture* CResourceManager::_CreateTexture	(LPCSTR _Name)
 	{
 		CTexture *	T		=	xr_new<CTexture>();
 		T->dwFlags			|=	xr_resource_flagged::RF_REGISTERED;
-		m_textures.insert	(mk_pair(T->set_name(Name),T));
+		m_textures.insert	(std::make_pair(T->set_name(Name),T));
 		T->Preload			();
 		if (Device.b_is_Ready && !bDeferredLoad) T->Load();
 		return		T;
@@ -640,7 +627,7 @@ CMatrix*	CResourceManager::_CreateMatrix	(LPCSTR Name)
 		CMatrix* M			=	xr_new<CMatrix>();
 		M->dwFlags			|=	xr_resource_flagged::RF_REGISTERED;
 		M->dwReference		=	1;
-		m_matrices.insert	(mk_pair(M->set_name(Name),M));
+		m_matrices.insert	(std::make_pair(M->set_name(Name),M));
 		return			M;
 	}
 }
@@ -674,7 +661,7 @@ CConstant*	CResourceManager::_CreateConstant	(LPCSTR Name)
 		CConstant* C		=	xr_new<CConstant>();
 		C->dwFlags			|=	xr_resource_flagged::RF_REGISTERED;
 		C->dwReference		=	1;
-		m_constants.insert	(mk_pair(C->set_name(Name),C));
+		m_constants.insert	(std::make_pair(C->set_name(Name),C));
 		return	C;
 	}
 }

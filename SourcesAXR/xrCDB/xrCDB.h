@@ -37,7 +37,7 @@ namespace CDB
 		u32				verts[3];		// 3*4 = 12b
 		union
 		{
-			u32			dummy;				// 4b
+			u32			dummy;
 			struct {
 				u32		material : 14;		// 
 				u32		suppress_shadows : 1;	// 
@@ -72,15 +72,6 @@ namespace CDB
 		IC u32			IDvert	(u32 ID)		{ return verts[ID];	}
 
 #if defined(_M_X64)
-		TRI(TRI_DEPRECATED& oldTri)
-		{
-			verts[0] = oldTri.verts[0];
-			verts[1] = oldTri.verts[1];
-			verts[2] = oldTri.verts[2];
-			dummy = oldTri.dummy;
-			dumb = 0;
-		}
-
 		TRI()
 		{
 			verts[0] = 0;
@@ -102,7 +93,9 @@ namespace CDB
 	};
 
 	// Build callback
-	typedef		void __stdcall	build_callback	(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* params);
+	using build_callback = void(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* params);
+	using serialize_callback = void(IWriter& writer);
+	using deserialize_callback = bool(IReader& reader);
 
 	// Model definition
 	class		XRCDB_API		MODEL
@@ -119,6 +112,7 @@ namespace CDB
 		xrCriticalSection		cs;
 		Opcode::OPCODE_Model*	tree;
 		u32						status;		// 0=ready, 1=init, 2=building
+		u32						version;
 
 		// tris
 		TRI*					tris;
@@ -150,6 +144,10 @@ namespace CDB
 		void build_internal (Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc=nullptr, void* bcp=nullptr, bool rebuildTrisRequired = true);
 		void build (Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc=nullptr, void* bcp=nullptr, bool rebuildTrisRequired = true);
 		u32						memory			();
+
+		void set_version(u32 value) { version = value; }
+		bool serialize(pcstr fileName, serialize_callback callback = nullptr) const;
+		bool deserialize(pcstr fileName, bool checkCrc32 = true, deserialize_callback callback = nullptr);
 	};
 
 	// Collider result

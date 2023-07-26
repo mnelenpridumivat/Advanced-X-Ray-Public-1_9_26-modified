@@ -187,6 +187,7 @@ public:
 	xr_deque<CSE_Abstract*>		game_spawn_queue;
 	xrServer*					Server;
 	GlobalFeelTouch				m_feel_deny;
+	std::vector<std::uint16_t>	m_just_destroyed;
 	
 	CZoneList*					hud_zones_list;
 	CZoneList*					create_hud_zones_list();
@@ -254,11 +255,14 @@ public:
 	virtual BOOL				Load_GameSpecific_Before( );
 	virtual BOOL				Load_GameSpecific_After ( );
 	virtual void				Load_GameSpecific_CFORM	( CDB::TRI* T, u32 count );
+	void						Load_GameSpecific_CFORM_Serialize(IWriter& writer) override;
+	bool						Load_GameSpecific_CFORM_Deserialize(IReader& reader) override;
 
 	// Events
 	virtual void				OnEvent					( EVENT E, u64 P1, u64 P2 );
 	virtual void	_BCL		OnFrame					( void );
 	virtual void				OnRender				( );
+	virtual void				ApplyCamera				();
 
 	virtual	shared_str			OpenDemoFile			(LPCSTR demo_file_name);
 	virtual void				net_StartPlayDemo		();
@@ -376,9 +380,14 @@ protected:
 public:
 	virtual	u32				GetRealPing					() { return m_dwRealPing; };
 
+private:
+	bool	m_is_removing_objects;
+
 public:
+			bool			is_removing_objects			() { return m_is_removing_objects; }
 			void			remove_objects				();
 			virtual void	OnSessionTerminate		(LPCSTR reason);
+			void			OnDestroyObject			(std::uint16_t id) override;
 			
 			file_transfer::client_site*					m_file_transfer;
 			
