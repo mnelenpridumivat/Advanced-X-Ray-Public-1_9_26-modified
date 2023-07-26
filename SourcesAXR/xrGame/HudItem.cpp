@@ -11,6 +11,9 @@
 #include "player_hud.h"
 #include "../xrEngine/SkeletonMotions.h"
 #include "ui_base.h"
+#include "HUDManager.h"
+
+ENGINE_API extern float psHUD_FOV_def;
 
 CHudItem::CHudItem()
 {
@@ -40,9 +43,20 @@ CHudItem::~CHudItem()
 void CHudItem::Load(LPCSTR section)
 {
 	hud_sect				= pSettings->r_string		(section,"hud");
+	item_sect				= section;
 	m_animation_slot		= pSettings->r_u32			(section,"animation_slot");
 
 	m_sounds.LoadSound(section, "snd_bore", "sndBore", true);
+
+	// HUD FOV
+	m_nearwall_enabled			= READ_IF_EXISTS(pSettings, r_bool,  section, "nearwall_on", true);
+	m_nearwall_target_hud_fov	= READ_IF_EXISTS(pSettings, r_float, section, "nearwall_target_hud_fov", 0.27f);
+	m_nearwall_dist_min			= READ_IF_EXISTS(pSettings, r_float, section, "nearwall_dist_min", 0.5f);
+	m_nearwall_dist_max			= READ_IF_EXISTS(pSettings, r_float, section, "nearwall_dist_max", 1.f);
+	m_nearwall_speed_mod		= READ_IF_EXISTS(pSettings, r_float, section, "nearwall_speed_mod", 10.f);
+
+	m_base_fov					= READ_IF_EXISTS(pSettings, r_float, section, "hud_fov", psHUD_FOV_def);
+	m_nearwall_last_hud_fov		= m_base_fov;
 }
 
 
@@ -71,7 +85,7 @@ void CHudItem::renderable_Render()
 			CInventoryOwner	*owner = smart_cast<CInventoryOwner*>(object().H_Parent());
 			VERIFY			(owner);
 			CInventoryItem	*self = smart_cast<CInventoryItem*>(this);
-			if (owner->attached(self))
+			if (owner->attached(self) || item().BaseSlot() == INV_SLOT_3)
 				on_renderable_Render();
 		}
 	}
@@ -233,6 +247,11 @@ void CHudItem::OnH_A_Chield		()
 void CHudItem::OnH_B_Chield		()
 {
 	StopCurrentAnimWithoutCallback();
+
+	if (pSettings->line_exist(item_sect, "hud_fov"))
+		m_nearwall_last_hud_fov = m_base_fov;
+	else
+		m_nearwall_last_hud_fov = psHUD_FOV_def;
 }
 
 void CHudItem::OnH_B_Independent	(bool just_before_destroy)
@@ -240,6 +259,11 @@ void CHudItem::OnH_B_Independent	(bool just_before_destroy)
 	m_sounds.StopAllSounds	();
 	UpdateXForm				();
 	
+	if (pSettings->line_exist(item_sect, "hud_fov"))
+		m_nearwall_last_hud_fov = m_base_fov;
+	else
+		m_nearwall_last_hud_fov = psHUD_FOV_def;
+
 	// next code was commented 
 	/*
 	if(HudItemData() && !just_before_destroy)
@@ -283,9 +307,9 @@ void CHudItem::on_a_hud_attach()
 	}
 }
 
-u32 CHudItem::PlayHUDMotion(const shared_str& M, BOOL bMixIn, CHudItem*  W, u32 state)
+u32 CHudItem::PlayHUDMotion(const shared_str& M, BOOL bMixIn, CHudItem*  W, u32 state, float speed)
 {
-	u32 anim_time = PlayHUDMotion_noCB(M, bMixIn);
+	u32 anim_time = PlayHUDMotion_noCB(M, bMixIn, speed);
 	if (anim_time > 0)
 	{
 		m_bStopAtEndAnimIsRunning = true;
@@ -300,10 +324,10 @@ u32 CHudItem::PlayHUDMotion(const shared_str& M, BOOL bMixIn, CHudItem*  W, u32 
 	return anim_time;
 }
 
-u32 CHudItem::PlayHUDMotionNew(const shared_str& M, const bool bMixIn, const u32 state, const bool randomAnim)
+u32 CHudItem::PlayHUDMotionNew(const shared_str& M, const bool bMixIn, const u32 state, const bool randomAnim, float speed)
 {
 	//Msg("~~[%s] Playing motion [%s] for [%s]", __FUNCTION__, M.c_str(), HudSection().c_str());
-	u32 anim_time					= PlayHUDMotion_noCB(M, bMixIn);
+	u32 anim_time					= PlayHUDMotion_noCB(M, bMixIn, speed);
 	if (anim_time>0)
 	{
 		m_bStopAtEndAnimIsRunning	= true;
@@ -339,11 +363,11 @@ bool CHudItem::isHUDAnimationExist(LPCSTR anim_name)
 	return false;
 }
 
-u32 CHudItem::PlayHUDMotionIfExists(std::initializer_list<const char*> Ms, const bool bMixIn, const u32 state, const bool randomAnim)
+u32 CHudItem::PlayHUDMotionIfExists(std::initializer_list<const char*> Ms, const bool bMixIn, const u32 state, const bool randomAnim, float speed)
 {
 	for (const auto* M : Ms)
 		if (isHUDAnimationExist(M))
-			return PlayHUDMotionNew(M, bMixIn, state, randomAnim);
+			return PlayHUDMotionNew(M, bMixIn, state, randomAnim, speed);
 
 	std::string dbg_anim_name;
 	for (const auto* M : Ms) 
@@ -356,7 +380,7 @@ u32 CHudItem::PlayHUDMotionIfExists(std::initializer_list<const char*> Ms, const
 	return 0;
 }
 
-u32 CHudItem::PlayHUDMotion_noCB(const shared_str& motion_name, const bool bMixIn, const bool randomAnim)
+u32 CHudItem::PlayHUDMotion_noCB(const shared_str& motion_name, const bool bMixIn, const bool randomAnim, float speed)
 {
 	m_current_motion					= motion_name;
 
@@ -371,11 +395,12 @@ u32 CHudItem::PlayHUDMotion_noCB(const shared_str& motion_name, const bool bMixI
 	}
 	if( HudItemData() )
 	{
-		return HudItemData()->anim_play		(motion_name, bMixIn, m_current_motion_def, m_started_rnd_anim_idx);
-	}else
+		return HudItemData()->anim_play		(motion_name, bMixIn, m_current_motion_def, m_started_rnd_anim_idx, speed);
+	}
+	else
 	{
 		m_started_rnd_anim_idx				= 0;
-		return g_player_hud->motion_length	(motion_name, HudSection(), m_current_motion_def );
+		return g_player_hud->motion_length	(motion_name, HudSection(), m_current_motion_def);
 	}
 }
 
@@ -466,6 +491,8 @@ void CHudItem::PlayAnimIdleMovingSlow()
 {
 	if (IsMisfireNow())
 		PlayHUDMotionIfExists({ "anm_idle_moving_slow_jammed", "anm_idle_moving_slow", "anm_idle_moving", "anm_idle" }, true, GetState());
+	else if (IsMagazineEmpty())
+		PlayHUDMotionIfExists({ "anm_idle_moving_slow_empty", "anm_idle_moving_slow", "anm_idle_moving", "anm_idle" }, true, GetState());
 	else
 		PlayHUDMotionIfExists({ "anm_idle_moving_slow", "anm_idle_moving", "anm_idle"}, true, GetState());
 }
@@ -474,6 +501,8 @@ void CHudItem::PlayAnimIdleMovingCrouch()
 {
 	if (IsMisfireNow())
 		PlayHUDMotionIfExists({ "anm_idle_moving_crouch_jammed", "anm_idle_moving_crouch", "anm_idle_moving", "anm_idle" }, true, GetState());
+	else if (IsMagazineEmpty())
+		PlayHUDMotionIfExists({ "anm_idle_moving_crouch_empty", "anm_idle_moving_crouch", "anm_idle_moving", "anm_idle" }, true, GetState());
 	else
 		PlayHUDMotionIfExists({ "anm_idle_moving_crouch", "anm_idle_moving", "anm_idle"}, true, GetState());
 }
@@ -482,6 +511,8 @@ void CHudItem::PlayAnimIdleMovingCrouchSlow()
 {
 	if (IsMisfireNow())
 		PlayHUDMotionIfExists({ "anm_idle_moving_crouch_slow_jammed", "anm_idle_moving_crouch_slow", "anm_idle_moving_crouch", "anm_idle_moving", "anm_idle" }, true, GetState());
+	else if (IsMagazineEmpty())
+		PlayHUDMotionIfExists({ "anm_idle_moving_crouch_slow_empty", "anm_idle_moving_crouch_slow", "anm_idle_moving_crouch", "anm_idle_moving", "anm_idle" }, true, GetState());
 	else
 		PlayHUDMotionIfExists({ "anm_idle_moving_crouch_slow", "anm_idle_moving_crouch", "anm_idle_moving", "anm_idle"}, true, GetState());
 }
@@ -537,4 +568,31 @@ void CHudItem::ReplaceHudSection(LPCSTR hud_section)
 {
 	if (hud_section != hud_sect)
 		hud_sect = hud_section;
+}
+
+float CHudItem::GetHudFov()
+{
+	if (m_nearwall_enabled && ParentIsActor() && Level().CurrentViewEntity() == object().H_Parent())
+	{
+		collide::rq_result& RQ = HUD().GetCurrentRayQuery();
+		float dist = RQ.range;
+
+		clamp(dist, m_nearwall_dist_min, m_nearwall_dist_max);
+		float fDistanceMod = ((dist - m_nearwall_dist_min) / (m_nearwall_dist_max - m_nearwall_dist_min)); // 0.f ... 1.f
+
+		float fBaseFov{ psHUD_FOV_def };
+
+		if (pSettings->line_exist(item_sect, "hud_fov"))
+			fBaseFov = m_base_fov;
+
+		clamp(fBaseFov, 0.0f, FLT_MAX);
+
+		float src = m_nearwall_speed_mod * Device.fTimeDelta;
+		clamp(src, 0.f, 1.f);
+
+		float fTrgFov = m_nearwall_target_hud_fov + fDistanceMod * (fBaseFov - m_nearwall_target_hud_fov);
+		m_nearwall_last_hud_fov = m_nearwall_last_hud_fov * (1 - src) + fTrgFov * src;
+	}
+
+	return m_nearwall_last_hud_fov;
 }

@@ -43,6 +43,7 @@ CEatableItem::CEatableItem()
 	m_iAnimLength = 0;
 	m_bActivated = false;
 	m_bItmStartAnim = false;
+	m_bNeedDestroyNotUseful = true;
 }
 
 CEatableItem::~CEatableItem()
@@ -59,14 +60,13 @@ void CEatableItem::Load(LPCSTR section)
 {
 	inherited::Load(section);
 
-	m_iConstPortions = READ_IF_EXISTS(pSettings, r_u32, section, "eat_portions_num", 1);
-	m_iPortionsNum = m_iConstPortions;
+	m_iPortionsNum = m_iConstPortions = READ_IF_EXISTS(pSettings, r_u32, section, "eat_portions_num", 1);
 	m_bHasAnimation = READ_IF_EXISTS(pSettings, r_bool, section, "has_anim", false);
 	m_bUnlimited = READ_IF_EXISTS(pSettings, r_bool, section, "unlimited_usage", false);
 	anim_sect = READ_IF_EXISTS(pSettings, r_string, section, "hud_section", nullptr);
 	m_fEffectorIntensity = READ_IF_EXISTS(pSettings, r_float, section, "cam_effector_intensity", 1.0f);
 	use_cam_effector = READ_IF_EXISTS(pSettings, r_string, section, "use_cam_effector", nullptr);
-	VERIFY						(m_iPortionsNum<10000);
+	m_bNeedDestroyNotUseful = READ_IF_EXISTS(pSettings, r_bool, section, "need_destroy_if_not_useful", true);
 }
 
 BOOL CEatableItem::net_Spawn				(CSE_Abstract* DC)
@@ -99,13 +99,14 @@ void CEatableItem::OnH_A_Independent()
 
 void CEatableItem::OnH_B_Independent(bool just_before_destroy)
 {
-	if(!Useful()) 
+	if (!Useful())
 	{
 		object().setVisible(FALSE);
 		object().setEnabled(FALSE);
 		if (m_physic_item)
 			m_physic_item->m_ready_to_destroy	= true;
 	}
+
 	inherited::OnH_B_Independent(just_before_destroy);
 }
 
@@ -185,8 +186,11 @@ void CEatableItem::UpdateUseAnim()
 	CEffectorCam* effector = Actor()->Cameras().GetCamEffector((ECamEffectorType)effUseItem);
 	bool IsActorAlive = g_pGamePersistent->GetActorAliveStatus();
 
-	if (m_bItmStartAnim && Actor()->inventory().GetActiveSlot() == NO_ACTIVE_SLOT && pDet->IsHidden())
+	if (m_bItmStartAnim && Actor()->inventory().GetActiveSlot() == NO_ACTIVE_SLOT && (!pDet || pDet->IsHidden()))
 		StartAnimation();
+
+	if (!IsActorAlive)
+		m_using_sound.stop();
 
 	if (m_bActivated)
 	{

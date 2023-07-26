@@ -31,13 +31,17 @@ namespace GameConstants
 	bool GetOutfitUseFilters();
 	bool GetHideHudOnMaster();
 	bool GetActorSkillsEnabled();
+	bool GetSleepInfluenceOnPsyHealth();
+	bool GetUseHQ_Icons();
 	int  GetArtefactsCount();
 	int  GetIntScriptCMDCount();
 	int  GetBOOLScriptCMDCount();
+	float GetDistantSndDistance();
 	Fvector4 GetRedColor();
 	Fvector4 GetGreenColor();
 	Fvector4 GetNeutralColor();
 	Fvector4 GetSSFX_DefaultDoF();
 	Fvector4 GetSSFX_FocusDoF();
+	bool GetSSFX_EnableBoreDoF();
 	LPCSTR GetAfInfluenceMode();
 };

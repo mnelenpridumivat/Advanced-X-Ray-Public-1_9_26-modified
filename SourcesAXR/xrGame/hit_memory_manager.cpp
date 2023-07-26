@@ -39,10 +39,10 @@ struct CHitObjectPredicate {
 	bool		operator()					(const MemorySpace::CHitObject &hit_object) const
 	{
 		if (!m_object)
-			return			(!hit_object.m_object);
+			return false;
 
 		if (!hit_object.m_object)
-			return			(false);
+			return false;
 
 		return				(m_object->ID() == hit_object.m_object->ID());
 	}
@@ -231,6 +231,16 @@ void CHitMemoryManager::enable			(const CObject *object, bool enable)
 		return;
 
 	(*J).m_enabled				= enable;
+}
+
+void CHitMemoryManager::remove(const MemorySpace::CHitObject* hit_object)
+{
+	HITS::iterator I = std::find_if(m_hits->begin(), m_hits->end(), [&](const MemorySpace::CHitObject& object)
+		{
+			return hit_object == &object;
+		});
+	if (I != m_hits->end())
+		m_hits->erase(I);
 }
 
 void CHitMemoryManager::remove_links	(CObject *object)

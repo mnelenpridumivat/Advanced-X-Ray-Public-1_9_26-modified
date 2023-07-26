@@ -38,6 +38,7 @@ CUIActorMenu::~CUIActorMenu()
 	xr_delete			(m_ItemInfo);
 
 	m_belt_list_over.clear();
+	m_ArtefactSlotsHighlight.clear();
 
 	ClearAllLists		();
 }
@@ -94,6 +95,57 @@ void CUIActorMenu::Construct()
 	m_PartnerBottomInfo->AdjustWidthToText();
 	m_PartnerWeight_end_x = m_PartnerWeight->GetWndPos().x;
 
+	m_PistolSlotHighlight		= UIHelper::CreateStatic(uiXml, "pistol_slot_highlight", this);
+	m_PistolSlotHighlight		->Show(false);
+	m_RiffleSlotHighlight		= UIHelper::CreateStatic(uiXml, "riffle_slot_highlight", this);
+	m_RiffleSlotHighlight		->Show(false);
+	m_OutfitSlotHighlight		= UIHelper::CreateStatic(uiXml, "outfit_slot_highlight", this);
+	m_OutfitSlotHighlight		->Show(false);
+	m_DetectorSlotHighlight		= UIHelper::CreateStatic(uiXml, "detector_slot_highlight", this);
+	m_DetectorSlotHighlight		->Show(false);
+
+	if (GameConstants::GetKnifeSlotEnabled())
+	{
+		if ((m_KnifeSlotHighlight = UIHelper::CreateStatic(uiXml, "knife_slot_highlight", this)))
+			m_KnifeSlotHighlight->Show(false);
+	}
+
+	if (GameConstants::GetBinocularSlotEnabled())
+	{
+		if ((m_BinocularSlotHighlight = UIHelper::CreateStatic(uiXml, "binocular_slot_highlight", this)))
+			m_BinocularSlotHighlight->Show(false);
+	}
+
+	if (GameConstants::GetTorchSlotEnabled())
+	{
+		if ((m_TorchSlotHighlight = UIHelper::CreateStatic(uiXml, "torch_slot_highlight", this)))
+			m_TorchSlotHighlight->Show(false);
+	}
+
+	if (GameConstants::GetBackpackSlotEnabled())
+	{
+		if ((m_BackpackSlotHighlight = UIHelper::CreateStatic(uiXml, "backpack_slot_highlight", this)))
+			m_BackpackSlotHighlight->Show(false);
+	}
+
+	if (GameConstants::GetDosimeterSlotEnabled())
+	{
+		if ((m_DosimeterSlotHighlight = UIHelper::CreateStatic(uiXml, "dosimeter_slot_highlight", this)))
+			m_DosimeterSlotHighlight->Show(false);
+	}
+
+	if (GameConstants::GetPantsSlotEnabled())
+	{
+		if ((m_PantsSlotHighlight = UIHelper::CreateStatic(uiXml, "pants_slot_highlight", this)))
+			m_PantsSlotHighlight->Show(false);
+	}
+
+	if (GameConstants::GetPdaSlotEnabled())
+	{
+		if ((m_PdaSlotHighlight = UIHelper::CreateStatic(uiXml, "pda_slot_highlight", this)))
+			m_PdaSlotHighlight->Show(false);
+	}
+
 	m_pInventoryBagList			= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_bag", this);
 	m_pInventoryBeltList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_belt", this);
 	m_pInventoryOutfitList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_outfit", this);
@@ -140,15 +192,71 @@ void CUIActorMenu::Construct()
 		m_pInventoryPdaList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_pda", this);
 	}
 
-	m_belt_list_over.push_back(UIHelper::CreateStatic(uiXml, "belt_list_over", this));
-	Fvector2 pos;
-	pos = m_belt_list_over[0]->GetWndPos();
-	float dy = uiXml.ReadAttribFlt("belt_list_over", 0, "dy", 10.0f);
-	for ( u8 i = 1; i < GameConstants::GetArtefactsCount(); ++i )
+	m_pTrashList				= UIHelper::CreateDragDropListEx		(uiXml, "dragdrop_trash", this);
+	m_pTrashList->m_f_item_drop	= CUIDragDropListEx::DRAG_DROP_EVENT	(this,&CUIActorMenu::OnItemDrop);
+	m_pTrashList->m_f_drag_event= CUIDragDropListEx::DRAG_ITEM_EVENT	(this,&CUIActorMenu::OnDragItemOnTrash);
+
+	Fvector2 pos{};
+	float dx{}, dy{};
+
+	int cols = m_pInventoryBeltList->CellsCapacity().x;
+	int rows = m_pInventoryBeltList->CellsCapacity().y;
+	int counter = 1;
+
+	for (u8 i = 0; i < rows; ++i)
 	{
+		for (u8 j = 0; j < cols; ++j)
+		{
+			m_ArtefactSlotsHighlight.push_back(UIHelper::CreateStatic(uiXml, "artefact_slot_highlight", this));
+
+			if (i == 0 && j == 0)
+			{
+				pos = m_ArtefactSlotsHighlight[0]->GetWndPos();
+				m_ArtefactSlotsHighlight[0]->Show(false);
+				dx = uiXml.ReadAttribFlt("artefact_slot_highlight", 0, "dx", 24.0f);
+				dy = uiXml.ReadAttribFlt("artefact_slot_highlight", 0, "dy", 24.0f);
+			}
+			else
+			{
+				if (j != 0)
+					pos.x += dx;
+
+				m_ArtefactSlotsHighlight[counter]->SetWndPos(pos);
+				m_ArtefactSlotsHighlight[i]->Show(false);
+				counter++;
+			}
+		}
+
+		pos.x = m_ArtefactSlotsHighlight[0]->GetWndPos().x;
 		pos.y += dy;
-		m_belt_list_over.push_back(UIHelper::CreateStatic(uiXml, "belt_list_over", this));
-		m_belt_list_over[i]->SetWndPos( pos );
+	}
+
+	counter = 1;
+
+	for (u8 i = 0; i < rows; ++i)
+	{
+		for (u8 j = 0; j < cols; ++j)
+		{
+			m_belt_list_over.push_back(UIHelper::CreateStatic(uiXml, "belt_list_over", this));
+
+			if (i == 0 && j == 0)
+			{
+				pos = m_belt_list_over[0]->GetWndPos();
+				dx = uiXml.ReadAttribFlt("belt_list_over", 0, "dx", 10.0f);
+				dy = uiXml.ReadAttribFlt("belt_list_over", 0, "dy", 10.0f);
+			}
+			else
+			{
+				if (j != 0)
+					pos.x += dx;
+
+				m_belt_list_over[counter]->SetWndPos(pos);
+				counter++;
+			}
+		}
+
+		pos.x = m_belt_list_over[0]->GetWndPos().x;
+		pos.y += dy;
 	}
 
 	m_ActorMoney	= UIHelper::CreateStatic(uiXml, "actor_money_static", this);
@@ -263,6 +371,10 @@ void CUIActorMenu::Construct()
 		BindDragDropListEvents(m_pInventoryPdaList);
 	}
 
+	m_allowed_drops[iTrashSlot].push_back(iActorBag);
+	m_allowed_drops[iTrashSlot].push_back(iActorSlot);
+	m_allowed_drops[iTrashSlot].push_back(iActorBelt);
+
 	m_allowed_drops[iActorSlot].push_back(iActorBag);
 	m_allowed_drops[iActorSlot].push_back(iActorTrade);
 	m_allowed_drops[iActorSlot].push_back(iDeadBodyBag);
@@ -302,6 +414,8 @@ void CUIActorMenu::Construct()
 	m_actor_trade						= NULL;
 	m_partner_trade						= NULL;
 	m_repair_mode						= false;
+	m_highlight_clear					= false;
+	m_item_info_view					= false;
 
 	DeInitInventoryMode					();
 	DeInitTradeMode						();
@@ -316,6 +430,7 @@ void CUIActorMenu::BindDragDropListEvents(CUIDragDropListEx* lst)
 	lst->m_f_item_db_click			= CUIDragDropListEx::DRAG_DROP_EVENT(this,&CUIActorMenu::OnItemDbClick);
 	lst->m_f_item_selected			= CUIDragDropListEx::DRAG_DROP_EVENT(this,&CUIActorMenu::OnItemSelected);
 	lst->m_f_item_rbutton_click		= CUIDragDropListEx::DRAG_DROP_EVENT(this,&CUIActorMenu::OnItemRButtonClick);
+	lst->m_f_item_mbutton_click		= CUIDragDropListEx::DRAG_DROP_EVENT(this,&CUIActorMenu::OnItemMButtonClick);
 	lst->m_f_item_focus_received	= CUIDragDropListEx::DRAG_DROP_EVENT(this,&CUIActorMenu::OnItemFocusReceive);
 	lst->m_f_item_focus_lost		= CUIDragDropListEx::DRAG_DROP_EVENT(this,&CUIActorMenu::OnItemFocusLost);
 	lst->m_f_item_focused_update	= CUIDragDropListEx::DRAG_DROP_EVENT(this,&CUIActorMenu::OnItemFocusedUpdate);

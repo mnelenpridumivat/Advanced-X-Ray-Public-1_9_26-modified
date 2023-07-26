@@ -67,8 +67,8 @@ void CUITalkWnd::InitTalkDialog()
 	m_pOthersDialogManager = smart_cast<CPhraseDialogManager*>(m_pOthersInvOwner);
 
 	//����� ������������
-	UITalkDialogWnd->UICharacterInfoLeft.InitCharacter		(m_pOurInvOwner->object_id());
-	UITalkDialogWnd->UICharacterInfoRight.InitCharacter		(m_pOthersInvOwner->object_id());
+	UITalkDialogWnd->UICharacterInfoLeft.InitCharacter		(m_pOurInvOwner);
+	UITalkDialogWnd->UICharacterInfoRight.InitCharacter		(m_pOthersInvOwner);
 
 //.	UITalkDialogWnd->UIDialogFrame.UITitleText.SetText		(m_pOthersInvOwner->Name());
 //.	UITalkDialogWnd->UIOurPhrasesFrame.UITitleText.SetText	(m_pOurInvOwner->Name());
@@ -214,6 +214,14 @@ void CUITalkWnd::Update()
 			Game().StartStopMenu(this,true);
 	}
 
+	CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(HUD().GetUI()->UIGame());
+
+	if (pGameSP)
+	{
+		if (pGameSP->MainInputReceiver() == this && !UITalkDialogWnd->IsShown())
+			UITalkDialogWnd->Show();
+	}
+
 	if(m_bNeedToUpdateQuestions)
 	{
 		UpdateQuestions			();
@@ -333,13 +341,12 @@ void CUITalkWnd::SwitchToTrade()
 	if ( m_pOurInvOwner->IsTradeEnabled() && m_pOthersInvOwner->IsTradeEnabled() )
 	{
 		CUIGameSP* pGameSP = smart_cast<CUIGameSP*>( HUD().GetUI()->UIGame() );
+
 		if ( pGameSP )
 		{
-			if ( pGameSP->MainInputReceiver() )
-			{
-				Game().StartStopMenu( pGameSP->MainInputReceiver(), true );
-			}
-			pGameSP->StartTrade	(m_pOurInvOwner, m_pOthersInvOwner);
+			UITalkDialogWnd->Show(false);
+			StopSnd();
+			pGameSP->StartTrade(m_pOurInvOwner, m_pOthersInvOwner);
 		} // pGameSP
 	}
 }
@@ -351,10 +358,8 @@ void CUITalkWnd::SwitchToUpgrade()
 		CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(HUD().GetUI()->UIGame());
 		if ( pGameSP )
 		{
-			if ( pGameSP->MainInputReceiver() )
-			{
-				Game().StartStopMenu(pGameSP->MainInputReceiver(),true);
-			}
+			UITalkDialogWnd->Show(false);
+			StopSnd();
 			pGameSP->StartUpgrade(m_pOurInvOwner, m_pOthersInvOwner);
 		}
 	}

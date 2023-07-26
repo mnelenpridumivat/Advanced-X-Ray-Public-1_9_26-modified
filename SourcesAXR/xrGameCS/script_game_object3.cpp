@@ -39,6 +39,18 @@
 #include "stalker_decision_space.h"
 #include "space_restriction_manager.h"
 
+//Alundaio
+#include "level_path_manager.h"
+#include "game_path_manager.h"
+#include "danger_manager.h"
+#include "danger_object.h"
+
+#include "Artefact.h"
+#include "holder_custom.h"
+#include "Actor.h"
+#include "WeaponAmmo.h"
+#include "WeaponMagazinedWGrenade.h"
+
 namespace MemorySpace {
 	struct CVisibleObject;
 	struct CSoundObject;
@@ -108,6 +120,15 @@ void CScriptGameObject::ChangeTeam(u8 team, u8 squad, u8 group)
 		custom_monster->ChangeTeam(team,squad,group);
 }
 
+void CScriptGameObject::SetVisualMemoryEnabled	(bool enabled)
+{
+	CCustomMonster				*custom_monster = smart_cast<CCustomMonster*>(&object());
+	if (!custom_monster)
+		ai().script_engine().script_log					(ScriptStorage::eLuaMessageTypeError,"CCustomMonster: cannot access class member ChangeTeam!");
+	else
+		custom_monster->memory().visual().enable(enabled);
+}
+
 CScriptGameObject *CScriptGameObject::GetEnemy() const
 {
 	CCustomMonster		*l_tpCustomMonster = smart_cast<CCustomMonster*>(&object());
@@ -163,6 +184,68 @@ CScriptGameObject *CScriptGameObject::GetCurrentOutfit() const
 	}
 	CGameObject		*current_equipment = inventoryOwner->GetCurrentOutfit() ? &inventoryOwner->GetCurrentOutfit()->object() : 0;
 	return			(current_equipment ? current_equipment->lua_game_object() : 0);
+}
+
+void CScriptGameObject::deadbody_closed(bool status)
+{
+	CInventoryOwner		*inventoryOwner = smart_cast<CInventoryOwner*>(&object());
+	if (!inventoryOwner) {
+		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CInventoryOwner : cannot access class member deadbody_closed!");
+		return;
+	}
+	inventoryOwner->deadbody_closed(status);
+}
+
+bool CScriptGameObject::deadbody_closed_status()
+{
+	CInventoryOwner		*inventoryOwner = smart_cast<CInventoryOwner*>(&object());
+	if (!inventoryOwner) {
+		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CInventoryOwner : cannot access class member deadbody_closed_status!");
+		return		(0);
+	}
+	return  inventoryOwner->deadbody_closed_status();
+}
+
+void CScriptGameObject::can_select_weapon(bool status)
+{
+	CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(&object());
+	if(!stalker) 
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError,"CAI_Stalker : cannot access class member can_select_weapon!");
+		return;
+	}
+	stalker->can_select_weapon(status);
+}
+
+bool CScriptGameObject::can_select_weapon() const
+{
+	CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(&object());
+	if(!stalker) 
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError,"CAI_Stalker : cannot access class member can_select_weapon!");
+		return(0);
+	}
+	return  stalker->can_select_weapon();
+}
+
+void CScriptGameObject::deadbody_can_take(bool status)
+{
+	CInventoryOwner		*inventoryOwner = smart_cast<CInventoryOwner*>(&object());
+	if (!inventoryOwner) {
+		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CInventoryOwner : cannot access class member deadbody_can_take!");
+		return;
+	}
+	inventoryOwner->deadbody_can_take(status);
+}
+
+bool CScriptGameObject::deadbody_can_take_status()
+{
+	CInventoryOwner		*inventoryOwner = smart_cast<CInventoryOwner*>(&object());
+	if (!inventoryOwner) {
+		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CInventoryOwner : cannot access class member deadbody_can_take_status!");
+		return		(0);
+	}
+	return  inventoryOwner->deadbody_can_take_status();
 }
 
 #include "CustomOutfit.h"
@@ -314,6 +397,63 @@ void CScriptGameObject::set_patrol_path		(LPCSTR path_name, const PatrolPathMana
 		ai().script_engine().script_log					(ScriptStorage::eLuaMessageTypeError,"CAI_Stalker : cannot access class member movement!");
 	else
 		stalker->movement().patrol().set_path		(path_name,patrol_start_type,patrol_route_type,random);
+}
+
+void CScriptGameObject::inactualize_level_path()
+{
+	CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(&object());
+	if (!stalker)
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CAI_Stalker : cannot access class member movement!");
+	else
+		stalker->movement().level_path().make_inactual();
+}
+
+void CScriptGameObject::inactualize_game_path()
+{
+	CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(&object());
+	if (!stalker)
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CAI_Stalker : cannot access class member movement!");
+	else
+		stalker->movement().game_path().make_inactual();
+}
+
+u32 CScriptGameObject::get_dest_game_vertex_id()
+{
+	CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(&object());
+	if (!stalker)
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CAI_Stalker : cannot access class member get_dest_level_vertex_id!");
+	else
+		return (stalker->movement().game_dest_vertex_id());
+	return u32(-1);
+}
+
+void CScriptGameObject::set_dest_game_vertex_id(GameGraph::_GRAPH_ID game_vertex_id)
+{
+	CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(&object());
+	if (!stalker)
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CAI_Stalker : cannot access class member set_dest_game_vertex_id!");
+	else {
+
+		if (!ai().game_graph().valid_vertex_id(game_vertex_id)) {
+#ifdef DEBUG
+			ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CAI_Stalker : invalid vertex id being setup by action %s!", stalker->brain().CStalkerPlanner::current_action().m_action_name);
+#endif
+			return;
+		}
+		stalker->movement().set_game_dest_vertex(game_vertex_id);
+
+	}
+}
+
+u32 CScriptGameObject::get_dest_level_vertex_id()
+{
+	CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(&object());
+	if (!stalker)
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CAI_Stalker : cannot access class member get_dest_level_vertex_id!");
+	else
+		return stalker->movement().level_dest_vertex_id();
+
+	return u32(-1);
 }
 
 void CScriptGameObject::set_dest_level_vertex_id(u32 level_vertex_id)
@@ -707,6 +847,130 @@ void CScriptGameObject::SetAnomalyPower(float p)
 	zone->SetMaxPower(p);
 }
 
+float CScriptGameObject::GetArtefactHealthRestoreSpeed()
+{
+	CArtefact* artefact = smart_cast<CArtefact*>(&object());
+	THROW(artefact);
+
+	return artefact->GetHealthPower();
+}
+
+float CScriptGameObject::GetArtefactRadiationRestoreSpeed()
+{
+	CArtefact* artefact = smart_cast<CArtefact*>(&object());
+	THROW(artefact);
+
+	return artefact->GetRadiationPower();
+}
+
+float CScriptGameObject::GetArtefactSatietyRestoreSpeed()
+{
+	CArtefact* artefact = smart_cast<CArtefact*>(&object());
+	THROW(artefact);
+
+	return artefact->GetSatietyPower();
+}
+
+float CScriptGameObject::GetArtefactPowerRestoreSpeed()
+{
+	CArtefact* artefact = smart_cast<CArtefact*>(&object());
+	THROW(artefact);
+
+	return artefact->GetPowerPower();
+}
+
+float CScriptGameObject::GetArtefactBleedingRestoreSpeed()
+{
+	CArtefact* artefact = smart_cast<CArtefact*>(&object());
+	THROW(artefact);
+
+	return artefact->GetBleedingPower();
+}
+
+float CScriptGameObject::GetArtefactImmunity(ALife::EHitType hit_type)
+{
+	CArtefact* artefact = smart_cast<CArtefact*>(&object());
+	THROW(artefact);
+
+	return artefact->GetImmunity(hit_type);
+}
+
+void CScriptGameObject::SetArtefactHealthRestoreSpeed(float value)
+{
+	CArtefact* artefact = smart_cast<CArtefact*>(&object());
+	THROW(artefact);
+
+	artefact->SetHealthPower(value);
+}
+
+void CScriptGameObject::SetArtefactRadiationRestoreSpeed(float value)
+{
+	CArtefact* artefact = smart_cast<CArtefact*>(&object());
+	THROW(artefact);
+
+	artefact->SetRadiationPower(value);
+}
+
+void CScriptGameObject::SetArtefactSatietyRestoreSpeed(float value)
+{
+	CArtefact* artefact = smart_cast<CArtefact*>(&object());
+	THROW(artefact);
+
+	artefact->SetSatietyPower(value);
+}
+
+void CScriptGameObject::SetArtefactPowerRestoreSpeed(float value)
+{
+	CArtefact* artefact = smart_cast<CArtefact*>(&object());
+	THROW(artefact);
+
+	artefact->SetPowerPower(value);
+}
+
+void CScriptGameObject::SetArtefactBleedingRestoreSpeed(float value)
+{
+	CArtefact* artefact = smart_cast<CArtefact*>(&object());
+	THROW(artefact);
+
+	artefact->SetBleedingPower(value);
+}
+
+void CScriptGameObject::SetArtefactImmunity(ALife::EHitType hit_type, float value)
+{
+	CArtefact* artefact = smart_cast<CArtefact*>(&object());
+	THROW(artefact);
+
+	return artefact->SetImmunity(hit_type, value);
+}
+
+void CScriptGameObject::ChangeAnomalyIdlePart(LPCSTR name, bool bIdleLight)
+{
+	CCustomZone* zone = smart_cast<CCustomZone*>(&object());
+	THROW(zone);
+	zone->ChangeIdleParticles(name, bIdleLight);
+}
+
+float CScriptGameObject::GetAnomalyRadius()
+{
+	CCustomZone* zone = smart_cast<CCustomZone*>(&object());
+	THROW(zone);
+	return zone->GetEffectiveRadius();
+}
+
+void CScriptGameObject::SetAnomalyRadius(float p)
+{
+	CCustomZone* zone = smart_cast<CCustomZone*>(&object());
+	THROW(zone);
+	zone->SetEffectiveRadius(p);
+}
+
+void CScriptGameObject::MoveAnomaly(Fvector pos)
+{
+	CCustomZone* zone = smart_cast<CCustomZone*>(&object());
+	THROW(zone);
+	zone->MoveScript(pos);
+}
+
 bool CScriptGameObject::weapon_strapped	() const
 {
 	CAI_Stalker		*stalker = smart_cast<CAI_Stalker*>(&object());
@@ -887,6 +1151,17 @@ void CScriptGameObject::buy_supplies			(CScriptIniFile *ini_file, LPCSTR section
 	);
 }
 
+void CScriptGameObject::buy_item_condition_factor(float factor)
+{
+	CInventoryOwner								*inventory_owner = smart_cast<CInventoryOwner*>(&object());
+	if (!inventory_owner) {
+		ai().script_engine().script_log			(ScriptStorage::eLuaMessageTypeError,"CInventoryOwner : cannot access class member buy_item_condition_factor!");
+		return;
+	}
+
+	inventory_owner->trade_parameters().buy_item_condition_factor = factor;
+}
+
 void sell_condition								(CScriptIniFile *ini_file, LPCSTR section)
 {
 	default_trade_parameters().process	(CTradeParameters::action_sell(0),*ini_file,section);
@@ -945,3 +1220,276 @@ void CScriptGameObject::sound_prefix			(LPCSTR sound_prefix)
 
 	custom_monster->sound().sound_prefix	(sound_prefix);
 }
+
+//Alundaio: Taken from Radium
+u16 CScriptGameObject::AmmoGetCount()
+{
+	CWeaponAmmo* ammo = smart_cast<CWeaponAmmo*>(&object());
+	if (!ammo)
+		return 0;
+
+	return ammo->m_boxCurr;
+}
+
+void CScriptGameObject::AmmoSetCount(u16 count)
+{
+	CWeaponAmmo* ammo = smart_cast<CWeaponAmmo*>(&object());
+	if (!ammo)
+		return;
+
+	ammo->m_boxCurr = count;
+}
+
+u16 CScriptGameObject::AmmoBoxSize()
+{
+	CWeaponAmmo* ammo = smart_cast<CWeaponAmmo*>(&object());
+	if (!ammo)
+		return 0;
+
+	return ammo->m_boxSize;
+}
+
+void CScriptGameObject::AttachVehicle(CScriptGameObject* veh) { AttachVehicle(veh, false); }
+void CScriptGameObject::AttachVehicle(CScriptGameObject* veh, const bool bForce)
+{
+	CActor* actor = smart_cast<CActor*>(&object());
+	if (actor)
+	{
+		CHolderCustom* vehicle = smart_cast<CHolderCustom*>(&veh->object());
+		if (vehicle)
+			actor->use_HolderEx(vehicle, bForce);
+		else
+			ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CGameObject : cannot be cast to CHolderCustom!");
+	}
+}
+
+void CScriptGameObject::DetachVehicle() { DetachVehicle(false); }
+void CScriptGameObject::DetachVehicle(const bool bForce)
+{
+	CActor* actor = smart_cast<CActor*>(&object());
+	if (actor)
+		actor->use_HolderEx(nullptr, bForce);
+}
+
+CScriptGameObject* CScriptGameObject::GetAttachedVehicle()
+{
+	CActor* actor = smart_cast<CActor*>(&object());
+	if (!actor)
+		return nullptr;
+
+	CHolderCustom* H = actor->Holder();
+	if (!H)
+		return nullptr;
+
+	CGameObject* GO = smart_cast<CGameObject*>(H);
+	if (!GO)
+		return nullptr;
+
+	return GO->lua_game_object();
+}
+
+void CScriptGameObject::SwitchState(u32 state)
+{
+	CWeapon* Weapon = object().cast_weapon();
+	if (Weapon)
+	{
+		Weapon->SwitchState(state);
+		return;
+	}
+
+	CInventoryItem* IItem = object().cast_inventory_item();
+	if (IItem)
+	{
+		CHudItem* itm = IItem->cast_hud_item();
+		if (itm)
+			itm->SwitchState(state);
+	}
+}
+
+u32 CScriptGameObject::GetState()
+{
+	CWeapon* Weapon = object().cast_weapon();
+	if (Weapon)
+		return Weapon->GetState();
+
+	CInventoryItem* IItem = object().cast_inventory_item();
+	if (IItem)
+	{
+		CHudItem* itm = IItem->cast_hud_item();
+		if (itm)
+			return itm->GetState();
+	}
+
+	return 65535;
+}
+
+bool CScriptGameObject::WeaponInGrenadeMode()
+{
+	CWeaponMagazinedWGrenade* wpn = smart_cast<CWeaponMagazinedWGrenade*>(&object());
+	if (!wpn)
+		return false;
+
+	return wpn->m_bGrenadeMode;
+}
+
+void CScriptGameObject::SetBoneVisible(pcstr bone_name, bool bVisibility) { SetBoneVisible(bone_name, bVisibility, true); }
+void CScriptGameObject::SetBoneVisible(pcstr bone_name, bool bVisibility, bool bRecursive)
+{
+	IKinematics* k = object().Visual()->dcast_PKinematics();
+
+	if (!k)
+		return;
+
+	u16 bone_id = k->LL_BoneID(bone_name);
+	if (bone_id == BI_NONE)
+		return;
+
+	if (bVisibility == !k->LL_GetBoneVisible(bone_id))
+		k->LL_SetBoneVisible(bone_id, bVisibility, bRecursive);
+}
+
+bool CScriptGameObject::IsBoneVisible(pcstr bone_name)
+{
+	IKinematics* k = object().Visual()->dcast_PKinematics();
+
+	if (!k)
+		return false;
+
+	u16 bone_id = k->LL_BoneID(bone_name);
+	if (bone_id == BI_NONE)
+		return false;
+
+	return k->LL_GetBoneVisible(bone_id);
+}
+
+float CScriptGameObject::GetLuminocityHemi()
+{
+	CGameObject* e = smart_cast<CGameObject*>(&object());
+	if (!e || !e->renderable_ROS())
+		return 0;
+	return e->renderable_ROS()->get_luminocity_hemi();
+}
+
+float CScriptGameObject::GetLuminocity()
+{
+	CGameObject* e = smart_cast<CGameObject*>(&object());
+	if (!e || !e->renderable_ROS())
+		return 0;
+	return e->renderable_ROS()->get_luminocity();
+}
+
+void CScriptGameObject::ForceSetPosition(Fvector pos) { ForceSetPosition(pos, false); }
+void CScriptGameObject::ForceSetPosition(Fvector pos, bool bActivate)
+{
+	Fmatrix M = object().XFORM();
+	M.translate(pos);
+	object().ForceTransform(M);
+	CPhysicsShellHolder* sh = object().cast_physics_shell_holder();
+	if (sh)
+	{
+		if (bActivate)
+			sh->activate_physic_shell();
+		if (sh->PPhysicsShell())
+			sh->PPhysicsShell()->SetTransform(M);
+	}
+}
+
+void CScriptGameObject::IterateFeelTouch(const luabind::functor<void>& functor)
+{
+	Feel::Touch* touch = smart_cast<Feel::Touch*>(&object());
+	if (touch)
+	{
+		for (const auto& game_object : touch->feel_touch)
+		{
+			// Xottab_DUTY: Do we need this cast from IGameObject* to IGameObject* ?
+			CObject* o = smart_cast<CObject*>(game_object);
+			if (o)
+				functor(o->ID());
+		}
+	}
+}
+
+void CScriptGameObject::SetSpatialType(u32 sptype)
+{
+	object().spatial.type = sptype;
+}
+
+u32 CScriptGameObject::GetSpatialType()
+{
+	return object().spatial.type;
+}
+
+u8 CScriptGameObject::GetRestrictionType()
+{
+	CSpaceRestrictor* restr = smart_cast<CSpaceRestrictor*>(&object());
+	if (restr)
+		return restr->m_space_restrictor_type;
+
+	return u8(-1);
+}
+
+void CScriptGameObject::SetRestrictionType(u8 type)
+{
+	CSpaceRestrictor* restr = smart_cast<CSpaceRestrictor*>(&object());
+	if (restr)
+	{
+		restr->m_space_restrictor_type = type;
+		if (type != RestrictionSpace::eRestrictorTypeNone)
+			Level().space_restriction_manager().register_restrictor(restr, RestrictionSpace::ERestrictorTypes(type));
+	}
+}
+
+void CScriptGameObject::RemoveDanger(const CDangerObject& dobject)
+{
+	CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(&object());
+	if (!stalker)
+		return;
+
+	stalker->memory().danger().remove(dobject);
+}
+
+void CScriptGameObject::SetRemainingUses(u8 value)
+{
+	CInventoryItem* IItm = object().cast_inventory_item();
+	if (!IItm)
+		return;
+
+	CEatableItem* eItm = IItm->cast_eatable_item();
+	if (!eItm)
+		return;
+
+	eItm->SetRemainingUses(value);
+}
+
+u8 CScriptGameObject::GetRemainingUses()
+{
+	CInventoryItem* IItm = object().cast_inventory_item();
+	if (!IItm)
+		return 0;
+
+	CEatableItem* eItm = IItm->cast_eatable_item();
+	if (!eItm)
+		return 0;
+
+	return eItm->GetPortionsNum();
+}
+
+u8 CScriptGameObject::GetMaxUses()
+{
+	CInventoryItem* IItm = object().cast_inventory_item();
+	if (!IItm)
+		return 0;
+
+	CEatableItem* eItm = IItm->cast_eatable_item();
+	if (!eItm)
+		return 0;
+
+	return eItm->GetMaxUses();
+}
+
+void CScriptGameObject::DestroyObject()
+{
+	object().DestroyObject();
+}
+
+//-Alundaio

@@ -12,17 +12,17 @@
 #include "../../script_entity_action.h"
 #include "../../script_game_object.h"
 #include "../../inventory.h"
-#include "../../../XrServerEntitiesCS/xrserver_objects_alife_monsters.h"
+#include "../../../xrServerEntitiesCS/xrserver_objects_alife_monsters.h"
 #include "../../artefact.h"
 #include "../../xrserver.h"
 #include "../../relation_registry.h"
-#include "../../../XrServerEntitiesCS/object_broker.h"
+#include "../../../xrServerEntitiesCS/object_broker.h"
 #include "../../sound_player.h"
 #include "../../level.h"
 #include "../../script_callback_ex.h"
 #include "../../game_object_space.h"
 #include "trader_animation.h"
-#include "../../../XrServerEntitiesCS/clsid_game.h"
+#include "../../../xrServerEntitiesCS/clsid_game.h"
 
 CAI_Trader::CAI_Trader()
 {
@@ -104,6 +104,7 @@ void CAI_Trader::LookAtActor(CBoneInstance *B)
 	XFORM().getHPB(h,p,b);
 	float cur_yaw	= h;
 	float dy		= _abs(angle_normalize_signed(yaw - cur_yaw));
+	clamp(dy, 0.f, 1.f);
 
 	if (angle_normalize_signed(yaw - cur_yaw) > 0) dy *= -1.f;
 
@@ -120,7 +121,7 @@ BOOL CAI_Trader::net_Spawn			(CSE_Abstract* DC)
 	CSE_ALifeTrader			*l_tpTrader = smart_cast<CSE_ALifeTrader*>(e);
 	R_ASSERT				(l_tpTrader);
 
-	//����������� PDA � InventoryOwner
+	//проспавнить PDA у InventoryOwner
 	if (!CInventoryOwner::net_Spawn(DC))
 		return				(FALSE);
 
@@ -132,7 +133,7 @@ BOOL CAI_Trader::net_Spawn			(CSE_Abstract* DC)
 
 	set_money				( l_tpTrader->m_dwMoney, false );
 
-	// ��������� callback �� �����
+	// Установка callback на кости
 	CBoneInstance			*bone_head =	&smart_cast<IKinematics*>(Visual())->LL_GetBoneInstance(smart_cast<IKinematics*>(Visual())->LL_BoneID("bip01_head"));
 	bone_head->set_callback	(bctCustom,BoneCallback,this);
 
@@ -335,13 +336,13 @@ void CAI_Trader::load (IReader &input_packet)
 }
 
 
-//��������� ������ ���������� � �������
-u32 CAI_Trader::ArtefactPrice (CArtefact* pArtefact)
+//проверяет список артефактов в заказах
+u32 CAI_Trader::ArtefactPrice(CArtefact* pArtefact)
 {
 	return pArtefact->Cost();
 }
 
-//������� ���������, � ����������� ���������� ������ ������� (true - ���� �������� ��� � ������)
+//продажа артефакта, с последуещим изменением списка заказов (true - если артефакт был в списке)
 bool CAI_Trader::BuyArtefact (CArtefact* pArtefact)
 {
 	VERIFY(pArtefact);

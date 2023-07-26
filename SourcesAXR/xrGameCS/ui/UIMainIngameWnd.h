@@ -1,4 +1,4 @@
-#ifndef	UI_MAIN_INGAME_WND_H_INCLUDED
+﻿#ifndef	UI_MAIN_INGAME_WND_H_INCLUDED
 #define UI_MAIN_INGAME_WND_H_INCLUDED
 
 #include "UIProgressBar.h"
@@ -19,7 +19,8 @@ class	CActor;
 class	CWeapon;
 class	CMissile;
 class	CInventoryItem;
-class CUIHudStatesWnd;
+class	CUIHudStatesWnd;
+class	CUICellItem;
 
 class CUIMainIngameWnd: public CUIWindow  
 {
@@ -32,8 +33,6 @@ public:
 	virtual void Update();
 
 			bool OnKeyboardPress(int dik);
-
-protected:
 	
 	CUIStatic			UIStaticDiskIO;
 //	CUIStatic			UIStaticHealth;
@@ -45,12 +44,11 @@ protected:
 	CUIMotionIcon		UIMotionIcon;
 	CUIZoneMap*			UIZoneMap;
 
-	//������, ������������ ���������� �������� PDA
+	//иконка, показывающая количество активных PDA
 //	CUIStatic			UIPdaOnline;
 	
 	CUIHudStatesWnd*	m_ui_hud_states;
 
-public:
 	IC	void			ShowZoneMap( bool status ) { UIZoneMap->visible = status; }
 		void			DrawZoneMap() { UIZoneMap->Render(); }
 		void			UpdateZoneMap() { UIZoneMap->Update(); }
@@ -58,18 +56,40 @@ public:
 	CUIHudStatesWnd*	get_hud_states() { return m_ui_hud_states; } //temp
 	void				OnSectorChanged			(int sector);
 
+	float				hud_info_x;
+	float				hud_info_y;
+	float				hud_info_item_x;
+	float				hud_info_item_y1;
+	float				hud_info_item_y2;
+	float				hud_info_item_y3;
+
+	int					hud_info_r_n;
+	int					hud_info_g_n;
+	int					hud_info_b_n;
+	int					hud_info_a_n;
+
+	int					hud_info_r_e;
+	int					hud_info_g_e;
+	int					hud_info_b_e;
+	int					hud_info_a_e;
+
+	int					hud_info_r_f;
+	int					hud_info_g_f;
+	int					hud_info_b_f;
+	int					hud_info_a_f;
+
 protected:
 
-	// 5 �������� ��� ����������� ������:
-	// - ���������� ������
-	// - ��������
-	// - �������
-	// - ������
-	// - ���������
+	// 5 статиков для отображения иконок:
+	// - сломанного оружия
+	// - радиации
+	// - ранения
+	// - голода
+	// - усталости
 	CUIStatic			UIWeaponJammedIcon;
 //	CUIStatic			UIRadiaitionIcon;
 //	CUIStatic			UIWoundIcon;
-//	CUIStatic			UIStarvationIcon;
+	CUIStatic			UIStarvationIcon;
 //	CUIStatic			UIPsyHealthIcon;
 	CUIStatic			UIInvincibleIcon;
 //	CUIStatic			UISleepIcon;
@@ -81,14 +101,14 @@ protected:
 
 public:
 	
-	// ����� �������������� ��������������� ������� 
+	// Енумы соответсвующие предупреждающим иконкам 
 	enum EWarningIcons
 	{
 		ewiAll				= 0,
 		ewiWeaponJammed,
 //		ewiRadiation,
 //		ewiWound,
-//		ewiStarvation,
+		ewiStarvation,
 //		ewiPsyHealth,
 //		ewiSleep,
 		ewiInvincible,
@@ -97,16 +117,16 @@ public:
 
 	void				SetMPChatLog					(CUIWindow* pChat, CUIWindow* pLog);
 
-	// ������ ���� ��������������� ������
+	// Задаем цвет соответствующей иконке
 	void				SetWarningIconColor				(EWarningIcons icon, const u32 cl);
 	void				TurnOffWarningIcon				(EWarningIcons icon);
 
-	// ������ ��������� ����� �����������, ����������� �� system.ltx
+	// Пороги изменения цвета индикаторов, загружаемые из system.ltx
 	typedef				xr_map<EWarningIcons, xr_vector<float> >	Thresholds;
 	typedef				Thresholds::iterator						Thresholds_it;
 	Thresholds			m_Thresholds;
 
-	// ���� ������������ ��������� �������� ������
+	// Енум перечисления возможных мигающих иконок
 	enum EFlashingIcons
 	{
 		efiPdaTask	= 0,
@@ -127,17 +147,18 @@ protected:
 	void				UpdateFlashingIcons				();
 //	void				UpdateActiveItemInfo			();
 
-//	void				SetAmmoIcon						(const shared_str& se�t_name);
+//	void				SetAmmoIcon						(const shared_str& sect_name);
 
-	// first - ������, second - ��������
+	// first - иконка, second - анимация
 	DEF_MAP				(FlashingIcons, EFlashingIcons, CUIStatic*);
+
 	FlashingIcons		m_FlashingIcons;
 
 //	CWeapon*			m_pWeapon;
 	CMissile*			m_pGrenade;
 	CInventoryItem*		m_pItem;
 
-	// ����������� ��������� ��� ��������� ������� �� ������
+	// Отображение подсказок при наведении прицела на объект
 	void				RenderQuickInfos();
 
 public:
@@ -148,14 +169,11 @@ public:
 
 protected:
 	CInventoryItem*		m_pPickUpItem;
-	CUIStatic			UIPickUpItemIcon;
-
+	float				fuzzyShowInfo_;
+	CUICellItem*		uiPickUpItemIconNew_;
 	float				m_iPickUpItemIconX;
 	float				m_iPickUpItemIconY;
-	float				m_iPickUpItemIconWidth;
-	float				m_iPickUpItemIconHeight;
-
-	void				UpdatePickUpItem();
+	float				m_iPickUpItemIconScale;
 public:
 	void				SetPickUpItem	(CInventoryItem* PickUpItem);
 #ifdef DEBUG

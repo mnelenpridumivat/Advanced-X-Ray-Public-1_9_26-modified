@@ -138,7 +138,8 @@ public:
 
 			BOOL				IsQuestItem			()	const	{return m_flags.test(FIsQuestItem);}			
 	virtual	u32					Cost				() const	{ return m_cost; }
-	virtual float				Weight				() const	{ return m_weight;}		
+	virtual float				Weight				() const	{ return m_weight;}	
+			void				SetWeight			(float w)	{ m_weight = w; }
 
 public:
 	CInventory*					m_pInventory;
@@ -146,6 +147,7 @@ public:
 	shared_str					m_name;
 	shared_str					m_nameShort;
 	shared_str					m_nameComplex;
+	shared_str					m_custom_text;
 
 	EItemPlace					m_eItemCurrPlace;
 
@@ -285,6 +287,7 @@ public:
 	bool	has_upgrade					( const shared_str& upgrade_id );
 	void	add_upgrade					( const shared_str& upgrade_id, bool loading );
 	bool	get_upgrades_str			( string2048& res ) const;
+	Upgrades_type get_upgrades			() { return m_upgrades; } //Alundaio
 
 	bool	equal_upgrades				( Upgrades_type const& other_upgrades ) const;
 

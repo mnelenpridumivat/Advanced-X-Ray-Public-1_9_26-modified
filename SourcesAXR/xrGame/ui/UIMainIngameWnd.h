@@ -14,6 +14,7 @@ class	CMissile;
 class	CInventoryItem;
 class	CUIHudStatesWnd;
 class	CUIMotionIcon;
+class	CUICellItem;
 
 class CUIMainIngameWnd: public CUIWindow  
 {
@@ -24,9 +25,6 @@ public:
 	virtual void Init();
 	virtual void Draw();
 	virtual void Update();
-
-
-protected:
 	
 	CUIStatic*			UIStaticDiskIO;
 	CUITextWnd*			UIStaticQuickHelp;
@@ -43,13 +41,13 @@ protected:
 	CUIStatic*			m_ind_sleepeness;
 	CUIStatic*			m_ind_alcoholism;
 	CUIStatic*			m_ind_narcotism;
+	CUIStatic*			m_ind_psy_health;
 	CUIStatic*			m_ind_filter_dirty;
 	CUIStatic*			m_ind_weapon_broken;
 	CUIStatic*			m_ind_helmet_broken;
 	CUIStatic*			m_ind_outfit_broken;
 	CUIStatic*			m_ind_overweight;
 
-public:
 	CUIStatic*			m_ind_boost_psy;
 	CUIStatic*			m_ind_boost_radia;
 	CUIStatic*			m_ind_boost_chem;
@@ -76,14 +74,36 @@ public:
 	CUITextWnd*			m_QuickSlotText3;
 	CUITextWnd*			m_QuickSlotText4;
 
+	float				hud_info_x;
+	float				hud_info_y;
+	float				hud_info_item_x;
+	float				hud_info_item_y1;
+	float				hud_info_item_y2;
+	float				hud_info_item_y3;
+
+	int					hud_info_r_n;
+	int					hud_info_g_n;
+	int					hud_info_b_n;
+	int					hud_info_a_n;
+
+	int					hud_info_r_e;
+	int					hud_info_g_e;
+	int					hud_info_b_e;
+	int					hud_info_a_e;
+
+	int					hud_info_r_f;
+	int					hud_info_g_f;
+	int					hud_info_b_f;
+	int					hud_info_a_f;
+
 protected:
 
-	// 5 статиков для отображения иконок:
-	// - сломанного оружия(only mp)
-	// - радиации
-	// - ранения
-	// - голода
-	// - усталости
+	// 5 СЃС‚Р°С‚РёРєРѕРІ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РёРєРѕРЅРѕРє:
+	// - СЃР»РѕРјР°РЅРЅРѕРіРѕ РѕСЂСѓР¶РёСЏ(only mp)
+	// - СЂР°РґРёР°С†РёРё
+	// - СЂР°РЅРµРЅРёСЏ
+	// - РіРѕР»РѕРґР°
+	// - СѓСЃС‚Р°Р»РѕСЃС‚Рё
 	CUIStatic*			UIWeaponJammedIcon;
 //	CUIStatic			UIRadiaitionIcon;
 //	CUIStatic			UIWoundIcon;
@@ -99,7 +119,7 @@ protected:
 
 public:
 	
-	// Енумы соответсвующие предупреждающим иконкам 
+	// Р•РЅСѓРјС‹ СЃРѕРѕС‚РІРµС‚СЃРІСѓСЋС‰РёРµ РїСЂРµРґСѓРїСЂРµР¶РґР°СЋС‰РёРј РёРєРѕРЅРєР°Рј 
 	enum EWarningIcons
 	{
 		ewiAll				= 0,
@@ -115,16 +135,16 @@ public:
 
 	void				SetMPChatLog					(CUIWindow* pChat, CUIWindow* pLog);
 
-	// Задаем цвет соответствующей иконке
+	// Р—Р°РґР°РµРј С†РІРµС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµР№ РёРєРѕРЅРєРµ
 	void				SetWarningIconColor				(EWarningIcons icon, const u32 cl);
 	void				TurnOffWarningIcon				(EWarningIcons icon);
 
-	// Пороги изменения цвета индикаторов, загружаемые из system.ltx
+	// РџРѕСЂРѕРіРё РёР·РјРµРЅРµРЅРёСЏ С†РІРµС‚Р° РёРЅРґРёРєР°С‚РѕСЂРѕРІ, Р·Р°РіСЂСѓР¶Р°РµРјС‹Рµ РёР· system.ltx
 	typedef				xr_map<EWarningIcons, xr_vector<float> >	Thresholds;
 	typedef				Thresholds::iterator						Thresholds_it;
 	Thresholds			m_Thresholds;
 
-	// Енум перечисления возможных мигающих иконок
+	// Р•РЅСѓРј РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ РІРѕР·РјРѕР¶РЅС‹С… РјРёРіР°СЋС‰РёС… РёРєРѕРЅРѕРє
 	enum EFlashingIcons
 	{
 		efiPdaTask	= 0,
@@ -148,16 +168,16 @@ protected:
 	void				UpdateFlashingIcons				();
 //	void				UpdateActiveItemInfo			();
 
-//	void				SetAmmoIcon						(const shared_str& seсt_name);
+//	void				SetAmmoIcon						(const shared_str& seСЃt_name);
 
-	// first - иконка, second - анимация
+	// first - РёРєРѕРЅРєР°, second - Р°РЅРёРјР°С†РёСЏ
 	DEF_MAP				(FlashingIcons, EFlashingIcons, CUIStatic*);
 	FlashingIcons		m_FlashingIcons;
 
 //	CMissile*			m_pGrenade;
 //	CInventoryItem*		m_pItem;
 
-	// Отображение подсказок при наведении прицела на объект
+	// РћС‚РѕР±СЂР°Р¶РµРЅРёРµ РїРѕРґСЃРєР°Р·РѕРє РїСЂРё РЅР°РІРµРґРµРЅРёРё РїСЂРёС†РµР»Р° РЅР° РѕР±СЉРµРєС‚
 	void				RenderQuickInfos();
 
 public:
@@ -169,12 +189,11 @@ protected:
 	CInventoryItem*		m_pPickUpItem;
 	CUIStatic*			UIPickUpItemIcon;
 
+	float				fuzzyShowInfo_;
+	CUICellItem*		uiPickUpItemIconNew_;
 	float				m_iPickUpItemIconX;
 	float				m_iPickUpItemIconY;
-	float				m_iPickUpItemIconWidth;
-	float				m_iPickUpItemIconHeight;
-
-	void				UpdatePickUpItem();
+	float				m_iPickUpItemIconScale;
 public:
 	void				SetPickUpItem	(CInventoryItem* PickUpItem);
 #ifdef DEBUG

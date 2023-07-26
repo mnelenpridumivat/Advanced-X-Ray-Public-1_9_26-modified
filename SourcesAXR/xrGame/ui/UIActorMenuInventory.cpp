@@ -97,10 +97,17 @@ void CUIActorMenu::InitInventoryMode()
 		m_pInventoryPdaList->Show(true);
 	}
 
+	if (GameConstants::GetPistolSlotEnabled())
+	{
+		m_pInventoryPistolNewList->Show(true);
+	}
+
 	InitInventoryContents				(m_pInventoryBagList);
 
 	VERIFY( CurrentGameUI() );
 	CurrentGameUI()->UIMainIngameWnd->ShowZoneMap(true);
+
+	m_bNeedMoveAfsToBag = false;
 //	m_clock_value->Show					(true);
 }
 
@@ -128,7 +135,8 @@ void CUIActorMenu::SendEvent_Item2Slot(PIItem pItem, u16 recipient, u16 slot_id)
 	P.w_u16							(pItem->object().ID());
 	P.w_u16							(slot_id);
 	CGameObject::u_EventSend		(P);
-
+	
+	clear_highlight_lists			();
 	PlaySnd							(eItemToSlot);
 };
 
@@ -141,7 +149,8 @@ void CUIActorMenu::SendEvent_Item2Belt(PIItem pItem, u16 recipient)
 	CGameObject::u_EventGen			(P, GEG_PLAYER_ITEM2BELT, pItem->object().H_Parent()->ID());
 	P.w_u16							(pItem->object().ID());
 	CGameObject::u_EventSend		(P);
-
+	
+	clear_highlight_lists			();
 	PlaySnd							(eItemToBelt);
 };
 
@@ -154,7 +163,8 @@ void CUIActorMenu::SendEvent_Item2Ruck(PIItem pItem, u16 recipient)
 	CGameObject::u_EventGen			(P, GEG_PLAYER_ITEM2RUCK, pItem->object().H_Parent()->ID());
 	P.w_u16							(pItem->object().ID());
 	CGameObject::u_EventSend		(P);
-
+	
+	clear_highlight_lists			();
 	PlaySnd							(eItemToRuck);
 };
 
@@ -179,6 +189,8 @@ void CUIActorMenu::SendEvent_Item_Drop(PIItem pItem, u16 recipient)
 	pItem->object().u_EventGen	(P,GE_OWNERSHIP_REJECT,pItem->parent_id());
 	P.w_u16						(pItem->object().ID());
 	pItem->object().u_EventSend	(P);
+
+	clear_highlight_lists		();
 	PlaySnd						(eDropItem);
 }
 
@@ -297,6 +309,7 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 		GameConstants::GetDosimeterSlotEnabled() ? m_pInventoryDosimeterList : nullptr,
 		GameConstants::GetPantsSlotEnabled() ? m_pInventoryPantsList : nullptr,
 		GameConstants::GetPdaSlotEnabled() ? m_pInventoryPdaList : nullptr,
+		GameConstants::GetPistolSlotEnabled() ? m_pInventoryPistolNewList : nullptr,
 		NULL
 	};
 
@@ -517,6 +530,11 @@ void CUIActorMenu::InitInventoryContents(CUIDragDropListEx* pBagList)
 	if (GameConstants::GetPdaSlotEnabled())
 	{
 		InitCellForSlot(PDA_SLOT);
+	}
+
+	if (GameConstants::GetPistolSlotEnabled())
+	{
+		InitCellForSlot(PISTOL_SLOT);
 	}
 
 	curr_list					= m_pInventoryBeltList;
@@ -900,6 +918,13 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 					return m_pInventoryPdaList;
 					break;
 			}
+
+			if (GameConstants::GetPistolSlotEnabled())
+			{
+				case PISTOL_SLOT:
+					return m_pInventoryPistolNewList;
+					break;
+			}
 	};
 	return NULL;
 }
@@ -924,10 +949,11 @@ bool CUIActorMenu::TryUseItem( CUICellItem* cell_itm )
 	{
 		return false;
 	}
-	if ( !item->Useful() )
+	if ( !item->Useful() || (pFilter && !pFilter->UseAllowed()) || (pRepairKit && !pRepairKit->UseAllowed()) )
 	{
 		return false;
 	}
+
 	u16 recipient = m_pActorInvOwner->object_id();
 	if ( item->parent_id() != recipient )
 	{
@@ -1015,10 +1041,6 @@ void CUIActorMenu::ActivatePropertiesBox()
 		if ( m_currMenuMode == mmInventory )
 			PropertiesBoxForDrop( cell_item, item, b_show );
 	}
-	//else if ( m_currMenuMode == mmDeadBodySearch )
-	//{
-	//	PropertiesBoxForUsing( item, b_show );
-	//}
 	else if ( m_currMenuMode == mmUpgrade )
 	{
 		PropertiesBoxForRepair( item, b_show );
@@ -1044,7 +1066,7 @@ void CUIActorMenu::PropertiesBoxForSlots( PIItem item, bool& b_show )
 	CHelmet* pHelmet		= smart_cast<CHelmet*>		( item );
 	CInventory&  inv		= m_pActorInvOwner->inventory();
 
-	// Флаг-признак для невлючения пункта контекстного меню: Dreess Outfit, если костюм уже надет
+	// Р¤Р»Р°Рі-РїСЂРёР·РЅР°Рє РґР»СЏ РЅРµРІР»СЋС‡РµРЅРёСЏ РїСѓРЅРєС‚Р° РєРѕРЅС‚РµРєСЃС‚РЅРѕРіРѕ РјРµРЅСЋ: Dreess Outfit, РµСЃР»Рё РєРѕСЃС‚СЋРј СѓР¶Рµ РЅР°РґРµС‚
 	bool bAlreadyDressed	= false;
 	u16 cur_slot			= item->BaseSlot();
 
@@ -1096,7 +1118,7 @@ void CUIActorMenu::PropertiesBoxForSlots( PIItem item, bool& b_show )
 
 void CUIActorMenu::PropertiesBoxForWeapon( CUICellItem* cell_item, PIItem item, bool& b_show )
 {
-	//отсоединение аддонов от вещи
+	//РѕС‚СЃРѕРµРґРёРЅРµРЅРёРµ Р°РґРґРѕРЅРѕРІ РѕС‚ РІРµС‰Рё
 	CWeapon*	pWeapon = smart_cast<CWeapon*>( item );
 	if ( !pWeapon )
 	{
@@ -1161,7 +1183,7 @@ void CUIActorMenu::PropertiesBoxForWeapon( CUICellItem* cell_item, PIItem item, 
 #include "../string_table.h"
 void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 {
-	//присоединение аддонов к активному слоту (2 или 3)
+	//РїСЂРёСЃРѕРµРґРёРЅРµРЅРёРµ Р°РґРґРѕРЅРѕРІ Рє Р°РєС‚РёРІРЅРѕРјСѓ СЃР»РѕС‚Сѓ (2 РёР»Рё 3)
 
 	CScope*				pScope				= smart_cast<CScope*>			(item);
 	CSilencer*			pSilencer			= smart_cast<CSilencer*>		(item);
@@ -1170,8 +1192,9 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 
 	PIItem	item_in_slot_2 = inv->ItemFromSlot(INV_SLOT_2);
 	PIItem	item_in_slot_3 = inv->ItemFromSlot(INV_SLOT_3);
+	PIItem	item_in_pistol_slot = inv->ItemFromSlot(PISTOL_SLOT);
 
-	if(!item_in_slot_2 && !item_in_slot_3)	return;
+	if(!item_in_slot_2 && !item_in_slot_3 && !item_in_pistol_slot)	return;
 
 	if ( pScope )
 	{
@@ -1190,6 +1213,14 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 			m_UIPropertiesBox->AddItem( str.c_str(),  (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON );
 //			m_UIPropertiesBox->AddItem( "st_attach_scope_to_rifle",  (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON );
 			b_show			= true;
+		}
+		if (item_in_pistol_slot && item_in_pistol_slot->CanAttach(pScope))
+		{
+			shared_str str = CStringTable().translate("st_attach_scope_to_pistol");
+			str.printf("%s %s", str.c_str(), item_in_pistol_slot->m_name.c_str());
+			m_UIPropertiesBox->AddItem(str.c_str(), (void*)item_in_pistol_slot, INVENTORY_ATTACH_ADDON);
+			//			m_UIPropertiesBox->AddItem( "st_attach_scope_to_rifle",  (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON );
+			b_show = true;
 		}
 		return;
 	}
@@ -1212,6 +1243,14 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 //			m_UIPropertiesBox->AddItem( "st_attach_silencer_to_rifle",  (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON );
 			b_show			= true;
 		}
+		if (item_in_pistol_slot && item_in_pistol_slot->CanAttach(pSilencer))
+		{
+			shared_str str = CStringTable().translate("st_attach_silencer_to_pistol");
+			str.printf("%s %s", str.c_str(), item_in_pistol_slot->m_name.c_str());
+			m_UIPropertiesBox->AddItem(str.c_str(), (void*)item_in_pistol_slot, INVENTORY_ATTACH_ADDON);
+			//			m_UIPropertiesBox->AddItem( "st_attach_silencer_to_rifle",  (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON );
+			b_show = true;
+		}
 		return;
 	}
 
@@ -1232,6 +1271,14 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 			m_UIPropertiesBox->AddItem( str.c_str(),  (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON );
 //			m_UIPropertiesBox->AddItem( "st_attach_gl_to_rifle",  (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON );
 			b_show			= true;
+		}
+		if (item_in_pistol_slot && item_in_pistol_slot->CanAttach(pGrenadeLauncher))
+		{
+			shared_str str = CStringTable().translate("st_attach_gl_to_rifle");
+			str.printf("%s %s", str.c_str(), item_in_pistol_slot->m_name.c_str());
+			m_UIPropertiesBox->AddItem(str.c_str(), (void*)item_in_pistol_slot, INVENTORY_ATTACH_ADDON);
+			//			m_UIPropertiesBox->AddItem( "st_attach_gl_to_rifle",  (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON );
+			b_show = true;
 		}
 	}
 }
@@ -1256,6 +1303,7 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 	PIItem	item_in_knife_slot = inv->ItemFromSlot(KNIFE_SLOT);
 	PIItem	item_in_wpn1_slot = inv->ItemFromSlot(INV_SLOT_2);
 	PIItem	item_in_wpn2_slot = inv->ItemFromSlot(INV_SLOT_3);
+	PIItem	item_in_wpn3_slot = inv->ItemFromSlot(PISTOL_SLOT);
 
 	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
 	CHelmet* helmet = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
@@ -1263,6 +1311,7 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 	CWeapon* knife = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(KNIFE_SLOT));
 	CWeapon* wpn1 = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(INV_SLOT_2));
 	CWeapon* wpn2 = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(INV_SLOT_3));
+	CWeapon* wpn3 = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(PISTOL_SLOT));
 
 	bool outfit_use_filter = false;
 	bool helmet_use_filter = false;
@@ -1274,6 +1323,7 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 	bool can_repair_knife = false;
 	bool can_repair_wpn1 = false;
 	bool can_repair_wpn2 = false;
+	bool can_repair_wpn3 = false;
 
 	if (outfit && pFilter)
 		outfit_use_filter = outfit->m_bUseFilter && outfit->m_fFilterCondition <= 0.99f && outfit->IsNecessaryItem(pFilter->cNameSect().c_str(), outfit->m_SuitableFilters);
@@ -1294,10 +1344,12 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 		can_repair_wpn1 = wpn1->GetCondition() < 0.9f && wpn1->GetCondition() >= 0.4f && wpn1->IsNecessaryItem(pRepairKit->cNameSect().c_str(), wpn1->m_SuitableRepairKits);
 	if (wpn2 && pRepairKit)
 		can_repair_wpn2 = wpn2->GetCondition() < 0.9f && wpn2->GetCondition() >= 0.4f && wpn2->IsNecessaryItem(pRepairKit->cNameSect().c_str(), wpn2->m_SuitableRepairKits);
+	if (wpn3 && pRepairKit)
+		can_repair_wpn3 = wpn3->GetCondition() < 0.9f && wpn3->GetCondition() >= 0.4f && wpn3->IsNecessaryItem(pRepairKit->cNameSect().c_str(), wpn3->m_SuitableRepairKits);
 
 	LPCSTR act_str = NULL;
 
-	if (!item->Useful())
+	if (!item->Useful() || (pFilter && !pFilter->UseAllowed()) || (pRepairKit && !pRepairKit->UseAllowed()))
 		return;
 
 	if ( pMedkit || pAntirad )
@@ -1409,6 +1461,14 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 			shared_str str = CStringTable().translate("st_repair");
 			str.printf("%s %s", str.c_str(), item_in_wpn2_slot->m_name.c_str());
 			m_UIPropertiesBox->AddItem(str.c_str(), (void*)item_in_wpn2_slot, REPAIR_KIT_WPN2);
+			b_show = true;
+		}
+
+		if (item_in_wpn3_slot && can_repair_wpn3)
+		{
+			shared_str str = CStringTable().translate("st_repair");
+			str.printf("%s %s", str.c_str(), item_in_wpn3_slot->m_name.c_str());
+			m_UIPropertiesBox->AddItem(str.c_str(), (void*)item_in_wpn3_slot, REPAIR_KIT_WPN3);
 			b_show = true;
 		}
 		return;
@@ -1709,6 +1769,15 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 			TryUseItem(cell_item);
 			break;
 		}
+	case REPAIR_KIT_WPN3:
+		{
+			CRepairKit* repair_kit = smart_cast<CRepairKit*>(item);
+			if (!repair_kit)
+				break;
+			repair_kit->m_iUseFor = 7;
+			TryUseItem(cell_item);
+			break;
+		}
 	}//switch
 
 	SetCurrentItem( NULL );
@@ -1724,7 +1793,8 @@ void CUIActorMenu::UpdateOutfit()
 	}
 
 	u32 af_count = m_pActorInvOwner->inventory().BeltWidth();
-	VERIFY( 0 <= af_count && af_count <= 5 );
+
+	VERIFY( 0 <= af_count && af_count <= GameConstants::GetArtefactsCount());
 
 	VERIFY( m_pInventoryBeltList );
 	CCustomOutfit* outfit    = m_pActorInvOwner->GetOutfit();
@@ -1733,15 +1803,24 @@ void CUIActorMenu::UpdateOutfit()
 	else
 		m_HelmetOver->Show(false);
 
+	if (outfit && !m_bNeedMoveAfsToBag)
+		m_bNeedMoveAfsToBag = true;
+
 	if ( !outfit )
 	{
-		MoveArtefactsToBag();
-		return;
+		if (m_bNeedMoveAfsToBag)
+		{
+			MoveArtefactsToBag();
+			m_bNeedMoveAfsToBag = false;
+		}
+
+		if (!af_count)
+			return;
 	}
 
 	Ivector2 afc;
-	afc.x = af_count;//1;
-	afc.y = 1;//af_count;
+	afc.x = m_pInventoryBeltList->CellsCapacity().x;
+	afc.y = m_pInventoryBeltList->CellsCapacity().y;
 
 	m_pInventoryBeltList->SetCellsCapacity( afc );
 
@@ -1749,7 +1828,6 @@ void CUIActorMenu::UpdateOutfit()
 	{
 		m_belt_list_over[i]->SetVisible( false );
 	}
-
 }
 
 void CUIActorMenu::MoveArtefactsToBag()
@@ -1761,4 +1839,29 @@ void CUIActorMenu::MoveArtefactsToBag()
 		ToBag( ci, false );
 	}//for i
 	m_pInventoryBeltList->ClearAll( true );
+}
+
+void CUIActorMenu::RefreshCurrentItemCell()
+{
+	CUICellItem* ci = CurrentItem();
+	if (!ci)
+		return;
+
+	if (ci->ChildsCount() > 0)
+	{
+		CUIDragDropListEx* invlist = GetListByType(iActorBag);
+
+		if (invlist->IsOwner(ci))
+		{
+			CUICellItem* parent = invlist->RemoveItem(ci, true);
+
+			while (parent->ChildsCount())
+			{
+				CUICellItem* child = parent->PopChild(nullptr);
+				invlist->SetItem(child);
+			}
+
+			invlist->SetItem(parent, GetUICursor().GetCursorPosition());
+		}
+	}
 }

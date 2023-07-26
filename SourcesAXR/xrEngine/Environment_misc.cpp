@@ -23,6 +23,9 @@ void CEnvModifier::load	(IReader* fs, u32 version)
 	fog_density		= fs->r_float	();
 	lowland_fog_height		= fs->r_float	();
 	lowland_fog_density		= fs->r_float	();
+
+	fs->r_fvector4	(color_dragging);
+
 	fs->r_fvector3	(ambient);
 	fs->r_fvector3	(sky_color);
 	fs->r_fvector3	(hemi_color);
@@ -231,6 +234,8 @@ CEnvDescriptor::CEnvDescriptor	(shared_str const& identifier) :
 	lowland_fog_height	= 0.0f;
 	lowland_fog_density = 0.0f;
 
+	color_dragging.set	(0.0f, 0.0f, 0.0f, 0.0f);
+
 	rain_density		= 0.0f;
 	rain_color.set		(0,0,0);
 
@@ -337,6 +342,9 @@ void CEnvDescriptor::load	(CEnvironment& environment, CInifile& config)
 	if (config.line_exist(m_identifier.c_str(), "lowland_fog_density"))
 		lowland_fog_density = config.r_float(m_identifier.c_str(), "lowland_fog_density");
 
+	if (config.line_exist(m_identifier.c_str(), "color_dragging"))
+		color_dragging = config.r_fvector4(m_identifier.c_str(), "color_dragging");
+
 	// swing desc
 	// normal
 	m_cSwingDesc[0].amp1 = config.line_exist(m_identifier.c_str(), "swing_normal_amp1") ? config.r_float(m_identifier.c_str(), "swing_normal_amp1") : pAdvancedSettings->r_float("details_params", "swing_normal_amp1");
@@ -358,6 +366,7 @@ void CEnvDescriptor::load	(CEnvironment& environment, CInifile& config)
 	C_CHECK					(ambient	);
 	C_CHECK					(hemi_color	);
 	C_CHECK					(sun_color	);
+	C_CHECK					(color_dragging);
 	on_device_create		();
 }
 
@@ -416,7 +425,7 @@ void CEnvDescriptorMixer::clear	()
 {
 	m_pDescriptorMixer->Clear();
 	/*
-	std::pair<u32,ref_texture>	zero = mk_pair(u32(0),ref_texture(0));
+	std::pair<u32,ref_texture>	zero = std::make_pair(u32(0),ref_texture(0));
 	sky_r_textures.clear		();
 	sky_r_textures.push_back	(zero);
 	sky_r_textures.push_back	(zero);
@@ -444,17 +453,17 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 	m_pDescriptorMixer->lerp(&*A.m_pDescriptor, &*B.m_pDescriptor);
 	/*
 	sky_r_textures.clear		();
-	sky_r_textures.push_back	(mk_pair(0,A.sky_texture));
-	sky_r_textures.push_back	(mk_pair(1,B.sky_texture));
+	sky_r_textures.push_back	(std::make_pair(0,A.sky_texture));
+	sky_r_textures.push_back	(std::make_pair(1,B.sky_texture));
 
 	sky_r_textures_env.clear	();
 
-	sky_r_textures_env.push_back(mk_pair(0,A.sky_texture_env));
-	sky_r_textures_env.push_back(mk_pair(1,B.sky_texture_env));
+	sky_r_textures_env.push_back(std::make_pair(0,A.sky_texture_env));
+	sky_r_textures_env.push_back(std::make_pair(1,B.sky_texture_env));
 
 	clouds_r_textures.clear		();
-	clouds_r_textures.push_back	(mk_pair(0,A.clouds_texture));
-	clouds_r_textures.push_back	(mk_pair(1,B.clouds_texture));
+	clouds_r_textures.push_back	(std::make_pair(0,A.clouds_texture));
+	clouds_r_textures.push_back	(std::make_pair(1,B.clouds_texture));
 	*/
 
 	weight					=	f;
@@ -503,6 +512,8 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 
 	lowland_fog_height	= fi*A.lowland_fog_height + f * B.lowland_fog_height;
 	lowland_fog_density = fi * A.lowland_fog_density + f * B.lowland_fog_density;
+
+	color_dragging.lerp(A.color_dragging, B.color_dragging, f);
 
 	// colors
 //.	sky_color.lerp			(A.sky_color,B.sky_color,f).add(Mdf.sky_color).mul(modif_power);

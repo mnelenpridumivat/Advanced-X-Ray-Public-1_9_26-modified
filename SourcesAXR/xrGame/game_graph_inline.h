@@ -113,7 +113,12 @@ IC	const float &CGameGraph::edge_weight							(const_iterator i) const
 
 IC	const CGameGraph::CVertex *CGameGraph::vertex					(u32 const vertex_id) const
 {
+#ifdef _M_X64
+	return (valid_vertex_id(vertex_id)) ? (m_nodes + vertex_id)
+		: (m_nodes + header().vertex_count() - 1);
+#else
 	return						(m_nodes + vertex_id);
+#endif
 }
 
 IC	const u8 &CGameGraph::CHeader::version							() const
@@ -299,7 +304,7 @@ IC	void GameGraph::CHeader::load									(IReader *reader)
 	for (u32 i=0; i<level_count; ++i) {
 		SLevel					l_tLevel;
 		l_tLevel.load			(reader);
-		m_levels.insert			(mk_pair(l_tLevel.id(),l_tLevel));
+		m_levels.insert			(std::make_pair(l_tLevel.id(),l_tLevel));
 	}
 }
 

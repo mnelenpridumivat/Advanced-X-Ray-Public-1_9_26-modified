@@ -69,7 +69,7 @@ class cl_texgen : public R_constant_setup
 	{
 		Fmatrix mTexgen;
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		Fmatrix			mTexelAdjust		= 
 		{
 			0.5f,				0.0f,				0.0f,			0.0f,
@@ -77,7 +77,7 @@ class cl_texgen : public R_constant_setup
 			0.0f,				0.0f,				1.0f,			0.0f,
 			0.5f,				0.5f,				0.0f,			1.0f
 		};
-#else	//	USE_DX10
+#else	//	USE_DX11
 		float	_w						= float(RDEVICE.dwWidth);
 		float	_h						= float(RDEVICE.dwHeight);
 		float	o_w						= (.5f / _w);
@@ -89,7 +89,7 @@ class cl_texgen : public R_constant_setup
 			0.0f,				0.0f,				1.0f,			0.0f,
 			0.5f + o_w,			0.5f + o_h,			0.0f,			1.0f
 		};
-#endif	//	USE_DX10
+#endif
 
 		mTexgen.mul	(mTexelAdjust,RCache.xforms.m_wvp);
 
@@ -104,7 +104,7 @@ class cl_VPtexgen : public R_constant_setup
 	{
 		Fmatrix mTexgen;
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		Fmatrix			mTexelAdjust		= 
 		{
 			0.5f,				0.0f,				0.0f,			0.0f,
@@ -112,7 +112,7 @@ class cl_VPtexgen : public R_constant_setup
 			0.0f,				0.0f,				1.0f,			0.0f,
 			0.5f,				0.5f,				0.0f,			1.0f
 		};
-#else	//	USE_DX10
+#else	//	USE_DX11
 		float	_w						= float(RDEVICE.dwWidth);
 		float	_h						= float(RDEVICE.dwHeight);
 		float	o_w						= (.5f / _w);
@@ -124,7 +124,7 @@ class cl_VPtexgen : public R_constant_setup
 			0.0f,				0.0f,				1.0f,			0.0f,
 			0.5f + o_w,			0.5f + o_h,			0.0f,			1.0f
 		};
-#endif	//	USE_DX10
+#endif
 
 		mTexgen.mul	(mTexelAdjust,RCache.xforms.m_vp);
 
@@ -466,18 +466,6 @@ static class dev_param_8 : public R_constant_setup
 	}
 }    dev_param_8;
 
-// PseudoPBR
-extern float ps_r3_pbr_intensity;
-extern float ps_r3_pbr_roughness;
-
-static class cl_pseudopbr : public R_constant_setup
-{
-	virtual void setup(R_constant* C)
-	{
-		RCache.set_c(C, ps_r3_pbr_roughness, ps_r3_pbr_intensity, 0, 0);
-	}
-} cl_pseudopbr;
-
 static class cl_pda_params : public R_constant_setup
 {
 	u32 marker;
@@ -522,6 +510,31 @@ static class ssfx_wpn_dof_2 : public R_constant_setup
 	}
 } ssfx_wpn_dof_2;
 
+// Reflections distance
+extern float ps_r2_reflections_distance;
+
+static class cl_refl_dist : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		RCache.set_c(C, ps_r2_reflections_distance, 0, 0, 0);
+	}
+} cl_refl_dist;
+
+//AO Debug
+static class cl_debug : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		RCache.set_c(C, ps_r2_ao_debug, 0, 0, 0);
+	}
+} binder_debug;
+
+static class cl_spv_screen_res : public R_constant_setup //--#SM+#--
+{
+	virtual void setup(R_constant* C) { RCache.set_c(C, (float)Device.m_SecondViewport.screenWidth, (float)Device.m_SecondViewport.screenHeight, 0, 0); }
+} binder_spv_screen_res;
+
 // Standart constant-binding
 void	CBlender_Compile::SetMapping	()
 {
@@ -540,6 +553,7 @@ void	CBlender_Compile::SetMapping	()
 	r_Constant("m_hud_params", &binder_hud_params);	//--#SM+#--
 	r_Constant("m_script_params", &binder_script_params); //--#SM+#--
 	r_Constant("m_blender_mode", &binder_blend_mode);	//--#SM+#--
+	r_Constant("svp_screen_res", &binder_spv_screen_res);
 
 	// matrices
 	r_Constant				("m_W",				&binder_w);
@@ -605,13 +619,15 @@ void	CBlender_Compile::SetMapping	()
 	r_Constant				("shader_param_7",	&dev_param_7);
 	r_Constant				("shader_param_8",	&dev_param_8);
 
-	//PseudoPBR
-	r_Constant				("pbr_settings",	&cl_pseudopbr);
 	// PDA
 	r_Constant				("pda_params",		&binder_pda_params);
 	//SSS DoF
 	r_Constant				("ssfx_wpn_dof_1",	&ssfx_wpn_dof_1);
 	r_Constant				("ssfx_wpn_dof_2",	&ssfx_wpn_dof_2);
+	//Reflections distance
+	r_Constant				("reflections_distance", &cl_refl_dist);
+	//AO Debug
+	r_Constant				("debug",			&binder_debug);
 
 	// detail
 	//if (bDetail	&& detail_scaler)

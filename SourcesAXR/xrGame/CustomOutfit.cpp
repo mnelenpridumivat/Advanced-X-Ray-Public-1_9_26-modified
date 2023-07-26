@@ -87,12 +87,11 @@ void CCustomOutfit::OnH_A_Chield()
 void CCustomOutfit::UpdateFilterCondition(void)
 {
 	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
-	CUIHudStatesWnd* wnd = CurrentGameUI()->UIMainIngameWnd->get_hud_states();
 
 	if (outfit && m_bUseFilter)
 	{
-		float m_radia_hit = wnd->get_zone_cur_power(ALife::eHitTypeRadiation) * 4;
-		float m_chemical_hit = wnd->get_zone_cur_power(ALife::eHitTypeChemicalBurn);
+		float m_radia_hit = CurrentGameUI()->get_zone_cur_power(ALife::eHitTypeRadiation) * 4;
+		float m_chemical_hit = CurrentGameUI()->get_zone_cur_power(ALife::eHitTypeChemicalBurn);
 		float uncharge_coef = ((m_fFilterDegradation + m_radia_hit + m_chemical_hit) / 16) * Device.fTimeDelta;
 
 		m_fFilterCondition -= uncharge_coef;
@@ -173,6 +172,7 @@ void CCustomOutfit::Load(LPCSTR section)
 	m_fSleepenessRestoreSpeed	= READ_IF_EXISTS(pSettings, r_float, section, "sleepeness_restore_speed", 0.0f);
 	m_fAlcoholismRestoreSpeed	= READ_IF_EXISTS(pSettings, r_float, section, "alcoholism_restore_speed", 0.0f);
 	m_fNarcotismRestoreSpeed	= READ_IF_EXISTS(pSettings, r_float, section, "narcotism_restore_speed", 0.0f);
+	m_fPsyHealthRestoreSpeed	= READ_IF_EXISTS(pSettings, r_float, section, "psy_health_restore_speed", 0.0f);
 
 	m_fJumpSpeed				= READ_IF_EXISTS(pSettings, r_float, section, "jump_speed", 1.f);
 	m_fWalkAccel				= READ_IF_EXISTS(pSettings, r_float, section, "walk_accel", 1.f);
@@ -183,7 +183,7 @@ void CCustomOutfit::Load(LPCSTR section)
 
 	m_full_icon_name		= pSettings->r_string( section, "full_icon_name" );
 	m_artefact_count 		= READ_IF_EXISTS( pSettings, r_u32, section, "artefact_count", 0 );
-	clamp( m_artefact_count, (u32)0, (u32)5 );
+	clamp( m_artefact_count, (u32)0, (u32)GameConstants::GetArtefactsCount());
 
 	m_BonesProtectionSect	= READ_IF_EXISTS(pSettings, r_string, section, "bones_koeff_protection",  "" );
 	bIsHelmetAvaliable		= !!READ_IF_EXISTS(pSettings, r_bool, section, "helmet_avaliable", true);
@@ -196,6 +196,11 @@ void CCustomOutfit::Load(LPCSTR section)
 	m_SuitableRepairKits.clear();
 	LPCSTR filters = READ_IF_EXISTS(pSettings, r_string, section, "suitable_filters", "antigas_filter");
 	LPCSTR repair_kits = READ_IF_EXISTS(pSettings, r_string, section, "suitable_repair_kits", "repair_kit");
+
+	m_PlayerHudSection = READ_IF_EXISTS(pSettings, r_string, section, "player_hud_section", "actor_hud");
+
+	// Added by Axel, to enable optional condition use on any item
+	m_flags.set(FUsingCondition, READ_IF_EXISTS(pSettings, r_bool, section, "use_condition", true));
 
 	if (filters && filters[0])
 	{
@@ -271,7 +276,7 @@ float CCustomOutfit::HitThroughArmor(float hit_power, s16 element, float ap, boo
 		float BoneArmor = ba*GetCondition();
 		if(/*!fis_zero(ba, EPS) && */(ap > BoneArmor))
 		{
-			//пуля пробила бронь
+			//РїСѓР»СЏ РїСЂРѕР±РёР»Р° Р±СЂРѕРЅСЊ
 			if(!IsGameTypeSingle())
 			{
 				float hit_fraction = (ap - BoneArmor) / ap;
@@ -286,9 +291,9 @@ float CCustomOutfit::HitThroughArmor(float hit_power, s16 element, float ap, boo
 		}
 		else
 		{
-			//пуля НЕ пробила бронь
+			//РїСѓР»СЏ РќР• РїСЂРѕР±РёР»Р° Р±СЂРѕРЅСЊ
 			NewHitPower *= m_boneProtection->m_fHitFracActor;
-			add_wound = false; 	//раны нет
+			add_wound = false; 	//СЂР°РЅС‹ РЅРµС‚
 		}
 	}
 	else
@@ -307,7 +312,7 @@ float CCustomOutfit::HitThroughArmor(float hit_power, s16 element, float ap, boo
 		if(NewHitPower < 0.f)
 			NewHitPower = 0.f;
 	}
-	//увеличить изношенность костюма
+	//СѓРІРµР»РёС‡РёС‚СЊ РёР·РЅРѕС€РµРЅРЅРѕСЃС‚СЊ РєРѕСЃС‚СЋРјР°
 	Hit(hit_power, hit_type);
 
 	return NewHitPower;
@@ -381,7 +386,7 @@ void CCustomOutfit::ApplySkinModel(CActor* pActor, bool bDress, bool bHUDOnly)
 
 
 		if (pActor == Level().CurrentViewEntity())	
-			g_player_hud->load(pSettings->r_string(cNameSect(),"player_hud_section"));
+			g_player_hud->load(m_PlayerHudSection);
 	}else
 	{
 		if (!bHUDOnly && m_ActorVisual.size())
@@ -401,7 +406,7 @@ void CCustomOutfit::ApplySkinModel(CActor* pActor, bool bDress, bool bHUDOnly)
 
 void	CCustomOutfit::OnMoveToRuck		(const SInvItemPlace& prev)
 {
-	if(m_pInventory && prev.type==eItemPlaceSlot)
+	if(m_pInventory && prev.type==eItemPlaceSlot && !Level().is_removing_objects())
 	{
 		CActor* pActor = smart_cast<CActor*> (H_Parent());
 		if (pActor)
@@ -450,6 +455,15 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 	if ( result2 && !test )
 		AddBonesProtection	(str);
 
+	result2 = process_if_exists_set(section, "player_hud_section", &CInifile::r_string, str, test);
+	if (result2 && !test)
+	{
+		m_PlayerHudSection = str;
+
+		if (this == smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT)))
+			ApplySkinModel(Actor(), true, false);
+	}
+
 	result |= result2;
 	result |= process_if_exists( section, "hit_fraction_actor", &CInifile::r_float, m_boneProtection->m_fHitFracActor, test );
 	
@@ -471,7 +485,7 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 	clamp( m_fPowerLoss, 0.0f, 1.0f );
 
 	result |= process_if_exists( section, "artefact_count", &CInifile::r_u32, m_artefact_count, test );
-	clamp( m_artefact_count, (u32)0, (u32)5 );
+	clamp( m_artefact_count, (u32)0, (u32)GameConstants::GetArtefactsCount());
 
 	result |= process_if_exists(section, "jump_speed", &CInifile::r_float, m_fJumpSpeed, test);
 	result |= process_if_exists(section, "walk_accel", &CInifile::r_float, m_fWalkAccel, test);

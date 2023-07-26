@@ -36,6 +36,8 @@ public:
 	void						relcase_register	(RELCASE_CALLBACK,int*);
 	void						relcase_unregister	(int*);
 
+	IC xr_vector<CObject*>&		GetActiveObjects	() { return objects_active; }
+
 public:
 	// methods
 								CObjectList			( );
@@ -53,6 +55,7 @@ public:
 
 	void						SingleUpdate		( CObject*		O		);
 	void						Update				( bool bForce );
+	void						ProcessDestroyQueue	();
 
 	void						net_Register		( CObject*		O		);
 	void						net_Unregister		( CObject*		O		);

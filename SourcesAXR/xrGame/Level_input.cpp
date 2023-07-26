@@ -139,10 +139,10 @@ void CLevel::IR_OnKeyboardPress	(int key)
 		{
 #ifdef DEBUG
 			if(psActorFlags.test(AF_NO_CLIP))
-				Device.Pause(!Device.Paused(), TRUE, TRUE, "li_pause_key_no_clip");
+				GAME_PAUSE(!Device.Paused(), TRUE, TRUE, "li_pause_key_no_clip");
 			else
 #endif //DEBUG
-				Device.Pause(!Device.Paused(), TRUE, TRUE, "li_pause_key");
+				GAME_PAUSE(!Device.Paused(), TRUE, TRUE, "li_pause_key");
 		}
 		return;
 	}
@@ -168,6 +168,12 @@ void CLevel::IR_OnKeyboardPress	(int key)
 		{
 			if(b_ui_exist && CurrentGameUI()->TopInputReceiver() )
 			{
+				//Arkada
+				if(Device.Paused())
+				{
+					GAME_PAUSE(FALSE, TRUE, TRUE, "bug_fix");
+					return;
+				}
 					if(CurrentGameUI()->IR_UIOnKeyboardPress(key))	return;//special case for mp and main_menu
 					CurrentGameUI()->TopInputReceiver()->HideDialog();
 			}else

@@ -34,7 +34,7 @@ void	CResourceManager::OnDeviceDestroy(BOOL )
 	m_blenders.clear	();
 
 	// destroy TD
-	for (map_TDIt _t=m_td.begin(); _t!=m_td.end(); _t++)
+	for (auto _t = m_td.begin(); _t != m_td.end(); _t++)
 	{
 		xr_free		((char*&)_t->first);
 		xr_free		((char*&)_t->second.T);
@@ -116,7 +116,7 @@ void	CResourceManager::OnDeviceCreate	(IReader* F)
 				chunk->seek		(0);
 				B->Load			(*chunk,desc.version);
 
-				std::pair<map_BlenderIt, bool> I =  m_blenders.insert	(mk_pair(xr_strdup(desc.cName),B));
+				std::pair<map_BlenderIt, bool> I =  m_blenders.insert	(std::make_pair(xr_strdup(desc.cName),B));
 				R_ASSERT2		(I.second,"shader.xr - found duplicate name!!!");
 			}
 			chunk->close	();

@@ -43,6 +43,7 @@ protected:
 		//M.F.S Team additions
 		_item_battery,
 		_item_thirst,
+		_item_psy_health,
 		_item_intoxication,
 		_item_sleepeness,
 
@@ -84,7 +85,14 @@ private:
 	bool		m_show_sign;
 	shared_str	m_unit_str;
 	shared_str	m_unit_str_max;
-	shared_str	m_texture_minus;
-	shared_str	m_texture_plus;
+	shared_str	m_texture;
+
+	//Color
+	u32			m_negative_color;
+	u32			m_neutral_color;
+	u32			m_positive_color;
+	bool		clr_invert;
+	bool		use_color;
+	bool		clr_dynamic;
 
 }; // class UIBoosterInfoItem

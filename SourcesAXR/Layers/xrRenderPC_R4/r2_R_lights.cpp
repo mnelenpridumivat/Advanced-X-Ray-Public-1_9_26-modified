@@ -7,6 +7,24 @@ IC		bool	pred_area		(light* _1, light* _2)
 	return	a0>a1;	// reverse -> descending
 }
 
+bool check_grass_shadow(light * L, CFrustum VB)
+{
+	// Grass shadows are allowed?
+	if (ps_ssfx_grass_shadows.x < 3 || !ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS))
+		return false;
+
+	//Inside the range?
+	if (L->vis.distance > ps_ssfx_grass_shadows.z)
+		return false;
+
+	// Is in view? L->vis.visible?
+	u32 mask = 0xff;
+	if (!VB.testSphere(L->position, L->range * 0.6f, mask))
+		return false;
+
+	return true;
+}
+
 void	CRender::render_lights	(light_Package& LP)
 {
 	//////////////////////////////////////////////////////////////////////////
@@ -99,8 +117,9 @@ void	CRender::render_lights	(light_Package& LP)
 			phase									= PHASE_SMAP;
 			if (RImplementation.o.Tshadows)	r_pmask	(true,true	);
 			else							r_pmask	(true,false	);
+			L->spatial_updatesector					();
 			L->svis.begin							();
-         PIX_EVENT(SHADOWED_LIGHTS_RENDER_SUBSPACE);
+			PIX_EVENT(SHADOWED_LIGHTS_RENDER_SUBSPACE);
 			r_dsgraph_render_subspace				(L->spatial.sector, L->X.S.combine, L->position, TRUE);
 			bool	bNormal							= mapNormalPasses[0][0].size() || mapMatrixPasses[0][0].size();
 			bool	bSpecial						= mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
@@ -112,6 +131,17 @@ void	CRender::render_lights	(light_Package& LP)
 				RCache.set_xform_view				(L->X.S.view);
 				RCache.set_xform_project			(L->X.S.project);
 				r_dsgraph_render_graph				(0);
+
+				if (Details)
+				{
+					if (check_grass_shadow(L, ViewBase))
+					{
+						Details->fade_distance = -1; // Use light position to calc "fade"
+						Details->light_position.set(L->position);
+						Details->Render();
+					}
+				}
+
 				L->X.S.transluent					= FALSE;
 				if (bSpecial)						{
 					L->X.S.transluent					= TRUE;

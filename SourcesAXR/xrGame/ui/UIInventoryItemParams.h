@@ -15,7 +15,7 @@ public:
 	CUIInventoryItem();
 	virtual				~CUIInventoryItem();
 	void				InitFromXml(CUIXml& xml);
-	void				SetInfo(const shared_str& section);
+	void				SetInfo(CInventoryItem& pInvItem);
 
 protected:
 	CUIInventoryItemInfo*	m_af_radius;
@@ -23,8 +23,7 @@ protected:
 	CUIInventoryItemInfo*	m_charge_level;
 	CUIInventoryItemInfo*	m_max_charge;
 	CUIInventoryItemInfo*	m_uncharge_speed;
-
-	CUIStatic*			m_Prop_line;
+	CUIStatic*				m_Prop_line;
 
 }; // class CUIInventoryItem
 
@@ -46,8 +45,15 @@ private:
 	float		m_magnitude;
 	bool		m_show_sign;
 	shared_str	m_unit_str;
-	shared_str	m_texture_minus;
-	shared_str	m_texture_plus;
+	shared_str	m_texture;
+
+	//Color
+	u32			m_negative_color;
+	u32			m_neutral_color;
+	u32			m_positive_color;
+	bool		clr_invert;
+	bool		use_color;
+	bool		clr_dynamic;
 
 }; // class CUIInventoryItemInfo
 

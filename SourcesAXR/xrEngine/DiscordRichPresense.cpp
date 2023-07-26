@@ -23,7 +23,7 @@ void xrDiscordPresense::Initialize()
     bGameRPCInfoInit = true;
     rpc_settings.Default();
     presenseInfo.largeImageText = rpc_settings.LargeImageText;
-    presenseInfo.smallImageKey =  rpc_settings.LargeImageKey;
+    presenseInfo.smallImageKey =  rpc_settings.SmallImageKey;
     presenseInfo.smallImageText = rpc_settings.SmallImageText;
     presenseInfo.largeImageKey    = rpc_settings.LargeImageKey;
 
@@ -59,7 +59,7 @@ void xrDiscordPresense::SetStatus()
 		}
 	}
 
-	if (discord_app_id != "745606008499601438")
+	if (!strcmp(discord_app_id, "745606008499601438"))
 	{
 		presenseInfo.smallImageKey = "advanced_xray";
 	}
@@ -84,10 +84,6 @@ void xrDiscordPresense::SetStatus()
 	else if (g_current_renderer == 2)
 	{
 		presenseInfo.smallImageText = "В Игре: Рендер R2 (DX9)";
-	}
-	else if (g_current_renderer == 3)
-	{
-		presenseInfo.smallImageText = "В Игре: Рендер R3 (DX10)";
 	}
 	else
 	{

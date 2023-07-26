@@ -34,6 +34,7 @@ CWeaponMagazined::CWeaponMagazined(ESoundTypes eSoundType) : CWeapon()
 	m_eSoundEmptyClick			= ESoundTypes(SOUND_TYPE_WEAPON_EMPTY_CLICKING | eSoundType);
 	m_eSoundReload				= ESoundTypes(SOUND_TYPE_WEAPON_RECHARGING | eSoundType);
 	m_eSoundClose				= ESoundTypes(SOUND_TYPE_WEAPON_RECHARGING);
+	m_sounds_enabled			= true;
 
 	psWpnAnimsFlag = { 0 };
 	
@@ -95,7 +96,7 @@ void CWeaponMagazined::Load	(LPCSTR section)
 
 	//Alundaio: LAYERED_SND_SHOOT
 	m_sounds.LoadSound(section, "snd_shoot", "sndShot", m_eSoundShot);
-	if (WeaponSoundExist(section, "snd_shoot_actor"))
+	if (WeaponSoundExist(section, "snd_shoot_actor", true))
 		m_sounds.LoadSound(section, "snd_shoot_actor", "sndShotActor", m_eSoundShot);
 	//-Alundaio
 
@@ -105,19 +106,19 @@ void CWeaponMagazined::Load	(LPCSTR section)
 	m_sounds.LoadSound(section,"snd_reload", "sndReload"		, m_eSoundReload		);
 	m_sounds.LoadSound(section, "snd_reflect", "sndReflect",  m_eSoundReflect);
 
-	if (WeaponSoundExist(section, "snd_changefiremode"))
+	if (WeaponSoundExist(section, "snd_changefiremode", true))
 		m_sounds.LoadSound(section, "snd_changefiremode", "sndFireModes", m_eSoundEmptyClick);
 
-	if (WeaponSoundExist(section, "snd_close"))
+	if (WeaponSoundExist(section, "snd_close", true))
 		m_sounds.LoadSound(section, "snd_close", "sndClose", m_eSoundClose);
 
-	if (WeaponSoundExist(section, "snd_reload_empty"))
+	if (WeaponSoundExist(section, "snd_reload_empty", true))
 		m_sounds.LoadSound(section, "snd_reload_empty", "sndReloadEmpty", m_eSoundReload);
-	if (WeaponSoundExist(section, "snd_reload_misfire"))
+	if (WeaponSoundExist(section, "snd_reload_misfire", true))
 		m_sounds.LoadSound(section, "snd_reload_misfire", "sndReloadMisfire", m_eSoundReload);
-	if (WeaponSoundExist(section, "snd_reload_jammed"))
+	if (WeaponSoundExist(section, "snd_reload_jammed", true))
 		m_sounds.LoadSound(section, "snd_reload_jammed", "sndReloadJammed", m_eSoundReload);
-	if (WeaponSoundExist(section, "snd_pump_gun"))
+	if (WeaponSoundExist(section, "snd_pump_gun", true))
 		m_sounds.LoadSound(section, "snd_pump_gun", "sndPumpGun", m_eSoundReload);
 
 	//звуки и партиклы глушителя, еслит такой есть
@@ -394,12 +395,15 @@ void CWeaponMagazined::UnloadMagazine(bool spawn_ammo)
 	xr_map<LPCSTR, u16>::iterator l_it;
 	for(l_it = l_ammo.begin(); l_ammo.end() != l_it; ++l_it) 
 	{
-		CWeaponAmmo *l_pA = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(l_it->first));
-		if(l_pA) 
+		if (m_pInventory)
 		{
-			u16 l_free = l_pA->m_boxSize - l_pA->m_boxCurr;
-			l_pA->m_boxCurr = l_pA->m_boxCurr + (l_free < l_it->second ? l_free : l_it->second);
-			l_it->second = l_it->second - (l_free < l_it->second ? l_free : l_it->second);
+			CWeaponAmmo* l_pA = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(l_it->first));
+			if (l_pA)
+			{
+				u16 l_free = l_pA->m_boxSize - l_pA->m_boxCurr;
+				l_pA->m_boxCurr = l_pA->m_boxCurr + (l_free < l_it->second ? l_free : l_it->second);
+				l_it->second = l_it->second - (l_free < l_it->second ? l_free : l_it->second);
+			}
 		}
 		if(l_it->second && !unlimited_ammo()) SpawnAmmo(l_it->second, l_it->first);
 	}
@@ -539,6 +543,7 @@ void CWeaponMagazined::OnStateSwitch	(u32 S)
 	HUD_VisualBulletUpdate();
 
 	inherited::OnStateSwitch(S);
+	CInventoryOwner* owner = smart_cast<CInventoryOwner*>(this->H_Parent());
 	switch (S)
 	{
 	case eFiremodeNext:
@@ -558,8 +563,8 @@ void CWeaponMagazined::OnStateSwitch	(u32 S)
 		switch2_Fire	();
 		break;
 	case eUnMisfire:
-		/*if (owner)
-			m_sounds_enabled = owner->CanPlayShHdRldSounds();*/
+		if (owner)
+			m_sounds_enabled = owner->CanPlayShHdRldSounds();
 		switch2_Unmis();
 		break;
 	case eMisfire:
@@ -570,12 +575,18 @@ void CWeaponMagazined::OnStateSwitch	(u32 S)
 		switch2_Empty	();
 		break;
 	case eReload:
+		if(owner)
+			m_sounds_enabled = owner->CanPlayShHdRldSounds();
 		switch2_Reload	();
 		break;
 	case eShowing:
+		if(owner)
+			m_sounds_enabled = owner->CanPlayShHdRldSounds();
 		switch2_Showing	();
 		break;
 	case eHiding:
+		if(owner)
+			m_sounds_enabled = owner->CanPlayShHdRldSounds();
 		switch2_Hiding	();
 		break;
 	case eHidden:
@@ -977,6 +988,8 @@ void CWeaponMagazined::switch2_Empty()
 }
 void CWeaponMagazined::PlayReloadSound()
 {
+	if(!m_sounds_enabled)
+		return;
 	if (iAmmoElapsed == 0)
 		if (m_sounds.FindSoundItem("sndReloadEmpty", false) && psWpnAnimsFlag.test(ANM_RELOAD_EMPTY))
 			PlaySound("sndReloadEmpty", get_LastFP());
@@ -998,11 +1011,14 @@ void CWeaponMagazined::switch2_Hiding()
 {
 	OnZoomOut();
 	CWeapon::FireEnd();
-	
-	if (iAmmoElapsed == 0 && psWpnAnimsFlag.test(ANM_HIDE_EMPTY) && WeaponSoundExist(m_section_id.c_str(), "snd_close"))
-		PlaySound("sndClose", get_LastFP());
-	else
-		PlaySound("sndHide", get_LastFP());
+
+	if(m_sounds_enabled)
+	{
+		if (iAmmoElapsed == 0 && psWpnAnimsFlag.test(ANM_HIDE_EMPTY) && WeaponSoundExist(m_section_id.c_str(), "snd_close"))
+			PlaySound("sndClose", get_LastFP());
+		else
+			PlaySound("sndHide", get_LastFP());
+	}
 
 	PlayAnimHide		();
 	SetPending			(TRUE);
@@ -1012,25 +1028,18 @@ void CWeaponMagazined::switch2_Unmis()
 {
 	VERIFY(GetState() == eUnMisfire);
 
-	if (m_sounds.FindSoundItem("sndReloadMisfire", false) && psWpnAnimsFlag.test(ANM_MISFIRE))
-		PlaySound("sndReloadMisfire", get_LastFP());
-	else if (m_sounds.FindSoundItem("sndReloadJammed", false) && isHUDAnimationExist("anm_reload_jammed"))
-		PlaySound("sndReloadJammed", get_LastFP());
-	else if (m_sounds.FindSoundItem("sndReloadEmpty", false) && psWpnAnimsFlag.test(ANM_RELOAD_EMPTY))
-		PlaySound("sndReloadEmpty", get_LastFP());
-	else
-		PlayReloadSound();
+	if (m_sounds_enabled)
+	{
+		if (m_sounds.FindSoundItem("sndReloadMisfire", false) && psWpnAnimsFlag.test(ANM_MISFIRE))
+			PlaySound("sndReloadMisfire", get_LastFP());
+		else if (m_sounds.FindSoundItem("sndReloadJammed", false) && isHUDAnimationExist("anm_reload_jammed"))
+			PlaySound("sndReloadJammed", get_LastFP());
+		else
+			PlayReloadSound();
+	}
 
 	if (psWpnAnimsFlag.test(ANM_MISFIRE) || isHUDAnimationExist("anm_reload_jammed"))
-	{
 		PlayHUDMotionIfExists({ "anm_reload_misfire", "anm_reload_jammed", "anm_reload" }, true, GetState());
-		// Shell Drop
-		Fvector vel;
-		PHGetLinearVell(vel);
-		OnShellDrop(get_LastSP(), vel);
-	}
-	else if (psWpnAnimsFlag.test(ANM_RELOAD_EMPTY))
-		PlayHUDMotionIfExists({ "anm_reload_empty", "anm_reload" }, true, GetState());
 	else
 		PlayAnimReload();
 }
@@ -1043,11 +1052,16 @@ void CWeaponMagazined::switch2_Hidden()
 
 	signal_HideComplete		();
 	RemoveShotEffector		();
-	m_nearwall_last_hud_fov = psHUD_FOV_def;
+
+	if (pSettings->line_exist(item_sect, "hud_fov"))
+		m_nearwall_last_hud_fov = m_base_fov;
+	else
+		m_nearwall_last_hud_fov = psHUD_FOV_def;
 }
 void CWeaponMagazined::switch2_Showing()
 {
-	PlaySound			("sndShow",get_LastFP());
+	if(m_sounds_enabled)
+		PlaySound("sndShow",get_LastFP());
 
 	SetPending			(TRUE);
 	PlayAnimShow		();
@@ -1492,27 +1506,6 @@ void CWeaponMagazined::PlayAnimReload()
 		PlayHUDMotion("anm_reload", TRUE, this, GetState());
 }
 
-const char* CWeaponMagazined::GetAnimAimName()
-{
-	auto pActor = smart_cast<const CActor*>(H_Parent());
-	if (pActor)
-	{
-		const u32 state = pActor->get_state();
-
-		if (state && state & mcAnyMove)
-		{
-			if (IsScopeAttached())
-			{
-				strcpy_s(guns_aim_anm, "anm_idle_aim_scope_moving");
-				return guns_aim_anm;
-			}
-			else
-				return strconcat(sizeof(guns_aim_anm), guns_aim_anm, "anm_idle_aim_moving", (state & mcFwd) ? "_forward" : ((state & mcBack) ? "_back" : ""), (state & mcLStrafe) ? "_left" : ((state & mcRStrafe) ? "_right" : ""));
-		}
-	}
-	return nullptr;
-}
-
 void CWeaponMagazined::PlayAnimAim()
 {
 	if (IsRotatingToZoom())
@@ -1530,6 +1523,30 @@ void CWeaponMagazined::PlayAnimAim()
 		{
 			PlayHUDMotionNew(guns_aim_anm, true, GetState());
 			return;
+		}
+		else if (strstr(guns_aim_anm, "_jammed"))
+		{
+			char new_guns_aim_anm[256];
+			strcpy(new_guns_aim_anm, guns_aim_anm);
+			new_guns_aim_anm[strlen(guns_aim_anm) - strlen("_jammed")] = '\0';
+
+			if (isHUDAnimationExist(new_guns_aim_anm))
+			{
+				PlayHUDMotionNew(new_guns_aim_anm, true, GetState());
+				return;
+			}
+		}
+		else if (strstr(guns_aim_anm, "_empty"))
+		{
+			char new_guns_aim_anm[256];
+			strcpy(new_guns_aim_anm, guns_aim_anm);
+			new_guns_aim_anm[strlen(guns_aim_anm) - strlen("_empty")] = '\0';
+
+			if (isHUDAnimationExist(new_guns_aim_anm))
+			{
+				PlayHUDMotionNew(new_guns_aim_anm, true, GetState());
+				return;
+			}
 		}
 	}
 
@@ -1572,16 +1589,14 @@ void CWeaponMagazined::PlayAnimShoot()
 	VERIFY(GetState()==eFire);
 
 	string_path guns_shoot_anm{};
-	strconcat(sizeof(guns_shoot_anm), guns_shoot_anm, "anm_shoot", (IsZoomed() && !IsRotatingToZoom()) ? (IsScopeAttached() ? "_aim_scope" : "_aim") : "", IsSilencerAttached() ? "_sil" : "");
+	strconcat(sizeof(guns_shoot_anm), guns_shoot_anm, (isHUDAnimationExist("anm_shoot") ? "anm_shoot" : "anm_shots"), (iAmmoElapsed == 1) ? "_last" : "", (IsZoomed() && !IsRotatingToZoom()) ? (IsScopeAttached() ? "_aim_scope" : "_aim") : "", IsSilencerAttached() ? "_sil" : "");
 
 	//HUD_VisualBulletUpdate();
 
-	if (IsZoomed() && psWpnAnimsFlag.test(ANM_SHOT_AIM) && IsScopeAttached())
-		PlayHUDMotion("anm_shots_when_aim", FALSE, this, GetState());
-	else if (iAmmoElapsed == 1 && psWpnAnimsFlag.test(ANM_SHOT_EMPTY))
-		PlayHUDMotion("anm_shot_l", FALSE, this, GetState());
+	if (iAmmoElapsed == 1)
+		PlayHUDMotionIfExists({ guns_shoot_anm, "anm_shot_l", "anm_shots_w_gl" }, false, GetState());
 	else
-		PlayHUDMotionIfExists({ "anm_shoot", "anm_shots" }, false, GetState());
+		PlayHUDMotionIfExists({ guns_shoot_anm, "anm_shots" }, false, GetState());
 }
 
 void CWeaponMagazined::OnZoomIn			()
@@ -1825,7 +1840,7 @@ bool CWeaponMagazined::install_upgrade_impl( LPCSTR section, bool test )
 	{
 		result |= process_if_exists_set( section, "silencer_flame_particles", &CInifile::r_string, m_sSilencerFlameParticles, test );
 		result |= process_if_exists_set( section, "silencer_smoke_particles", &CInifile::r_string, m_sSilencerSmokeParticles, test );
-
+		
 		result2 = process_if_exists_set( section, "snd_silncer_shot", &CInifile::r_string, str, test );
 		if ( result2 && !test ) { m_sounds.LoadSound( section, "snd_silncer_shot"	, "sndSilencerShot", m_eSoundShot	);	}
 		result |= result2;
@@ -1853,14 +1868,15 @@ bool CWeaponMagazined::install_upgrade_impl( LPCSTR section, bool test )
 }
 
 // AVO: for custom added sounds check if sound exists
-bool CWeaponMagazined::WeaponSoundExist(LPCSTR section, LPCSTR sound_name) const
+bool CWeaponMagazined::WeaponSoundExist(LPCSTR section, LPCSTR sound_name, bool log) const
 {
 	pcstr str;
 	bool sec_exist = process_if_exists_set(section, sound_name, &CInifile::r_string, str, true);
 	if (sec_exist)
 		return true;
 #ifdef DEBUG
-	Msg("~ [WARNING] ------ Sound [%s] does not exist in [%s]", sound_name, section);
+	if (log)
+		Msg("~ [WARNING] ------ Sound [%s] does not exist in [%s]", sound_name, section);
 #endif
 	return false;
 }

@@ -160,13 +160,13 @@ void CTorch::Switch(bool light_on)
 	{
 		if (light_on && !m_switched_on)
 		{
-			if (m_sounds.FindSoundItem("SndTurnOn", false))
-				m_sounds.PlaySound("SndTurnOn", pActor->Position(), NULL, !!pActor->HUDview());
+			if (m_sounds.FindSoundItem("sndTurnOn", false))
+				m_sounds.PlaySound("sndTurnOn", pActor->Position(), NULL, !!pActor->HUDview());
 		}
 		else if (!light_on && m_switched_on)
 		{
-			if (m_sounds.FindSoundItem("SndTurnOff", false))
-				m_sounds.PlaySound("SndTurnOff", pActor->Position(), NULL, !!pActor->HUDview());
+			if (m_sounds.FindSoundItem("sndTurnOff", false))
+				m_sounds.PlaySound("sndTurnOff", pActor->Position(), NULL, !!pActor->HUDview());
 		}
 	}
 
@@ -215,7 +215,6 @@ BOOL CTorch::net_Spawn(CSE_Abstract* DC)
 		return				(FALSE);
 	
 	bool b_r2				= !!psDeviceFlags.test(rsR2);
-	b_r2					|= !!psDeviceFlags.test(rsR3);
 	b_r2					|= !!psDeviceFlags.test(rsR4);
 
 	IKinematics* K			= smart_cast<IKinematics*>(Visual());

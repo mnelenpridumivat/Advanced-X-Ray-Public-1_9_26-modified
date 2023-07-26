@@ -4,6 +4,7 @@
 #include "UIWndCallback.h"
 #include "../../xrServerEntities/inventory_space.h"
 #include "UIHint.h"
+#include "script_game_object.h" //Alundaio
 
 class CUICharacterInfo;
 class CUIDragDropListEx;
@@ -111,6 +112,7 @@ protected:
 	CUIDragDropListEx*			m_pInventoryDosimeterList;
 	CUIDragDropListEx*			m_pInventoryPantsList;
 	CUIDragDropListEx*			m_pInventoryPdaList;
+	CUIDragDropListEx*			m_pInventoryPistolNewList;
 
 	xr_vector<CUIStatic*>		m_belt_list_over;
 	CUIStatic*					m_HelmetOver;
@@ -130,6 +132,7 @@ protected:
 	CUIStatic*					m_DosimeterSlotHighlight;
 	CUIStatic*					m_PantsSlotHighlight;
 	CUIStatic*					m_PdaSlotHighlight;
+	CUIStatic*					m_PistolNewSlotHighlight;
 
 	CUIInventoryUpgradeWnd*		m_pUpgradeWnd;
 	
@@ -158,6 +161,7 @@ protected:
 	CUIProgressBar*				m_Knife_progress;
 	CUIProgressBar*				m_SecondHelmet_progress;
 	CUIProgressBar*				m_Pants_progress;
+	CUIProgressBar*				m_Pistol_progress;
 
 	// bottom ---------------------------------
 	CUIStatic*					m_ActorBottomInfo;
@@ -194,6 +198,7 @@ protected:
 	bool						m_item_info_view;
 	bool						m_highlight_clear;
 	u32							m_trade_partner_inventory_state;
+	bool						m_bNeedMoveAfsToBag;
 public:
 	CUIDragDropReferenceList*	m_pQuickSlot;
 
@@ -249,6 +254,7 @@ protected:
 	bool		xr_stdcall		OnItemDbClick				(CUICellItem* itm);
 	bool		xr_stdcall		OnItemSelected				(CUICellItem* itm);
 	bool		xr_stdcall		OnItemRButtonClick			(CUICellItem* itm);
+	bool		xr_stdcall		OnItemMButtonClick			(CUICellItem* itm);
 	bool		xr_stdcall		OnItemFocusReceive			(CUICellItem* itm);
 	bool		xr_stdcall		OnItemFocusLost				(CUICellItem* itm);
 	bool		xr_stdcall		OnItemFocusedUpdate			(CUICellItem* itm);
@@ -268,10 +274,12 @@ protected:
 	void						CurModeToScript				();
 	void						RepairEffect_CurItem		();
 
+public:
 	void						SetCurrentItem				(CUICellItem* itm);
 	CUICellItem*				CurrentItem					();
 	PIItem						CurrentIItem				();
 
+protected:
 	void						InfoCurItem					(CUICellItem* cell_item); //on update item
 
 	void						ActivatePropertiesBox		();
@@ -362,6 +370,18 @@ public:
 	void						TakeAllFromInventoryBox		();
 	void						UpdateConditionProgressBars	();
 
+	CScriptGameObject*			GetCurrentItemAsGameObject	();
+	void						HighlightSectionInSlot		(pcstr section, EDDListType type, u16 slot_id = 0);
+	void						HighlightForEachInSlot		(const luabind::functor<bool>& functor, EDDListType type, u16 slot_id);
+
+	void						RefreshCurrentItemCell		();
+
 	IC	UIHint*					get_hint_wnd				() { return m_hint_wnd; }
 
+	DECLARE_SCRIPT_REGISTER_FUNCTION
+
 }; // class CUIActorMenu
+
+add_to_type_list(CUIActorMenu)
+#undef script_type_list
+#define script_type_list save_type_list(CUIActorMenu)

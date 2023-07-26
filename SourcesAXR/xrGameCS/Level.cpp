@@ -1,4 +1,4 @@
-#include "pch_script.h"
+Ôªø#include "pch_script.h"
 #include "../xrEngine/fdemorecord.h"
 #include "../xrEngine/fdemoplay.h"
 #include "../xrEngine/environment.h"
@@ -67,8 +67,17 @@
 #endif
 
 #include "embedded_editor/embedded_editor_main.h"
+#include "embedded_editor/editor_render.h"
+
+#include "../xrCore/_detail_collision_point.h"
+#include "../xrEngine/CameraManager.h"
+#include "ActorEffector.h"
 
 ENGINE_API bool g_dedicated_server;
+ENGINE_API extern xr_vector<DetailCollisionPoint> level_detailcoll_points;
+ENGINE_API extern int ps_detail_enable_collision;
+ENGINE_API extern Fvector actor_position;
+ENGINE_API extern float ps_detail_collision_radius;
 
 extern BOOL	g_bDebugDumpPhysicsStep;
 extern CUISequencer * g_tutorial;
@@ -221,6 +230,7 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	*/
 	//---------------------------------------------------------	
 	m_file_transfer = NULL;
+	m_is_removing_objects = false;
 }
 
 extern CAI_Space *g_ai_space;
@@ -459,6 +469,8 @@ void CLevel::ProcessGameEvents		()
 		if (!game_events->queue.empty())	
 			Msg("- d[%d],ts[%d] -- E[svT=%d],[evT=%d]",Device.dwTimeGlobal,timeServer(),svT,game_events->queue.begin()->timestamp);
 		*/
+
+		m_just_destroyed.clear();
 
 		while	(game_events->available(svT))
 		{
@@ -733,7 +745,7 @@ void CLevel::OnFrame	()
 	m_ph_commander_scripts->update		();
 //	autosave_manager().update			();
 
-	//ÔÓÒ˜ËÚ‡Ú¸ ÔÓÎÂÚ ÔÛÎ¸
+	//–ø—Ä–æ—Å—á–∏—Ç–∞—Ç—å –ø–æ–ª–µ—Ç –ø—É–ª—å
 	Device.Statistic->TEST0.Begin		();
 	BulletManager().CommitRenderSet		();
 	Device.Statistic->TEST0.End			();
@@ -761,7 +773,35 @@ void CLevel::OnFrame	()
 		pStatGraphR->AppendItem(float(m_dwRPC)*fRPC_Mult, 0xffff0000, 1);
 		pStatGraphR->AppendItem(float(m_dwRPS)*fRPS_Mult, 0xff00ff00, 0);
 	};
+
 	ShowEditor();
+
+	//-- –û–±–Ω–æ–≤–ª—è–µ–º —Ç–æ—á–∫–∏ –∫–æ–ª–∏–∑–∏–∏
+	if (ps_detail_enable_collision)
+	{
+		//-- VlaGan: —É–¥–∞–ª—è–µ–º —Ç–æ–ª—å–∫–æ –ø–æ–∑–∏—Ü–∏–∏ —Å is_explosion = false
+		xr_vector<DetailCollisionPoint> explosion_points;
+		for (const auto& point : level_detailcoll_points)
+		{
+			if (point.is_explosion)
+				explosion_points.push_back(point);
+		}
+
+		level_detailcoll_points.clear();
+
+		if (explosion_points.size())
+			level_detailcoll_points = explosion_points;
+
+		const xr_vector<CObject*>& active_objects = Objects.GetActiveObjects();
+
+		for (auto& obj : active_objects) //-- CEntityAlive –±—É–¥–µ—Ç –ª—É—á—à–µ
+		{
+			auto gobj = smart_cast<CEntityAlive*>(obj);
+
+			if (gobj && actor_position.distance_to(gobj->Position()) <= ps_detail_collision_radius)
+				level_detailcoll_points.push_back(DetailCollisionPoint(gobj->Position(), gobj->ID()));
+		}
+	}
 }
 
 int		psLUA_GCSTEP					= 10			;
@@ -780,16 +820,19 @@ extern	Flags32	dbg_net_Draw_Flags;
 
 extern void draw_wnds_rects();
 
+#include "ui/UIBtnHint.h"
 void CLevel::OnRender()
 {
 	// PDA
-	if (game && HUD().GetUI()->UIGame() && &HUD().GetUI()->UIGame()->PdaMenu())
+	if (game && HUD().GetUI()->UIGame())
 	{
 		const auto pda = &HUD().GetUI()->UIGame()->PdaMenu();
 		const auto pda_actor = Actor() ? Actor()->GetPDA() : nullptr;
-		if (psActorFlags.test(AF_3D_PDA) && pda && pda->IsShown())
+		if (psActorFlags.test(AF_3D_PDA) && pda->IsShown())
 		{
 			pda->Draw();
+			if (g_btnHint)
+				g_btnHint->OnRender();
 			CUICursor* cursor = UI()->GetUICursor();
 
 			if (cursor)
@@ -842,14 +885,14 @@ void CLevel::OnRender()
 		return;
 
 	Game().OnRender();
-	//ÓÚËÒÓ‚‡Ú¸ Ú‡ÒÒ˚ ÔÛÎ¸
+	//–æ—Ç—Ä–∏—Å–æ–≤–∞—Ç—å —Ç—Ä–∞—Å—Å—ã –ø—É–ª—å
 	//Device.Statistic->TEST1.Begin();
 	BulletManager().Render();
 	//Device.Statistic->TEST1.End();
 
 	::Render->AfterWorldRender(); //--#SM+#-- +SecondVP+
 
-	//ÓÚËÒÓ‚‡Ú¸ ËÌÚÂÙÂÈc ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
+	//–æ—Ç—Ä–∏—Å–æ–≤–∞—Ç—å –∏–Ω—Ç–µ—Ä—Ñ–µ–πc –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è
 	HUD().RenderUI();
 
 #ifdef DEBUG
@@ -860,6 +903,8 @@ void CLevel::OnRender()
 #ifdef DEBUG
 	if (ai().get_level_graph())
 		ai().level_graph().render();
+
+	embedded_editor_render();
 
 #ifdef DEBUG_PRECISE_PATH
 	test_precise_path		();
@@ -1299,9 +1344,27 @@ void CLevel::OnAlifeSimulatorLoaded()
 	GameTaskManager().ResetStorage();
 }
 
+void CLevel::OnDestroyObject(std::uint16_t id)
+{
+	m_just_destroyed.push_back(id);
+}
+
 void CLevel::OnSessionTerminate		(LPCSTR reason)
 {
 	MainMenu()->OnSessionTerminate(reason);
+}
+
+void CLevel::ApplyCamera()
+{
+	inherited::ApplyCamera();
+
+	/*if (g_actor)
+	{
+		Actor()->Cameras().ApplyDevice(VIEWPORT_NEAR);
+	}*/
+
+	if (g_actor && lastApplyCameraVPNear > -1.f)
+		lastApplyCamera(lastApplyCameraVPNear);
 }
 
 u32	GameID()

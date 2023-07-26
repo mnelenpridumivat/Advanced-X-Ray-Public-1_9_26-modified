@@ -61,6 +61,9 @@ CActorCondition::CActorCondition(CActor *object) :
 	m_fNarcotism				= 0.0f;
 	m_fWithdrawal				= 0.0f;
 	m_fDrugs					= 0.f;
+	m_fV_PsyHealth_Health		= 0.0f;
+
+	m_bPsyHealthKillActor		= false;
 
 //	m_vecBoosts.clear();
 
@@ -174,6 +177,7 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
 	clamp(m_fSleepenessCritical, 0.0f, 1.0f);
 	m_fV_Sleepeness = pSettings->r_float(section, "sleepeness_v");
 	m_fV_SleepenessPower = pSettings->r_float(section, "sleepeness_power_v");
+	m_fV_SleepenessPsyHealth = pSettings->r_float(section, "sleepeness_psy_health_v");
 	m_fSleepeness_V_Sleep = pSettings->r_float(section, "sleepeness_v_sleep");
 
 	// M.F.S. Team Alcoholism (History Of Puhtinskyi)
@@ -191,6 +195,9 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
 	m_fV_WithdrawalPower = pSettings->r_float(section, "withdrawal_power_v");
 	m_fV_WithdrawalHealth = pSettings->r_float(section, "withdrawal_health_v");
 	m_fV_Drugs = pSettings->r_float(section, "drugs_v");
+
+	m_bPsyHealthKillActor = READ_IF_EXISTS(pSettings, r_bool, section, "psy_health_kill_actor", false);
+	m_fV_PsyHealth_Health = READ_IF_EXISTS(pSettings, r_float, section, "psy_health_health_v", 0.0f);
 
 	// M.F.S. Team Skills System
 	m_fV_SatietySkill = READ_IF_EXISTS(pSettings, r_float, "skills_influence", "skills_satiety_restore", 0.0f);
@@ -237,7 +244,7 @@ float CActorCondition::GetZoneMaxPower( ALife::EHitType hit_type ) const
 	case ALife::eHitTypeWound:
 		return m_max_wound_protection;
 	default:
-		NODEFAULT;
+		break;
 	}
 	
 	return GetZoneMaxPower( iz_type );
@@ -274,6 +281,8 @@ void CActorCondition::UpdateCondition()
 		{
 			UpdateNarcotism();
 		}
+
+		UpdatePsyHealth();
 
 		m_fAlcohol		+= m_fV_Alcohol*m_fDeltaTime;
 		clamp			(m_fAlcohol,			0.0f,		1.0f);
@@ -354,33 +363,6 @@ void CActorCondition::UpdateCondition()
 			if (ceDrugs)
 				RemoveEffector(m_object, effDrugs);
 		}
-
-		
-		string512			pp_sect_name;
-		shared_str ln		= Level().name();
-		if(ln.size())
-		{
-			CEffectorPP* ppe	= object().Cameras().GetPPEffector((EEffectorPPType)effPsyHealth);
-			
-
-			strconcat			(sizeof(pp_sect_name),pp_sect_name, "effector_psy_health", "_", *ln);
-			if(!pSettings->section_exist(pp_sect_name))
-				xr_strcpy			(pp_sect_name, "effector_psy_health");
-
-			if	( !fsimilar(GetPsyHealth(), 1.0f, 0.05f) )
-			{
-				if(!ppe)
-				{
-					AddEffector(m_object,effPsyHealth, pp_sect_name, GET_KOEFF_FUNC(this, &CActorCondition::GetPsy));
-				}
-			}else
-			{
-				if(ppe)
-					RemoveEffector(m_object,effPsyHealth);
-			}
-		}
-//-		if(fis_zero(GetPsyHealth()))
-//-			SetHealth( 0.0f );
 	};
 
 	UpdateSatiety();
@@ -410,6 +392,8 @@ void CActorCondition::UpdateCondition()
 	{
 		UpdateNarcotism();
 	}
+
+	UpdatePsyHealth();
 
 	inherited::UpdateCondition();
 
@@ -659,7 +643,7 @@ void CActorCondition::UpdateIntoxication()
 //M.F.S. Team Sleepeness
 void CActorCondition::UpdateSleepeness()
 {
-	if (GetSleepeness() >= 0.85f)
+	if (GetSleepeness() >= 0.85f && !GameConstants::GetSleepInfluenceOnPsyHealth())
 	{
 		luabind::functor<void> funct;
 		if (ai().script_engine().functor("mfs_functions.generate_phantoms", funct))
@@ -676,7 +660,7 @@ void CActorCondition::UpdateSleepeness()
 	CEffectorCam* ce = Actor()->Cameras().GetCamEffector((ECamEffectorType)effSleepeness);
 	if (m_fSleepeness <= m_fSleepenessCritical)
 	{
-		if (!ce)
+		if (!ce && pSettings->section_exist("effector_sleepeness"))
 			AddEffector(m_object, effSleepeness, "effector_sleepeness", GET_KOEFF_FUNC(this, &CActorCondition::GetSleepeness));
 	}
 	else
@@ -698,7 +682,12 @@ void CActorCondition::UpdateSleepeness()
 	if (CanBeHarmed() && !psActorFlags.test(AF_GODMODE_RT))
 	{
 		if (m_fSleepeness >= m_fSleepenessCritical)
+		{
 			m_fDeltaPower -= m_fV_SleepenessPower * m_fSleepeness * m_fDeltaTime;
+
+			if (GameConstants::GetSleepInfluenceOnPsyHealth())
+				m_fDeltaPsyHealth -= m_fV_SleepenessPsyHealth * m_fSleepeness * m_fDeltaTime;
+		}
 	}
 }
 
@@ -781,6 +770,33 @@ void CActorCondition::UpdateNarcotism()
 	{
 		m_fWithdrawal -= m_fV_Withdrawal * m_fDeltaTime;
 		clamp(m_fWithdrawal, 0.0f, 3.0f);
+	}
+}
+
+//M.F.S. Team Psy Health
+void CActorCondition::UpdatePsyHealth()
+{
+	if (GetPsy() > 0.85f)
+	{
+		luabind::functor<void> funct;
+		if (ai().script_engine().functor("mfs_functions.generate_phantoms", funct))
+			funct();
+
+		if (m_bPsyHealthKillActor)
+			m_fDeltaHealth -= m_fV_PsyHealth_Health * GetPsy() * m_fDeltaTime;
+	}
+
+	CEffectorPP* ppePsyHealth = object().Cameras().GetPPEffector((EEffectorPPType)effPsyHealth);
+
+	if (!fsimilar(GetPsyHealth(), 1.0f, 0.05f))
+	{
+		if (!ppePsyHealth && pSettings->section_exist("effector_psy_health"))
+			AddEffector(m_object, effPsyHealth, "effector_psy_health", GET_KOEFF_FUNC(this, &CActorCondition::GetPsy));
+	}
+	else
+	{
+		if (ppePsyHealth)
+			RemoveEffector(m_object, effPsyHealth);
 	}
 }
 
@@ -1027,6 +1043,13 @@ void CActorCondition::ChangeDrugs(float value)
 	m_fDrugs += value;
 }
 
+//M.F.S. Team Psy Health
+void CActorCondition::ChangePsyHealth(float value)
+{
+	m_fPsyHealth += value;
+	clamp(m_fPsyHealth, 0.0f, 1.0f);
+}
+
 void CActorCondition::BoostParameters(const SBooster& B, bool need_change_tf)
 {
 	if(OnServer())
@@ -1083,6 +1106,47 @@ void CActorCondition::DisableBoostParameters(const SBooster& B)
 		default: NODEFAULT;	
 	}
 }
+
+void CActorCondition::WoundForEach(const luabind::functor<bool>& funct)
+{
+	auto const& cur_wounds = wounds();
+	CEntityCondition::WOUND_VECTOR::const_iterator it = wounds().begin();
+	CEntityCondition::WOUND_VECTOR::const_iterator it_e = wounds().end();
+	for (; it != it_e; ++it)
+	{
+		if (funct(it) == true)
+			break;
+	}
+}
+
+void CActorCondition::BoosterForEach(const luabind::functor<bool>& funct)
+{
+	const auto& cur_booster_influences = GetCurBoosterInfluences();
+	CEntityCondition::BOOSTER_MAP::const_iterator it = cur_booster_influences.begin();
+	CEntityCondition::BOOSTER_MAP::const_iterator it_e = cur_booster_influences.end();
+	for (; it != it_e; ++it)
+	{
+		if (funct((*it).first, (*it).second.fBoostTime, (*it).second.fBoostValue) == true)
+			break;
+	}
+}
+
+bool CActorCondition::ApplyBooster_script(const SBooster& B, LPCSTR sect)
+{
+	return ApplyBooster(B, sect);
+}
+
+void CActorCondition::ClearAllBoosters()
+{
+	const auto& cur_booster_influences = GetCurBoosterInfluences();
+	CEntityCondition::BOOSTER_MAP::const_iterator it = cur_booster_influences.begin();
+	CEntityCondition::BOOSTER_MAP::const_iterator it_e = cur_booster_influences.end();
+	for (; it != it_e; ++it)
+	{
+		DisableBoostParameters((*it).second);
+	}
+}
+
 void CActorCondition::BoostHpRestore(const float value)
 {
 	m_change_v.m_fV_HealthRestore += value;

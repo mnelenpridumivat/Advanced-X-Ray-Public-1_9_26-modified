@@ -110,8 +110,6 @@ void CUIActorMenu::Construct()
 	m_DetectorSlotHighlight		->Show(false);
 	m_QuickSlotsHighlight[0]	= UIHelper::CreateStatic(uiXml, "quick_slot_highlight", this);
 	m_QuickSlotsHighlight[0]	->Show(false);
-	m_ArtefactSlotsHighlight.push_back(UIHelper::CreateStatic(uiXml, "artefact_slot_highlight", this));
-	m_ArtefactSlotsHighlight[0]	->Show(false);
 
 	if (GameConstants::GetKnifeSlotEnabled())
 	{
@@ -161,9 +159,31 @@ void CUIActorMenu::Construct()
 			m_PdaSlotHighlight->Show(false);
 	}
 
+	if (GameConstants::GetPistolSlotEnabled())
+	{
+		if ((m_PistolNewSlotHighlight = UIHelper::CreateStatic(uiXml, "pistol_slot_highlight", this)))
+			m_PistolNewSlotHighlight->Show(false);
+	}
+
+	m_pInventoryBagList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_bag", this);
+	m_pInventoryBeltList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_belt", this);
+	m_pInventoryOutfitList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_outfit", this);
+	m_pInventoryHelmetList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_helmet", this);
+	m_pInventoryDetectorList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_detector", this);
+	m_pInventoryPistolList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_inv_slot1", this);
+	m_pInventoryAutomaticList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_inv_slot2", this);
+	m_pTradeActorBagList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_actor_trade_bag", this);
+	m_pTradeActorList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_actor_trade", this);
+	m_pTradePartnerBagList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_partner_bag", this);
+	m_pTradePartnerList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_partner_trade", this);
+	m_pDeadBodyBagList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_deadbody_bag", this);
+	m_pQuickSlot = UIHelper::CreateDragDropReferenceList(uiXml, "dragdrop_quick_slots", this);
+	m_pQuickSlot->Initialize();
+
 	Fvector2 pos;
 	pos								= m_QuickSlotsHighlight[0]->GetWndPos();
 	float dx						= uiXml.ReadAttribFlt("quick_slot_highlight", 0, "dx", 24.0f);
+	float dy						= uiXml.ReadAttribFlt("quick_slot_highlight", 0, "dy", 24.0f);
 	for(u8 i=1;i<4;i++)
 	{
 		pos.x						+= dx;
@@ -171,30 +191,38 @@ void CUIActorMenu::Construct()
 		m_QuickSlotsHighlight[i]	->SetWndPos(pos);
 		m_QuickSlotsHighlight[i]	->Show(false);
 	}
-	pos								= m_ArtefactSlotsHighlight[0]->GetWndPos();
-	dx								= uiXml.ReadAttribFlt("artefact_slot_highlight", 0, "dx", 24.0f);
-	for(u8 i=1;i < GameConstants::GetArtefactsCount();i++)
-	{
-		pos.x						+= dx;
-		m_ArtefactSlotsHighlight.push_back(UIHelper::CreateStatic(uiXml, "artefact_slot_highlight", this));
-		m_ArtefactSlotsHighlight[i]	->SetWndPos(pos);
-		m_ArtefactSlotsHighlight[i]	->Show(false);
-	}
 
-	m_pInventoryBagList			= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_bag", this);
-	m_pInventoryBeltList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_belt", this);
-	m_pInventoryOutfitList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_outfit", this);
-	m_pInventoryHelmetList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_helmet", this);
-	m_pInventoryDetectorList	= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_detector", this);
-	m_pInventoryPistolList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_pistol", this);
-	m_pInventoryAutomaticList	= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_automatic", this);
-	m_pTradeActorBagList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_actor_trade_bag", this);
-	m_pTradeActorList			= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_actor_trade", this);
-	m_pTradePartnerBagList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_partner_bag", this);
-	m_pTradePartnerList			= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_partner_trade", this);
-	m_pDeadBodyBagList			= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_deadbody_bag", this);
-	m_pQuickSlot				= UIHelper::CreateDragDropReferenceList(uiXml, "dragdrop_quick_slots", this);
-	m_pQuickSlot->Initialize	();
+	int cols = m_pInventoryBeltList->CellsCapacity().x;
+	int rows = m_pInventoryBeltList->CellsCapacity().y;
+	int counter = 1;
+
+	for (u8 i = 0; i < rows; ++i)
+	{
+		for (u8 j = 0; j < cols; ++j)
+		{
+			m_ArtefactSlotsHighlight.push_back(UIHelper::CreateStatic(uiXml, "artefact_slot_highlight", this));
+
+			if (i == 0 && j == 0)
+			{
+				pos = m_ArtefactSlotsHighlight[0]->GetWndPos();
+				m_ArtefactSlotsHighlight[0]->Show(false);
+				dx = uiXml.ReadAttribFlt("artefact_slot_highlight", 0, "dx", 24.0f);
+				dy = uiXml.ReadAttribFlt("artefact_slot_highlight", 0, "dy", 24.0f);
+			}
+			else
+			{
+				if (j != 0)
+					pos.x += dx;
+
+				m_ArtefactSlotsHighlight[counter]->SetWndPos(pos);
+				m_ArtefactSlotsHighlight[i]->Show(false);
+				counter++;
+			}
+		}
+
+		pos.x = m_ArtefactSlotsHighlight[0]->GetWndPos().x;
+		pos.y += dy;
+	}
 
 	if (GameConstants::GetKnifeSlotEnabled())
 	{
@@ -236,19 +264,43 @@ void CUIActorMenu::Construct()
 		m_pInventoryPdaList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_pda", this);
 	}
 
+	if (GameConstants::GetPistolSlotEnabled())
+	{
+		m_pInventoryPistolNewList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_pistol", this);
+	}
+
 	m_pTrashList				= UIHelper::CreateDragDropListEx		(uiXml, "dragdrop_trash", this);
 	m_pTrashList->m_f_item_drop	= CUIDragDropListEx::DRAG_CELL_EVENT	(this,&CUIActorMenu::OnItemDrop);
 	m_pTrashList->m_f_drag_event= CUIDragDropListEx::DRAG_ITEM_EVENT	(this,&CUIActorMenu::OnDragItemOnTrash);
 
-	m_belt_list_over.push_back(UIHelper::CreateStatic(uiXml, "belt_list_over", this));
-	pos							= m_belt_list_over[0]->GetWndPos();
-	dx							= uiXml.ReadAttribFlt("belt_list_over", 0, "dx", 10.0f);
-	for ( u8 i = 1; i < GameConstants::GetArtefactsCount(); ++i )
+	counter = 1;
+
+	for (u8 i = 0; i < rows; ++i)
 	{
-		pos.x					+= dx;
-		m_belt_list_over.push_back(UIHelper::CreateStatic(uiXml, "belt_list_over", this));
-		m_belt_list_over[i]->SetWndPos( pos );
+		for (u8 j = 0; j < cols; ++j)
+		{
+			m_belt_list_over.push_back(UIHelper::CreateStatic(uiXml, "belt_list_over", this));
+
+			if (i == 0 && j == 0)
+			{
+				pos = m_belt_list_over[0]->GetWndPos();
+				dx = uiXml.ReadAttribFlt("belt_list_over", 0, "dx", 10.0f);
+				dy = uiXml.ReadAttribFlt("belt_list_over", 0, "dy", 10.0f);
+			}
+			else
+			{
+				if (j != 0)
+					pos.x += dx;
+
+				m_belt_list_over[counter]->SetWndPos(pos);
+				counter++;
+			}
+		}
+
+		pos.x = m_belt_list_over[0]->GetWndPos().x;
+		pos.y += dy;
 	}
+
 	m_HelmetOver = UIHelper::CreateStatic(uiXml, "helmet_over", this);
 	m_HelmetOver->Show			(false);
 
@@ -277,6 +329,11 @@ void CUIActorMenu::Construct()
 	if (GameConstants::GetPantsSlotEnabled())
 	{
 		m_Pants_progress = UIHelper::CreateProgressBar(uiXml, "progess_bar_pants", this);
+	}
+
+	if (GameConstants::GetPistolSlotEnabled())
+	{
+		m_Pistol_progress = UIHelper::CreateProgressBar(uiXml, "progess_bar_pistol", this);
 	}
 
 	m_trade_buy_button	= UIHelper::Create3tButton(uiXml, "trade_buy_button", this);
@@ -397,6 +454,11 @@ void CUIActorMenu::Construct()
 		BindDragDropListEvents(m_pInventoryPdaList);
 	}
 
+	if (GameConstants::GetPistolSlotEnabled())
+	{
+		BindDragDropListEvents(m_pInventoryPistolNewList);
+	}
+
 	m_allowed_drops[iTrashSlot].push_back(iActorBag);
 	m_allowed_drops[iTrashSlot].push_back(iActorSlot);
 	m_allowed_drops[iTrashSlot].push_back(iActorBelt);
@@ -463,6 +525,7 @@ void CUIActorMenu::BindDragDropListEvents(CUIDragDropListEx* lst)
 	lst->m_f_item_db_click			= CUIDragDropListEx::DRAG_CELL_EVENT(this,&CUIActorMenu::OnItemDbClick);
 	lst->m_f_item_selected			= CUIDragDropListEx::DRAG_CELL_EVENT(this,&CUIActorMenu::OnItemSelected);
 	lst->m_f_item_rbutton_click		= CUIDragDropListEx::DRAG_CELL_EVENT(this,&CUIActorMenu::OnItemRButtonClick);
+	lst->m_f_item_mbutton_click		= CUIDragDropListEx::DRAG_CELL_EVENT(this,&CUIActorMenu::OnItemMButtonClick);
 	lst->m_f_item_focus_received	= CUIDragDropListEx::DRAG_CELL_EVENT(this,&CUIActorMenu::OnItemFocusReceive);
 	lst->m_f_item_focus_lost		= CUIDragDropListEx::DRAG_CELL_EVENT(this,&CUIActorMenu::OnItemFocusLost);
 	lst->m_f_item_focused_update	= CUIDragDropListEx::DRAG_CELL_EVENT(this,&CUIActorMenu::OnItemFocusedUpdate);

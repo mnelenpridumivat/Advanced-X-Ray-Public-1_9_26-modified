@@ -1050,7 +1050,7 @@ void CPHShell::AddElementRecursive(CPhysicsElement* root_e, u16 id,Fmatrix globa
 #endif
 	if(m_spliter_holder&&E->has_geoms())
 	{
-		m_spliter_holder->AddToGeomMap(mk_pair(id,E->last_geom())); 
+		m_spliter_holder->AddToGeomMap(std::make_pair(id,E->last_geom())); 
 	}
 
 	if(spGetingMap)
@@ -1505,6 +1505,21 @@ void CPHShell::SplitProcess(PHSHELL_PAIR_VECTOR &out_shels)
 	if(! m_spliter_holder) return;
 	m_spliter_holder->SplitProcess(out_shels);
 	if(!m_spliter_holder->m_splitters.size()) xr_delete(m_spliter_holder);
+}
+
+void	CPHShell::SplitterHolderActivate()
+{
+	CPHShellSplitterHolder* sh = SplitterHolder();
+	if (sh)
+		sh->Activate();
+}
+
+void	CPHShell::SplitterHolderDeactivate()
+{
+
+	CPHShellSplitterHolder* sh = SplitterHolder();
+	if (sh)
+		sh->Deactivate();
 }
 
 u16 CPHShell::BoneIdToRootGeom(u16 id)

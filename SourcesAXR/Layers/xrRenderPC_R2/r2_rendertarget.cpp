@@ -18,6 +18,7 @@
 #include "blender_hud_blood.h"
 #include "blender_hud_stamina.h"
 #include "blender_hud_bleeding.h"
+#include "blender_hud_intoxication.h"
 
 #include "../xrRender/dxRenderDeviceRender.h"
 
@@ -194,6 +195,9 @@ CRenderTarget::CRenderTarget		()
 	param_noise_fps		= 25.f;
 	param_noise_scale	= 1.f;
 
+	rt_secondVP = nullptr; //--#SM+# +SecondVP+
+	rt_ui_pda = nullptr;
+
 	im_noise_time		= 1/100.0f;
 	im_noise_shift_w	= 0;
 	im_noise_shift_h	= 0;
@@ -217,11 +221,11 @@ CRenderTarget::CRenderTarget		()
 	b_ssao							= xr_new<CBlender_SSAO>					();
 	b_luminance						= xr_new<CBlender_luminance>			();
 	b_combine						= xr_new<CBlender_combine>				();
-	b_sunshafts						= new CBlender_sunshafts				();
+	b_sunshafts						= xr_new<CBlender_sunshafts>();
     //FXAA
-    b_fxaa 							= new CBlender_FXAA						();
+    b_fxaa 							= xr_new<CBlender_FXAA>();
 	//Vignette
-	b_vignette						= new CBlender_Vignette					();
+	b_vignette						= xr_new<CBlender_Vignette>();
 	//HUD MASK
 	b_hud_mask						= xr_new<CBlender_hud_mask>				();
 	//HUD BLOOD
@@ -230,6 +234,8 @@ CRenderTarget::CRenderTarget		()
 	b_hud_power						= xr_new<CBlender_Hud_Stamina>			();
 	//HUD BLEEDING
 	b_hud_bleeding					= xr_new<CBlender_Hud_Stamina>			();
+	//HUD INXTOXICATION
+	b_hud_intoxication				= xr_new<CBlender_Hud_Intoxication>		();
 
 	//	NORMAL
 	{
@@ -404,6 +410,8 @@ CRenderTarget::CRenderTarget		()
 	s_hud_power.create(b_hud_power, "r2\\hud_power");
 	//Hud Bleeding
 	s_hud_bleeding.create(b_hud_bleeding, "r2\\hud_bleeding");
+	//Hud Intoxication
+	s_hud_intoxication.create(b_hud_intoxication, "r2\\hud_intoxication");
 		
 	//SSAO
 	if (RImplementation.o.ssao_blur_on)
@@ -676,6 +684,8 @@ CRenderTarget::~CRenderTarget	()
 	accum_omnip_geom_destroy	();
 	accum_point_geom_destroy	();
 	accum_volumetric_geom_destroy();
+	rt_secondVP.destroy(); //--#SM+#-- +SecondVP+
+	rt_ui_pda.destroy();
 
 	// Blenders
 	xr_delete					(b_combine				);
@@ -696,6 +706,7 @@ CRenderTarget::~CRenderTarget	()
 	xr_delete					(b_hud_blood			); //Hud Blood
 	xr_delete					(b_hud_power			); //Hud Stamina
 	xr_delete					(b_hud_bleeding			); //Hud Bleeding
+	xr_delete					(b_hud_intoxication		); //Hud Intoxication
 }
 
 void CRenderTarget::reset_light_marker( bool bResetStencil)

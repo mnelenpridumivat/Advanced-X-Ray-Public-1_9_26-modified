@@ -31,6 +31,7 @@
 #include "../MPPlayersBag.h"
 #include "../HUDManager.h"
 #include "../player_hud.h"
+#include "../PDA.h"
 #include "../Actor.h"
 #include "AdvancedXrayGameConstants.h"
 
@@ -45,6 +46,7 @@ void CUIActorMenu::InitInventoryMode()
 	m_pInventoryDetectorList->Show		(true);
 	m_pInventoryPistolList->Show		(true);
 	m_pInventoryAutomaticList->Show		(true);
+	m_pTrashList->Show					(true);
 	
 	m_RightDelimiter->Show				(false);
 	m_clock_value->Show					(true);
@@ -88,10 +90,13 @@ void CUIActorMenu::InitInventoryMode()
 
 	VERIFY( HUD().GetUI() && HUD().GetUI()->UIMainIngameWnd );
 	HUD().GetUI()->UIMainIngameWnd->ShowZoneMap(true);
+
+	m_bNeedMoveAfsToBag = false;
 }
 
 void CUIActorMenu::DeInitInventoryMode()
 {
+	m_pTrashList->Show					(false);
 	m_clock_value->Show					(false);
 }
 
@@ -112,7 +117,8 @@ void CUIActorMenu::SendEvent_Item2Slot(PIItem pItem, u16 recipient)
 	CGameObject::u_EventGen			(P, GEG_PLAYER_ITEM2SLOT, pItem->object().H_Parent()->ID());
 	P.w_u16							(pItem->object().ID());
 	CGameObject::u_EventSend		(P);
-
+	
+	clear_highlight_lists			();
 	PlaySnd							(eItemToSlot);
 };
 
@@ -125,7 +131,8 @@ void CUIActorMenu::SendEvent_Item2Belt(PIItem pItem, u16 recipient)
 	CGameObject::u_EventGen			(P, GEG_PLAYER_ITEM2BELT, pItem->object().H_Parent()->ID());
 	P.w_u16							(pItem->object().ID());
 	CGameObject::u_EventSend		(P);
-
+	
+	clear_highlight_lists			();
 	PlaySnd							(eItemToBelt);
 };
 
@@ -138,7 +145,8 @@ void CUIActorMenu::SendEvent_Item2Ruck(PIItem pItem, u16 recipient)
 	CGameObject::u_EventGen			(P, GEG_PLAYER_ITEM2RUCK, pItem->object().H_Parent()->ID());
 	P.w_u16							(pItem->object().ID());
 	CGameObject::u_EventSend		(P);
-
+	
+	clear_highlight_lists			();
 	PlaySnd							(eItemToRuck);
 };
 
@@ -163,6 +171,8 @@ void CUIActorMenu::SendEvent_Item_Drop(PIItem pItem, u16 recipient)
 	pItem->object().u_EventGen	(P,GE_OWNERSHIP_REJECT,pItem->parent_id());
 	P.w_u16						(pItem->object().ID());
 	pItem->object().u_EventSend	(P);
+	
+	clear_highlight_lists		();
 	PlaySnd						(eDropItem);
 }
 
@@ -617,6 +627,8 @@ bool CUIActorMenu::ToBag(CUICellItem* itm, bool b_use_cursor_pos)
 		bool result							= b_already || (!b_own_item || m_pActorInvOwner->inventory().Ruck(iitem) );
 		VERIFY								(result);
 		CUICellItem* i						= old_owner->RemoveItem(itm, (old_owner==new_owner) );
+		if (!i)
+			return false;
 		
 		if(b_use_cursor_pos)
 			new_owner->SetItem				(i,old_owner->GetDragItemPosition());
@@ -771,7 +783,7 @@ bool CUIActorMenu::TryUseItem( CUICellItem* cell_itm )
 	{
 		return false;
 	}
-	if ( !item->Useful() )
+	if ( !item->Useful() || (pFilter && !pFilter->UseAllowed()) || (pRepairKit && !pRepairKit->UseAllowed()))
 	{
 		return false;
 	}
@@ -829,17 +841,14 @@ void CUIActorMenu::ActivatePropertiesBox()
 	m_UIPropertiesBox->RemoveAll();
 	bool b_show = false;
 
-	if ( m_currMenuMode == mmInventory )
+	if ( m_currMenuMode == mmInventory || m_currMenuMode == mmDeadBodySearch)
 	{
 		PropertiesBoxForSlots( item, b_show );
 		PropertiesBoxForWeapon( cell_item, item, b_show );
 		PropertiesBoxForAddon( item, b_show );
 		PropertiesBoxForUsing( item, b_show );
-		PropertiesBoxForDrop( cell_item, item, b_show );
-	}
-	else if ( m_currMenuMode == mmDeadBodySearch )
-	{
-		PropertiesBoxForUsing( item, b_show );
+		if ( m_currMenuMode == mmInventory )
+			PropertiesBoxForDrop( cell_item, item, b_show );
 	}
 	else if ( m_currMenuMode == mmUpgrade )
 	{
@@ -867,7 +876,7 @@ void CUIActorMenu::PropertiesBoxForSlots( PIItem item, bool& b_show )
 	CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>( item );
 	CInventory*  inv = &m_pActorInvOwner->inventory();
 
-	// Флаг-признак для невлючения пункта контекстного меню: Dreess Outfit, если костюм уже надет
+	// Р¤Р»Р°Рі-РїСЂРёР·РЅР°Рє РґР»СЏ РЅРµРІР»СЋС‡РµРЅРёСЏ РїСѓРЅРєС‚Р° РєРѕРЅС‚РµРєСЃС‚РЅРѕРіРѕ РјРµРЅСЋ: Dreess Outfit, РµСЃР»Рё РєРѕСЃС‚СЋРј СѓР¶Рµ РЅР°РґРµС‚
 	bool bAlreadyDressed = false;
 	u32 const cur_slot = item->GetSlot();
 
@@ -906,7 +915,7 @@ void CUIActorMenu::PropertiesBoxForSlots( PIItem item, bool& b_show )
 
 void CUIActorMenu::PropertiesBoxForWeapon( CUICellItem* cell_item, PIItem item, bool& b_show )
 {
-	//отсоединение аддонов от вещи
+	//РѕС‚СЃРѕРµРґРёРЅРµРЅРёРµ Р°РґРґРѕРЅРѕРІ РѕС‚ РІРµС‰Рё
 	CWeapon*	pWeapon = smart_cast<CWeapon*>( item );
 	if ( !pWeapon )
 	{
@@ -953,7 +962,7 @@ void CUIActorMenu::PropertiesBoxForWeapon( CUICellItem* cell_item, PIItem item, 
 
 void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 {
-	//присоединение аддонов к активному слоту (2 или 3)
+	//РїСЂРёСЃРѕРµРґРёРЅРµРЅРёРµ Р°РґРґРѕРЅРѕРІ Рє Р°РєС‚РёРІРЅРѕРјСѓ СЃР»РѕС‚Сѓ (2 РёР»Рё 3)
 
 	CScope*				pScope				= smart_cast<CScope*>			(item);
 	CSilencer*			pSilencer			= smart_cast<CSilencer*>		(item);
@@ -1052,7 +1061,7 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 
 	LPCSTR act_str = NULL;
 
-	if (!item->Useful())
+	if (!item->Useful() || (pFilter && !pFilter->UseAllowed()) || (pRepairKit && !pRepairKit->UseAllowed()))
 		return;
 
 	if ( pMedkit || pAntirad )
@@ -1148,6 +1157,17 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 		m_UIPropertiesBox->AddItem( act_str,  NULL, INVENTORY_EAT_ACTION );
 		b_show			= true;
 	}
+}
+
+void CUIActorMenu::PropertiesBoxForPlaying(PIItem item, bool& b_show)
+{
+	CPda* pPda = smart_cast<CPda*>(item);
+	if(!pPda || !pPda->CanPlayScriptFunction())
+		return;
+
+	LPCSTR act_str = "st_play";
+	m_UIPropertiesBox->AddItem(act_str,  NULL, INVENTORY_PLAY_ACTION);
+	b_show = true;
 }
 
 void CUIActorMenu::PropertiesBoxForDrop( CUICellItem* cell_item, PIItem item, bool& b_show )
@@ -1257,6 +1277,14 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 			return;
 			break;
 		}
+	case INVENTORY_PLAY_ACTION:
+		{
+			CPda* pPda = smart_cast<CPda*>(item);
+			if(!pPda)
+				break;
+			pPda->PlayScriptFunction();
+			break;
+		}
 	case BATTERY_CHARGE_TORCH:
 		{
 			CBattery* battery = smart_cast<CBattery*>(item);
@@ -1340,23 +1368,35 @@ void CUIActorMenu::UpdateOutfit()
 	{
 		m_belt_list_over[i]->SetVisible( true );
 	}
+
 	u32 af_count = m_pActorInvOwner->inventory().BeltWidth();
-	VERIFY( 0 <= af_count && af_count <= 5 );
+	VERIFY( 0 <= af_count && af_count <= GameConstants::GetArtefactsCount());
 
 	VERIFY( m_pInventoryBeltList );
 	PIItem         ii_outfit = m_pActorInvOwner->inventory().m_slots[OUTFIT_SLOT].m_pIItem;
 	CCustomOutfit* outfit    = smart_cast<CCustomOutfit*>( ii_outfit );
+
+	if (outfit && !m_bNeedMoveAfsToBag)
+		m_bNeedMoveAfsToBag = true;
+
 	if ( !ii_outfit || !outfit )
 	{
-		MoveArtefactsToBag();
-		return;
+		if (m_bNeedMoveAfsToBag)
+		{
+			MoveArtefactsToBag();
+			m_bNeedMoveAfsToBag = false;
+		}
+
+		if (!af_count)
+			return;
 	}
 
 	Ivector2 afc;
-	afc.x = 1; // m_pInventoryBeltList->GetCellsCapacity().x;
-	afc.y = af_count;
+	afc.x = m_pInventoryBeltList->CellsCapacity().x;
+	afc.y = m_pInventoryBeltList->CellsCapacity().y;
 	
 	m_pInventoryBeltList->SetCellsCapacity( afc );
+
 	for ( u8 i = 0; i < af_count ; ++i )
 	{
 		m_belt_list_over[i]->SetVisible( false );
@@ -1372,4 +1412,29 @@ void CUIActorMenu::MoveArtefactsToBag()
 		ToBag( ci, false );
 	}//for i
 	m_pInventoryBeltList->ClearAll( true );
+}
+
+void CUIActorMenu::RefreshCurrentItemCell()
+{
+	CUICellItem* ci = CurrentItem();
+	if (!ci)
+		return;
+
+	if (ci->ChildsCount() > 0)
+	{
+		CUIDragDropListEx* invlist = GetListByType(iActorBag);
+
+		if (invlist->IsOwner(ci))
+		{
+			CUICellItem* parent = invlist->RemoveItem(ci, true);
+
+			while (parent->ChildsCount())
+			{
+				CUICellItem* child = parent->PopChild(nullptr);
+				invlist->SetItem(child);
+			}
+
+			invlist->SetItem(parent, GetUICursor()->GetCursorPosition());
+		}
+	}
 }

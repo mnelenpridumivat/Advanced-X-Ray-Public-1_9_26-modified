@@ -318,7 +318,7 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 	m_zone_flags.set			(eUseOnOffTime,	(m_TimeToDisable!=0)&&(m_TimeToEnable!=0) );
 
 	//добавить источники света
-	bool br1 = (0==psDeviceFlags.test(rsR2|rsR3|rsR4));
+	bool br1 = (0==psDeviceFlags.test(rsR2|rsR4));
 	
 	
 	bool render_ver_allowed = !br1 || (br1&&m_zone_flags.test(eIdleLightR1)) ;
@@ -353,7 +353,8 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 
 	setEnabled					(TRUE);
 
-	PlayIdleParticles			();
+	if (IsEnabled())
+		PlayIdleParticles();
 
 	m_iPreviousStateTime		= m_iStateTime = 0;
 
@@ -1565,4 +1566,17 @@ void CCustomZone::load							(IReader &input_packet)
 		m_eZoneState = eZoneStateDisabled;
 	else
 		m_eZoneState = eZoneStateIdle;
+}
+
+void CCustomZone::ChangeIdleParticles(LPCSTR name, bool bIdleLight)
+{
+	StopIdleParticles(true);
+	m_sIdleParticles = name;
+	PlayIdleParticles(bIdleLight);
+}
+
+void CCustomZone::MoveScript(Fvector pos)
+{
+	XFORM().translate_over(pos);
+	OnMove();
 }

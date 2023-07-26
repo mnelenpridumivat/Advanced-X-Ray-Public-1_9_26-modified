@@ -52,7 +52,7 @@ CTexture::~CTexture()
 	DEV->_DeleteTexture	(this);
 }
 
-void					CTexture::surface_set	(ID3DBaseTexture* surf )
+void CTexture::surface_set(ID3DBaseTexture* surf)
 {
 	if (surf)			surf->AddRef		();
 	_RELEASE			(pSurface);
@@ -60,12 +60,34 @@ void					CTexture::surface_set	(ID3DBaseTexture* surf )
 
 	pSurface			= surf;
 
-	if (pSurface)
+	desc_update();
+
+	m_pSRView = CreateShaderRes(pSurface);
+}
+
+void CTexture::SurfaceSetRT(ID3DBaseTexture* surf, ID3DShaderResourceView* sh_res_view)
+{
+	pSurface = surf;
+	m_pSRView = sh_res_view;
+}
+
+ID3DShaderResourceView* CTexture::CreateShaderRes(ID3DBaseTexture* surf)
+{
+	pSurface = surf;
+
+	desc_update();
+
+	if (surf)
 	{
-		desc_update();
+		//desc_update();
+
+		ID3DShaderResourceView* sh_res_view = nullptr;
 
 		D3D_RESOURCE_DIMENSION	type;
-		pSurface->GetType(&type);
+
+		//pSurface->GetType(&type);
+		surf->GetType(&type);
+
 		if (D3D_RESOURCE_DIMENSION_TEXTURE2D == type )
 		{
 			D3D_SHADER_RESOURCE_VIEW_DESC	ViewDesc;
@@ -104,16 +126,24 @@ void					CTexture::surface_set	(ID3DBaseTexture* surf )
 				break;
 			}
 
-         // this would be supported by DX10.1 but is not needed for stalker
-        // if( ViewDesc.Format != DXGI_FORMAT_R24_UNORM_X8_TYPELESS )
-				if( (desc.SampleDesc.Count <= 1) || (ViewDesc.Format != DXGI_FORMAT_R24_UNORM_X8_TYPELESS) )         
-					CHK_DX(HW.pDevice->CreateShaderResourceView(pSurface, &ViewDesc, &m_pSRView));
-        else
-           m_pSRView = 0;
+			if ((desc.SampleDesc.Count <= 1) || (ViewDesc.Format != DXGI_FORMAT_R24_UNORM_X8_TYPELESS))
+			{
+				R_CHK(HW.pDevice->CreateShaderResourceView(surf, &ViewDesc, &sh_res_view));
+				R_ASSERT(sh_res_view);
+			}
 		}
 		else
-			CHK_DX(HW.pDevice->CreateShaderResourceView(pSurface, NULL, &m_pSRView));
-	}	
+			R_CHK(HW.pDevice->CreateShaderResourceView(surf, nullptr, &sh_res_view));
+
+		return sh_res_view;
+	}
+	return nullptr;
+}
+
+void CTexture::surface_null()
+{
+	pSurface = nullptr;
+	m_pSRView = nullptr;
 }
 
 ID3DBaseTexture*	CTexture::surface_get	()
@@ -250,7 +280,6 @@ void CTexture::Apply(u32 dwStage)
 		//HW.pDevice->GSSetShaderResources(dwStage-rstGeometry, 1, &m_pSRView);
 		SRVSManager.SetGSResource(dwStage-rstGeometry, m_pSRView);
 	}
-#ifdef USE_DX11
 	else if (dwStage<rstDomain)	//	Geometry shader stage resources
 	{
 		SRVSManager.SetHSResource(dwStage-rstHull, m_pSRView);
@@ -263,7 +292,6 @@ void CTexture::Apply(u32 dwStage)
 	{
 		SRVSManager.SetCSResource(dwStage-rstCompute, m_pSRView);
 	}
-#endif
 	else
 		VERIFY("Invalid stage");
 }
@@ -286,22 +314,14 @@ void CTexture::apply_theora(u32 dwStage)
 		u32 _w				= pTheora->Width(false);
 
 		//R_CHK				(T2D->LockRect(0,&R,&rect,0));
-#ifdef USE_DX11
 		R_CHK				(HW.pContext->Map(T2D, 0, D3D_MAP_WRITE_DISCARD, 0, &mapData));
-#else
-		R_CHK				(T2D->Map(0,D3D_MAP_WRITE_DISCARD,0,&mapData));
-#endif
 		//R_ASSERT			(R.Pitch == int(pTheora->Width(false)*4));
 		R_ASSERT			(mapData.RowPitch == int(pTheora->Width(false)*4));
 		int _pos			= 0;
 		pTheora->DecompressFrame((u32*)mapData.pData, _w - rect.right, _pos);
 		VERIFY				(u32(_pos) == rect.bottom*_w);
 		//R_CHK				(T2D->UnlockRect(0));
-#ifdef USE_DX11
 		HW.pContext->Unmap(T2D, 0);
-#else
-		T2D->Unmap(0);
-#endif
 	}
 	Apply(dwStage);
 	//CHK_DX(HW.pDevice->SetTexture(dwStage,pSurface));
@@ -317,20 +337,15 @@ void CTexture::apply_avi	(u32 dwStage)
 
 		// AVI
 		//R_CHK	(T2D->LockRect(0,&R,NULL,0));
-#ifdef USE_DX11
+
 		R_CHK(HW.pContext->Map(T2D, 0, D3D_MAP_WRITE_DISCARD, 0, &mapData));
-#else
-		R_CHK	(T2D->Map(0,D3D_MAP_WRITE_DISCARD,0,&mapData));
-#endif
+
 		R_ASSERT(mapData.RowPitch == int(pAVI->m_dwWidth*4));
 		BYTE* ptr; pAVI->GetFrame(&ptr);
 		CopyMemory(mapData.pData,ptr,pAVI->m_dwWidth*pAVI->m_dwHeight*4);
 		//R_CHK	(T2D->UnlockRect(0));
-#ifdef USE_DX11
+
 		HW.pContext->Unmap(T2D, 0);
-#else
-		T2D->Unmap(0);
-#endif
 	}
 	//CHK_DX(HW.pDevice->SetTexture(dwStage,pSurface));
 	Apply(dwStage);

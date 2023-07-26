@@ -50,13 +50,25 @@ extern float	ps_current_detail_density;
 class ECORE_API CDetailManager
 {
 public:
+	float fade_distance = 99999;
+	Fvector light_position;
+
+	void details_clear();
+
 	struct	SlotItem	{								// один кустик
 		float						scale;
 		float						scale_calculated;
 		Fmatrix						mRotY;
+		float						m_fTimeCollision{};
+        //Fvector					dir;
+        //float						fYAngle;
+        u16							collision_parent = (u16)-1;
+        IC bool						IsCollisionParent() { return collision_parent != (u16)-1; }
 		u32							vis_ID;				// индекс в visibility списке он же тип [не качается, качается1, качается2]
 		float						c_hemi;
 		float						c_sun;
+		float						distance;
+		Fvector						position;
 #if RENDER==R_R1
 		Fvector						c_rgb;
 #endif
@@ -169,11 +181,11 @@ public:
 	void							hw_Load_Shaders	();
 	void							hw_Unload		();
 	void							hw_Render		();
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	void							hw_Render_dump	(const Fvector4 &consts, const Fvector4 &wave, const Fvector4 &wind, u32 var_id, u32 lod_id);
-#else	//	USE_DX10
+#else	//	USE_DX11
 	void							hw_Render_dump	(ref_constant array, u32 var_id, u32 lod_id, u32 c_base);
-#endif	//	USE_DX10
+#endif
 
 public:
 	// get unpacked slot

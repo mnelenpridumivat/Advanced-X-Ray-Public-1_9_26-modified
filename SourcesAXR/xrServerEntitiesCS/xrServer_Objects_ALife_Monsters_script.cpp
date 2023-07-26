@@ -27,6 +27,16 @@ void set_character_name_script(CSE_ALifeTraderAbstract* ta, LPCSTR name)
 	ta->m_character_name = name;
 }
 
+LPCSTR character_icon_script(CSE_ALifeTraderAbstract* ta)
+{
+	return ta->m_character_name.c_str();
+}
+
+void set_character_icon_script(CSE_ALifeTraderAbstract* ta, LPCSTR icon)
+{
+	ta->m_character_icon = icon;
+}
+
 #pragma optimize("s",on)
 void CSE_ALifeTraderAbstract::script_register(lua_State *L)
 {
@@ -37,9 +47,12 @@ void CSE_ALifeTraderAbstract::script_register(lua_State *L)
 #ifdef XRGAME_EXPORTS
 			.def("community",		&CommunityName)
 			.def("profile_name",	&profile_name_script)
+			.def("set_profile_name",+[](CSE_ALifeTraderAbstract* ta, const pcstr str) { ta->set_character_profile(str); })
 			.def("rank",			&Rank)
+			.def("set_rank",		&CSE_ALifeTraderAbstract::SetRank)
 			.def("reputation",		&Reputation)
 			.property("character_name", &character_name_script, &set_character_name_script)
+			.property("character_icon", &character_icon_script, &set_character_icon_script)
 #endif // XRGAME_EXPORTS
 	];
 }

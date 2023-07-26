@@ -10,7 +10,8 @@
 
 #include "Weapon.h"
 #include "Inventory.h"
-
+#include "../Include/xrRender/RenderVisual.h"
+#include "../Include/xrRender/Kinematics.h"
 #include "SleepEffector.h"
 #include "ActorEffector.h"
 #include "level.h"
@@ -275,6 +276,9 @@ void	CActor::cam_Lookout	( const Fmatrix &xform, float camera_height )
 			r_torso.roll = 0.f;
 		}
 }
+
+u16 eyeID;
+
 void CActor::cam_Update(float dt, float fFOV)
 {
 	if (m_holder)
@@ -283,9 +287,18 @@ void CActor::cam_Update(float dt, float fFOV)
 	// HUD FOV Update
 	if (this == Level().CurrentControlEntity())
 	{
-		CWeapon* pWeapon = smart_cast<CWeapon*>(this->inventory().ActiveItem());
-		if (eacFirstEye == cam_active && pWeapon)
-			psHUD_FOV = pWeapon->GetHudFov();
+		auto pItem = smart_cast<CHudItem*>(inventory().ActiveItem());
+		auto pDet = smart_cast<CHudItem*>(inventory().ItemFromSlot(DETECTOR_SLOT));
+
+		if (eacFirstEye == cam_active)
+		{
+			if (pItem)
+				psHUD_FOV = pItem->GetHudFov();
+			else if (pDet)
+				psHUD_FOV = pDet->GetHudFov();
+			else
+				psHUD_FOV = psHUD_FOV_def;
+		}
 		else
 			psHUD_FOV = psHUD_FOV_def;
 	}
@@ -339,6 +352,19 @@ void CActor::cam_Update(float dt, float fFOV)
 	float _viewport_near			= VIEWPORT_NEAR;
 	// calc point
 	xform.transform_tiny			(point);
+	
+	if(!g_Alive() && eacFirstEye == cam_active && !Level().Cameras().GetCamEffector(cefDemo)) //Arkada: First Person Death
+	{
+		IKinematics* k = Visual()->dcast_PKinematics();
+		if(eyeID == NULL)
+			eyeID = k->LL_BoneID("eye_left");
+		Fmatrix m;
+		m.mul_43(XFORM(),k->LL_GetTransform(eyeID));
+		point = m.c; //Head position
+
+		m.mul_43(XFORM(),k->LL_GetTransform(eyeID));
+		m.getHPB(dangle); //Head direction
+	}
 
 	CCameraBase* C					= cam_Active();
 

@@ -40,6 +40,7 @@
 #include "AdvancedXrayGameConstants.h"
 #include "WeaponKnife.h"
 #include "WeaponBinoculars.h"
+#include "WeaponPistol.h"
 #include "Torch.h"
 #include "Backpack.h"
 #include "AnomalyDetector.h"
@@ -63,7 +64,7 @@ void CUIActorMenu::SetActor(CInventoryOwner* io)
 	if ( IsGameTypeSingle() )
 	{
 		if ( io )
-			m_ActorCharacterInfo->InitCharacter	(m_pActorInvOwner->object_id());
+			m_ActorCharacterInfo->InitCharacter	(m_pActorInvOwner);
 		else
 			m_ActorCharacterInfo->ClearInfo();
 	}
@@ -82,7 +83,7 @@ void CUIActorMenu::SetPartner(CInventoryOwner* io)
 		if (m_pPartnerInvOwner->use_simplified_visual() ) 
 			m_PartnerCharacterInfo->ClearInfo();
 		else 
-			m_PartnerCharacterInfo->InitCharacter( m_pPartnerInvOwner->object_id() );
+			m_PartnerCharacterInfo->InitCharacter(m_pPartnerInvOwner);
 
 		SetInvBox( NULL );
 	}else
@@ -406,6 +407,11 @@ EDDListType CUIActorMenu::GetListType(CUIDragDropListEx* l)
 			return iActorSlot;
 	}
 
+	if (GameConstants::GetPistolSlotEnabled())
+	{
+		if (l == m_pInventoryPistolNewList) return iActorSlot;
+	}
+
 	R_ASSERT(0);
 	
 	return iInvalid;
@@ -617,6 +623,11 @@ void CUIActorMenu::clear_highlight_lists()
 			m_PdaSlotHighlight->Show(false);
 	}
 
+	if (GameConstants::GetPistolSlotEnabled())
+	{
+		m_PistolNewSlotHighlight->Show(false);
+	}
+
 	for(u8 i=0; i<4; i++)
 		m_QuickSlotsHighlight[i]->Show(false);
 	for(u8 i=0; i<GameConstants::GetArtefactsCount(); i++)
@@ -665,11 +676,21 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 	CBackpack* backpack = smart_cast<CBackpack*>(item);
 	CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly*>(item);
 	CPda* pda = smart_cast<CPda*>(item);
+	CWeaponPistol* pistol = smart_cast<CWeaponPistol*>(item);
 
 	if (weapon && (!knife && !binoculars))
 	{
-		m_InvSlot2Highlight->Show(true);
-		m_InvSlot3Highlight->Show(true);
+		if (GameConstants::GetPistolSlotEnabled() && pistol)
+		{
+			if (m_PistolNewSlotHighlight)
+				m_PistolNewSlotHighlight->Show(true);
+		}
+		else
+		{
+			m_InvSlot2Highlight->Show(true);
+			m_InvSlot3Highlight->Show(true);
+		}
+
 		return;
 	}
 
@@ -719,7 +740,7 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 			return;
 
 		Ivector2 cap = m_pInventoryBeltList->CellsCapacity();
-		for(u8 i=0; i<cap.x; i++)
+		for (u8 i = 0; i < (cap.x * cap.y); i++)
 			m_ArtefactSlotsHighlight[i]->Show(true);
 		return;
 	}
@@ -1097,6 +1118,11 @@ void CUIActorMenu::ClearAllLists()
 	{
 		m_pInventoryPdaList->ClearAll(true);
 	}
+
+	if (GameConstants::GetPistolSlotEnabled())
+	{
+		m_pInventoryPistolNewList->ClearAll(true);
+	}
 }
 
 void CUIActorMenu::CallMessageBoxYesNo( LPCSTR text )
@@ -1236,4 +1262,76 @@ void CUIActorMenu::UpdateConditionProgressBars()
 				m_Pants_progress->SetProgressPos(0);
 		}
 	}
+
+	if (GameConstants::GetPistolSlotEnabled())
+	{
+		if (m_Pistol_progress)
+		{
+			itm = m_pActorInvOwner->inventory().ItemFromSlot(PISTOL_SLOT);
+			if (itm)
+				m_Pistol_progress->SetProgressPos(iCeil(itm->GetCondition() * 15.0f) / 15.0f);
+			else
+				m_Pistol_progress->SetProgressPos(0);
+		}
+	}
+}
+
+void CUIActorMenu::HighlightSectionInSlot(pcstr section, EDDListType type, u16 slot_id /*= 0*/)
+{
+	CUIDragDropListEx* slot_list = GetListByType(type);
+
+	if (!slot_list)
+		slot_list = m_pInventoryBagList;
+
+	u32 const cnt = slot_list->ItemsCount();
+	for (u32 i = 0; i < cnt; ++i)
+	{
+		CUICellItem* ci = slot_list->GetItemIdx(i);
+		const PIItem item = static_cast<PIItem>(ci->m_pData);
+		if (!item)
+			continue;
+
+		if (strcmp(section, item->m_section_id.c_str()) != 0)
+			continue;
+
+		ci->m_select_armament = true;
+	}
+
+	m_highlight_clear = false;
+}
+
+void CUIActorMenu::HighlightForEachInSlot(const luabind::functor<bool>& functor, EDDListType type, u16 slot_id)
+{
+	if (!functor)
+		return;
+
+	CUIDragDropListEx* slot_list = GetListByType(type);
+
+	if (!slot_list)
+		slot_list = m_pInventoryBagList;
+
+	u32 const cnt = slot_list->ItemsCount();
+	for (u32 i = 0; i < cnt; ++i)
+	{
+		CUICellItem* ci = slot_list->GetItemIdx(i);
+		PIItem item = (PIItem)ci->m_pData;
+		if (!item)
+			continue;
+
+		if (functor(item->object().cast_game_object()->lua_game_object()) == false)
+			continue;
+
+		ci->m_select_armament = true;
+	}
+
+	m_highlight_clear = false;
+}
+
+CScriptGameObject* CUIActorMenu::GetCurrentItemAsGameObject()
+{
+	CGameObject* GO = smart_cast<CGameObject*>(CurrentIItem());
+	if (GO)
+		return GO->lua_game_object();
+
+	return nullptr;
 }

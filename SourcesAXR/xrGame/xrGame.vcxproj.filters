@@ -2227,10 +2227,10 @@
     <Filter Include="UI\Common\PDA\logs\News">
       <UniqueIdentifier>{0be79b04-5abf-46a3-8978-fd77bcf23e4a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\Common\ui-item-infos">
+    <Filter Include="UI\Common\UIItemInfo">
       <UniqueIdentifier>{0b39a888-0acb-4da1-a61e-4871a797c666}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\Common\ui-item-infos\CharacterInfo">
+    <Filter Include="UI\Common\UIItemInfo\CharacterInfo">
       <UniqueIdentifier>{c175aec8-8892-4cac-ac38-14949d9994a4}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI\Common\TALK">
@@ -2494,17 +2494,11 @@
     <Filter Include="Core\Client\Objects\items &amp; weapons\Consumables">
       <UniqueIdentifier>{671b2682-c463-4887-8384-91bd9bade277}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\AMonsters\monsters\AnomalPseudoGigant">
-      <UniqueIdentifier>{d6f9d85d-9a65-46f5-bf07-aeca056641bb}</UniqueIdentifier>
+    <Filter Include="UI\Common\LoadingScreen">
+      <UniqueIdentifier>{f4d88e99-ef9b-4ae8-bb9b-7fa1dafeb254}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\AMonsters\monsters\AnomalPseudoGigant\Abilities">
-      <UniqueIdentifier>{3affc557-f1c7-41f3-99ff-98cf7c4bdd02}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AMonsters\monsters\AnomalPseudoGigant\Script">
-      <UniqueIdentifier>{a6d9347d-f6a8-47b0-93f1-70f1f3664bef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AMonsters\monsters\AnomalPseudoGigant\Attack">
-      <UniqueIdentifier>{5001d048-60b7-4390-8d35-3b8e3e35ec04}</UniqueIdentifier>
+    <Filter Include="Core\Client\Objects\items &amp; weapons\Devices\ArtefactContainer">
+      <UniqueIdentifier>{6d7a608a-de29-4a07-8c93-097892207606}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -6780,23 +6774,23 @@
     <ClInclude Include="ui\UINewsItemWnd.h">
       <Filter>UI\Common\PDA\logs\News</Filter>
     </ClInclude>
-    <ClInclude Include="ui\ui_af_params.h">
-      <Filter>UI\Common\ui-item-infos</Filter>
+    <ClInclude Include="ui\UIArtefactParams.h">
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIBoosterInfo.h">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIItemInfo.h">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIOutfitInfo.h">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIWpnParams.h">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICharacterInfo.h">
-      <Filter>UI\Common\ui-item-infos\CharacterInfo</Filter>
+      <Filter>UI\Common\UIItemInfo\CharacterInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITalkDialogWnd.h">
       <Filter>UI\Common\TALK</Filter>
@@ -7414,7 +7408,7 @@
       <Filter>Core\Client\Objects\items &amp; weapons\Consumables</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInventoryItemParams.h">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClInclude>
     <ClInclude Include="embedded_editor\embedded_editor_hud.h">
       <Filter>EmbeddedEditor</Filter>
@@ -7436,32 +7430,20 @@
     <ClInclude Include="RepairKit.h">
       <Filter>Core\Client\Objects\items &amp; weapons\Consumables</Filter>
     </ClInclude>
-    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant.h">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant</Filter>
+    <ClInclude Include="ui\UILoadingScreen.h">
+      <Filter>UI\Common\LoadingScreen</Filter>
     </ClInclude>
-    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_burer_state_attack_shield.h">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Abilities</Filter>
+    <ClInclude Include="ArtefactContainer.h">
+      <Filter>Core\Client\Objects\items &amp; weapons\Devices\ArtefactContainer</Filter>
     </ClInclude>
-    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_burer_state_attack_shield_inline.h">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Abilities</Filter>
+    <ClInclude Include="embedded_editor\editor_render.h">
+      <Filter>EmbeddedEditor</Filter>
     </ClInclude>
-    <ClInclude Include="ai\monsters\pseudogigant\pseudo_gigant_orig.h">
-      <Filter>AI\AMonsters\monsters\PseudoGigant</Filter>
+    <ClInclude Include="embedded_editor\editor_render_ai_map.h">
+      <Filter>EmbeddedEditor</Filter>
     </ClInclude>
-    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_manager.h">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant</Filter>
-    </ClInclude>
-    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack.h">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Attack</Filter>
-    </ClInclude>
-    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack_inline.h">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Attack</Filter>
-    </ClInclude>
-    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack_shield.h">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Attack</Filter>
-    </ClInclude>
-    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack_shield_inline.h">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Attack</Filter>
+    <ClInclude Include="embedded_editor\editor_render_spawn_element.h">
+      <Filter>EmbeddedEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -10444,23 +10426,23 @@
     <ClCompile Include="ui\UINewsItemWnd.cpp">
       <Filter>UI\Common\PDA\logs\News</Filter>
     </ClCompile>
-    <ClCompile Include="ui\ui_af_params.cpp">
-      <Filter>UI\Common\ui-item-infos</Filter>
+    <ClCompile Include="ui\UIArtefactParams.cpp">
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIBoosterInfo.cpp">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIItemInfo.cpp">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIOutfitInfo.cpp">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIWpnParams.cpp">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICharacterInfo.cpp">
-      <Filter>UI\Common\ui-item-infos\CharacterInfo</Filter>
+      <Filter>UI\Common\UIItemInfo\CharacterInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITalkDialogWnd.cpp">
       <Filter>UI\Common\TALK</Filter>
@@ -11129,7 +11111,7 @@
       <Filter>Core\Client\Objects\items &amp; weapons\Consumables</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInventoryItemParams.cpp">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClCompile>
     <ClCompile Include="embedded_editor\embedded_editor_hud.cpp">
       <Filter>EmbeddedEditor</Filter>
@@ -11150,26 +11132,26 @@
     <ClCompile Include="RepairKit.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Consumables</Filter>
     </ClCompile>
-    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant.cpp">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant</Filter>
+    <ClCompile Include="ui\UILoadingScreen.cpp">
+      <Filter>UI\Common\LoadingScreen</Filter>
     </ClCompile>
-    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_ability.cpp">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Abilities</Filter>
+    <ClCompile Include="EntityCondition_script.cpp">
+      <Filter>Core\Client\Objects\base\EntityCondition</Filter>
     </ClCompile>
-    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_flame_thrower.cpp">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Abilities</Filter>
+    <ClCompile Include="CustomOutfit_script.cpp">
+      <Filter>Core\Client\Objects\items &amp; weapons\Outfit</Filter>
     </ClCompile>
-    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_telekinesis.cpp">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Abilities</Filter>
+    <ClCompile Include="ArtefactContainer.cpp">
+      <Filter>Core\Client\Objects\items &amp; weapons\Devices\ArtefactContainer</Filter>
     </ClCompile>
-    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_script.cpp">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Script</Filter>
+    <ClCompile Include="embedded_editor\editor_render.cpp">
+      <Filter>EmbeddedEditor</Filter>
     </ClCompile>
-    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_manager.cpp">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant</Filter>
+    <ClCompile Include="embedded_editor\editor_render_ai_map.cpp">
+      <Filter>EmbeddedEditor</Filter>
     </ClCompile>
-    <ClCompile Include="eatable_item_object_script.cpp">
-      <Filter>Core\Client\Objects\inventory\EatableItemObject</Filter>
+    <ClCompile Include="embedded_editor\editor_render_spawn_element.cpp">
+      <Filter>EmbeddedEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -11191,8 +11173,5 @@
     <CustomBuild Include="ui\UIRankFaction.h">
       <Filter>UI\Common\PDA\Statistics &amp; Rankings</Filter>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

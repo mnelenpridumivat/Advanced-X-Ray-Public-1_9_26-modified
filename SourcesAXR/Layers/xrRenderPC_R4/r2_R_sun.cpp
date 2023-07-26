@@ -238,7 +238,7 @@ struct	DumbClipper
 		return	true;
 	}
 	D3DXVECTOR3			point		(Fbox& bb, int i) const { return D3DXVECTOR3( (i&1)?bb.min.x:bb.max.x, (i&2)?bb.min.y:bb.max.y, (i&4)?bb.min.z:bb.max.z );  }
-	Fbox				clipped_AABB(xr_vector<Fbox,render_alloc<Fbox3> >& src, Fmatrix& xf)
+	Fbox				clipped_AABB(xr_vector<Fbox>& src, Fmatrix& xf)
 	{
 		Fbox3		result;		result.invalidate		();
 		for (int it=0; it<int(src.size()); it++)		{
@@ -287,7 +287,7 @@ inline const _Tp& max(const _Tp& __a, const _Tp& __b) {
 	return  __a < __b ? __b : __a;
 }
 
-xr_vector<Fbox,render_alloc<Fbox> >	s_casters;
+xr_vector<Fbox>	s_casters;
 
 D3DXVECTOR2 BuildTSMProjectionMatrix_caster_depth_bounds(D3DXMATRIX& lightSpaceBasis)
 {
@@ -409,7 +409,7 @@ void CRender::render_sun				()
 	}
 
 	// Fill the database
-	xr_vector<Fbox3,render_alloc<Fbox3> >		&s_receivers = main_coarse_structure;
+	xr_vector<Fbox3>							&s_receivers = main_coarse_structure;
 	s_casters.reserve							(s_receivers.size());
 	set_Recorder								(&s_casters);
 	r_dsgraph_render_subspace					(cull_sector, &cull_frustum, cull_xform, cull_COP, TRUE);
@@ -1004,13 +1004,13 @@ void CRender::init_cacades				( )
 	float fBias = -0.0000025f;
 	//	float size = MAP_SIZE_START;
 	m_sun_cascades[0].reset_chain = true;
-	m_sun_cascades[0].size = 20;
+	m_sun_cascades[0].size = ps_ssfx_shadow_cascades.x; //20
 	m_sun_cascades[0].bias = m_sun_cascades[0].size*fBias;
 
-	m_sun_cascades[1].size = 40;
+	m_sun_cascades[1].size = ps_ssfx_shadow_cascades.y; //40
 	m_sun_cascades[1].bias = m_sun_cascades[1].size*fBias;
 
- 	m_sun_cascades[2].size = 160;
+	m_sun_cascades[2].size = ps_ssfx_shadow_cascades.z; //160
  	m_sun_cascades[2].bias = m_sun_cascades[2].size*fBias;
 
 // 	for( u32 i = 0; i < cascade_count; ++i )
@@ -1282,8 +1282,13 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 			RCache.set_xform_view				(Fidentity					);
 			RCache.set_xform_project			(fuckingsun->X.D.combine	);	
 			r_dsgraph_render_graph				(0)	;
-			if (ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS))	
-				Details->Render					()	;
+
+			if (ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS) && cascade_ind <= ps_ssfx_grass_shadows.x)
+			{
+				Details->fade_distance = dm_fade * dm_fade * ps_ssfx_grass_shadows.y;
+				Details->Render();
+			}
+
 			fuckingsun->X.D.transluent			= FALSE;
 			if (bSpecial)						{
 				fuckingsun->X.D.transluent			= TRUE;

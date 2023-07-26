@@ -155,7 +155,6 @@ public:
 	void			ToggleDetector		(bool bFastMode);
 	void			HideDetector		(bool bFastMode);
 	void			ShowDetector		(bool bFastMode);
-	float			m_fAfDetectRadius;
 	virtual bool	CheckCompatibility	(CHudItem*);
 
 	virtual u32		ef_detector_type	() const	{return 1;};
@@ -163,6 +162,8 @@ public:
 			void	UpdateChargeLevel	(void);
 	virtual void	save				(NET_Packet &output_packet);
 	virtual void	load				(IReader &input_packet);
+			float	GetAfDetectRadius	() { return m_fAfDetectRadius;};
+			float	GetAfVisRadius		() { return m_fAfVisRadius;};
 			float	GetCurrentChargeLevel(void) const;
 			void	SetCurrentChargeLevel(float val);
 			float	GetUnchargeSpeed	(void) const;
@@ -206,7 +207,7 @@ public:
 			void	Flash(bool bOn, float fRelPower);
 
 protected:
-			bool	CheckCompatibilityInt		(CHudItem*);
+			bool	CheckCompatibilityInt		(CHudItem* itm, u16* slot_to_activate);
 			void 	TurnDetectorInternal		(bool b);
 	void 			UpdateNightVisionMode		(bool b_off);
 	void			UpdateVisibility			();
@@ -215,6 +216,7 @@ protected:
 	virtual void 	CreateUI					()				{};
 
 	bool			m_bWorking;
+	float			m_fAfDetectRadius;
 	float			m_fAfVisRadius;
 
 	CAfList			m_artefacts;

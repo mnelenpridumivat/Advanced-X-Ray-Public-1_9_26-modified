@@ -148,6 +148,9 @@ bool CUIGameSP::IR_UIOnKeyboardPress(int dik)
 			{
 				SDrawStaticStruct* sm2		= AddCustomStatic("secondary_task", true);
 				sm2->m_static->TextItemControl()->SetTextST	(t1->m_Description.c_str());
+
+				if (t1->m_difficulty_icon_name.c_str())
+					m_game_objective->m_static->InitTexture(t1->m_difficulty_icon_name.c_str());
 			}
 		}break;
 	}
@@ -322,13 +325,13 @@ void CChangeLevelWnd::Show()
 	
 
 	g_block_pause							= true;
-	Device.Pause							(TRUE, TRUE, TRUE, "CChangeLevelWnd_show");
+	GAME_PAUSE							(TRUE, TRUE, TRUE, "CChangeLevelWnd_show");
 	bShowPauseString						= FALSE;
 }
 
 void CChangeLevelWnd::Hide()
 {
 	g_block_pause							= false;
-	Device.Pause							(FALSE, TRUE, TRUE, "CChangeLevelWnd_hide");
+	GAME_PAUSE							(FALSE, TRUE, TRUE, "CChangeLevelWnd_hide");
 }
 

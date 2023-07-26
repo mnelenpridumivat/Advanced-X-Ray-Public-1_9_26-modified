@@ -10,21 +10,29 @@
 #include "UIXmlInit.h"
 #include "UIProgressBar.h"
 
-#include "Weapon.h"
-#include "CustomOutfit.h"
-#include "ActorHelmet.h"
+#include "eatable_item.h"
+#include "AntigasFilter.h"
+#include "Artefact.h"
+#include "CustomDetector.h"
+#include "Torch.h"
+#include "AnomalyDetector.h"
+
+#include "AdvancedXrayGameConstants.h"
 
 CUICellItem* CUICellItem::m_mouse_selected_item = NULL;
 
 CUICellItem::CUICellItem()
 {
-	m_pParentList		= NULL;
-	m_pData				= NULL;
-	m_custom_draw		= NULL;
-	m_text				= NULL;
-//-	m_mark				= NULL;
-	m_upgrade			= NULL;
-	m_pConditionState	= NULL;
+	m_pParentList		= nullptr;
+	m_pData				= nullptr;
+	m_custom_draw		= nullptr;
+	m_text				= nullptr;
+	m_custom_text		= nullptr;
+	m_qmark				= nullptr;
+	m_upgrade			= nullptr;
+	m_pConditionState	= nullptr;
+	m_pPortionsState	= nullptr;
+	m_pChargeState		= nullptr;
 	m_drawn_frame		= 0;
 	SetAccelerator		(0);
 	m_b_destroy_childs	= true;
@@ -32,6 +40,7 @@ CUICellItem::CUICellItem()
 	m_select_armament	= false;
 	m_cur_mark			= false;
 	m_has_upgrade		= false;
+	m_is_quest			= false;
 	
 	init();
 }
@@ -55,11 +64,22 @@ void CUICellItem::init()
 	CUIXmlInit::InitStatic	( uiXml, "cell_item_text", 0, m_text );
 	m_text->Show			( false );
 
-/*	m_mark					= xr_new<CUIStatic>();
-	m_mark->SetAutoDelete	( true );
-	AttachChild				( m_mark );
-	CUIXmlInit::InitStatic	( uiXml, "cell_item_mark", 0, m_mark );
-	m_mark->Show			( false );*/
+	if (uiXml.NavigateToNode("cell_item_custom_text", 0))
+	{
+		m_custom_text = xr_new<CUIStatic>();
+		m_custom_text->SetAutoDelete(true);
+		AttachChild(m_custom_text);
+		CUIXmlInit::InitStatic(uiXml, "cell_item_custom_text", 0, m_custom_text);
+		m_custom_text_pos = m_custom_text->GetWndPos();
+		m_custom_text->Show(false);
+	}
+
+	m_qmark					= xr_new<CUIStatic>();
+	m_qmark->SetAutoDelete	( true );
+	AttachChild				( m_qmark );
+	CUIXmlInit::InitStatic	( uiXml, "cell_item_quest_mark", 0, m_qmark );
+	m_qmark_pos				= m_qmark->GetWndPos();
+	m_qmark->Show			( false );
 
 	m_upgrade				= xr_new<CUIStatic>();
 	m_upgrade->SetAutoDelete( true );
@@ -72,7 +92,25 @@ void CUICellItem::init()
 	m_pConditionState->SetAutoDelete(true);
 	AttachChild(m_pConditionState);
 	CUIXmlInit::InitProgressBar(uiXml, "condition_progess_bar", 0, m_pConditionState);
-	m_pConditionState->Show(true);
+	m_pConditionState->Show(false);
+
+	if (uiXml.NavigateToNode("portions_progess_bar", 0))
+	{
+		m_pPortionsState = xr_new<CUIProgressBar>();
+		m_pPortionsState->SetAutoDelete(true);
+		AttachChild(m_pPortionsState);
+		CUIXmlInit::InitProgressBar(uiXml, "portions_progess_bar", 0, m_pPortionsState);
+		m_pPortionsState->Show(false);
+	}
+
+	if (uiXml.NavigateToNode("charge_level_progess_bar", 0))
+	{
+		m_pChargeState = xr_new<CUIProgressBar>();
+		m_pChargeState->SetAutoDelete(true);
+		AttachChild(m_pChargeState);
+		CUIXmlInit::InitProgressBar(uiXml, "charge_level_progess_bar", 0, m_pChargeState);
+		m_pChargeState->Show(false);
+	}
 }
 
 void CUICellItem::Draw()
@@ -86,7 +124,8 @@ void CUICellItem::Draw()
 
 void CUICellItem::Update()
 {
-	EnableHeading(m_pParentList->GetVerticalPlacement());
+	if (m_pParentList)
+		EnableHeading(m_pParentList->GetVerticalPlacement() && m_pParentList);
 	if(Heading())
 	{
 		SetHeading			( 90.0f * (PI/180.0f) );
@@ -96,7 +135,7 @@ void CUICellItem::Update()
 
 	inherited::Update();
 	
-	if ( CursorOverWindow() )
+	if ( CursorOverWindow() && m_pParentList)
 	{
 		Frect clientArea;
 		m_pParentList->GetClientArea(clientArea);
@@ -104,24 +143,55 @@ void CUICellItem::Update()
 		if(clientArea.in(cp))
 			GetMessageTarget()->SendMessage(this, DRAG_DROP_ITEM_FOCUSED_UPDATE, NULL);
 	}
-	
+	UpdateIndicators();
+}
+
+void CUICellItem::UpdateIndicators()
+{
 	PIItem item = (PIItem)m_pData;
 	if ( item )
 	{
-		m_has_upgrade = item->has_any_upgrades();
+		m_has_upgrade	= item->has_any_upgrades();
+		m_is_quest		= item->IsQuestItem();
+		m_with_custom_text = item->m_custom_text!=nullptr;
 
 //		Fvector2 size      = GetWndSize();
 //		Fvector2 up_size = m_upgrade->GetWndSize();
 //		pos.x = size.x - up_size.x - 4.0f;
 		Fvector2 pos;
-		pos.set( m_upgrade_pos );
-		if ( ChildsCount() )
+		if (m_has_upgrade)
 		{
-			pos.x += m_text->GetWndSize().x + 2.0f;
+			pos.set(m_upgrade_pos);
+			if (ChildsCount())
+			{
+				pos.x				+= m_text->GetWndSize().x + 2.0f;
+			}
+			m_upgrade->SetWndPos	(pos);
 		}
-		m_upgrade->SetWndPos( pos );
+		if (m_is_quest)
+		{
+			pos.set(m_qmark_pos);
+			Fvector2 size		= GetWndSize();
+			Fvector2 up_size	= m_qmark->GetWndSize();
+			pos.x				= size.x - up_size.x - 4.0f;// making pos at right-end of cell
+			pos.y				= size.y - up_size.y - 4.0f;// making pos at bottom-end of cell
+			m_qmark->SetWndPos	(pos);
+		}
+		if (m_custom_text && m_with_custom_text)
+		{
+			pos.set(m_custom_text_pos);
+			Fvector2 size		= GetWndSize();
+			Fvector2 up_size	= m_custom_text->GetWndSize();
+			pos.x				= size.x - up_size.x - 4.0f;// making pos at right-end of cell
+			pos.y				= size.y - up_size.y - 4.0f;// making pos at bottom-end of cell
+			m_custom_text->SetWndPos	(pos);
+			m_custom_text->TextItemControl()->SetTextST	(*item->m_custom_text);
+		}
 	}
-	m_upgrade->Show( m_has_upgrade );
+	m_upgrade->Show				(m_has_upgrade);
+	m_qmark->Show				(m_is_quest);
+	if (m_custom_text)
+		m_custom_text->Show		(m_with_custom_text);
 }
 
 bool CUICellItem::OnMouseAction(float x, float y, EUIMessages mouse_action)
@@ -149,6 +219,11 @@ bool CUICellItem::OnMouseAction(float x, float y, EUIMessages mouse_action)
 	else if ( mouse_action == WINDOW_RBUTTON_DOWN )
 	{
 		GetMessageTarget()->SendMessage( this, DRAG_DROP_ITEM_RBUTTON_CLICK, NULL );
+		return true;
+	}
+	else if ( mouse_action == WINDOW_CBUTTON_DOWN )
+	{
+		GetMessageTarget()->SendMessage( this, DRAG_DROP_ITEM_CBUTTON_CLICK, NULL );
 		return true;
 	}
 	
@@ -189,6 +264,13 @@ CUIDragItem* CUICellItem::CreateDragItem()
 		r.x2			= r.x1 + t2;
 		r.y2			= r.y1 + t1;
 	}
+
+	if (Heading() && UI().is_widescreen())
+	{
+		r.y2 /= UI().get_current_kx() * 1.26f;
+		r.x2 /= UI().get_current_kx() * 1.3f;
+	}
+
 	tmp->Init(GetShader(), r, GetUIStaticItem().GetTextureRect());
 	return tmp;
 }
@@ -196,21 +278,30 @@ CUIDragItem* CUICellItem::CreateDragItem()
 void CUICellItem::SetOwnerList(CUIDragDropListEx* p)	
 {
 	m_pParentList = p;
+	UpdateCellItemProgressBars();
+}
+
+void CUICellItem::UpdateCellItemProgressBars()
+{
 	UpdateConditionProgressBar();
+
+	if (m_pPortionsState)
+		UpdatePortionsProgressBar();
+
+	if (m_pChargeState)
+		UpdateChargeLevelProgressBar();
 }
 
 void CUICellItem::UpdateConditionProgressBar()
 {
-
-	if(m_pParentList && m_pParentList->GetConditionProgBarVisibility())
+	if (m_pParentList && m_pParentList->GetConditionProgBarVisibility())
 	{
 		PIItem itm = (PIItem)m_pData;
-		CWeapon* pWeapon = smart_cast<CWeapon*>(itm);
-		CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>(itm);
-		CHelmet* pHelmet = smart_cast<CHelmet*>(itm);
-		if(pWeapon || pOutfit || pHelmet)
+
+		if (itm && itm->IsUsingCondition())
 		{
 			Ivector2 itm_grid_size = GetGridSize();
+
 			if(m_pParentList->GetVerticalPlacement())
 				std::swap(itm_grid_size.x, itm_grid_size.y);
 
@@ -219,13 +310,150 @@ void CUICellItem::UpdateConditionProgressBar()
 			float x = 1.f;
 			float y = itm_grid_size.y * (cell_size.y + cell_space.y) - m_pConditionState->GetHeight() - 2.f;
 
-			m_pConditionState->SetWndPos(Fvector2().set(x,y));
-			m_pConditionState->SetProgressPos(iCeil(itm->GetCondition()*13.0f)/13.0f);
+			m_pConditionState->SetWndPos(Fvector2().set(x, y));
+			m_pConditionState->SetProgressPos(iCeil(itm->GetCondition() * 13.0f) / 13.0f);
+
 			m_pConditionState->Show(true);
+
 			return;
 		}
 	}
 	m_pConditionState->Show(false);
+}
+
+void CUICellItem::UpdatePortionsProgressBar()
+{
+	if (m_pParentList && m_pParentList->GetConditionProgBarVisibility())
+	{
+		PIItem itm = (PIItem)m_pData;
+		CEatableItem* pEatable = smart_cast<CEatableItem*>(itm);
+
+		if (pEatable && pEatable->m_iConstPortions > 1 && pEatable->m_iConstPortions <= 8)
+		{
+			int BasePortionsNum = pEatable->m_iConstPortions;
+			Ivector2 itm_grid_size = GetGridSize();
+			if (m_pParentList->GetVerticalPlacement())
+				std::swap(itm_grid_size.x, itm_grid_size.y);
+
+			Ivector2 cell_size = m_pParentList->CellSize();
+			Ivector2 cell_space = m_pParentList->CellsSpacing();
+			float x = 1.f;
+			float y = itm_grid_size.y * (cell_size.y + cell_space.y) - m_pPortionsState->GetHeight() - 2.f;
+			Fvector2 size;
+			float scaler = 1.f;
+
+			// 8 portions is max value!!!
+			switch (BasePortionsNum)
+			{
+				case 2:
+				{
+					scaler = UI().is_widescreen() ? 3.95f : 3.88f;
+					break;
+				}
+				case 3:
+				{
+					scaler = UI().is_widescreen() ? 3.95f : 3.9f;
+					break;
+				}
+				case 4:
+				{
+					scaler = UI().is_widescreen() ? 3.98f : 3.9f;
+					break;
+				}
+				case 5:
+				{
+					scaler = UI().is_widescreen() ? 4 : 3.9f;
+					break;
+				}
+				case 6:
+				{
+					scaler = UI().is_widescreen() ? 4 : 3.9f;
+					break;
+				}
+				case 7:
+				{
+					scaler = UI().is_widescreen() ? 3.98f : 4;
+					break;
+				}
+				case 8:
+				{
+					scaler = UI().is_widescreen() ? 4 : 3.9f;
+					break;
+				}
+				default:
+				{
+					break;
+				}
+			}
+
+			size.x = BasePortionsNum * scaler;
+			size.y = m_pPortionsState->GetHeight();
+
+			m_pPortionsState->SetRange(0, BasePortionsNum * scaler);
+			m_pPortionsState->SetWndPos(Fvector2().set(x, y));
+			m_pPortionsState->SetWndSize(size);
+			m_pPortionsState->SetProgressPos(iCeil((pEatable->GetPortionsNum() * scaler) * 13.0f) / 13.0f);
+
+			m_pPortionsState->Show(true);
+
+			return;
+		}
+	}
+
+	m_pPortionsState->Show(false);
+}
+
+void CUICellItem::UpdateChargeLevelProgressBar()
+{
+	if (m_pParentList && m_pParentList->GetConditionProgBarVisibility())
+	{
+		PIItem itm = (PIItem)m_pData;
+		CTorch* torch = smart_cast<CTorch*>(itm);
+		CCustomDetector* artefact_detector = smart_cast<CCustomDetector*>(itm);
+		CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly*>(itm);
+		CArtefact* artefact = smart_cast<CArtefact*>(itm);
+
+		if (torch || artefact_detector || anomaly_detector || artefact)
+		{
+			Ivector2 itm_grid_size = GetGridSize();
+
+			if (m_pParentList->GetVerticalPlacement())
+				std::swap(itm_grid_size.x, itm_grid_size.y);
+
+			Ivector2 cell_size = m_pParentList->CellSize();
+			Ivector2 cell_space = m_pParentList->CellsSpacing();
+			float x = 1.f;
+			float y = itm_grid_size.y * (cell_size.y + cell_space.y) - m_pChargeState->GetHeight() - 2.f;
+
+			m_pChargeState->SetWndPos(Fvector2().set(x, y));
+
+			if (torch && GameConstants::GetTorchHasBattery())
+			{
+				m_pChargeState->SetProgressPos(iCeil(torch->GetCurrentChargeLevel() * 13.0f) / 13.0f);
+				m_pChargeState->Show(true);
+			}
+			else if (artefact_detector && GameConstants::GetArtDetectorUseBattery())
+			{
+				m_pChargeState->SetProgressPos(iCeil(artefact_detector->GetCurrentChargeLevel() * 13.0f) / 13.0f);
+				m_pChargeState->Show(true);
+			}
+			else if (anomaly_detector && GameConstants::GetAnoDetectorUseBattery())
+			{
+				m_pChargeState->SetProgressPos(iCeil(anomaly_detector->GetCurrentChargeLevel() * 13.0f) / 13.0f);
+				m_pChargeState->Show(true);
+			}
+			else if (artefact && GameConstants::GetArtefactsDegradation())
+			{
+				m_pChargeState->SetProgressPos(iCeil(artefact->GetCurrentChargeLevel() * 13.0f) / 13.0f);
+				m_pChargeState->Show(true);
+			}
+			else
+				m_pChargeState->Show(false);
+
+			return;
+		}
+	}
+	m_pChargeState->Show(false);
 }
 
 bool CUICellItem::EqualTo(CUICellItem* itm)

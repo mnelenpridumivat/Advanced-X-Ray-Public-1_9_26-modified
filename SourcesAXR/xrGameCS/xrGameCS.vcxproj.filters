@@ -2344,10 +2344,10 @@
     <Filter Include="UI\Common\PDA\logs\News">
       <UniqueIdentifier>{0894fd9c-eb9d-4b58-9bf2-254423d9c3e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\Common\ui-item-infos">
+    <Filter Include="UI\Common\UIItemInfo">
       <UniqueIdentifier>{9c396a40-7756-41f0-9337-614f7fcb8229}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\Common\ui-item-infos\CharacterInfo">
+    <Filter Include="UI\Common\UIItemInfo\CharacterInfo">
       <UniqueIdentifier>{cf155b1b-5dfe-4fc6-82d3-139ae4fa1d62}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI\Common\TALK">
@@ -2583,6 +2583,12 @@
     </Filter>
     <Filter Include="Core\Client\Objects\items &amp; weapons\Consumables">
       <UniqueIdentifier>{ad12579f-fb0b-44c2-8944-183220c5c2f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Common\LoadingScreen">
+      <UniqueIdentifier>{8409490a-682a-433f-9333-ba5d7c2be070}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Client\Objects\items &amp; weapons\Devices\ArtefactContainer">
+      <UniqueIdentifier>{b0b72c42-4627-4849-be34-0cedf965de5d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -7014,20 +7020,20 @@
     <ClInclude Include="ui\UINewsWnd.h">
       <Filter>UI\Common\PDA\logs\News</Filter>
     </ClInclude>
-    <ClInclude Include="ui\ui_af_params.h">
-      <Filter>UI\Common\ui-item-infos</Filter>
+    <ClInclude Include="ui\UIArtefactParams.h">
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIItemInfo.h">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIOutfitInfo.h">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIWpnParams.h">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICharacterInfo.h">
-      <Filter>UI\Common\ui-item-infos\CharacterInfo</Filter>
+      <Filter>UI\Common\UIItemInfo\CharacterInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITalkDialogWnd.h">
       <Filter>UI\Common\TALK</Filter>
@@ -7498,7 +7504,7 @@
       <Filter>Core\Client\Objects\items &amp; weapons\Consumables</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInventoryItemParams.h">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClInclude>
     <ClInclude Include="embedded_editor\embedded_editor_hud.h">
       <Filter>EmbeddedEditor</Filter>
@@ -7511,7 +7517,7 @@
       <Filter>Core\Client\Objects\items &amp; weapons\Consumables</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIBoosterInfo.h">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClInclude>
     <ClInclude Include="embedded_editor\embedded_editor_pos_informer.h">
       <Filter>EmbeddedEditor</Filter>
@@ -7521,6 +7527,24 @@
     </ClInclude>
     <ClInclude Include="RepairKit.h">
       <Filter>Core\Client\Objects\items &amp; weapons\Consumables</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\UILoadingScreen.h">
+      <Filter>UI\Common\LoadingScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\monsters\monster_aura.h">
+      <Filter>AI\AMonsters\common\components</Filter>
+    </ClInclude>
+    <ClInclude Include="ArtefactContainer.h">
+      <Filter>Core\Client\Objects\items &amp; weapons\Devices\ArtefactContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="embedded_editor\editor_render.h">
+      <Filter>EmbeddedEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="embedded_editor\editor_render_ai_map.h">
+      <Filter>EmbeddedEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="embedded_editor\editor_render_spawn_element.h">
+      <Filter>EmbeddedEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -10650,20 +10674,20 @@
     <ClCompile Include="ui\UINewsWnd.cpp">
       <Filter>UI\Common\PDA\logs\News</Filter>
     </ClCompile>
-    <ClCompile Include="ui\ui_af_params.cpp">
-      <Filter>UI\Common\ui-item-infos</Filter>
+    <ClCompile Include="ui\UIArtefactParams.cpp">
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIItemInfo.cpp">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIOutfitInfo.cpp">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIWpnParams.cpp">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICharacterInfo.cpp">
-      <Filter>UI\Common\ui-item-infos\CharacterInfo</Filter>
+      <Filter>UI\Common\UIItemInfo\CharacterInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITalkDialogWnd.cpp">
       <Filter>UI\Common\TALK</Filter>
@@ -10732,6 +10756,9 @@
       <Filter>UI\Common\InventoryUtilities</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIActorMenu.cpp">
+      <Filter>UI\Common\Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\UIActorMenu_action.cpp">
       <Filter>UI\Common\Inventory</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIActorMenu_script.cpp">
@@ -11191,7 +11218,7 @@
       <Filter>Core\Client\Objects\items &amp; weapons\Consumables</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInventoryItemParams.cpp">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClCompile>
     <ClCompile Include="embedded_editor\embedded_editor_hud.cpp">
       <Filter>EmbeddedEditor</Filter>
@@ -11204,7 +11231,7 @@
       <Filter>Core\Client\Objects\items &amp; weapons\Consumables</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIBoosterInfo.cpp">
-      <Filter>UI\Common\ui-item-infos</Filter>
+      <Filter>UI\Common\UIItemInfo</Filter>
     </ClCompile>
     <ClCompile Include="embedded_editor\embedded_editor_pos_informer.cpp">
       <Filter>EmbeddedEditor</Filter>
@@ -11214,6 +11241,30 @@
     </ClCompile>
     <ClCompile Include="RepairKit.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Consumables</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\UILoadingScreen.cpp">
+      <Filter>UI\Common\LoadingScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="ai\monsters\monster_aura.cpp">
+      <Filter>AI\AMonsters\common\components</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityCondition_script.cpp">
+      <Filter>Core\Client\Objects\base\EntityCondition</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomOutfit_script.cpp">
+      <Filter>Core\Client\Objects\items &amp; weapons\Outfit</Filter>
+    </ClCompile>
+    <ClCompile Include="ArtefactContainer.cpp">
+      <Filter>Core\Client\Objects\items &amp; weapons\Devices\ArtefactContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="embedded_editor\editor_render.cpp">
+      <Filter>EmbeddedEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="embedded_editor\editor_render_ai_map.cpp">
+      <Filter>EmbeddedEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="embedded_editor\editor_render_spawn_element.cpp">
+      <Filter>EmbeddedEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

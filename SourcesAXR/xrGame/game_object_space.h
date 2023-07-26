@@ -52,10 +52,10 @@ namespace GameObject {
 		eInvBoxItemTake,
 		eWeaponNoAmmoAvailable,
 
-		// for anomal pseudogiant
-		eShieldOn,
-		eShieldOff,
-		eJump,
+		// vehicle
+		eAttachVehicle,
+		eDetachVehicle,
+		eUseVehicle,
 
 		eDummy = u32(-1),
 	};

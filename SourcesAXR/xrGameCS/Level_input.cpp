@@ -105,7 +105,7 @@ public:
 	}}
 }	vtune	;
 
-// Îáðàáîòêà íàæàòèÿ êëàâèø
+// ÐžÐ±Ñ€Ð°Ð±Ð¾Ñ‚ÐºÐ° Ð½Ð°Ð¶Ð°Ñ‚Ð¸Ñ ÐºÐ»Ð°Ð²Ð¸Ñˆ
 extern bool g_block_pause;
 extern bool g_block_all_except_movement;
 
@@ -147,7 +147,7 @@ void CLevel::IR_OnKeyboardPress	(int key)
 		#endif // INGAME_EDITOR
 
 		if (!g_block_pause && (IsGameTypeSingle() || IsDemoPlay()))
-			Device.Pause(!Device.Paused(), TRUE, TRUE, "li_pause_key");
+			GAME_PAUSE(!Device.Paused(), TRUE, TRUE, "li_pause_key");
 		return;
 	}
 
@@ -171,6 +171,12 @@ void CLevel::IR_OnKeyboardPress	(int key)
 	case kQUIT: {
 		if(b_ui_exist && HUD().GetUI()->MainInputReceiver() )
 		{
+			//Arkada
+			if(Device.Paused())
+			{
+				GAME_PAUSE(FALSE, TRUE, TRUE, "bug_fix");
+				return;
+			}
 				if(HUD().GetUI()->MainInputReceiver()->IR_OnKeyboardPress(key))	return;//special case for mp and main_menu
 				HUD().GetUI()->StartStopMenu( HUD().GetUI()->MainInputReceiver(), true);
 		}else

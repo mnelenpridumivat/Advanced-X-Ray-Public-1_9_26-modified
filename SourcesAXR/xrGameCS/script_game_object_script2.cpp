@@ -71,6 +71,7 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.property("satiety",				&CScriptGameObject::GetSatiety,			&CScriptGameObject::SetSatiety)
 		.property("radiation",				&CScriptGameObject::GetRadiation,		&CScriptGameObject::SetRadiation)
 		.property("morale",					&CScriptGameObject::GetMorale,			&CScriptGameObject::SetMorale)
+		.property("bleeding",				&CScriptGameObject::GetBleeding,		&CScriptGameObject::SetBleeding)
 		.property("thirst",					&CScriptGameObject::GetThirst,			&CScriptGameObject::ChangeThirst)
 		.property("intoxication",			&CScriptGameObject::GetIntoxication,	&CScriptGameObject::ChangeIntoxication)
 		.property("sleepeness",				&CScriptGameObject::GetSleepeness,		&CScriptGameObject::ChangeSleepeness)
@@ -102,6 +103,7 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("squad",						&CScriptGameObject::Squad)
 		.def("group",						&CScriptGameObject::Group)
 		.def("change_team",					(void (CScriptGameObject::*)(u8,u8,u8))(&CScriptGameObject::ChangeTeam))
+		.def("set_visual_memory_enabled",	&CScriptGameObject::SetVisualMemoryEnabled)
 		.def("kill",						&CScriptGameObject::Kill)
 		.def("hit",							&CScriptGameObject::Hit)
 		.def("play_cycle",					(void (CScriptGameObject::*)(LPCSTR))(&CScriptGameObject::play_cycle))
@@ -144,6 +146,21 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("get_ammo_in_magazine",		&CScriptGameObject::GetAmmoElapsed)
 		.def("get_ammo_total",				&CScriptGameObject::GetSuitableAmmoTotal)
 		.def("set_ammo_elapsed",			&CScriptGameObject::SetAmmoElapsed)
+		//Alundaio
+		.def("use",							&CScriptGameObject::Use)
+		.def("start_trade",					&CScriptGameObject::StartTrade)
+		.def("start_upgrade",				&CScriptGameObject::StartUpgrade)
+		.def("get_ammo_type",				&CScriptGameObject::GetAmmoType)
+		.def("set_ammo_type",				&CScriptGameObject::SetAmmoType)
+		.def("get_ammo_count_for_type",		&CScriptGameObject::GetAmmoCount)
+		.def("get_main_weapon_type",		&CScriptGameObject::GetMainWeaponType)
+		.def("get_weapon_type",				&CScriptGameObject::GetWeaponType)
+		.def("set_main_weapon_type",		&CScriptGameObject::SetMainWeaponType)
+		.def("set_weapon_type",				&CScriptGameObject::SetWeaponType)
+		.def("has_ammo_type",				&CScriptGameObject::HasAmmoType)
+		.def("get_weapon_substate",			&CScriptGameObject::GetWeaponSubstate)
+		.def("set_weight",					&CScriptGameObject::SetWeight)
+		//-Alundaio
 		.def("set_queue_size",				&CScriptGameObject::SetQueueSize)
 //		.def("best_hit",					&CScriptGameObject::GetBestHit)
 //		.def("best_sound",					&CScriptGameObject::GetBestSound)
@@ -168,6 +185,10 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("get_monster_hit_info",		&CScriptGameObject::GetMonsterHitInfo)
 		.def("bind_object",					&CScriptGameObject::bind_object,adopt<2>())
 		.def("motivation_action_manager",	&script_action_planner)
+
+		// poltergeist
+		.def("poltergeist_set_actor_ignore",&CScriptGameObject::poltergeist_set_actor_ignore)
+		.def("poltergeist_get_actor_ignore",&CScriptGameObject::poltergeist_get_actor_ignore)
 
 		// bloodsucker
 		.def("set_invisible",				&CScriptGameObject::set_invisible)
@@ -195,6 +216,13 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("get_current_outfit",			&CScriptGameObject::GetCurrentOutfit)
 		.def("get_current_outfit_protection",&CScriptGameObject::GetCurrentOutfitProtection)
 
+		.def("deadbody_closed",				&CScriptGameObject::deadbody_closed)
+		.def("deadbody_closed_status",		&CScriptGameObject::deadbody_closed_status)
+		.def("deadbody_can_take",			&CScriptGameObject::deadbody_can_take)
+		.def("deadbody_can_take_status",	&CScriptGameObject::deadbody_can_take_status)
+
+		.def("can_select_weapon",			(bool (CScriptGameObject::*)() const)&CScriptGameObject::can_select_weapon)
+		.def("can_select_weapon",			(void (CScriptGameObject::*)(bool))&CScriptGameObject::can_select_weapon)
 
 		// searchlight
 		.def("get_current_direction",		&CScriptGameObject::GetCurrentDirection)
@@ -228,7 +256,12 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("set_desired_direction",		(void (CScriptGameObject::*)())(&CScriptGameObject::set_desired_direction))
 		.def("set_desired_direction",		(void (CScriptGameObject::*)(const Fvector *))(&CScriptGameObject::set_desired_direction))
 		.def("set_patrol_path",				&CScriptGameObject::set_patrol_path)
+		.def("inactualize_level_path",		&CScriptGameObject::inactualize_level_path)
+		.def("inactualize_game_path",		&CScriptGameObject::inactualize_game_path)
 		.def("set_dest_level_vertex_id",	&CScriptGameObject::set_dest_level_vertex_id)
+		.def("get_dest_level_vertex_id",	&CScriptGameObject::get_dest_level_vertex_id)
+		.def("set_dest_game_vertex_id",		&CScriptGameObject::set_dest_game_vertex_id)
+		.def("get_dest_game_vertex_id",		&CScriptGameObject::get_dest_game_vertex_id)
 		.def("level_vertex_id",				&CScriptGameObject::level_vertex_id)
 		.def("game_vertex_id",				&CScriptGameObject::game_vertex_id)
 		.def("add_animation",				(void (CScriptGameObject::*)(LPCSTR, bool, bool))(&CScriptGameObject::add_animation))
@@ -257,9 +290,15 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("set_actor_position",			&CScriptGameObject::SetActorPosition)
 		.def("set_actor_direction",			&CScriptGameObject::SetActorDirection)
 
+		.def("disable_hit_marks",			(void (CScriptGameObject::*)	(bool))&CScriptGameObject::DisableHitMarks)
+		.def("disable_hit_marks",			(bool (CScriptGameObject::*)	() const)&CScriptGameObject::DisableHitMarks)
+
+		.def("set_npc_position",			&CScriptGameObject::SetNpcPosition)
+
 		.def("vertex_in_direction",			&CScriptGameObject::vertex_in_direction)
 
 		.def("item_in_slot",				&CScriptGameObject::item_in_slot)
+		.def("active_detector",				&CScriptGameObject::active_detector)
 		.def("active_slot",					&CScriptGameObject::active_slot)
 		.def("activate_slot",				&CScriptGameObject::activate_slot)
 
@@ -268,6 +307,10 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 #endif // DEBUG
 		.def("invulnerable",				(bool (CScriptGameObject::*)() const)&CScriptGameObject::invulnerable)
 		.def("invulnerable",				(void (CScriptGameObject::*)(bool))&CScriptGameObject::invulnerable)
+		
+		.def("get_smart_cover_description",	&CScriptGameObject::get_smart_cover_description)
+		.def("set_visual_name",				&CScriptGameObject::set_visual_name)
+		.def("get_visual_name",				&CScriptGameObject::get_visual_name)
 
 		.def("can_throw_grenades",			(bool (CScriptGameObject::*)	() const)&CScriptGameObject::can_throw_grenades)
 		.def("can_throw_grenades",			(void (CScriptGameObject::*)	(bool ))&CScriptGameObject::can_throw_grenades)
@@ -287,6 +330,7 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("set_dest_smart_cover",		(void (CScriptGameObject::*)	(LPCSTR))&CScriptGameObject::set_dest_smart_cover)
 		.def("set_dest_smart_cover",		(void (CScriptGameObject::*)	())&CScriptGameObject::set_dest_smart_cover)
 		.def("get_dest_smart_cover",		(CCoverPoint const* (CScriptGameObject::*) ())&CScriptGameObject::get_dest_smart_cover)
+		.def("get_dest_smart_cover_name",	&CScriptGameObject::get_dest_smart_cover_name)
 
 		.def("set_dest_loophole",			(void (CScriptGameObject::*)	(LPCSTR))&CScriptGameObject::set_dest_loophole)
 		.def("set_dest_loophole",			(void (CScriptGameObject::*)	())&CScriptGameObject::set_dest_loophole)

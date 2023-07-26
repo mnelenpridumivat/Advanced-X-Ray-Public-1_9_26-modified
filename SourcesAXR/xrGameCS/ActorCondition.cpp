@@ -19,6 +19,8 @@
 
 #include "AdvancedXrayGameConstants.h"
 #include "CustomOutfit.h"
+#include "PDA.h"
+#include "ai/monsters/BaseMonster/base_monster.h"
 
 #define MAX_SATIETY					1.0f
 #define START_SATIETY				0.5f
@@ -54,6 +56,9 @@ CActorCondition::CActorCondition(CActor *object) :
 	m_fNarcotism				= 0.0f;
 	m_fWithdrawal				= 0.0f;
 	m_fDrugs					= 0.f;
+	m_fV_PsyHealth_Health		= 0.0f;
+
+	m_bPsyHealthKillActor		= false;
 
 	VERIFY						(object);
 	m_object					= object;
@@ -95,7 +100,7 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
 	m_fAccelK					= pSettings->r_float(section,"accel_k");
 	m_fSprintK					= pSettings->r_float(section,"sprint_k");
 
-	//порог силы и здоровья меньше которого актер начинает хромать
+	//РїРѕСЂРѕРі СЃРёР»С‹ Рё Р·РґРѕСЂРѕРІСЊСЏ РјРµРЅСЊС€Рµ РєРѕС‚РѕСЂРѕРіРѕ Р°РєС‚РµСЂ РЅР°С‡РёРЅР°РµС‚ С…СЂРѕРјР°С‚СЊ
 	m_fLimpingHealthBegin		= pSettings->r_float(section,	"limping_health_begin");
 	m_fLimpingHealthEnd			= pSettings->r_float(section,	"limping_health_end");
 	R_ASSERT					(m_fLimpingHealthBegin<=m_fLimpingHealthEnd);
@@ -116,7 +121,8 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
 	
 	m_fV_Alcohol				= pSettings->r_float(section,"alcohol_v");
 
-//. ???	m_fSatietyCritical			= pSettings->r_float(section,"satiety_critical");
+	m_fSatietyCritical			= pSettings->r_float(section, "satiety_critical");
+	clamp						(m_fSatietyCritical, 0.0f, 1.0f);
 	m_fV_Satiety				= pSettings->r_float(section,"satiety_v");		
 	m_fV_SatietyPower			= pSettings->r_float(section,"satiety_power_v");
 	m_fV_SatietyHealth			= pSettings->r_float(section,"satiety_health_v");
@@ -152,6 +158,7 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
 	clamp(m_fSleepenessCritical, 0.0f, 1.0f);
 	m_fV_Sleepeness = pSettings->r_float(section, "sleepeness_v");
 	m_fV_SleepenessPower = pSettings->r_float(section, "sleepeness_power_v");
+	m_fV_SleepenessPsyHealth = pSettings->r_float(section, "sleepeness_psy_health_v");
 	m_fSleepeness_V_Sleep = pSettings->r_float(section, "sleepeness_v_sleep");
 
 	// M.F.S. Team Alcoholism (History Of Puhtinskyi)
@@ -169,6 +176,9 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
 	m_fV_WithdrawalPower = pSettings->r_float(section, "withdrawal_power_v");
 	m_fV_WithdrawalHealth = pSettings->r_float(section, "withdrawal_health_v");
 	m_fV_Drugs = pSettings->r_float(section, "drugs_v");
+
+	m_bPsyHealthKillActor = READ_IF_EXISTS(pSettings, r_bool, section, "psy_health_kill_actor", false);
+	m_fV_PsyHealth_Health = READ_IF_EXISTS(pSettings, r_float, section, "psy_health_health_v", 0.0f);
 
 	// M.F.S. Team Skills System
 	m_fV_SatietySkill = READ_IF_EXISTS(pSettings, r_float, "skills_influence", "skills_satiety_restore", 0.0f);
@@ -213,14 +223,14 @@ float CActorCondition::GetZoneMaxPower( ALife::EHitType hit_type ) const
 	case ALife::eHitTypePhysicStrike:
 		return 1.0f;
 	default:
-		NODEFAULT;
+		break;
 	}
 	
 	return GetZoneMaxPower( iz_type );
 }
 
 
-//вычисление параметров с ходом времени
+//РІС‹С‡РёСЃР»РµРЅРёРµ РїР°СЂР°РјРµС‚СЂРѕРІ СЃ С…РѕРґРѕРј РІСЂРµРјРµРЅРё
 #include "UI.h"
 #include "HUDManager.h"
 
@@ -291,35 +301,10 @@ void CActorCondition::UpdateCondition()
 			if (ceDrugs)
 				RemoveEffector(m_object, effDrugs);
 		}
-		
-		string512			pp_sect_name;
-		shared_str ln		= Level().name();
-		if(ln.size())
-		{
-			CEffectorPP* ppe	= object().Cameras().GetPPEffector((EEffectorPPType)effPsyHealth);
-			
-
-			strconcat			(sizeof(pp_sect_name),pp_sect_name, "effector_psy_health", "_", *ln);
-			if(!pSettings->section_exist(pp_sect_name))
-				strcpy_s			(pp_sect_name, "effector_psy_health");
-
-			if	( !fsimilar(GetPsyHealth(), 1.0f, 0.05f) )
-			{
-				if(!ppe)
-				{
-					AddEffector(m_object,effPsyHealth, pp_sect_name, GET_KOEFF_FUNC(this, &CActorCondition::GetPsy));
-				}
-			}else
-			{
-				if(ppe)
-					RemoveEffector(m_object,effPsyHealth);
-			}
-		}
-//-		if(fis_zero(GetPsyHealth()))
-//-			SetHealth( 0.0f );
 	};
 
-	UpdateSatiety				();
+	UpdateSatiety();
+	UpdatePsyHealth();
 
 	if (GameConstants::GetActorThirst())
 	{
@@ -364,7 +349,7 @@ void CActorCondition::UpdateCondition()
 			m_death_effector->Stop();
 	}
 
-	AffectDamage_InjuriousMaterial();
+	AffectDamage_InjuriousMaterialAndMonstersInfluence();
 
 	/*if(m_fDeltaTime > 0.0f)
 	{
@@ -385,42 +370,96 @@ void CActorCondition::UpdateCondition()
 	}*/
 }
 
-void CActorCondition::AffectDamage_InjuriousMaterial()
+void CActorCondition::AffectDamage_InjuriousMaterialAndMonstersInfluence()
 {
 	float one = 0.1f;
-	float tg  = Device.fTimeGlobal;
-
-	float damage = GetInjuriousMaterialDamage();
-	if ( damage < EPS )
-	{
-		m_f_time_affected = tg;
-		return;
-	}
-
-	if ( m_f_time_affected + one > tg )
+	float tg = Device.fTimeGlobal;
+	if (m_f_time_affected + one > tg)
 	{
 		return;
 	}
-	clamp( m_f_time_affected, tg - (one * 3), tg );
-	
-	damage *= one;
+
+	clamp(m_f_time_affected, tg - (one * 3), tg);
+
+	float psy_influence = 0;
+	float fire_influence = 0;
+	float radiation_influence = GetInjuriousMaterialDamage(); // Get Radiation from Material
+
+	// Add Radiation and Psy Level from Monsters
+	CPda* const pda = m_object->GetPDA();
+
+	if (pda)
+	{
+		typedef xr_vector<CObject*>				monsters;
+
+		for (monsters::const_iterator	it = pda->feel_touch.begin();
+			it != pda->feel_touch.end();
+			++it)
+		{
+			CBaseMonster* const	monster = smart_cast<CBaseMonster*>(*it);
+
+			if (!monster) continue;
+
+			if (monster->g_Alive())
+			{
+				psy_influence += monster->get_psy_influence();
+				radiation_influence += monster->get_radiation_influence();
+				fire_influence += monster->get_fire_influence();
+			}
+			else
+			{
+				if (monster->get_enable_psy_aura_after_die())
+					psy_influence += monster->get_psy_influence();
+
+				if (monster->get_enable_rad_aura_after_die())
+					radiation_influence += monster->get_radiation_influence();
+
+				if (monster->get_enable_fire_aura_after_die())
+					fire_influence += monster->get_fire_influence();
+			}
+		}
+	}
+
+	struct
+	{
+		ALife::EHitType	type;
+		float			value;
+
+	} hits[] = { { ALife::eHitTypeRadiation, radiation_influence * one },
+							{ ALife::eHitTypeTelepatic, psy_influence * one },
+							{ ALife::eHitTypeBurn,		fire_influence * one } };
 
 	NET_Packet	np;
 
-	while ( m_f_time_affected + one < tg )
+	while (m_f_time_affected + one < tg)
 	{
 		m_f_time_affected += one;
 
-		SHit HDS = SHit( damage, 0.0f, Fvector().set(0,1,0), NULL, BI_NONE, Fvector().set(0,0,0), 0.0f, ALife::eHitTypeRadiation );
-///		Msg( "_____ damage = %.4f     frame=%d", damage, Device.dwFrame );
+		for (int i = 0; i < sizeof(hits) / sizeof(hits[0]); ++i)
+		{
+			float			damage = hits[i].value;
+			ALife::EHitType	type = hits[i].type;
 
-		HDS.GenHeader(GE_HIT, m_object->ID());
+			if (damage > EPS)
+			{
+				SHit HDS = SHit(damage,
+					0.0f, 
+					Fvector().set(0, 1, 0),
+					NULL,
+					BI_NONE,
+					Fvector().set(0, 0, 0),
+					0.0f,
+					type,
+					0.0f,
+					false);
 
-		HDS.Write_Packet( np );
-		CGameObject::u_EventSend( np );
+				HDS.GenHeader(GE_HIT, m_object->ID());
+				HDS.Write_Packet(np);
+				CGameObject::u_EventSend(np);
+			}
 
-		m_object->Hit(&HDS);
-	
+		} // for
+
 	}//while
 }
 
@@ -463,35 +502,24 @@ void CActorCondition::UpdateRadiation()
 
 void CActorCondition::UpdateSatiety()
 {
-	if (!IsGameTypeSingle()) return;
-
-	float k = 1.0f;
-	if(m_fSatiety>0)
+	if (!IsGameTypeSingle())
 	{
-		m_fSatiety -=	m_fV_Satiety*
-						k*
-						m_fDeltaTime;
-	
-		clamp			(m_fSatiety,		0.0f,		1.0f);
-
-	}
-		
-	//сытость увеличивает здоровье только если нет открытых ран
-	if(!m_bIsBleeding)
-	{
-		m_fDeltaHealth += CanBeHarmed() ? 
-					(m_fV_SatietyHealth*(m_fSatiety>0.0f?1.f:-1.f)*m_fDeltaTime)
-					: 0;
+		m_fDeltaPower += m_fV_SatietyPower * m_fDeltaTime;
+		return;
 	}
 
-	//коэффициенты уменьшения восстановления силы от сытоти и радиации
-	float radiation_power_k		= 1.f;
-	float satiety_power_k		= 1.f;
-			
-	m_fDeltaPower += m_fV_SatietyPower*
-				radiation_power_k*
-				satiety_power_k*
-				m_fDeltaTime;
+	if (m_fSatiety > 0)
+	{
+		m_fSatiety -= m_fV_Satiety * m_fDeltaTime;
+		clamp(m_fSatiety, 0.0f, 1.0f);
+	}
+
+	float satiety_health_koef = (m_fSatiety - m_fSatietyCritical) / (m_fSatiety >= m_fSatietyCritical ? 1 - m_fSatietyCritical : m_fSatietyCritical);
+	if (CanBeHarmed() && !psActorFlags.test(AF_GODMODE_RT))
+	{
+		m_fDeltaHealth += m_fV_SatietyHealth * satiety_health_koef * m_fDeltaTime;
+		m_fDeltaPower += m_fV_SatietyPower * m_fSatiety * m_fDeltaTime;
+	}
 }
 
 //M.F.S. Team Thirst
@@ -510,7 +538,7 @@ void CActorCondition::UpdateThirst()
 
 	}
 
-	//жажда увеличивает здоровье только если нет открытых ран
+	//Р¶Р°Р¶РґР° СѓРІРµР»РёС‡РёРІР°РµС‚ Р·РґРѕСЂРѕРІСЊРµ С‚РѕР»СЊРєРѕ РµСЃР»Рё РЅРµС‚ РѕС‚РєСЂС‹С‚С‹С… СЂР°РЅ
 	if (!m_bIsBleeding)
 	{
 		m_fDeltaHealth += CanBeHarmed() ?
@@ -518,7 +546,7 @@ void CActorCondition::UpdateThirst()
 			: 0;
 	}
 
-	//коэффициенты уменьшения восстановления силы от жажды
+	//РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ СѓРјРµРЅСЊС€РµРЅРёСЏ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ СЃРёР»С‹ РѕС‚ Р¶Р°Р¶РґС‹
 	float thirst_power_k = 1.f;
 
 	m_fDeltaPower += m_fV_ThirstPower *
@@ -559,7 +587,7 @@ void CActorCondition::UpdateIntoxication()
 //M.F.S. Team Sleepeness
 void CActorCondition::UpdateSleepeness()
 {
-	if (GetSleepeness() >= 0.85f)
+	if (GetSleepeness() >= 0.85f && !GameConstants::GetSleepInfluenceOnPsyHealth())
 	{
 		luabind::functor<void> funct;
 		if (ai().script_engine().functor("mfs_functions.generate_phantoms", funct))
@@ -576,7 +604,7 @@ void CActorCondition::UpdateSleepeness()
 	CEffectorCam* ce = Actor()->Cameras().GetCamEffector((ECamEffectorType)effSleepeness);
 	if (m_fSleepeness <= m_fSleepenessCritical)
 	{
-		if (!ce)
+		if (!ce && pSettings->section_exist("effector_sleepeness"))
 			AddEffector(m_object, effSleepeness, "effector_sleepeness", GET_KOEFF_FUNC(this, &CActorCondition::GetSleepeness));
 	}
 	else
@@ -598,7 +626,12 @@ void CActorCondition::UpdateSleepeness()
 	if (CanBeHarmed() && !psActorFlags.test(AF_GODMODE_RT))
 	{
 		if (m_fSleepeness >= m_fSleepenessCritical)
+		{
 			m_fDeltaPower -= m_fV_SleepenessPower * m_fSleepeness * m_fDeltaTime;
+
+			if (GameConstants::GetSleepInfluenceOnPsyHealth())
+				m_fDeltaPsyHealth -= m_fV_SleepenessPsyHealth * m_fSleepeness * m_fDeltaTime;
+		}
 	}
 }
 
@@ -684,13 +717,40 @@ void CActorCondition::UpdateNarcotism()
 	}
 }
 
+//M.F.S. Team Psy Health
+void CActorCondition::UpdatePsyHealth()
+{
+	if (GetPsy() > 0.85f)
+	{
+		luabind::functor<void> funct;
+		if (ai().script_engine().functor("mfs_functions.generate_phantoms", funct))
+			funct();
+
+		if (m_bPsyHealthKillActor)
+			m_fDeltaHealth -= m_fV_PsyHealth_Health * GetPsy() * m_fDeltaTime;
+	}
+
+	CEffectorPP* ppePsyHealth = object().Cameras().GetPPEffector((EEffectorPPType)effPsyHealth);
+
+	if (!fsimilar(GetPsyHealth(), 1.0f, 0.05f))
+	{
+		if (!ppePsyHealth && pSettings->section_exist("effector_psy_health"))
+			AddEffector(m_object, effPsyHealth, "effector_psy_health", GET_KOEFF_FUNC(this, &CActorCondition::GetPsy));
+	}
+	else
+	{
+		if (ppePsyHealth)
+			RemoveEffector(m_object, effPsyHealth);
+	}
+}
+
 CWound* CActorCondition::ConditionHit(SHit* pHDS)
 {
 	if (GodMode()) return NULL;
 	return inherited::ConditionHit(pHDS);
 }
 
-//weight - "удельный" вес от 0..1
+//weight - "СѓРґРµР»СЊРЅС‹Р№" РІРµСЃ РѕС‚ 0..1
 void CActorCondition::ConditionJump(float weight)
 {
 	float power			=	m_fJumpPower;
@@ -863,6 +923,13 @@ void CActorCondition::ChangeWithdrawal(float value)
 void CActorCondition::ChangeDrugs(float value)
 {
 	m_fDrugs += value;
+}
+
+//M.F.S. Team Psy Health
+void CActorCondition::ChangePsyHealth(float value)
+{
+	m_fPsyHealth += value;
+	clamp(m_fPsyHealth, 0.0f, 1.0f);
 }
 
 void CActorCondition::UpdateTutorialThresholds()
@@ -1079,4 +1146,16 @@ void CActorDeathEffector::Stop()
 	m_death_sound.destroy	();
 	enable_input			();
 	show_indicators			();
+}
+
+void CActorCondition::WoundForEach(const luabind::functor<bool>& funct)
+{
+	auto const& cur_wounds = wounds();
+	CEntityCondition::WOUND_VECTOR::const_iterator it = wounds().begin();
+	CEntityCondition::WOUND_VECTOR::const_iterator it_e = wounds().end();
+	for (; it != it_e; ++it)
+	{
+		if (funct(it) == true)
+			break;
+	}
 }

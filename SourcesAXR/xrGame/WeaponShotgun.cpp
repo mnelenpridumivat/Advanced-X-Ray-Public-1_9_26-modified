@@ -34,6 +34,12 @@ void CWeaponShotgun::Load	(LPCSTR section)
 
 		m_sounds.LoadSound(section, "snd_add_cartridge", "sndAddCartridge", false, m_eSoundAddCartridge);
 
+		if (WeaponSoundExist(section, "snd_add_cartridge_empty", true))
+			m_sounds.LoadSound(section, "snd_add_cartridge_empty", "sndAddCartridgeEmpty", false, m_eSoundAddCartridge);
+
+		if (WeaponSoundExist(section, "snd_reload_misfire", true))
+			m_sounds.LoadSound(section, "snd_reload_misfire", "sndReloadMisfire", false, m_eSoundOpen);
+
 		m_sounds.LoadSound(section, "snd_close_weapon", "sndClose_2", false, m_eSoundClose_2);
 	};
 
@@ -50,7 +56,7 @@ bool CWeaponShotgun::Action			(u16 cmd, u32 flags)
 {
 	if(inherited::Action(cmd, flags)) return true;
 
-	if(	m_bTriStateReload && GetState()==eReload &&
+	if(	m_bTriStateReload && GetState()==eReload && !IsMisfire() &&
 		cmd==kWPN_FIRE && flags&CMD_START &&
 		m_sub_state==eSubstateReloadInProcess		)//остановить перезагрузку
 	{
@@ -66,20 +72,25 @@ void CWeaponShotgun::OnAnimationEnd(u32 state)
 	if(!m_bTriStateReload || state != eReload)
 		return inherited::OnAnimationEnd(state);
 
-	switch(m_sub_state){
-		case eSubstateReloadBegin:{
-			m_sub_state = eSubstateReloadInProcess;
+	switch(m_sub_state)
+	{
+		case eSubstateReloadBegin:
+		{
+			m_sub_state = IsMisfire() ? eSubstateReloadEnd : eSubstateReloadInProcess;
 			SwitchState(eReload);
 		}break;
 
-		case eSubstateReloadInProcess:{
-			if( 0 != AddCartridge(1) ){
+		case eSubstateReloadInProcess:
+		{
+			if( 0 != AddCartridge(1) )
+			{
 				m_sub_state = eSubstateReloadEnd;
 			}
 			SwitchState(eReload);
 		}break;
 
-		case eSubstateReloadEnd:{
+		case eSubstateReloadEnd:
+		{
 			m_sub_state = eSubstateReloadBegin;
 			SwitchState(eIdle);
 		}break;
@@ -97,10 +108,11 @@ void CWeaponShotgun::Reload()
 
 void CWeaponShotgun::TriStateReload()
 {
-	if( m_magazine.size() == (u32)iMagazineSize ||  !HaveCartridgeInInventory(1) )return;
-	CWeapon::Reload		();
-	m_sub_state			= eSubstateReloadBegin;
-	SwitchState			(eReload);
+	if (!(m_magazine.size() == (u32)iMagazineSize) || HaveCartridgeInInventory(1) || IsMisfire())
+	{
+		m_sub_state = eSubstateReloadBegin;
+		SwitchState(eReload);
+	}
 }
 
 void CWeaponShotgun::OnStateSwitch	(u32 S)
@@ -112,7 +124,8 @@ void CWeaponShotgun::OnStateSwitch	(u32 S)
 
 	CWeapon::OnStateSwitch(S);
 
-	if( m_magazine.size() == (u32)iMagazineSize || !HaveCartridgeInInventory(1) ){
+	if( m_magazine.size() == (u32)iMagazineSize || !HaveCartridgeInInventory(1) && !IsMisfire())
+	{
 			switch2_EndReload		();
 			m_sub_state = eSubstateReloadEnd;
 			return;
@@ -121,7 +134,7 @@ void CWeaponShotgun::OnStateSwitch	(u32 S)
 	switch (m_sub_state)
 	{
 	case eSubstateReloadBegin:
-		if( HaveCartridgeInInventory(1) )
+		if(HaveCartridgeInInventory(1) || IsMisfire())
 			switch2_StartReload	();
 		break;
 	case eSubstateReloadInProcess:
@@ -136,14 +149,22 @@ void CWeaponShotgun::OnStateSwitch	(u32 S)
 
 void CWeaponShotgun::switch2_StartReload()
 {
-	PlaySound			("sndOpen",get_LastFP());
+	if (!IsMisfire())
+		PlaySound("sndOpen", get_LastFP());
+	else
+		PlaySound("sndReloadMisfire", get_LastFP());
+
 	PlayAnimOpenWeapon	();
 	SetPending			(TRUE);
 }
 
 void CWeaponShotgun::switch2_AddCartgidge	()
 {
-	PlaySound	("sndAddCartridge",get_LastFP());
+	if (WeaponSoundExist(m_section_id.c_str(), "snd_add_cartridge_empty") && iAmmoElapsed == 0)
+		PlaySound("sndAddCartridgeEmpty", get_LastFP());
+	else
+		PlaySound("sndAddCartridge", get_LastFP());
+
 	PlayAnimAddOneCartridgeWeapon();
 	SetPending			(TRUE);
 }
@@ -151,8 +172,21 @@ void CWeaponShotgun::switch2_AddCartgidge	()
 void CWeaponShotgun::switch2_EndReload	()
 {
 	SetPending			(FALSE);
-	PlaySound("sndClose_2", get_LastFP());
-	PlayAnimCloseWeapon	();
+
+	if (!IsMisfire())
+	{
+		PlaySound("sndClose_2", get_LastFP());
+		PlayAnimCloseWeapon();
+	}
+	else
+	{
+		bMisfire = false;
+
+		if (GetAmmoElapsed() > 0) //xrKrodin: хз, надо ли удал€ть заклинивший патрон в данном случае. Ќадо подумать над этим.
+			SetAmmoElapsed(GetAmmoElapsed() - 1);
+
+		SwitchState(eIdle);
+	}
 }
 
 void CWeaponShotgun::PlayAnimOpenWeapon()
@@ -163,13 +197,65 @@ void CWeaponShotgun::PlayAnimOpenWeapon()
 void CWeaponShotgun::PlayAnimAddOneCartridgeWeapon()
 {
 	VERIFY(GetState()==eReload);
-	PlayHUDMotion("anm_add_cartridge",FALSE,this,GetState());
+
+	if (iAmmoElapsed == 0)
+		PlayHUDMotionIfExists({ "anm_add_cartridge_empty", "anm_add_cartridge" }, true, GetState());
+	else
+		PlayHUDMotion("anm_add_cartridge", FALSE, this, GetState());
 }
 void CWeaponShotgun::PlayAnimCloseWeapon()
 {
 	VERIFY(GetState()==eReload);
 
 	PlayHUDMotionIfExists({ "anm_close_weapon", "anm_close" }, false, GetState());
+}
+
+void CWeaponShotgun::PlayAnimAim()
+{
+	if (IsRotatingToZoom())
+	{
+		if (isHUDAnimationExist("anm_idle_aim_start"))
+		{
+			PlayHUDMotionNew("anm_idle_aim_start", true, GetState());
+			return;
+		}
+	}
+
+	if (const char* guns_aim_anm = GetAnimAimName())
+	{
+		if (isHUDAnimationExist(guns_aim_anm))
+		{
+			PlayHUDMotionNew(guns_aim_anm, true, GetState());
+			return;
+		}
+		else if (strstr(guns_aim_anm, "_jammed"))
+		{
+			char new_guns_aim_anm[256];
+			strcpy(new_guns_aim_anm, guns_aim_anm);
+			new_guns_aim_anm[strlen(guns_aim_anm) - strlen("_jammed")] = '\0';
+
+			if (isHUDAnimationExist(new_guns_aim_anm))
+			{
+				PlayHUDMotionNew(new_guns_aim_anm, true, GetState());
+				return;
+			}
+		}
+		else if (strstr(guns_aim_anm, "_empty"))
+		{
+			char new_guns_aim_anm[256];
+			strcpy(new_guns_aim_anm, guns_aim_anm);
+			new_guns_aim_anm[strlen(guns_aim_anm) - strlen("_empty")] = '\0';
+
+			if (isHUDAnimationExist(new_guns_aim_anm))
+			{
+				PlayHUDMotionNew(new_guns_aim_anm, true, GetState());
+				return;
+			}
+		}
+	}
+
+	if (isHUDAnimationExist("anm_idle_aim"))
+		PlayHUDMotion("anm_idle_aim", TRUE, NULL, GetState());
 }
 
 bool CWeaponShotgun::HaveCartridgeInInventory(u8 cnt)
@@ -196,7 +282,7 @@ bool CWeaponShotgun::HaveCartridgeInInventory(u8 cnt)
 
 u8 CWeaponShotgun::AddCartridge		(u8 cnt)
 {
-	if(IsMisfire())	bMisfire = false;
+	if (IsMisfire())	bMisfire = false;
 
 	if ( m_set_next_ammoType_on_reload != undefined_ammo_type )
 	{

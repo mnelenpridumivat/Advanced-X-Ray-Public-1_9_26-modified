@@ -84,7 +84,6 @@ public:
 		u32		distortion			: 1;
 		u32		distortion_enabled	: 1;
 		u32		mblur				: 1;
-		u32		pseudo_pbr			: 1;
 
 		u32		sunfilter			: 1;
 		u32		sunstatic			: 1;
@@ -99,7 +98,6 @@ public:
 	  u32		dx10_msaa_hybrid	: 1;	//	DX10.0 main path with DX10.1 A-test msaa allowed
       u32		dx10_msaa_opt	    : 1;	//	DX10.1 path
       u32		dx10_gbuffer_opt	: 1;	//	
-	  u32		dx10_sm4_1			: 1;	//	DX10.1 path
       u32		dx10_msaa_alphatest	: 2;	//	A-test mode
 	  u32		dx10_msaa_samples	: 4;
 
@@ -156,7 +154,7 @@ public:
 	light_Package												LP_normal;
 	light_Package												LP_pending;
 
-	xr_vector<Fbox3,render_alloc<Fbox3> >						main_coarse_structure;
+	xr_vector<Fbox3>											main_coarse_structure;
 
 	shared_str													c_sbase			;
 	shared_str													c_lmaterial		;

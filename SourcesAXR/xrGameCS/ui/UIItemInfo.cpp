@@ -17,7 +17,8 @@
 #include "UIInventoryUtilities.h"
 #include "../PhysicsShellHolder.h"
 #include "UIWpnParams.h"
-#include "ui_af_params.h"
+#include "UIArtefactParams.h"
+#include "UICellItem.h"
 #include "UIInvUpgradeProperty.h"
 #include "UIOutfitInfo.h"
 #include "../Weapon.h"
@@ -31,14 +32,15 @@
 
 extern const LPCSTR g_inventory_upgrade_xml;
 
-#define  INV_GRID_WIDTH2  40
-#define  INV_GRID_HEIGHT2 40
+#define INV_GRID_WIDTH2(HQ_ICONS) ((HQ_ICONS) ? (80.0f) : (40.0f))
+#define INV_GRID_HEIGHT2(HQ_ICONS) ((HQ_ICONS) ? (80.0f) : (40.0f))
 
 CUIItemInfo::CUIItemInfo()
 {
 	UIItemImageSize.set			(0.0f,0.0f);
 	
 	UICost						= NULL;
+	UITradeTip					= NULL;
 	UIWeight					= NULL;
 	UIItemImage					= NULL;
 	UIDesc						= NULL;
@@ -121,6 +123,14 @@ void CUIItemInfo::InitItemInfo(LPCSTR xml_name)
 		xml_init.InitStatic		(uiXml, "static_cost", 0,			UICost);
 	}
 
+	if(uiXml.NavigateToNode("static_no_trade",0))
+	{
+		UITradeTip					= xr_new<CUIStatic>();
+		AttachChild					(UITradeTip);
+		UITradeTip->SetAutoDelete	(true);
+		xml_init.InitStatic			(uiXml, "static_no_trade", 0,		UITradeTip);
+	}
+
 	if(uiXml.NavigateToNode("descr_list",0))
 	{
 		UIConditionWnd					= xr_new<CUIConditionParams>();
@@ -186,8 +196,16 @@ void CUIItemInfo::InitItemInfo(Fvector2 pos, Fvector2 size, LPCSTR xml_name)
 
 bool	IsGameTypeSingle();
 
-void CUIItemInfo::InitItem(CInventoryItem* pInvItem, CInventoryItem* pCompareItem)
+void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem, u32 item_price, LPCSTR trade_tip)
 {
+	if(!pCellItem)
+	{
+		m_pInvItem			= NULL;
+		Enable				(false);
+		return;
+	}
+
+	PIItem pInvItem			= (PIItem)pCellItem->m_pData;
 	m_pInvItem				= pInvItem;
 	Enable					(NULL != m_pInvItem);
 	if(!m_pInvItem)			return;
@@ -211,10 +229,15 @@ void CUIItemInfo::InitItem(CInventoryItem* pInvItem, CInventoryItem* pCompareIte
 			{
 				// its helper item, m_boxCur is zero, so recalculate via CInventoryItem::Weight()
 				weight = pInvItem->CInventoryItem::Weight();
+				for( u32 j = 0; j < pCellItem->ChildsCount(); ++j )
+				{
+					PIItem jitem	= (PIItem)pCellItem->Child(j)->m_pData;
+					weight			+= jitem->CInventoryItem::Weight();
+				}
 			}
 		}
 
-		sprintf				(str, "%3.2f %s", weight, kg_str );
+		xr_sprintf			(str, "%3.2f %s", weight, kg_str );
 		UIWeight->SetText	(str);
 		
 		pos.x = UIWeight->GetWndPos().x;
@@ -225,14 +248,21 @@ void CUIItemInfo::InitItem(CInventoryItem* pInvItem, CInventoryItem* pCompareIte
 	}
 	if ( UICost && IsGameTypeSingle() )
 	{
-		sprintf				(str, "%d RU", pInvItem->Cost());		// will be owerwritten in multiplayer
-		UICost->SetText		(str);
-		pos.x = UICost->GetWndPos().x;
-		if ( m_complex_desc )
+		if (item_price != u32(-1))
 		{
-			UICost->SetWndPos	(pos);
+			xr_sprintf(str, "%d RU", item_price);// will be owerwritten in multiplayer
+			UICost->SetText(str);
+			UICost->Show(true);
+		}
+		else if (item_price == u32(-1))
+		{
+			xr_sprintf(str, "%d RU", pInvItem->Cost());// will be owerwritten in multiplayer
+			UICost->SetText(str);
+			UICost->Show(true);
 		}
 	}
+	else
+		UICost->Show(false);
 	
 //	CActor* actor = smart_cast<CActor*>( Level().CurrentViewEntity() );
 //	if ( g_pGameLevel && Level().game && actor )
@@ -242,13 +272,33 @@ void CUIItemInfo::InitItem(CInventoryItem* pInvItem, CInventoryItem* pCompareIte
 //		GetItemPrice();
 //	}
 	
-	if ( UIDesc )
+	if ( UITradeTip && IsGameTypeSingle())
 	{
-		pos.y = UIDesc->GetWndPos().y;
+		pos.y = UITradeTip->GetWndPos().y;
 		if ( UIWeight && m_complex_desc )
 		{
 			pos.y = UIWeight->GetWndPos().y + UIWeight->GetHeight() + 4.0f;
 		}
+
+		if(trade_tip==NULL)
+			UITradeTip->Show(false);
+		else
+		{
+			UITradeTip->SetText(CStringTable().translate(trade_tip).c_str());
+			UITradeTip->AdjustHeightToText();
+			UITradeTip->SetWndPos(pos);
+			UITradeTip->Show(true);
+		}
+	}
+	
+	if ( UIDesc )
+	{
+		pos.y = UIDesc->GetWndPos().y;
+		if ( UIWeight )
+			pos.y = UIWeight->GetWndPos().y + UIWeight->GetHeight() + 4.0f;
+
+		if(UITradeTip && trade_tip!=NULL)
+			pos.y = UITradeTip->GetWndPos().y + UITradeTip->GetHeight() + 4.0f;
 
 		pos.x					= UIDesc->GetWndPos().x;
 		UIDesc->SetWndPos		(pos);
@@ -290,19 +340,138 @@ void CUIItemInfo::InitItem(CInventoryItem* pInvItem, CInventoryItem* pCompareIte
 	}
 	if(UIItemImage)
 	{
-		// ��������� ��������
+		// Загружаем картинку
 		UIItemImage->SetShader				(InventoryUtilities::GetEquipmentIconsShader());
 
 		Irect item_grid_rect				= pInvItem->GetInvGridRect();
-		UIItemImage->GetUIStaticItem().SetOriginalRect(	float(item_grid_rect.x1*INV_GRID_WIDTH), float(item_grid_rect.y1*INV_GRID_HEIGHT),
-														float(item_grid_rect.x2*INV_GRID_WIDTH),	float(item_grid_rect.y2*INV_GRID_HEIGHT));
+		UIItemImage->GetUIStaticItem().SetOriginalRect(	float(item_grid_rect.x1*INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons())), float(item_grid_rect.y1*INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons())),
+														float(item_grid_rect.x2*INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons())),	float(item_grid_rect.y2*INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons())));
 		UIItemImage->TextureOn				();
 		UIItemImage->ClipperOn				();
 		UIItemImage->SetStretchTexture		(true);
-		Frect v_r							= {	0.0f, 
-												0.0f, 
-												float(item_grid_rect.x2*INV_GRID_WIDTH2),	
-												float(item_grid_rect.y2*INV_GRID_HEIGHT2)};
+		Frect v_r{};
+			
+		if (GameConstants::GetUseHQ_Icons())
+		{
+			v_r = { 0.0f,
+				0.0f,
+				float(item_grid_rect.x2 * INV_GRID_WIDTH2(GameConstants::GetUseHQ_Icons()) / 2),
+				float(item_grid_rect.y2 * INV_GRID_HEIGHT2(GameConstants::GetUseHQ_Icons()) / 2) };
+		}
+		else
+		{
+				v_r = { 0.0f,
+				0.0f,
+				float(item_grid_rect.x2 * INV_GRID_WIDTH2(GameConstants::GetUseHQ_Icons())),
+				float(item_grid_rect.y2 * INV_GRID_HEIGHT2(GameConstants::GetUseHQ_Icons())) };
+		}
+		if(UI()->is_16_9_mode())
+			v_r.x2 /= 1.2f;
+
+		UIItemImage->GetUIStaticItem().SetRect	(v_r);
+//		UIItemImage->SetWidth					(_min(v_r.width(),	UIItemImageSize.x));
+//		UIItemImage->SetHeight					(_min(v_r.height(),	UIItemImageSize.y));
+		UIItemImage->SetWidth					( v_r.width()  );
+		UIItemImage->SetHeight					( v_r.height() );
+	}
+}
+
+void CUIItemInfo::InitItemUpgrade(CInventoryItem* pInvItem)
+{
+	m_pInvItem				= pInvItem;
+	Enable					(NULL != m_pInvItem);
+	if(!m_pInvItem)			return;
+
+	Fvector2				pos;	pos.set( 0.0f, 0.0f );
+	string256				str;
+	if ( UIName )
+	{
+		UIName->SetText		(pInvItem->NameItem());
+		UIName->AdjustHeightToText();
+	}
+	if ( UIWeight )
+	{
+		LPCSTR  kg_str = CStringTable().translate( "st_kg" ).c_str();
+		float	weight = pInvItem->Weight();
+
+		xr_sprintf			(str, "%3.2f %s", weight, kg_str );
+		UIWeight->SetText	(str);
+	}
+	if ( UICost && IsGameTypeSingle() )
+	{
+		xr_sprintf(str, "%d RU", pInvItem->Cost());// will be owerwritten in multiplayer
+		UICost->SetText(str);
+		UICost->Show(true);
+	
+	}
+	
+	if ( UIDesc )
+	{
+
+		pos.x					= UIDesc->GetWndPos().x;
+		UIDesc->SetWndPos		(pos);
+		UIDesc->Clear			();
+		VERIFY					(0==UIDesc->GetSize());
+		if(m_desc_info.bShowDescrText)
+		{
+			CUIStatic* pItem					= xr_new<CUIStatic>();
+			pItem->SetTextColor					(m_desc_info.uDescClr);
+			pItem->SetFont						(m_desc_info.pDescFont);
+			pItem->SetWidth						(UIDesc->GetDesiredChildWidth());
+			pItem->SetTextComplexMode			(true);
+			pItem->SetText						(*pInvItem->ItemDescription());
+			pItem->AdjustHeightToText			();
+			UIDesc->AddWindow					(pItem, true);
+		}
+		TryAddConditionInfo					(*pInvItem, NULL);
+		TryAddWpnInfo						(*pInvItem, NULL);
+		TryAddArtefactInfo					(*pInvItem);
+		TryAddOutfitInfo					(*pInvItem, NULL);
+		TryAddUpgradeInfo					(*pInvItem);
+		TryAddBoosterInfo					(*pInvItem);
+
+		if(m_b_FitToHeight)
+		{
+			UIDesc->SetWndSize				(Fvector2().set(UIDesc->GetWndSize().x, UIDesc->GetPadSize().y) );
+			Fvector2 new_size;
+			new_size.x						= GetWndSize().x;
+			new_size.y						= UIDesc->GetWndPos().y+UIDesc->GetWndSize().y+20.0f;
+			new_size.x						= _max(105.0f, new_size.x);
+			new_size.y						= _max(105.0f, new_size.y);
+			SetWndSize						(new_size);
+			if(UIBackground)
+				UIBackground->InitFrameWindow(UIBackground->GetWndPos(), new_size);
+		}
+
+		UIDesc->ScrollToBegin				();
+	}
+	if(UIItemImage)
+	{
+		// Загружаем картинку
+		UIItemImage->SetShader				(InventoryUtilities::GetEquipmentIconsShader());
+
+		Irect item_grid_rect				= pInvItem->GetInvGridRect();
+		UIItemImage->GetUIStaticItem().SetOriginalRect(	float(item_grid_rect.x1*INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons())), float(item_grid_rect.y1*INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons())),
+														float(item_grid_rect.x2*INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons())),	float(item_grid_rect.y2*INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons())));
+		UIItemImage->TextureOn				();
+		UIItemImage->ClipperOn				();
+		UIItemImage->SetStretchTexture		(true);
+		Frect v_r{};
+			
+		if (GameConstants::GetUseHQ_Icons())
+		{
+			v_r = { 0.0f,
+				0.0f,
+				float(item_grid_rect.x2 * INV_GRID_WIDTH2(GameConstants::GetUseHQ_Icons()) / 2),
+				float(item_grid_rect.y2 * INV_GRID_HEIGHT2(GameConstants::GetUseHQ_Icons()) / 2) };
+		}
+		else
+		{
+				v_r = { 0.0f,
+				0.0f,
+				float(item_grid_rect.x2 * INV_GRID_WIDTH2(GameConstants::GetUseHQ_Icons())),
+				float(item_grid_rect.y2 * INV_GRID_HEIGHT2(GameConstants::GetUseHQ_Icons())) };
+		}
 		if(UI()->is_16_9_mode())
 			v_r.x2 /= 1.2f;
 
@@ -316,15 +485,13 @@ void CUIItemInfo::InitItem(CInventoryItem* pInvItem, CInventoryItem* pCompareIte
 
 void CUIItemInfo::TryAddConditionInfo( CInventoryItem& pInvItem, CInventoryItem* pCompareItem )
 {
-	CWeapon*		weapon = smart_cast<CWeapon*>( &pInvItem );
-	CCustomOutfit*	outfit = smart_cast<CCustomOutfit*>( &pInvItem );
 	CTorch*			torch = smart_cast<CTorch*>(&pInvItem);
 	CCustomDetector* artefact_detector = smart_cast<CCustomDetector*>(&pInvItem);
 	CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly*>(&pInvItem);
 
 	bool ShowCharge = GameConstants::GetTorchHasBattery() || GameConstants::GetArtDetectorUseBattery() || GameConstants::GetAnoDetectorUseBattery();
 
-	if ( weapon || outfit)
+	if ( pInvItem.IsUsingCondition() )
 	{
 		UIConditionWnd->SetInfo( pCompareItem, pInvItem );
 		UIDesc->AddWindow( UIConditionWnd, false );
@@ -339,7 +506,7 @@ void CUIItemInfo::TryAddConditionInfo( CInventoryItem& pInvItem, CInventoryItem*
 
 void CUIItemInfo::TryAddWpnInfo( CInventoryItem& pInvItem, CInventoryItem* pCompareItem )
 {
-	if (UIWpnParams->Check( pInvItem.object().cNameSect()) && GameConstants::GetShowWpnInfo())
+	if (UIWpnParams->Check( pInvItem) && GameConstants::GetShowWpnInfo())
 	{
 		UIWpnParams->SetInfo( pCompareItem, pInvItem );
 		UIDesc->AddWindow( UIWpnParams, false );
@@ -382,7 +549,7 @@ void CUIItemInfo::TryAddItemInfo(CInventoryItem& pInvItem)
 
 	if ((item || hud_item) && UIInventoryItem)
 	{
-		UIInventoryItem->SetInfo(pInvItem.object().cNameSect());
+		UIInventoryItem->SetInfo(pInvItem);
 		UIDesc->AddWindow(UIInventoryItem, false);
 	}
 }

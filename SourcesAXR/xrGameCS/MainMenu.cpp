@@ -57,7 +57,7 @@ CMainMenu*	MainMenu()	{return (CMainMenu*)g_pGamePersistent->m_pMainMenu; };
 #define INIT_MSGBOX(_box, _template)	{ _box = xr_new<CUIMessageBoxEx>(); _box->InitMessageBox(_template);}
 //----------------------------------------------------------------------------------
 
-CMainMenu::CMainMenu	()
+CMainMenu::CMainMenu()
 {
 	m_Flags.zero					();
 	m_startDialog					= NULL;
@@ -67,6 +67,7 @@ CMainMenu::CMainMenu	()
 	ReadTextureInfo					();
 	CUIXmlInit::InitColorDefs		();
 	g_btnHint						= NULL;
+	g_statHint						= NULL;
 	m_deactivated_frame				= 0;	
 	
 	m_sPatchURL						= "";
@@ -85,6 +86,7 @@ CMainMenu::CMainMenu	()
 	if(!g_dedicated_server)
 	{
 		g_btnHint						= xr_new<CUIButtonHint>();
+		g_statHint						= xr_new<CUIButtonHint>();
 		m_pGameSpyFull					= xr_new<CGameSpy_Full>();
 		
 		for (u32 i=0; i<u32(ErrMax); i++)
@@ -100,11 +102,16 @@ CMainMenu::CMainMenu	()
 		m_pMB_ErrDlgs[DownloadMPMap]->AddCallback("button_copy", MESSAGE_BOX_COPY_CLICKED, CUIWndCallback::void_function(this, &CMainMenu::OnDownloadMPMap_CopyURL));
 		m_pMB_ErrDlgs[DownloadMPMap]->AddCallback("button_yes", MESSAGE_BOX_YES_CLICKED, CUIWndCallback::void_function(this, &CMainMenu::OnDownloadMPMap));
 	}
+
+	Msg("*Start prefetching UI textures");
+	Device.m_pRender->RenderPrefetchUITextures();
 }
 
-CMainMenu::~CMainMenu	()
+CMainMenu::~CMainMenu()
 {
+	ReportTxrsForPrefetching();
 	xr_delete						(g_btnHint);
+	xr_delete						(g_statHint);
 	xr_delete						(m_startDialog);
 	g_pGamePersistent->m_pMainMenu	= NULL;
 	xr_delete						(m_pGameSpyFull);
@@ -147,7 +154,7 @@ void CMainMenu::Activate	(bool bActivate)
 	if(bActivate)
 	{
 		b_shniaganeed_pp			= true;
-		Device.Pause				(TRUE, FALSE, TRUE, "mm_activate1");
+		GAME_PAUSE				(TRUE, FALSE, TRUE, "mm_activate1");
 		m_Flags.set					(flActive|flNeedChangeCapture,TRUE);
 
 		m_Flags.set					(flRestoreCursor,GetUICursor()->IsVisible());
@@ -166,7 +173,7 @@ void CMainMenu::Activate	(bool bActivate)
 			m_Flags.set					(flRestorePauseStr, bShowPauseString);
 			bShowPauseString			= FALSE;
 			if(!m_Flags.test(flRestorePause))
-				Device.Pause			(TRUE, TRUE, FALSE, "mm_activate2");
+				GAME_PAUSE			(TRUE, TRUE, FALSE, "mm_activate2");
 		}
 
 		//m_startDialog->m_bWorkInPause		= true;
@@ -220,7 +227,7 @@ void CMainMenu::Activate	(bool bActivate)
 		if(b_is_single)
 		{
 			if(!m_Flags.test(flRestorePause))
-				Device.Pause			(FALSE, TRUE, FALSE, "mm_deactivate1");
+				GAME_PAUSE			(FALSE, TRUE, FALSE, "mm_deactivate1");
 
 			bShowPauseString			= m_Flags.test(flRestorePauseStr);
 		}	
@@ -228,7 +235,7 @@ void CMainMenu::Activate	(bool bActivate)
 		if(m_Flags.test(flRestoreCursor))
 			GetUICursor()->Show			();
 
-		Device.Pause					(FALSE, TRUE, TRUE, "mm_deactivate2");
+		GAME_PAUSE					(FALSE, TRUE, TRUE, "mm_deactivate2");
 
 		if(m_Flags.test(flNeedVidRestart))
 		{
@@ -364,6 +371,11 @@ void CMainMenu::OnRender	()
 {
 	if(m_Flags.test(flGameSaveScreenshot))
 		return;
+
+	Render->firstViewPort = MAIN_VIEWPORT;
+	Render->lastViewPort = MAIN_VIEWPORT;
+	Render->currentViewPort = MAIN_VIEWPORT;
+	Render->needPresenting = true;
 
 	if(g_pGameLevel)
 		Render->Calculate			();
@@ -829,4 +841,15 @@ void CMainMenu::OnDownloadMPMap(CUIWindow* w, void* d)
 	LPCSTR params = NULL;
 	STRCONCAT(params, "/C start ", url);
 	ShellExecute(0, "open", "cmd.exe", params, NULL, SW_SHOW);
+}
+
+void CMainMenu::ReportTxrsForPrefetching()
+{
+	if (SuggestedForPrefetching.size() > 0)
+	{
+		Msg("---These UI textures are suggested to be prefetched since they caused stutterings when some UI window was loading");
+		Msg("---Add this list to section [prefetch_ui_textures]");
+		for (u32 i = 0; i < SuggestedForPrefetching.size(); i++)
+			Msg("%s", SuggestedForPrefetching[i].c_str());
+	}
 }
