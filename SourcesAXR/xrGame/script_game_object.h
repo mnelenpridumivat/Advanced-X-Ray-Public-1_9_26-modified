@@ -428,6 +428,7 @@ public:
 			void SetCharacterCommunity		(LPCSTR,int,int);
 			void SetCharacterName			(LPCSTR name);
 			void SetCharacterIcon			(LPCSTR icon);
+			void SetCharacterDefaultVisual	(LPCSTR name);
 		
 
 			u32					GetInventoryObjectCount() const;

@@ -695,6 +695,30 @@ void CScriptGameObject::SetCharacterIcon(LPCSTR icon)
 	return pOurOwner->SetIcon(icon);
 }
 
+void CScriptGameObject::SetCharacterDefaultVisual(LPCSTR name)
+{
+	if (!name)
+	{
+		Msg("! SetCharacterDefaultVisual(...): empty visual name!");
+		return;
+	}
+
+	CActor* pActor = smart_cast<CActor*>(&object());
+	if (!pActor)
+	{
+		Msg("! SetCharacterDefaultVisual(...): method applicable only for actor!");
+		return;
+	}
+
+	pActor->SetDefaultVisualOutfit(name);
+
+	// Update right now!
+	if (!pActor->GetOutfit())
+	{
+		pActor->ChangeVisual(pActor->GetDefaultVisualOutfit());
+	}
+}
+
 LPCSTR CScriptGameObject::sound_voice_prefix () const
 {
 	CInventoryOwner* pInventoryOwner = smart_cast<CInventoryOwner*>(&object());

@@ -52,6 +52,10 @@ namespace GameObject {
 		eInvBoxItemTake,
 		eWeaponNoAmmoAvailable,
 
+		eShieldOn,
+		eShieldOff,
+		eJump,
+
 		// vehicle
 		eAttachVehicle,
 		eDetachVehicle,

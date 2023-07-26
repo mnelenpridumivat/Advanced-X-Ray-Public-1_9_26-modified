@@ -2500,6 +2500,15 @@
     <Filter Include="Core\Client\Objects\items &amp; weapons\Devices\ArtefactContainer">
       <UniqueIdentifier>{6d7a608a-de29-4a07-8c93-097892207606}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\AMonsters\monsters\AnomalPseudoGigant">
+      <UniqueIdentifier>{29f70269-604a-4675-8f43-ccfc38386d21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\AMonsters\monsters\AnomalPseudoGigant\Script">
+      <UniqueIdentifier>{db06864f-1c1f-4ae9-82eb-6a37bf18319c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\AMonsters\monsters\AnomalPseudoGigant\Combat">
+      <UniqueIdentifier>{a361c0d0-0ef2-4701-bfb4-f00ba251832c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">
@@ -7445,6 +7454,31 @@
     <ClInclude Include="embedded_editor\editor_render_spawn_element.h">
       <Filter>EmbeddedEditor</Filter>
     </ClInclude>
+    <ClInclude Include="ai\monsters\pseudogigant\pseudo_gigant_orig.h" />
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant.h">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_manager.h">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack_shield_inline.h">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack_shield.h">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack_inline.h">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_attack.h">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_burer_state_attack_shield_inline.h">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_burer_state_attack_shield.h">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Combat</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -11153,6 +11187,25 @@
     <ClCompile Include="embedded_editor\editor_render_spawn_element.cpp">
       <Filter>EmbeddedEditor</Filter>
     </ClCompile>
+    <ClCompile Include="eatable_item_object_script.cpp" />
+    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant.cpp">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant</Filter>
+    </ClCompile>
+    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_manager.cpp">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant</Filter>
+    </ClCompile>
+    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_script.cpp">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_telekinesis.cpp">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_flame_thrower.cpp">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_ability.cpp">
+      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Combat</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ai\monsters\chimera\chimera_attack_state.h">
@@ -11173,5 +11226,8 @@
     <CustomBuild Include="ui\UIRankFaction.h">
       <Filter>UI\Common\PDA\Statistics &amp; Rankings</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

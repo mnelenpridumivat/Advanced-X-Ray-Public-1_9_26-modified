@@ -116,7 +116,7 @@ bool    ImGui_ImplWin32_Init(void* hwnd)
     ImGuiIO& io = ImGui::GetIO();
 
 	// Keyboard mapping. ImGui will use those indices to peek into the io.KeyDown[] array that we will update during the application lifetime.
-	io.KeyMap[ImGuiKey_Tab] = DIK_TAB;
+	/*io.KeyMap[ImGuiKey_Tab] = DIK_TAB;
 	io.KeyMap[ImGuiKey_LeftArrow] = DIK_LEFT;
 	io.KeyMap[ImGuiKey_RightArrow] = DIK_RIGHT;
 	io.KeyMap[ImGuiKey_UpArrow] = DIK_UP;
@@ -156,7 +156,7 @@ bool    ImGui_ImplWin32_Init(void* hwnd)
 	io.KeyMap[ImGuiKey_W] = DIK_W;
 	io.KeyMap[ImGuiKey_X] = DIK_X;
 	io.KeyMap[ImGuiKey_Y] = DIK_Y;
-	io.KeyMap[ImGuiKey_Z] = DIK_Z;
+	io.KeyMap[ImGuiKey_Z] = DIK_Z;*/
 
     IM_ASSERT(io.BackendPlatformUserData == nullptr && "Already initialized a platform backend!");
 
