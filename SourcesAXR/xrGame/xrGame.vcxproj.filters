@@ -11168,15 +11168,6 @@
     <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_manager.cpp">
       <Filter>AI\AMonsters\monsters\AnomalPseudoGigant</Filter>
     </ClCompile>
-    <ClCompile Include="AntigasFilter_script.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Consumables</Filter>
-    </ClCompile>
-    <ClCompile Include="Battery_script.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Consumables</Filter>
-    </ClCompile>
-    <ClCompile Include="RepairKit_script.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Consumables</Filter>
-    </ClCompile>
     <ClCompile Include="eatable_item_object_script.cpp">
       <Filter>Core\Client\Objects\inventory\EatableItemObject</Filter>
     </ClCompile>
