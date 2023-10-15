@@ -70,6 +70,8 @@
 
 #include "game_news.h"
 
+#include "../xrEngine/xr_ioc_cmd.h"
+
 // Hud Type
 xr_token			qhud_type_token[] = {
 	{ "hud_1",					1},
@@ -2149,6 +2151,28 @@ public:
 	}
 };
 
+class CCC_MaskCheat : public CCC_Mask 
+{
+public:
+	CCC_MaskCheat(LPCSTR N, Flags32* V, u32 M) : CCC_Mask(N, V, M){}
+
+	virtual void	Execute(LPCSTR args) {
+#ifndef DEBUG
+		if (g_pGamePersistent && (mask == AF_GODMODE || mask == AF_UNLIMITEDAMMO)) {
+			GAME_NEWS_DATA				news_data;
+			news_data.m_type = (GAME_NEWS_DATA::eNewsType)0;
+			news_data.news_caption = Actor()->Name();
+			news_data.news_text = *CStringTable().translate("st_console_Cheating");
+			news_data.texture_name = Actor()->IconName();
+			Actor()->AddGameNews(news_data);
+			return;
+		}
+#endif
+		CCC_Mask::Execute(args);
+	}
+
+};
+
 extern BOOL UIRedraw;
 
 void CCC_RegisterCommands()
@@ -2364,8 +2388,8 @@ CMD4(CCC_Integer,			"hit_anims_tune",						&tune_hit_anims,		0, 1);
 		CMD1(CCC_GiveTask,		"g_task");
 		CMD1(CCC_GiveMoney,		"g_money");
 		CMD1(DumpTxrsForPrefetching, "ui_textures_for_prefetching");//Prints the list of UI textures, which caused stutterings during game
-		CMD3(CCC_Mask,			"g_god",			&psActorFlags, AF_GODMODE);
-		CMD3(CCC_Mask,			"g_unlimitedammo",	&psActorFlags, AF_UNLIMITEDAMMO);
+		CMD3(CCC_MaskCheat,			"g_god",			&psActorFlags, AF_GODMODE);
+		CMD3(CCC_MaskCheat,			"g_unlimitedammo",	&psActorFlags, AF_UNLIMITEDAMMO);
 		CMD4(CCC_Integer,		"hud_adjust_mode",	&hud_adj_mode, 0, 5);
 	}
 

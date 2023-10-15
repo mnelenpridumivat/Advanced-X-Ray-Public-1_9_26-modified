@@ -212,7 +212,9 @@ public:
 	// Normalize
 	ICF	SelfRef	normalize(const Self &v) 
 	{
+#ifdef FS_DEBUG
 		VERIFY((v.x*v.x+v.y*v.y+v.z*v.z)>flt_zero);
+#endif
 		T mag=_sqrt(1/(v.x*v.x + v.y*v.y + v.z*v.z));
 		x = v.x*mag;
 		y = v.y*mag;

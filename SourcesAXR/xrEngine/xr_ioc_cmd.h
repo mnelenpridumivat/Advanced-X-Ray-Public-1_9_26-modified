@@ -94,7 +94,7 @@ public		:
 	  const BOOL GetValue()const{ return value->test(mask); }
 	virtual void	Execute	(LPCSTR args)
 	{
-#ifndef DEBUG
+/*#ifdef DEBUG
 		if (mask == AF_GODMODE || mask == AF_UNLIMITEDAMMO) {
 			GAME_NEWS_DATA				news_data;
 			news_data.m_type = (GAME_NEWS_DATA::eNewsType)0;
@@ -104,7 +104,7 @@ public		:
 			Actor()->AddGameNews(news_data);
 			return;
 		}
-#endif
+#endif*/
 		if (EQ(args, "on"))			value->set(mask, TRUE);
 		else if (EQ(args, "off"))	value->set(mask, FALSE);
 		else if (EQ(args, "1"))		value->set(mask, TRUE);

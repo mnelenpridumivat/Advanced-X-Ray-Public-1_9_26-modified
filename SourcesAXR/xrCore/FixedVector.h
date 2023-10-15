@@ -35,7 +35,11 @@ public:
 	IC void		push_back(value_type e)		{ VERIFY(count<dim); array[count++]=e;	}
 	IC void		pop_back()					{ VERIFY(count); count--;				}
 
-	IC reference		operator[] (u32 id)			{ VERIFY(id<count); return array[id];	}
+	IC reference		operator[] (u32 id)			{
+#ifdef FS_DEBUG
+		VERIFY(id<count);
+#endif
+		return array[id];	}
 	IC const_reference	operator[] (u32 id)	const	{ VERIFY(id<count); return array[id];	}
 
 	IC reference		front()				{ return array[0];						}
@@ -62,7 +66,12 @@ public:
 		count++;
 		array[id] = V;
 	}
-	IC void		assign(iterator p, int c) { VERIFY(c>0 && c<dim); CopyMemory(array,p,c*sizeof(value_type)); count=c; }
+	IC void		assign(iterator p, int c) { 
+#ifdef FS_DEBUG
+		VERIFY(c>0 && c<dim); 
+#endif
+		CopyMemory(array,p,c*sizeof(value_type)); 
+		count=c; }
 	IC BOOL		equal (const svector<value_type,dim>& base) const
 	{
 		if (size()!=base.size())	return FALSE;
