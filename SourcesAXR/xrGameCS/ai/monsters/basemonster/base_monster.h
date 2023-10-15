@@ -486,7 +486,7 @@ protected:
 public:	
 	shared_str						get_section()	const { return m_section; }
 
-
+	void							ReloadDamageAndAnimations();
 //////////////////////////////////////////////////////////////////////////
 // DEBUG stuff
 #ifdef DEBUG

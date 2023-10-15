@@ -100,6 +100,12 @@ void CWeaponMagazined::Load	(LPCSTR section)
 		m_sounds.LoadSound(section, "snd_shoot_actor", "sndShotActor", m_eSoundShot);
 	//-Alundaio
 
+	if (WeaponSoundExist(section, "snd_shoot_last", true))
+		m_sounds.LoadSound(section, "snd_shoot_last", "sndShotLast", false, m_eSoundShot);
+
+	if (WeaponSoundExist(section, "snd_silncer_shoot_last", true))
+		m_sounds.LoadSound(section, "snd_silncer_shoot_last", "sndSilencerShotLast", false, m_eSoundShot);
+
 	m_sSndShotCurrent = IsSilencerAttached() ? "sndSilencerShot" : "sndShot";
 
 	m_sounds.LoadSound(section,"snd_empty", "sndEmptyClick"	, m_eSoundEmptyClick	);
@@ -800,6 +806,10 @@ void CWeaponMagazined::OnShot()
 
 	if (ParentIsActor())
 	{
+		luabind::functor<void> funct;
+		if (ai().script_engine().functor("mfs_functions.on_actor_shoot", funct))
+			funct();
+
 		string128 sndName;
 		strconcat(sizeof(sndName), sndName, m_sSndShotCurrent.c_str(), "Actor");
 		if (m_sounds.FindSoundItem(sndName, false))
@@ -809,7 +819,13 @@ void CWeaponMagazined::OnShot()
 		}
 	}
 
-	m_sounds.PlaySound(m_sSndShotCurrent.c_str(), get_LastFP(), H_Root(), !!GetHUDmode(), false, (u8)-1);
+	string128 sndName;
+	strconcat(sizeof(sndName), sndName, m_sSndShotCurrent.c_str(), (iAmmoElapsed == 1) ? "Last" : "");
+
+	if (m_sounds.FindSoundItem(sndName, false))
+		m_sounds.PlaySound(sndName, get_LastFP(), H_Root(), !!GetHUDmode(), false, (u8)-1);
+	else
+		m_sounds.PlaySound(m_sSndShotCurrent.c_str(), get_LastFP(), H_Root(), !!GetHUDmode(), false, (u8)-1);
 
 	// snd reflection
 	if (IsSilencerAttached() == false)
@@ -875,6 +891,7 @@ void CWeaponMagazined::OnAnimationEnd(u32 state)
 		case eUnMisfire:
 		{
 			bMisfire = false;
+			m_magazine.pop_back();
 			iAmmoElapsed--;
 			SwitchState(eIdle);
 		}break; // End of UnMisfire animation

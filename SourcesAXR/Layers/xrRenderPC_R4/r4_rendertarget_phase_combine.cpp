@@ -394,13 +394,21 @@ void	CRenderTarget::phase_combine	()
 		PhaseVignette();
 	}
 
-	// Chromatic Aberration
-	if (ps_r2_postscreen_flags.test(R_FLAG_CHROMATIC_ABERRATION))
-		phase_chrom_aberration();
-
 	// Film Grain
 	if (ps_r2_postscreen_flags.test(R_FLAG_FILM_GRAIN))
 		phase_film_grain();
+
+	if (ps_r2_ls_flags_ext.test(R4FLAGEXT_NEW_SHADER_SUPPORT))
+	{
+		//Compute blur textures
+		phase_blur();
+
+		//Compute bloom (new)
+		//phase_pp_bloom();
+
+		if (ps_r2_ls_flags.test(R2FLAG_DOF))
+			phase_dof();
+	}
 
 	//Hud Effects, Hud Mask, Nightvision
 	if (!_menu_pp && g_pGamePersistent->GetActor() && g_pGamePersistent->IsCamFirstEye())
@@ -415,6 +423,10 @@ void	CRenderTarget::phase_combine	()
 			phase_hud_power();
 			phase_hud_bleeding();
 			phase_hud_intoxication();
+
+			// Chromatic Aberration
+			if (ps_r2_postscreen_flags.test(R_FLAG_CHROMATIC_ABERRATION))
+				phase_chrom_aberration();
 		}
 
 		if (ps_r2_postscreen_flags.test(R_FLAG_HUD_MASK) && HudGlassEnabled && IsActorAlive)
@@ -423,15 +435,6 @@ void	CRenderTarget::phase_combine	()
 		if (IsActorAlive && NightVisionEnabled && NightVisionType > 0 && ps_r__ShaderNVG == 1)
 			phase_nightvision();
 	}
-
-	//Compute blur textures
-	phase_blur();
-
-	//Compute bloom (new)
-	//phase_pp_bloom();
-
-	if (ps_r2_ls_flags.test(R2FLAG_DOF))
-		phase_dof();
 
 	// PP enabled ?
 	//	Render to RT texture to be able to copy RT even in windowed mode.
@@ -526,17 +529,17 @@ void	CRenderTarget::phase_combine	()
 		RCache.set_c				("m_previous",	m_previous);
 		RCache.set_c				("m_blur",		m_blur_scale.x,m_blur_scale.y, 0,0);
 
-		float red_color = ps_color_dragging.x;
-		float green_color = ps_color_dragging.y;
-		float blue_color = ps_color_dragging.z;
-		float saturation = ps_color_dragging.w;
+		float red_color = ps_color_grading.x;
+		float green_color = ps_color_grading.y;
+		float blue_color = ps_color_grading.z;
+		float saturation = ps_color_grading.w;
 
-		if (bWeatherColorDragging)
+		if (bWeatherColorGrading)
 		{
-			red_color += g_pGamePersistent->Environment().CurrentEnv->color_dragging.x;
-			green_color += g_pGamePersistent->Environment().CurrentEnv->color_dragging.y;
-			blue_color += g_pGamePersistent->Environment().CurrentEnv->color_dragging.z;
-			saturation += g_pGamePersistent->Environment().CurrentEnv->color_dragging.w;
+			red_color += g_pGamePersistent->Environment().CurrentEnv->color_grading.x;
+			green_color += g_pGamePersistent->Environment().CurrentEnv->color_grading.y;
+			blue_color += g_pGamePersistent->Environment().CurrentEnv->color_grading.z;
+			saturation += g_pGamePersistent->Environment().CurrentEnv->color_grading.w;
 		}
 
 		RCache.set_c				("r_color_drag", red_color, green_color, blue_color, saturation);

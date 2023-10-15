@@ -154,7 +154,7 @@ extern ECORE_API float			ps_r2_ss_sunshafts_length;
 extern ECORE_API float			ps_r2_ss_sunshafts_radius;
 extern u32						ps_sunshafts_mode;
 
-extern ECORE_API Fvector4		ps_color_dragging;
+extern ECORE_API Fvector4		ps_color_grading;
 
 extern ECORE_API float			ps_r2_rain_drops_intensity;
 extern ECORE_API float			ps_r2_rain_drops_speed;
@@ -176,6 +176,20 @@ extern ECORE_API float			ps_r2_reflections_distance;
 //AO Debug
 extern ECORE_API int			ps_r2_ao_debug;
 
+//Anomaly
+extern ECORE_API float			ps_r2_img_exposure;
+extern ECORE_API float			ps_r2_img_gamma;
+extern ECORE_API float			ps_r2_img_saturation;
+extern ECORE_API Fvector		ps_r2_img_cg;
+
+//Commands modifiers for DX9
+extern ECORE_API float			r2_tonemap_middlegray_modifier;	// r2-only
+extern ECORE_API float			r2_tonemap_low_lum_modifier;	// r2-only
+extern ECORE_API float			r2_sun_lumscale_modifier;		// r2-only
+extern ECORE_API float			r2_sun_lumscale_amb_modifier;	// r2-only
+
+extern ECORE_API int			ps_r4_ss_grass_collision;
+extern ECORE_API int			ps_r4_pseudo_pbr;
 enum
 {
 	R2FLAG_SUN					= (1<<0),
@@ -220,6 +234,7 @@ enum
 	R3FLAG_MSAA_HYBRID			= (1<<28),
 	R3FLAG_MSAA_OPT				= (1<<29),
 	R3FLAG_GBUFFER_OPT			= (1<<30),
+	R4FLAGEXT_NEW_SHADER_SUPPORT = (1<<31),
 	//R3FLAG_MSAA_ALPHATEST		= (1<<31),
 };
 
@@ -292,9 +307,5 @@ extern ECORE_API float			droplets_power_debug;
 // M.F.S. Team: Flares Render
 extern ECORE_API	u32			ps_r2_flares;
 extern ECORE_API	xr_token	qflares_token[];
-
-// Screen Space Shaders
-extern ECORE_API Fvector4 ps_ssfx_grass_shadows;
-extern ECORE_API Fvector3 ps_ssfx_shadow_cascades;
 
 #endif

@@ -193,6 +193,7 @@ public:
 	_DECLARE_FUNCTION10	(GetHangover		,			float);
 	_DECLARE_FUNCTION10	(GetNarcotism		,			float);
 	_DECLARE_FUNCTION10	(GetWithdrawal		,			float);
+	_DECLARE_FUNCTION10	(GetAlcohol			,			float);
 
 	_DECLARE_FUNCTION11	(SetHealth,			void, float);
 	_DECLARE_FUNCTION11	(SetPsyHealth,		void, float);
@@ -209,6 +210,7 @@ public:
 	_DECLARE_FUNCTION11	(ChangeHangover,	void, float);
 	_DECLARE_FUNCTION11	(ChangeNarcotism,	void, float);
 	_DECLARE_FUNCTION11	(ChangeWithdrawal,	void, float);
+	_DECLARE_FUNCTION11	(ChangeAlcohol,		void, float);
 
 			void				set_fov				(float new_fov);
 			void				set_range			(float new_range);
@@ -634,6 +636,7 @@ public:
 			
 			// Monster Jumper
 			void				jump					(const Fvector &position, float factor);
+			void				ReloadDamageAndAnimations();
 
 			void				set_ignore_monster_threshold		(float ignore_monster_threshold);
 			void				restore_ignore_monster_threshold	();

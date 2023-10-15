@@ -22,9 +22,6 @@
 
 #include "../../xrEngine/x_ray.h"
 
-#include <tbb/task.h>
-#include <tbb/spin_mutex.h>
-#include "tbb/parallel_invoke.h"
 
 const float dbgOffset			= 0.f;
 const int	dbgItems			= 128;
@@ -300,7 +297,9 @@ void CDetailManager::UpdateVisibleM()
 				continue;
 			}
 			u32 mask			= 0xff;
-			u32 res				= View.testSphere(MS.vis.sphere.P, MS.vis.sphere.R, mask);
+
+			u32 res = View.testSphere(MS.vis.sphere.P, MS.vis.sphere.R, mask);
+
 			if (fcvNone==res)
 			{
 				continue;	// invisible-view frustum
@@ -325,7 +324,9 @@ void CDetailManager::UpdateVisibleM()
 				// if upper test = fcvPartial - test inner slots
 				if (fcvPartial==res){
 					u32 _mask	= mask;
-					u32 _res	= View.testSphere(S.vis.sphere.P, S.vis.sphere.R, _mask);
+
+					u32 _res = View.testSphere(S.vis.sphere.P, S.vis.sphere.R, _mask);
+
 					if (fcvNone==_res)
 					{
 						continue;	// invisible-view frustum
@@ -401,7 +402,7 @@ void CDetailManager::UpdateVisibleM()
 	RDEVICE.Statistic->RenderDUMP_DT_VIS.End	();
 }
 
-void CDetailManager::Render()
+void CDetailManager::Render	()
 {
 #ifndef _EDITOR
 	if (0==dtFS)						return;
@@ -438,37 +439,31 @@ void CDetailManager::Render()
 	m_frame_rendered		= RDEVICE.dwFrame;
 }
 
-tbb::spin_mutex DMmutex;
-
-void __stdcall CDetailManager::MT_CALC()
+void __stdcall	CDetailManager::MT_CALC		()
 {
 #ifndef _EDITOR
-	if (0 == RImplementation.Details) return; // possibly deleted
-	//if (0 == dtFS) return;
-	if (!psDeviceFlags.is(rsDetails)) return;
+	if (0 == RImplementation.Details)		return;	// possibly deleted
+	//if (0 == dtFS)						return;
+	if (!psDeviceFlags.is(rsDetails))	return;
 #endif    
 
-	if (m_frame_calc == RDEVICE.dwFrame) return;
-	if ((m_frame_rendered + 1) != RDEVICE.dwFrame) return;
+	MT.Enter					();
+	if (m_frame_calc!=RDEVICE.dwFrame)	
+		if ((m_frame_rendered+1)==RDEVICE.dwFrame) //already rendered
+		{
+			Fvector		EYE				= RDEVICE.vCameraPosition_saved;
 
-	tbb::spin_mutex::scoped_lock lock(DMmutex);
+			int s_x	= iFloor			(EYE.x/dm_slot_size+.5f);
+			int s_z	= iFloor			(EYE.z/dm_slot_size+.5f);
 
-	Fvector EYE = RDEVICE.vCameraPosition_saved;
-	int s_x = iFloor(EYE.x / dm_slot_size + .5f);
-	int s_z = iFloor(EYE.z / dm_slot_size + .5f);
+			RDEVICE.Statistic->RenderDUMP_DT_Cache.Begin	();
+			cache_Update				(s_x,s_z,EYE,dm_max_decompress);
+			RDEVICE.Statistic->RenderDUMP_DT_Cache.End	();
 
-	tbb::parallel_invoke(
-		[&] {
-			RDEVICE.Statistic->RenderDUMP_DT_Cache.Begin();
-			cache_Update(s_x, s_z, EYE, dm_max_decompress);
-			RDEVICE.Statistic->RenderDUMP_DT_Cache.End();
-		},
-		[&] {
-			UpdateVisibleM();
+			UpdateVisibleM				();
+			m_frame_calc				= RDEVICE.dwFrame;
 		}
-		);
-
-	m_frame_calc = RDEVICE.dwFrame;
+	MT.Leave					        ();
 }
 
 void CDetailManager::details_clear()
@@ -479,18 +474,18 @@ void CDetailManager::details_clear()
 	if (ps_ssfx_grass_shadows.x <= 0)
 		return;
 
-		for (u32 x = 0; x < 3; x++)
-		{
-		vis_list & list = m_visibles[x];
+	for (u32 x = 0; x < 3; x++)
+	{
+		vis_list& list = m_visibles[x];
 
-			for (u32 O = 0; O < objects.size(); O++)
-			{
-			CDetail & Object = *objects[O];
-			xr_vector<SlotItemVec*>&vis = list[O];
+		for (u32 O = 0; O < objects.size(); O++)
+		{
+			CDetail& Object = *objects[O];
+			xr_vector<SlotItemVec*>& vis = list[O];
 			if (!vis.empty())
-				{
-				vis.clear_not_free();
-				}
+			{
+				vis.erase(vis.begin(), vis.end());
 			}
 		}
+	}
 }

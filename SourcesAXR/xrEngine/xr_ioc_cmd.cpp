@@ -522,6 +522,19 @@ public:
 ENGINE_API BOOL r2_sun_static = TRUE;
 ENGINE_API BOOL r2_advanced_pp = FALSE;	//	advanced post process and effects
 
+// Ascii1457's Screen Space Shaders
+ENGINE_API Fvector3 ps_ssfx_shadow_cascades = { 20.f, 40.f, 160.f };
+ENGINE_API Fvector4 ps_ssfx_grass_shadows = { .0f, .35f, 30.0f, .0f };
+ENGINE_API Fvector4 ps_ssfx_grass_interactive = { 1.0f, 8.f, 2000.0f, 1.0f };
+ENGINE_API Fvector4 ps_ssfx_int_grass_params_1 = { 1.0f, 1.0f, 1.0f, 25.0f };
+ENGINE_API Fvector4 ps_ssfx_int_grass_params_2 = { 1.0f, 5.0f, 1.0f, 1.0f };
+ENGINE_API Fvector4 ps_ssfx_hud_drops_1 = { 1.0f, 1.0f, 30.f, .05f }; // Anim Speed, Int, Reflection, Refraction
+ENGINE_API Fvector4 ps_ssfx_hud_drops_2 = { .0225f, 1.f, 0.0f, 2.0f }; // Density, Size, Extra Gloss, Gloss
+ENGINE_API Fvector4 ps_ssfx_blood_decals = { 0.6f, 0.6f, 0.f, 0.f };
+ENGINE_API Fvector4 ps_ssfx_rain_1 = { 6.0f, 0.1f, 0.6f, 2.f }; // Len, Width, Speed, Quality
+ENGINE_API Fvector4 ps_ssfx_rain_2 = { 0.7f, 0.1f, 1.0f, 0.5f }; // Alpha, Brigthness, Refraction, Reflection
+ENGINE_API Fvector4 ps_ssfx_rain_3 = { 0.01f, 1.0f, 0.0f, 0.0f }; // Alpha, Refraction ( Splashes ) - Yohji: Alpha was edited (0.5->0.01f) due to a bug with transparency and other particles.
+
 u32	renderer_value	= 3;
 //void fill_render_mode_list();
 //void free_render_mode_list();
@@ -671,7 +684,7 @@ ENGINE_API float psHUD_FOV = psHUD_FOV_def;
 
 ENGINE_API float psSVPImageSizeK = 0.7f;
 ENGINE_API int psSVPFrameDelay = 1;
-ENGINE_API float fps_limit = 60.0f;
+ENGINE_API float fps_limit = 120.0f;
 
 //extern int			psSkeletonUpdate;
 extern int			rsDVB_Size;
@@ -698,16 +711,11 @@ ENGINE_API int			ps_r__ShaderNVG				= 0;
 ENGINE_API float		ps_detail_collision_dist	= 1.f;
 ENGINE_API float		ps_detail_collision_time	= 0.25f;
 ENGINE_API Fvector		ps_detail_collision_angle	= { 0, 50, 0 };
-ENGINE_API int			ps_detail_enable_collision	= 1;
+ENGINE_API int			ps_detail_enable_collision	= 0;
 
 ENGINE_API float		ps_detail_collision_radius	= 40.f;
 ENGINE_API xr_vector<DetailCollisionPoint> level_detailcoll_points;
 ENGINE_API Fvector		actor_position{};
-
-//Screen Space Shaders Stuff
-ENGINE_API Fvector4		ps_ssfx_grass_interactive = Fvector4().set(.0f, .0f, 2000.0f, 1.0f);
-ENGINE_API Fvector4		ps_ssfx_int_grass_params_1 = Fvector4().set(1.0f, 1.0f, 1.0f, 1.0f);
-ENGINE_API Fvector4		ps_ssfx_int_grass_params_2 = Fvector4().set(1.0f, 5.0f, 1.0f, 1.0f);
 
 void CCC_Register()
 {
@@ -769,10 +777,6 @@ void CCC_Register()
 	CMD4(CCC_Float,		"r__detail_collision_time",				&ps_detail_collision_time,		0.1f, 3.f);
 	CMD4(CCC_Vector3,	"r__detail_collision_angles",			&ps_detail_collision_angle,		Fvector({ -90.f, -90.f, -90.f }), Fvector({ 90.f, 90.f, 90.f }));
 
-	CMD4(CCC_Vector4,	"ssfx_grass_interactive",				&ps_ssfx_grass_interactive, Fvector4().set(0, 0, 0, 0), Fvector4().set(1, 15, 5000, 1));
-	CMD4(CCC_Vector4,	"ssfx_int_grass_params_1",				&ps_ssfx_int_grass_params_1, Fvector4().set(0, 0, 0, 0), Fvector4().set(5, 5, 5, 5));
-	CMD4(CCC_Vector4,	"ssfx_int_grass_params_2",				&ps_ssfx_int_grass_params_2, Fvector4().set(0, 0, 0, 0), Fvector4().set(5, 20, 1, 5));
-
 	CMD4(CCC_Float,		"svp_image_size_k",		&psSVPImageSizeK,	0.1f,	2.f				);
 	CMD4(CCC_Integer,	"svp_frame_delay",		&psSVPFrameDelay,	1,		3				);
 	CMD4(CCC_Integer,	"rs_debug_second_vp",	&debugSecondVP,		FALSE,	TRUE			);
@@ -795,6 +799,8 @@ void CCC_Register()
 	CMD2(CCC_Gamma,		"rs_c_brightness"		,&ps_brightness		);
 	CMD2(CCC_Gamma,		"rs_c_contrast"			,&ps_contrast		);
 	CMD3(CCC_Mask,		"rs_draw_fps",			&psDeviceFlags,		rsDrawFPS				);
+	CMD4(CCC_Float,		"rs_fps_limit",			&fps_limit,			10.f, 900.f				);
+	CMD4(CCC_Integer,	"svp_frame_delay",		&psSVPFrameDelay,	1, 3					);
 //	CMD4(CCC_Integer,	"rs_vb_size",			&rsDVB_Size,		32,		4096);
 //	CMD4(CCC_Integer,	"rs_ib_size",			&rsDIB_Size,		32,		4096);
 

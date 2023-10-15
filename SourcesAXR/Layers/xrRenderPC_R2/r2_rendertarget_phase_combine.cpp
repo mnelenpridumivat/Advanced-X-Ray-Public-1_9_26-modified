@@ -119,7 +119,7 @@ void	CRenderTarget::phase_combine	()
 		CEnvDescriptorMixer& envdesc= *g_pGamePersistent->Environment().CurrentEnv		;
 		const float minamb			= 0.001f;
 		Fvector4	ambclr			= { _max(envdesc.ambient.x*2,minamb),	_max(envdesc.ambient.y*2,minamb),			_max(envdesc.ambient.z*2,minamb),	0	};
-					ambclr.mul		(ps_r2_sun_lumscale_amb);
+					ambclr.mul		(ps_r2_sun_lumscale_amb + r2_sun_lumscale_amb_modifier);
 
 //.		Fvector4	envclr			= { envdesc.sky_color.x*2+EPS,	envdesc.sky_color.y*2+EPS,	envdesc.sky_color.z*2+EPS,	envdesc.weight					};
 		Fvector4	envclr			= { envdesc.hemi_color.x*2+EPS,	envdesc.hemi_color.y*2+EPS,	envdesc.hemi_color.z*2+EPS,	envdesc.weight					};
@@ -350,17 +350,17 @@ void	CRenderTarget::phase_combine	()
 		RCache.set_c				("m_previous",	m_previous);
 		RCache.set_c				("m_blur",		m_blur_scale.x,m_blur_scale.y, 0,0);
 
-		float red_color = ps_color_dragging.x;
-		float green_color = ps_color_dragging.y;
-		float blue_color = ps_color_dragging.z;
-		float saturation = ps_color_dragging.w;
+		float red_color = ps_color_grading.x;
+		float green_color = ps_color_grading.y;
+		float blue_color = ps_color_grading.z;
+		float saturation = ps_color_grading.w;
 
-		if (bWeatherColorDragging)
+		if (bWeatherColorGrading)
 		{
-			red_color += g_pGamePersistent->Environment().CurrentEnv->color_dragging.x;
-			green_color += g_pGamePersistent->Environment().CurrentEnv->color_dragging.y;
-			blue_color += g_pGamePersistent->Environment().CurrentEnv->color_dragging.z;
-			saturation += g_pGamePersistent->Environment().CurrentEnv->color_dragging.w;
+			red_color += g_pGamePersistent->Environment().CurrentEnv->color_grading.x;
+			green_color += g_pGamePersistent->Environment().CurrentEnv->color_grading.y;
+			blue_color += g_pGamePersistent->Environment().CurrentEnv->color_grading.z;
+			saturation += g_pGamePersistent->Environment().CurrentEnv->color_grading.w;
 		}
 
 		RCache.set_c("r_color_drag", red_color, green_color, blue_color, saturation);
@@ -539,7 +539,7 @@ void CRenderTarget::phase_combine_volumetric()
 		CEnvDescriptorMixer& envdesc= *g_pGamePersistent->Environment().CurrentEnv		;
 		const float minamb			= 0.001f;
 		Fvector4	ambclr			= { _max(envdesc.ambient.x*2,minamb),	_max(envdesc.ambient.y*2,minamb),			_max(envdesc.ambient.z*2,minamb),	0	};
-		ambclr.mul		(ps_r2_sun_lumscale_amb);
+		ambclr.mul		(ps_r2_sun_lumscale_amb + r2_sun_lumscale_amb_modifier);
 
 //.		Fvector4	envclr			= { envdesc.sky_color.x*2+EPS,	envdesc.sky_color.y*2+EPS,	envdesc.sky_color.z*2+EPS,	envdesc.weight					};
 		Fvector4	envclr			= { envdesc.hemi_color.x*2+EPS,	envdesc.hemi_color.y*2+EPS,	envdesc.hemi_color.z*2+EPS,	envdesc.weight					};

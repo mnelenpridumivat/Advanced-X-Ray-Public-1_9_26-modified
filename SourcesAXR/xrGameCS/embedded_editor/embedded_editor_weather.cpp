@@ -13,9 +13,6 @@
 #include <imgui.h>
 #include "imgui_internal.h"
 
-float editor_longitude = 0.0;
-float editor_altitude = 0.0;
-
 Fvector convert(const Fvector& v)
 {
     Fvector result;
@@ -120,7 +117,7 @@ void saveWeather(shared_str name, const xr_vector<CEnvDescriptor*>& env)
 		f.w_float(el->m_identifier.c_str(), "swing_fast_rot1", el->m_cSwingDesc[1].rot1);
 		f.w_float(el->m_identifier.c_str(), "swing_fast_rot2", el->m_cSwingDesc[1].rot2);
 		f.w_float(el->m_identifier.c_str(), "swing_fast_speed", el->m_cSwingDesc[1].speed);
-		f.w_fvector4(el->m_identifier.c_str(), "color_dragging", el->color_dragging);
+		f.w_fvector4(el->m_identifier.c_str(), "color_grading", el->color_grading);
 		f.w_fvector3(el->m_identifier.c_str(), "dof", el->dof_value);
 		f.w_float(el->m_identifier.c_str(), "dof_kernel", el->dof_kernel);
 		f.w_float(el->m_identifier.c_str(), "dof_sky", el->dof_sky);
@@ -274,6 +271,9 @@ bool editTexture(const char* label, shared_str& texName)
 	return changed;
 }
 
+float editor_altitude = 0.f;
+float editor_longitude = 0.f;
+
 void ShowWeatherEditor(bool& show)
 {
 	if (!ImGui::Begin(modifiedWeathers.empty() ? "Weather###Weather" : "Weather*###Weather", &show)) {
@@ -399,16 +399,14 @@ void ShowWeatherEditor(bool& show)
 	if (ImGui::SliderFloat("sun_altitude", &editor_altitude, -360.0f, 360.0f))
 	{
 		changed = true;
-		if (changed)
-			cur->sun_dir.setHP(deg2rad(editor_longitude), deg2rad(editor_altitude));
-		else
-			editor_altitude = cur->sun_dir.getH();
+
+		cur->sun_dir.setHP(deg2rad(editor_longitude), deg2rad(editor_altitude));
 	}
 	if (ImGui::SliderFloat("sun_longitude", &editor_longitude, -360.0f, 360.0f))
 	{
 		changed = true;
-		if (changed)
-			cur->sun_dir.setHP(deg2rad(editor_longitude), deg2rad(editor_altitude));
+
+		cur->sun_dir.setHP(deg2rad(editor_longitude), deg2rad(editor_altitude));
 	}
 	if (ImGui::SliderFloat("sun_shafts_intensity", &cur->m_fSunShaftsIntensity, 0.0f, 2.0f))
 		changed = true;
@@ -472,11 +470,11 @@ void ShowWeatherEditor(bool& show)
 	if (ImGui::SliderFloat("swing_fast_speed", &cur->m_cSwingDesc[1].speed, 0.0f, 10.0f))
 		changed = true;
 
-	if (bWeatherColorDragging)
+	if (bWeatherColorGrading)
 	{
-		ImGui::Text(u8"Color Dragging Parameters");
+		ImGui::Text(u8"Color Grading Parameters");
 
-		if (ImGui::ColorEdit4("color_dragging", (float*)&cur->color_dragging))
+		if (ImGui::ColorEdit4("color_grading", (float*)&cur->color_grading))
 			changed = true;
 	}
 

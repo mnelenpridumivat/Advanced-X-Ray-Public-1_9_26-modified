@@ -9,6 +9,8 @@
 #include "object_broker.h"
 #include "UIXmlInit.h"
 #include "UIProgressBar.h"
+#include "UIGameCustom.h"
+#include "UIActorMenu.h"
 
 #include "eatable_item.h"
 #include "AntigasFilter.h"
@@ -144,6 +146,7 @@ void CUICellItem::Update()
 			GetMessageTarget()->SendMessage(this, DRAG_DROP_ITEM_FOCUSED_UPDATE, NULL);
 	}
 	UpdateIndicators();
+	UpdateCellItemProgressBars();
 }
 
 void CUICellItem::UpdateIndicators()
@@ -214,6 +217,7 @@ bool CUICellItem::OnMouseAction(float x, float y, EUIMessages mouse_action)
 	else if ( mouse_action == WINDOW_LBUTTON_DB_CLICK )
 	{
 		GetMessageTarget()->SendMessage( this, DRAG_DROP_ITEM_DB_CLICK, NULL );
+		CurrentGameUI()->ActorMenu().SetCurrentConsumable(this);
 		return true;
 	}
 	else if ( mouse_action == WINDOW_RBUTTON_DOWN )
