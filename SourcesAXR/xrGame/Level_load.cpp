@@ -72,7 +72,11 @@ BOOL CLevel::Load_GameSpecific_After()
 						
 			if ((g_pGamePersistent->m_game_params.m_e_game_type & EGameIDs(gametype_usage)) || (ver == 0))
 			{
-				pStaticParticles				= CParticlesObject::Create(ref_name,FALSE,false);
+				Msg("Load particle [%s]", ref_name);
+				pStaticParticles = CParticlesObject::Create(ref_name, FALSE, false);
+				if (pSettings->line_exist("optimization_particles", ref_name)) {
+					pStaticParticles->SetOptimization(true, pSettings->r_float("optimization_particles", ref_name));
+				}
 				pStaticParticles->UpdateParent	(transform,zero_vel);
 				pStaticParticles->Play			(false);
 				m_StaticParticles.push_back		(pStaticParticles);
