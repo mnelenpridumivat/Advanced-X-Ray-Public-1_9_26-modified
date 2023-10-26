@@ -222,7 +222,7 @@ void CLevel::IR_OnKeyboardPress	(int key)
 		return;
 	}
 
-#ifndef MASTER_GOLD
+#ifndef NO_DEBUG_INPUT
 	switch (key) {
 	case DIK_F7: {
 		if (GameID() != eGameIDSingle) return;

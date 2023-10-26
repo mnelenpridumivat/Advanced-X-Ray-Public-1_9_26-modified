@@ -638,17 +638,19 @@ CUICellItem* CUICellContainer::RemoveItem(CUICellItem* itm, bool force_root)
 	}
 
 	Ivector2 pos			= GetItemPos(itm);
-	Ivector2 cs				= itm->GetGridSize();
+	if (pos.x != -1 && pos.y != -1) {
+		Ivector2 cs = itm->GetGridSize();
 
-	if(m_pParentDragDropList->GetVerticalPlacement())
-		std::swap(cs.x,cs.y);
+		if (m_pParentDragDropList->GetVerticalPlacement())
+			std::swap(cs.x, cs.y);
 
-	for(int x=0; x<cs.x;++x)
-		for(int y=0; y<cs.y;++y)
-		{
-			CUICell& C		= GetCellAt(Ivector2().set(x,y).add(pos));
-			C.Clear			();
-		}
+		for (int x = 0; x < cs.x; ++x)
+			for (int y = 0; y < cs.y; ++y)
+			{
+				CUICell& C = GetCellAt(Ivector2().set(x, y).add(pos));
+				C.Clear();
+			}
+	}
 
 	itm->SetOwnerList		(NULL);
 	DetachChild				(itm);
@@ -774,7 +776,7 @@ Ivector2 CUICellContainer::GetItemPos(CUICellItem* itm)
 			return p;
 		}
 
-		R_ASSERT(0);
+		//R_ASSERT(0);
 		return Ivector2().set(-1,-1);
 }
 
@@ -842,7 +844,6 @@ void CUICellContainer::ClearAll(bool bDestroy)
 			delete_data			(wc);
 		}
 	}
-
 }
 
 Ivector2 CUICellContainer::PickCell(const Fvector2& abs_pos)

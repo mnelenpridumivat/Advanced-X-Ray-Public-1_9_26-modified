@@ -1079,6 +1079,8 @@ void CUIActorMenu::ClearAllLists()
 	m_pTradePartnerList->ClearAll				(true);
 	m_pDeadBodyBagList->ClearAll				(true);
 
+	SetCurrentConsumable(nullptr);
+
 	if (GameConstants::GetKnifeSlotEnabled())
 	{
 		m_pInventoryKnifeList->ClearAll(true);
