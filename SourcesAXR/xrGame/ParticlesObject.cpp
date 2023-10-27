@@ -174,12 +174,12 @@ void CParticlesObject::shedule_Update	(u32 _dt)
 		//IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
  		if (Actor() && m_UseOptimization) {
 			if (Actor()->Position().distance_to_sqr(Position()) <= m_OptimizationDistance * m_OptimizationDistance) {
-				if (!m_bStopping) {
+				if (m_bStopping) {
 					Msg("Reactivate particle [%s]", *Name());
 					Play(false);
 				}
 			}
-			else if (m_bStopping) {
+			else if (!m_bStopping) {
 				Msg("Stop playing particle [%s]", *Name());
 				Stop();
 			}
