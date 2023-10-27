@@ -17,6 +17,9 @@ protected:
 	bool				m_bLooped;			//флаг, что система зациклена
 	bool				m_bStopping;		//вызвана функция Stop()
 
+	bool m_UseOptimization = false;
+	float m_OptimizationDistance = 0.0f;
+
 protected:
 	u32					mt_dt;
 
@@ -32,6 +35,8 @@ public:
 	virtual void		renderable_Render	();
 	void				PerformAllTheWork	(u32 dt);
 	void	__stdcall	PerformAllTheWork_mt();
+
+	void				SetOptimization(bool UseOptimization, float Distance);
 
 	Fvector&			Position			();
 	void				SetXFORM			(const Fmatrix& m);

@@ -12,6 +12,8 @@
 #include "../xrEngine/IGame_Persistent.h"
 #include "../xrEngine/environment.h"
 
+#include "Actor.h"
+
 const Fvector zero_vel		= {0.f,0.f,0.f};
 
 CParticlesObject::CParticlesObject	(LPCSTR p_name, BOOL bAutoRemove, bool destroy_on_game_load) :
@@ -164,18 +166,33 @@ void CParticlesObject::shedule_Update	(u32 _dt)
 	if (m_bDead)					return;
 	u32 dt							= Device.dwTimeGlobal - dwLastTime;
 	if (dt)							{
-		if (0){//.psDeviceFlags.test(mtParticles))	{    //. AlexMX comment this line// NO UNCOMMENT - DON'T WORK PROPERLY
+		/*if (0) {//.psDeviceFlags.test(mtParticles))	{    //. AlexMX comment this line// NO UNCOMMENT - DON'T WORK PROPERLY
 			mt_dt					= dt;
 			fastdelegate::FastDelegate0<>		delegate	(this,&CParticlesObject::PerformAllTheWork_mt);
 			Device.seqParallel.push_back		(delegate);
-		} else {
-			mt_dt					= 0;
-			IParticleCustom* V		= smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
-			V->OnFrame				(dt);
+		} else {*/
+		//IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
+ 		if (Actor() && m_UseOptimization) {
+			if (Actor()->Position().distance_to_sqr(Position()) <= m_OptimizationDistance * m_OptimizationDistance) {
+				if (m_bStopping) {
+					Msg("Reactivate particle [%s]", *Name());
+					Play(false);
+				}
+			}
+			else if (!m_bStopping) {
+				Msg("Stop playing particle [%s]", *Name());
+				Stop();
+			}
 		}
+		if (IsPlaying()) {
+			mt_dt = 0;
+			IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
+			V->OnFrame(dt);
+		}
+		//}
 		dwLastTime					= Device.dwTimeGlobal;
 	}
-	UpdateSpatial					();
+	UpdateSpatial();
 }
 
 void CParticlesObject::PerformAllTheWork(u32 _dt)
@@ -200,6 +217,16 @@ void CParticlesObject::PerformAllTheWork_mt()
 	IParticleCustom* V		= smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 	V->OnFrame				(mt_dt);
 	mt_dt					= 0;
+}
+
+void CParticlesObject::SetOptimization(bool UseOptimization, float Distance)
+{
+	if (UseOptimization && Distance < 0.0f) {
+		Msg("Invalid optimization distance [%f] for particle", Distance);
+		VERIFY(0);
+	}
+	m_UseOptimization = UseOptimization;
+	m_OptimizationDistance = Distance;
 }
 
 void CParticlesObject::SetXFORM			(const Fmatrix& m)
