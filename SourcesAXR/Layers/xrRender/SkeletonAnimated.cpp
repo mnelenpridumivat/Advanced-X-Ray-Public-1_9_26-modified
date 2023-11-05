@@ -374,6 +374,9 @@ CBlend*	CKinematicsAnimated::PlayCycle		(LPCSTR  N, BOOL bMixIn, PlayCallback Ca
 CBlend*	CKinematicsAnimated::PlayCycle		(MotionID motion_ID,  BOOL bMixIn, PlayCallback Callback, LPVOID CallbackParam,u8 channel /*= 0*/)
 {	
 	VERIFY					(motion_ID.valid()); 
+	if (motion_ID.slot >= m_Motions.size()) {
+		throw "err";
+	}
     CMotionDef* m_def		= m_Motions[motion_ID.slot].motions.motion_def(motion_ID.idx);
     VERIFY					(m_def);
 	return LL_PlayCycle		(m_def->bone_or_part,motion_ID,bMixIn, 
@@ -668,6 +671,7 @@ CBlend*	CKinematicsAnimated::IBlend_Create	()
 	CBlend *I=blend_pool.begin(), *E=blend_pool.end();
 	for (; I!=E; I++)
 		if (I->blend_state() == CBlend::eFREE_SLOT) return I;
+	throw "err";
 	FATAL("Too many blended motions requisted");
 	return 0;
 }

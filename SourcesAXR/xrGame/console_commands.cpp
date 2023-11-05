@@ -703,7 +703,7 @@ public:
 		//	return;
 		//};
 		//#endif
-#ifdef DEBUG
+#ifdef ALLOW_CHEATS
 		Console->Hide	();
 
 		LPSTR			fn_; 
