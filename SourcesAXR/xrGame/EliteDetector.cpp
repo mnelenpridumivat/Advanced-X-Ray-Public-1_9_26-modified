@@ -177,7 +177,7 @@ void CUIArtefactDetectorElite::Draw()
 	xr_vector<SDrawOneItem>::const_iterator it_e = m_items_to_draw.end();
 	for(;it!=it_e;++it)
 	{
-		Fvector					p = (*it).pos;
+		Fvector					p = it->pos;
 		Fvector					pt3d;
 		M.transform_tiny		(pt3d,p);
 		float kz				= wrk_sz.y / m_parent->GetAfDetectRadius();
@@ -192,8 +192,8 @@ void CUIArtefactDetectorElite::Draw()
 		pos.sub					(rp);
 		if(1 /* r.in(pos)*/ )
 		{
-			(*it).pStatic->SetWndPos	(pos);
-			(*it).pStatic->Draw			();
+			it->pStatic->SetWndPos	(pos);
+			it->pStatic->Draw			();
 		}
 	}
 

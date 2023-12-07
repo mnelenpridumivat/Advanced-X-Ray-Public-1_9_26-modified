@@ -309,7 +309,7 @@ void CConsole::OnRender()
 		vecTipsEx::iterator ite = m_tips.end();
 		for ( u32 i = 0; itb != ite ; ++itb, ++i ) // tips
 		{
-			pFont->OutI( -1.0f + shift_x, fMaxY + i*LDIST, "%s", (*itb).text.c_str() );
+			pFont->OutI( -1.0f + shift_x, fMaxY + i*LDIST, "%s", itb->text.c_str() );
 			if ( i >= VIEW_TIPS_COUNT-1 )
 			{
 				break; //for
@@ -390,9 +390,9 @@ void CConsole::DrawBackgrounds( bool bGame )
 	vecTipsEx::iterator ite = m_tips.end();
 	for ( ; itb != ite; ++itb )
 	{
-		if ( pFont->SizeOf_( (*itb).text.c_str() ) > pFont->SizeOf_( max_str ) )
+		if ( pFont->SizeOf_( itb->text.c_str() ) > pFont->SizeOf_( max_str ) )
 		{
-			max_str = (*itb).text.c_str();
+			max_str = itb->text.c_str();
 		}
 	}
 
@@ -669,7 +669,7 @@ void CConsole::SelectCommand()
 	VERIFY( 0 <= m_cmd_history_idx && m_cmd_history_idx < (int)m_cmd_history.size() );
 		
 	vecHistory::reverse_iterator	it_rb = m_cmd_history.rbegin() + m_cmd_history_idx;
-	ec().set_edit( (*it_rb).c_str() );
+	ec().set_edit( it_rb->c_str() );
 	reset_selected_tip();
 }
 

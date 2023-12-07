@@ -46,14 +46,14 @@ IC	int	 CScriptTokenList::id		(LPCSTR name)
 {
 	iterator				I = token(name);
 	VERIFY					(I != m_token_list.end());
-	return					((*I).id);
+	return					(I->id);
 }
 
 IC	LPCSTR CScriptTokenList::name	(int id)
 {
 	iterator				I = token(id);
 	VERIFY					(I != m_token_list.end());
-	return					((*I).name);
+	return					(I->name);
 }
 
 IC	CScriptTokenList::iterator CScriptTokenList::token	(LPCSTR name)

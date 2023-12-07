@@ -83,7 +83,7 @@ CGameTask* CGameTaskManager::HasGameTask(const shared_str& id, bool only_inproce
 	FindTaskByID key(id, only_inprocess);
 	vGameTasks_it it = std::find_if(GetGameTasks().begin(),GetGameTasks().end(),key);
 	if( it!=GetGameTasks().end() )
-		return (*it).game_task;
+		return it->game_task;
 	
 	return 0;
 }
@@ -195,7 +195,7 @@ void CGameTaskManager::UpdateTasks						()
 		Tasks::const_iterator	I = tasks.begin();
 		Tasks::const_iterator	E = tasks.end();
 		for ( ; I != E; ++I) {
-			CGameTask* const	t = (*I).game_task;
+			CGameTask* const	t = I->game_task;
 			if (t->GetTaskState()!=eTaskStateInProgress)
 				continue;
 
@@ -294,7 +294,7 @@ CGameTask* CGameTaskManager::HasGameTask(const CMapLocation* ml, bool only_inpro
 
 	for(; it!=it_e; ++it)
 	{
-		CGameTask* gt = (*it).game_task;
+		CGameTask* gt = it->game_task;
 		if(gt->LinkedMapLocation()==ml)
 		{
 			if(only_inprocess && gt->GetTaskState()!=eTaskStateInProgress)
@@ -393,7 +393,7 @@ void CGameTaskManager::DumpTasks()
 	vGameTasks_it it_e			= GetGameTasks().end();
 	for(; it!=it_e; ++it)
 	{
-		const CGameTask* gt = (*it).game_task;
+		const CGameTask* gt = it->game_task;
 		Msg( " ID=[%s] state=[%s] prio=[%d] ",
 			gt->m_ID.c_str(),
 			sTaskStates[gt->GetTaskState()],

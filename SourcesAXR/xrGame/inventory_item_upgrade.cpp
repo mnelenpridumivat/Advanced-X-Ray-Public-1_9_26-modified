@@ -128,7 +128,7 @@ void CInventoryItem::log_upgrades()
 	Upgrades_type::const_iterator ie = m_upgrades.end();
 	for ( ; ib != ie; ++ib )
 	{
-		Msg( "    %s", (*ib).c_str() );
+		Msg( "    %s", ib->c_str() );
 	}
 	Msg( "* finish - upgrades of item = %s", m_section_id.c_str() );
 }

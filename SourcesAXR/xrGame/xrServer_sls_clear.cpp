@@ -64,10 +64,10 @@ void xrServer::SLS_Clear		()
 		xrS_entities::const_iterator	I = entities.begin();
 		xrS_entities::const_iterator	E = entities.end();
 		for ( ; I != E; ++I) {
-			if ((*I).second->ID_Parent != 0xffff)
+			if (I->second->ID_Parent != 0xffff)
 				continue;
 			found						= true;
-			Perform_destroy				((*I).second,mode);
+			Perform_destroy				(I->second,mode);
 			break;
 		}
 		if (!found)		//R_ASSERT(found);

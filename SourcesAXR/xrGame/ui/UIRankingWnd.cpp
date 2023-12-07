@@ -160,7 +160,7 @@ void CUIRankingWnd::Init()
 	CInifile::SectIt_ ib			= achievs_section.Data.begin();
 	CInifile::SectIt_ ie			= achievs_section.Data.end();
 	for(u8 i = 0; ib != ie ; ++ib, ++i)
-		add_achievement(xml, (*ib).first);
+		add_achievement(xml, ib->first);
 
 	xml.SetLocalRoot(stored_root);
 }

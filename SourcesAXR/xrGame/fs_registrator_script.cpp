@@ -15,7 +15,7 @@ LPCSTR update_path_script(CLocatorAPI* fs, LPCSTR initial, LPCSTR src)
 {
 	string_path			temp;
 	shared_str			temp_2;
-	fs->update_path(temp, initial,src);
+	FS.update_path(temp, initial,src);
 	temp_2 = temp;
 	return *temp_2;
 }
@@ -133,20 +133,20 @@ FS_file_list_ex file_list_open_ex(CLocatorAPI* fs, LPCSTR path, u32 flags, LPCST
 {return FS_file_list_ex(path,flags,mask);}
 
 FS_file_list file_list_open_script(CLocatorAPI* fs, LPCSTR initial, u32 flags)
-{	return FS_file_list(fs->file_list_open(initial,flags));}
+{	return FS_file_list(FS.file_list_open(initial,flags));}
 
 FS_file_list file_list_open_script_2(CLocatorAPI* fs, LPCSTR initial, LPCSTR folder, u32 flags)
-{	return FS_file_list(fs->file_list_open(initial,folder,flags));}
+{	return FS_file_list(FS.file_list_open(initial,folder,flags));}
 
 void dir_delete_script_2(CLocatorAPI* fs, LPCSTR path, LPCSTR nm, int remove_files)
-{	fs->dir_delete(path,nm,remove_files);}
+{	FS.dir_delete(path,nm,remove_files);}
 
 void dir_delete_script(CLocatorAPI* fs, LPCSTR full_path, int remove_files)
-{	fs->dir_delete(full_path,remove_files);}
+{	FS.dir_delete(full_path,remove_files);}
 
 LPCSTR get_file_age_str(CLocatorAPI* fs, LPCSTR nm)
 {
-	time_t t= fs->get_file_age(nm);
+	time_t t= FS.get_file_age(nm);
 	struct tm *newtime;
 	newtime = localtime( &t );
 	return asctime( newtime );

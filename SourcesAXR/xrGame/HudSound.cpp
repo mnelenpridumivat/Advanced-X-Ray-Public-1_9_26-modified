@@ -77,7 +77,7 @@ void HUD_SOUND_ITEM::DestroySound(HUD_SOUND_ITEM& hud_snd)
 {
 	xr_vector<SSnd>::iterator it = hud_snd.sounds.begin();
 	for(;it!=hud_snd.sounds.end();++it)
-		(*it).snd.destroy();
+		it->snd.destroy();
 	hud_snd.sounds.clear	();
 	
 	hud_snd.m_activeSnd		= NULL;
@@ -147,7 +147,7 @@ void HUD_SOUND_ITEM::StopSound(HUD_SOUND_ITEM& hud_snd)
 {
 	xr_vector<SSnd>::iterator it = hud_snd.sounds.begin();
 	for(;it!=hud_snd.sounds.end();++it)
-		(*it).snd.stop		();
+		it->snd.stop		();
 	hud_snd.m_activeSnd		= NULL;
 }
 

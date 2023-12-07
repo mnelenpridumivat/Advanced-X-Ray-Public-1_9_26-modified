@@ -34,7 +34,7 @@ rat_state_base *rat_state_manager::state(state_id_type const &state_id)
 	if (I == m_states.end())
 		return				(0);
 
-	return					((*I).second);
+	return					(I->second);
 }
 
 void rat_state_manager::push_state		(state_id_type const &state_id)

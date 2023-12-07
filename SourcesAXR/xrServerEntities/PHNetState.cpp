@@ -234,7 +234,7 @@ void SPHBonesData::net_Save(NET_Packet &P)
 	PHNETSTATE_I	i=bones.begin(),e=bones.end();
 	for(;e!=i;i++)
 	{
-		(*i).net_Save(P,get_min(),get_max());
+		i->net_Save(P,get_min(),get_max());
 	}
 	//	this comment is added by Dima (correct me if this is wrong)
 	//  if we call 2 times in a row StateWrite then we get different results

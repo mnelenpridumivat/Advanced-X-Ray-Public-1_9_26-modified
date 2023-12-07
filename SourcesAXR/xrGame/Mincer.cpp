@@ -25,7 +25,7 @@ void CMincer::OnStateSwitch(EZoneState new_state)
 		OBJECT_INFO_VEC_IT it;
 		for(it = m_ObjectInfoMap.begin(); m_ObjectInfoMap.end() != it; ++it) 
 		{
-			CPhysicsShellHolder * GO = smart_cast<CPhysicsShellHolder *>((*it).object);
+			CPhysicsShellHolder * GO = smart_cast<CPhysicsShellHolder *>(it->object);
 			if (GO)					Telekinesis().activate(GO,m_fThrowInImpulse, m_fTeleHeight, 100000);
 		}
 	}

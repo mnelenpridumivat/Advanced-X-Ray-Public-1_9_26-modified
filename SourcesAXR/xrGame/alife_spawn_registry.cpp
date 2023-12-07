@@ -162,8 +162,8 @@ void CALifeSpawnRegistry::save_updates		(IWriter &stream)
 	SPAWN_GRAPH::vertex_iterator			I = m_spawns.vertices().begin();
 	SPAWN_GRAPH::vertex_iterator			E = m_spawns.vertices().end();
 	for ( ; I != E; ++I) {
-		stream.open_chunk					((*I).second->vertex_id());
-		(*I).second->data()->save_update	(stream);
+		stream.open_chunk					(I->second->vertex_id());
+		I->second->data()->save_update	(stream);
 		stream.close_chunk					();
 	}
 }
@@ -195,10 +195,10 @@ void CALifeSpawnRegistry::build_root_spawns	()
 		SPAWN_GRAPH::const_vertex_iterator	I = m_spawns.vertices().begin();
 		SPAWN_GRAPH::const_vertex_iterator	E = m_spawns.vertices().end();
 		for ( ; I != E; ++I) {
-			SPAWN_GRAPH::const_iterator	i = (*I).second->edges().begin();
-			SPAWN_GRAPH::const_iterator	e = (*I).second->edges().end();
+			SPAWN_GRAPH::const_iterator	i = I->second->edges().begin();
+			SPAWN_GRAPH::const_iterator	e = I->second->edges().end();
 			for ( ; i != e; ++i)
-				m_temp1.push_back			((*i).vertex_id());
+				m_temp1.push_back			(i->vertex_id());
 		}
 	}
 

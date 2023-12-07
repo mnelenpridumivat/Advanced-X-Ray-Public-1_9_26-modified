@@ -710,7 +710,7 @@ void CEnvironment::load_weathers		()
 		std::sort(_I->second.begin(),_I->second.end(),sort_env_etl_pred);
 	}
 	R_ASSERT2	(!WeatherCycles.empty(),"Empty weathers.");
-	SetWeather	((*WeatherCycles.begin()).first.c_str());
+	SetWeather	(WeatherCycles.begin()->first.c_str());
 }
 
 void CEnvironment::load_weather_effects	()

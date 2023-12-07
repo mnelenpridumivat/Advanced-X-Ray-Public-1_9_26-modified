@@ -817,7 +817,7 @@ void get_files_list( xr_vector<shared_str>& files, LPCSTR dir, LPCSTR file_ext )
 
 	for( ; itb != ite; ++itb )
 	{
-		LPCSTR fn_ext = (*itb).name.c_str();
+		LPCSTR fn_ext = itb->name.c_str();
 		VERIFY( xr_strlen(fn_ext) > len_str_ext );
 		string_path fn;
 		strncpy_s( fn, sizeof(fn), fn_ext, xr_strlen(fn_ext)-len_str_ext );
@@ -1541,7 +1541,7 @@ struct CCC_JumpToLevel : public IConsole_Command {
 		GameGraph::LEVEL_MAP::const_iterator	I = ai().game_graph().header().levels().begin();
 		GameGraph::LEVEL_MAP::const_iterator	E = ai().game_graph().header().levels().end();
 		for ( ; I != E; ++I )
-			if ( !xr_strcmp((*I).second.name(),level) )
+			if ( !xr_strcmp(I->second.name(),level) )
 			{
 				ai().alife().jump_to_level(level);
 				return;
@@ -1568,7 +1568,7 @@ struct CCC_JumpToLevel : public IConsole_Command {
 		GameGraph::LEVEL_MAP::const_iterator	ite = ai().game_graph().header().levels().end();
 		for ( ; itb != ite; ++itb )
 		{
-			tips.push_back( (*itb).second.name() );
+			tips.push_back( itb->second.name() );
 		}
 	}
 

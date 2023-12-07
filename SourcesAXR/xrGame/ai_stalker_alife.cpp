@@ -112,14 +112,14 @@ void CAI_Stalker::attach_available_ammo			(CWeapon *weapon)
 	xr_vector<CTradeItem>::iterator	I = m_temp_items.begin();
 	xr_vector<CTradeItem>::iterator	E = m_temp_items.end();
 	for ( ; I != E; ++I) {
-		if (m_total_money < (*I).m_item->Cost())
+		if (m_total_money < I->m_item->Cost())
 			continue;
 
 		if (
 			std::find(
 				weapon->m_ammoTypes.begin(),
 				weapon->m_ammoTypes.end(),
-				(*I).m_item->object().cNameSect()
+				I->m_item->object().cNameSect()
 			) == 
 			weapon->m_ammoTypes.end()
 		)
@@ -142,10 +142,10 @@ void CAI_Stalker::choose_weapon					(ALife::EWeaponPriorityType weapon_priority_
 	xr_vector<CTradeItem>::iterator	I = m_temp_items.begin();
 	xr_vector<CTradeItem>::iterator	E = m_temp_items.end();
 	for ( ; I != E; ++I) {
-		if (m_total_money < (*I).m_item->Cost())
+		if (m_total_money < I->m_item->Cost())
 			continue;
 
-		ai().ef_storage().non_alife().member_item() = &(*I).m_item->object();
+		ai().ef_storage().non_alife().member_item() = &I->m_item->object();
 
 		int						j = ai().ef_storage().m_pfPersonalWeaponType->dwfGetWeaponType();
 		float					current_value = -1.f;
@@ -211,10 +211,10 @@ void CAI_Stalker::choose_detector				()
 	xr_vector<CTradeItem>::iterator	I = m_temp_items.begin();
 	xr_vector<CTradeItem>::iterator	E = m_temp_items.end();
 	for ( ; I != E; ++I) {
-		if (m_total_money < (*I).m_item->Cost())
+		if (m_total_money < I->m_item->Cost())
 			continue;
 
-		CCustomDetector			*detector = smart_cast<CCustomDetector*>((*I).m_item);
+		CCustomDetector			*detector = smart_cast<CCustomDetector*>(I->m_item);
 		if (!detector)
 			continue;
 
@@ -282,7 +282,7 @@ bool CAI_Stalker::can_sell							(CInventoryItem* item)
 	update_sell_info		();
 	xr_vector<CTradeItem>::const_iterator	I = std::find(m_temp_items.begin(),m_temp_items.end(),item->object().ID());
 	VERIFY					(I != m_temp_items.end());
-	return					((*I).m_new_owner_id != ID());
+	return					(I->m_new_owner_id != ID());
 }
 
 bool CAI_Stalker::AllowItemToTrade 					(CInventoryItem const * item, const SInvItemPlace& place) const

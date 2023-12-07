@@ -115,7 +115,7 @@ void CUIChangeWeather::ParseWeather()
 	
 	for( ;it!=it_e; ++it)
 	{
-		AddWeather			( (*it).m_weather_name, (*it).m_start_time);
+		AddWeather			( it->m_weather_name, it->m_start_time);
 	}
 };
 

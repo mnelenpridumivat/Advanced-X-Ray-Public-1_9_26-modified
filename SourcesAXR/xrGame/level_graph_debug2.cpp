@@ -177,16 +177,16 @@ void CLevelGraph::draw_restrictions	()
 	CRandom R;
 
 	for ( ; I != E; ++I) {
-		if (!(*I).second->m_ref_count)
+		if (!I->second->m_ref_count)
 			continue;
-		if (!(*I).second->initialized()) continue;
+		if (!I->second->initialized()) continue;
 
 		u8 b = static_cast<u8>(R.randI(255));
 		u8 g = static_cast<u8>(R.randI(255));
 		u8 r = static_cast<u8>(R.randI(255));
 
-		xr_vector<u32>::const_iterator	i = (*I).second->border().begin();
-		xr_vector<u32>::const_iterator	e = (*I).second->border().end();
+		xr_vector<u32>::const_iterator	i = I->second->border().begin();
+		xr_vector<u32>::const_iterator	e = I->second->border().end();
 		for ( ; i != e; ++i) {
 			Fvector temp = ai().level_graph().vertex_position(*i);
 			temp.y += .1f;

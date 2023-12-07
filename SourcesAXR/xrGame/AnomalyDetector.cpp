@@ -143,7 +143,7 @@ void CDetectorAnomaly::StopAllSounds()
 	ZONE_TYPE_MAP_IT it;
 	for(it = m_ZoneTypeMap.begin(); m_ZoneTypeMap.end() != it; ++it) 
 	{
-		ZONE_TYPE& zone_type = (*it).second;
+		ZONE_TYPE& zone_type = it->second;
 		HUD_SOUND_ITEM::StopSound(zone_type.detect_snds);
 //		zone_type.detect_snd.stop();
 	}

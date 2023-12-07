@@ -48,7 +48,7 @@ void CMovementManager::show_game_path_info	()
 	const_iterator				I = m_location_manager->vertex_types().begin();
 	const_iterator				E = m_location_manager->vertex_types().end();
 	for ( ; I != E; ++I)
-		Msg						("!   [%d][%d][%d][%d]",(*I).tMask[0],(*I).tMask[1],(*I).tMask[2],(*I).tMask[3]);
+		Msg						("!   [%d][%d][%d][%d]",I->tMask[0],I->tMask[1],I->tMask[2],I->tMask[3]);
 }
 
 void CMovementManager::process_game_path()

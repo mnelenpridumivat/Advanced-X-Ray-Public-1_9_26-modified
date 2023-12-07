@@ -382,7 +382,7 @@ bool CUICharacterInfo::ignore_community( shared_str const& check_community )
 	CInifile::SectIt_	ie = faction_section.Data.end();
 	for ( ; ib != ie ; ++ib )
 	{
-		if ( check_community == (*ib).first )
+		if ( check_community == ib->first )
 		{
 			return true;
 		}

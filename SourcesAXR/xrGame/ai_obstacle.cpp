@@ -243,13 +243,13 @@ void ai_obstacle::compute_impl		()
 		for (u32 z=z_min; z<=z_max; ++z) {
 			u32					xz = x*row_length + z;
 			const_iterator		I = std::lower_bound(B,E,xz);
-			if ((I == E) || ((*I).position().xz() != xz))
+			if ((I == E) || (I->position().xz() != xz))
 				continue;
 
 			predicate			(*I);
 
 			for (++I; I != E; ++I) {
-				if ((*I).position().xz() != xz)
+				if (I->position().xz() != xz)
 					break;
 				
 				predicate		(*I);

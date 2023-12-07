@@ -147,9 +147,9 @@ void CDialogHolder::RemoveDialogToRender(CUIWindow* pDialog)
 
 	if(it!=m_dialogsToRender.end())
 	{
-		(*it).wnd->Show(false);
-		(*it).wnd->Enable(false);
-		(*it).enabled = false;
+		it->wnd->Show(false);
+		it->wnd->Enable(false);
+		it->enabled = false;
 	}
 }
 
@@ -159,8 +159,8 @@ void CDialogHolder::DoRenderDialogs()
 {
 	xr_vector<dlgItem>::iterator it = m_dialogsToRender.begin();
 	for(; it!=m_dialogsToRender.end();++it){
-		if( (*it).enabled && (*it).wnd->IsShown() )
-			(*it).wnd->Draw();
+		if( it->enabled && it->wnd->IsShown() )
+			it->wnd->Draw();
 	}
 }
 
@@ -170,8 +170,8 @@ void  CDialogHolder::OnExternalHideIndicators()
 	xr_vector<recvItem>::iterator it_e = m_input_receivers.end();
 	for(;it!=it_e;++it)
 	{
-		(*it).m_flags.set(recvItem::eIndicators, FALSE);
-		(*it).m_flags.set(recvItem::eCrosshair, FALSE);
+		it->m_flags.set(recvItem::eIndicators, FALSE);
+		it->m_flags.set(recvItem::eCrosshair, FALSE);
 	}
 }
 
@@ -238,8 +238,8 @@ void CDialogHolder::OnFrame()
 	{
 		xr_vector<dlgItem>::iterator it = m_dialogsToRender.begin();
 		for(; it!=m_dialogsToRender.end();++it)
-			if((*it).enabled && (*it).wnd->IsEnabled())
-				(*it).wnd->Update();
+			if(it->enabled && it->wnd->IsEnabled())
+				it->wnd->Update();
 	}
 
 	m_b_in_update = false;

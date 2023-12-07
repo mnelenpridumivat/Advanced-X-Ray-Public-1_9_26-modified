@@ -89,5 +89,5 @@ void Touch::feel_touch_relcase	(CObject* O)
 		feel_touch_delete		(O);
 		}
 	xr_vector<DenyTouch>::iterator Id=feel_touch_disable.begin(),IdE=feel_touch_disable.end();
-	for(;Id!=IdE;++Id)			if((*Id).O==O )	{ feel_touch_disable.erase(Id); break; }
+	for(;Id!=IdE;++Id)			if(Id->O==O )	{ feel_touch_disable.erase(Id); break; }
 }

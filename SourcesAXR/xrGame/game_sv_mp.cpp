@@ -1891,7 +1891,7 @@ void game_sv_mp::DumpOnlineStatistic()
 	{
 		string16					num_buf;
 		xr_sprintf					(num_buf,"%d",idx);
-		xr_sprintf					(str_buff,"\"%s\"", CStringTable().translate((*it).map_name.c_str()).c_str());
+		xr_sprintf					(str_buff,"\"%s\"", CStringTable().translate(it->map_name.c_str()).c_str());
 		ini.w_string				("map_rotation", num_buf, str_buff);
 	}
 

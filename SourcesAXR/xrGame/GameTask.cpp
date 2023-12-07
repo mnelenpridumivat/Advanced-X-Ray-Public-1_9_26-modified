@@ -186,7 +186,7 @@ bool CGameTask::CheckFunctions(const task_state_functors& v) const
 	task_state_functors::const_iterator it	= v.begin();
 	for(;it!=v.end();++it)
 	{
-		if( (*it).is_valid() ) res = (*it)(m_ID.c_str());
+		if( it->is_valid() ) res = (*it)(m_ID.c_str());
 		if(!res) break;
 	}
 	return res;
@@ -196,7 +196,7 @@ void CGameTask::CallAllFuncs(const task_state_functors& v)
 {
 	task_state_functors::const_iterator it	= v.begin();
 	for(;it!=v.end();++it){
-		if( (*it).is_valid() ) (*it)(m_ID.c_str());
+		if( it->is_valid() ) (*it)(m_ID.c_str());
 	}
 }
 void CGameTask::SendInfo(const xr_vector<shared_str>& v)

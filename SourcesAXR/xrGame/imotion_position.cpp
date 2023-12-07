@@ -487,7 +487,7 @@ static void restore_blends( buffer_vector<sblend_save>& buffer )
 {
 	buffer_vector<sblend_save>::iterator i = buffer.begin(), e = buffer.end();
 	for(; i != e; ++i )
-		(*i).restore();
+		i->restore();
 	buffer.clear();
 }
 

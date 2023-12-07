@@ -286,7 +286,7 @@ void   squad_grouping_behaviour::first_nearest (Fvector& v)
 
 	if ( it_cur != squad->get_commands()->end() )
 	{
-		v = (*it_cur).first->Position();
+		v = it_cur->first->Position();
 	}
 }
 
@@ -323,7 +323,7 @@ void   squad_grouping_behaviour::next_nearest (Fvector& v)
 
 	if ( it_cur != squad->get_commands()->end() )
 	{
-		v = (*it_cur).first->Position();
+		v = it_cur->first->Position();
 	}
 }
 

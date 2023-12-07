@@ -22,7 +22,7 @@ const CStalkerVelocityHolder::COLLECTION &CStalkerVelocityHolder::collection	(co
 {
 	COLLECTIONS::const_iterator	I = m_collections.find(section);
 	if (I != m_collections.end())
-		return					(*(*I).second);
+		return					(*I->second);
 
 	COLLECTION					*collection = xr_new<COLLECTION>(section);
 	m_collections.insert		(std::make_pair(section,collection));

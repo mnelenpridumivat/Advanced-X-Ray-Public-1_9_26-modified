@@ -219,13 +219,13 @@ u32	CLevelGraph::vertex_id				(const Fvector &position) const
 	CVertex				*B = m_nodes;
 	CVertex				*E = m_nodes + header().vertex_count();
 	CVertex				*I = std::lower_bound	(B,E,_vertex_position.xz());
-	if ((I == E) || ((*I).position().xz() != _vertex_position.xz()))
+	if ((I == E) || (I->position().xz() != _vertex_position.xz()))
 		return			static_cast<u32>(-1);
 
 	u32					best_vertex_id = static_cast<u32>(I - B);
 	float				y = vertex_plane_y(best_vertex_id,position.x,position.z);
 	for (++I; I != E; ++I) {
-		if ((*I).position().xz() != _vertex_position.xz())
+		if (I->position().xz() != _vertex_position.xz())
 			break;
 
 		u32				new_vertex_id = static_cast<u32>(I - B);
@@ -294,14 +294,14 @@ u32 CLevelGraph::guess_vertex_id	(u32 const &current_vertex_id, Fvector const &p
 			if (I == E)
 				continue;
 
-			if ((*I).position().xz() != test_xz)
+			if (I->position().xz() != test_xz)
 				continue;
 
 			u32				best_vertex_id = static_cast<u32>(I - B);
 			contour			(vertex_contour, best_vertex_id);
 			float			best_distance = nearest(best_point, position, vertex_contour);
 			for (++I; I != E; ++I) {
-				if ((*I).position().xz() != test_xz)
+				if (I->position().xz() != test_xz)
 					break;
 			
 				u32				vertex_id = static_cast<u32>(I - B);

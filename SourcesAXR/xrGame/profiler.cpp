@@ -107,7 +107,7 @@ void CProfiler::setup_timer			(LPCSTR timer_id, const u64 &timer_time, const u32
 		}
 		i						= m_timers.insert(std::make_pair(shared_str(timer_id),CProfileStats())).first;
 
-		CProfileStats			&current = (*i).second;
+		CProfileStats			&current = i->second;
 		current.m_min_time		= _time;
 		current.m_max_time		= _time;
 		current.m_total_time	= _time;
@@ -116,7 +116,7 @@ void CProfiler::setup_timer			(LPCSTR timer_id, const u64 &timer_time, const u32
 		m_actual				= false;
 	}
 	else {
-		CProfileStats			&current = (*i).second;
+		CProfileStats			&current = i->second;
 		current.m_min_time		= _min(current.m_min_time,_time);
 		current.m_max_time		= _max(current.m_max_time,_time);
 		current.m_total_time	+= _time;
@@ -124,12 +124,12 @@ void CProfiler::setup_timer			(LPCSTR timer_id, const u64 &timer_time, const u32
 		current.m_call_count	+= call_count;
 	}
 
-	if (_time > (*i).second.m_time)
-		(*i).second.m_time		= _time;
+	if (_time > i->second.m_time)
+		i->second.m_time		= _time;
 	else
-		(*i).second.m_time		= .01f*_time + .99f*(*i).second.m_time;
+		i->second.m_time		= .01f*_time + .99f*i->second.m_time;
 
-	(*i).second.m_update_time	= Device.dwTimeGlobal;
+	i->second.m_update_time	= Device.dwTimeGlobal;
 }
 
 void CProfiler::clear				()
@@ -182,17 +182,17 @@ void CProfiler::show_stats			(CGameFont *game_font, bool show)
 		PORTIONS::const_iterator	I = m_portions.begin(), J = I;
 		PORTIONS::const_iterator	E = m_portions.end();
 		for ( ; I != E; ++I) {
-			if (xr_strcmp((*I).m_timer_id,(*J).m_timer_id)) {
-				setup_timer		((*J).m_timer_id,timer_time,call_count);
+			if (xr_strcmp(I->m_timer_id,J->m_timer_id)) {
+				setup_timer		(J->m_timer_id,timer_time,call_count);
 				timer_time		= 0;
 				call_count		= 0;
 				J				= I;
 			}
 
 			++call_count;
-			timer_time			+= (*I).m_time;
+			timer_time			+= I->m_time;
 		}
-		setup_timer				((*J).m_timer_id,timer_time,call_count);
+		setup_timer				(J->m_timer_id,timer_time,call_count);
 
 		m_portions.clear		();
 
@@ -203,11 +203,11 @@ void CProfiler::show_stats			(CGameFont *game_font, bool show)
 			TIMERS::iterator	I = m_timers.begin();
 			TIMERS::iterator	E = m_timers.end();
 			for ( ; I != E; ++I)
-				max_string_size	= _max(max_string_size,compute_string_length(*(*I).first));
+				max_string_size	= _max(max_string_size,compute_string_length(*I->first));
 
 			I					= m_timers.begin();
 			for ( ; I != E; ++I)
-				convert_string	(*(*I).first,(*I).second.m_name,max_string_size);
+				convert_string	(*I->first,I->second.m_name,max_string_size);
 
 			m_actual			= true;
 		}
@@ -222,11 +222,11 @@ void CProfiler::show_stats			(CGameFont *game_font, bool show)
 	TIMERS::iterator			I = m_timers.begin();
 	TIMERS::iterator			E = m_timers.end();
 	for ( ; I != E; ++I) {
-		if ((*I).second.m_update_time != Device.dwTimeGlobal)
-			(*I).second.m_time	*= .99f;
+		if (I->second.m_update_time != Device.dwTimeGlobal)
+			I->second.m_time	*= .99f;
 
-		float					average = (*I).second.m_count ? (*I).second.m_total_time/static_cast<float>((*I).second.m_count) : 0.f;
-		if (average >= (*I).second.m_time)
+		float					average = I->second.m_count ? I->second.m_total_time/static_cast<float>(I->second.m_count) : 0.f;
+		if (average >= I->second.m_time)
 			game_font->SetColor	(color_xrgb(127,127,127));
 		else
 			game_font->SetColor	(color_xrgb(255,255,255));
@@ -234,16 +234,16 @@ void CProfiler::show_stats			(CGameFont *game_font, bool show)
 		game_font->OutNext		(
 //			"%s.. %8.3f %8.3f %8.3f %8.3f %8.3f %8d %12.3f",
 			"%s%c%c %8.3f %8.3f %8.3f %6.1f %8d %12.3f",
-			*(*I).second.m_name,
+			*I->second.m_name,
 			white_character,
 			white_character,
-			(*I).second.m_time,
+			I->second.m_time,
 			average,
-			(*I).second.m_max_time,
-			static_cast<float>((*I).second.m_call_count)/m_call_count,//float((*I).second.m_count),
+			I->second.m_max_time,
+			static_cast<float>(I->second.m_call_count)/m_call_count,//float((*I).second.m_count),
 //			(*I).second.m_min_time,
-			(*I).second.m_call_count,
-			(*I).second.m_total_time
+			I->second.m_call_count,
+			I->second.m_total_time
 		);
 	}
 

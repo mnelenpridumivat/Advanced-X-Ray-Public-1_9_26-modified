@@ -20,10 +20,10 @@ CALifeObjectRegistry::~CALifeObjectRegistry	()
 	OBJECT_REGISTRY::iterator I			= B;
 	OBJECT_REGISTRY::iterator const E	= m_objects.end();
 	for ( ; I != E; ++I)
-		(*I).second->on_unregister	();
+		I->second->on_unregister	();
 
 	for (I = B; I != E; ++I)
-		xr_delete					((*I).second);
+		xr_delete					(I->second);
 }
 
 void CALifeObjectRegistry::save				(IWriter &memory_stream, CSE_ALifeDynamicObject *object, u32 &object_count)
@@ -69,16 +69,16 @@ void CALifeObjectRegistry::save				(IWriter &memory_stream)
 	OBJECT_REGISTRY::iterator	I = m_objects.begin();
 	OBJECT_REGISTRY::iterator	E = m_objects.end();
 	for ( ; I != E; ++I) {
-		if (!(*I).second->can_save())
+		if (!I->second->can_save())
 			continue;
 
-		if ((*I).second->redundant())
+		if (I->second->redundant())
 			continue;
 
-		if ((*I).second->ID_Parent != 0xffff)
+		if (I->second->ID_Parent != 0xffff)
 			continue;
 
-		save					(memory_stream,(*I).second, object_count);
+		save					(memory_stream,I->second, object_count);
 	}
 	
 	u32							last_position = memory_stream.tell();

@@ -147,7 +147,7 @@ bool CALifeSwitchManager::synchronize_location(CSE_ALifeDynamicObject *I)
 		Memory.mem_copy		(test,&*I->children.begin(),size*sizeof(ALife::_OBJECT_ID));
 		std::sort			(test,test + size);
 		for (u32 i=1; i<size; ++i) {
-			VERIFY3			(test[i - 1] != test[i],"Child is registered twice in the child list",(*I).name_replace());
+			VERIFY3			(test[i - 1] != test[i],"Child is registered twice in the child list", I->name_replace());
 		}
 	}
 #endif // DEBUG
@@ -164,7 +164,7 @@ bool CALifeSwitchManager::synchronize_location(CSE_ALifeDynamicObject *I)
 	if	(!I->m_bOnline && !ai().level_graph().valid_vertex_id(I->m_tNodeID))
 		return				(true);
 
-	return					((*I).synchronize_location());
+	return					(I->synchronize_location());
 	STOP_PROFILE
 }
 

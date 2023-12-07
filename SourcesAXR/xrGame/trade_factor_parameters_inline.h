@@ -34,5 +34,5 @@ IC	const CTradeFactors &CTradeFactorParameters::factors	(const shared_str &secti
 {
 	FACTORS::const_iterator	I = m_factors.find(section);
 	VERIFY					(I != m_factors.end());
-	return					((*I).second);
+	return					(I->second);
 }

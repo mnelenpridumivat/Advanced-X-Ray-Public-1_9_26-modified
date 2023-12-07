@@ -49,7 +49,7 @@ TEMPLATE_SPECIALIZATION
 IC	_dist_type CGamePathManager::evaluate	(const _index_type &node_index1, const _index_type &node_index2, const _Graph::const_iterator &i) const
 {
 	VERIFY					(graph);
-	return					((*i).distance());
+	return					(i->distance());
 }
 
 TEMPLATE_SPECIALIZATION

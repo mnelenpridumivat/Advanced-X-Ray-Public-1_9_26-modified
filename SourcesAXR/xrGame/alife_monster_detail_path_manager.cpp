@@ -156,7 +156,7 @@ void CALifeMonsterDetailPathManager::actualize				()
 		xr_vector<GameGraph::STerrainPlace>::iterator I = object().m_tpaTerrain.begin();
 		xr_vector<GameGraph::STerrainPlace>::iterator E = object().m_tpaTerrain.end();
 		for ( ; I != E; ++I) {
-			Msg							("! [%d , %d , %d , %d]",(*I).tMask[0],(*I).tMask[1],(*I).tMask[2],(*I).tMask[3]);
+			Msg							("! [%d , %d , %d , %d]",I->tMask[0],I->tMask[1],I->tMask[2],I->tMask[3]);
 		};
 	}
 #endif

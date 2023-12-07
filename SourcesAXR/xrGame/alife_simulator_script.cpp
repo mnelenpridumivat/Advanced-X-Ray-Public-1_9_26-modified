@@ -103,7 +103,7 @@ void generate_story_ids		(
 		STORY_PAIRS::const_iterator	I = result.begin();
 		STORY_PAIRS::const_iterator	E = result.end();
 		for ( ; I != E; ++I)
-			R_ASSERT3		((*I).first != temp,duplicated_id_description,*temp);
+			R_ASSERT3		(I->first != temp,duplicated_id_description,*temp);
 		
 		result.push_back	(std::make_pair(*temp,atoi(N)));
 	}

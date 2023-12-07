@@ -331,7 +331,7 @@ void CScriptEngine::remove_script_process	(const EScriptProcessors &process_id)
 {
 	CScriptProcessStorage::iterator	I = m_script_processes.find(process_id);
 	if (I != m_script_processes.end()) {
-		xr_delete						((*I).second);
+		xr_delete						(I->second);
 		m_script_processes.erase		(I);
 	}
 }

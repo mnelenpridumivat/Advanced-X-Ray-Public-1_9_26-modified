@@ -50,8 +50,8 @@ lua_State* CDbgScriptThreads::FindScript(int nThreadID)
 {
 	xr_vector<SScriptThread>::iterator It = m_threads.begin();
 	for(;It!=m_threads.end();++It){
-		if( (*It).scriptID == nThreadID )
-			return (*It).lua;
+		if( It->scriptID == nThreadID )
+			return It->lua;
 	}
 	return 0;
 }

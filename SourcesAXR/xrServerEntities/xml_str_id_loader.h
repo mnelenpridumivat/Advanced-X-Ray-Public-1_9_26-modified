@@ -99,7 +99,7 @@ const typename ITEM_DATA* CSXML_IdToIndex::GetById (const shared_str& str_id, bo
 	for(T_VECTOR::iterator it = m_pItemDataVector->begin();
 		m_pItemDataVector->end() != it; it++)
 	{
-		if( (*it).id == str_id)
+		if( it->id == str_id)
 			break;
 	}
 
@@ -107,7 +107,7 @@ const typename ITEM_DATA* CSXML_IdToIndex::GetById (const shared_str& str_id, bo
 	{
 		int i=0;
 		for(T_VECTOR::iterator it = m_pItemDataVector->begin();	m_pItemDataVector->end() != it; it++,i++)
-			Msg("[%d]=[%s]",i,*(*it).id );
+			Msg("[%d]=[%s]",i,*it->id );
 
 		R_ASSERT3(no_assert, "item not found, id", *str_id);
 		return NULL;
@@ -176,7 +176,7 @@ typename void	CSXML_IdToIndex::InitInternal ()
 			T_VECTOR::iterator t_it = m_pItemDataVector->begin();
 			for(;m_pItemDataVector->end() != t_it; t_it++)
 			{
-				if(shared_str((*t_it).id) == shared_str(item_name))
+				if(shared_str(t_it->id) == shared_str(item_name))
 					break;
 			}
 

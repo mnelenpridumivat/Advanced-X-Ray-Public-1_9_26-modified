@@ -781,7 +781,7 @@ void SArtefactDetectorsSupport::UpdateOnFrame()
 			if(b!=e)
 			{
 				std::advance(b, ::Random.randI(static_cast<s32>(e - b)));
-				m_currPatrolVertex	= m_currPatrolPath->vertex((*b).vertex_id());
+				m_currPatrolVertex	= m_currPatrolPath->vertex(b->vertex_id());
 				m_destPoint			= m_currPatrolVertex->data().position();
 			}	
 		}

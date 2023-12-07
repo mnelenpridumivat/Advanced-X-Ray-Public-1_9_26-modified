@@ -38,7 +38,7 @@ void CSoundPlayer::clear			()
 	xr_vector<CSoundSingle>::iterator	I = m_playing_sounds.begin();
 	xr_vector<CSoundSingle>::iterator	E = m_playing_sounds.end();
 	for ( ; I != E; ++I)
-		(*I).destroy				();
+		I->destroy				();
 
 	m_playing_sounds.clear			();
 
@@ -104,15 +104,15 @@ bool CSoundPlayer::check_sound_legacy(u32 internal_type) const
 	}
 
 	VERIFY								(m_sounds.end() != J);
-	const CSoundCollectionParamsFull	&sound = (*J).second.first;
+	const CSoundCollectionParamsFull	&sound = J->second.first;
 	if (sound.m_synchro_mask & m_sound_mask)
 		return						(false);
 
 	xr_vector<CSoundSingle>::const_iterator	I = m_playing_sounds.begin();
 	xr_vector<CSoundSingle>::const_iterator	E = m_playing_sounds.end();
 	for ( ; I != E; ++I)
-		if ((*I).m_synchro_mask & sound.m_synchro_mask)
-			if ((*I).m_priority <= sound.m_priority)
+		if (I->m_synchro_mask & sound.m_synchro_mask)
+			if (I->m_priority <= sound.m_priority)
 				return				(false);
 	return							(true);
 }
@@ -142,11 +142,11 @@ void CSoundPlayer::update_playing_sounds()
 	xr_vector<CSoundSingle>::iterator	I = m_playing_sounds.begin();
 	xr_vector<CSoundSingle>::iterator	E = m_playing_sounds.end();
 	for ( ; I != E; ++I) {
-		if ((*I).m_sound->_feedback())
-			(*I).m_sound->_feedback()->set_position(compute_sound_point(*I));
+		if (I->m_sound->_feedback())
+			I->m_sound->_feedback()->set_position(compute_sound_point(*I));
 		else
-			if (!(*I).started() && (Device.dwTimeGlobal >= (*I).m_start_time))
-				(*I).play_at_pos		(m_object,compute_sound_point(*I));
+			if (!I->started() && (Device.dwTimeGlobal >= I->m_start_time))
+				I->play_at_pos		(m_object,compute_sound_point(*I));
 	}
 }
 
@@ -155,10 +155,10 @@ bool CSoundPlayer::need_bone_data	() const
 	xr_vector<CSoundSingle>::const_iterator	I = m_playing_sounds.begin();
 	xr_vector<CSoundSingle>::const_iterator	E = m_playing_sounds.end();
 	for ( ; I != E; ++I) {
-		if ((*I).m_sound->_feedback())
+		if (I->m_sound->_feedback())
 			return					(true);
 		else
-			if (!(*I).started() && (Device.dwTimeGlobal >= (*I).m_start_time))
+			if (!I->started() && (Device.dwTimeGlobal >= I->m_start_time))
 				return				(true);
 	}
 	return							(false);
@@ -171,8 +171,8 @@ void CSoundPlayer::play				(u32 internal_type, u32 max_start_time, u32 min_start
 	
 	SOUND_COLLECTIONS::iterator	I = m_sounds.find(internal_type);
 	VERIFY						(m_sounds.end() != I);
-	CSoundCollectionParamsFull	&sound = (*I).second.first;
-	if ((*I).second.second->m_sounds.empty()) {
+	CSoundCollectionParamsFull	&sound = I->second.first;
+	if (I->second.second->m_sounds.empty()) {
 #ifdef DEBUG
 		Msg						("- There are no sounds in sound collection \"%s\" with internal type %d (sound_script = %d)",*sound.m_sound_prefix,internal_type,StalkerSpace::eStalkerSoundScript);
 #endif
@@ -203,13 +203,13 @@ void CSoundPlayer::play				(u32 internal_type, u32 max_start_time, u32 min_start
 	);
 	/**/
 	sound_single.m_sound->clone	(
-		(*I).second.second->random(id),
+		I->second.second->random(id),
 		st_Effect,
 		sg_SourceType
 	);
 
 	sound_single.m_sound->_p->g_object		= m_object;
-	sound_single.m_sound->_p->g_userdata	= (*I).second.first.m_data;
+	sound_single.m_sound->_p->g_userdata	= I->second.first.m_data;
 	VERIFY						(sound_single.m_sound->_handle());
 
 	VERIFY						(max_start_time >= min_start_time);

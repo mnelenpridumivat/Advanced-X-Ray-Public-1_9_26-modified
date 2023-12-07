@@ -163,7 +163,7 @@ void CMainMenu::ReadTextureInfo()
 	for( ;fit!=fit_e; ++fit)
 	{
     	string_path	fn1, fn2,fn3;
-        _splitpath	((*fit).name.c_str(),fn1,fn2,fn3,0);
+        _splitpath	(fit->name.c_str(),fn1,fn2,fn3,0);
 		xr_strcat(fn3,".xml");
 
 		CUITextureMaster::ParseShTexInfo(fn3);

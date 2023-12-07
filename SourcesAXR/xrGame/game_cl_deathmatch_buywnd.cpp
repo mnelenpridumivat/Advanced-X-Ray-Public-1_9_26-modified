@@ -296,7 +296,7 @@ void game_cl_Deathmatch::CheckItem			(PIItem pItem, PRESET_ITEMS* pPresetItems, 
 	s16 DesiredAddons = 0;	
 	if (PresetItemIt != pPresetItems->end())
 	{
-		DesiredAddons = (*PresetItemIt).ItemID >> 5;
+		DesiredAddons = PresetItemIt->ItemID >> 5;
 		pPresetItems->erase(PresetItemIt);
 	}
 	//-----------------------------------------------------

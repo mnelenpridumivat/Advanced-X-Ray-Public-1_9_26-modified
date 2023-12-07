@@ -91,7 +91,7 @@ bool CBaseGraviZone ::IdleState()
 		{
 			for(OBJECT_INFO_VEC_IT it = m_ObjectInfoMap.begin(); m_ObjectInfoMap.end() != it; ++it) 
 			{
-				CPhysicsShellHolder * GO = smart_cast<CPhysicsShellHolder *>( (*it).object );
+				CPhysicsShellHolder * GO = smart_cast<CPhysicsShellHolder *>( it->object );
 
 				if(GO && GO->PPhysicsShell() && Telekinesis().is_active_object(GO))
 				{
@@ -106,7 +106,7 @@ bool CBaseGraviZone ::IdleState()
 
 			for(OBJECT_INFO_VEC_IT it = m_ObjectInfoMap.begin(); m_ObjectInfoMap.end() != it; ++it) 
 			{
-				CPhysicsShellHolder * GO = smart_cast<CPhysicsShellHolder *>( (*it).object );
+				CPhysicsShellHolder * GO = smart_cast<CPhysicsShellHolder *>( it->object );
 
 				if(GO && GO->PPhysicsShell() && !Telekinesis().is_active_object(GO))
 				{

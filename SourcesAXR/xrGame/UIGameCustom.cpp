@@ -619,7 +619,7 @@ void CMapListHelper::LoadMapInfo(LPCSTR map_cfg_fn, const xr_string& map_name, L
 		CInifile::SectCIt si_e		= S.Data.end();
 		for( ;si!=si_e; ++si)
 		{
-			const shared_str& game_type = (*si).first;
+			const shared_str& game_type = si->first;
 			
 			if(game_type=="ver")		continue;
 
@@ -667,8 +667,8 @@ void CMapListHelper::Load()
 	{
 		m_weathers.resize		(m_weathers.size()+1);
 		SGameWeathers& gw		= m_weathers.back();
-		gw.m_weather_name		= (*wi).first;
-		gw.m_start_time			= (*wi).second;
+		gw.m_weather_name		= wi->first;
+		gw.m_start_time			= wi->second;
 	}
 
 	// scan for additional maps
@@ -681,8 +681,8 @@ void CMapListHelper::Load()
 	for( ;fit!=fit_e; ++fit)
 	{
 		string_path					map_cfg_fn;
-		FS.update_path				(map_cfg_fn, "$game_levels$", (*fit).name.c_str());
-		LoadMapInfo					(map_cfg_fn, (*fit).name);
+		FS.update_path				(map_cfg_fn, "$game_levels$", fit->name.c_str());
+		LoadMapInfo					(map_cfg_fn, fit->name);
 	}
 	//scan all not laoded archieves
 	LPCSTR tmp_entrypoint			= "temporary_gamedata\\";
@@ -733,7 +733,7 @@ SGameTypeMaps* CMapListHelper::GetMapListInt(const shared_str& game_type)
 	TSTORAGE_CIT it_e	= m_storage.end();
 	for( ;it!=it_e; ++it)
 	{
-		if(game_type==(*it).m_game_type_name )
+		if(game_type==it->m_game_type_name )
 			return &(*it);
 	}
 	return NULL;
@@ -750,7 +750,7 @@ const SGameTypeMaps& CMapListHelper::GetMapListFor(const EGameIDs game_id)
 	TSTORAGE_CIT it_e	= m_storage.end();
 	for( ;it!=it_e; ++it)
 	{
-		if(game_id==(*it).m_game_type_id )
+		if(game_id==it->m_game_type_id )
 			return (*it);
 	}
 	return m_storage[0];

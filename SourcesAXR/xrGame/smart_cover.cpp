@@ -85,8 +85,8 @@ cover::cover					(
 				(*J)->id().c_str()
 			)
 		);
-		vertex					(**J, (*i).second);
-		const_cast<loophole*&>((*i).first) = *J;
+		vertex					(**J, i->second);
+		const_cast<loophole*&>(i->first) = *J;
 	}
 
 #ifdef DEBUG
@@ -118,8 +118,8 @@ void cover::vertex				(smart_cover::loophole const &loophole, smart_cover::looph
 	const_iterator				I = loophole.actions().begin();
 	const_iterator				E = loophole.actions().end();
 	for ( ; I != E; ++I )
-		if ( ( *I ).second->movement( ) ) {
-			Fvector				pos = position((*I).second->target_position());
+		if ( I->second->movement( ) ) {
+			Fvector				pos = position(I->second->target_position());
 			pos.y				+= 2.0f;
 			u32					level_vertex_id = graph.vertex_id(pos);
 			VERIFY2				(
@@ -129,7 +129,7 @@ void cover::vertex				(smart_cover::loophole const &loophole, smart_cover::looph
 					loophole.id().c_str()
 				)
 			);
-			loophole_data.m_action_vertices.push_back(std::make_pair((*I).first, level_vertex_id));
+			loophole_data.m_action_vertices.push_back(std::make_pair(I->first, level_vertex_id));
 		}
 }
 
@@ -265,7 +265,7 @@ u32 const &cover::level_vertex_id			(smart_cover::loophole const &loophole) cons
 {
 	Vertices::const_iterator	I = std::find_if(m_vertices.begin(), m_vertices.end(), loophole_predicate(&loophole));
 	VERIFY						(I != m_vertices.end());
-	return						((*I).second.m_level_vertex_id);
+	return						(I->second.m_level_vertex_id);
 }
 
 #ifdef DEBUG

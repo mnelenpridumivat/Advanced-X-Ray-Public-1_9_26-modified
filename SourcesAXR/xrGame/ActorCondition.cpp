@@ -1126,7 +1126,7 @@ void CActorCondition::BoosterForEach(const luabind::functor<bool>& funct)
 	CEntityCondition::BOOSTER_MAP::const_iterator it_e = cur_booster_influences.end();
 	for (; it != it_e; ++it)
 	{
-		if (funct((*it).first, (*it).second.fBoostTime, (*it).second.fBoostValue) == true)
+		if (funct(it->first, it->second.fBoostTime, it->second.fBoostValue) == true)
 			break;
 	}
 }
@@ -1143,7 +1143,7 @@ void CActorCondition::ClearAllBoosters()
 	CEntityCondition::BOOSTER_MAP::const_iterator it_e = cur_booster_influences.end();
 	for (; it != it_e; ++it)
 	{
-		DisableBoostParameters((*it).second);
+		DisableBoostParameters(it->second);
 	}
 }
 
@@ -1446,7 +1446,7 @@ bool CActorCondition::ApplyBooster(const SBooster& B, const shared_str& sect)
 
 		BOOSTER_MAP::iterator it = m_booster_influences.find(B.m_type);
 		if(it!=m_booster_influences.end())
-			DisableBoostParameters((*it).second);
+			DisableBoostParameters(it->second);
 		m_booster_influences[B.m_type] = B;
 		BoostParameters(B);
 	}

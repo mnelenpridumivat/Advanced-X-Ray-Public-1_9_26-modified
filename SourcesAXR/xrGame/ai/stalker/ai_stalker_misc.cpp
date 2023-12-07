@@ -173,10 +173,10 @@ void CAI_Stalker::process_enemies		()
 	VISIBLES::const_iterator	I = memory().visual().objects().begin();
 	VISIBLES::const_iterator	E = memory().visual().objects().end();
 	for ( ; I != E; ++I) {
-		if (!(*I).visible(mask))
+		if (!I->visible(mask))
 			continue;
 
-		const CAI_Stalker		*member = smart_cast<const CAI_Stalker*>((*I).m_object);
+		const CAI_Stalker		*member = smart_cast<const CAI_Stalker*>(I->m_object);
 		if (!member)
 			continue;
 

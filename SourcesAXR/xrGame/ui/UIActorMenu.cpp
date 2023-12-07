@@ -907,7 +907,7 @@ void CUIActorMenu::highlight_ammo_for_weapon( PIItem weapon_item, CUIDragDropLis
 		xr_vector<shared_str>::iterator itb = ammo_types.begin();
 		for ( ; itb != ite; ++itb )
 		{
-			if ( ammo_name._get() == (*itb)._get() )
+			if ( ammo_name._get() == itb->_get() )
 			{
 				ci->m_select_armament = true;
 				break; // itb
@@ -954,7 +954,7 @@ void CUIActorMenu::highlight_weapons_for_ammo( PIItem ammo_item, CUIDragDropList
 		xr_vector<shared_str>::iterator ite = weapon->m_ammoTypes.end();
 		for ( ; itb != ite; ++itb )
 		{
-			if ( ammo_name._get() == (*itb)._get() )
+			if ( ammo_name._get() == itb->_get() )
 			{
 				ci->m_select_armament = true;
 				break; // for itb
@@ -970,7 +970,7 @@ void CUIActorMenu::highlight_weapons_for_ammo( PIItem ammo_item, CUIDragDropList
 		ite = wg->m_ammoTypes2.end();
 		for ( ; itb != ite; ++itb )
 		{
-			if ( ammo_name._get() == (*itb)._get() )
+			if ( ammo_name._get() == itb->_get() )
 			{
 				ci->m_select_armament = true;
 				break; // for itb

@@ -582,7 +582,7 @@ void CCustomZone::shedule_Update(u32 dt)
 		for(OBJECT_INFO_VEC_IT it = m_ObjectInfoMap.begin(); 
 			m_ObjectInfoMap.end() != it; ++it) 
 		{
-			CGameObject* pObject		= (*it).object;
+			CGameObject* pObject		= it->object;
 			if (!pObject)				continue;
 			CEntityAlive* pEntityAlive	= smart_cast<CEntityAlive*>(pObject);
 			SZoneObjectInfo& info		= (*it);
@@ -1131,7 +1131,7 @@ void CCustomZone::AffectObjects()
 	OBJECT_INFO_VEC_IT it;
 	for(it = m_ObjectInfoMap.begin(); m_ObjectInfoMap.end() != it; ++it) 
 	{
-		if( !(*it).object->getDestroy() )
+		if( !it->object->getDestroy() )
 			Affect( &(*it) );
 	}
 }
@@ -1263,7 +1263,7 @@ bool CCustomZone::Enable()
 	for(OBJECT_INFO_VEC_IT it = m_ObjectInfoMap.begin(); 
 		m_ObjectInfoMap.end() != it; ++it) 
 	{
-		CGameObject* pObject = (*it).object;
+		CGameObject* pObject = it->object;
 		if (!pObject) continue;
 		PlayEntranceParticles(pObject);
 		PlayObjectIdleParticles(pObject);
@@ -1280,7 +1280,7 @@ bool CCustomZone::Disable()
 
 	for(OBJECT_INFO_VEC_IT it = m_ObjectInfoMap.begin(); m_ObjectInfoMap.end()!=it; ++it) 
 	{
-		CGameObject* pObject = (*it).object;
+		CGameObject* pObject = it->object;
 		if (!pObject) 
 			continue;
 

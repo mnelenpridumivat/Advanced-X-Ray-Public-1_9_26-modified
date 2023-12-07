@@ -1089,7 +1089,7 @@ bool CCustomMonster::update_critical_wounded	(const u16 &bone_id, const float &p
 		BODY_PART::const_iterator		I = m_bones_body_parts.find(bone_id);
 		if (I == m_bones_body_parts.end()) return (false);
 		
-		m_critical_wound_type			= (*I).second;
+		m_critical_wound_type			= I->second;
 
 		critical_wounded_state_start	();
 

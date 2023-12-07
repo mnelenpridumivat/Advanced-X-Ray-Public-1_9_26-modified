@@ -176,7 +176,7 @@ void CAI_Space::validate			(const u32 level_id) const
 		game_graph().begin_spawn			(i,I,E);
 //		Msg									("vertex [%d] has %d death points",i,game_graph().vertex(i)->death_point_count());
 		for ( ; I != E; ++I) {
-			VERIFY							(cross_table().vertex((*I).level_vertex_id()).game_vertex_id() == i);
+			VERIFY							(cross_table().vertex( I->level_vertex_id()).game_vertex_id() == i);
 		}
 	}
 	

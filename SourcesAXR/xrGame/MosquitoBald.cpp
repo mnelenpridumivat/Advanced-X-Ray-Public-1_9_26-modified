@@ -106,12 +106,12 @@ void CMosquitoBald::UpdateSecondaryHit()
 	OBJECT_INFO_VEC_IT it;
 	for(it = m_ObjectInfoMap.begin(); m_ObjectInfoMap.end() != it; ++it) 
 	{
-		if(!(*it).object->getDestroy())
+		if(!it->object->getDestroy())
 		{
-			CPhysicsShellHolder *pGameObject = smart_cast<CPhysicsShellHolder*>((&(*it))->object);
+			CPhysicsShellHolder *pGameObject = smart_cast<CPhysicsShellHolder*>(((*it)).object);
 			if(!pGameObject) return;
 
-			if((&(*it))->zone_ignore) return;
+			if(((*it)).zone_ignore) return;
 			Fvector P; 
 			XFORM().transform_tiny(P,CFORM()->getSphere().P);
 

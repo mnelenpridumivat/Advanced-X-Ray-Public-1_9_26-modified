@@ -49,7 +49,7 @@ player_hud_motion* player_hud_motion_container::find_motion(const shared_str& na
 	xr_vector<player_hud_motion>::iterator it_e = m_anims.end();
 	for(;it!=it_e;++it)
 	{
-		const shared_str& s = (true)?(*it).m_alias_name:(*it).m_base_name;
+		const shared_str& s = (true)?it->m_alias_name:it->m_base_name;
 		if( s == name)
 			return &(*it);
 	}

@@ -69,19 +69,19 @@ void CMapLocationRegistry::save(IWriter &stream)
 	iterator				E = m_objects.end();
 	for ( ; I != E; ++I) {
 		u32					size = 0;
-		Locations::iterator	i = (*I).second.begin();
-		Locations::iterator	e = (*I).second.end();
+		Locations::iterator	i = I->second.begin();
+		Locations::iterator	e = I->second.end();
 		for ( ; i != e; ++i) {
-			VERIFY			((*i).location);
-			if ((*i).location->Serializable())
+			VERIFY			(i->location);
+			if (i->location->Serializable())
 				++size;
 		}
-		stream.w			(&(*I).first,sizeof((*I).first));
+		stream.w			(&I->first,sizeof(I->first));
 		stream.w_u32		(size);
-		i					= (*I).second.begin();
+		i					= I->second.begin();
 		for ( ; i != e; ++i)
-			if ((*i).location->Serializable())
-				(*i).save	(stream);
+			if (i->location->Serializable())
+				i->save	(stream);
 	}
 }
 
@@ -142,9 +142,9 @@ void CMapManager::RemoveMapLocation(const shared_str& spot_type, u16 id)
 	if( it!=Locations().end() )
 	{
 		if(IsGameTypeSingle())
-			Level().GameTaskManager().MapLocationRelcase((*it).location);
+			Level().GameTaskManager().MapLocationRelcase(it->location);
 
-		Destroy					((*it).location);
+		Destroy					(it->location);
 		Locations().erase		(it);
 	}
 }
@@ -156,9 +156,9 @@ void CMapManager::RemoveMapLocationByObjectID(u16 id) //call on destroy object
 	while( it!= Locations().end() )
 	{
 		if(IsGameTypeSingle())
-			Level().GameTaskManager().MapLocationRelcase((*it).location);
+			Level().GameTaskManager().MapLocationRelcase(it->location);
 
-		Destroy					((*it).location);
+		Destroy					(it->location);
 		Locations().erase		(it);
 
 		it = std::find_if(Locations().begin(), Locations().end(), key);
@@ -173,9 +173,9 @@ void CMapManager::RemoveMapLocation(CMapLocation* ml)
 	if( it!=Locations().end() )
 	{
 		if(IsGameTypeSingle())
-			Level().GameTaskManager().MapLocationRelcase((*it).location);
+			Level().GameTaskManager().MapLocationRelcase(it->location);
 
-		Destroy					((*it).location);
+		Destroy					(it->location);
 		Locations().erase		(it);
 	}
 
@@ -188,8 +188,8 @@ bool CMapManager::GetMapLocationsForObject(u16 id, xr_vector<CMapLocation*>& res
 	Locations_it it_e		= Locations().end();
 	for(; it!=it_e;++it)
 	{
-		if((*it).actual && (*it).object_id==id)
-			res.push_back((*it).location);
+		if(it->actual && it->object_id==id)
+			res.push_back(it->location);
 	}
 	return (res.size()!=0);
 }
@@ -206,7 +206,7 @@ CMapLocation* CMapManager::GetMapLocation(const shared_str& spot_type, u16 id)
 	FindLocationBySpotID key(spot_type, id);
 	Locations_it it = std::find_if(Locations().begin(), Locations().end(), key);
 	if( it!=Locations().end() )
-		return (*it).location;
+		return it->location;
 	
 	return 0;
 }
@@ -218,7 +218,7 @@ void CMapManager::GetMapLocations(const shared_str& spot_type, u16 id, xr_vector
 	
 	while( it!=Locations().end() )
 	{
-		res.push_back((*it).location);
+		res.push_back(it->location);
 		it = std::find_if(++it, Locations().end(), key);
 	}
 }
@@ -233,10 +233,10 @@ void CMapManager::Update()
 	for(u32 idx=0; it!=it_e;++it,++idx)
 	{
 		bool bForce		= Device.dwFrame%3 == idx%3;
-		(*it).actual	= (*it).location->Update();
+		it->actual	= it->location->Update();
 
-		if((*it).actual && bForce)
-			(*it).location->CalcPosition();
+		if(it->actual && bForce)
+			it->location->CalcPosition();
 	}
 	std::sort( Locations().begin(),Locations().end() );
 
@@ -256,7 +256,7 @@ void CMapManager::DisableAllPointers()
 	Locations_it it_e = Locations().end();
 
 	for(; it!=it_e;++it)
-		(*it).location->DisablePointer	();
+		it->location->DisablePointer	();
 }
 
 
@@ -285,8 +285,8 @@ void CMapManager::Dump						()
 	Locations_it it_e = Locations().end();
 	for(; it!=it_e;++it)
 	{
-		Msg("spot_type=[%s] object_id=[%d]",*((*it).spot_type), (*it).object_id);
-		(*it).location->Dump();
+		Msg("spot_type=[%s] object_id=[%d]",*(it->spot_type), it->object_id);
+		it->location->Dump();
 	}
 
 	Msg("end of map_locations dump");

@@ -53,14 +53,14 @@ void manager::fill_levels			(CInifile& config, LPCSTR prefix, LPCSTR category)
 	CInifile::Items::const_iterator	i = section.begin();
 	CInifile::Items::const_iterator	e = section.end();
 	for ( ; i != e; ++i) {
-		if (!(*i).first.size())
+		if (!i->first.size())
 			continue;
 
-		VERIFY						(config.section_exist((*i).first));
-		if (!config.line_exist((*i).first, "weathers")) {
+		VERIFY						(config.section_exist( i->first));
+		if (!config.line_exist(i->first, "weathers")) {
 			m_levels.insert			(
 				std::make_pair(
-					(*i).first.c_str(),
+					i->first.c_str(),
 					std::make_pair(
 						category,
 						s_default_weather_id
@@ -70,10 +70,10 @@ void manager::fill_levels			(CInifile& config, LPCSTR prefix, LPCSTR category)
 			continue;
 		}
 
-		LPCSTR						weather_id = config.r_string((*i).first, "weathers");
+		LPCSTR						weather_id = config.r_string(i->first, "weathers");
 		m_levels.insert				(
 			std::make_pair(
-				(*i).first.c_str(),
+				i->first.c_str(),
 				std::make_pair(
 					category,
 					weather_id
@@ -140,13 +140,13 @@ void manager::fill					()
 	for ( ; i != e; ++i) {
 		string_path					description;
 		xr_strcpy					(description, "weather for level ");
-		xr_strcat					(description, (*i).first.c_str());
+		xr_strcat					(description, i->first.c_str());
 		m_property_holder->add_property	(
-			(*i).first.c_str(),
-			(*i).second.first,
+			i->first.c_str(),
+			i->second.first,
 			description,
-			(*i).second.second.c_str(),
-			(*i).second.second,
+			i->second.second.c_str(),
+			i->second.second,
 			collection_getter,
 			collection_size_getter,
 			editor::property_holder::value_editor_combo_box,

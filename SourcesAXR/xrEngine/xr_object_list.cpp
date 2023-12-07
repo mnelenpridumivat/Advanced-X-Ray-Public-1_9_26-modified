@@ -278,11 +278,11 @@ void CObjectList::ProcessDestroyQueue()
 		RELCASE_CALLBACK_VEC::iterator It	= m_relcase_callbacks.begin();
 		RELCASE_CALLBACK_VEC::iterator Ite	= m_relcase_callbacks.end();
 		for(;It!=Ite; ++It)	{
-			VERIFY			(*(*It).m_ID==(It-m_relcase_callbacks.begin()));
+			VERIFY			(* It->m_ID==(It-m_relcase_callbacks.begin()));
 			Objects::iterator dIt	= destroy_queue.begin();
 			Objects::iterator dIte	= destroy_queue.end();
 			for (;dIt!=dIte; ++dIt) {
-				(*It).m_Callback(*dIt);
+				It->m_Callback(*dIt);
 				g_hud->net_Relcase	(*dIt);
 			}
 		}

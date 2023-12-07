@@ -27,14 +27,14 @@ private:
 
 		IC	bool	operator()			(_iterator &i, u64 cycle_count, bool) const
 		{
-			if ((*i).second->m_schedule_counter	== cycle_count)
+			if (i->second->m_schedule_counter	== cycle_count)
 				return					(false);
 
 			if (m_current >= m_count)
 				return					(false);
 
 			++m_current;
-			(*i).second->m_schedule_counter	= cycle_count;
+			i->second->m_schedule_counter	= cycle_count;
 
 			return						(true);
 		}
@@ -42,7 +42,7 @@ private:
 		IC	void	operator()			(_iterator &i, u64 cycle_count) const
 		{
 			START_PROFILE("ALife/scheduled/update")
-			(*i).second->update			();
+			i->second->update			();
 			STOP_PROFILE
 		}
 	};

@@ -44,7 +44,7 @@ void CStringTable::Init		()
 	for( ;fit!=fit_e; ++fit)
 	{
     	string_path		fn, ext;
-        _splitpath		((*fit).name.c_str(), 0, 0, fn, ext);
+        _splitpath		(fit->name.c_str(), 0, 0, fn, ext);
 		xr_strcat			(fn, ext);
 
 		Load			(fn);

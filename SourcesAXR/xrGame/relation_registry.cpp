@@ -137,7 +137,7 @@ CHARACTER_GOODWILL	 RELATION_REGISTRY::GetGoodwill			(u16 from, u16 to) const
 		PERSONAL_RELATION_MAP::const_iterator it = relation_data->personal.find(to);
 		if(relation_data->personal.end() != it)
 		{
-			const SRelation& relation = (*it).second;
+			const SRelation& relation = it->second;
 			return relation.Goodwill();
 		}
 	}
@@ -189,7 +189,7 @@ CHARACTER_GOODWILL	 RELATION_REGISTRY::GetCommunityGoodwill (CHARACTER_COMMUNITY
 		COMMUNITY_RELATION_MAP::const_iterator it = relation_data->communities.find(from_community);
 		if(relation_data->communities.end() != it)
 		{
-			const SRelation& relation = (*it).second;
+			const SRelation& relation = it->second;
 			return relation.Goodwill();
 		}
 	}

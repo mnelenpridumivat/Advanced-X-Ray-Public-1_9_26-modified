@@ -118,13 +118,13 @@ IC	void CSmartCastStats::show					()
 	xr_vector<CStats>::const_iterator	I = m_temp.begin();
 	xr_vector<CStats>::const_iterator	E = m_temp.end();
 	for ( ; I != E; ++I)
-		total							+= (*I).m_count;
+		total							+= I->m_count;
 
 	Msg									("SmartCast stats (different %d, total %d) : ",(u32)m_stats.size(),total);
 
 	I									= m_temp.begin();
 	for ( ; I != E; ++I)
-		Msg								("%8d %6.2f% : smart_cast<%s>(%s)",(*I).m_count,static_cast<float>((*I).m_count)*100.f/static_cast<float>(total),(*I).m_to,(*I).m_from);
+		Msg								("%8d %6.2f% : smart_cast<%s>(%s)",I->m_count,static_cast<float>(I->m_count)*100.f/static_cast<float>(total),I->m_to,I->m_from);
 }
 
 void add_smart_cast_stats		(LPCSTR from, LPCSTR to)

@@ -200,10 +200,10 @@ bool CVisualMemoryManager::visible_right_now	(const CGameObject *game_object) co
 	if ((objects().end() == I))
 		return						(false);
 
-	if (!(*I).visible(mask()))
+	if (!I->visible(mask()))
 		return						(false);
 
-	if ((*I).m_level_time < m_last_update_time)
+	if (I->m_level_time < m_last_update_time)
 		return						(false);
 
 	return							(true);
@@ -223,7 +223,7 @@ bool CVisualMemoryManager::visible_now	(const CGameObject *game_object) const
 	}
 
 	VISIBLES::const_iterator		I = std::find(objects().begin(),objects().end(),object_id(game_object));
-	return							((objects().end() != I) && (*I).visible(mask()));
+	return							((objects().end() != I) && I->visible(mask()));
 }
 
 void CVisualMemoryManager::enable		(const CObject *object, bool enable)
@@ -231,7 +231,7 @@ void CVisualMemoryManager::enable		(const CObject *object, bool enable)
 	VISIBLES::iterator	J = std::find(m_objects->begin(),m_objects->end(),object_id(object));
 	if (J == m_objects->end())
 		return;
-	(*J).m_enabled					= enable;
+	J->m_enabled					= enable;
 }
 
 float CVisualMemoryManager::object_visible_distance(const CGameObject *game_object, float &object_distance) const
@@ -511,11 +511,11 @@ void CVisualMemoryManager::add_visible_object	(const CObject *object, float time
 	}
 	else {
 		if (!fictitious)
-			(*J).fill			(game_object,self,(*J).m_squad_mask.get() | mask(),(*J).m_visible.get() | mask());
+			J->fill			(game_object,self,J->m_squad_mask.get() | mask(),J->m_visible.get() | mask());
 		else {
-			(*J).m_visible.assign	((*J).m_visible.get() | mask());
-			(*J).m_squad_mask.assign((*J).m_squad_mask.get() | mask());
-			(*J).m_enabled			= true;
+			J->m_visible.assign	(J->m_visible.get() | mask());
+			J->m_squad_mask.assign(J->m_squad_mask.get() | mask());
+			J->m_enabled			= true;
 		}
 	}
 //	STOP_PROFILE
@@ -549,13 +549,13 @@ void CVisualMemoryManager::check_visibles	() const
 	xr_vector<CVisibleObject>::iterator	I = m_objects->begin();
 	xr_vector<CVisibleObject>::iterator	E = m_objects->end();
 	for ( ; I != E; ++I) {
-		if (!(*I).visible(mask))
+		if (!I->visible(mask))
 			continue;
 		
 		xr_vector<Feel::Vision::feel_visible_Item>::iterator	i = m_object->feel_visible.begin();
 		xr_vector<Feel::Vision::feel_visible_Item>::iterator	e = m_object->feel_visible.end();
 		for (; i!=e; ++i)
-			if (i->O->ID() == (*I).m_object->ID()) {
+			if (i->O->ID() == I->m_object->ID()) {
 				VERIFY						(i->fuzzy > 0.f);
 				break;
 			}
@@ -689,8 +689,8 @@ void CVisualMemoryManager::update				(float time_delta)
 		xr_vector<CVisibleObject>::iterator	I = m_objects->begin();
 		xr_vector<CVisibleObject>::iterator	E = m_objects->end();
 		for ( ; I != E; ++I)
-			if ((*I).m_level_time + current_state().m_still_visible_time < Device.dwTimeGlobal)
-				(*I).visible			(mask,false);
+			if (I->m_level_time + current_state().m_still_visible_time < Device.dwTimeGlobal)
+				I->visible			(mask,false);
 	}
 	STOP_PROFILE
 
@@ -708,8 +708,8 @@ void CVisualMemoryManager::update				(float time_delta)
 		xr_vector<CNotYetVisibleObject>::iterator	I = m_not_yet_visible_objects.begin();
 		xr_vector<CNotYetVisibleObject>::iterator	E = m_not_yet_visible_objects.end();
 		for ( ; I != E; ++I)
-			if ((*I).m_update_time < Device.dwTimeGlobal)
-				(*I).m_value			= 0.f;
+			if (I->m_update_time < Device.dwTimeGlobal)
+				I->m_value			= 0.f;
 	}
 	STOP_PROFILE
 
@@ -758,7 +758,7 @@ void CVisualMemoryManager::update				(float time_delta)
 			SetActorVisibility				(
 				m_object->ID(),
 				clampr(
-					(*I).m_value/visibility_threshold(),
+					I->m_value/visibility_threshold(),
 					0.f,
 					1.f
 				)
@@ -809,34 +809,34 @@ void CVisualMemoryManager::save	(NET_Packet &packet) const
 		if ( !is_object_valuable_to_save( m_object, *I) )
 			continue;
 
-		VERIFY					((*I).m_object);
-		packet.w_u16			((*I).m_object->ID());
+		VERIFY					(I->m_object);
+		packet.w_u16			(I->m_object->ID());
 		// object params
-		packet.w_u32			((*I).m_object_params.m_level_vertex_id);
-		packet.w_vec3			((*I).m_object_params.m_position);
+		packet.w_u32			(I->m_object_params.m_level_vertex_id);
+		packet.w_vec3			(I->m_object_params.m_position);
 #ifdef USE_ORIENTATION
 		packet.w_float			((*I).m_object_params.m_orientation.yaw);
 		packet.w_float			((*I).m_object_params.m_orientation.pitch);
 		packet.w_float			((*I).m_object_params.m_orientation.roll);
 #endif // USE_ORIENTATION
 		// self params
-		packet.w_u32			((*I).m_self_params.m_level_vertex_id);
-		packet.w_vec3			((*I).m_self_params.m_position);
+		packet.w_u32			(I->m_self_params.m_level_vertex_id);
+		packet.w_vec3			(I->m_self_params.m_position);
 #ifdef USE_ORIENTATION
 		packet.w_float			((*I).m_self_params.m_orientation.yaw);
 		packet.w_float			((*I).m_self_params.m_orientation.pitch);
 		packet.w_float			((*I).m_self_params.m_orientation.roll);
 #endif // USE_ORIENTATION
 #ifdef USE_LEVEL_TIME
-		packet.w_u32			((Device.dwTimeGlobal >= (*I).m_level_time) ? (Device.dwTimeGlobal - (*I).m_level_time) : 0);
+		packet.w_u32			((Device.dwTimeGlobal >= I->m_level_time) ? (Device.dwTimeGlobal - I->m_level_time) : 0);
 #endif // USE_LAST_LEVEL_TIME
 #ifdef USE_LEVEL_TIME
-		packet.w_u32			((Device.dwTimeGlobal >= (*I).m_level_time) ? (Device.dwTimeGlobal - (*I).m_last_level_time) : 0);
+		packet.w_u32			((Device.dwTimeGlobal >= I->m_level_time) ? (Device.dwTimeGlobal - I->m_last_level_time) : 0);
 #endif // USE_LAST_LEVEL_TIME
 #ifdef USE_FIRST_LEVEL_TIME
 		packet.w_u32			((Device.dwTimeGlobal >= (*I).m_level_time) ? (Device.dwTimeGlobal - (*I).m_first_level_time) : 0);
 #endif // USE_FIRST_LEVEL_TIME
-		packet.w_u64			((*I).m_visible.flags);
+		packet.w_u64			(I->m_visible.flags);
 	}
 
 //	Msg("after saving object %s[%d]", m_object->cName().c_str(), packet.w_tell() );
@@ -927,7 +927,7 @@ void CVisualMemoryManager::clear_delayed_objects()
 	DELAYED_VISIBLE_OBJECTS::const_iterator	I = m_delayed_objects.begin();
 	DELAYED_VISIBLE_OBJECTS::const_iterator	E = m_delayed_objects.end();
 	for ( ; I != E; ++I)
-		manager.remove						((*I).m_object_id,m_object->ID());
+		manager.remove						(I->m_object_id,m_object->ID());
 
 	m_delayed_objects.clear					();
 }
@@ -937,13 +937,13 @@ void CVisualMemoryManager::on_requested_spawn	(CObject *object)
 	DELAYED_VISIBLE_OBJECTS::iterator	I = m_delayed_objects.begin();
 	DELAYED_VISIBLE_OBJECTS::iterator	E = m_delayed_objects.end();
 	for ( ; I != E; ++I) {
-		if ((*I).m_object_id != object->ID())
+		if (I->m_object_id != object->ID())
 			continue;
 		
 		if (m_object->g_Alive()) {
-			(*I).m_visible_object.m_object	= smart_cast<CGameObject*>(object);
-			VERIFY						((*I).m_visible_object.m_object);
-			add_visible_object			((*I).m_visible_object);
+			I->m_visible_object.m_object	= smart_cast<CGameObject*>(object);
+			VERIFY						(I->m_visible_object.m_object);
+			add_visible_object			(I->m_visible_object);
 		}
 
 		m_delayed_objects.erase			(I);

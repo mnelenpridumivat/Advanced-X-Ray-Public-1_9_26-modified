@@ -147,7 +147,7 @@ void CUIMotionIcon::SetActorVisibility		(u16 who_id, float value)
 	}
 	else
 	{
-		(*it).value	= value;
+		it->value	= value;
 	}
 
 	m_bchanged = true;

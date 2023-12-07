@@ -70,7 +70,7 @@ struct CEnemyFiller {
 			return;
 		}
 
-		(*I).m_mask.set				(m_mask,TRUE);
+		I->m_mask.set				(m_mask,TRUE);
 	}
 };
 
@@ -127,7 +127,7 @@ void CAgentEnemyManager::fill_enemies			()
 		ENEMIES::iterator				E = enemies().end();
 		for ( ; I != E; ++I) {
 			if (m_only_wounded_left) {
-				const CAI_Stalker			*stalker = smart_cast<const CAI_Stalker*>((*I).m_object);
+				const CAI_Stalker			*stalker = smart_cast<const CAI_Stalker*>(I->m_object);
 				if (!stalker || !stalker->wounded())
 					m_only_wounded_left	= false;
 				else
@@ -135,13 +135,13 @@ void CAgentEnemyManager::fill_enemies			()
 			}
 			else {
 				if (!m_is_any_wounded) {
-					const CAI_Stalker		*stalker = smart_cast<const CAI_Stalker*>((*I).m_object);
+					const CAI_Stalker		*stalker = smart_cast<const CAI_Stalker*>(I->m_object);
 					if (stalker && stalker->wounded())
 						m_is_any_wounded	= true;
 				}
 			}
 
-			memory.object_information	((*I).m_object,(*I).m_level_time,(*I).m_enemy_position);
+			memory.object_information	(I->m_object,I->m_level_time,I->m_enemy_position);
 		}
 	}
 
@@ -191,11 +191,11 @@ void CAgentEnemyManager::compute_enemy_danger	()
 		CAgentMemberManager::const_iterator	i = object().member().combat_members().begin();
 		CAgentMemberManager::const_iterator	e = object().member().combat_members().end();
 		for ( ; i != e; ++i) {
-			float					value = evaluate((*I).m_object,&(*i)->object());
+			float					value = evaluate(I->m_object,&(*i)->object());
 			if (value > best)
 				best				= value;
 		}
-		(*I).m_probability			= best;
+		I->m_probability			= best;
 	}
 
 	std::sort						(m_enemies.begin(),m_enemies.end());
@@ -210,7 +210,7 @@ void CAgentEnemyManager::assign_enemies			()
 		ENEMIES::iterator				I = m_enemies.begin();
 		ENEMIES::iterator				E = m_enemies.end();
 		for ( ; I != E; ++I) {
-			J							= (*I).m_mask.get();
+			J							= I->m_mask.get();
 			N							= 0;
 			best						= -1.f;
 			for ( ; J; J &= J - 1) {
@@ -219,7 +219,7 @@ void CAgentEnemyManager::assign_enemies			()
 				if (!fsimilar((*i)->probability(),1.f))
 					continue;
 
-				float					value = evaluate(&(*i)->object(),(*I).m_object);
+				float					value = evaluate(&(*i)->object(),I->m_object);
 				if (value > best) {
 					best				= value;
 					N					= K;
@@ -231,10 +231,10 @@ void CAgentEnemyManager::assign_enemies			()
 		if (!N)
 			break;
 		
-		(*I).m_distribute_mask.set		(N,TRUE);
+		I->m_distribute_mask.set		(N,TRUE);
 		CAgentMemberManager::iterator	i = object().member().member(N);
 		(*i)->probability				(best);
-		(*I).m_probability				*= 1.f - best; 
+		I->m_probability				*= 1.f - best; 
 
 		// recovering sort order
 		for (u32 i=0, n = m_enemies.size() - 1; i<n; ++i)
@@ -263,10 +263,10 @@ void CAgentEnemyManager::permutate_enemies		()
 		ENEMIES::const_iterator	i = m_enemies.begin(), b = i;
 		ENEMIES::const_iterator	e = m_enemies.end();
 		for ( ; i != e; ++i) {
-			if ((*i).m_mask.is(member_mask))
+			if (i->m_mask.is(member_mask))
 				(*I)->enemies().push_back	(static_cast<u32>(i - b));
 
-			if ((*i).m_distribute_mask.is(member_mask)) {
+			if (i->m_distribute_mask.is(member_mask)) {
 				(*I)->selected_enemy		(static_cast<u32>(i - b));
 				enemy_selected				= true;
 			}
@@ -353,15 +353,15 @@ void CAgentEnemyManager::permutate_enemies		()
 			ENEMIES::iterator	i = m_enemies.begin();
 			ENEMIES::iterator	e = m_enemies.end();
 			for ( ; i != e; ++i) {
-				if (visual.visible_now((*i).m_object)) {
-					(*i).m_distribute_mask.assign((*i).m_distribute_mask.get() | object().member().mask(&(*I)->object()));
+				if (visual.visible_now(i->m_object)) {
+					i->m_distribute_mask.assign(i->m_distribute_mask.get() | object().member().mask(&(*I)->object()));
 					continue;
 				}
 
-				if (hit.last_hit_object_id() != (*i).m_object->ID())
+				if (hit.last_hit_object_id() != i->m_object->ID())
 					continue;
 
-				(*i).m_distribute_mask.assign((*i).m_distribute_mask.get() | object().member().mask(&(*I)->object()));
+				i->m_distribute_mask.assign(i->m_distribute_mask.get() | object().member().mask(&(*I)->object()));
 			}
 		}
 	}
@@ -395,7 +395,7 @@ void CAgentEnemyManager::assign_enemy_masks		()
 			CAgentMemberManager::MEMBER_STORAGE::const_iterator	i = object().member().combat_members().begin();
 			CAgentMemberManager::MEMBER_STORAGE::const_iterator	e = object().member().combat_members().end();
 			for ( ; i != e; ++i)
-				(*i)->object().memory().make_object_visible_somewhen((*I).m_object);
+				(*i)->object().memory().make_object_visible_somewhen(I->m_object);
 		}
 	}
 
@@ -432,8 +432,8 @@ void CAgentEnemyManager::assign_wounded			()
 		ENEMIES::iterator	I = m_enemies.begin();
 		ENEMIES::iterator	E = m_enemies.end();
 		for ( ; I != E; ++I) {
-			VERIFY			(!(*I).m_distribute_mask.get());
-			VERIFY			((*I).m_mask.get());
+			VERIFY			(! I->m_distribute_mask.get());
+			VERIFY			(I->m_mask.get());
 		}
 	}
 #endif // DEBUG
@@ -443,27 +443,27 @@ void CAgentEnemyManager::assign_wounded			()
 		WOUNDED_ENEMY		*I = previous_wounded;
 		WOUNDED_ENEMY		*E = previous_wounded + previous_wounded_count;
 		for ( ; I != E; ++I) {
-			ENEMIES::iterator			J = std::find(m_enemies.begin(),m_enemies.end(),(*I).first);
+			ENEMIES::iterator			J = std::find(m_enemies.begin(),m_enemies.end(),I->first);
 			if (J == m_enemies.end())
 				continue;
 
-			CMemberOrder				*member_order = object().member().get_member((*I).second.first);
+			CMemberOrder				*member_order = object().member().get_member(I->second.first);
 			if (!member_order)
 				continue;
 
-			squad_mask_type				mask = object().member().mask((*I).second.first);
+			squad_mask_type				mask = object().member().mask(I->second.first);
 			if (!(object().member().combat_mask() & mask))
 				continue;
 
 			CAgentMemberManager::iterator	i = object().member().member(mask);
-			if ((*I).first->Position().distance_to_sqr((*i)->object().Position()) > _sqr(wounded_enemy_reached_distance))
+			if (I->first->Position().distance_to_sqr((*i)->object().Position()) > _sqr(wounded_enemy_reached_distance))
 				continue;
 
-			if (wounded_processor((*J).m_object) != static_cast<ALife::_OBJECT_ID>(-1))
+			if (wounded_processor(J->m_object) != static_cast<ALife::_OBJECT_ID>(-1))
 				continue;
 
-			wounded_processor			((*J).m_object,(*I).second.first);
-			(*J).m_distribute_mask.set	(mask,TRUE);
+			wounded_processor			(J->m_object,I->second.first);
+			J->m_distribute_mask.set	(mask,TRUE);
 			VERIFY						((assigned | mask) != assigned);
 			assigned					|= mask;
 		}
@@ -482,15 +482,15 @@ void CAgentEnemyManager::assign_wounded			()
 			ENEMIES::iterator	I = m_enemies.begin();
 			ENEMIES::iterator	E = m_enemies.end();
 			for ( ; I != E; ++I) {
-				if (population((*I).m_distribute_mask.get()) > population_level)
+				if (population(I->m_distribute_mask.get()) > population_level)
 					continue;
 
-				squad_mask_type						J = (*I).m_mask.get();
+				squad_mask_type						J = I->m_mask.get();
 				J									&= (assigned ^ static_cast<squad_mask_type>(-1));
 				for ( ; J; J &= J - 1) {
 					squad_mask_type					K = (J & (J - 1)) ^ J;
 					CAgentMemberManager::iterator	i = object().member().member(K);
-					float							distance_sqr = (*i)->object().Position().distance_to_sqr((*I).m_object->Position());
+					float							distance_sqr = (*i)->object().Position().distance_to_sqr(I->m_object->Position());
 					if (distance_sqr < best_distance_sqr) {
 						best_distance_sqr			= distance_sqr;
 						enemy						= &*I;
@@ -518,10 +518,10 @@ void CAgentEnemyManager::assign_wounded			()
 				for ( ; I != E; ++I)
 					Msg				(
 						"  [%s][0x%08x][0x%08x][%.2f]",
-						*(*I).m_object->cName(),
-						(*I).m_mask.get(),
-						(*I).m_distribute_mask.get(),
-						(*I).m_probability
+						*I->m_object->cName(),
+						I->m_mask.get(),
+						I->m_distribute_mask.get(),
+						I->m_probability
 					);
 			}
 			Msg						("combat members(%d):",object().member().combat_members().size());
@@ -644,8 +644,8 @@ ALife::_OBJECT_ID CAgentEnemyManager::wounded_processor	(const CEntityAlive *obj
 	WOUNDED_ENEMIES::const_iterator	I = m_wounded.begin();
 	WOUNDED_ENEMIES::const_iterator	E = m_wounded.end();
 	for ( ; I != E; ++I) {
-		if ((*I).first == object)
-			return					((*I).second.first);
+		if (I->first == object)
+			return					(I->second.first);
 	}
 
 	return							static_cast<ALife::_OBJECT_ID>(-1);
@@ -687,9 +687,9 @@ void CAgentEnemyManager::wounded_processed		(const CEntityAlive *object, bool va
 	WOUNDED_ENEMIES::iterator		I = std::find_if(m_wounded.begin(),m_wounded.end(),find_wounded_predicate(object));
 	if (I == m_wounded.end())
 		return;
-	VERIFY							((*I).second.first != static_cast<ALife::_OBJECT_ID>(-1));
+	VERIFY							(I->second.first != static_cast<ALife::_OBJECT_ID>(-1));
 //	VERIFY							(!(*I).second.second);
-	(*I).second.second				= true;
+	I->second.second				= true;
 }
 
 bool CAgentEnemyManager::wounded_processed		(const CEntityAlive *object) const
@@ -697,7 +697,7 @@ bool CAgentEnemyManager::wounded_processed		(const CEntityAlive *object) const
 	WOUNDED_ENEMIES::const_iterator	I = std::find_if(m_wounded.begin(),m_wounded.end(),find_wounded_predicate(object));
 	if (I == m_wounded.end())
 		return						(false);
-	return							((*I).second.second);
+	return							(I->second.second);
 }
 
 bool CAgentEnemyManager::assigned_wounded		(const CEntityAlive *wounded, const CAI_Stalker *member)
@@ -705,11 +705,11 @@ bool CAgentEnemyManager::assigned_wounded		(const CEntityAlive *wounded, const C
 	ENEMIES::const_iterator			I = m_enemies.begin();
 	ENEMIES::const_iterator			E = m_enemies.end();
 	for ( ; I != E; ++I) {
-		if ((*I).m_object != wounded)
+		if (I->m_object != wounded)
 			continue;
 
 		return						(
-			!!(*I).m_distribute_mask.test(
+			!!I->m_distribute_mask.test(
 				object().member().mask(member)
 			)
 		);
@@ -727,5 +727,5 @@ bool CAgentEnemyManager::useful_enemy			(const CEntityAlive *enemy, const CAI_St
 	if (I == m_enemies.end())
 		return						(true);
 
-	return							(!!(*I).m_distribute_mask.test(object().member().mask(member)));
+	return							(!!I->m_distribute_mask.test(object().member().mask(member)));
 }

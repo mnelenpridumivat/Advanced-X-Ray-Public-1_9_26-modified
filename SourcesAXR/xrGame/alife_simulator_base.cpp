@@ -329,13 +329,13 @@ void CALifeSimulatorBase::assign_death_position(CSE_ALifeCreatureAbstract *tpALi
 	tpALifeCreatureAbstract->m_tGraphID		= tGraphID;
 #ifdef DEBUG
 	if (psAI_Flags.test(aiALife)) {
-		Msg									("[LSS] Generated death position %s[%f][%f][%f] -> [%f][%f][%f] : [%d]",tpALifeCreatureAbstract->name_replace(),VPUSH(tpALifeCreatureAbstract->o_Position),VPUSH((*i).level_point()),(*i).level_vertex_id());
+		Msg									("[LSS] Generated death position %s[%f][%f][%f] -> [%f][%f][%f] : [%d]",tpALifeCreatureAbstract->name_replace(),VPUSH(tpALifeCreatureAbstract->o_Position),VPUSH((*i).level_point()),i->level_vertex_id());
 	}
 #endif
-	tpALifeCreatureAbstract->o_Position		= (*i).level_point();
-	tpALifeCreatureAbstract->m_tNodeID		= (*i).level_vertex_id();
+	tpALifeCreatureAbstract->o_Position		= i->level_point();
+	tpALifeCreatureAbstract->m_tNodeID		= i->level_vertex_id();
 	R_ASSERT2								((ai().game_graph().vertex(tGraphID)->level_id() != graph().level().level_id()) || ai().level_graph().valid_vertex_id(tpALifeCreatureAbstract->m_tNodeID),"Invalid vertex");
-	tpALifeCreatureAbstract->m_fDistance	= (*i).distance();
+	tpALifeCreatureAbstract->m_fDistance	= i->distance();
 	CSE_ALifeMonsterAbstract				*l_tpALifeMonsterAbstract = smart_cast<CSE_ALifeMonsterAbstract*>(tpALifeCreatureAbstract);
 	if (l_tpALifeMonsterAbstract)
 		l_tpALifeMonsterAbstract->m_tPrevGraphID = l_tpALifeMonsterAbstract->m_tNextGraphID = l_tpALifeMonsterAbstract->m_tGraphID;

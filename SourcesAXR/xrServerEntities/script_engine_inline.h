@@ -19,7 +19,7 @@ CScriptProcess *CScriptEngine::script_process	(const EScriptProcessors &process_
 {
 	CScriptProcessStorage::const_iterator	I = m_script_processes.find(process_id);
 	if ((I != m_script_processes.end()))
-		return								((*I).second);
+		return								(I->second);
 	return									(0);
 }
 

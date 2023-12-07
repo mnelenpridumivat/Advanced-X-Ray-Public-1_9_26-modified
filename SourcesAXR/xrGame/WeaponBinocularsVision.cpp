@@ -235,7 +235,7 @@ void CBinocularsVision::Update()
 	CVisualMemoryManager::VISIBLES::const_iterator v_it = vVisibles.begin();
 	for (; v_it!=vVisibles.end(); ++v_it)
 	{
-		const CObject*	_object_			= (*v_it).m_object;
+		const CObject*	_object_			= v_it->m_object;
 		if (!pActor->memory().visual().visible_right_now(smart_cast<const CGameObject*>(_object_)))
 			continue;
 

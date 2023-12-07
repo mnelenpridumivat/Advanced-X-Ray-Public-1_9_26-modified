@@ -148,8 +148,8 @@ void CHitMemoryManager::add					(float amount, const Fvector &vLocalDir, const C
 			m_hits->push_back	(hit_object);
 	}
 	else {
-		(*J).fill				(entity_alive,m_object,(!m_stalker ? (*J).m_squad_mask.get() : ((*J).m_squad_mask.get() | m_stalker->agent_manager().member().mask(m_stalker))));
-		(*J).m_amount			= _max(amount,(*J).m_amount);
+		J->fill				(entity_alive,m_object,(!m_stalker ? J->m_squad_mask.get() : (J->m_squad_mask.get() | m_stalker->agent_manager().member().mask(m_stalker))));
+		J->m_amount			= _max(amount,J->m_amount);
 	}
 }
 
@@ -179,7 +179,7 @@ void CHitMemoryManager::add					(const CHitObject &_hit_object)
 			m_hits->push_back	(hit_object);
 	}
 	else {
-		hit_object.m_squad_mask.assign	(hit_object.m_squad_mask.get() | (*J).m_squad_mask.get());
+		hit_object.m_squad_mask.assign	(hit_object.m_squad_mask.get() | J->m_squad_mask.get());
 		*J						= hit_object;
 	}
 }
@@ -214,10 +214,10 @@ void CHitMemoryManager::update()
 	HITS::const_iterator		I = m_hits->begin();
 	HITS::const_iterator		E = m_hits->end();
 	for ( ; I != E; ++I) {
-		if ((*I).m_level_time > level_time) {
+		if (I->m_level_time > level_time) {
 			xr_delete			(m_selected_hit);
 			m_selected_hit		= xr_new<CHitObject>(*I);
-			level_time			= (*I).m_level_time;
+			level_time			= I->m_level_time;
 		}
 	}
 #endif
@@ -230,7 +230,7 @@ void CHitMemoryManager::enable			(const CObject *object, bool enable)
 	if (J == m_hits->end())
 		return;
 
-	(*J).m_enabled				= enable;
+	J->m_enabled				= enable;
 }
 
 void CHitMemoryManager::remove(const MemorySpace::CHitObject* hit_object)
@@ -279,36 +279,36 @@ void CHitMemoryManager::save	(NET_Packet &packet) const
 	HITS::const_iterator		I = objects().begin();
 	HITS::const_iterator		E = objects().end();
 	for ( ; I != E; ++I) {
-		VERIFY					((*I).m_object);
-		packet.w_u16			((*I).m_object->ID());
+		VERIFY					(I->m_object);
+		packet.w_u16			(I->m_object->ID());
 		// object params
-		packet.w_u32			((*I).m_object_params.m_level_vertex_id);
-		packet.w_vec3			((*I).m_object_params.m_position);
+		packet.w_u32			(I->m_object_params.m_level_vertex_id);
+		packet.w_vec3			(I->m_object_params.m_position);
 #ifdef USE_ORIENTATION
 		packet.w_float			((*I).m_object_params.m_orientation.yaw);
 		packet.w_float			((*I).m_object_params.m_orientation.pitch);
 		packet.w_float			((*I).m_object_params.m_orientation.roll);
 #endif // USE_ORIENTATION
 		// self params
-		packet.w_u32			((*I).m_self_params.m_level_vertex_id);
-		packet.w_vec3			((*I).m_self_params.m_position);
+		packet.w_u32			(I->m_self_params.m_level_vertex_id);
+		packet.w_vec3			(I->m_self_params.m_position);
 #ifdef USE_ORIENTATION
 		packet.w_float			((*I).m_self_params.m_orientation.yaw);
 		packet.w_float			((*I).m_self_params.m_orientation.pitch);
 		packet.w_float			((*I).m_self_params.m_orientation.roll);
 #endif // USE_ORIENTATION
 #ifdef USE_LEVEL_TIME
-		packet.w_u32			((Device.dwTimeGlobal >= (*I).m_level_time) ? (Device.dwTimeGlobal - (*I).m_level_time) : 0);
+		packet.w_u32			((Device.dwTimeGlobal >= I->m_level_time) ? (Device.dwTimeGlobal - I->m_level_time) : 0);
 #endif // USE_LAST_LEVEL_TIME
 #ifdef USE_LEVEL_TIME
-		packet.w_u32			((Device.dwTimeGlobal >= (*I).m_level_time) ? (Device.dwTimeGlobal - (*I).m_last_level_time) : 0);
+		packet.w_u32			((Device.dwTimeGlobal >= I->m_level_time) ? (Device.dwTimeGlobal - I->m_last_level_time) : 0);
 #endif // USE_LAST_LEVEL_TIME
 #ifdef USE_FIRST_LEVEL_TIME
 		packet.w_u32			((Device.dwTimeGlobal >= (*I).m_level_time) ? (Device.dwTimeGlobal - (*I).m_first_level_time) : 0);
 #endif // USE_FIRST_LEVEL_TIME
-		packet.w_vec3			((*I).m_direction);
-		packet.w_u16			((*I).m_bone_index);
-		packet.w_float			((*I).m_amount);
+		packet.w_vec3			(I->m_direction);
+		packet.w_u16			(I->m_bone_index);
+		packet.w_float			(I->m_amount);
 	}
 }
 
@@ -393,8 +393,8 @@ void CHitMemoryManager::clear_delayed_objects()
 	DELAYED_HIT_OBJECTS::const_iterator		I = m_delayed_objects.begin();
 	DELAYED_HIT_OBJECTS::const_iterator		E = m_delayed_objects.end();
 	for ( ; I != E; ++I)
-		if (manager.callback((*I).m_object_id,m_object->ID()))
-			manager.remove					((*I).m_object_id,m_object->ID());
+		if (manager.callback(I->m_object_id,m_object->ID()))
+			manager.remove					(I->m_object_id,m_object->ID());
 
 	m_delayed_objects.clear					();
 }
@@ -404,13 +404,13 @@ void CHitMemoryManager::on_requested_spawn	(CObject *object)
 	DELAYED_HIT_OBJECTS::iterator		I = m_delayed_objects.begin();
 	DELAYED_HIT_OBJECTS::iterator		E = m_delayed_objects.end();
 	for ( ; I != E; ++I) {
-		if ((*I).m_object_id != object->ID())
+		if (I->m_object_id != object->ID())
 			continue;
 		
 		if (m_object->g_Alive()) {
-			(*I).m_hit_object.m_object= smart_cast<CEntityAlive*>(object);
-			VERIFY						((*I).m_hit_object.m_object);
-			add							((*I).m_hit_object);
+			I->m_hit_object.m_object= smart_cast<CEntityAlive*>(object);
+			VERIFY						(I->m_hit_object.m_object);
+			add							(I->m_hit_object);
 		}
 
 		m_delayed_objects.erase			(I);

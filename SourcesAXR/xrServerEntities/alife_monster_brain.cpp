@@ -132,13 +132,13 @@ void CALifeMonsterBrain::select_task			()
 	CALifeSmartTerrainRegistry::OBJECTS::const_iterator	I = ai().alife().smart_terrains().objects().begin();
 	CALifeSmartTerrainRegistry::OBJECTS::const_iterator	E = ai().alife().smart_terrains().objects().end();
 	for ( ; I != E; ++I) {
-		if (!(*I).second->enabled(&object()))
+		if (!I->second->enabled(&object()))
 			continue;
 
-		float						value = (*I).second->suitable(&object());
+		float						value = I->second->suitable(&object());
 		if (value > best_value) {
 			best_value				= value;
-			object().m_smart_terrain_id	= (*I).second->ID;
+			object().m_smart_terrain_id	= I->second->ID;
 		}
 	}
 

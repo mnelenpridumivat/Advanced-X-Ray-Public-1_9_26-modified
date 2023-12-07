@@ -123,7 +123,7 @@ void SHeliMovementState::UpdatePatrolPath()
 			if(need_to_del_path &&	currPatrolVertex->data().flags())//fake flags that signals entrypoint for round path
 				SetPointFlags(currPatrolVertex->vertex_id(), 0);
 
-			currPatrolVertex =  currPatrolPath->vertex((*b).vertex_id());
+			currPatrolVertex =  currPatrolPath->vertex(b->vertex_id());
 			
 			Fvector p = currPatrolVertex->data().position();
 			desiredPoint = p;
@@ -371,7 +371,7 @@ void SHeliMovementState::goByRoundPath(Fvector center_, float radius_, bool cloc
 	for(;it!=it_e;++it,++pt_idx){
 		string128 pt_name;
 		xr_sprintf(pt_name,"heli_round_path_pt_%d",pt_idx);
-		CPatrolPoint pt = CPatrolPoint((CLevelGraph*)0,(CGameLevelCrossTable*)0,(CGameGraph*)0,pp,(*it).point,static_cast<u32>(-1),0,pt_name);
+		CPatrolPoint pt = CPatrolPoint((CLevelGraph*)0,(CGameLevelCrossTable*)0,(CGameGraph*)0,pp,it->point,static_cast<u32>(-1),0,pt_name);
 		pp->add_vertex(pt,pt_idx);
 		if (pt_idx)
 			pp->add_edge(pt_idx-1,pt_idx,1.f);
@@ -390,10 +390,10 @@ void SHeliMovementState::goByRoundPath(Fvector center_, float radius_, bool cloc
 	CPatrolPath::const_vertex_iterator b = currPatrolPath->vertices().begin();
 	CPatrolPath::const_vertex_iterator e = currPatrolPath->vertices().end();
 	for ( ; b != e; ++b) {
-		float d = (*b).second->data().position().distance_to(currP);
+		float d = b->second->data().position().distance_to(currP);
 		if ( (d>stop_path) && (d<min_dist)  ){
 			min_dist		= d;
-			start_vertex_id = (*b).first;
+			start_vertex_id = b->first;
 		}
 	}
 

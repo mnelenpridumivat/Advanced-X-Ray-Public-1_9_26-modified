@@ -14,7 +14,7 @@ void CUIOptionsManager::RegisterItem(CUIOptionsItem* item, const shared_str& gro
 
 	if (m_groups.end() != it)
 	{
-		(*it).second.push_back(item);
+		it->second.push_back(item);
 	}
 	else
 	{
@@ -30,9 +30,9 @@ void CUIOptionsManager::UnRegisterItem(CUIOptionsItem* item)
 {
 	groups_it it;
 	for (it = m_groups.begin(); it!= m_groups.end(); it++){
-		for (u32 i = 0; i < (*it).second.size(); i++)
-			if ((*it).second[i] == item){
-				(*it).second.erase((*it).second.begin() + i); return;}
+		for (u32 i = 0; i < it->second.size(); i++)
+			if (it->second[i] == item){
+				it->second.erase(it->second.begin() + i); return;}
 	}
 }
 
@@ -42,8 +42,8 @@ void CUIOptionsManager::SendMessage2Group(const shared_str& group, const char* m
 
 	R_ASSERT2(m_groups.end() != it, "invalid group name");
 
-	for (u32 i = 0; i < (*it).second.size(); i++)
-		(*it).second[i]->OnMessage(message);
+	for (u32 i = 0; i < it->second.size(); i++)
+		it->second[i]->OnMessage(message);
 }
 
 void CUIOptionsManager::SaveBackupValues(const shared_str& group)
@@ -52,8 +52,8 @@ void CUIOptionsManager::SaveBackupValues(const shared_str& group)
 
 	R_ASSERT3(m_groups.end() != it, "invalid group name",group.c_str());
 
-	for (u32 i = 0; i < (*it).second.size(); i++){
-		(*it).second[i]->SaveBackUpOptValue();
+	for (u32 i = 0; i < it->second.size(); i++){
+		it->second[i]->SaveBackUpOptValue();
 	}
 }
 
@@ -63,8 +63,8 @@ void CUIOptionsManager::SetCurrentValues(const shared_str& group)
 
 	R_ASSERT3(m_groups.end() != it, "invalid group name",group.c_str());
 
-	for (u32 i = 0; i < (*it).second.size(); i++)
-		(*it).second[i]->SetCurrentOptValue();
+	for (u32 i = 0; i < it->second.size(); i++)
+		it->second[i]->SetCurrentOptValue();
 }
 
 void CUIOptionsManager::SaveValues(const shared_str& group)
@@ -73,9 +73,9 @@ void CUIOptionsManager::SaveValues(const shared_str& group)
 
 	R_ASSERT3(m_groups.end() != it, "invalid group name",group.c_str());
 
-	for (u32 i = 0; i < (*it).second.size(); i++)
+	for (u32 i = 0; i < it->second.size(); i++)
 	{
-		CUIOptionsItem* oi = (*it).second[i];
+		CUIOptionsItem* oi = it->second[i];
 		if(oi->IsChangedOptValue())
 			oi->SaveOptValue();
 	}
@@ -86,9 +86,9 @@ void CUIOptionsManager::UndoGroup(const shared_str& group)
 	groups_it it = m_groups.find(group);	
 	R_ASSERT2(m_groups.end() != it, "invalid group name");
 
-	for (u32 i = 0; i < (*it).second.size(); i++)
+	for (u32 i = 0; i < it->second.size(); i++)
 	{
-		CUIOptionsItem* oi = (*it).second[i];
+		CUIOptionsItem* oi = it->second[i];
 		if(oi->IsChangedOptValue())
 			oi->UndoOptValue();
 	}

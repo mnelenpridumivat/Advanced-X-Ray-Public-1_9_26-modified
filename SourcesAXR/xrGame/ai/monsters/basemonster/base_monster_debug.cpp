@@ -722,7 +722,7 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 		                              e = EnemyMemory.get_memory().end();
 		  i!=e; ++i )
 	{
-		const CEntityAlive* p_enemy = (*i).first;
+		const CEntityAlive* p_enemy = i->first;
 		if ( p_enemy != EnemyMan.get_enemy() )
 		{
 			TextTree& enemy_s = enemies_s.add_line(make_xrstr("Enemy %i", index++));
@@ -886,7 +886,7 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 	for ( SoundIterator i=sound().objects().begin(), e=sound().objects().end();
 		  i!=e; ++i )
 	{
-		object_count += (*i).second.second->m_sounds.size();
+		object_count += i->second.second->m_sounds.size();
 	}
 
 	TextTree& now_playing_s = sound_player_s.add_line("Objects", object_count);
@@ -898,12 +898,12 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 		                      e=sound().playing_sounds().end();
 		  i!=e; ++i )
 	{
-		xr_string source = (*i).m_sound->_handle() ? (*i).m_sound->_handle()->file_name() : "no source";
+		xr_string source = i->m_sound->_handle() ? i->m_sound->_handle()->file_name() : "no source";
 
 		xr_string status = "not yet started";
-		if ( Device.dwTimeGlobal >= (*i).m_start_time )
+		if ( Device.dwTimeGlobal >= i->m_start_time )
 		{
-			status = (*i).m_sound->_feedback() ? "playing" : "already played";
+			status = i->m_sound->_feedback() ? "playing" : "already played";
 		}
 
 		TextTree& current_sound_s = now_playing_s.add_line(make_xrstr("Sound %i", index++));

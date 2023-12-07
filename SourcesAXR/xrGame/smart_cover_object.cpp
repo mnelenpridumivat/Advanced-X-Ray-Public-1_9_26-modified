@@ -43,13 +43,13 @@ BOOL object::net_Spawn		(CSE_Abstract *server_entity)
 	ShapeVec::iterator				I = smart_cover->shapes.begin();
 	ShapeVec::iterator				E = smart_cover->shapes.end();
 	for ( ; I != E; ++I) {
-		switch ((*I).type) {
+		switch (I->type) {
 			case 0 : {
-				shape->add_sphere	((*I).data.sphere);
+				shape->add_sphere	(I->data.sphere);
 				break;
 			}
 			case 1 : {
-				shape->add_box		((*I).data.box);
+				shape->add_box		(I->data.box);
 				break;
 			}
 		}
@@ -159,16 +159,16 @@ bool object::inside			(Fvector const &position) const
 	Shapes::const_iterator			i = shape->shapes.begin();
 	Shapes::const_iterator			e = shape->shapes.end();
 	for ( ; i != e; ++i) {
-		switch ((*i).type) {
+		switch (i->type) {
 			case 0 : {
-				if ((*i).data.sphere.P.distance_to(position) <= (*i).data.sphere.R)
+				if (i->data.sphere.P.distance_to(position) <= i->data.sphere.R)
 					return			(true);
 
 				continue;
 			}
 			case 1 : {
 				Fmatrix				matrix;
-				const Fmatrix		&box = (*i).data.box;
+				const Fmatrix		&box = i->data.box;
 				matrix.mul_43		(XFORM(),box);
 				Fvector				A,B[8];
 				Fplane				plane;

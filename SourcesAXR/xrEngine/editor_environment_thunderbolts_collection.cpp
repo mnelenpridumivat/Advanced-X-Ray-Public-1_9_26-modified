@@ -64,11 +64,11 @@ void collection::load					(CInifile& config)
 	items_type::const_iterator	i = items.Data.begin();
 	items_type::const_iterator	e = items.Data.end();
 	for ( ; i != e; ++i) {
-		thunderbolt_id*			object = xr_new<thunderbolt_id>(m_manager, (*i).first);
+		thunderbolt_id*			object = xr_new<thunderbolt_id>(m_manager, i->first);
 		object->fill			(m_collection);
 		m_ids.push_back			(object);
 
-		palette.push_back		(m_manager.description(config, (*i).first));
+		palette.push_back		(m_manager.description(config, i->first));
 	}
 }
 

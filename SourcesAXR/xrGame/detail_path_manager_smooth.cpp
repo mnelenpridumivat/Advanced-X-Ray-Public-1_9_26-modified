@@ -432,7 +432,7 @@ bool CDetailPathManager::compute_path(
 				dest.direction.mul	(-1.f);
 
 			m_temp_path.clear		();
-			if (compute_trajectory(start,dest,m_tpTravelLine ? &m_temp_path : 0,time,(*I).index,real_straight_line_index,(*i).index,direction_type)) {
+			if (compute_trajectory(start,dest,m_tpTravelLine ? &m_temp_path : 0,time,I->index,real_straight_line_index,i->index,direction_type)) {
 				if (!m_try_min_time || (time < min_time)) {
 					min_time		= time;
 					if (m_tpTravelLine) {
@@ -526,12 +526,12 @@ bool CDetailPathManager::init_build(
 	VELOCITIES::const_iterator			I = m_movement_params.begin();
 	VELOCITIES::const_iterator			E = m_movement_params.end();
 	for ( ; I != E; ++I) {
-		if (!check_mask(m_velocity_mask,(*I).first))
+		if (!check_mask(m_velocity_mask,I->first))
 			continue;
 		STravelParamsIndex				temp;
-		static_cast<STravelParams&>(temp)			= (*I).second;
-		temp.index						= (*I).first;
-		if (check_mask(m_desirable_mask,(*I).first)) {
+		static_cast<STravelParams&>(temp)			= I->second;
+		temp.index						= I->first;
+		if (check_mask(m_desirable_mask,I->first)) {
 			m_start_params.insert		(m_start_params.begin(),temp);
 			if (max_linear_velocity < temp.linear_velocity) {
 				straight_line_index		= temp.index;
@@ -694,7 +694,7 @@ void CDetailPathManager::build_path_via_key_points(
 	xr_vector<STravelPoint>::const_iterator	I = m_key_points.begin(), B = I;
 	xr_vector<STravelPoint>::const_iterator	E = m_key_points.end();
 	for (B != E ? ++I : I; I != E; ++I) {
-		VERIFY							(ai().level_graph().inside((*I).vertex_id,(*I).position));
+		VERIFY							(ai().level_graph().inside( I->vertex_id, I->position));
 
 		bool							last_point = (I + 1) == E;
 		if (!last_point) {

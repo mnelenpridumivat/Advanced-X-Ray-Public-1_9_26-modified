@@ -49,7 +49,7 @@ void setup_location_types_section(GameGraph::TERRAIN_VECTOR &m_vertex_types, CIn
 	CInifile::SectCIt				I = sect.Data.begin();
 	CInifile::SectCIt				E = sect.Data.end();
 	for ( ; I != E; ++I) {
-		LPCSTR						S = *(*I).first;
+		LPCSTR						S = *I->first;
 		string16					I;
 		u32							N = _GetItemCount(S);
 		
@@ -2157,7 +2157,7 @@ CSE_ALifeOnlineOfflineGroup::~CSE_ALifeOnlineOfflineGroup	()
 {
 #ifdef XRGAME_EXPORTS
 	while ( !m_members.empty() )
-		unregister_member( (*m_members.begin()).first );
+		unregister_member( m_members.begin()->first );
 	xr_delete					(m_brain);
 #endif
 }
@@ -2181,7 +2181,7 @@ void CSE_ALifeOnlineOfflineGroup::STATE_Write				(NET_Packet &tNetPacket)
 	MEMBERS::iterator			I = m_members.begin();
 	MEMBERS::iterator			E = m_members.end();
 	for ( ; I != E; ++I)
-		save_data				((*I).first,tNetPacket);
+		save_data				(I->first,tNetPacket);
 #endif
 }
 

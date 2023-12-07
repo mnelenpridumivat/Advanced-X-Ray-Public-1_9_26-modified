@@ -84,7 +84,7 @@ CALifeSimulator::~CALifeSimulator		()
 	configs_type::iterator i	= m_configs_lru.begin();
 	configs_type::iterator const e	= m_configs_lru.end();
 	for ( ; i != e; ++i )
-		FS.r_close				( (*i).second );
+		FS.r_close				( i->second );
 }
 
 void CALifeSimulator::destroy			()

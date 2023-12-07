@@ -368,11 +368,11 @@ void engine::fill_class_info	(cs::lua_studio::backend& backend, char* const buff
 			stream				+= xr_sprintf(stream, size - (stream - buffer), "...");
 			break;
 		}
-		lua_pushstring			(state,(*I).first);
+		lua_pushstring			(state,I->first);
 		lua_insert				(state,1);
 		lua_pushlightuserdata	(state,object);
 		lua_insert				(state,1);
-		(*I).second.func		(state,(*I).second.pointer_offset);
+		I->second.func		(state,I->second.pointer_offset);
 		
 		string4096				type;
 		bool					use_in_description;
@@ -387,9 +387,9 @@ void engine::fill_class_info	(cs::lua_studio::backend& backend, char* const buff
 		lua_remove				(state,1);
 
 		if (use_in_description)
-			stream				+= xr_sprintf(stream, size - (stream - buffer), "%s[%s]=%s ", (*I).first, type, value);
+			stream				+= xr_sprintf(stream, size - (stream - buffer), "%s[%s]=%s ", I->first, type, value);
 		else
-			stream				+= xr_sprintf(stream, size - (stream - buffer), "%s=%s ", (*I).first, value);
+			stream				+= xr_sprintf(stream, size - (stream - buffer), "%s=%s ", I->first, value);
 
 		++i;
 	}
@@ -555,12 +555,12 @@ void engine::push_class_base					(lua_State* const state, char const* const id)
 	Bases::const_iterator		I = bases.begin();
 	Bases::const_iterator		E = bases.end();
 	for ( ; I != E; ++I) {
-		pcstr					name = (*I).base->name();
+		pcstr					name = I->base->name();
 		if (sz_cmp(id,name))
 			continue;
 
 		lua_pop_value			(state, 1);
-		lua_pushlightuserdata	(state, (*I).base);
+		lua_pushlightuserdata	(state, I->base);
 		return;
 	}
 
@@ -643,8 +643,8 @@ void engine::fill_class_data					(
 		vector_class<base_info>::const_iterator	e = _class->bases().end();
 		for ( ; i != e; ++i)
 			value_to_expand.add_value	(
-				(*i).base->name(),
-				class_name(type, sizeof(type), *(*i).base),
+				i->base->name(),
+				class_name(type, sizeof(type), *i->base),
 				"{...}",
 				cs::lua_studio::icon_type_class_base
 			);
@@ -657,11 +657,11 @@ void engine::fill_class_data					(
 	property_map::const_iterator	i = _class->properties().begin();
 	property_map::const_iterator	e = _class->properties().end();
 	for ( ; i != e; ++i) {
-		lua_pushstring			(state,(*i).first);
+		lua_pushstring			(state,i->first);
 		lua_insert				(state,1);
 		lua_pushlightuserdata	(state,object);
 		lua_insert				(state,1);
-		(*i).second.func		(state, (*i).second.pointer_offset);
+		i->second.func		(state, i->second.pointer_offset);
 
 		bool					use_in_description;
 		
@@ -677,7 +677,7 @@ void engine::fill_class_data					(
 		lua_remove				(state,1);
 
 		value_to_expand.add_value	(
-			(*i).first,
+			i->first,
 			type,
 			value,
 			icon_type

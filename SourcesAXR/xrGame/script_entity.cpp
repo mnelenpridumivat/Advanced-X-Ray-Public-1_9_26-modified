@@ -163,8 +163,8 @@ bool CScriptEntity::CheckTypeVisibility(const char* section_name)
 	CVisualMemoryManager::VISIBLES::const_iterator	I = m_monster->memory().visual().objects().begin();
 	CVisualMemoryManager::VISIBLES::const_iterator	E = m_monster->memory().visual().objects().end();
 	for ( ; I != E; ++I) {
-		VERIFY			((*I).m_object);
-		if (!xr_strcmp(section_name, *(*I).m_object->cNameSect()))
+		VERIFY			(I->m_object);
+		if (!xr_strcmp(section_name, *I->m_object->cNameSect()))
 			return		(true);
 	}
 	return				(false);
@@ -677,10 +677,10 @@ void CScriptEntity::process_sound_callbacks()
 		
 		object().callback(GameObject::eSound)(
 			object().lua_game_object(),
-			(*I).m_game_object_id,
-			(*I).m_sound_type,
-			(*I).m_position,
-			(*I).m_sound_power
+			I->m_game_object_id,
+			I->m_sound_type,
+			I->m_position,
+			I->m_sound_power
 		);
 	}
 

@@ -51,7 +51,7 @@ Root* Manager::get_root( shared_str const& root_id )
 	Roots_type::const_iterator i = m_roots.find( root_id );
 	if ( i != m_roots.end() )
 	{
-		return ( (*i).second );
+		return ( i->second );
 	}
 	return ( NULL );
 }
@@ -61,7 +61,7 @@ Upgrade* Manager::get_upgrade( shared_str const& upgrade_id )
 	Upgrades_type::const_iterator i = m_upgrades.find( upgrade_id );
 	if ( i != m_upgrades.end() )
 	{
-		return ( (*i).second );
+		return ( i->second );
 	}
 	return ( NULL );
 }
@@ -71,7 +71,7 @@ Group* Manager::get_group( shared_str const& group_id )
 	Groups_type::const_iterator i = m_groups.find( group_id );
 	if ( i != m_groups.end() )
 	{
-		return ( (*i).second );
+		return ( i->second );
 	}
 	return ( NULL );
 }
@@ -81,7 +81,7 @@ Property* Manager::get_property( shared_str const& property_id )
 	Properties_type::const_iterator i = m_properties.find( property_id );
 	if ( i != m_properties.end() )
 	{
-		return ( (*i).second );
+		return ( i->second );
 	}
 	return ( NULL );
 }
@@ -175,7 +175,7 @@ void Manager::load_all_inventory()
 	CInifile::SectIt_	ie = inv_section.Data.end();
 	for ( ; ib != ie ; ++ib )
 	{
-		shared_str root_id( (*ib).first );
+		shared_str root_id( ib->first );
 //		if ( !item_upgrades_exist( root_id ) ) continue;
 		item_upgrades_exist( root_id );
 		add_root( root_id );
@@ -206,7 +206,7 @@ void Manager::load_all_properties()
 	CInifile::SectIt_	ie = inv_section.Data.end();
 	for ( ; ib != ie ; ++ib )
 	{
-		shared_str property_id( (*ib).first );
+		shared_str property_id( ib->first );
 		add_property( property_id );
 	}
 
@@ -228,7 +228,7 @@ void Manager::log_hierarchy()
 		Roots_type::iterator ie = m_roots.end();
 		for ( ; ib != ie ; ++ib )
 		{
-			Msg( "   %s", (*ib).first.c_str() );
+			Msg( "   %s", ib->first.c_str() );
 		}
 	}
 
@@ -238,7 +238,7 @@ void Manager::log_hierarchy()
 		Groups_type::iterator ie = m_groups.end();
 		for ( ; ib != ie ; ++ib )
 		{
-			Msg( "   %s", (*ib).first.c_str() );
+			Msg( "   %s", ib->first.c_str() );
 		}
 	}
 
@@ -248,7 +248,7 @@ void Manager::log_hierarchy()
 		Upgrades_type::iterator ie = m_upgrades.end();
 		for ( ; ib != ie ; ++ib )
 		{
-			Msg( "   %s", (*ib).first.c_str() );
+			Msg( "   %s", ib->first.c_str() );
 		}
 	}
 
@@ -258,7 +258,7 @@ void Manager::log_hierarchy()
 		Properties_type::iterator ie = m_properties.end();
 		for ( ; ib != ie ; ++ib )
 		{
-			Msg( "   %s", (*ib).first.c_str() );
+			Msg( "   %s", ib->first.c_str() );
 		}
 	}
 
@@ -268,7 +268,7 @@ void Manager::log_hierarchy()
 	Roots_type::iterator ie = m_roots.end();
 	for ( ; ib != ie ; ++ib )
 	{
-		((*ib).second)->log_hierarchy( "" );
+		(ib->second)->log_hierarchy( "" );
 	}
 	
 	Msg( "- ----- ----- ----- inventory upgrades hierarchy: end   ----- ----- -----" );
@@ -437,14 +437,14 @@ bool Manager::compute_range( LPCSTR parameter, float& low, float& high )
 	Roots_type::iterator ie = m_roots.end();
 	for ( ; ib != ie ; ++ib )
 	{
-		compute_range_section( ((*ib).second)->id_str(), parameter, low, high );
+		compute_range_section( (ib->second)->id_str(), parameter, low, high );
 	}
 
 	Upgrades_type::iterator uib = m_upgrades.begin();
 	Upgrades_type::iterator uie = m_upgrades.end();
 	for ( ; uib != uie ; ++uib )
 	{
-		compute_range_section( ((*uib).second)->section(), parameter, low, high );
+		compute_range_section( (uib->second)->section(), parameter, low, high );
 	}
 	
 	return ( low != flt_max ) && ( high != flt_min );

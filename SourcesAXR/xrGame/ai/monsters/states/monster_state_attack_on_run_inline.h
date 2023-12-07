@@ -222,7 +222,7 @@ bool   is_valid_point_to_move (Fvector const & point, u32 * out_vertex)
 	CLevelGraph::CVertex	* E 			= 	B + ai().level_graph().header().vertex_count();
 	CLevelGraph::CVertex	* I 			= 	std::lower_bound(B, E, vertex_pos.xz());
 
-	for ( ;(I != E) && ((*I).position().xz() == vertex_pos.xz()); ++I )
+	for ( ;(I != E) && (I->position().xz() == vertex_pos.xz()); ++I )
 	{
 		if ( abs(ai().level_graph().vertex_plane_y(*I) - point.y) < 4.f )
 		{

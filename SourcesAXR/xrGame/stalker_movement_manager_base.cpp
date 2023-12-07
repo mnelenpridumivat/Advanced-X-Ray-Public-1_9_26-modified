@@ -694,12 +694,12 @@ void stalker_movement_manager_base::update_object_on_the_way	(const CGameObject 
 	xr_vector<STravelPathPoint>::const_iterator	I = detail().path().begin() + detail().curr_travel_point_index() + 1;
 	xr_vector<STravelPathPoint>::const_iterator	E = detail().path().end();
 	for ( ; I != E; ++I) {
-		if (distance_to_line((*(I - 1)).position,(*I).position,position) < 1.f) {
+		if (distance_to_line(((I - 1))->position,I->position,position) < 1.f) {
 			m_last_query_result			= true;
 			return;
 		}
 
-		current_distance				+= (*(I - 1)).position.distance_to((*I).position);
+		current_distance				+= ((I - 1))->position.distance_to(I->position);
 		if (current_distance > distance)
 			return;
 	}
@@ -743,7 +743,7 @@ void stalker_movement_manager_base::check_for_bad_path	(stalker_movement_params&
 	PATH::const_iterator				J = I + 1;
 	VERIFY								(J != E);
 	for ( ; J != E; ++I, ++J) {
-		next_direction					= Fvector().sub((*J).position,(*I).position);
+		next_direction					= Fvector().sub(J->position,I->position);
 		float							magnitude = next_direction.magnitude();
 		distance						+= magnitude;
 		//. how can it be?

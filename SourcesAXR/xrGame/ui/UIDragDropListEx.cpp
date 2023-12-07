@@ -822,7 +822,7 @@ void CUICellContainer::ClearAll(bool bDestroy)
 		UI_CELLS_VEC_IT it		= m_cells.begin();
 		UI_CELLS_VEC_IT it_e	= m_cells.end();
 		for(;it!=it_e;++it)
-			(*it).Clear();
+			it->Clear();
 	}
 	while( !m_ChildWndList.empty() )
 	{

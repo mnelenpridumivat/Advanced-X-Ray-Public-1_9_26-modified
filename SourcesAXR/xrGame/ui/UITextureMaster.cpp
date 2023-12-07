@@ -80,7 +80,7 @@ void CUITextureMaster::InitTexture(const shared_str& texture_name, const shared_
 			m_shaders[p]->create(shader_name.c_str(), it->second.file.c_str());
 
 		out_shader			= m_shaders[p];
-		out_rect			= (*it).second.rect;
+		out_rect			= it->second.rect;
 	}else
 		out_shader->create	(shader_name.c_str(), texture_name.c_str());
 }
@@ -97,7 +97,7 @@ void CUITextureMaster::InitTexture(const shared_str& texture_name, CUIStaticItem
 			m_shaders[p]->create(shader_name.c_str(), it->second.file.c_str());
 
 		tc->SetShader		(m_shaders[p]);
-		tc->SetTextureRect	((*it).second.rect);
+		tc->SetTextureRect	(it->second.rect);
 		tc->SetSize			(Fvector2().set(it->second.rect.width(),it->second.rect.height()));
 	}
 	else
@@ -147,5 +147,5 @@ void CUITextureMaster::GetTextureShader(const shared_str&  texture_name, ui_shad
 
 	R_ASSERT3(it != m_textures.end(), "can't find texture", texture_name.c_str());
 
-	sh->create("hud\\default", *((*it).second.file));	
+	sh->create("hud\\default", *(it->second.file));	
 }

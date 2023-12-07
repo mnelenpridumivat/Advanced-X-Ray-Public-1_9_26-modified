@@ -179,9 +179,9 @@ shared_str CRestrictions::GetItemGroup(const shared_str& item) const
 	group_items::const_iterator			IT;
 	
 	for (it = m_goups.begin(); it != m_goups.end(); it++)
-		for (IT = (*it).second.begin(); IT != (*it).second.end(); IT++)
+		for (IT = it->second.begin(); IT != it->second.end(); IT++)
 			if ((*IT) == item)
-				return (*it).first;		
+				return it->first;		
 
 	return		NULL;
 }
@@ -251,7 +251,7 @@ void CRestrictions::Dump() const
 		group_items::const_iterator it2		= it->second.begin();
 		group_items::const_iterator it2_e	= it->second.end();
 		for(;it2!=it2_e;++it2)
-			Msg("	[%s]",(*it2).c_str());
+			Msg("	[%s]",it2->c_str());
 	}
 	Msg("------------rank restrictions------------");
 	for(u32 i=0; i<_RANK_COUNT+1; ++i)
@@ -266,7 +266,7 @@ void CRestrictions::Dump() const
 
 		for(;it!=it_e;++it)
 		{
-			Msg("	[%s]:[%d]", (*it).first.c_str(), (*it).second);
+			Msg("	[%s]:[%d]", it->first.c_str(), it->second);
 		}
 		Msg("-----------------------------------------");
 	}
