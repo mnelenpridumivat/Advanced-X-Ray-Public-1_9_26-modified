@@ -50,8 +50,8 @@ float CAutosaveManager::shedule_Scale		()
 void CAutosaveManager::shedule_Update		(u32 dt)
 {
 	inherited::shedule_Update	(dt);
-	#pragma todo("Plecha to Plecha : AUTOSAVE (do not forgive to enable it in release version:-))))!!!!")
-	if (true) return;
+	//#pragma todo("Plecha to Plecha : AUTOSAVE (do not forgive to enable it in release version:-))))!!!!")
+	//if (true) return;
 	if (!ai().get_alife())
 		return;
 
@@ -65,8 +65,13 @@ void CAutosaveManager::shedule_Update		(u32 dt)
 		
 	update_autosave_time		();
 
+	u32							years, months, days, hours, minutes, seconds, milliseconds;
+	split_time					(last_autosave_time(), years, months, days, hours, minutes, seconds, milliseconds);
+	string256 TimeStr;
+	sprintf(TimeStr, " %d.%d.%d %d:%d:%d", years, months, days, hours, minutes, seconds);
+
 	string_path					temp;
-	strconcat					(sizeof(temp),temp,Core.UserName," - ","autosave");
+	strconcat					(sizeof(temp),temp,Core.UserName," - ","autosave", TimeStr);
 	NET_Packet					net_packet;
 	net_packet.w_begin			(M_SAVE_GAME);
 	net_packet.w_stringZ		(temp);
@@ -81,7 +86,7 @@ void CAutosaveManager::shedule_Update		(u32 dt)
 
 	SetFileAttributes			( S1, FILE_ATTRIBUTE_HIDDEN );
 	
-	CurrentGameUI()->AddCustomStatic("autosave", true);
+	CurrentGameUI()->AddCustomStatic(temp, true);
 }
 
 void CAutosaveManager::on_game_loaded	()
