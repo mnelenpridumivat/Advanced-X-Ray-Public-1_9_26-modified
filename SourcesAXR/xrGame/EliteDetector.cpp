@@ -27,7 +27,7 @@ void CEliteDetector::CreateUI()
 
 CUIArtefactDetectorElite&  CEliteDetector::ui()
 {
-	return *((CUIArtefactDetectorElite*)m_ui);
+	return *static_cast<CUIArtefactDetectorElite*>(m_ui);
 }
 
 void CEliteDetector::UpdateAf()

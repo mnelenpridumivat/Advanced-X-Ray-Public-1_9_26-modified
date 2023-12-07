@@ -54,7 +54,7 @@ void BONE::compute_bones			(u32 const bone_id)
 	bone_matrix.getXYZ	(angles);
 	VERIFY			( _valid(angles) );
 	VERIFY			( (bone_count - bone_id - 1) > 0 );
-	angles.mul			(1.f/float(bone_count - bone_id - 1));
+	angles.mul			(1.f/static_cast<float>(bone_count - bone_id - 1));
 	bone_matrix.setXYZ	(angles);
 	VERIFY			( _valid(bone_matrix) );
 

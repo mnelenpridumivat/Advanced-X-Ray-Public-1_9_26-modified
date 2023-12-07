@@ -135,7 +135,7 @@ void CSpectator::UpdateCL()
 			//-------------------------------------
 			int idx			= 0;
 			game_PlayerState* P = Game().local_player;
-			if (P&&(P->team>=0)&&(P->team<(int)Level().seniority_holder().teams().size())){
+			if (P&&(P->team>=0)&&(P->team<static_cast<int>(Level().seniority_holder().teams().size()))){
 				const CTeamHierarchyHolder& T		= Level().seniority_holder().team(P->team);
 				for (u32 i=0; i<T.squads().size(); ++i){
 					const CSquadHierarchyHolder& S = T.squad(i);
@@ -206,7 +206,7 @@ void CSpectator::IR_OnKeyboardPress(int cmd)
 			if (!Level().IsDemoPlay() && (!PS || PS->GameID != ID())) break;
 			
 
-			EActorCameras new_camera = EActorCameras((cam_active+1)%eacMaxCam);
+			EActorCameras new_camera = static_cast<EActorCameras>((cam_active + 1) % eacMaxCam);
 			
 			if (!PS->testFlag(GAME_PLAYER_FLAG_SPECTATOR))
 			{
@@ -220,7 +220,7 @@ void CSpectator::IR_OnKeyboardPress(int cmd)
 					}
 					if (new_camera == (eacMaxCam - 1))
 						break;
-					new_camera = EActorCameras((new_camera+1)%eacMaxCam);					
+					new_camera = static_cast<EActorCameras>((new_camera + 1) % eacMaxCam);					
 				}
 				if (!found)
 					break;
@@ -303,11 +303,11 @@ void CSpectator::IR_OnMouseMove(int dx, int dy)
 	CCameraBase* C	= cameras	[cam_active];
 	float scale		= (C->f_fov/g_fov)*psMouseSens * psMouseSensScale/50.f;
 	if (dx){
-		float d = float(dx)*scale;
+		float d = static_cast<float>(dx)*scale;
 		cameras[cam_active]->Move((d<0)?kLEFT:kRIGHT, _abs(d));
 	}
 	if (dy){
-		float d = ((psMouseInvert.test(1))?-1:1)*float(dy)*scale*3.f/4.f;
+		float d = ((psMouseInvert.test(1))?-1:1)*static_cast<float>(dy)*scale*3.f/4.f;
 		cameras[cam_active]->Move((d>0)?kUP:kDOWN, _abs(d));
 	}
 }

@@ -31,10 +31,10 @@ CLevelGraph::CLevelGraph		()
 	m_reader					= FS.r_open	(file_name);
 
 	// m_header & data
-	m_header					= (CHeader*)m_reader->pointer();
+	m_header					= static_cast<CHeader*>(m_reader->pointer());
 	R_ASSERT					(header().version() == XRAI_CURRENT_VERSION);
 	m_reader->advance			(sizeof(CHeader));
-	m_nodes						= (CVertex*)m_reader->pointer();
+	m_nodes						= static_cast<CVertex*>(m_reader->pointer());
 	m_row_length				= iFloor((header().box().max.z - header().box().min.z)/header().cell_size() + EPS_L + 1.5f);
 	m_column_length				= iFloor((header().box().max.x - header().box().min.x)/header().cell_size() + EPS_L + 1.5f);
 	m_access_mask.assign		(header().vertex_count(),true);
@@ -220,15 +220,15 @@ u32	CLevelGraph::vertex_id				(const Fvector &position) const
 	CVertex				*E = m_nodes + header().vertex_count();
 	CVertex				*I = std::lower_bound	(B,E,_vertex_position.xz());
 	if ((I == E) || ((*I).position().xz() != _vertex_position.xz()))
-		return			(u32(-1));
+		return			static_cast<u32>(-1);
 
-	u32					best_vertex_id = u32(I - B);
+	u32					best_vertex_id = static_cast<u32>(I - B);
 	float				y = vertex_plane_y(best_vertex_id,position.x,position.z);
 	for (++I; I != E; ++I) {
 		if ((*I).position().xz() != _vertex_position.xz())
 			break;
 
-		u32				new_vertex_id = u32(I - B);
+		u32				new_vertex_id = static_cast<u32>(I - B);
 		float			_y = vertex_plane_y(new_vertex_id,position.x,position.z);
 		if (y <= position.y) {
 			// so, current node is under the specified position
@@ -283,10 +283,10 @@ u32 CLevelGraph::guess_vertex_id	(u32 const &current_vertex_id, Fvector const &p
 
 	CVertex const			*B = m_nodes;
 	CVertex const			*E = m_nodes + header().vertex_count();
-	u32						start_x = (u32)_max( 0, int(x) - max_guess_vertex_count);
-	u32						stop_x  = _min( max_x(), x + (u32)max_guess_vertex_count);
-	u32						start_z = (u32)_max( 0, int(z) - max_guess_vertex_count);
-	u32						stop_z  = _min(	max_z(),z + (u32)max_guess_vertex_count);
+	u32						start_x = static_cast<u32>(_max(0, int(x) - max_guess_vertex_count));
+	u32						stop_x  = _min( max_x(), x + static_cast<u32>(max_guess_vertex_count));
+	u32						start_z = static_cast<u32>(_max(0, int(z) - max_guess_vertex_count));
+	u32						stop_z  = _min(	max_z(),z + static_cast<u32>(max_guess_vertex_count));
 	for (u32 i = start_x; i<=stop_x; ++i) {
 		for (u32 j = start_z; j <= stop_z; ++j) {
 			u32				test_xz = i*m_row_length + j;
@@ -297,14 +297,14 @@ u32 CLevelGraph::guess_vertex_id	(u32 const &current_vertex_id, Fvector const &p
 			if ((*I).position().xz() != test_xz)
 				continue;
 
-			u32				best_vertex_id = u32(I - B);
+			u32				best_vertex_id = static_cast<u32>(I - B);
 			contour			(vertex_contour, best_vertex_id);
 			float			best_distance = nearest(best_point, position, vertex_contour);
 			for (++I; I != E; ++I) {
 				if ((*I).position().xz() != test_xz)
 					break;
 			
-				u32				vertex_id = u32(I - B);
+				u32				vertex_id = static_cast<u32>(I - B);
 				Fvector			point;
 				contour			(vertex_contour, vertex_id);
 				float			distance = nearest(point, position, vertex_contour);

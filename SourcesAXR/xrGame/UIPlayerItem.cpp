@@ -98,28 +98,28 @@ void UIPlayerItem::InitIconParams(CUIXml& uiXml)
 void UIPlayerItem::UpdateTextParams(game_PlayerState const * ps)
 {
 	buffer_vector<char> value_store(
-		_alloca(512), 512, 512, char(0));
+		_alloca(512), 512, 512, static_cast<char>(0));
 	TMapStrToUIText::iterator ie = m_text_params.end();
 	for (TMapStrToUIText::iterator i = m_text_params.begin(); i != ie; ++i)
 	{
 		VERIFY(i->second);
 		GetTextParamValue(ps, i->first, value_store);
 		i->second->SetText(value_store.begin());
-		std::fill(value_store.begin(), value_store.end(), char(0));
+		std::fill(value_store.begin(), value_store.end(), static_cast<char>(0));
 	}
 }
 
 void UIPlayerItem::UpdateIconParams(game_PlayerState const * ps)
 {
 	buffer_vector<char> value_store(
-		_alloca(512), 512, 512, char(0));
+		_alloca(512), 512, 512, static_cast<char>(0));
 	TMapStrToUIStatic::iterator ie = m_icon_params.end();
 	for (TMapStrToUIStatic::iterator i = m_icon_params.begin(); i != ie; ++i)
 	{
 		VERIFY(i->second);
 		GetIconParamValue(ps, i->first, value_store);
  		i->second->SetValue(value_store.begin());
-		std::fill(value_store.begin(), value_store.end(), char(0));
+		std::fill(value_store.begin(), value_store.end(), static_cast<char>(0));
 	}
 }
 
@@ -163,10 +163,10 @@ void UIPlayerItem::GetIconParamValue(game_PlayerState const * ps,
 	VERIFY(cl_game);
 	if (param_name.equal("rank"))
 	{
-		if (ETeam(cl_game->ModifyTeam(ps->team)) == etGreenTeam)
+		if (static_cast<ETeam>(cl_game->ModifyTeam(ps->team)) == etGreenTeam)
 		{
 			xr_sprintf(dest.begin(), dest.size(), "ui_hud_status_green_0%d", ps->rank + 1);
-		} else if (ETeam(cl_game->ModifyTeam(ps->team)) == etBlueTeam)
+		} else if (static_cast<ETeam>(cl_game->ModifyTeam(ps->team)) == etBlueTeam)
 		{
 			xr_sprintf(dest.begin(), dest.size(), "ui_hud_status_blue_0%d", ps->rank + 1);
 		}

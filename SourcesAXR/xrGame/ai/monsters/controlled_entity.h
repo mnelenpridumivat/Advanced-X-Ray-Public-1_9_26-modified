@@ -4,9 +4,9 @@
 class CEntity;
 
 enum ETask {
-	eTaskFollow		= u32(0),
+	eTaskFollow		= static_cast<u32>(0),
 	eTaskAttack,
-	eTaskNone		= u32(-1)
+	eTaskNone		= static_cast<u32>(-1)
 };
 
 struct SControlledInfo {

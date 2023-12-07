@@ -21,7 +21,7 @@
 CALifeSpawnRegistry::CALifeSpawnRegistry	(LPCSTR section)
 {
 	m_spawn_name				= "";
-	seed						(u32(CPU::QPC() & 0xffffffff));
+	seed						(static_cast<u32>(CPU::QPC() & 0xffffffff));
 	m_game_graph				= 0;
 	m_chunk						= 0;
 	m_file						= 0;
@@ -172,8 +172,8 @@ void CALifeSpawnRegistry::load_updates		(IReader &stream)
 {
 	u32								vertex_id;
 	for (IReader *chunk = stream.open_chunk_iterator(vertex_id); chunk; chunk = stream.open_chunk_iterator(vertex_id,chunk)) {
-		VERIFY						(u32(ALife::_SPAWN_ID(-1)) > vertex_id);
-		const SPAWN_GRAPH::CVertex	*vertex = m_spawns.vertex(ALife::_SPAWN_ID(vertex_id));
+		VERIFY						(u32(static_cast<ALife::_SPAWN_ID>(-1)) > vertex_id);
+		const SPAWN_GRAPH::CVertex	*vertex = m_spawns.vertex(static_cast<ALife::_SPAWN_ID>(vertex_id));
 		VERIFY						(vertex);
 		vertex->data()->load_update	(*chunk);
 	}
@@ -188,7 +188,7 @@ void CALifeSpawnRegistry::build_root_spawns	()
 		SPAWN_GRAPH::const_vertex_iterator	I = m_spawns.vertices().begin();
 		SPAWN_GRAPH::const_vertex_iterator	E = m_spawns.vertices().end();
 		for ( ; I != E; ++I)
-			m_temp0.push_back				((*I).second->vertex_id());
+			m_temp0.push_back				(I->second->vertex_id());
 	}
 
 	{
@@ -222,11 +222,12 @@ void CALifeSpawnRegistry::build_story_spawns()
 	SPAWN_GRAPH::const_vertex_iterator	I = m_spawns.vertices().begin();
 	SPAWN_GRAPH::const_vertex_iterator	E = m_spawns.vertices().end();
 	for ( ; I != E; ++I) {
-		CSE_ALifeObject					*object = smart_cast<CSE_ALifeObject*>(&(*I).second->data()->object());
+		CSE_ALifeObject					*object = smart_cast<CSE_ALifeObject*>(&I->second->data()->object());
 		VERIFY							(object);
+		m_spawn_ids_by_name.emplace(object->name_replace(), I->first);
 		if (object->m_spawn_story_id == INVALID_SPAWN_STORY_ID)
 			continue;
 
-		m_spawn_story_ids.insert		(std::make_pair(object->m_spawn_story_id,(*I).first));
+		m_spawn_story_ids.insert		(std::make_pair(object->m_spawn_story_id,I->first));
 	}
 }

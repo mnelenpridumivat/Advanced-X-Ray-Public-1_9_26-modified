@@ -69,7 +69,7 @@ void CGraviArtefact::UpdateCLChild()
 		{
 			XFORM().set(H_Parent()->XFORM());
 			
-			if (GameID() == eGameIDArtefactHunt && m_CarringBoneID != u16(-1))
+			if (GameID() == eGameIDArtefactHunt && m_CarringBoneID != static_cast<u16>(-1))
 			{
 				IKinematics* K	= smart_cast<IKinematics*>(H_Parent()->Visual());
 				if (K)

@@ -35,7 +35,7 @@ CSE_ALifeTraderAbstract* ch_info_get_from_id (u16 id)
 }
 
 CUICharacterInfo::CUICharacterInfo()
-	: m_ownerID(u16(-1)),
+	: m_ownerID(static_cast<u16>(-1)),
 	pUIBio(nullptr)
 {
 	ZeroMemory			(m_icons,sizeof(m_icons));
@@ -309,7 +309,7 @@ void CUICharacterInfo::Update()
 		CSE_ALifeTraderAbstract* T = detail::object_exists_in_alife_registry(m_ownerID) ?
 									 ch_info_get_from_id(m_ownerID) : NULL;
 		if (NULL==T){
-			m_ownerID = u16(-1);
+			m_ownerID = static_cast<u16>(-1);
 			return;
 		}
 		else
@@ -358,8 +358,8 @@ bool CUICharacterInfo::get_actor_community( shared_str* our, shared_str* enemy )
 		return false;
 	}
 	u32   size_temp   = (xr_strlen(vs_teams) + 1) * sizeof(char);
-	PSTR  our_fract   = (PSTR)_alloca( size_temp );
-	PSTR  enemy_fract = (PSTR)_alloca( size_temp );
+	PSTR  our_fract   = static_cast<PSTR>(_alloca(size_temp));
+	PSTR  enemy_fract = static_cast<PSTR>(_alloca(size_temp));
 	_GetItem( vs_teams, 0, our_fract, size_temp );
 	_GetItem( vs_teams, 1, enemy_fract, size_temp );
 

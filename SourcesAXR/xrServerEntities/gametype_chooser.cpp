@@ -6,7 +6,7 @@
 #include "xrServer_Objects_Abstract.h"
 //old
 enum ERPGameType{		// [0..255]
-	rpgtGameAny							= u8(0),
+	rpgtGameAny							= static_cast<u8>(0),
 	rpgtGameDeathmatch,
 	rpgtGameTeamDeathmatch,
 	rpgtGameArtefactHunt,

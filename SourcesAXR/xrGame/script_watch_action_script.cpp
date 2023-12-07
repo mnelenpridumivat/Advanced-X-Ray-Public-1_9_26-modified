@@ -21,13 +21,13 @@ void CScriptWatchAction::script_register(lua_State *L)
 		class_<CScriptWatchAction>("look")
 			.enum_("look")
 			[
-				value("path_dir",				int(SightManager::eSightTypePathDirection)),
-				value("search",					int(SightManager::eSightTypeSearch)),
-				value("danger",					int(SightManager::eSightTypeCover)),
-				value("point",					int(SightManager::eSightTypePosition)),
-				value("fire_point",				int(SightManager::eSightTypeFirePosition)),
-				value("cur_dir",				int(SightManager::eSightTypeCurrentDirection)),
-				value("direction",				int(SightManager::eSightTypeDirection))
+				value("path_dir",				static_cast<int>(SightManager::eSightTypePathDirection)),
+				value("search",					static_cast<int>(SightManager::eSightTypeSearch)),
+				value("danger",					static_cast<int>(SightManager::eSightTypeCover)),
+				value("point",					static_cast<int>(SightManager::eSightTypePosition)),
+				value("fire_point",				static_cast<int>(SightManager::eSightTypeFirePosition)),
+				value("cur_dir",				static_cast<int>(SightManager::eSightTypeCurrentDirection)),
+				value("direction",				static_cast<int>(SightManager::eSightTypeDirection))
 			]
 			.def(								constructor<>())
 			.def(								constructor<SightManager::ESightType>())
@@ -43,6 +43,6 @@ void CScriptWatchAction::script_register(lua_State *L)
 			.def("direct",						&CScriptWatchAction::SetWatchDirection)		// time
 			.def("type",						&CScriptWatchAction::SetWatchType)
 			.def("bone",						&CScriptWatchAction::SetWatchBone)
-			.def("completed",					(bool (CScriptWatchAction::*)())(&CScriptWatchAction::completed))
+			.def("completed",					static_cast<bool (CScriptWatchAction::*)()>(&CScriptWatchAction::completed))
 	];
 }

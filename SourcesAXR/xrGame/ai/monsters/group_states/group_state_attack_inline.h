@@ -61,7 +61,7 @@ void CStateGroupAttackAbstract::initialize()
 		goal.type	= MG_AttackEnemy;
 		goal.entity	= const_cast<CEntityAlive*>(m_enemy);
 
-		if ( squad->get_index(object) == u8(-1) )
+		if ( squad->get_index(object) == static_cast<u8>(-1) )
 		{
 			squad->SetLeader(object);
 			monster_squad().get_squad(object)->set_squad_index(object->EnemyMan.get_enemy());

@@ -41,10 +41,10 @@ void CStateCustomGroupAbstract::setup_substates()
 		data.time_out	= 0;			// do not use time out
 		switch(object->get_number_animation())
 		{
-		case u32(5):
+		case static_cast<u32>(5):
 			data.sound_type	= MonsterSound::eMonsterSoundSteal;
 			break;
-		case u32(6):
+		case static_cast<u32>(6):
 			data.sound_type	= MonsterSound::eMonsterSoundThreaten;
 			break;
 		default:

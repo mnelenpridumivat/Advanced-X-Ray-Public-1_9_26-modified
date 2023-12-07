@@ -90,7 +90,7 @@ protected:
 	event_condition_t*			add_and_condition			(event_condition_t* left, event_condition_t* right);
 	
 	event_condition_t*			add_hit_condition_dist		(u32 hit_counts, u16 weapon_id, u16 bone_id, float_binary_function* fbfunc, float distanse);
-	event_condition_t*			add_kill_condition_dist		(u32 kill_counts, u16 weapon_id, u16 kill_type, u16 special_kill_type, u32 time_period = u32(-1));
+	event_condition_t*			add_kill_condition_dist		(u32 kill_counts, u16 weapon_id, u16 kill_type, u16 special_kill_type, u32 time_period = static_cast<u32>(-1));
 
 	event_condition_t*			add_accumm_value_condition	(u16 param_id, float_binary_function* fbfunc, float argument);
 	event_condition_t*			add_accumm_value_condition	(u16 param_id, u32_binary_function* fbfunc, u32 argument);

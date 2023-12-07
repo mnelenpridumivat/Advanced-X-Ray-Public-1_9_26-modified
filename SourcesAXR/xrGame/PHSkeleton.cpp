@@ -59,7 +59,7 @@ void CPHSkeleton::RespawnInit()
 
 void CPHSkeleton::Init()
 {
-	m_remove_time = u32(-1);
+	m_remove_time = static_cast<u32>(-1);
 	b_removing=false;
 	m_startup_anim=NULL;
 }
@@ -185,7 +185,7 @@ void CPHSkeleton::SaveNetState(NET_Packet& P)
 	}
 	else
 	{
-		P.w_u64(u64(-1));
+		P.w_u64(static_cast<u64>(-1));
 		P.w_u16(0);
 	}
 	/////////////////////////////
@@ -308,9 +308,9 @@ void CPHSkeleton::PHSplit()
 {
 
 
-	u16 spawned=u16(m_unsplited_shels.size());
+	u16 spawned=static_cast<u16>(m_unsplited_shels.size());
 	PPhysicsShellHolder()->PPhysicsShell()->SplitProcess(m_unsplited_shels);
-	u16 i=u16(m_unsplited_shels.size())-spawned;
+	u16 i=static_cast<u16>(m_unsplited_shels.size())-spawned;
 	//	Msg("%o,spawned,%d",this,i);
 	for(;i;--i) SpawnCopy();
 
@@ -400,13 +400,13 @@ void CPHSkeleton::RecursiveBonesCheck(u16 id)
 	if(!removable) return;
 	CPhysicsShellHolder* obj=PPhysicsShellHolder();
 	IKinematics* K		= smart_cast<IKinematics*>(obj->Visual());
-	CBoneData& BD		= K->LL_GetData(u16(id));
+	CBoneData& BD		= K->LL_GetData(static_cast<u16>(id));
 	//////////////////////////////////////////
 	Flags64 mask;
 	mask.assign(K->LL_GetBonesVisible());
 	///////////////////////////////////////////
 	if(
-		mask.is(1ui64<<(u64)id)&& 
+		mask.is(1ui64<<static_cast<u64>(id))&& 
 		!(BD.shape.flags.is(SBoneShape::sfRemoveAfterBreak))
 		) {
 			removable = false;
@@ -437,7 +437,7 @@ void CPHSkeleton::InitServerObject(CSE_Abstract * D)
 	l_tpALifeDynamicObject->m_tNodeID	= obj->ai_location().level_vertex_id();
 	l_tpALifePhysicObject->set_visual	(*obj->cNameVisual());
 
-	l_tpALifePhysicObject->source_id	= u16(obj->ID());
+	l_tpALifePhysicObject->source_id	= static_cast<u16>(obj->ID());
 	l_tpALifePhysicObject->startup_animation=m_startup_anim;
 	D->s_name			= "ph_skeleton_object";//*cNameSect()
 	D->set_name_replace	("");

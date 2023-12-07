@@ -37,7 +37,7 @@ void CHUDCrosshair::SetDispersion	(float disp)
 	Device.mProject.transform	(r,R);
 
 	Fvector2		scr_size;
-	scr_size.set	(float(::Render->getTarget()->get_width()), float(::Render->getTarget()->get_height()));
+	scr_size.set	(static_cast<float>(::Render->getTarget()->get_width()), static_cast<float>(::Render->getTarget()->get_height()));
 	float radius_pixels		= _abs(r.x)*scr_size.x/2.0f;
 	target_radius		= radius_pixels; 
 }
@@ -50,7 +50,7 @@ void CHUDCrosshair::SetFirstBulletDispertion(float fbdisp)
 	Device.mProject.transform	(r,R);
 
 	Fvector2		scr_size;
-	scr_size.set	(float(::Render->getTarget()->get_width()), float(::Render->getTarget()->get_height()));
+	scr_size.set	(static_cast<float>(::Render->getTarget()->get_width()), static_cast<float>(::Render->getTarget()->get_height()));
 	fb_radius		= _abs(r.x)*scr_size.x/2.0f;
 }
 
@@ -61,7 +61,7 @@ void CHUDCrosshair::OnRenderFirstBulletDispertion()
 	VERIFY			(g_bRendering);
 	Fvector2		center;
 	Fvector2		scr_size;
-	scr_size.set	(float(::Render->getTarget()->get_width()), float(::Render->getTarget()->get_height()));
+	scr_size.set	(static_cast<float>(::Render->getTarget()->get_width()), static_cast<float>(::Render->getTarget()->get_height()));
 	center.set		(scr_size.x/2.0f, scr_size.y/2.0f);
 
 	UIRender->StartPrimitive		(10, IUIRender::ptLineList, UI().m_currentPointType);
@@ -117,7 +117,7 @@ void CHUDCrosshair::OnRender(const Fvector2& cent, const Fvector2& size_scr)
 
 	if (!g_advanced_crosshair)
 	{
-		scr_size.set(float(::Render->getTarget()->get_width()), float(::Render->getTarget()->get_height()));
+		scr_size.set(static_cast<float>(::Render->getTarget()->get_width()), static_cast<float>(::Render->getTarget()->get_height()));
 		center.set(scr_size.x / 2.0f, scr_size.y / 2.0f);
 	}
 	else

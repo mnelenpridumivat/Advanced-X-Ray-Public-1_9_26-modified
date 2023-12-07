@@ -25,7 +25,7 @@ void killer_victim_angle::reset_game()
 
 u32 const killer_victim_angle::get_u32_param()
 {
-	return u32(acosf(m_killer_victim_angle_cos) * (180.f/PI));
+	return static_cast<u32>(acosf(m_killer_victim_angle_cos) * (180.f / PI));
 }
 
 void killer_victim_angle::OnPlayerKilled(u16 killer_id,

@@ -20,7 +20,7 @@ void anim_bone_fix::	callback	( CBoneInstance *BI )
 	
 //	Fmatrix	m = BI->mTransform;
 
-	anim_bone_fix* fix = (anim_bone_fix*) BI->callback_param();
+	anim_bone_fix* fix = static_cast<anim_bone_fix*>(BI->callback_param());
 	VERIFY( fix->bone );
 	VERIFY( fix->parent );
 	//VERIFY( fix->bone == BI );

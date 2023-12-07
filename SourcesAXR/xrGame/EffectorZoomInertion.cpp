@@ -118,7 +118,7 @@ BOOL CEffectorZoomInertion::ProcessCam(SCamEffectorInfo& info)
 		};
 	}
 
-	m_vCurrentPoint.lerp(m_vLastPoint, m_vTargetPoint, float(m_dwTimePassed)/m_dwDeltaTime);
+	m_vCurrentPoint.lerp(m_vLastPoint, m_vTargetPoint, static_cast<float>(m_dwTimePassed)/m_dwDeltaTime);
 
 	m_vOldCameraDir = info.d;
 

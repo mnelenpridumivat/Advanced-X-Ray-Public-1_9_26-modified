@@ -29,7 +29,7 @@ IC	LPCSTR	CScriptRTokenList::get		(u32 index)
 
 IC	u32		CScriptRTokenList::size		()
 {
-	return			(u32(m_values.size()));
+	return			static_cast<u32>(m_values.size());
 }
 
 IC	void	CScriptRTokenList::clear	()

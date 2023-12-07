@@ -102,7 +102,7 @@ void   CStateAnomalPseudoGigantAttack<Object>::execute()
 	}
 	else if(get_state_current()->check_completion()) {
 		get_state_current()->finalize();
-		current_substate = u32(-1);
+		current_substate = static_cast<u32>(-1);
 		prev_substate = current_substate;
 		switch_original_states();
 	}
@@ -341,7 +341,7 @@ void CStateAnomalPseudoGigantAttack<Object>::switch_original_states()
 template <typename Object>
 bool CStateAnomalPseudoGigantAttack<Object>::check_steal_state()
 {
-	if (prev_substate == u32(-1)) {
+	if (prev_substate == static_cast<u32>(-1)) {
 		if (get_state(eStateAttack_Steal)->check_start_conditions())
 			return true;
 	}
@@ -355,7 +355,7 @@ bool CStateAnomalPseudoGigantAttack<Object>::check_steal_state()
 template <typename Object>
 bool CStateAnomalPseudoGigantAttack<Object>::check_camp_state()
 {
-	if (prev_substate == u32(-1)) {
+	if (prev_substate == static_cast<u32>(-1)) {
 		if (get_state(eStateAttackCamp)->check_start_conditions())
 			return true;
 	}

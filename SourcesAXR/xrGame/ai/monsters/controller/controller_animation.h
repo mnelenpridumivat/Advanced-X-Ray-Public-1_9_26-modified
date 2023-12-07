@@ -13,7 +13,7 @@ class CControllerAnimation : public CControlAnimationBase {
 
 public:
 	enum ELegsActionType {
-		eLegsTypeBase			= u32(1) << 15,
+		eLegsTypeBase			= static_cast<u32>(1) << 15,
 
 		// -----------------------------------------
 
@@ -49,7 +49,7 @@ public:
 		eLegsRunStrafeLeftDamaged	= eLegsTypeRun	| 9,
 		eLegsRunStrafeRightDamaged	= eLegsTypeRun	| 10,
 
-		eLegsUndefined = u32(-1),
+		eLegsUndefined = static_cast<u32>(-1),
 	};
 
 	enum ETorsoActionType {

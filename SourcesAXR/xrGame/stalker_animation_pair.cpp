@@ -238,7 +238,7 @@ void CStalkerAnimationPair::select_animation(const ANIM_VECTOR &array, const ANI
 	}
 
 	VERIFY					(I != E);
-	VERIFY					(u32(I - B) < array.size());
+	VERIFY					(static_cast<u32>(I - B) < array.size());
 	m_array_animation		= array[I - B];
 	VERIFY					(m_array_animation);
 }

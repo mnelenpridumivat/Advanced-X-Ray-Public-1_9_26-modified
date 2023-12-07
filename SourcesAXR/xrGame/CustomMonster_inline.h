@@ -63,7 +63,7 @@ IC	float CCustomMonster::panic_threshold				() const
 
 IC	float CCustomMonster::client_update_fdelta			() const
 {
-	return			((float)m_client_update_delta/1000.f);
+	return			(static_cast<float>(m_client_update_delta)/1000.f);
 }
 
 IC	const u32 &CCustomMonster::client_update_delta		() const
@@ -83,12 +83,12 @@ IC	const u32 &CCustomMonster::critical_wound_type	() const
 
 IC bool CCustomMonster::critically_wounded			()
 {
-	return			(m_critical_wound_type != u32(-1));
+	return			(m_critical_wound_type != static_cast<u32>(-1));
 }
 
 IC void CCustomMonster::critical_wounded_state_stop	() 
 {
-	m_critical_wound_type = u32(-1);
+	m_critical_wound_type = static_cast<u32>(-1);
 }
 
 IC		void CCustomMonster::invulnerable			(const bool &invulnerable)

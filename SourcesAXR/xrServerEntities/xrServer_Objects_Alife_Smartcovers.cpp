@@ -157,8 +157,8 @@ void CSE_SmartCover::STATE_Write(NET_Packet	&tNetPacket)
 	tNetPacket.w_float			(m_hold_position_time);
 	tNetPacket.w_float			(m_enter_min_enemy_distance);
 	tNetPacket.w_float			(m_exit_min_enemy_distance);
-	tNetPacket.w_u8				((u8)m_is_combat_cover);
-	tNetPacket.w_u8				((u8)m_can_fire);
+	tNetPacket.w_u8				(static_cast<u8>(m_is_combat_cover));
+	tNetPacket.w_u8				(static_cast<u8>(m_can_fire));
 }
 
 void CSE_SmartCover::UPDATE_Read(NET_Packet	&tNetPacket)

@@ -9,7 +9,7 @@
 #endif
 
 enum EActiveComAction {
-	eRemove			= u32(0),
+	eRemove			= static_cast<u32>(0),
 	eAdd			
 };
 
@@ -395,14 +395,14 @@ void CControl_Manager::unlock(CControl_Com *com, ControlCom::EControlType type)
 
 void CControl_Manager::path_stop(CControl_Com *com)
 {
-	SControlPathBuilderData		*ctrl_path = (SControlPathBuilderData*)data(com, ControlCom::eControlPath); 
+	SControlPathBuilderData		*ctrl_path = static_cast<SControlPathBuilderData*>(data(com, ControlCom::eControlPath)); 
 	VERIFY						(ctrl_path);
 	ctrl_path->enable			= false;
 }
 
 void CControl_Manager::move_stop(CControl_Com *com)
 {
-	SControlMovementData		*ctrl_move = (SControlMovementData*)data(com, ControlCom::eControlMovement); 
+	SControlMovementData		*ctrl_move = static_cast<SControlMovementData*>(data(com, ControlCom::eControlMovement)); 
 	VERIFY						(ctrl_move);
 	ctrl_move->velocity_target	= 0;
 	ctrl_move->acc				= flt_max;
@@ -410,7 +410,7 @@ void CControl_Manager::move_stop(CControl_Com *com)
 }
 void CControl_Manager::dir_stop(CControl_Com *com)
 {
-	SControlDirectionData		*ctrl_dir = (SControlDirectionData*)data(com, ControlCom::eControlDir); 
+	SControlDirectionData		*ctrl_dir = static_cast<SControlDirectionData*>(data(com, ControlCom::eControlDir)); 
 	VERIFY						(ctrl_dir);
 	ctrl_dir->heading.target_speed	= 0;
 }

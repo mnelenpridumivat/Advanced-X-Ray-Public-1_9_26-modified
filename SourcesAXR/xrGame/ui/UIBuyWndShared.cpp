@@ -66,10 +66,10 @@ const u32 CItemMgr::GetItemIdx(const shared_str& sect_name) const
 #ifdef DEBUG
 		Msg("item not found in registry [%s]", sect_name.c_str());
 #endif // DEBUG
-		return u32(-1);
+		return static_cast<u32>(-1);
 	}
 
-	return				u32( std::distance(m_items.begin(), it) );
+	return				static_cast<u32>(std::distance(m_items.begin(), it));
 }
 
 void CItemMgr::Dump() const

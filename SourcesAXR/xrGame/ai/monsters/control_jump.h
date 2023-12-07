@@ -8,15 +8,15 @@ struct SControlJumpData : public ControlCom::IComData {
 	float					force_factor;
 
 	enum EFlags {	
-		eEnablePredictPosition		= u32(1) << 0,
-		ePrepareSkip				= u32(1) << 1,	// do not use prepare state
-		ePrepareInMove				= u32(1) << 2,
-		eGlideOnPrepareFailed		= u32(1) << 3,  // if not set then cannot start jump
-		eGlidePlayAnimOnce			= u32(1) << 4,
-		eGroundSkip					= u32(1) << 5,
-		eUseTargetPosition			= u32(1) << 6,
-		eDontUseVelocityBounce		= u32(1) << 7,
-		eUseAutoAim					= u32(1) << 8,
+		eEnablePredictPosition		= static_cast<u32>(1) << 0,
+		ePrepareSkip				= static_cast<u32>(1) << 1,	// do not use prepare state
+		ePrepareInMove				= static_cast<u32>(1) << 2,
+		eGlideOnPrepareFailed		= static_cast<u32>(1) << 3,  // if not set then cannot start jump
+		eGlidePlayAnimOnce			= static_cast<u32>(1) << 4,
+		eGroundSkip					= static_cast<u32>(1) << 5,
+		eUseTargetPosition			= static_cast<u32>(1) << 6,
+		eDontUseVelocityBounce		= static_cast<u32>(1) << 7,
+		eUseAutoAim					= static_cast<u32>(1) << 8,
 	};
 	
 	flags32					flags;

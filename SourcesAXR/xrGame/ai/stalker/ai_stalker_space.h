@@ -12,7 +12,7 @@
 
 namespace StalkerSpace {
 	enum EStalkerSounds {
-		eStalkerSoundDie = u32(0),
+		eStalkerSoundDie = static_cast<u32>(0),
 		eStalkerSoundDieInAnomaly,
 		eStalkerSoundInjuring,
 		eStalkerSoundHumming,
@@ -42,16 +42,16 @@ namespace StalkerSpace {
 		eStalkerSoundThrowGrenade,
 
 		eStalkerSoundScript,
-		eStalkerSoundDummy = u32(-1),
+		eStalkerSoundDummy = static_cast<u32>(-1),
 	};
 
 	enum EStalkerSoundMasks {
-		eStalkerSoundMaskAnySound					= u32(0),
-		eStalkerSoundMaskDie						= u32(-1),
-		eStalkerSoundMaskDieInAnomaly				= u32(-1),
-		eStalkerSoundMaskInjuring					= u32(-1),
-		eStalkerSoundMaskInjuringByFriend			= u32(-1),
-		eStalkerSoundMaskNonTriggered				= u32(1 << 31) | (1 << 30),
+		eStalkerSoundMaskAnySound					= static_cast<u32>(0),
+		eStalkerSoundMaskDie						= static_cast<u32>(-1),
+		eStalkerSoundMaskDieInAnomaly				= static_cast<u32>(-1),
+		eStalkerSoundMaskInjuring					= static_cast<u32>(-1),
+		eStalkerSoundMaskInjuringByFriend			= static_cast<u32>(-1),
+		eStalkerSoundMaskNonTriggered				= static_cast<u32>(1 << 31) | (1 << 30),
 		eStalkerSoundMaskNoHumming					= (1 << 29),
 		eStalkerSoundMaskFree						= eStalkerSoundMaskNoHumming | eStalkerSoundMaskNonTriggered,
 		eStalkerSoundMaskHumming					= 1 | eStalkerSoundMaskFree,
@@ -78,12 +78,12 @@ namespace StalkerSpace {
 		eStalkerSoundMaskWounded					= eStalkerSoundMaskDanger,
 		eStalkerSoundMaskGrenadeAlarm				= eStalkerSoundMaskDanger,
 		eStalkerSoundMaskFriendlyGrenadeAlarm		= eStalkerSoundMaskDanger,
-		eStalkerSoundMaskDummy						= u32(-1),
+		eStalkerSoundMaskDummy						= static_cast<u32>(-1),
 	};
 
 	enum EBodyAction {
-		eBodyActionNone		= u32(0),
+		eBodyActionNone		= static_cast<u32>(0),
 		eBodyActionHello,
-		eBodyActionDummy	= u32(-1),
+		eBodyActionDummy	= static_cast<u32>(-1),
 	};
 };

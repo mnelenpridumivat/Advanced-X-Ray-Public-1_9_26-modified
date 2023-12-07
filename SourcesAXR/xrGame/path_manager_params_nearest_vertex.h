@@ -24,7 +24,7 @@ struct SNearestVertex : public SBaseParameters<
 			const Fvector			&target_position,
 			_dist_type				max_range = _dist_type(6000),
 			_iteration_type			max_iteration_count = _iteration_type(-1),
-			u32						max_visited_node_count = u32(-1)
+			u32						max_visited_node_count = static_cast<u32>(-1)
 		)
 		:
 		SBaseParameters<

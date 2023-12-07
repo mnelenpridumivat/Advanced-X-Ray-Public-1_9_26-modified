@@ -94,7 +94,7 @@ void	animation_movement_controller::	deinitialize					()
 	
 	CBoneInstance& B=m_pKinematicsC->LL_GetBoneInstance( m_pKinematicsC->LL_GetBoneRoot( ) );
 	VERIFY( B.callback() == RootBoneCallback );
-	VERIFY( B.callback_param() == (void*)this );
+	VERIFY( B.callback_param() == static_cast<void*>(this) );
 	B.reset_callback( );
 	m_pKinematicsA->SetBlendDestroyCallback( 0 );
 	m_control_blend =  0 ;
@@ -182,7 +182,7 @@ static void get_animation_root_position( Fmatrix &pos, IKinematics* K, IKinemati
 	VERIFY( smart_cast<IKinematics*>(KA) == K );
 
 	SKeyTable	keys;
-	KA->LL_BuldBoneMatrixDequatize( &K->LL_GetData( 0 ), u8(1<<0), keys );
+	KA->LL_BuldBoneMatrixDequatize( &K->LL_GetData( 0 ), static_cast<u8>(1 << 0), keys );
 	
 //find
 	CKey *key = 0;
@@ -365,7 +365,7 @@ void animation_movement_controller::RootBoneCallback( CBoneInstance* B )
 	VERIFY( B );
 	VERIFY( B->callback_param() );
 	
-	animation_movement_controller* O = ( animation_movement_controller* )( B->callback_param() );
+	animation_movement_controller* O = static_cast<animation_movement_controller*>(B->callback_param());
 
 	O->DBG_verify_position_not_chaged();
 

@@ -201,7 +201,7 @@ game_TeamState::game_TeamState()
 
 game_GameState::game_GameState()
 {
-	m_type						= EGameIDs(u32(0));
+	m_type						= static_cast<EGameIDs>(u32(0));
 	m_phase						= GAME_PHASE_NONE;
 	m_round						= -1;
 	m_round_start_time_str[0]	= 0;
@@ -271,7 +271,7 @@ void game_GameState::switch_Phase		(u32 new_phase)
 {
 	OnSwitchPhase(m_phase, new_phase);
 
-	m_phase				= u16(new_phase);
+	m_phase				= static_cast<u16>(new_phase);
 	m_start_time		= Level().timeServer();
 }
 
@@ -282,7 +282,7 @@ ALife::_TIME_ID  game_GameState::GetStartGameTime()
 
 ALife::_TIME_ID game_GameState::GetGameTime()
 {
-	return			(m_qwStartGameTime + ALife::_TIME_ID(m_fTimeFactor*float(Level().timeServer_Async() - m_qwStartProcessorTime)));
+	return			(m_qwStartGameTime + static_cast<ALife::_TIME_ID>(m_fTimeFactor * float(Level().timeServer_Async() - m_qwStartProcessorTime)));
 }
 
 float game_GameState::GetGameTimeFactor()
@@ -306,7 +306,7 @@ void game_GameState::SetGameTimeFactor	(ALife::_TIME_ID GameTime, const float fT
 
 ALife::_TIME_ID game_GameState::GetEnvironmentGameTime()
 {
-	return						(m_qwEStartGameTime + ALife::_TIME_ID(m_fETimeFactor*float(Level().timeServer_Async() - m_qwEStartProcessorTime)));
+	return						(m_qwEStartGameTime + static_cast<ALife::_TIME_ID>(m_fETimeFactor * float(Level().timeServer_Async() - m_qwEStartProcessorTime)));
 }
 
 float game_GameState::GetEnvironmentGameTimeFactor()

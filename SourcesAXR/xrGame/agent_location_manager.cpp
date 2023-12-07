@@ -188,7 +188,7 @@ float CAgentLocationManager::danger		(const CCoverPoint *cover, CAI_Stalker *mem
 			continue;
 
 		result					*= 
-			float(Device.dwTimeGlobal - (*I)->m_level_time)/float((*I)->m_interval);
+			static_cast<float>(Device.dwTimeGlobal - (*I)->m_level_time)/static_cast<float>((*I)->m_interval);
 	}
 
 	return						(result);

@@ -704,8 +704,8 @@ void WeaponUsageStatistic::Send_Check_Respond()
 		P.w_u8(BChA_Request.NumFalse);		BChA_Request.NumFalse = 0;
 		P.w_u8(BChA_Request.NumTrue);		BChA_Request.NumTrue = 0;
 
-		if ((char*)pSFalse != (char*)SFalse) P.w(SFalse, u32((char*)pSFalse-(char*)SFalse));
-		if ((char*)pSTrue != (char*)STrue) P.w(STrue, u32((char*)pSTrue-(char*)STrue));
+		if ((char*)pSFalse != static_cast<char*>(SFalse)) P.w(SFalse, static_cast<u32>((char*)pSFalse - (char*)SFalse));
+		if ((char*)pSTrue != static_cast<char*>(STrue)) P.w(STrue, static_cast<u32>((char*)pSTrue - (char*)STrue));
 		//-----------------------------------------------------
 		ClientID ClID; ClID.set(BChA_Request.SenderID);
 		if(Level().Server) Level().Server->SendTo(ClID, P);

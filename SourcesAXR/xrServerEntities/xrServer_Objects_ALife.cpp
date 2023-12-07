@@ -363,12 +363,12 @@ CSE_ALifeObject::CSE_ALifeObject			(LPCSTR caSection) : CSE_Abstract(caSection)
 {
 	m_bOnline					= false;
 	m_fDistance					= 0.0f;
-	ID							= ALife::_OBJECT_ID(-1);
-	m_tGraphID					= GameGraph::_GRAPH_ID(-1);
-	m_tSpawnID					= ALife::_SPAWN_ID(-1);
+	ID							= static_cast<ALife::_OBJECT_ID>(-1);
+	m_tGraphID					= static_cast<GameGraph::_GRAPH_ID>(-1);
+	m_tSpawnID					= static_cast<ALife::_SPAWN_ID>(-1);
 	m_bDirectControl			= true;
 	m_bALifeControl				= true;
-	m_tNodeID					= u32(-1);
+	m_tNodeID					= static_cast<u32>(-1);
 	m_flags.one					();
 	m_story_id					= INVALID_STORY_ID;
 	m_spawn_story_id			= INVALID_SPAWN_STORY_ID;
@@ -379,7 +379,7 @@ CSE_ALifeObject::CSE_ALifeObject			(LPCSTR caSection) : CSE_Abstract(caSection)
     fp_data.inc					();
 #endif // XRSE_FACTORY_EXPORTS
 	m_flags.set					(flOfflineNoMove,FALSE);
-	seed						(u32(CPU::QPC() & 0xffffffff));
+	seed						(static_cast<u32>(CPU::QPC() & 0xffffffff));
 }
 
 #ifdef XRGAME_EXPORTS
@@ -524,7 +524,7 @@ u32	CSE_ALifeObject::ef_equipment_type		() const
 {
 	string16					temp; CLSID2TEXT(m_tClassID,temp);
 	R_ASSERT3	(false,"Invalid alife equipment type request, virtual function is not properly overloaded!",temp);
-	return		(u32(-1));
+	return		static_cast<u32>(-1);
 //	return		(6);
 }
 
@@ -532,7 +532,7 @@ u32	 CSE_ALifeObject::ef_main_weapon_type	() const
 {
 	string16					temp; CLSID2TEXT(m_tClassID,temp);
 	R_ASSERT3	(false,"Invalid alife main weapon type request, virtual function is not properly overloaded!",temp);
-	return		(u32(-1));
+	return		static_cast<u32>(-1);
 //	return		(5);
 }
 
@@ -548,7 +548,7 @@ u32	CSE_ALifeObject::ef_detector_type		() const
 {
 	string16					temp; CLSID2TEXT(m_tClassID,temp);
 	R_ASSERT3	(false,"Invalid alife detector type request, virtual function is not properly overloaded!",temp);
-	return		(u32(-1));
+	return		static_cast<u32>(-1);
 }
 
 bool CSE_ALifeObject::used_ai_locations		() const
@@ -582,22 +582,22 @@ bool CSE_ALifeObject::interactive			() const
 
 void CSE_ALifeObject::use_ai_locations		(bool value)
 {
-	m_flags.set					(flUsedAI_Locations, BOOL(value));
+	m_flags.set					(flUsedAI_Locations, static_cast<BOOL>(value));
 }
 
 void CSE_ALifeObject::can_switch_online		(bool value)
 {
-	m_flags.set					(flSwitchOnline,BOOL(value));
+	m_flags.set					(flSwitchOnline,static_cast<BOOL>(value));
 }
 
 void CSE_ALifeObject::can_switch_offline	(bool value)
 {
-	m_flags.set					(flSwitchOffline,BOOL(value));
+	m_flags.set					(flSwitchOffline,static_cast<BOOL>(value));
 }
 
 void CSE_ALifeObject::interactive			(bool value)
 {
-	m_flags.set					(flInteractive,BOOL(value));
+	m_flags.set					(flInteractive,static_cast<BOOL>(value));
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -664,7 +664,7 @@ void CSE_ALifeGroupAbstract::FillProps		(LPCSTR pref, PropItemVec& items)
 CSE_ALifeDynamicObject::CSE_ALifeDynamicObject(LPCSTR caSection) : CSE_ALifeObject(caSection)
 {
 	m_tTimeID					= 0;
-	m_switch_counter			= u64(-1);
+	m_switch_counter			= static_cast<u64>(-1);
 }
 
 CSE_ALifeDynamicObject::~CSE_ALifeDynamicObject()
@@ -890,8 +890,8 @@ void CSE_ALifeSpaceRestrictor::FillProps		(LPCSTR pref, PropItemVec& items)
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifeLevelChanger::CSE_ALifeLevelChanger(LPCSTR caSection) : CSE_ALifeSpaceRestrictor(caSection)
 {
-	m_tNextGraphID				= GameGraph::_GRAPH_ID(-1);
-	m_dwNextNodeID				= u32(-1);
+	m_tNextGraphID				= static_cast<GameGraph::_GRAPH_ID>(-1);
+	m_dwNextNodeID				= static_cast<u32>(-1);
 	m_tNextPosition.set			(0.f,0.f,0.f);
 	m_tAngles.set				(0.f,0.f,0.f);
 #ifdef XRSE_FACTORY_EXPORTS
@@ -1002,7 +1002,7 @@ CSE_ALifeObjectPhysic::CSE_ALifeObjectPhysic(LPCSTR caSection) : CSE_ALifeDynami
 #else
 	m_freeze_time				= 0;
 #endif
-	m_relevent_random.seed		(u32(CPU::GetCLK() & u32(-1)));
+	m_relevent_random.seed		(static_cast<u32>(CPU::GetCLK() & u32(-1)));
 }
 
 CSE_ALifeObjectPhysic::~CSE_ALifeObjectPhysic		() 
@@ -1119,7 +1119,7 @@ void CSE_ALifeObjectPhysic::UPDATE_Read		(NET_Packet	&tNetPacket)
 	m_u8NumItems					= num_items.num_items;
 
 	R_ASSERT2						(
-		m_u8NumItems < (u8(1) << 5),
+		m_u8NumItems < (static_cast<u8>(1) << 5),
 		make_string("%d",m_u8NumItems)
 		);
 	
@@ -1203,7 +1203,7 @@ void CSE_ALifeObjectPhysic::UPDATE_Write	(NET_Packet	&tNetPacket)
 	num_items.num_items				= m_u8NumItems;
 
 	R_ASSERT2						(
-		num_items.num_items < (u8(1) << 5),
+		num_items.num_items < (static_cast<u8>(1) << 5),
 		make_string("%d",num_items.num_items)
 		);
 
@@ -1624,7 +1624,7 @@ CSE_ALifeSchedulable::CSE_ALifeSchedulable	(LPCSTR caSection)
 {
 	m_tpCurrentBestWeapon		= 0;
 	m_tpBestDetector			= 0;
-	m_schedule_counter			= u64(-1);
+	m_schedule_counter			= static_cast<u64>(-1);
 }
 
 CSE_ALifeSchedulable::~CSE_ALifeSchedulable	()
@@ -1645,28 +1645,28 @@ u32	CSE_ALifeSchedulable::ef_creature_type	() const
 {
 	string16					temp; CLSID2TEXT(base()->m_tClassID,temp);
 	R_ASSERT3					(false,"Invalid alife creature type request, virtual function is not properly overloaded!",temp);
-	return						(u32(-1));
+	return						static_cast<u32>(-1);
 }
 
 u32	 CSE_ALifeSchedulable::ef_anomaly_type	() const
 {
 	string16					temp; CLSID2TEXT(base()->m_tClassID,temp);
 	R_ASSERT3					(false,"Invalid alife anomaly type request, virtual function is not properly overloaded!",temp);
-	return						(u32(-1));
+	return						static_cast<u32>(-1);
 }
 
 u32	 CSE_ALifeSchedulable::ef_weapon_type	() const
 {
 	string16					temp; CLSID2TEXT(base()->m_tClassID,temp);
 	R_ASSERT3					(false,"Invalid alife weapon type request, virtual function is not properly overloaded!",temp);
-	return						(u32(-1));
+	return						static_cast<u32>(-1);
 }
 
 u32	 CSE_ALifeSchedulable::ef_detector_type	() const
 {
 	string16					temp; CLSID2TEXT(base()->m_tClassID,temp);
 	R_ASSERT3					(false,"Invalid alife detector type request, virtual function is not properly overloaded!",temp);
-	return						(u32(-1));
+	return						static_cast<u32>(-1);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1846,7 +1846,7 @@ void CSE_ALifeCar::data_save(NET_Packet &tNetPacket)
 	tNetPacket.w_vec3(o_Position);
 	tNetPacket.w_vec3(o_Angle);
 	{
-		tNetPacket.w_u16(u16(door_states.size()));
+		tNetPacket.w_u16(static_cast<u16>(door_states.size()));
 		xr_vector<SDoorState>::iterator i=door_states.begin(),e=door_states.end();
 		for(;e!=i;++i)
 		{
@@ -1855,7 +1855,7 @@ void CSE_ALifeCar::data_save(NET_Packet &tNetPacket)
 		//door_states.clear();
 	}
 	{
-		tNetPacket.w_u16(u16(wheel_states.size()));
+		tNetPacket.w_u16(static_cast<u16>(wheel_states.size()));
 		xr_vector<SWheelState>::iterator i=wheel_states.begin(),e=wheel_states.end();
 		for(;e!=i;++i)
 		{

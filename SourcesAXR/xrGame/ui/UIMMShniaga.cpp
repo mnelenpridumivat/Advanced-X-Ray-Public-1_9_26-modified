@@ -276,7 +276,7 @@ void CUIMMShniaga::SelectBtn(int btn)
 void CUIMMShniaga::SelectBtn(CUIWindow* btn)
 {
 	R_ASSERT(m_page >= 0);
-	for (int i = 0; i<(int)m_buttons.size(); ++i)
+	for (int i = 0; i<static_cast<int>(m_buttons.size()); ++i)
 	{
 		if (0 == m_page)
 		{
@@ -388,11 +388,11 @@ int CUIMMShniaga::BtnCount()
 {
 	R_ASSERT(-1);
 	if (m_page == 0)
-        return (int)m_buttons.size();
+        return static_cast<int>(m_buttons.size());
 	else if (m_page == 1)
-		return (int)m_buttons_new.size();
+		return static_cast<int>(m_buttons_new.size());
 	else if (m_page == 2)
-		return (int)m_buttons_new_network.size();
+		return static_cast<int>(m_buttons_new_network.size());
 	else 
 		return -1;
 }
@@ -441,7 +441,7 @@ void CUIMMShniaga::ProcessEvent(EVENT ev)
 				m_origin = m_shniaga->GetWndPos().y;
 				m_destination = m_selected->GetWndPos().y - m_magnifier->GetWndPos().y;
 				m_destination += m_offset;
-				m_run_time = u32((log(1 + abs(m_origin - m_destination))/log(GetHeight()))*300);
+				m_run_time = static_cast<u32>((log(1 + abs(m_origin - m_destination)) / log(GetHeight())) * 300);
 				if (m_run_time < 100)
 					m_run_time = 100;
 

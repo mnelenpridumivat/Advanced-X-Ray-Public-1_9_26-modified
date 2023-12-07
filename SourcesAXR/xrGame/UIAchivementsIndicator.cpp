@@ -36,7 +36,7 @@ void CUIAchivementIndicator::AddAchivement	(shared_str const & achivement_name,
 	tmp_item->UIIcon.InitTexture(achivement_name.c_str());
 	tmp_item->SetColorAnimation	(color_animation.c_str(), LA_ONLYALPHA | LA_TEXTURECOLOR);
 	Fvector2 sz;
-	sz.set(int(width), int(height));
+	sz.set(static_cast<int>(width), static_cast<int>(height));
 	tmp_item->SetWndSize(sz);
 	tmp_item->UIIcon.SetWndSize(sz);
 }

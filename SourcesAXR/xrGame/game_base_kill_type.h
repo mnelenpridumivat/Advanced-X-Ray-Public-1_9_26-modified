@@ -4,7 +4,7 @@ enum KILL_TYPE{
 	KT_HIT = 0,
 	KT_BLEEDING,
 	KT_RADIATION,
-	KT_FORCEDWORD = u32(-1)
+	KT_FORCEDWORD = static_cast<u32>(-1)
 };
 
 enum SPECIAL_KILL_TYPE
@@ -21,7 +21,7 @@ enum SPECIAL_KILL_TYPE
 	SKT_NEWRANK,
 	SKT_EYESHOT,
 
-	SKT_FORCEDWORD = u32(-1)
+	SKT_FORCEDWORD = static_cast<u32>(-1)
 };
 
 enum KILL_RES 
@@ -33,5 +33,5 @@ enum KILL_RES
 	KR_RIVAL,
 	KR_RIVAL_CRITICAL,
 
-	KR_FORCEDWORD	= u32 (-1)
+	KR_FORCEDWORD	= static_cast<u32>(-1)
 };

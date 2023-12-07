@@ -60,7 +60,7 @@ private:
 	template <>
 		T_ITEM				convert<float>		(LPCSTR str)
 	{
-		return (float)atof(str);
+		return static_cast<float>(atof(str));
 	}
 
 };
@@ -102,7 +102,7 @@ typename CSIni_Table::ITEM_TABLE& CSIni_Table::table	()
 
 	VERIFY(table_sect);
 	std::size_t table_size = T_INI_LOADER::GetMaxIndex()+1;
-	std::size_t cur_table_width = (table_width == -1)?table_size:(std::size_t)table_width;
+	std::size_t cur_table_width = (table_width == -1)?table_size:static_cast<std::size_t>(table_width);
 
 	m_pTable->resize(table_size);
 
@@ -121,7 +121,7 @@ typename CSIni_Table::ITEM_TABLE& CSIni_Table::table	()
 		(*m_pTable)[cur_index].resize(cur_table_width);
 		for(std::size_t j=0; j<cur_table_width; j++)
 		{
-			(*m_pTable)[cur_index][j] = convert<typename T_ITEM>(_GetItem(*(*i).second,(int)j,buffer));
+			(*m_pTable)[cur_index][j] = convert<typename T_ITEM>(_GetItem(*(*i).second,static_cast<int>(j),buffer));
 		}
 	}
 

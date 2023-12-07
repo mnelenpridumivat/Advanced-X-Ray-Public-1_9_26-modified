@@ -177,7 +177,7 @@ IStateManagerBase *CPsyDog::create_state_manager()
 
 u8 CPsyDog::get_phantoms_count()
 {
-	return u8(m_storage.size());
+	return static_cast<u8>(m_storage.size());
 }
 
 //////////////////////////////////////////////////////////////////////////

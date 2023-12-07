@@ -41,7 +41,7 @@ void CStateMonsterDangerMoveToHomePointAbstract::initialize()
 	m_target_node			= object->Home->get_place_in_cover();
 	m_skip_camp				= false;
 
-	if (m_target_node == u32(-1)) {
+	if (m_target_node == static_cast<u32>(-1)) {
 		m_target_node	= object->Home->get_place();
 		m_skip_camp		= true;
 	}
@@ -81,7 +81,7 @@ TEMPLATE_SPECIALIZATION
 bool CStateMonsterDangerMoveToHomePointAbstract::check_completion()
 {
 	if (object->HitMemory.get_last_hit_time() > time_state_started) return true;
-	if (m_skip_camp && (prev_substate != u32(-1)) && (prev_substate != eStatePanic_HomePoint_Hide) ) return true;
+	if (m_skip_camp && (prev_substate != static_cast<u32>(-1)) && (prev_substate != eStatePanic_HomePoint_Hide) ) return true;
 
 	return false;
 }
@@ -93,7 +93,7 @@ bool CStateMonsterDangerMoveToHomePointAbstract::check_completion()
 TEMPLATE_SPECIALIZATION
 void CStateMonsterDangerMoveToHomePointAbstract::reselect_state()
 {
-	if (prev_substate == u32(-1)) {
+	if (prev_substate == static_cast<u32>(-1)) {
 		select_state(eStatePanic_HomePoint_Hide);
 		return;
 	} 

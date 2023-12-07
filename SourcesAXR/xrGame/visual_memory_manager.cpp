@@ -141,7 +141,7 @@ void CVisualMemoryManager::reinit					()
 	if (m_object)
 		m_object->feel_vision_clear		();
 
-	m_last_update_time					= u32(-1);
+	m_last_update_time					= static_cast<u32>(-1);
 }
 
 void CVisualMemoryManager::reload				(LPCSTR section)
@@ -180,7 +180,7 @@ u32	CVisualMemoryManager::visible_object_time_last_seen	(const CObject *object) 
 	if (I != m_objects->end()) 
 		return (I->m_level_time);	
 	else 
-		return u32(-1);
+		return static_cast<u32>(-1);
 }
 
 bool CVisualMemoryManager::visible_right_now	(const CGameObject *game_object) const
@@ -246,7 +246,7 @@ float CVisualMemoryManager::object_visible_distance(const CGameObject *game_obje
 				m_object->Visual()
 			)
 			->LL_GetTransform		(
-				u16(m_object->eye_bone)
+				static_cast<u16>(m_object->eye_bone)
 			);
 
 		Fvector							temp;
@@ -325,8 +325,8 @@ float CVisualMemoryManager::get_object_velocity	(const CGameObject *game_object,
 	return					(
 		pos1.vPosition.distance_to(pos0.vPosition)/
 		(
-			float(pos1.dwTime)/1000.f - 
-			float(pos0.dwTime)/1000.f
+			static_cast<float>(pos1.dwTime)/1000.f - 
+			static_cast<float>(pos0.dwTime)/1000.f
 		)
 	);
 }
@@ -582,7 +582,7 @@ float CVisualMemoryManager::feel_vision_mtl_transp(CObject* O, u32 element)
 	if (O){
 		IKinematics* V		= smart_cast<IKinematics*>(O->Visual());
 		if (0!=V){
-			CBoneData& B	= V->LL_GetData((u16)element);
+			CBoneData& B	= V->LL_GetData(static_cast<u16>(element));
 			vis				= GMLib.GetMaterialByIdx(B.game_mtl_idx)->fVisTransparencyFactor;
 		}
 	}else{
@@ -655,7 +655,7 @@ CVisibleObject *CVisualMemoryManager::visible_object	(const CGameObject *game_ob
 IC	squad_mask_type CVisualMemoryManager::mask			() const
 {
 	if (!m_stalker)
-		return					(squad_mask_type(-1));
+		return					static_cast<squad_mask_type>(-1);
 
 	return						(m_stalker->agent_manager().member().mask(m_stalker));
 }
@@ -800,7 +800,7 @@ void CVisualMemoryManager::save	(NET_Packet &packet) const
 			++count;
 	}
 
-	packet.w_u8					((u8)count);
+	packet.w_u8					(static_cast<u8>(count));
 
 	if ( !count )
 		return;

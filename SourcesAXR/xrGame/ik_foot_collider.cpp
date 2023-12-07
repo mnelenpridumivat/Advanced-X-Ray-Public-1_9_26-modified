@@ -149,7 +149,7 @@ IC bool	get_plane_dynamic(  ik_pick_result &r, Fvector &next_pos, float &next_ra
 			float dist = pick_dist;
 			IKinematics::pick_result res;
 		
-			if( K->PickBone(R.O->XFORM(), res , dist,  pos, pick_v, (u16) R.element ) )
+			if( K->PickBone(R.O->XFORM(), res , dist,  pos, pick_v, static_cast<u16>(R.element) ) )
 			{
 				//cld.collided = true;
 				r.position.add( pos, Fvector( ).mul( pick_v, res.dist ) );

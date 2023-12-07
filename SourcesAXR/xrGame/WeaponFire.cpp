@@ -59,14 +59,14 @@ void CWeapon::FireTrace		(const Fvector& P, const Fvector& D)
 
 	CCartridge &l_cartridge = m_magazine.back();
 //	Msg("ammo - %s", l_cartridge.m_ammoSect.c_str());
-	VERIFY		(u16(-1) != l_cartridge.bullet_material_idx);
+	VERIFY		(static_cast<u16>(-1) != l_cartridge.bullet_material_idx);
 	//-------------------------------------------------------------	
 	bool is_tracer	= m_bHasTracers && !!l_cartridge.m_flags.test(CCartridge::cfTracer);
 	if ( is_tracer && !IsGameTypeSingle() )
 		is_tracer	= is_tracer	/*&& (m_magazine.size() % 3 == 0)*/ && !IsSilencerAttached();
 
 	l_cartridge.m_flags.set	(CCartridge::cfTracer, is_tracer );
-	if (m_u8TracerColorID != u8(-1))
+	if (m_u8TracerColorID != static_cast<u8>(-1))
 		l_cartridge.param_s.u8ColorID	= m_u8TracerColorID;
 	//-------------------------------------------------------------
 	//повысить изношенность оружия с учетом влияния конкретного патрона
@@ -128,7 +128,7 @@ void CWeapon::FireTrace		(const Fvector& P, const Fvector& D)
 	m_magazine.pop_back	();
 	--iAmmoElapsed;
 
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
+	VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
 }
 
 void CWeapon::StopShooting()

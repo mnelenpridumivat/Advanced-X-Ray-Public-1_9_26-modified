@@ -178,7 +178,7 @@ void   CPoltergeist::update_detection ()
 	Fvector const actor_pos				=	Actor()->Position();
 	float const dist2actor				=	actor_pos.distance_to(Position());
 
-	float const time_passed_sec			=	float(Device.dwTimeGlobal - m_last_detection_time) / 1000.f;
+	float const time_passed_sec			=	static_cast<float>(Device.dwTimeGlobal - m_last_detection_time) / 1000.f;
 	m_last_detection_time				=	Device.dwTimeGlobal;
 	
 	if ( !get_actor_ignore() &&
@@ -214,8 +214,8 @@ void   CPoltergeist::update_detection ()
 	{
 		if ( !m_detection_pp_type_index )
 		{
-			for (	m_detection_pp_type_index		=	(u32)effPoltergeistTeleDetectStartEffect; 
-					Actor()->Cameras().GetPPEffector	((EEffectorPPType)m_detection_pp_type_index); 
+			for (	m_detection_pp_type_index		=	static_cast<u32>(effPoltergeistTeleDetectStartEffect); 
+					Actor()->Cameras().GetPPEffector	(static_cast<EEffectorPPType>(m_detection_pp_type_index)); 
 					++m_detection_pp_type_index ) { ; }
 	
 			AddEffector						(Actor(), m_detection_pp_type_index, m_detection_pp_effector_name, 

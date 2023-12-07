@@ -112,7 +112,7 @@ CIKLimb&	CIKLimb:: operator = ( const CIKLimb& l )
 void CIKLimb::Invalidate()
 {
 
-	m_id					=u16( -1 )											;
+	m_id					=static_cast<u16>(-1)											;
 	m_bones[0]				=BI_NONE											;	
 	m_bones[1]				=BI_NONE											;	
 	m_bones[2]				=BI_NONE											;	
@@ -1034,7 +1034,7 @@ struct ssaved_callback :
 static void	_BCL get_matrix( CBoneInstance* P )
 {
 	VERIFY( _valid(  P->mTransform ) );
-	*((Fmatrix*)P->callback_param()) = P->mTransform;
+	*static_cast<Fmatrix*>(P->callback_param()) = P->mTransform;
 
 }
 u16	CIKLimb::foot_matrix_predict ( Fmatrix& foot, Fmatrix& toe, float time, IKinematicsAnimated *K ) const 
@@ -1065,7 +1065,7 @@ u16	CIKLimb::foot_matrix_predict ( Fmatrix& foot, Fmatrix& toe, float time, IKin
 	bi2.set_callback( bctCustom, get_matrix, &m_b2, FALSE );
 	bi3.set_callback( bctCustom, get_matrix, &m_b3, FALSE );
 
-	Kinematics()->Bone_GetAnimPos( foot, m_bones[3], u8(-1), false );
+	Kinematics()->Bone_GetAnimPos( foot, m_bones[3], static_cast<u8>(-1), false );
 	u16 ref_b = m_foot.get_ref_bone( m_b2, m_b3 );
 	foot = m_b2;
 	toe = m_b3;
@@ -1256,7 +1256,7 @@ IC void CIKLimb::get_start( Fmatrix &start, SCalculateData &D, u16 bone )
 
 void 	CIKLimb::BonesCallback0( CBoneInstance* B )
 {
-	SCalculateData* D	=(SCalculateData*)B->callback_param();
+	SCalculateData* D	=static_cast<SCalculateData*>(B->callback_param());
 	VERIFY( D );
 	float	const	*x	=D->m_angles;
 	Fmatrix			bm;
@@ -1279,7 +1279,7 @@ void 	CIKLimb::BonesCallback0( CBoneInstance* B )
 }
 void 	CIKLimb::BonesCallback1				( CBoneInstance* B )
 {
-	SCalculateData	*D	=(SCalculateData*)B->callback_param();
+	SCalculateData	*D	=static_cast<SCalculateData*>(B->callback_param());
 
 	float	const	*x	=D->m_angles;
 	Fmatrix 		bm;
@@ -1292,7 +1292,7 @@ void 	CIKLimb::BonesCallback1				( CBoneInstance* B )
 }
 void 	CIKLimb::BonesCallback2				( CBoneInstance* B )
 {
-	SCalculateData	*D		=(SCalculateData*)B->callback_param();
+	SCalculateData	*D		=static_cast<SCalculateData*>(B->callback_param());
 	
 	float	const	*x		=D->m_angles;
 	Fmatrix 		bm;

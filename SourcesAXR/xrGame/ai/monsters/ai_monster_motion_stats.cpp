@@ -26,7 +26,7 @@ bool CMotionStats::is_good_motion(u32 elems_checked)
 	if (index == 0) return true;
 	else from_index = index-1;
 
-	if (s32(index - elems_checked) < 0) return true;
+	if (static_cast<s32>(index - elems_checked) < 0) return true;
 	else to_index = index - elems_checked;
 	
 	bool bGood = true;
@@ -39,7 +39,7 @@ bool CMotionStats::is_good_motion(u32 elems_checked)
 
 		float	cur_dist	= _data[i].position.distance_to(_data[i-1].position); 
 		TTime	delta_t		= _data[i].time - _data[i-1].time;
-		float	speed		= cur_dist * 1000.f / float(delta_t);
+		float	speed		= cur_dist * 1000.f / static_cast<float>(delta_t);
 		
 		if (fsimilar(_data[i-1].speed,0.0f)) continue; 
 		

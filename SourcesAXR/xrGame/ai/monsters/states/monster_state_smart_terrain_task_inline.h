@@ -119,7 +119,7 @@ void CStateMonsterSmartTerrainTaskAbstract::setup_substates()
 TEMPLATE_SPECIALIZATION
 void CStateMonsterSmartTerrainTaskAbstract::reselect_state()
 {
-	if (prev_substate == u32(-1)) {
+	if (prev_substate == static_cast<u32>(-1)) {
 		if (get_state(eStateSmartTerrainTaskGamePathWalk)->check_start_conditions()) {
 			select_state(eStateSmartTerrainTaskGamePathWalk);
 		} else {
@@ -156,10 +156,10 @@ void CStateMonsterSmartTerrainTaskAbstract::check_force_state()
 	// check if task has changed
 	CALifeSmartTerrainTask			*task = monster->brain().smart_terrain().task(monster);
 	if (!task || (m_current_task != task)) {
-		if (current_substate != u32(-1)) get_state_current()->critical_finalize();
+		if (current_substate != static_cast<u32>(-1)) get_state_current()->critical_finalize();
 		
-		current_substate = u32(-1);
-		prev_substate	 = u32(-1);
+		current_substate = static_cast<u32>(-1);
+		prev_substate	 = static_cast<u32>(-1);
 		
 		m_current_task	= task;
 	}

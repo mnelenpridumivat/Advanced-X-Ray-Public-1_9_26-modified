@@ -127,7 +127,7 @@ public:
 	xr_vector<fastdelegate::FastDelegate0<>>    GameLoadedCallback;
 };
 
-IC CGamePersistent&		GamePersistent()		{ return *((CGamePersistent*) g_pGamePersistent);			}
+IC CGamePersistent&		GamePersistent()		{ return *static_cast<CGamePersistent*>(g_pGamePersistent);			}
 
 #endif //GamePersistentH
 

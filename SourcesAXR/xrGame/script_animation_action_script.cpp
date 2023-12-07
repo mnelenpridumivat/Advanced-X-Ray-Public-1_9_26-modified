@@ -19,22 +19,22 @@ void CScriptAnimationAction::script_register(lua_State *L)
 		class_<CScriptAnimationAction>("anim")
 			.enum_("type")
 			[
-				value("free",					int(MonsterSpace::eMentalStateFree)),
-				value("danger",					int(MonsterSpace::eMentalStateDanger)),
-				value("panic",					int(MonsterSpace::eMentalStatePanic))
+				value("free",					static_cast<int>(MonsterSpace::eMentalStateFree)),
+				value("danger",					static_cast<int>(MonsterSpace::eMentalStateDanger)),
+				value("panic",					static_cast<int>(MonsterSpace::eMentalStatePanic))
 			]
 			.enum_("monster")
 			[
-				value("stand_idle",				int(MonsterSpace::eAA_StandIdle)),
-				value("capture_prepare",		int(MonsterSpace::eAA_CapturePrepare)),
-				value("sit_idle",				int(MonsterSpace::eAA_SitIdle)),
-				value("lie_idle",				int(MonsterSpace::eAA_LieIdle)),
-				value("eat",					int(MonsterSpace::eAA_Eat)),
-				value("sleep",					int(MonsterSpace::eAA_Sleep)),
-				value("rest",					int(MonsterSpace::eAA_Rest)),
-				value("attack",					int(MonsterSpace::eAA_Attack)),
-				value("look_around",			int(MonsterSpace::eAA_LookAround)),
-				value("turn",					int(MonsterSpace::eAA_Turn))
+				value("stand_idle",				static_cast<int>(MonsterSpace::eAA_StandIdle)),
+				value("capture_prepare",		static_cast<int>(MonsterSpace::eAA_CapturePrepare)),
+				value("sit_idle",				static_cast<int>(MonsterSpace::eAA_SitIdle)),
+				value("lie_idle",				static_cast<int>(MonsterSpace::eAA_LieIdle)),
+				value("eat",					static_cast<int>(MonsterSpace::eAA_Eat)),
+				value("sleep",					static_cast<int>(MonsterSpace::eAA_Sleep)),
+				value("rest",					static_cast<int>(MonsterSpace::eAA_Rest)),
+				value("attack",					static_cast<int>(MonsterSpace::eAA_Attack)),
+				value("look_around",			static_cast<int>(MonsterSpace::eAA_LookAround)),
+				value("turn",					static_cast<int>(MonsterSpace::eAA_Turn))
 			]
 
 			.def(								constructor<>())
@@ -47,6 +47,6 @@ void CScriptAnimationAction::script_register(lua_State *L)
 			
 			.def("anim",						&CScriptAnimationAction::SetAnimation)
 			.def("type",						&CScriptAnimationAction::SetMentalState)
-			.def("completed",					(bool (CScriptAnimationAction::*)())(&CScriptAnimationAction::completed))
+			.def("completed",					static_cast<bool (CScriptAnimationAction::*)()>(&CScriptAnimationAction::completed))
 	];
 }

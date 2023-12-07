@@ -146,7 +146,7 @@ IC	CCoverEvaluatorAngle::CCoverEvaluatorAngle	(CRestrictedObject *object) : inhe
 	m_direction.set		(flt_max,flt_max,flt_max);
 	m_best_direction.set(flt_max,flt_max,flt_max);
 	m_best_alpha		= flt_max;;
-	m_level_vertex_id	= u32(-1);
+	m_level_vertex_id	= static_cast<u32>(-1);
 }
 
 IC	void CCoverEvaluatorAngle::setup		(const Fvector &enemy_position, float min_enemy_distance, float	max_enemy_distance, u32 level_vertex_id)

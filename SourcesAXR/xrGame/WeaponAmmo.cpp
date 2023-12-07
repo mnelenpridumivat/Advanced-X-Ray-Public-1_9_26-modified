@@ -18,7 +18,7 @@ CCartridge::CCartridge()
 	m_flags.assign			(cfTracer | cfRicochet);
 	m_ammoSect = NULL;
 	param_s.Init();
-	bullet_material_idx = u16(-1);
+	bullet_material_idx = static_cast<u16>(-1);
 }
 
 void CCartridge::Load(LPCSTR section, u8 LocalAmmoType) 
@@ -64,7 +64,7 @@ void CCartridge::Load(LPCSTR section, u8 LocalAmmoType)
 	m_flags.set			(cfExplosive, pSettings->r_bool(section, "explosive"));
 
 	bullet_material_idx		=  GMLib.GetMaterialIdx(WEAPON_MATERIAL_NAME);
-	VERIFY	(u16(-1)!=bullet_material_idx);
+	VERIFY	(static_cast<u16>(-1)!=bullet_material_idx);
 	VERIFY	(param_s.fWallmarkSize>0);
 
 	m_InvShortName			= CStringTable().translate( pSettings->r_string(section, "inv_name_short"));
@@ -117,7 +117,7 @@ void CWeaponAmmo::Load(LPCSTR section)
 	cartridge_param.fWallmarkSize	= pSettings->r_float(section, "wm_size");
 	R_ASSERT				(cartridge_param.fWallmarkSize>0);
 
-	m_boxSize				= (u16)pSettings->r_s32(section, "box_size");
+	m_boxSize				= static_cast<u16>(pSettings->r_s32(section, "box_size"));
 	m_boxCurr				= m_boxSize;	
 }
 
@@ -245,7 +245,7 @@ float CWeaponAmmo::Weight() const
 	if (m_boxSize > 0)
 	{
 		float res = inherited::Weight();
-		res *= (float)m_boxCurr / (float)m_boxSize;
+		res *= static_cast<float>(m_boxCurr) / static_cast<float>(m_boxSize);
 		return res;
 	}
 	return 0;
@@ -255,7 +255,7 @@ u32 CWeaponAmmo::Cost() const
 {
 	u32 res = inherited::Cost();
 
-	res = iFloor(res*(float)m_boxCurr/(float)m_boxSize+0.5f);
+	res = iFloor(res*static_cast<float>(m_boxCurr)/static_cast<float>(m_boxSize)+0.5f);
 
 	return res;
 }

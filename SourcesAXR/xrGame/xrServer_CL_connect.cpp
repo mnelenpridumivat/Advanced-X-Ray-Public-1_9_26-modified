@@ -75,7 +75,7 @@ void xrServer::SendConfigFinished(ClientID const & clientId)
 void xrServer::SendConnectionData(IClient* _CL)
 {
 	conn_spawned_ids.clear();
-	xrClientData*	CL				= (xrClientData*)_CL;
+	xrClientData*	CL				= static_cast<xrClientData*>(_CL);
 	NET_Packet		P;
 	// Replicate current entities on to this client
 	xrS_entities::iterator	I=entities.begin(),E=entities.end();
@@ -98,7 +98,7 @@ void xrServer::SendConnectionData(IClient* _CL)
 
 void xrServer::OnCL_Connected		(IClient* _CL)
 {
-	xrClientData*	CL				= (xrClientData*)_CL;
+	xrClientData*	CL				= static_cast<xrClientData*>(_CL);
 	CL->net_Accepted = TRUE;
 	/*if (Level().IsDemoPlay())
 	{

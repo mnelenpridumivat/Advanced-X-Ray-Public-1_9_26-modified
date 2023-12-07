@@ -2,7 +2,7 @@
 
 namespace GameObject {
 	enum ECallbackType {
-		eTradeStart = u32(0),
+		eTradeStart = static_cast<u32>(0),
 		eTradeStop,
 		eTradeSellBuyItem,
 		eTradePerformTradeOperation,
@@ -61,7 +61,7 @@ namespace GameObject {
 		eDetachVehicle,
 		eUseVehicle,
 
-		eDummy = u32(-1),
+		eDummy = static_cast<u32>(-1),
 	};
 };
 

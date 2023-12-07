@@ -26,7 +26,7 @@ void CStateMonsterRestIdleAbstract::initialize()
 {
 	inherited::initialize();
 
-	m_target_node = u32(-1);
+	m_target_node = static_cast<u32>(-1);
 	
 	// try to get cover
 	const CCoverPoint *point = object->CoverMan->find_cover(object->Position(), 5.f, 10.f);
@@ -62,12 +62,12 @@ void CStateMonsterRestIdleAbstract::critical_finalize()
 TEMPLATE_SPECIALIZATION
 void CStateMonsterRestIdleAbstract::reselect_state()
 {
-	if ((prev_substate == u32(-1)) && (m_target_node != u32(-1))) {
+	if ((prev_substate == static_cast<u32>(-1)) && (m_target_node != static_cast<u32>(-1))) {
 		select_state(eStateRest_WalkToCover);
 		return;
 	} 
 
-	if ((prev_substate == eStateRest_WalkToCover) || (prev_substate == u32(-1))) {
+	if ((prev_substate == eStateRest_WalkToCover) || (prev_substate == static_cast<u32>(-1))) {
 		select_state(eStateRest_LookOpenPlace);
 		return;
 	}

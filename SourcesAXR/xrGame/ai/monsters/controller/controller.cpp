@@ -326,12 +326,12 @@ void CController::set_controlled_task(u32 task)
 {
 	if (!HasUnderControl()) return;
 	
-	const CEntity *object = ((((ETask)task) == eTaskNone) ? 0 : ((((ETask)task) == eTaskFollow) ? this : EnemyMan.get_enemy()));
+	const CEntity *object = ((static_cast<ETask>(task) == eTaskNone) ? 0 : ((static_cast<ETask>(task) == eTaskFollow) ? this : EnemyMan.get_enemy()));
 	
 	for	(u32 i=0; i<m_controlled_objects.size(); i++) {
 		CControlledEntityBase *entity = smart_cast<CControlledEntityBase *>(m_controlled_objects[i]);		
 		entity->get_data().m_object = object;
-		entity->get_data().m_task	= (ETask)task;
+		entity->get_data().m_task	= static_cast<ETask>(task);
 	}
 }
 
@@ -431,7 +431,7 @@ void CController::UpdateCL()
 
 	if (active_control_fx) {
 		u32 time_to_show	= 150;
-		float percent		= float((Device.dwTimeGlobal - time_control_hit_started)) / float(time_to_show);
+		float percent		= static_cast<float>(Device.dwTimeGlobal - time_control_hit_started) / static_cast<float>(time_to_show);
 		float percent2		= 1 - (percent - TEXTURE_SIZE_PERCENT) / 2 ;
 
 		

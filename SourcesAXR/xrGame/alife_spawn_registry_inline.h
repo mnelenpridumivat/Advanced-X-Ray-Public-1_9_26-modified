@@ -47,7 +47,32 @@ IC	void CALifeSpawnRegistry::process_spawns		(SPAWN_IDS &spawns)
 
 IC	const ALife::_SPAWN_ID &CALifeSpawnRegistry::spawn_id	(const ALife::_SPAWN_STORY_ID &spawn_story_id) const
 {
-	SPAWN_STORY_IDS::const_iterator	I = m_spawn_story_ids.find(spawn_story_id);
-	VERIFY2							(I != m_spawn_story_ids.end(),"Spawn story id cannot be found");
-	return							((*I).second);
+	auto it = m_spawn_story_ids.find(spawn_story_id);
+	if (it != m_spawn_story_ids.end())
+		return it->second;
+
+	// KRodin: ¬ оригинале при ненахождении стори айди, возвращалс€ рандомный мусор, на мой взгл€д лучше вернуть -1 и в лог написать, потому что там сто€л VERIFY. ’от€ € не уверен
+	// что надо писать...
+	Msg("!![%s] Spawn story id [%u] cannot be found!", __FUNCTION__, spawn_story_id);
+	return static_cast<ALife::_SPAWN_ID>(-1);
+
+
+	/*SPAWN_STORY_IDS::const_iterator	I = m_spawn_story_ids.find(spawn_story_id);
+	VERIFY3							(I != m_spawn_story_ids.end(),"Spawn story id [%u] cannot be found", spawn_story_id);
+	return							(I->second);*/
+}
+
+IC	const ALife::_SPAWN_ID &CALifeSpawnRegistry::spawn_id	(const char* obj_name) const
+{
+	auto it = m_spawn_ids_by_name.find(obj_name);
+	if (it != m_spawn_ids_by_name.end())
+		return it->second;
+
+	// KRodin: а вот тут надо в лог писать или нет? ’з, надеюсь т.к. метод новый, код с его использованием будут писать более адекватно и поэтому вывод в лог не нужен.
+	return static_cast<ALife::_SPAWN_ID>(-1);
+
+
+	/*SPAWN_STORY_IDS::const_iterator	I = m_spawn_ids_by_name.find(obj_name);
+	VERIFY3							(I != m_spawn_ids_by_name.end(), "Spawn story id [%s] cannot be found", obj_name);
+	return							((*I).second);*/
 }

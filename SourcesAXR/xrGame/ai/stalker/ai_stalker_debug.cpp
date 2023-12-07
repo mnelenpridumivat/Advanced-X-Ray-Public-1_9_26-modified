@@ -156,7 +156,7 @@ void draw_planner						(const planner_type &brain, LPCSTR start_indent, LPCSTR i
 	DBG_OutText	("%s%sselected    : %s",start_indent,indent,_brain.action2string(brain.solution().front()));
 	// solution
 	DBG_OutText	("%s%ssolution",start_indent,indent);
-	for (int i=0; i<(int)brain.solution().size(); ++i)
+	for (int i=0; i<static_cast<int>(brain.solution().size()); ++i)
 		DBG_OutText("%s%s%s%s",start_indent,indent,indent,_brain.action2string(brain.solution()[i]));
 	// current
 	DBG_OutText	("%s%scurrent world state",start_indent,indent);
@@ -303,7 +303,7 @@ void CAI_Stalker::debug_text			()
 		DBG_OutText	("%s%sobjects     : %d",indent,indent,memory().hit().objects().size());
 		ALife::_OBJECT_ID					object_id = memory().hit().last_hit_object_id();
 		DBG_OutText	("%s%slast hit object id   : %d",indent,indent,object_id);
-		CObject								*object = (object_id == ALife::_OBJECT_ID(-1)) ? 0 : Level().Objects.net_Find(object_id);
+		CObject								*object = (object_id == static_cast<ALife::_OBJECT_ID>(-1)) ? 0 : Level().Objects.net_Find(object_id);
 		DBG_OutText	("%s%slast hit object name : %s",indent,indent,object ? *object->cName() : "");
 #ifdef USE_SELECTED_HIT
 		if (memory().hit().hit()) {
@@ -413,7 +413,7 @@ void CAI_Stalker::debug_text			()
 	if (memory().danger().selected() && memory().danger().selected()->object()) {
 		DBG_OutText	("%s%sselected",indent,indent);
 		DBG_OutText	("%s%s%stype      : %s",indent,indent,indent,danger_type(memory().danger().selected()->type()));
-		DBG_OutText	("%s%s%stime      : %.3f (%.3f)",indent,indent,indent,float(memory().danger().selected()->time())/1000.f,float(Device.dwTimeGlobal - memory().danger().selected()->time())/1000.f);
+		DBG_OutText	("%s%s%stime      : %.3f (%.3f)",indent,indent,indent,static_cast<float>(memory().danger().selected()->time())/1000.f,static_cast<float>(Device.dwTimeGlobal - memory().danger().selected()->time())/1000.f);
 		DBG_OutText	("%s%s%sinitiator : %s",indent,indent,indent,*memory().danger().selected()->object()->cName());
 		if (g_Alive() && memory().danger().selected()->object())
 			DBG_OutText("%s%s%svisible   : %s",indent,indent,indent,memory().visual().visible_now(memory().danger().selected()->object()) ? "+" : "-");
@@ -998,7 +998,7 @@ public:
 
 BOOL _ray_query_callback	(collide::rq_result& result, LPVOID params)
 {
-	ray_query_param						*param = (ray_query_param*)params;
+	ray_query_param						*param = static_cast<ray_query_param*>(params);
 	param->m_points->push_back			(
 		Fvector().mad(
 			param->m_start_position,
@@ -1277,8 +1277,8 @@ static void fill_bones				(CAI_Stalker& self, Fmatrix const& transform, IKinemat
 	else
 		start_transform					= controller->start_transform();
 
-	u32									buffer_size = u32(bone_count)*sizeof(Fmatrix);
-	Fmatrix*							buffer = (Fmatrix*)_alloca(buffer_size);
+	u32									buffer_size = static_cast<u32>(bone_count)*sizeof(Fmatrix);
+	Fmatrix*							buffer = static_cast<Fmatrix*>(_alloca(buffer_size));
 	buffer_vector<Fmatrix>				bones(buffer, bone_count);
 	for (u16 i = 0; i<bone_count; ++i) {
 		Fmatrix							matrix;
@@ -1745,34 +1745,34 @@ void CAI_Stalker::OnRender				()
 			float						best_value = -1.f;
 
 			for (u32 i=0, j = 0; i<36; ++i) {
-				float				value = ai().level_graph().high_cover_in_direction(float(10*i)/180.f*PI,v);
-				direction.setHP		(float(10*i)/180.f*PI,0);
+				float				value = ai().level_graph().high_cover_in_direction(static_cast<float>(10 * i)/180.f*PI,v);
+				direction.setHP		(static_cast<float>(10 * i)/180.f*PI,0);
 				direction.normalize	();
 				direction.mul		(value*half_size);
 				direction.add		(position);
 				direction.y			= position.y;
 				Level().debug_renderer().draw_line	(Fidentity,position,direction,D3DCOLOR_XRGB(0,0,255));
-				value				= ai().level_graph().compute_high_square(float(10*i)/180.f*PI,PI/2.f,v);
+				value				= ai().level_graph().compute_high_square(static_cast<float>(10 * i)/180.f*PI,PI/2.f,v);
 				if (value > best_value) {
 					best_value		= value;
 					j				= i;
 				}
 			}
 
-			direction.set		(position.x - half_size*float(v->high_cover(0))/15.f,position.y,position.z);
+			direction.set		(position.x - half_size*static_cast<float>(v->high_cover(0))/15.f,position.y,position.z);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,D3DCOLOR_XRGB(255,0,0));
 
-			direction.set		(position.x,position.y,position.z + half_size*float(v->high_cover(1))/15.f);
+			direction.set		(position.x,position.y,position.z + half_size*static_cast<float>(v->high_cover(1))/15.f);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,D3DCOLOR_XRGB(255,0,0));
 
-			direction.set		(position.x + half_size*float(v->high_cover(2))/15.f,position.y,position.z);
+			direction.set		(position.x + half_size*static_cast<float>(v->high_cover(2))/15.f,position.y,position.z);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,D3DCOLOR_XRGB(255,0,0));
 
-			direction.set		(position.x,position.y,position.z - half_size*float(v->high_cover(3))/15.f);
+			direction.set		(position.x,position.y,position.z - half_size*static_cast<float>(v->high_cover(3))/15.f);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,D3DCOLOR_XRGB(255,0,0));
 
-			float				value = ai().level_graph().high_cover_in_direction(float(10*j)/180.f*PI,v);
-			direction.setHP		(float(10*j)/180.f*PI,0);
+			float				value = ai().level_graph().high_cover_in_direction(static_cast<float>(10 * j)/180.f*PI,v);
+			direction.setHP		(static_cast<float>(10 * j)/180.f*PI,0);
 			direction.normalize	();
 			direction.mul		(value*half_size);
 			direction.add		(position);
@@ -1785,34 +1785,34 @@ void CAI_Stalker::OnRender				()
 			float						best_value = -1.f;
 
 			for (u32 i=0, j = 0; i<36; ++i) {
-				float				value = ai().level_graph().low_cover_in_direction(float(10*i)/180.f*PI,v);
-				direction.setHP		(float(10*i)/180.f*PI,0);
+				float				value = ai().level_graph().low_cover_in_direction(static_cast<float>(10 * i)/180.f*PI,v);
+				direction.setHP		(static_cast<float>(10 * i)/180.f*PI,0);
 				direction.normalize	();
 				direction.mul		(value*half_size);
 				direction.add		(position);
 				direction.y			= position.y;
 				Level().debug_renderer().draw_line	(Fidentity,position,direction,D3DCOLOR_XRGB(0,0,255));
-				value				= ai().level_graph().compute_low_square(float(10*i)/180.f*PI,PI/2.f,v);
+				value				= ai().level_graph().compute_low_square(static_cast<float>(10 * i)/180.f*PI,PI/2.f,v);
 				if (value > best_value) {
 					best_value		= value;
 					j				= i;
 				}
 			}
 
-			direction.set		(position.x - half_size*float(v->low_cover(0))/15.f,position.y,position.z);
+			direction.set		(position.x - half_size*static_cast<float>(v->low_cover(0))/15.f,position.y,position.z);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,D3DCOLOR_XRGB(255,0,0));
 
-			direction.set		(position.x,position.y,position.z + half_size*float(v->low_cover(1))/15.f);
+			direction.set		(position.x,position.y,position.z + half_size*static_cast<float>(v->low_cover(1))/15.f);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,D3DCOLOR_XRGB(255,0,0));
 
-			direction.set		(position.x + half_size*float(v->low_cover(2))/15.f,position.y,position.z);
+			direction.set		(position.x + half_size*static_cast<float>(v->low_cover(2))/15.f,position.y,position.z);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,D3DCOLOR_XRGB(255,0,0));
 
-			direction.set		(position.x,position.y,position.z - half_size*float(v->low_cover(3))/15.f);
+			direction.set		(position.x,position.y,position.z - half_size*static_cast<float>(v->low_cover(3))/15.f);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,D3DCOLOR_XRGB(255,0,0));
 
-			float				value = ai().level_graph().low_cover_in_direction(float(10*j)/180.f*PI,v);
-			direction.setHP		(float(10*j)/180.f*PI,0);
+			float				value = ai().level_graph().low_cover_in_direction(static_cast<float>(10 * j)/180.f*PI,v);
+			direction.setHP		(static_cast<float>(10 * j)/180.f*PI,0);
 			direction.normalize	();
 			direction.mul		(value*half_size);
 			direction.add		(position);

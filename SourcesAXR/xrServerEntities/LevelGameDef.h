@@ -10,13 +10,13 @@ enum EPointType{
     ptEnvMod,
     ptSpawnPoint,
     ptMaxType,
-    pt_force_dword=u32(-1)
+    pt_force_dword=static_cast<u32>(-1)
 };
 
 enum EWayType{
     wtPatrolPath=0,
     wtMaxType,
-    wt_force_dword=u32(-1)
+    wt_force_dword=static_cast<u32>(-1)
 };
 
 enum ERPpointType{		// [0..255]

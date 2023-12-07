@@ -16,7 +16,7 @@ void AddEffector		(CActor* A, int type, const shared_str& sect_name)
 
 		pp_anm->bOverlap					= !!pSettings->r_bool(sect_name,"pp_eff_overlap");
 
-		pp_anm->SetType						((EEffectorPPType)type);
+		pp_anm->SetType						(static_cast<EEffectorPPType>(type));
 		pp_anm->SetCyclic					(bCyclic);
 
 		LPCSTR fn = pSettings->r_string		(sect_name,"pp_eff_name");
@@ -26,7 +26,7 @@ void AddEffector		(CActor* A, int type, const shared_str& sect_name)
 	if(pSettings->line_exist(sect_name,"cam_eff_name")){
 		bool bCyclic						= !!pSettings->r_bool(sect_name,"cam_eff_cyclic");
 		CAnimatorCamEffector* cam_anm		= xr_new<CAnimatorCamEffector>();
-		cam_anm->SetType					((ECamEffectorType)type);
+		cam_anm->SetType					(static_cast<ECamEffectorType>(type));
 		cam_anm->SetCyclic					(bCyclic);
 
 		if(pSettings->line_exist(sect_name, "cam_eff_hud_affect"))
@@ -46,7 +46,7 @@ void AddEffector		(CActor* A, int type, const shared_str& sect_name, CEffectorCo
 	if(pSettings->line_exist(sect_name,"pp_eff_name")){
 		bool bCyclic						= !!pSettings->r_bool(sect_name,"pp_eff_cyclic");
 		CPostprocessAnimatorControlled* pp_anm	= xr_new<CPostprocessAnimatorControlled>(ec);
-		pp_anm->SetType						((EEffectorPPType)type);
+		pp_anm->SetType						(static_cast<EEffectorPPType>(type));
 		pp_anm->SetCyclic					(bCyclic);
 		pp_anm->bOverlap					= !!pSettings->r_bool(sect_name,"pp_eff_overlap");
 		LPCSTR fn = pSettings->r_string		(sect_name,"pp_eff_name");
@@ -56,7 +56,7 @@ void AddEffector		(CActor* A, int type, const shared_str& sect_name, CEffectorCo
 	if(pSettings->line_exist(sect_name,"cam_eff_name")){
 		bool bCyclic						= !!pSettings->r_bool(sect_name,"cam_eff_cyclic");
 		CCameraEffectorControlled* cam_anm	= xr_new<CCameraEffectorControlled>(ec);
-		cam_anm->SetType					((ECamEffectorType)type);
+		cam_anm->SetType					(static_cast<ECamEffectorType>(type));
 		cam_anm->SetCyclic					(bCyclic);
 
 		if(pSettings->line_exist(sect_name, "cam_eff_hud_affect"))
@@ -76,7 +76,7 @@ void AddEffector		(CActor* A, int type, const shared_str& sect_name, GET_KOEFF_F
 	if(pSettings->line_exist(sect_name,"pp_eff_name")){
 		bool bCyclic						= !!pSettings->r_bool(sect_name,"pp_eff_cyclic");
 		CPostprocessAnimatorLerp* pp_anm	= xr_new<CPostprocessAnimatorLerp>();
-		pp_anm->SetType						((EEffectorPPType)type);
+		pp_anm->SetType						(static_cast<EEffectorPPType>(type));
 		pp_anm->SetCyclic					(bCyclic);
 		pp_anm->bOverlap					= !!pSettings->r_bool(sect_name,"pp_eff_overlap");
 		LPCSTR fn = pSettings->r_string		(sect_name,"pp_eff_name");
@@ -88,7 +88,7 @@ void AddEffector		(CActor* A, int type, const shared_str& sect_name, GET_KOEFF_F
 		bool bCyclic						= !!pSettings->r_bool(sect_name,"cam_eff_cyclic");
 		CAnimatorCamLerpEffector* cam_anm	= xr_new<CAnimatorCamLerpEffector>();
 		cam_anm->SetFactorFunc				(k_func);
-		cam_anm->SetType					((ECamEffectorType)type);
+		cam_anm->SetType					(static_cast<ECamEffectorType>(type));
 		cam_anm->SetCyclic					(bCyclic);
 
 		if(pSettings->line_exist(sect_name, "cam_eff_hud_affect"))
@@ -109,7 +109,7 @@ void AddEffector(CActor* A, int type, const shared_str& sect_name, float factor)
 	if(pSettings->line_exist(sect_name,"pp_eff_name")){
 		bool bCyclic						= !!pSettings->r_bool(sect_name,"pp_eff_cyclic");
 		CPostprocessAnimatorLerpConst* pp_anm= xr_new<CPostprocessAnimatorLerpConst>();
-		pp_anm->SetType						((EEffectorPPType)type);
+		pp_anm->SetType						(static_cast<EEffectorPPType>(type));
 		pp_anm->SetCyclic					(bCyclic);
 		pp_anm->SetPower					(factor);
 		pp_anm->bOverlap					= !!pSettings->r_bool(sect_name,"pp_eff_overlap");
@@ -121,7 +121,7 @@ void AddEffector(CActor* A, int type, const shared_str& sect_name, float factor)
 		bool bCyclic						= !!pSettings->r_bool(sect_name,"cam_eff_cyclic");
 		CAnimatorCamLerpEffectorConst* cam_anm	= xr_new<CAnimatorCamLerpEffectorConst>();
 		cam_anm->SetFactor					(factor);
-		cam_anm->SetType					((ECamEffectorType)type);
+		cam_anm->SetType					(static_cast<ECamEffectorType>(type));
 		cam_anm->SetCyclic					(bCyclic);
 	
 		if(pSettings->line_exist(sect_name, "cam_eff_hud_affect"))
@@ -139,8 +139,8 @@ void AddEffector(CActor* A, int type, const shared_str& sect_name, float factor)
 
 void RemoveEffector		(CActor* A, int type)
 {
-	A->Cameras().RemoveCamEffector	((ECamEffectorType)type);
-	A->Cameras().RemovePPEffector		((EEffectorPPType)type);
+	A->Cameras().RemoveCamEffector	(static_cast<ECamEffectorType>(type));
+	A->Cameras().RemovePPEffector		(static_cast<EEffectorPPType>(type));
 }
 
 
@@ -335,7 +335,7 @@ void SndShockEffector::Start(CActor* A, float snd_length, float power)
 void SndShockEffector::Update()
 {
 	m_cur_length		+= Device.dwTimeDelta;
-	float x				= float(m_cur_length)/m_snd_length;
+	float x				= static_cast<float>(m_cur_length)/m_snd_length;
 	float y				= 2.f*x-1;
 	if (y>0.f){
 		psSoundVFactor	= y*(m_stored_volume-m_stored_volume*SND_MIN_VOLUME_FACTOR)+m_stored_volume*SND_MIN_VOLUME_FACTOR;

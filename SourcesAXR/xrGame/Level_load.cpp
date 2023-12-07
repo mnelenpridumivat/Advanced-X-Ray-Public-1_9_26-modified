@@ -70,7 +70,7 @@ BOOL CLevel::Load_GameSpecific_After()
 			OBJ->r							(&transform,sizeof(Fmatrix));transform.c.y+=0.01f;
 			
 						
-			if ((g_pGamePersistent->m_game_params.m_e_game_type & EGameIDs(gametype_usage)) || (ver == 0))
+			if ((g_pGamePersistent->m_game_params.m_e_game_type & static_cast<EGameIDs>(gametype_usage)) || (ver == 0))
 			{
 				Msg("Load particle [%s]", ref_name);
 				pStaticParticles = CParticlesObject::Create(ref_name, FALSE, false);
@@ -202,7 +202,7 @@ void CLevel::Load_GameSpecific_CFORM	( CDB::TRI* tris, u32 count )
 	ID_INDEX_PAIRS						translator;
 	translator.reserve					(GMLib.CountMaterial());
 	u16									default_id = (u16)GMLib.GetMaterialIdx("default");
-	translator.push_back				(translation_pair(u32(-1),default_id));
+	translator.push_back				(translation_pair(static_cast<u32>(-1),default_id));
 
 	u16									index = 0, static_mtl_count = 1;
 	int max_ID							= 0;
@@ -222,7 +222,7 @@ void CLevel::Load_GameSpecific_CFORM	( CDB::TRI* tris, u32 count )
 		CDB::TRI						*I = tris;
 		CDB::TRI						*E = tris + count;
 		for ( ; I != E; ++I) {
-			ID_INDEX_PAIRS::iterator	i = std::find(translator.begin(),translator.end(),(u16)(*I).material);
+			ID_INDEX_PAIRS::iterator	i = std::find(translator.begin(),translator.end(),static_cast<u16>((*I).material));
 			if (i != translator.end()) {
 				(*I).material			= (*i).m_index;
 				SGameMtl* mtl			= GMLib.GetMaterialByIdx	((*i).m_index);
@@ -241,7 +241,7 @@ void CLevel::Load_GameSpecific_CFORM	( CDB::TRI* tris, u32 count )
 		CDB::TRI						*I = tris;
 		CDB::TRI						*E = tris + count;
 		for ( ; I != E; ++I) {
-			ID_INDEX_PAIRS::iterator	i = std::lower_bound(translator.begin(),translator.end(),(u16)(*I).material);
+			ID_INDEX_PAIRS::iterator	i = std::lower_bound(translator.begin(),translator.end(),static_cast<u16>((*I).material));
 			if ((i != translator.end()) && ((*i).m_id == (*I).material)) {
 				(*I).material			= (*i).m_index;
 				SGameMtl* mtl			= GMLib.GetMaterialByIdx	((*i).m_index);

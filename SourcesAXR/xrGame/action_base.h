@@ -26,12 +26,12 @@ protected:
 
 protected:
 	enum EActionStates {
-		eActionStateConstructed		= u32(0),
+		eActionStateConstructed		= static_cast<u32>(0),
 		eActionStateSetup,
 		eActionStateInitialized,
 		eActionStateExecuted,
 		eActionStateFinalized,
-		eActionStateDummy			= u32(-1),
+		eActionStateDummy			= static_cast<u32>(-1),
 	};
 
 public:

@@ -160,7 +160,7 @@ void door::change_state			( )
 	if ( m_state == m_target_state )
 		return;
 
-	m_object.callback(GameObject::eUseObject)( m_object.lua_game_object(), (CScriptGameObject*)0 );
+	m_object.callback(GameObject::eUseObject)( m_object.lua_game_object(), static_cast<CScriptGameObject*>(0) );
 #ifdef DEBUG
 	if ( g_debug_doors)
 		Msg						( "door[%s] started to change its state to [%s]", m_object.cName().c_str(), m_target_state == door_state_open ? "open" : "closed" );
@@ -278,7 +278,7 @@ shared_str door::get_initiators_ids	( ) const
 	for ( ; i != e; ++i )
 		buffer_size				+= xr_strlen((*i)->get_name()) + 2;
 
-	LPSTR const result			= (LPSTR)_alloca(buffer_size);
+	LPSTR const result			= static_cast<LPSTR>(_alloca(buffer_size));
 	*result						= 0;
 	LPSTR j						= result;
 	u32 left_size				= buffer_size;

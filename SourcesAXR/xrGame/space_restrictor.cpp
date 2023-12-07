@@ -95,10 +95,10 @@ BOOL CSpaceRestrictor::net_Spawn	(CSE_Abstract* data)
 	setEnabled						(FALSE);
 	setVisible						(FALSE);
 
-	if (!ai().get_level_graph() || (RestrictionSpace::ERestrictorTypes(se_shape->m_space_restrictor_type) == RestrictionSpace::eRestrictorTypeNone))
+	if (!ai().get_level_graph() || (static_cast<RestrictionSpace::ERestrictorTypes>(se_shape->m_space_restrictor_type) == RestrictionSpace::eRestrictorTypeNone))
 		return						(TRUE);
 
-	Level().space_restriction_manager().register_restrictor(this,RestrictionSpace::ERestrictorTypes(se_shape->m_space_restrictor_type));
+	Level().space_restriction_manager().register_restrictor(this,static_cast<RestrictionSpace::ERestrictorTypes>(se_shape->m_space_restrictor_type));
 
 	return							(TRUE);
 }
@@ -110,7 +110,7 @@ void CSpaceRestrictor::net_Destroy	()
 	if (!ai().get_level_graph())
 		return;
 	
-	if (RestrictionSpace::ERestrictorTypes(m_space_restrictor_type) == RestrictionSpace::eRestrictorTypeNone)
+	if (static_cast<RestrictionSpace::ERestrictorTypes>(m_space_restrictor_type) == RestrictionSpace::eRestrictorTypeNone)
 		return;
 
 	Level().space_restriction_manager().unregister_restrictor(this);
@@ -146,7 +146,7 @@ void CSpaceRestrictor::prepare			() const
 	m_spheres.resize				(0);
 	m_boxes.resize					(0);
 
-	const CCF_Shape					*shape = (const CCF_Shape*)collidable.model;
+	const CCF_Shape					*shape = static_cast<const CCF_Shape*>(collidable.model);
 
 	typedef xr_vector<CCF_Shape::shape_def> SHAPES;
 
@@ -239,7 +239,7 @@ void CSpaceRestrictor::OnRender	()
 	DRender->OnFrameEnd();
 	Fvector l_half; l_half.set(.5f, .5f, .5f);
 	Fmatrix l_ball, l_box;
-	xr_vector<CCF_Shape::shape_def> &l_shapes = ((CCF_Shape*)CFORM())->Shapes();
+	xr_vector<CCF_Shape::shape_def> &l_shapes = static_cast<CCF_Shape*>(CFORM())->Shapes();
 	xr_vector<CCF_Shape::shape_def>::iterator l_pShape;
 	
 	u32 Color = 0;

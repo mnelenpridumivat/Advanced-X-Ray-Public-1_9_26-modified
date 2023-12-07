@@ -163,8 +163,8 @@ void CBaseGraviZone ::Affect(SZoneObjectInfo* O)
 		// выброс аномалии
 		
 		//если время выброса еще не пришло
-		if(m_dwBlowoutExplosionTime<(u32)m_iPreviousStateTime ||
-			m_dwBlowoutExplosionTime>=(u32)m_iStateTime)
+		if(m_dwBlowoutExplosionTime<static_cast<u32>(m_iPreviousStateTime) ||
+			m_dwBlowoutExplosionTime>=static_cast<u32>(m_iStateTime))
 		{
 
 			AffectPull(GO,throw_in_dir,BlowoutRadiusPercent(GO)*Radius());	

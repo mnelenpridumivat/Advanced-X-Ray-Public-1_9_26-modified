@@ -422,7 +422,7 @@ void ui_actor_state_item::init_from_xml( CUIXml& xml, LPCSTR path )
 	LPCSTR hint_text = xml.Read( "hint_text", 0, "no hint" );
 	set_hint_text_ST( hint_text );
 	
-	set_hint_delay( (u32)xml.ReadAttribInt( "hint_text", 0, "delay" ) );
+	set_hint_delay( static_cast<u32>(xml.ReadAttribInt("hint_text", 0, "delay")) );
 
 	if ( xml.NavigateToNode( "state_progress", 0 ) )	
 	{
@@ -518,7 +518,7 @@ void ui_actor_state_item::set_text( float value )
 	{
 		return;
 	}
-	int v = (int)( value * m_magnitude + 0.49f );// m_magnitude=100
+	int v = static_cast<int>(value * m_magnitude + 0.49f);// m_magnitude=100
 	clamp( v, 0, 99 );
 	string32 text_res;
 	xr_sprintf( text_res, sizeof(text_res), "%d", v );

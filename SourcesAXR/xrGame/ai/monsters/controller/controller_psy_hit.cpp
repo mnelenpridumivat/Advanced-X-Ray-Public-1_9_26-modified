@@ -77,7 +77,7 @@ void CControllerPsyHit::activate()
 
 	//////////////////////////////////////////////////////////////////////////
 	// set direction
-	SControlDirectionData			*ctrl_dir = (SControlDirectionData*)m_man->data(this, ControlCom::eControlDir); 
+	SControlDirectionData			*ctrl_dir = static_cast<SControlDirectionData*>(m_man->data(this, ControlCom::eControlDir)); 
 	VERIFY							(ctrl_dir);
 	ctrl_dir->heading.target_speed	= 3.f;
 	ctrl_dir->heading.target_angle	= m_man->direction().angle_to_target(Actor()->Position());
@@ -101,7 +101,7 @@ void CControllerPsyHit::deactivate()
 
 		Actor()->u_EventGen	(P, GEG_PLAYER_WEAPON_HIDE_STATE, Actor()->ID());
 		P.w_u16				(INV_STATE_BLOCK_ALL);
-		P.w_u8				(u8(false));
+		P.w_u8				(static_cast<u8>(false));
 		Actor()->u_EventSend(P);
 	}
 
@@ -129,7 +129,7 @@ void CControllerPsyHit::on_event(ControlCom::EEventType type, ControlCom::IEvent
 
 void CControllerPsyHit::play_anim()
 {
-	SControlAnimationData		*ctrl_anim = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+	SControlAnimationData		*ctrl_anim = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 	VERIFY						(ctrl_anim);
 
 	ctrl_anim->global.set_motion ( m_stage[m_current_index] );
@@ -266,14 +266,14 @@ void CControllerPsyHit::death_glide_start()
 	NET_Packet			P;
 	Actor()->u_EventGen	(P, GEG_PLAYER_WEAPON_HIDE_STATE, Actor()->ID());
 	P.w_u16				(INV_STATE_BLOCK_ALL);
-	P.w_u8				(u8(true));
+	P.w_u8				(static_cast<u8>(true));
 	Actor()->u_EventSend(P);
 	
 	m_blocked			= true;
 
 	//////////////////////////////////////////////////////////////////////////
 	// set direction
-	SControlDirectionData			*ctrl_dir = (SControlDirectionData*)m_man->data(this, ControlCom::eControlDir); 
+	SControlDirectionData			*ctrl_dir = static_cast<SControlDirectionData*>(m_man->data(this, ControlCom::eControlDir)); 
 	VERIFY							(ctrl_dir);
 	ctrl_dir->heading.target_speed	= 3.f;
 	ctrl_dir->heading.target_angle	= m_man->direction().angle_to_target(Actor()->Position());

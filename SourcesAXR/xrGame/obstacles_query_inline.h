@@ -49,7 +49,7 @@ IC	void obstacles_query::add									(const CGameObject *object)
 		return;
 
 	m_actual				= false;
-	m_obstacles.insert		(std::make_pair(object,u32(-1)));
+	m_obstacles.insert		(std::make_pair(object,static_cast<u32>(-1)));
 }
 
 IC	bool obstacles_query::refresh_objects						()

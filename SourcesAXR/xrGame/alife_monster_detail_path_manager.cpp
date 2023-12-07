@@ -225,18 +225,18 @@ void CALifeMonsterDetailPathManager::follow_path				(const ALife::_TIME_ID &time
 		return;
 	}
 
-	float							last_time_delta = float(time_delta)/1000.f;
+	float							last_time_delta = static_cast<float>(time_delta)/1000.f;
 	for ( ; m_path.size() > 1;) {
 		setup_current_speed			();
 		float						update_distance = (last_time_delta/ai().alife().time_manager().normal_time_factor())*speed();
 
-		float						distance_between = ai().game_graph().distance(object().get_object().m_tGraphID,(GameGraph::_GRAPH_ID)m_path[m_path.size() - 2]);
+		float						distance_between = ai().game_graph().distance(object().get_object().m_tGraphID,static_cast<GameGraph::_GRAPH_ID>(m_path[m_path.size() - 2]));
 		if (distance_between > (update_distance + m_walked_distance)) {
 			m_walked_distance		+= update_distance;
 #ifdef DEBUG
 			object().m_fDistanceFromPoint	= m_walked_distance;
 			object().m_fDistanceToPoint		= distance_between;
-			object().m_tNextGraphID			= (GameGraph::_GRAPH_ID)m_path[m_path.size() - 2];
+			object().m_tNextGraphID			= static_cast<GameGraph::_GRAPH_ID>(m_path[m_path.size() - 2]);
 #endif
 			return;
 		}

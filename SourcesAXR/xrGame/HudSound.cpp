@@ -57,7 +57,7 @@ void  HUD_SOUND_ITEM::LoadSound(LPCSTR section,
 		{
 			_GetItem (str, 1, buf_str);
 			if(xr_strlen(buf_str)>0)
-				*volume = (float)atof(buf_str);
+				*volume = static_cast<float>(atof(buf_str));
 		}
 	}
 
@@ -68,7 +68,7 @@ void  HUD_SOUND_ITEM::LoadSound(LPCSTR section,
 		{
 			_GetItem (str, 2, buf_str);
 			if(xr_strlen(buf_str)>0)
-				*delay = (float)atof(buf_str);
+				*delay = static_cast<float>(atof(buf_str));
 		}
 	}
 }
@@ -99,8 +99,8 @@ void HUD_SOUND_ITEM::PlaySound(	HUD_SOUND_ITEM&		hud_snd,
 	if(looped)
 		flags |= sm_Looped;
 
-	if(index==u8(-1))
-		index = (u8)Random.randI(hud_snd.sounds.size());
+	if(index==static_cast<u8>(-1))
+		index = static_cast<u8>(Random.randI(hud_snd.sounds.size()));
 
 	hud_snd.m_activeSnd = &hud_snd.sounds[ index ];
 	
@@ -130,8 +130,8 @@ void HUD_SOUND_ITEM::PlaySoundAdd(
 	u32 flags = b_hud_mode ? sm_2D : 0;
 	if (looped)
 		flags |= sm_Looped;
-	if (index == u8(-1))
-		index = (u8)Random.randI(hud_snd.sounds.size());
+	if (index == static_cast<u8>(-1))
+		index = static_cast<u8>(Random.randI(hud_snd.sounds.size()));
 	hud_snd.m_activeSnd = &hud_snd.sounds[index];
 
 	Fvector pos = flags & sm_2D ? Fvector().set(0, 0, 0) : position;

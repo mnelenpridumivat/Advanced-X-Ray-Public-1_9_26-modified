@@ -23,9 +23,9 @@ IC	CAbstractOperatorCondition::COperatorConditionAbstract	(const _condition_type
 	m_value				(value)
 {
 	u32					seed = ::Random32.seed();
-	::Random32.seed		(u32(condition) + 1);
+	::Random32.seed		(static_cast<u32>(condition) + 1);
 	m_hash				= ::Random32.random(0xffffffff);
-	::Random32.seed		(m_hash + u32(value));
+	::Random32.seed		(m_hash + static_cast<u32>(value));
 	m_hash				^= ::Random32.random(0xffffffff);
 	::Random32.seed		(seed);
 }

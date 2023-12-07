@@ -26,7 +26,7 @@ CHARACTER_RANK::RANK_KILL_TABLE		CHARACTER_RANK::m_rank_kill_table;
 
 int   CHARACTER_RANK::ValueToIndex    (CHARACTER_RANK_VALUE val)
 {
-	for(int i=0; i<(int)m_pItemDataVector->size(); i++)
+	for(int i=0; i<static_cast<int>(m_pItemDataVector->size()); i++)
 	{
 		if(val < (*m_pItemDataVector)[i].threshold)
 			return i;
@@ -63,8 +63,8 @@ CHARACTER_GOODWILL CHARACTER_RANK::relation		(int to)
 
 CHARACTER_GOODWILL  CHARACTER_RANK::relation		(int from, int to)
 {
-	VERIFY(from >= 0 && from <(int)m_relation_table.table().size());
-	VERIFY(to >= 0 && to <(int)m_relation_table.table().size());
+	VERIFY(from >= 0 && from <static_cast<int>(m_relation_table.table().size()));
+	VERIFY(to >= 0 && to <static_cast<int>(m_relation_table.table().size()));
 
 	return m_relation_table.table()[from][to];
 }

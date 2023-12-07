@@ -125,8 +125,8 @@ void CHM_Static::Update	()
 		{
 			for (int x=0; x<dhm_precision; ++x)
 			{
-				float	rx	= (float(x)/float(dhm_precision))*dhm_size + bb.min.x;
-				float	rz	= (float(z)/float(dhm_precision))*dhm_size + bb.min.z;
+				float	rx	= (static_cast<float>(x)/static_cast<float>(dhm_precision))*dhm_size + bb.min.x;
+				float	rz	= (static_cast<float>(z)/static_cast<float>(dhm_precision))*dhm_size + bb.min.z;
 				float	ry	= bb.min.y-5;
 				Fvector pos; pos.set(rx,bb.max.y,rz);
 				Fvector	dir; dir.set(0,-1,0);

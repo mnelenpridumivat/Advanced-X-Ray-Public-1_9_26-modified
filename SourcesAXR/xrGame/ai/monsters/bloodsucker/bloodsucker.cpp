@@ -280,7 +280,7 @@ void CAI_Bloodsucker::reinit()
 	//com_man().add_rotation_jump_data("run_turn_r_0","run_turn_r_1","run_turn_r_0","run_turn_r_1", PI - 0.01f, SControlRotationJumpData::eStopAtOnce | SControlRotationJumpData::eRotateOnce);
 	com_man().add_rotation_jump_data("run_turn_l_0","run_turn_l_1","run_turn_r_0","run_turn_r_1", PI_DIV_2);
 	
-	com_man().load_jump_data("boloto_jump_prepare",0, "boloto_jump_fly", "boloto_jump_end", u32(-1), MonsterMovement::eBloodsuckerVelocityParameterJumpGround,0);
+	com_man().load_jump_data("boloto_jump_prepare",0, "boloto_jump_fly", "boloto_jump_end", static_cast<u32>(-1), MonsterMovement::eBloodsuckerVelocityParameterJumpGround,0);
 
 	// save visual	
 	m_visual_default			= cNameVisual();
@@ -302,7 +302,7 @@ void CAI_Bloodsucker::reload(LPCSTR section)
 	sound().add(pSettings->r_string(section,"Sound_Vampire_StartHunt"),			DEFAULT_SAMPLE_COUNT,	SOUND_TYPE_MONSTER_ATTACKING, MonsterSound::eHighPriority + 5,	MonsterSound::eBaseChannel,	eVampireStartHunt,				"bip01_head");
 	sound().add(pSettings->r_string(section,"Sound_Invisibility_Change_State"),	DEFAULT_SAMPLE_COUNT,	SOUND_TYPE_MONSTER_ATTACKING, MonsterSound::eNormalPriority,	MonsterSound::eChannelIndependent << 1,	eChangeVisibility,	"bip01_head");
 	sound().add(pSettings->r_string(section,"Sound_Growl"),						DEFAULT_SAMPLE_COUNT,	SOUND_TYPE_MONSTER_ATTACKING, MonsterSound::eHighPriority + 6,	MonsterSound::eBaseChannel,	eGrowl,							"bip01_head");
-	sound().add(pSettings->r_string(section,"Sound_Alien"),						DEFAULT_SAMPLE_COUNT,	SOUND_TYPE_MONSTER_ATTACKING, MonsterSound::eCriticalPriority,	u32(MonsterSound::eCaptureAllChannels),	eAlien,				"bip01_head");
+	sound().add(pSettings->r_string(section,"Sound_Alien"),						DEFAULT_SAMPLE_COUNT,	SOUND_TYPE_MONSTER_ATTACKING, MonsterSound::eCriticalPriority,	static_cast<u32>(MonsterSound::eCaptureAllChannels),	eAlien,				"bip01_head");
 }
 
 void CAI_Bloodsucker::LoadVampirePPEffector(LPCSTR section)
@@ -499,8 +499,8 @@ void   CAI_Bloodsucker::set_visibility_state (visibility_t new_state)
 
 void   CAI_Bloodsucker::force_visibility_state (int state)
 {
-	m_force_visibility_state	=	(visibility_t)state;
-	set_visibility_state			((visibility_t)state);
+	m_force_visibility_state	=	static_cast<visibility_t>(state);
+	set_visibility_state			(static_cast<visibility_t>(state));
 }
 
 void   CAI_Bloodsucker::update_invisibility ()
@@ -677,8 +677,8 @@ void CAI_Bloodsucker::start_drag()
 
 void CAI_Bloodsucker::animation_end_jump(CBlend* B)
 {
-	((CAI_Bloodsucker*)B->CallbackParam)->set_invis();
-	((CAI_Bloodsucker*)B->CallbackParam)->jump(((CAI_Bloodsucker*)B->CallbackParam)->j_position, ((CAI_Bloodsucker*)B->CallbackParam)->j_factor);
+	static_cast<CAI_Bloodsucker*>(B->CallbackParam)->set_invis();
+	static_cast<CAI_Bloodsucker*>(B->CallbackParam)->jump(static_cast<CAI_Bloodsucker*>(B->CallbackParam)->j_position, static_cast<CAI_Bloodsucker*>(B->CallbackParam)->j_factor);
 }
 
 void CAI_Bloodsucker::predator_start()
@@ -756,7 +756,7 @@ void CAI_Bloodsucker::move_actor_cam (float angle)
 
 void CAI_Bloodsucker::HitEntity(const CEntity *pEntity, float fDamage, float impulse, Fvector &dir, ALife::EHitType hit_type, bool draw_hit_marks)
 {
-	bool is_critical = rand()/(float)RAND_MAX <= m_critical_hit_chance;
+	bool is_critical = rand()/static_cast<float>(RAND_MAX) <= m_critical_hit_chance;
 
 	if ( is_critical )
 	{
@@ -817,7 +817,7 @@ void   CAI_Bloodsucker::renderable_Render ()
 
 bool   CAI_Bloodsucker::done_enough_hits_before_vampire ()
 {
-	return (int)m_hits_before_vampire >= (int)m_sufficient_hits_before_vampire + m_sufficient_hits_before_vampire_random;
+	return static_cast<int>(m_hits_before_vampire) >= static_cast<int>(m_sufficient_hits_before_vampire) + m_sufficient_hits_before_vampire_random;
 }
 
 void   CAI_Bloodsucker::on_attack_on_run_hit ()

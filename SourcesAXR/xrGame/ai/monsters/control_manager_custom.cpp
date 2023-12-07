@@ -116,7 +116,7 @@ void CControlManagerCustom::on_event(ControlCom::EEventType type, ControlCom::IE
 	case ControlCom::eventSequenceEnd:	m_man->release(this, ControlCom::eControlSequencer); break;
 	case ControlCom::eventTAChange: 
 		{
-			STripleAnimEventData *event_data = (STripleAnimEventData *)data;
+			STripleAnimEventData *event_data = static_cast<STripleAnimEventData*>(data);
 			if (event_data->m_current_state == eStateNone) 
 										m_man->release(this, ControlCom::eControlTripleAnimation); 
 
@@ -170,7 +170,7 @@ void CControlManagerCustom::ta_activate(const SAnimationTripleData &data)
 
 	m_man->capture			(this,	ControlCom::eControlTripleAnimation);
 
-	SAnimationTripleData	*ctrl_data = (SAnimationTripleData*)m_man->data(this, ControlCom::eControlTripleAnimation); 
+	SAnimationTripleData	*ctrl_data = static_cast<SAnimationTripleData*>(m_man->data(this, ControlCom::eControlTripleAnimation)); 
 	VERIFY					(ctrl_data);
 
 	ctrl_data->pool[0]		= data.pool[0];
@@ -197,7 +197,7 @@ bool CControlManagerCustom::ta_is_active(const SAnimationTripleData &data)
 {
 	if (!m_triple_anim->is_active()) return false;
 
-	SAnimationTripleData	*ctrl_data = (SAnimationTripleData*)m_man->data(this, ControlCom::eControlTripleAnimation); 
+	SAnimationTripleData	*ctrl_data = static_cast<SAnimationTripleData*>(m_man->data(this, ControlCom::eControlTripleAnimation)); 
 	VERIFY					(ctrl_data);
 
 	return (
@@ -219,7 +219,7 @@ void CControlManagerCustom::seq_init()
 {
 	m_man->capture				(this,	ControlCom::eControlSequencer);
 
-	SAnimationSequencerData		*ctrl_data = (SAnimationSequencerData*)m_man->data(this, ControlCom::eControlSequencer); 
+	SAnimationSequencerData		*ctrl_data = static_cast<SAnimationSequencerData*>(m_man->data(this, ControlCom::eControlSequencer)); 
 	if (!ctrl_data) return;
 
 	ctrl_data->motions.clear	();
@@ -227,7 +227,7 @@ void CControlManagerCustom::seq_init()
 
 void CControlManagerCustom::seq_add(MotionID motion)
 {
-	SAnimationSequencerData		*ctrl_data = (SAnimationSequencerData*)m_man->data(this, ControlCom::eControlSequencer); 
+	SAnimationSequencerData		*ctrl_data = static_cast<SAnimationSequencerData*>(m_man->data(this, ControlCom::eControlSequencer)); 
 	if (!ctrl_data) return;
 
 	ctrl_data->motions.push_back(motion);
@@ -245,7 +245,7 @@ void CControlManagerCustom::seq_run(MotionID motion)
 
 	m_man->capture				(this,	ControlCom::eControlSequencer);
 
-	SAnimationSequencerData		*ctrl_data = (SAnimationSequencerData*)m_man->data(this, ControlCom::eControlSequencer); 
+	SAnimationSequencerData		*ctrl_data = static_cast<SAnimationSequencerData*>(m_man->data(this, ControlCom::eControlSequencer)); 
 	if (!ctrl_data) return;
 
 	ctrl_data->motions.clear	();
@@ -267,7 +267,7 @@ void CControlManagerCustom::jump(CObject *obj, const SControlJumpData &ta)
 
 	m_man->capture		(this, ControlCom::eControlJump);
 
-	SControlJumpData	*ctrl_data = (SControlJumpData *) m_man->data(this, ControlCom::eControlJump);
+	SControlJumpData	*ctrl_data = static_cast<SControlJumpData*>(m_man->data(this, ControlCom::eControlJump));
 	VERIFY				(ctrl_data);
 
 	ctrl_data->target_object						= obj;
@@ -344,7 +344,7 @@ bool CControlManagerCustom::jump(const SControlJumpData &ta)
 
 	m_man->capture		(this, ControlCom::eControlJump);
 
-	SControlJumpData	*ctrl_data = (SControlJumpData *) m_man->data(this, ControlCom::eControlJump);
+	SControlJumpData	*ctrl_data = static_cast<SControlJumpData*>(m_man->data(this, ControlCom::eControlJump));
 	VERIFY				(ctrl_data);
 
 	ctrl_data->target_object						= ta.target_object;
@@ -369,7 +369,7 @@ void CControlManagerCustom::jump(const Fvector &position)
 
 	m_man->capture		(this, ControlCom::eControlJump);
 
-	SControlJumpData	*ctrl_data = (SControlJumpData *) m_man->data(this, ControlCom::eControlJump);
+	SControlJumpData	*ctrl_data = static_cast<SControlJumpData*>(m_man->data(this, ControlCom::eControlJump));
 	VERIFY				(ctrl_data);
 
 	ctrl_data->target_object						= 0;
@@ -396,7 +396,7 @@ void CControlManagerCustom::script_jump(const Fvector &position, float factor)
 
 	m_man->capture		(this, ControlCom::eControlJump);
 
-	SControlJumpData	*ctrl_data = (SControlJumpData *) m_man->data(this, ControlCom::eControlJump);
+	SControlJumpData	*ctrl_data = static_cast<SControlJumpData*>(m_man->data(this, ControlCom::eControlJump));
 	VERIFY				(ctrl_data);
 
 	ctrl_data->target_object		= 0;
@@ -537,7 +537,7 @@ void CControlManagerCustom::check_rotation_jump()
 	
 	m_man->capture				(this, ControlCom::eControlRotationJump);
 	
-	SControlRotationJumpData	*ctrl_data = (SControlRotationJumpData *) m_man->data(this, ControlCom::eControlRotationJump);
+	SControlRotationJumpData	*ctrl_data = static_cast<SControlRotationJumpData*>(m_man->data(this, ControlCom::eControlRotationJump));
 	VERIFY						(ctrl_data);
 
 	(*ctrl_data)				= m_rot_jump_data[Random.randI(m_rot_jump_data.size())];
@@ -570,7 +570,7 @@ void CControlManagerCustom::check_threaten()
 
 	m_man->capture		(this, ControlCom::eControlThreaten);
 
-	SControlThreatenData	*ctrl_data = (SControlThreatenData *) m_man->data(this, ControlCom::eControlThreaten);
+	SControlThreatenData	*ctrl_data = static_cast<SControlThreatenData*>(m_man->data(this, ControlCom::eControlThreaten));
 	VERIFY					(ctrl_data);
 	ctrl_data->animation	= m_threaten_anim;
 	ctrl_data->time			= m_threaten_time;
@@ -596,7 +596,7 @@ void CControlManagerCustom::check_melee_jump()
 
 	m_man->capture				(this, ControlCom::eControlMeleeJump);
 
-	SControlMeleeJumpData		*ctrl_data = (SControlMeleeJumpData *) m_man->data(this, ControlCom::eControlMeleeJump);
+	SControlMeleeJumpData		*ctrl_data = static_cast<SControlMeleeJumpData*>(m_man->data(this, ControlCom::eControlMeleeJump));
 	VERIFY						(ctrl_data);
 
 	(*ctrl_data)				= m_melee_jump_data;
@@ -657,7 +657,7 @@ void CControlManagerCustom::critical_wound(LPCSTR anim)
 
 	m_man->capture				(this,	ControlCom::eComCriticalWound);
 
-	SControlCriticalWoundData	*ctrl_data = (SControlCriticalWoundData*)m_man->data(this, ControlCom::eComCriticalWound); 
+	SControlCriticalWoundData	*ctrl_data = static_cast<SControlCriticalWoundData*>(m_man->data(this, ControlCom::eComCriticalWound)); 
 	if (!ctrl_data) return;
 	
 	ctrl_data->animation = anim;

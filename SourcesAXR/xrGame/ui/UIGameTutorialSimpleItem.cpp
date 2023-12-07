@@ -169,7 +169,7 @@ void CUISequenceSimpleItem::OnRender()
 		m_time_start = -1.0f;
 	else
 	if(m_time_start < 0.0f)
-		m_time_start				= float(Device.dwTimeContinual)/1000.0f;
+		m_time_start				= static_cast<float>(Device.dwTimeContinual)/1000.0f;
 }
 
 float CUISequenceSimpleItem::current_factor()
@@ -183,9 +183,9 @@ float CUISequenceSimpleItem::current_factor()
 void CUISequenceSimpleItem::Update()
 {
 	inherited::Update();
-	float _start					= (m_time_start<0.0f)? (float(Device.dwTimeContinual)/1000.0f) : m_time_start;
+	float _start					= (m_time_start<0.0f)? (static_cast<float>(Device.dwTimeContinual)/1000.0f) : m_time_start;
 
-	float gt						= float(Device.dwTimeContinual)/1000.0f;
+	float gt						= static_cast<float>(Device.dwTimeContinual)/1000.0f;
 	SubItemVecIt _I					= m_subitems.begin();
 	SubItemVecIt _E					= m_subitems.end();
 	for(;_I!=_E;++_I)

@@ -70,7 +70,7 @@ IC bool CAI_Rat::bfCheckIfSoundFrightful()
 IC	void CAI_Rat::update_morale_broadcast(float const &fValue, float const &/**fRadius/**/)
 {
 	CGroupHierarchyHolder &Group = Level().seniority_holder().team(g_Team()).squad(g_Squad()).group(g_Group());
-	for (int i=0; i<(int)Group.members().size(); ++i)
+	for (int i=0; i<static_cast<int>(Group.members().size()); ++i)
 		if (Group.members()[i]->g_Alive())
 			Group.members()[i]->m_fMorale += fValue;
 }

@@ -126,7 +126,7 @@ STRING_VALUE CStringTable::ParseLine(LPCSTR str, LPCSTR skey, bool bFirst)
 		res.append			(str+k, b-str-k);
 		const char* e		= strstr( b+LEN,"$$" );
 
-		int len				= (int)(e-b-LEN);
+		int len				= static_cast<int>(e - b - LEN);
 
 		strncpy_s				(srcbuff,b+LEN, len);
 		srcbuff[len]		= 0;
@@ -142,14 +142,14 @@ STRING_VALUE CStringTable::ParseLine(LPCSTR str, LPCSTR skey, bool bFirst)
 			res.append(b, LEN + len + 2);
 		}
 
-		k					= (int)(b-str);
+		k					= static_cast<int>(b - str);
 		k					+= len;
 		k					+= LEN;
 		k					+= 2;
 		b_hit				= true;
 	};
 
-	if(k<(int)xr_strlen(str)){
+	if(k<static_cast<int>(xr_strlen(str))){
 		res.append(str+k);
 	}
 

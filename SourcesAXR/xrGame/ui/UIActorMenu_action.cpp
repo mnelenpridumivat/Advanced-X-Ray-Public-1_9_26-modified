@@ -196,7 +196,7 @@ bool CUIActorMenu::OnItemDbClick(CUICellItem* itm)
 				{
 					break;
 				}
-				PIItem iitem_to_place = (PIItem)itm->m_pData;
+				PIItem iitem_to_place = static_cast<PIItem>(itm->m_pData);
 				if ( !ToSlot( itm, false, iitem_to_place->BaseSlot() ) )
 				{
 					if ( !ToBelt( itm, false ) )

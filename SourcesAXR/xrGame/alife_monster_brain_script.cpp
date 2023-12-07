@@ -25,6 +25,6 @@ void CALifeMonsterBrain::script_register	(lua_State *L)
 		class_<CALifeMonsterBrain>("CALifeMonsterBrain")
 			.def("movement",				&get_movement)
 			.def("update",					&CALifeMonsterBrain::update)
-			.def("can_choose_alife_tasks",	(void (CALifeMonsterBrain::*)(bool))&CALifeMonsterBrain::can_choose_alife_tasks)
+			.def("can_choose_alife_tasks",	static_cast<void (CALifeMonsterBrain::*)(bool)>(&CALifeMonsterBrain::can_choose_alife_tasks))
 	];
 }

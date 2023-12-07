@@ -40,8 +40,8 @@ void CDamageManager::reload				(LPCSTR section, CInifile const * ini)
 		string32 buffer;
 		if (ini->line_exist(section,"default")) {
 			LPCSTR value			= ini->r_string(section,"default");
-			m_default_hit_factor	= (float)atof(_GetItem(value,0,buffer));
-			m_default_wound_factor  = (float)atof(_GetItem(value,2,buffer));
+			m_default_hit_factor	= static_cast<float>(atof(_GetItem(value, 0, buffer)));
+			m_default_wound_factor  = static_cast<float>(atof(_GetItem(value, 2, buffer)));
 		}
 	}
 
@@ -84,17 +84,17 @@ void CDamageManager::load_section(LPCSTR section, CInifile const * ini)
 			VERIFY					(m_object);
 			int						bone = kinematics->LL_BoneID(i->first);
 			R_ASSERT2				(BI_NONE != bone, *(*i).first);
-			CBoneInstance			&bone_instance = kinematics->LL_GetBoneInstance(u16(bone));
-			bone_instance.set_param	(0,(float)atof(_GetItem(*(*i).second,0,buffer)));
-			bone_instance.set_param	(1,(float)atoi(_GetItem(*(*i).second,1,buffer)));
-			bone_instance.set_param	(2,(float)atof(_GetItem(*(*i).second,2,buffer)));
+			CBoneInstance			&bone_instance = kinematics->LL_GetBoneInstance(static_cast<u16>(bone));
+			bone_instance.set_param	(0,static_cast<float>(atof(_GetItem(*(*i).second, 0, buffer))));
+			bone_instance.set_param	(1,static_cast<float>(atoi(_GetItem(*(*i).second, 1, buffer))));
+			bone_instance.set_param	(2,static_cast<float>(atof(_GetItem(*(*i).second, 2, buffer))));
 			if (_GetItemCount(*(*i).second) < 4)
 			{
-				bone_instance.set_param	(3,(float)atof(_GetItem(*(*i).second,0,buffer)));
+				bone_instance.set_param	(3,static_cast<float>(atof(_GetItem(*(*i).second, 0, buffer))));
 			}
 			else
 			{
-				bone_instance.set_param	(3,(float)atof(_GetItem(*(*i).second,3,buffer)));
+				bone_instance.set_param	(3,static_cast<float>(atof(_GetItem(*(*i).second, 3, buffer))));
 			}
 			if(0==bone && (fis_zero(bone_instance.get_param(0)) || fis_zero(bone_instance.get_param(2)) ) ){
 				string256 error_str;
@@ -108,7 +108,7 @@ void CDamageManager::load_section(LPCSTR section, CInifile const * ini)
 
 void  CDamageManager::HitScale			(const int element, float& hit_scale, float& wound_scale, bool aim_bullet)
 {
-	if(BI_NONE == u16(element))
+	if(BI_NONE == static_cast<u16>(element))
 	{
 		//считаем что параметры для BI_NONE заданы как 1.f 
 		hit_scale = 1.f * m_default_hit_factor;
@@ -122,18 +122,18 @@ void  CDamageManager::HitScale			(const int element, float& hit_scale, float& wo
 
 	if ( aim_bullet )
 	{
-		scale			= V->LL_GetBoneInstance(u16(element)).get_param(3);
+		scale			= V->LL_GetBoneInstance(static_cast<u16>(element)).get_param(3);
 	}
 
 	// in case when not 1st bullet or 1st bullet has scale unset (== 0)
 	if ( !aim_bullet || !scale )
 	{
-		scale			= V->LL_GetBoneInstance(u16(element)).get_param(0);
+		scale			= V->LL_GetBoneInstance(static_cast<u16>(element)).get_param(0);
 	}
 
 	hit_scale			= scale;
 	
 	// get wound scale
-	scale				= V->LL_GetBoneInstance(u16(element)).get_param(2);
+	scale				= V->LL_GetBoneInstance(static_cast<u16>(element)).get_param(2);
 	wound_scale			= scale;
 }

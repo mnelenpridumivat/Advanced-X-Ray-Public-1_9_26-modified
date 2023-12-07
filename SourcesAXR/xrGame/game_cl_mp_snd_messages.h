@@ -7,6 +7,6 @@ enum {
 	ID_READY,
 	ID_MATCH_STARTED,
 
-	ID_forcedword		= u32(-1)
+	ID_forcedword		= static_cast<u32>(-1)
 };
 

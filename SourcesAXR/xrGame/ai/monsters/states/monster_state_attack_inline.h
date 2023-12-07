@@ -134,7 +134,7 @@ void CStateMonsterAttackAbstract::execute()
 TEMPLATE_SPECIALIZATION
 bool CStateMonsterAttackAbstract::check_steal_state()
 {
-	if (prev_substate == u32(-1)) {
+	if (prev_substate == static_cast<u32>(-1)) {
 		if (get_state(eStateAttack_Steal)->check_start_conditions())	
 			return true;
 	} else if (prev_substate == eStateAttack_Steal) {
@@ -147,7 +147,7 @@ bool CStateMonsterAttackAbstract::check_steal_state()
 TEMPLATE_SPECIALIZATION
 bool CStateMonsterAttackAbstract::check_camp_state()
 {
-	if (prev_substate == u32(-1)) {
+	if (prev_substate == static_cast<u32>(-1)) {
 		if (get_state(eStateAttackCamp)->check_start_conditions())	
 			return true;
 	} else if (prev_substate == eStateAttackCamp) {

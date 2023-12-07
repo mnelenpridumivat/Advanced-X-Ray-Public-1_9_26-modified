@@ -14,8 +14,8 @@ struct SStateDataAction {
 		action		= ACT_STAND_IDLE;
 		spec_params	= 0;
 		time_out	= 0;
-		sound_type	= u32(-1);
-		sound_delay	= u32(-1);
+		sound_type	= static_cast<u32>(-1);
+		sound_delay	= static_cast<u32>(-1);
 	}
 };
 
@@ -38,7 +38,7 @@ struct SStateDataMoveToPoint {
 	SStateDataMoveToPoint() {
 		point.set			(0.f,0.f,0.f);
 		target_direction.set(0.f,0.f,0.f);
-		vertex				= u32(-1);
+		vertex				= static_cast<u32>(-1);
 		accelerated			= false;
 		completion_dist		= 0.f;
 	}
@@ -52,7 +52,7 @@ struct SStateDataMoveToPointEx : public SStateDataMoveToPoint {
 	u32 time_to_rebuild;		//u32(-1) - не перестраивать, 0-по-умолчанию, ...
 
 	SStateDataMoveToPointEx() {
-		time_to_rebuild = u32(-1);
+		time_to_rebuild = static_cast<u32>(-1);
 	}
 };
 
@@ -118,7 +118,7 @@ struct SStateDataMoveAroundPoint {
 
 	SStateDataMoveAroundPoint() {
 		point.set			(0.f,0.f,0.f);
-		vertex				= u32(-1);
+		vertex				= static_cast<u32>(-1);
 		accelerated			= false;
 		radius				= 10.f;
 	}

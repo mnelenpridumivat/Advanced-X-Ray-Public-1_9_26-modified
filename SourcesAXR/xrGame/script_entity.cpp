@@ -199,7 +199,7 @@ CScriptEntityAction *CScriptEntity::GetCurrentAction()
 void __stdcall ActionCallback(IKinematics *tpKinematics)
 {
 	// sounds
-	CScriptEntity	*l_tpScriptMonster = smart_cast<CScriptEntity*>((CGameObject*)(tpKinematics->GetUpdateCallbackParam()));
+	CScriptEntity	*l_tpScriptMonster = smart_cast<CScriptEntity*>(static_cast<CGameObject*>(tpKinematics->GetUpdateCallbackParam()));
 	VERIFY			(l_tpScriptMonster);
 	if (!l_tpScriptMonster->GetCurrentAction())
 		return;
@@ -268,7 +268,7 @@ void CScriptEntity::ProcessScripts()
 #endif
 		if (true /*psAI_Flags.is(aiLua)*/ )
 		{
-			object().callback(GameObject::eActionTypeRemoved)(object().lua_game_object(),u32(eActionTypeRemoved));
+			object().callback(GameObject::eActionTypeRemoved)(object().lua_game_object(),static_cast<u32>(eActionTypeRemoved));
 		}
 
 		xr_delete	(l_tpEntityAction);
@@ -288,7 +288,7 @@ void CScriptEntity::ProcessScripts()
 		l_bCompleted	= l_tpEntityAction->m_tWatchAction.m_bCompleted;
 		bfAssignWatch	(l_tpEntityAction);
 		if (l_tpEntityAction->m_tWatchAction.m_bCompleted && !l_bCompleted)
-			object().callback(GameObject::eActionTypeWatch)(object().lua_game_object(),u32(eActionTypeWatch));
+			object().callback(GameObject::eActionTypeWatch)(object().lua_game_object(),static_cast<u32>(eActionTypeWatch));
 
 		l_bCompleted	= l_tpEntityAction->m_tAnimationAction.m_bCompleted;
 		bfAssignAnimation(l_tpEntityAction);
@@ -296,23 +296,23 @@ void CScriptEntity::ProcessScripts()
 		l_bCompleted	= l_tpEntityAction->m_tSoundAction.m_bCompleted;
 		bfAssignSound	(l_tpEntityAction);
 		if (l_tpEntityAction->m_tSoundAction.m_bCompleted && !l_bCompleted)
-			object().callback(GameObject::eActionTypeSound)(object().lua_game_object(),u32(eActionTypeSound));
+			object().callback(GameObject::eActionTypeSound)(object().lua_game_object(),static_cast<u32>(eActionTypeSound));
 
 		
 		l_bCompleted	= l_tpEntityAction->m_tParticleAction.m_bCompleted;
 		bfAssignParticles(l_tpEntityAction);
 		if (l_tpEntityAction->m_tParticleAction.m_bCompleted && !l_bCompleted)
-			object().callback(GameObject::eActionTypeParticle)(object().lua_game_object(),u32(eActionTypeParticle));
+			object().callback(GameObject::eActionTypeParticle)(object().lua_game_object(),static_cast<u32>(eActionTypeParticle));
 		
 		l_bCompleted	= l_tpEntityAction->m_tObjectAction.m_bCompleted;
 		bfAssignObject	(l_tpEntityAction);
 		if (l_tpEntityAction->m_tObjectAction.m_bCompleted && !l_bCompleted)
-			object().callback(GameObject::eActionTypeObject)(object().lua_game_object(),u32(eActionTypeObject));
+			object().callback(GameObject::eActionTypeObject)(object().lua_game_object(),static_cast<u32>(eActionTypeObject));
 		
 		l_bCompleted	= l_tpEntityAction->m_tMovementAction.m_bCompleted;
 		bfAssignMovement(l_tpEntityAction);
 		if (l_tpEntityAction->m_tMovementAction.m_bCompleted && !l_bCompleted)
-			object().callback(GameObject::eActionTypeMovement)(object().lua_game_object(),u32(eActionTypeMovement), -1);
+			object().callback(GameObject::eActionTypeMovement)(object().lua_game_object(),static_cast<u32>(eActionTypeMovement), -1);
 
 		// Установить выбранную анимацию
 		if (!l_tpEntityAction->m_tAnimationAction.m_bCompleted)
@@ -468,7 +468,7 @@ bool CScriptEntity::bfAssignMovement(CScriptEntityAction *tpEntityAction)
 			m_monster->movement().patrol().set_start_type	(l_tMovementAction.m_tPatrolPathStart);
 			m_monster->movement().patrol().set_route_type	(l_tMovementAction.m_tPatrolPathStop);
 			m_monster->movement().patrol().set_random		(l_tMovementAction.m_bRandom);
-			if (l_tMovementAction.m_previous_patrol_point != u32(-1)) {
+			if (l_tMovementAction.m_previous_patrol_point != static_cast<u32>(-1)) {
 				m_monster->movement().patrol().set_previous_point(l_tMovementAction.m_previous_patrol_point);
 			}
 			break;
@@ -565,7 +565,7 @@ void ScriptCallBack(CBlend* B)
 	VERIFY			(l_tpScriptMonster);
 	if (l_tpScriptMonster->GetCurrentAction() && !B->bone_or_part) {
 		if (!l_tpScriptMonster->GetCurrentAction()->m_tAnimationAction.m_bCompleted)
-			l_tpScriptMonster->object().callback(GameObject::eActionTypeAnimation)(l_tpScriptMonster->object().lua_game_object(),u32(eActionTypeAnimation));
+			l_tpScriptMonster->object().callback(GameObject::eActionTypeAnimation)(l_tpScriptMonster->object().lua_game_object(),static_cast<u32>(eActionTypeAnimation));
 			
 		l_tpScriptMonster->m_tpScriptAnimation.invalidate();
 		l_tpScriptMonster->GetCurrentAction()->m_tAnimationAction.m_bCompleted = true;

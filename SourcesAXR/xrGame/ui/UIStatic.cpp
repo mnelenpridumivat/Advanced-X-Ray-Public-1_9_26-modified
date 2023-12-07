@@ -177,7 +177,7 @@ void CUIStatic::Update()
 			float heading		= (PI_MUL_2/255.0f) * color_get_A(clr);
 			SetHeading			(heading);
 
-			float _value		= (float)color_get_R(clr);
+			float _value		= static_cast<float>(color_get_R(clr));
 			
 			float f_scale		= _value / 64.0f;
 			Fvector2 _sz;

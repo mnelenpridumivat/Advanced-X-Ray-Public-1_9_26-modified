@@ -29,7 +29,7 @@ public:
 	template<class _Other>	uialloc<T>&				operator=		(const uialloc<_Other>&)					{	return (*this);	}
 							pointer					allocate		(size_type n, const void* p=0) const	
 							{	VERIFY(1==n);
-								return (pointer) ui_allocator.create();	
+								return static_cast<pointer>(ui_allocator.create());	
 							};
 							char*			__charalloc		(size_type n)							
 							{	VERIFY	(1==n);
@@ -38,18 +38,18 @@ public:
 							void					deallocate		(pointer p, size_type n) const			
 							{	
 								VERIFY(1==n);
-								_12b* p_ = (_12b*)p;
+								_12b* p_ = static_cast<_12b*>(p);
 								ui_allocator.destroy	(p_);				
 							}
 							void					deallocate		(void* p, size_type n) const		
 							{	
 								VERIFY(1==n);
-								_12b* p_ = (_12b*)p;
+								_12b* p_ = static_cast<_12b*>(p);
 								ui_allocator.destroy	(p_);				
 							}
 							void					construct		(pointer p, const T& _Val)				{	std::_Construct(p, _Val);	}
 							void					destroy			(pointer p)								{	std::_Destroy(p);			}
-							size_type				max_size		() const								{	size_type _Count = (size_type)(-1) / sizeof (T);	return (0 < _Count ? _Count : 1);	}
+							size_type				max_size		() const								{	size_type _Count = static_cast<size_type>(-1) / sizeof (T);	return (0 < _Count ? _Count : 1);	}
 };
 template<class _Ty,	class _Other>	inline	bool operator==(const uialloc<_Ty>&, const uialloc<_Other>&)		{	return (true);							}
 template<class _Ty, class _Other>	inline	bool operator!=(const uialloc<_Ty>&, const uialloc<_Other>&)		{	return (false);							}

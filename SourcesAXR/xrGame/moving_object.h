@@ -15,7 +15,7 @@
 class moving_object {
 public:
 	enum action_type {
-		action_move			= u32(0),
+		action_move			= static_cast<u32>(0),
 		action_wait,
 		action_step_left,
 		action_step_right,

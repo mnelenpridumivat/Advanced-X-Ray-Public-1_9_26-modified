@@ -300,7 +300,7 @@ void CUIDemoPlayControl::Update()
 	//st.translate("demo play active : ").c_str() (need to translate ?)
 	CStringTable st;
 	
-	xr_sprintf	(demo_pos,		": %2d %%, ", int(Level().GetDemoPlayPos() * 100));
+	xr_sprintf	(demo_pos,		": %2d %%, ", static_cast<int>(Level().GetDemoPlayPos() * 100));
 	xr_sprintf	(demo_speed,	": %1.1fx", Level().GetDemoPlaySpeed());
 	
 	STRCONCAT(demo_play_string, 

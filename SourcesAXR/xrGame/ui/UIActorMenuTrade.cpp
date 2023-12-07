@@ -71,10 +71,10 @@ bool is_item_in_list(CUIDragDropListEx* pList, PIItem item)
 		for(u16 k=0;k<cell_item->ChildsCount();k++)
 		{
 			CUICellItem* inv_cell_item = cell_item->Child(k);
-			if((PIItem)inv_cell_item->m_pData==item)
+			if(static_cast<PIItem>(inv_cell_item->m_pData)==item)
 				return true;
 		}
-		if((PIItem)cell_item->m_pData==item)
+		if(static_cast<PIItem>(cell_item->m_pData)==item)
 			return true;
 	}
 	return false;
@@ -160,7 +160,7 @@ void CUIActorMenu::DeInitTradeMode()
 
 bool CUIActorMenu::ToActorTrade(CUICellItem* itm, bool b_use_cursor_pos)
 {
-	PIItem	iitem						= (PIItem)itm->m_pData;
+	PIItem	iitem						= static_cast<PIItem>(itm->m_pData);
 	if ( !CanMoveToPartner( iitem ) )
 	{
 		return false;
@@ -200,7 +200,7 @@ bool CUIActorMenu::ToActorTrade(CUICellItem* itm, bool b_use_cursor_pos)
 
 bool CUIActorMenu::ToPartnerTrade(CUICellItem* itm, bool b_use_cursor_pos)
 {
-	PIItem	iitem						= (PIItem)itm->m_pData;
+	PIItem	iitem						= static_cast<PIItem>(itm->m_pData);
 	SInvItemPlace	pl;
 	pl.type		= eItemPlaceRuck;
 	if ( !m_pPartnerInvOwner->AllowItemToTrade( iitem, pl ) )
@@ -260,11 +260,11 @@ float CUIActorMenu::CalcItemsWeight(CUIDragDropListEx* pList)
 	for( u32 i = 0; i < pList->ItemsCount(); ++i )
 	{
 		CUICellItem* itm	= pList->GetItemIdx(i);
-		PIItem	iitem		= (PIItem)itm->m_pData;
+		PIItem	iitem		= static_cast<PIItem>(itm->m_pData);
 		res					+= iitem->Weight();
 		for( u32 j = 0; j < itm->ChildsCount(); ++j )
 		{
-			PIItem	jitem	= (PIItem)itm->Child(j)->m_pData;
+			PIItem	jitem	= static_cast<PIItem>(itm->Child(j)->m_pData);
 			res				+= jitem->Weight();
 		}
 	}
@@ -277,11 +277,11 @@ u32 CUIActorMenu::CalcItemsPrice(CUIDragDropListEx* pList, CTrade* pTrade, bool 
 	for( u32 i = 0; i < pList->ItemsCount(); ++i )
 	{
 		CUICellItem* itm	= pList->GetItemIdx(i);
-		PIItem iitem		= (PIItem)itm->m_pData;
+		PIItem iitem		= static_cast<PIItem>(itm->m_pData);
 		res					+= pTrade->GetItemPrice(iitem, bBuying);
 		for( u32 j = 0; j < itm->ChildsCount(); ++j )
 		{
-			PIItem jitem	= (PIItem)itm->Child(j)->m_pData;
+			PIItem jitem	= static_cast<PIItem>(itm->Child(j)->m_pData);
 			res				+= pTrade->GetItemPrice(jitem, bBuying);
 		}
 	}
@@ -295,7 +295,7 @@ bool CUIActorMenu::CanMoveToPartner(PIItem pItem)
 		return false;
 
 	if ( !m_pPartnerInvOwner->trade_parameters().enabled(
-		CTradeParameters::action_buy(0), pItem->object().cNameSect() ) )
+		static_cast<CTradeParameters::action_buy>(0), pItem->object().cNameSect() ) )
 	{
 		return false;
 	}
@@ -426,7 +426,7 @@ void CUIActorMenu::OnBtnPerformTradeBuy(CUIWindow* w, void* d)
 	int actor_money    = (int)m_pActorInvOwner->get_money();
 	int partner_money  = (int)m_pPartnerInvOwner->get_money();
 	int actor_price    = 0;//(int)CalcItemsPrice( m_pTradeActorList,   m_partner_trade, true  );
-	int partner_price  = (int)CalcItemsPrice( m_pTradePartnerList, m_partner_trade, false );
+	int partner_price  = static_cast<int>(CalcItemsPrice(m_pTradePartnerList, m_partner_trade, false));
 
 	int delta_price    = actor_price - partner_price;
 	actor_money        += delta_price;
@@ -467,7 +467,7 @@ void CUIActorMenu::OnBtnPerformTradeSell(CUIWindow* w, void* d)
 
 	int actor_money    = (int)m_pActorInvOwner->get_money();
 	int partner_money  = (int)m_pPartnerInvOwner->get_money();
-	int actor_price    = (int)CalcItemsPrice( m_pTradeActorList,   m_partner_trade, true  );
+	int actor_price    = static_cast<int>(CalcItemsPrice(m_pTradeActorList, m_partner_trade, true));
 	int partner_price  = 0;//(int)CalcItemsPrice( m_pTradePartnerList, m_partner_trade, false );
 
 	int delta_price    = actor_price - partner_price;
@@ -506,7 +506,7 @@ void CUIActorMenu::TransferItems( CUIDragDropListEx* pSellList, CUIDragDropListE
 	while ( pSellList->ItemsCount() )
 	{
 		CUICellItem* cell_item = pSellList->RemoveItem( pSellList->GetItemIdx(0), false );
-		PIItem item = (PIItem)cell_item->m_pData;
+		PIItem item = static_cast<PIItem>(cell_item->m_pData);
 		pTrade->TransferItem( item, bBuying );
 		
 		if ( bBuying )

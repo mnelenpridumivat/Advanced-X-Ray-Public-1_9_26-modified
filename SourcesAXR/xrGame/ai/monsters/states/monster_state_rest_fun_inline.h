@@ -42,7 +42,7 @@ void CStateMonsterRestFunAbstract::execute()
 
 	object->set_action									(ACT_RUN);
 	object->path().set_target_point			(point);
-	object->path().set_rebuild_time			(100 + u32(50.f * dist));
+	object->path().set_rebuild_time			(100 + static_cast<u32>(50.f * dist));
 	object->path().set_use_covers			(false);
 	object->path().set_distance_to_end		(0.5f);
 	object->anim().accel_activate					(eAT_Calm);
@@ -65,7 +65,7 @@ void CStateMonsterRestFunAbstract::execute()
 			
 			// выполнить бросок
 			for (u32 i=0; i<target->m_pPhysicsShell->get_ElementsNumber();i++) {
-				target->m_pPhysicsShell->get_ElementByStoreOrder((u16)i)->applyImpulse(dir, IMPULSE_TO_CORPSE * target->m_pPhysicsShell->getMass() / target->m_pPhysicsShell->Elements().size());
+				target->m_pPhysicsShell->get_ElementByStoreOrder(static_cast<u16>(i))->applyImpulse(dir, IMPULSE_TO_CORPSE * target->m_pPhysicsShell->getMass() / target->m_pPhysicsShell->Elements().size());
 			}
 
 			time_last_hit	= Device.dwTimeGlobal;

@@ -12,15 +12,15 @@
 
 namespace MonsterSpace {
 	enum EMentalState {
-		eMentalStateDanger = u32(0),
+		eMentalStateDanger = static_cast<u32>(0),
 		eMentalStateFree,
 		eMentalStatePanic,
 	};
 
 	enum EBodyState {
-		eBodyStateCrouch = u32(0),
+		eBodyStateCrouch = static_cast<u32>(0),
 		eBodyStateStand,
-		eBodyStateDummy = u32(-1)
+		eBodyStateDummy = static_cast<u32>(-1)
 	};
 
 	enum EMovementType {
@@ -65,9 +65,9 @@ namespace MonsterSpace {
 		eObjectActionTake,
 		eObjectActionMisfire1,
 		eObjectActionEmpty1,
-		eObjectActionNoItems		= eObjectActionIdle | u16(-1),
+		eObjectActionNoItems		= eObjectActionIdle | static_cast<u16>(-1),
 		// 
-		eObjectActionDummy			= u32(-1),
+		eObjectActionDummy			= static_cast<u32>(-1),
 	};
 
 	struct SBoneRotation {
@@ -88,9 +88,9 @@ namespace MonsterSpace {
 	};
 	
 	enum EScriptMonsterSpeedParam {
-		eSP_Default				= u32(0),
+		eSP_Default				= static_cast<u32>(0),
 		eSP_ForceSpeed,	
-		eSP_None				= u32(-1),
+		eSP_None				= static_cast<u32>(-1),
 	};
 
 	enum EScriptMonsterAnimAction {
@@ -104,28 +104,28 @@ namespace MonsterSpace {
 		eAA_Attack,				
 		eAA_LookAround,
 		eAA_Turn,
-		eAA_NoAction			= u32(-1)
+		eAA_NoAction			= static_cast<u32>(-1)
 	};
 
 	enum EScriptMonsterGlobalAction {
-		eGA_Rest				= u32(0),
+		eGA_Rest				= static_cast<u32>(0),
 		eGA_Eat,
 		eGA_Attack,
 		eGA_Panic,
-		eGA_None				= u32(-1)
+		eGA_None				= static_cast<u32>(-1)
 	};
 
 	enum EScriptSoundAnim {
-		eAnimSoundCustom		= u32(0),
+		eAnimSoundCustom		= static_cast<u32>(0),
 		eAnimSoundDefault,
 	};
 
 	enum EMonsterHeadAnimType {
-		eHeadAnimNormal			= u32(0),
+		eHeadAnimNormal			= static_cast<u32>(0),
 		eHeadAnimAngry,
 		eHeadAnimGlad,
 		eHeadAnimKind,
 
-		eHeadAnimNone			= u32(-1),
+		eHeadAnimNone			= static_cast<u32>(-1),
 	};
 };

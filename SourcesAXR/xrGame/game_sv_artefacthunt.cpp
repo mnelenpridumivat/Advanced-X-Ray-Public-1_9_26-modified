@@ -109,7 +109,7 @@ void	game_sv_ArtefactHunt::Create					(shared_str& options)
 	m_iMoney_for_BuySpawn = READ_IF_EXISTS(pSettings, r_s32, "artefacthunt_gamedata", "spawn_cost", -10000);
 	//---------------------------------------------------------------
 	Set_RankUp_Allowed			( false );
-	ArtefactChooserRandom.seed	( u32(CPU::QPC() & 0xffffffff) );
+	ArtefactChooserRandom.seed	( static_cast<u32>(CPU::QPC() & 0xffffffff) );
 }
 
 void game_sv_ArtefactHunt::OnRoundStart()
@@ -157,7 +157,7 @@ KILL_RES game_sv_ArtefactHunt::GetKillResult(game_PlayerState* pKiller, game_Pla
 bool game_sv_ArtefactHunt::OnKillResult(KILL_RES KillResult, game_PlayerState* pKiller, game_PlayerState* pVictim)
 {	
 	bool res = true;	
-	TeamStruct* pTeam		= GetTeamData(u8(pKiller->team));
+	TeamStruct* pTeam		= GetTeamData(static_cast<u8>(pKiller->team));
 	switch (KillResult)
 	{
 	case KR_TEAMMATE_CRITICAL:
@@ -178,7 +178,7 @@ bool game_sv_ArtefactHunt::OnKillResult(KILL_RES KillResult, game_PlayerState* p
 			{
 				u32 ResMoney = pTeam->m_iM_TargetRival;
 				if (pKiller->testFlag(GAME_PLAYER_FLAG_INVINCIBLE))
-					ResMoney = s32(ResMoney * pTeam->m_fInvinsibleKillModifier);
+					ResMoney = static_cast<s32>(ResMoney * pTeam->m_fInvinsibleKillModifier);
 				Player_AddMoney(pKiller, ResMoney);
 			};
 			res = true;
@@ -387,7 +387,7 @@ void	game_sv_ArtefactHunt::assign_RP(CSE_Abstract* E, game_PlayerState* ps_who)
 		NET_Packet		P;
 		pPlayer->u_EventGen		(P,GE_GAME_EVENT,pPlayer->ID()	);
 		P.w_u16						(GAME_EVENT_PLAYER_KILL);
-		P.w_u16			(u16(pPlayer->ID())	);
+		P.w_u16			(static_cast<u16>(pPlayer->ID())	);
 		pPlayer->u_EventSend		(P);
 	}
 	else
@@ -472,7 +472,7 @@ u32		game_sv_ArtefactHunt::RP_2_Use				(CSE_Abstract* E)
 	CSE_ALifeCreatureActor	*pA	=	smart_cast<CSE_ALifeCreatureActor*>(E);
 	if (!pA) return 0;
 
-	return u32(pA->g_team());
+	return static_cast<u32>(pA->g_team());
 };
 
 void	game_sv_ArtefactHunt::LoadTeams			()
@@ -522,7 +522,7 @@ BOOL	game_sv_ArtefactHunt::OnTouch				(u16 eid_who, u16 eid_what, BOOL bForced)
 				if (!m_bArtefactWasTaken)
 				{
 					m_bArtefactWasTaken = true;
-					TeamStruct* pTeam		= GetTeamData(u8(ps_who->team));
+					TeamStruct* pTeam		= GetTeamData(static_cast<u8>(ps_who->team));
 					if (pTeam)
 					{	
 						struct experience_adder
@@ -663,7 +663,7 @@ void game_sv_ArtefactHunt::OnArtefactOnBase(ClientID id_who)
 	//add player's points
 	
 	Set_RankUp_Allowed(true);
-	TeamStruct* pTeam		= GetTeamData(u8(ps->team));
+	TeamStruct* pTeam		= GetTeamData(static_cast<u8>(ps->team));
 	if (pTeam)
 	{
 		Player_AddMoney(ps, pTeam->m_iM_TargetSucceed);
@@ -936,7 +936,7 @@ void game_sv_ArtefactHunt::Assign_Artefact_RPoint(CSE_Abstract* E)
 	r	= rp[m_LastRespawnPointID];
 	rpID.erase(rpID.begin()+ID);
 */	
-	u32 ID				= ArtefactChooserRandom.randI((int)rp.size());
+	u32 ID				= ArtefactChooserRandom.randI(static_cast<int>(rp.size()));
 #ifndef MASTER_GOLD
 	Msg					("---select artefact RPoint [%d]", ID);
 #endif // #ifndef MASTER_GOLD
@@ -950,7 +950,7 @@ void game_sv_ArtefactHunt::OnTimelimitExceed()
 	if ( GetTeamScore(0) == GetTeamScore(1) ) return;
 	u8 winning_team = (GetTeamScore(0) < GetTeamScore(1))? 1 : 0;
 	OnTeamScore(winning_team, false);
-	m_phase = u16((winning_team)?GAME_PHASE_TEAM2_SCORES:GAME_PHASE_TEAM1_SCORES);
+	m_phase = static_cast<u16>((winning_team) ? GAME_PHASE_TEAM2_SCORES : GAME_PHASE_TEAM1_SCORES);
 	switch_Phase		(m_phase);
 
 	OnDelayedRoundEnd( eRoundEnd_TimeLimit ); // "Team Final Score"
@@ -959,11 +959,11 @@ void game_sv_ArtefactHunt::OnTimelimitExceed()
 void game_sv_ArtefactHunt::net_Export_State(NET_Packet& P, ClientID id_to)
 {
 	inherited::net_Export_State(P, id_to);
-	P.w_u8			(u8(Get_ArtefactsCount()));
+	P.w_u8			(static_cast<u8>(Get_ArtefactsCount()));
 	P.w_u16			(artefactBearerID);
 	P.w_u8			(teamInPossession);
 	P.w_u16			(m_dwArtefactID);
-	P.w_u8			((u8)Get_BearerCantSprint());
+	P.w_u8			(static_cast<u8>(Get_BearerCantSprint()));
 
 	P.w_s32			(Get_ReinforcementTime());
 	if ( Get_ReinforcementTime() > 0)
@@ -1311,7 +1311,7 @@ void	game_sv_ArtefactHunt::CheckForTeamElimination()
 		m_server->ForEachClientDo(tmp_functor);
 	};
 	//-----------------------------------------------------------------------------
-	m_phase = u16((WinTeam == 1)?GAME_PHASE_TEAM2_ELIMINATED:GAME_PHASE_TEAM1_ELIMINATED);
+	m_phase = static_cast<u16>((WinTeam == 1) ? GAME_PHASE_TEAM2_ELIMINATED : GAME_PHASE_TEAM1_ELIMINATED);
 	switch_Phase(m_phase);
 
 	OnDelayedTeamEliminated(); //OnDelayedRoundEnd( eRoundEnd_FragLimit ); //??   "Team Eliminated"
@@ -1327,7 +1327,7 @@ void	game_sv_ArtefactHunt::CheckForTeamWin()
 	if (!WinTeam) 
 	{
 		if (!GetTimeLimit()) return;
-		if (GetTimeLimit() && ((Level().timeServer()-StartTime())) > u32(GetTimeLimit()*60000))
+		if (GetTimeLimit() && ((Level().timeServer()-StartTime())) > static_cast<u32>(GetTimeLimit() * 60000))
 		{
 			int Team1 = GetTeamScore(0);
 			int Team2 = GetTeamScore(1);
@@ -1351,7 +1351,7 @@ void	game_sv_ArtefactHunt::CheckForTeamWin()
 	};
 	
 	OnTeamScore(WinTeam, false);
-	m_phase = u16( ( WinTeam == 2 ) ? GAME_PHASE_TEAM2_SCORES : GAME_PHASE_TEAM1_SCORES );
+	m_phase = static_cast<u16>((WinTeam == 2) ? GAME_PHASE_TEAM2_SCORES : GAME_PHASE_TEAM1_SCORES);
 	switch_Phase( m_phase );
 
 	OnDelayedRoundEnd( eRoundEnd_ArtrefactLimit ); //"Team Final Score" 
@@ -1374,7 +1374,7 @@ void	game_sv_ArtefactHunt::Check_ForClearRun		(game_PlayerState* ps)
 		ps->m_bClearRun = true;
 		return;
 	};*/
-	TeamStruct* pTeam		= GetTeamData(u8(ps->team));
+	TeamStruct* pTeam		= GetTeamData(static_cast<u8>(ps->team));
 	if (!pTeam) return;	
 
 	Player_AddMoney(ps, pTeam->m_iM_ClearRunBonus);	

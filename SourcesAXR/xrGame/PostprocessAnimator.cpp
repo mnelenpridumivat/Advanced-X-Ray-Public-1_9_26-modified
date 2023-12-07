@@ -43,7 +43,7 @@ CPostprocessAnimator::CPostprocessAnimator()
 
 CPostprocessAnimator::CPostprocessAnimator(int id, bool cyclic)
 #ifndef _PP_EDITOR_
-:CEffectorPP((EEffectorPPType)id, 100000, true),
+:CEffectorPP(static_cast<EEffectorPPType>(id), 100000, true),
 m_bCyclic(cyclic)
 #endif
 {

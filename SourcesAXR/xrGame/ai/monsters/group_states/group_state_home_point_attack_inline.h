@@ -47,7 +47,7 @@ TEMPLATE_SPECIALIZATION
 void CStateGroupAttackMoveToHomePointAbstract::initialize()
 {
 	inherited::initialize	();
-	m_target_node = u32(-1);
+	m_target_node = static_cast<u32>(-1);
 	m_last_tick_enemy_inaccessible	=	0;
 	m_first_tick_enemy_inaccessible	=	0;
 	m_state_started					=	time();
@@ -140,7 +140,7 @@ bool CStateGroupAttackMoveToHomePointAbstract::check_start_conditions()
 TEMPLATE_SPECIALIZATION
 bool CStateGroupAttackMoveToHomePointAbstract::check_completion()
 {
-	bool const in_camp_state				=	prev_substate != u32(-1) && 
+	bool const in_camp_state				=	prev_substate != static_cast<u32>(-1) && 
 												prev_substate != eStateAttack_HomePoint_Hide;
 
 	if ( m_skip_camp && in_camp_state )
@@ -204,7 +204,7 @@ void CStateGroupAttackMoveToHomePointAbstract::setup_substates()
 
 		m_skip_camp	  = false;
 
-		if ( m_target_node == u32(-1) )
+		if ( m_target_node == static_cast<u32>(-1) )
 		{
 			m_target_node	= object->Home->get_place_in_min_home();
 			m_skip_camp		= true;

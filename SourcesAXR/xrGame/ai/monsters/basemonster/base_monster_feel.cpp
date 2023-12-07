@@ -126,13 +126,13 @@ void CBaseMonster::HitEntity(const CEntity *pEntity, float fDamage, float impuls
 			
 			float time_to_lock		= fDamage * MAX_LOCK_TIME;
 			clamp					(time_to_lock, 0.f, MAX_LOCK_TIME);
-			Actor()->lock_accel_for	(int(time_to_lock * 1000));
+			Actor()->lock_accel_for	(static_cast<int>(time_to_lock * 1000));
 
 			//////////////////////////////////////////////////////////////////////////
 			//
 			//////////////////////////////////////////////////////////////////////////
 			
-			CEffectorCam* ce = Actor()->Cameras().GetCamEffector((ECamEffectorType)effBigMonsterHit);
+			CEffectorCam* ce = Actor()->Cameras().GetCamEffector(static_cast<ECamEffectorType>(effBigMonsterHit));
 			if(!ce)
 			{
 				const shared_str&	eff_sect = pSettings->r_string(cNameSect(), "actor_hit_effect");	
@@ -313,7 +313,7 @@ bool CBaseMonster::critical_wound_external_conditions_suitable	()
 
 void CBaseMonster::critical_wounded_state_start() 
 {
-	VERIFY	(m_critical_wound_type != u32(-1));
+	VERIFY	(m_critical_wound_type != static_cast<u32>(-1));
 
 	LPCSTR anim = 0;
 	switch (m_critical_wound_type)	{

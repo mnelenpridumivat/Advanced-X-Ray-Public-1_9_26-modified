@@ -27,7 +27,7 @@ bool CStateChimeraHuntingMoveToCoverAbstract::check_completion()
 TEMPLATE_SPECIALIZATION
 void CStateChimeraHuntingMoveToCoverAbstract::reselect_state()
 {
-	if (prev_substate == u32(-1))					select_state(eStateMoveToCover);
+	if (prev_substate == static_cast<u32>(-1))					select_state(eStateMoveToCover);
 	else if (prev_substate == eStateMoveToCover)	select_state(eStateComeOut);
 	else											select_state(eStateMoveToCover);
 }

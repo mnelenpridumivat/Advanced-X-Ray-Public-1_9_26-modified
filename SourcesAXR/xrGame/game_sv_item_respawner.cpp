@@ -12,13 +12,13 @@ item_respawn_manager::spawn_item::spawn_item()
 	item_object = NULL;
 	respawn_time = 0;
 	last_spawn_time = 0;
-	last_game_id = u16(-1);
+	last_game_id = static_cast<u16>(-1);
 }
 item_respawn_manager::spawn_item::spawn_item(u32 r_time)
 {
 	item_object = NULL;
 	respawn_time = r_time;
-	last_game_id = u16(-1);
+	last_game_id = static_cast<u16>(-1);
 	last_spawn_time = 0;
 }
 
@@ -353,7 +353,7 @@ void item_respawn_manager::clear_level_items()
 		if (!entity)
 			continue;		// this can be in case ending of a round...
 		//VERIFY2(entity, make_string("entity not found [%d]", *i).c_str());
-		if (entity->ID_Parent != u16(-1))
+		if (entity->ID_Parent != static_cast<u16>(-1))
 			continue;
 #ifndef MASTER_GOLD
 		Msg("---Destroying level item [%d] before respawn...", *i);

@@ -372,7 +372,7 @@ bool CInventory::Slot(u16 slot_id, PIItem pIItem, bool bNotActivate, bool strict
 			R_ASSERT(it_ruck == m_ruck.end());
 		} else
 		{
-			u16 real_parent = pIItem->object().H_Parent() ? pIItem->object().H_Parent()->ID() : u16(-1);
+			u16 real_parent = pIItem->object().H_Parent() ? pIItem->object().H_Parent()->ID() : static_cast<u16>(-1);
 			R_ASSERT2(GetOwner()->object_id() == real_parent,
 				make_string("! ERROR: CL: actor [%d] doesn't contain [%d], real parent is [%d]", 
 					GetOwner()->object_id(), pIItem->object_id(), real_parent).c_str()
@@ -461,7 +461,7 @@ bool CInventory::Ruck(PIItem pIItem, bool strict_placement)
 
 	if (!IsGameTypeSingle())
 	{
-		u16 real_parent = pIItem->object().H_Parent() ? pIItem->object().H_Parent()->ID() : u16(-1);
+		u16 real_parent = pIItem->object().H_Parent() ? pIItem->object().H_Parent()->ID() : static_cast<u16>(-1);
 		if (GetOwner()->object_id() != real_parent)
 		{
 			Msg("! WARNING: CL: actor [%d] tries to place to ruck not own item [%d], that has parent [%d]",
@@ -487,7 +487,7 @@ bool CInventory::Ruck(PIItem pIItem, bool strict_placement)
 
 		if (!IsGameTypeSingle())
 		{
-			u16 item_parent_id = pIItem->object().H_Parent() ? pIItem->object().H_Parent()->ID() : u16(-1) ;
+			u16 item_parent_id = pIItem->object().H_Parent() ? pIItem->object().H_Parent()->ID() : static_cast<u16>(-1) ;
 			u16 inventory_owner_id = GetOwner()->object_id();
 			R_ASSERT2(item_parent_id == inventory_owner_id,
 				make_string("! ERROR: CL: Actor[%d] tries to place to ruck not own item [%d], real item owner is [%d]",
@@ -716,7 +716,7 @@ bool CInventory::Action(u16 cmd, u32 flags)
 			b_send_event = true;
 			if (cmd == kWPN_6 && !IsGameTypeSingle()) return false;
 			
-			u16 slot = u16(cmd - kWPN_1 + 1);
+			u16 slot = static_cast<u16>(cmd - kWPN_1 + 1);
 			if ( flags & CMD_START )
 			{
 				ActiveWeapon( slot );
@@ -911,7 +911,7 @@ void CInventory::UpdateDropItem(PIItem pIItem)
 		{
 			NET_Packet					P;
 			pIItem->object().u_EventGen	(P, GE_OWNERSHIP_REJECT, pIItem->object().H_Parent()->ID());
-			P.w_u16						(u16(pIItem->object().ID()));
+			P.w_u16						(static_cast<u16>(pIItem->object().ID()));
 			pIItem->object().u_EventSend(P);
 		}
 	}// dropManual
@@ -1230,7 +1230,7 @@ u32	CInventory::dwfGetObjectCount()
 
 CInventoryItem	*CInventory::tpfGetObjectByIndex(int iIndex)
 {
-	if ((iIndex >= 0) && (iIndex < (int)m_all.size())) {
+	if ((iIndex >= 0) && (iIndex < static_cast<int>(m_all.size()))) {
 		TIItemContainer	&l_list = m_all;
 		int			i = 0;
 		for(TIItemContainer::iterator l_it = l_list.begin(); l_list.end() != l_it; ++l_it, ++i) 
@@ -1293,7 +1293,7 @@ u32  CInventory::BeltWidth() const
 		if (outfit)
 		{
 			result += outfit->get_artefact_count();
-			clamp(result, u32(0), u32(GameConstants::GetArtefactsCount()));
+			clamp(result, static_cast<u32>(0), static_cast<u32>(GameConstants::GetArtefactsCount()));
 		}
 		return result;
 	}

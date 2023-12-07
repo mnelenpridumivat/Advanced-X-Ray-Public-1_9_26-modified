@@ -56,7 +56,7 @@ void CAI_Stalker::OnEvent		(NET_Packet& P, u16 type)
 //				DropItemSendMessage(O);
 				NET_Packet				P;
 				u_EventGen				(P,GE_OWNERSHIP_REJECT,ID());
-				P.w_u16					(u16(O->ID()));
+				P.w_u16					(static_cast<u16>(O->ID()));
 				u_EventSend				(P);
 
 #ifndef SILENCE
@@ -127,7 +127,7 @@ void CAI_Stalker::DropItemSendMessage	(CObject *O)
 	// We doesn't have similar weapon - pick up it
 	NET_Packet				P;
 	u_EventGen				(P,GE_OWNERSHIP_REJECT,ID());
-	P.w_u16					(u16(O->ID()));
+	P.w_u16					(static_cast<u16>(O->ID()));
 	u_EventSend				(P);
 }
 

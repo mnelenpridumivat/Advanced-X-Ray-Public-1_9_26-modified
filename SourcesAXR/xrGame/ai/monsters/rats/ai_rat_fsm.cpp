@@ -323,9 +323,15 @@ void CAI_Rat::AttackRun()
 	//	Msg			("%6d : Rat %s, %f -> %f [%f]",Device.dwTimeGlobal,*cName(),movement().m_body.current.pitch,movement().m_body.target.pitch,get_custom_pitch_speed(0.f));
 	vfSetFire(false);
 
-	ERatStates eState = ERatStates(dwfChooseAction(m_dwActionRefreshRate,m_fAttackSuccessProbability,m_fAttackSuccessProbability,m_fAttackSuccessProbability,m_fAttackSuccessProbability,g_Team(),g_Squad(),g_Group(),m_eCurrentState,m_eCurrentState,m_eCurrentState,aiRatRetreat,aiRatRetreat,this,30.f));
+	ERatStates eState = static_cast<ERatStates>(dwfChooseAction(m_dwActionRefreshRate, m_fAttackSuccessProbability, m_fAttackSuccessProbability,
+	                                                            m_fAttackSuccessProbability, m_fAttackSuccessProbability, g_Team(), g_Squad(),
+	                                                            g_Group(), m_eCurrentState, m_eCurrentState, m_eCurrentState, aiRatRetreat,
+	                                                            aiRatRetreat, this, 30.f));
 	if (eState != m_eCurrentState) {
-		eState = ERatStates(dwfChooseAction(0*m_dwActionRefreshRate,m_fAttackSuccessProbability,m_fAttackSuccessProbability,m_fAttackSuccessProbability,m_fAttackSuccessProbability,g_Team(),g_Squad(),g_Group(),m_eCurrentState,m_eCurrentState,m_eCurrentState,aiRatRetreat,aiRatRetreat,this,30.f));
+		eState = static_cast<ERatStates>(dwfChooseAction(0 * m_dwActionRefreshRate, m_fAttackSuccessProbability,
+		                                                 m_fAttackSuccessProbability, m_fAttackSuccessProbability,
+		                                                 m_fAttackSuccessProbability, g_Team(), g_Squad(), g_Group(), m_eCurrentState,
+		                                                 m_eCurrentState, m_eCurrentState, aiRatRetreat, aiRatRetreat, this, 30.f));
 		GO_TO_NEW_STATE_THIS_UPDATE(eState);
 	}
 
@@ -389,10 +395,16 @@ void CAI_Rat::Retreat()
 	}
 
 	if (memory().enemy().selected() && memory().enemy().selected()->g_Alive()) {
-		ERatStates eState = ERatStates(dwfChooseAction(m_dwActionRefreshRate,m_fAttackSuccessProbability,m_fAttackSuccessProbability,m_fAttackSuccessProbability,m_fAttackSuccessProbability,g_Team(),g_Squad(),g_Group(),aiRatAttackRun,aiRatAttackRun,aiRatAttackRun,aiRatRetreat,aiRatRetreat,this,30.f));
+		ERatStates eState = static_cast<ERatStates>(dwfChooseAction(m_dwActionRefreshRate, m_fAttackSuccessProbability, m_fAttackSuccessProbability,
+		                                                            m_fAttackSuccessProbability, m_fAttackSuccessProbability, g_Team(), g_Squad(),
+		                                                            g_Group(), aiRatAttackRun, aiRatAttackRun, aiRatAttackRun, aiRatRetreat,
+		                                                            aiRatRetreat, this, 30.f));
 		//		ERatStates eState = ERatStates(dwfChooseAction(m_dwActionRefreshRate,m_fAttackSuccessProbability,m_fAttackSuccessProbability,m_fAttackSuccessProbability,m_fAttackSuccessProbability,g_Team(),g_Squad(),g_Group(),aiRatAttackRun,aiRatAttackRun,aiRatAttackRun,aiRatAttackRun,aiRatAttackRun,this,30.f));
 		if (eState != m_eCurrentState) {
-			eState = ERatStates(dwfChooseAction(m_dwActionRefreshRate,m_fAttackSuccessProbability,m_fAttackSuccessProbability,m_fAttackSuccessProbability,m_fAttackSuccessProbability,g_Team(),g_Squad(),g_Group(),aiRatAttackRun,aiRatAttackRun,aiRatAttackRun,aiRatRetreat,aiRatRetreat,this,30.f));
+			eState = static_cast<ERatStates>(dwfChooseAction(m_dwActionRefreshRate, m_fAttackSuccessProbability, m_fAttackSuccessProbability,
+			                                                 m_fAttackSuccessProbability, m_fAttackSuccessProbability, g_Team(), g_Squad(),
+			                                                 g_Group(), aiRatAttackRun, aiRatAttackRun, aiRatAttackRun, aiRatRetreat,
+			                                                 aiRatRetreat, this, 30.f));
 			GO_TO_NEW_STATE_THIS_UPDATE(eState);
 		}
 		Fvector tTemp;
@@ -651,7 +663,7 @@ void CAI_Rat::EatCorpse()
 		sound().play				(eRatSoundEat);
 	}
 	else {
-		sound().remove_active_sounds(u32(-1));
+		sound().remove_active_sounds(static_cast<u32>(-1));
 		if (!a)
 			m_fSpeed					= m_fMaxSpeed;
 		else

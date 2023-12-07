@@ -92,7 +92,7 @@ bool CStateMonsterAttackCampAbstract::check_start_conditions()
 TEMPLATE_SPECIALIZATION
 void CStateMonsterAttackCampAbstract::reselect_state()
 {
-	if (prev_substate == u32(-1)) {
+	if (prev_substate == static_cast<u32>(-1)) {
 		select_state(eStateAttackCamp_Hide);
 		return;
 	}

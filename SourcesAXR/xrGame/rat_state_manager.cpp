@@ -13,7 +13,7 @@
 
 rat_state_manager::rat_state_manager	() :
 	m_object				(0),
-	m_last_state_id			(u32(-1))
+	m_last_state_id			(static_cast<u32>(-1))
 {
 }
 

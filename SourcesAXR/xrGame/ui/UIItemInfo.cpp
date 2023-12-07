@@ -212,7 +212,7 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 		return;
 	}
 
-	PIItem pInvItem			= (PIItem)pCellItem->m_pData;
+	PIItem pInvItem			= static_cast<PIItem>(pCellItem->m_pData);
 	m_pInvItem				= pInvItem;
 	Enable					(NULL != m_pInvItem);
 	if(!m_pInvItem)			return;
@@ -238,7 +238,7 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 				weight = pInvItem->CInventoryItem::Weight();
 				for( u32 j = 0; j < pCellItem->ChildsCount(); ++j )
 				{
-					PIItem jitem	= (PIItem)pCellItem->Child(j)->m_pData;
+					PIItem jitem	= static_cast<PIItem>(pCellItem->Child(j)->m_pData);
 					weight			+= jitem->CInventoryItem::Weight();
 				}
 
@@ -254,7 +254,7 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 			UIWeight->SetWndPos	(pos);
 		}
 	}
-	if ( UICost && IsGameTypeSingle() && item_price!=u32(-1) )
+	if ( UICost && IsGameTypeSingle() && item_price!=static_cast<u32>(-1) )
 	{
 		xr_sprintf				(str, "%d RU", item_price);// will be owerwritten in multiplayer
 		UICost->SetText		(str);

@@ -131,7 +131,7 @@ void CControlAnimationBase::update()
 void CControlAnimationBase::clear_override_animation ()
 {
 	m_override_animation		=	eAnimUndefined;
-	m_override_animation_index	=	(u32)-1;
+	m_override_animation_index	=	static_cast<u32>(-1);
 }
 
 void CControlAnimationBase::set_override_animation (EMotionAnim anim, u32 index)
@@ -167,7 +167,7 @@ void CControlAnimationBase::set_override_animation (pcstr name)
 
 			u32 anim_index			=	0;
 			sscanf						(anim_index_string, "%d", &anim_index);
-			set_override_animation		((EMotionAnim)anim_type, anim_index);
+			set_override_animation		(static_cast<EMotionAnim>(anim_type), anim_index);
 
 			return;
 		}
@@ -248,13 +248,13 @@ void CControlAnimationBase::SelectVelocities()
 
 		u32 cur_point_velocity_index = m_object->movement().detail().path()[m_object->movement().detail().curr_travel_point_index()].velocity;
 
-		u32 next_point_velocity_index = u32(-1);
+		u32 next_point_velocity_index = static_cast<u32>(-1);
 		if (m_object->movement().detail().path().size() > m_object->movement().detail().curr_travel_point_index() + 1) 
 			next_point_velocity_index = m_object->movement().detail().path()[m_object->movement().detail().curr_travel_point_index() + 1].velocity;
 
 		// если сейчас стоит на месте и есть след точка (т.е. должен быть в движении),
 		// то реализовать поворот на месте, а дальше форсировать скорость со следующей точки
-		if ((cur_point_velocity_index == MonsterMovement::eVelocityParameterStand) && (next_point_velocity_index != u32(-1))) {
+		if ((cur_point_velocity_index == MonsterMovement::eVelocityParameterStand) && (next_point_velocity_index != static_cast<u32>(-1))) {
 			if (!m_object->control().direction().is_turning()) 
 				cur_point_velocity_index = next_point_velocity_index;
 		} 

@@ -9,7 +9,7 @@
 
 CBolt::CBolt(void) 
 {
-	m_thrower_id				=u16(-1);
+	m_thrower_id				=static_cast<u16>(-1);
 }
 
 CBolt::~CBolt(void) 
@@ -53,7 +53,7 @@ void CBolt::Throw()
 {
 	CMissile					*l_pBolt = smart_cast<CMissile*>(m_fake_missile);
 	if(!l_pBolt)				return;
-	l_pBolt->set_destroy_time	(u32(m_dwDestroyTimeMax/phTimefactor));
+	l_pBolt->set_destroy_time	(static_cast<u32>(m_dwDestroyTimeMax / phTimefactor));
 	inherited::Throw			();
 	spawn_fake_missile			();
 }

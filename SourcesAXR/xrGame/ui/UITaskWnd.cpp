@@ -172,7 +172,7 @@ void CUITaskWnd::ReloadTaskInfo()
 	CGameTask* t					= Level().GameTaskManager().ActiveTask();
 	m_pStoryLineTaskItem->InitTask	(t);
 	
-	if(t && (t->m_map_object_id==u16(-1) || t->m_map_location.size()==0))
+	if(t && (t->m_map_object_id==static_cast<u16>(-1) || t->m_map_location.size()==0))
 		m_btn_focus->Show(false);
 	else
 		m_btn_focus->Show(true);

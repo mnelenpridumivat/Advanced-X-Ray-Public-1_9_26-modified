@@ -29,8 +29,8 @@ void CStateMonsterLookToPointAbstract::execute()
 	object->anim().SetSpecParams			(data.action.spec_params);
 	object->dir().face_target				(data.point, data.face_delay);
 
-	if (data.action.sound_type != u32(-1)) {
-		if (data.action.sound_delay != u32(-1))
+	if (data.action.sound_type != static_cast<u32>(-1)) {
+		if (data.action.sound_delay != static_cast<u32>(-1))
 			object->sound().play(data.action.sound_type, 0,0,data.action.sound_delay);
 		else 
 			object->sound().play(data.action.sound_type);

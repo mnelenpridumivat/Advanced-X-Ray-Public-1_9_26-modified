@@ -63,17 +63,17 @@ void CControlAnimation::update_frame()
 
 static void  global_animation_end_callback(CBlend* B)
 {
-	CControlAnimation *controller = (CControlAnimation *)B->CallbackParam;
+	CControlAnimation *controller = static_cast<CControlAnimation*>(B->CallbackParam);
 	controller->m_global_animation_end = true;
 }
 static void  legs_animation_end_callback(CBlend* B)
 {
-	CControlAnimation *controller = (CControlAnimation *)B->CallbackParam;
+	CControlAnimation *controller = static_cast<CControlAnimation*>(B->CallbackParam);
 	controller->m_legs_animation_end = true;
 }
 static void  torso_animation_end_callback(CBlend* B)
 {
-	CControlAnimation *controller = (CControlAnimation *)B->CallbackParam;
+	CControlAnimation *controller = static_cast<CControlAnimation*>(B->CallbackParam);
 	controller->m_torso_animation_end = true;
 }
 
@@ -106,7 +106,7 @@ void CControlAnimation::play_part(SAnimationPart &part, PlayCallback callback)
 	VERIFY				(part.get_motion().valid());
 	
 	u16 bone_or_part	= m_skeleton_animated->LL_GetMotionDef(part.get_motion())->bone_or_part;
-	if (bone_or_part == u16(-1)) bone_or_part = m_skeleton_animated->LL_PartID("default");
+	if (bone_or_part == static_cast<u16>(-1)) bone_or_part = m_skeleton_animated->LL_PartID("default");
 	
 	// initialize synchronization of prev and current animation
 	float pos		= -1.f;
@@ -175,7 +175,7 @@ void CControlAnimation::check_events(SAnimationPart &part)
 		ANIMATION_EVENT_MAP_IT it = m_anim_events.find(part.get_motion());
 		if (it != m_anim_events.end()) {
 
-			float cur_perc = float(Device.dwTimeGlobal - part.time_started) / ((part.blend->timeTotal / part.blend->speed) * 1000);
+			float cur_perc = static_cast<float>(Device.dwTimeGlobal - part.time_started) / ((part.blend->timeTotal / part.blend->speed) * 1000);
 
 			for (ANIMATION_EVENT_VEC_IT event_it = it->second.begin(); event_it != it->second.end(); ++event_it) {
 				SAnimationEvent &event = *event_it;
@@ -216,7 +216,7 @@ void CControlAnimation::restart(SAnimationPart &part, PlayCallback callback)
 	VERIFY				(part.blend);
 
 	u16 bone_or_part	= m_skeleton_animated->LL_GetMotionDef(part.get_motion())->bone_or_part;
-	if (bone_or_part == u16(-1)) bone_or_part = m_skeleton_animated->LL_PartID("default");
+	if (bone_or_part == static_cast<u16>(-1)) bone_or_part = m_skeleton_animated->LL_PartID("default");
 
 	//save 
 	float time_saved		= part.blend->timeCurrent;

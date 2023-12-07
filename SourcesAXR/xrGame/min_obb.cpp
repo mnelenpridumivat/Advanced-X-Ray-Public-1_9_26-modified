@@ -59,8 +59,8 @@ static Fvector GetColumn(Fmatrix &self, const u32 &index)
 //----------------------------------------------------------------------------
 static float Volume (const float* afAngle, void* pvUserData)
 {
-    int iQuantity = ((PointArray*)pvUserData)->m_iQuantity;
-    const Fvector* akPoint = ((PointArray*)pvUserData)->m_akPoint;
+    int iQuantity = static_cast<PointArray*>(pvUserData)->m_iQuantity;
+    const Fvector* akPoint = static_cast<PointArray*>(pvUserData)->m_akPoint;
 
     float fCos0 = _cos(afAngle[0]);
     float fSin0 = _sin(afAngle[0]);

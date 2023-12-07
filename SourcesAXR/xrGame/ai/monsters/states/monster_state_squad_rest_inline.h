@@ -69,7 +69,7 @@ void CStateMonsterSquadRestAbstract::setup_substates()
 				data.vertex		= object->control().path_builder().restrictions().accessible_nearest(dest_pos, data.point);
 			} else {
 				data.point		= dest_pos;
-				data.vertex		= u32(-1);
+				data.vertex		= static_cast<u32>(-1);
 			}
 		}
 

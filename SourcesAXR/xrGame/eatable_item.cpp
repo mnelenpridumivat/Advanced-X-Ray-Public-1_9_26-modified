@@ -130,7 +130,7 @@ void CEatableItem::UpdateInRuck(CActor* actor)
 
 void CEatableItem::HideWeapon()
 {
-	CEffectorCam* effector = Actor()->Cameras().GetCamEffector((ECamEffectorType)effUseItem);
+	CEffectorCam* effector = Actor()->Cameras().GetCamEffector(static_cast<ECamEffectorType>(effUseItem));
 	CCustomDetector* pDet = smart_cast<CCustomDetector*>(Actor()->inventory().ItemFromSlot(DETECTOR_SLOT));
 
 	Actor()->SetWeaponHideState(INV_STATE_BLOCK_ALL, true);
@@ -148,7 +148,7 @@ void CEatableItem::StartAnimation()
 {
 	m_bActivated = true;
 
-	CEffectorCam* effector = Actor()->Cameras().GetCamEffector((ECamEffectorType)effUseItem);
+	CEffectorCam* effector = Actor()->Cameras().GetCamEffector(static_cast<ECamEffectorType>(effUseItem));
 
 	if (pSettings->line_exist(anim_sect, "single_handed_anim"))
 		m_iAnimHandsCnt = pSettings->r_u32(anim_sect, "single_handed_anim");
@@ -184,7 +184,7 @@ void CEatableItem::UpdateUseAnim(CActor* actor)
 	if (!m_bHasAnimation) return;
 
 	CCustomDetector* pDet = smart_cast<CCustomDetector*>(actor->inventory().ItemFromSlot(DETECTOR_SLOT));
-	CEffectorCam* effector = actor->Cameras().GetCamEffector((ECamEffectorType)effUseItem);
+	CEffectorCam* effector = actor->Cameras().GetCamEffector(static_cast<ECamEffectorType>(effUseItem));
 	bool IsActorAlive = g_pGamePersistent->GetActorAliveStatus();
 
 	if (m_bItmStartAnim && actor->inventory().GetActiveSlot() == NO_ACTIVE_SLOT && (!pDet || pDet->IsHidden()))
@@ -228,12 +228,12 @@ bool CEatableItem::UseBy (CEntityAlive* entity_alive)
 
 	entity_alive->conditions().ApplyInfluence(V, m_physic_item->cNameSect());
 
-	for (u8 i = 0; i < (u8)eBoostMaxCount; i++)
+	for (u8 i = 0; i < static_cast<u8>(eBoostMaxCount); i++)
 	{
 		if (pSettings->line_exist(m_physic_item->cNameSect().c_str(), ef_boosters_section_names[i]))
 		{
 			SBooster B;
-			B.Load(m_physic_item->cNameSect(), (EBoostParams)i);
+			B.Load(m_physic_item->cNameSect(), static_cast<EBoostParams>(i));
 			entity_alive->conditions().ApplyBooster(B, m_physic_item->cNameSect());
 		}
 	}

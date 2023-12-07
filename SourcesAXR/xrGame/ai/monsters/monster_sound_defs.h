@@ -4,7 +4,7 @@
 // monster base sound types
 namespace MonsterSound {
 	enum EType {
-		eMonsterSoundBase			= u32(0),
+		eMonsterSoundBase			= static_cast<u32>(0),
 		eMonsterSoundIdle			= eMonsterSoundBase | 1,
 		eMonsterSoundEat			= eMonsterSoundBase | 2,
 		eMonsterSoundAggressive		= eMonsterSoundBase | 3,
@@ -20,22 +20,22 @@ namespace MonsterSound {
 		eMonsterSoundPanic			= eMonsterSoundBase | 11,
 		eMonsterSoundIdleDistant	= eMonsterSoundBase | 12,
 
-		eMonsterSoundScript			= u32(1) << 7,
+		eMonsterSoundScript			= static_cast<u32>(1) << 7,
 		eMonsterSoundCustom			= eMonsterSoundScript << 7,
-		eMonsterSoundDummy			= u32(-1),
+		eMonsterSoundDummy			= static_cast<u32>(-1),
 	};
 
 	enum EPriority {
-		eCriticalPriority	= u32(1),
-		eHighPriority		= u32(1) << 3,
-		eNormalPriority		= u32(1) << 7,
-		eLowPriority		= u32(1) << 15
+		eCriticalPriority	= static_cast<u32>(1),
+		eHighPriority		= static_cast<u32>(1) << 3,
+		eNormalPriority		= static_cast<u32>(1) << 7,
+		eLowPriority		= static_cast<u32>(1) << 15
 	};
 
 	enum EVirtualChannels {
-		eBaseChannel		= u32(1) << 7,
-		eChannelIndependent	= u32(1) << 15,	// can be played in any time with any conditions (need shift operator for every id)
-		eCaptureAllChannels = u32(-1),		// play only this one
+		eBaseChannel		= static_cast<u32>(1) << 7,
+		eChannelIndependent	= static_cast<u32>(1) << 15,	// can be played in any time with any conditions (need shift operator for every id)
+		eCaptureAllChannels = static_cast<u32>(-1),		// play only this one
 	};
 };
 

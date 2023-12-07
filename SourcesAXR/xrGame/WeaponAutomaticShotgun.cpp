@@ -9,8 +9,8 @@
 
 CWeaponAutomaticShotgun::CWeaponAutomaticShotgun()
 {
-	m_eSoundClose_2			= ESoundTypes(SOUND_TYPE_WEAPON_SHOOTING);
-	m_eSoundAddCartridge	= ESoundTypes(SOUND_TYPE_WEAPON_SHOOTING);
+	m_eSoundClose_2			= static_cast<ESoundTypes>(SOUND_TYPE_WEAPON_SHOOTING);
+	m_eSoundAddCartridge	= static_cast<ESoundTypes>(SOUND_TYPE_WEAPON_SHOOTING);
 }
 
 CWeaponAutomaticShotgun::~CWeaponAutomaticShotgun()
@@ -96,7 +96,7 @@ void CWeaponAutomaticShotgun::Reload()
 
 void CWeaponAutomaticShotgun::TriStateReload()
 {
-	if (m_magazine.size() == (u32)iMagazineSize)
+	if (m_magazine.size() == static_cast<u32>(iMagazineSize))
 		return;
 
 	if (HaveCartridgeInInventory(1) || IsMisfire())
@@ -115,7 +115,7 @@ void CWeaponAutomaticShotgun::OnStateSwitch	(u32 S)
 
 	CWeapon::OnStateSwitch(S);
 
-	if( m_magazine.size() == (u32)iMagazineSize || !HaveCartridgeInInventory(1) && !IsMisfire())
+	if( m_magazine.size() == static_cast<u32>(iMagazineSize) || !HaveCartridgeInInventory(1) && !IsMisfire())
 	{
 			switch2_EndReload		();
 			m_sub_state = eSubstateReloadEnd;
@@ -212,7 +212,7 @@ bool CWeaponAutomaticShotgun::HaveCartridgeInInventory(u8 cnt)
 	u32 ac = GetAmmoCount(m_ammoType);
 	if(ac<cnt)
 	{
-		for(u8 i = 0; i < u8(m_ammoTypes.size()); ++i) 
+		for(u8 i = 0; i < static_cast<u8>(m_ammoTypes.size()); ++i) 
 		{
 			if(m_ammoType==i) continue;
 			ac	+= GetAmmoCount(i);
@@ -241,7 +241,7 @@ u8 CWeaponAutomaticShotgun::AddCartridge		(u8 cnt)
 		return 0;
 
 	m_pCurrentAmmo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny( m_ammoTypes[m_ammoType].c_str() ));
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
+	VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
 
 
 	if (m_DefaultCartridge.m_LocalAmmoType != m_ammoType)
@@ -260,7 +260,7 @@ u8 CWeaponAutomaticShotgun::AddCartridge		(u8 cnt)
 //		m_fCurrentCartirdgeDisp = l_cartridge.m_kDisp;
 	}
 
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
+	VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
 
 	//выкинуть коробку патронов, если она пустая
 	if(m_pCurrentAmmo && !m_pCurrentAmmo->m_boxCurr && OnServer()) 
@@ -272,7 +272,7 @@ u8 CWeaponAutomaticShotgun::AddCartridge		(u8 cnt)
 void	CWeaponAutomaticShotgun::net_Export	(NET_Packet& P)
 {
 	inherited::net_Export(P);	
-	P.w_u8(u8(m_magazine.size()));	
+	P.w_u8(static_cast<u8>(m_magazine.size()));	
 	for (u32 i=0; i<m_magazine.size(); i++)
 	{
 		CCartridge& l_cartridge = *(m_magazine.begin()+i);

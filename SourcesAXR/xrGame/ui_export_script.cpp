@@ -49,9 +49,9 @@ void UIRegistrator::script_register(lua_State *L)
 		class_<CGameFont>("CGameFont")
 			.enum_("EAligment")
 			[
-				value("alLeft",						int(CGameFont::alLeft)),
-				value("alRight",					int(CGameFont::alRight)),
-				value("alCenter",					int(CGameFont::alCenter))
+				value("alLeft",						static_cast<int>(CGameFont::alLeft)),
+				value("alRight",					static_cast<int>(CGameFont::alRight)),
+				value("alCenter",					static_cast<int>(CGameFont::alCenter))
 			],
 
 

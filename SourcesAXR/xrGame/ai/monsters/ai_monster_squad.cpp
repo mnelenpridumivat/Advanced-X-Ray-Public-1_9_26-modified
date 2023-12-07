@@ -72,14 +72,14 @@ bool CMonsterSquad::SquadActive()
 
 u8 CMonsterSquad::squad_alife_count()
 {
-	if (!leader) return u8(0);
+	if (!leader) return static_cast<u8>(0);
 
 	// проверить количество живых объектов в группе
 	u8 alive_num = 0;
 	for (MEMBER_GOAL_MAP_IT it = m_goals.begin(); it != m_goals.end(); it++) 
 		if (it->first->g_Alive()) alive_num++;
 
-	if (alive_num < 2) return u8(0);
+	if (alive_num < 2) return static_cast<u8>(0);
 
 	return alive_num;
 }

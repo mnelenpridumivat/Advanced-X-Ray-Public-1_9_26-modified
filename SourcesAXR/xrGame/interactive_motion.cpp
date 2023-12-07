@@ -92,7 +92,7 @@ void	interactive_motion::shell_setup				( )
 void interactive_motion::anim_callback( CBlend *B )
 {
 	VERIFY( B->CallbackParam );
-	( (interactive_motion*) ( B->CallbackParam ) )->flags.set( fl_switch_dm_toragdoll, TRUE );
+	static_cast<interactive_motion*>(B->CallbackParam)->flags.set( fl_switch_dm_toragdoll, TRUE );
 }
 
 void interactive_motion::play( )

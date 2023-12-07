@@ -12,7 +12,7 @@ IC	CSightControlAction::CSightControlAction	(float weight, u32 inertia_time, con
 	m_weight			(weight),
 	m_inertia_time		(inertia_time)
 {
-	(CSightAction&)*this	= sight_action;
+	static_cast<CSightAction&>(*this)	= sight_action;
 }
 
 IC	float CSightControlAction::weight			() const

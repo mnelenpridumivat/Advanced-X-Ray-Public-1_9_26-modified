@@ -38,7 +38,7 @@ bool CSavedGameWrapper::valid_saved_game		(IReader &stream)
 	if (stream.length() < 8)
 		return					(false);
 
-	if (stream.r_u32() != u32(-1))
+	if (stream.r_u32() != static_cast<u32>(-1))
 		return					(false);
 
 	if (stream.r_u32() < ALIFE_VERSION)
@@ -71,7 +71,7 @@ CSavedGameWrapper::CSavedGameWrapper			(LPCSTR saved_game_name)
 		CALifeTimeManager		time_manager(alife_section);
 		m_game_time				= time_manager.game_time();
 		m_actor_health			= 1.f;
-		m_level_id				= _LEVEL_ID(-1);
+		m_level_id				= static_cast<_LEVEL_ID>(-1);
 		m_level_name			= "";
 		return;
 	}
@@ -109,7 +109,7 @@ CSavedGameWrapper::CSavedGameWrapper			(LPCSTR saved_game_name)
 			if (!sub_chunk) {
 				chunk->close	();
 				F_entity_Destroy(object);
-				m_level_id		= _LEVEL_ID(-1);
+				m_level_id		= static_cast<_LEVEL_ID>(-1);
 				m_level_name	= "";
 				return;
 			}
@@ -121,7 +121,7 @@ CSavedGameWrapper::CSavedGameWrapper			(LPCSTR saved_game_name)
 
 		if (!FS.exist(file_name, "$game_spawn$", spawn_file_name, ".spawn")) {
 			F_entity_Destroy	(object);
-			m_level_id			= _LEVEL_ID(-1);
+			m_level_id			= static_cast<_LEVEL_ID>(-1);
 			m_level_name		= "";
 			return;
 		}
@@ -137,7 +137,7 @@ CSavedGameWrapper::CSavedGameWrapper			(LPCSTR saved_game_name)
 
 		if (!spawn) {
 			F_entity_Destroy	(object);
-			m_level_id			= _LEVEL_ID(-1);
+			m_level_id			= static_cast<_LEVEL_ID>(-1);
 			m_level_name		= "";
 			return;
 		}
@@ -147,7 +147,7 @@ CSavedGameWrapper::CSavedGameWrapper			(LPCSTR saved_game_name)
 			F_entity_Destroy	(object);
 			if(b_destroy_spawn)
 				FS.r_close		(spawn);
-			m_level_id			= _LEVEL_ID(-1);
+			m_level_id			= static_cast<_LEVEL_ID>(-1);
 			m_level_name		= "";
 			return;
 		}

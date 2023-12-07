@@ -24,9 +24,9 @@ CAI_Dog::CAI_Dog()
 {
 	StateMan = xr_new<CStateManagerDog>(this);
 	
-	min_move_dist		= u32(5);
-	max_move_dist		= u32(7);
-	m_start_smelling	= u32(-1);
+	min_move_dist		= static_cast<u32>(5);
+	max_move_dist		= static_cast<u32>(7);
+	m_start_smelling	= static_cast<u32>(-1);
 	m_smelling_count	= Random.randI(3);
 	CControlled::init_external	(this);
 
@@ -87,8 +87,8 @@ void CAI_Dog::Load(LPCSTR section)
 	}
 	if (max_move_dist < min_move_dist)
 	{
-		min_move_dist = u32(5);
-		max_move_dist = u32(7);
+		min_move_dist = static_cast<u32>(5);
+		max_move_dist = static_cast<u32>(7);
 	}
 
 	anim().AddReplacedAnim(&m_bDamaged,			eAnimRun,		eAnimRunDamaged);
@@ -214,7 +214,7 @@ void CAI_Dog::reinit()
 	b_state_end	=		false;
 	b_state_check =		false;
 	b_end_state_eat =	false;
-	saved_state =		u32(-1);
+	saved_state =		static_cast<u32>(-1);
 	Home->set_move_dists(min_move_dist, max_move_dist);
 }
 
@@ -268,7 +268,7 @@ u32 CAI_Dog::get_number_animation()
 
 u32 CAI_Dog::random_anim()
 {
-	if (m_anim_factor > u32(Random.randI(100)))
+	if (m_anim_factor > static_cast<u32>(Random.randI(100)))
 	{
 		if (is_night()) return 5;
 		return 4;
@@ -325,10 +325,10 @@ void CAI_Dog::start_animation()
 
 void CAI_Dog::animation_end(CBlend* B)
 {
-	((CAI_Dog*)B->CallbackParam)->b_state_anim = false;
-	((CAI_Dog*)B->CallbackParam)->b_anim_end = true;
-	((CAI_Dog*)B->CallbackParam)->com_man().script_release(ControlCom::eControlAnimation);
-	((CAI_Dog*)B->CallbackParam)->b_state_end = false;
+	static_cast<CAI_Dog*>(B->CallbackParam)->b_state_anim = false;
+	static_cast<CAI_Dog*>(B->CallbackParam)->b_anim_end = true;
+	static_cast<CAI_Dog*>(B->CallbackParam)->com_man().script_release(ControlCom::eControlAnimation);
+	static_cast<CAI_Dog*>(B->CallbackParam)->b_state_end = false;
 }
 
 void CAI_Dog::anim_end_reinit()
@@ -391,7 +391,7 @@ void CAI_Dog::HitEntityInJump (const CEntity *pEntity)
 u32 CAI_Dog::get_attack_rebuild_time ()
 {
 	float dist = EnemyMan.get_enemy()->Position().distance_to(Position());
-	return 100 + u32(25*dist);
+	return 100 + static_cast<u32>(25 * dist);
 }
 
 bool  CAI_Dog::can_use_agressive_jump (const CObject* enemy) 

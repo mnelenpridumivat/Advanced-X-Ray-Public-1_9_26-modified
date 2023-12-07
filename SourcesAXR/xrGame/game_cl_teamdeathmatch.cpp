@@ -140,12 +140,12 @@ void game_cl_TeamDeathmatch::TranslateGameMessage	(u32 msg, NET_Packet& P)
 							PlayerName,
 							Color_Main,
 							*st.translate("mp_joined"),
-							CTeamInfo::GetTeam_color_tag(int(Team)),							
-							CTeamInfo::GetTeam_name(int(Team)));
+							CTeamInfo::GetTeam_color_tag(static_cast<int>(Team)),							
+							CTeamInfo::GetTeam_name(static_cast<int>(Team)));
 			if(CurrentGameUI()) CurrentGameUI()->CommonMessageOut(Text);
 			//---------------------------------------
 			Msg("%s %s %s", PlayerName, *st.translate("mp_joined"),
-				CTeamInfo::GetTeam_name(int(Team)));
+				CTeamInfo::GetTeam_name(static_cast<int>(Team)));
 		}break;
 
 	case PLAYER_CHANGE_TEAM://tdm
@@ -159,15 +159,15 @@ void game_cl_TeamDeathmatch::TranslateGameMessage	(u32 msg, NET_Packet& P)
 			if (!pPlayer) break;
 
 			xr_sprintf(Text, "%s%s %s%s %s%s", 
-							CTeamInfo::GetTeam_color_tag(int(OldTeam)), 
+							CTeamInfo::GetTeam_color_tag(static_cast<int>(OldTeam)), 
 							pPlayer->getName(), 
 							Color_Main, 
 							*st.translate("mp_switched_to"),
-							CTeamInfo::GetTeam_color_tag(int(NewTeam)), 
-							CTeamInfo::GetTeam_name(int(NewTeam)));
+							CTeamInfo::GetTeam_color_tag(static_cast<int>(NewTeam)), 
+							CTeamInfo::GetTeam_name(static_cast<int>(NewTeam)));
 			if(CurrentGameUI()) CurrentGameUI()->CommonMessageOut(Text);
 			//---------------------------------------
-			Msg("%s *s %s", pPlayer->getName(), *st.translate("mp_switched_to"), CTeamInfo::GetTeam_name(int(NewTeam)));
+			Msg("%s *s %s", pPlayer->getName(), *st.translate("mp_switched_to"), CTeamInfo::GetTeam_name(static_cast<int>(NewTeam)));
 		}break;
 
 	default:
@@ -290,7 +290,7 @@ void game_cl_TeamDeathmatch::OnTeamSelect(int Team)
 		P.w_u16(GAME_EVENT_PLAYER_GAME_MENU);
 		P.w_u8(PLAYER_CHANGE_TEAM);
 		
-		P.w_s16			(s16(Team+1));
+		P.w_s16			(static_cast<s16>(Team + 1));
 		//P.w_u32			(0);
 		l_pPlayer->u_EventSend		(P);
 		//-----------------------------------------------------------------
@@ -760,7 +760,7 @@ void				game_cl_TeamDeathmatch::PlayRankChangesSndMessage ()
 void				game_cl_TeamDeathmatch::OnGameMenuRespond_ChangeTeam	(NET_Packet& P)
 {
 	s16 OldTeam = local_player->team;
-	local_player->team = u8(P.r_s16() & 0x00ff);
+	local_player->team = static_cast<u8>(P.r_s16() & 0x00ff);
 	if (OldTeam != local_player->team)
 	{
 		OnTeamChanged();
@@ -788,7 +788,7 @@ bool				game_cl_TeamDeathmatch::IsPlayerInTeam(game_PlayerState* ps, ETeam team)
 		}
 		return false;
 	}
-	return (ModifyTeam(s16(ps->team)) == s16(team));
+	return (ModifyTeam(static_cast<s16>(ps->team)) == static_cast<s16>(team));
 }
 
 LPCSTR game_cl_TeamDeathmatch::GetGameScore(string32&	score_dest)

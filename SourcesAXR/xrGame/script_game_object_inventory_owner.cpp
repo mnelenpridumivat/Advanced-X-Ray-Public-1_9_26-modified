@@ -102,7 +102,7 @@ void  CScriptGameObject::GiveGameNews(LPCSTR caption, LPCSTR news, LPCSTR textur
 void _give_news	(LPCSTR caption, LPCSTR text, LPCSTR texture_name, int delay, int show_time, int type)
 {
 	GAME_NEWS_DATA				news_data;
-	news_data.m_type			= (GAME_NEWS_DATA::eNewsType)type;
+	news_data.m_type			= static_cast<GAME_NEWS_DATA::eNewsType>(type);
 	news_data.news_caption		= caption;
 	news_data.news_text			= text;
 	if(show_time!=0)
@@ -1134,11 +1134,11 @@ u32	 CScriptGameObject::accessible_nearest	(const Fvector &position, Fvector &re
 	CCustomMonster	*monster = smart_cast<CCustomMonster*>(&object());
 	if (!monster) {
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CRestrictedObject : cannot access class member accessible!");
-		return								(u32(-1));
+		return								static_cast<u32>(-1);
 	}
 	if (monster->movement().restrictions().accessible(position)) {
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CRestrictedObject : you use accessible_nearest when position is already accessible!");
-		return								(u32(-1));
+		return								static_cast<u32>(-1);
 	}
 	return									(monster->movement().restrictions().accessible_nearest(position,result));
 }
@@ -1351,7 +1351,7 @@ int	CScriptGameObject::animation_slot			() const
 	CHudItem		*hud_item = smart_cast<CHudItem*>(&object());
 	if (!hud_item) {
 		ai().script_engine().script_log			(ScriptStorage::eLuaMessageTypeError,"CHudItem : cannot access class member animation_slot!");
-		return		(u32(-1));
+		return		static_cast<u32>(-1);
 	}
 	return			(hud_item->animation_slot());
 }
@@ -1383,7 +1383,7 @@ CScriptGameObject *CScriptGameObject::item_in_slot	(u32 slot_id) const
 		return		(0);
 	}
 
-	CInventoryItem	*result = inventory_owner->inventory().ItemFromSlot((u16)slot_id);
+	CInventoryItem	*result = inventory_owner->inventory().ItemFromSlot(static_cast<u16>(slot_id));
 	return			(result ? result->object().lua_game_object() : 0);
 }
 
@@ -1426,7 +1426,7 @@ void CScriptGameObject::activate_slot	(u32 slot_id)
 		ai().script_engine().script_log			(ScriptStorage::eLuaMessageTypeError,"CInventoryOwner : cannot access class member activate_slot!");
 		return						;
 	}
-	inventory_owner->inventory().Activate((u16)slot_id);
+	inventory_owner->inventory().Activate(static_cast<u16>(slot_id));
 }
 
 void CScriptGameObject::enable_movement	(bool enable)
@@ -1539,13 +1539,13 @@ u32 CScriptGameObject::aim_time						(CScriptGameObject *weapon)
 	CAI_Stalker							*stalker = smart_cast<CAI_Stalker*>(&object());
 	if (!stalker) {
 		ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"CAI_Stalker : cannot access class member aim_time!");
-		return							(u32(-1));
+		return							static_cast<u32>(-1);
 	}
 
 	CWeapon								*weapon_ = smart_cast<CWeapon*>(&weapon->object());
 	if (!weapon_) {
 		ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"CAI_Stalker : cannot access class member aim_time (not a weapon passed)!");
-		return							(u32(-1));
+		return							static_cast<u32>(-1);
 	}
 
 	return								(stalker->aim_time(*weapon_));

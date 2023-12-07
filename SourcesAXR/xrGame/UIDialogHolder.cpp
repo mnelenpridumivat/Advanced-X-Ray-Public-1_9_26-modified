@@ -18,7 +18,7 @@ dlgItem::dlgItem(CUIWindow* pWnd)
 
 bool dlgItem::operator < (const dlgItem& itm) const
 {
-	return (int)enabled > (int)itm.enabled;
+	return static_cast<int>(enabled) > static_cast<int>(itm.enabled);
 }
 
 bool operator == (const dlgItem& i1, const dlgItem& i2)

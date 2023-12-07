@@ -119,7 +119,7 @@ void CUIDragDropListEx::InitDragDropList(Fvector2 pos, Fvector2 size)
 
 void CUIDragDropListEx::OnScrollV(CUIWindow* w, void* pData)
 {
-	m_container->SetWndPos		(Fvector2().set(m_container->GetWndPos().x, float(-m_vScrollBar->GetScrollPos())));
+	m_container->SetWndPos		(Fvector2().set(m_container->GetWndPos().x, static_cast<float>(-m_vScrollBar->GetScrollPos())));
 }
 
 void CUIDragDropListEx::CreateDragItem(CUICellItem* itm)
@@ -620,7 +620,7 @@ CUICellItem* CUICellContainer::RemoveItem(CUICellItem* itm, bool force_root)
 {
 	for(WINDOW_LIST_it it = m_ChildWndList.begin(); m_ChildWndList.end()!=it; ++it)
 	{
-		CUICellItem* i		= (CUICellItem*)(*it);
+		CUICellItem* i		= static_cast<CUICellItem*>(*it);
 		
 		if(i->HasChild(itm))
 		{
@@ -756,7 +756,7 @@ void CUICellContainer::SetCellsSpacing(const Ivector2& c)
 
 Ivector2 CUICellContainer::TopVisibleCell()
 {
-	return Ivector2().set	(0, iFloor(m_pParentDragDropList->ScrollPos()/float(CellSize().y+m_cellSpacing.y)));
+	return Ivector2().set	(0, iFloor(m_pParentDragDropList->ScrollPos()/static_cast<float>(CellSize().y + m_cellSpacing.y)));
 }
 
 CUICell& CUICellContainer::GetCellAt(const Ivector2& pos)
@@ -874,8 +874,8 @@ void CUICellContainer::Draw()
 
 	Irect				tgt_cells;
 	tgt_cells.lt		= TopVisibleCell();
-	tgt_cells.x2		= iFloor( (float(clientArea.width())+float(cell_sz.x)-EPS)/float(cell_sz.x)) + tgt_cells.lt.x;
-	tgt_cells.y2		= iFloor( (float(clientArea.height())+float(cell_sz.y)-EPS)/float(cell_sz.y)) + tgt_cells.lt.y;
+	tgt_cells.x2		= iFloor( (static_cast<float>(clientArea.width())+static_cast<float>(cell_sz.x)-EPS)/static_cast<float>(cell_sz.x)) + tgt_cells.lt.x;
+	tgt_cells.y2		= iFloor( (static_cast<float>(clientArea.height())+static_cast<float>(cell_sz.y)-EPS)/static_cast<float>(cell_sz.y)) + tgt_cells.lt.y;
 
 	clamp				(tgt_cells.x2, 0, cell_cnt.x-1);
 	clamp				(tgt_cells.y2, 0, cell_cnt.y-1);
@@ -896,8 +896,8 @@ void CUICellContainer::Draw()
 
 	// calculate cell size in screen pixels
 	Fvector2 f_len, sp_len;
-	UI().ClientToScreenScaled(f_len, float(CellSize().x), float(CellSize().y) );
-	UI().ClientToScreenScaled(sp_len, float(CellsSpacing().x), float(CellsSpacing().y) );
+	UI().ClientToScreenScaled(f_len, static_cast<float>(CellSize().x), static_cast<float>(CellSize().y) );
+	UI().ClientToScreenScaled(sp_len, static_cast<float>(CellsSpacing().x), static_cast<float>(CellsSpacing().y) );
 
 	GetCellsInRange(tgt_cells,m_cells_to_draw);
 

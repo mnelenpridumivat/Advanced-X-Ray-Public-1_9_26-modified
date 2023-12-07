@@ -119,7 +119,7 @@ void CActor::SetWeaponHideState (u16 State, bool bSet)
 		NET_Packet	P;
 		u_EventGen	(P, GEG_PLAYER_WEAPON_HIDE_STATE, ID());
 		P.w_u16		(State);
-		P.w_u8		(u8(bSet));
+		P.w_u8		(static_cast<u8>(bSet));
 		u_EventSend	(P);
 	};
 }
@@ -225,7 +225,7 @@ void CActor::on_weapon_shot_start		(CWeapon *weapon)
 	CCameraShotEffector* effector = smart_cast<CCameraShotEffector*>( Cameras().GetCamEffector(eCEShot) );
 	if ( !effector )
 	{
-		effector = (CCameraShotEffector*)Cameras().AddCamEffector( xr_new<CCameraShotEffector>( camera_recoil ) );
+		effector = static_cast<CCameraShotEffector*>(Cameras().AddCamEffector(xr_new<CCameraShotEffector>(camera_recoil)));
 	}
 	else
 	{

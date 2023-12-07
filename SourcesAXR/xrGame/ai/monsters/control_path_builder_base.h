@@ -34,11 +34,11 @@ class CControlPathBuilderBase : public CControl_ComBase {
 					STarget()
 		{
 			_position.set( -FLT_MAX, -FLT_MAX, -FLT_MAX );
-			_node  =u32(-1);
+			_node  =static_cast<u32>(-1);
 		}
 		void		init		() {
 			_position.set	(0.f,0.f,0.f);
-			_node			= u32(-1);
+			_node			= static_cast<u32>(-1);
 		}
 
 		void		set			(const Fvector &pos, u32 vertex) {
@@ -78,11 +78,11 @@ class CControlPathBuilderBase : public CControl_ComBase {
 	// -----------------------------------------------------------
 
 	enum {
-		eStatePathValid			= u32(1) << 0,		
-		eStateWaitNewPath		= u32(1) << 1,
-		eStatePathEnd			= u32(1) << 2,
-		eStateNoPath			= u32(1) << 3,
-		eStatePathFailed		= u32(1) << 4
+		eStatePathValid			= static_cast<u32>(1) << 0,		
+		eStateWaitNewPath		= static_cast<u32>(1) << 1,
+		eStatePathEnd			= static_cast<u32>(1) << 2,
+		eStateNoPath			= static_cast<u32>(1) << 3,
+		eStatePathFailed		= static_cast<u32>(1) << 4
 	};
 	u32							m_state;
 
@@ -125,7 +125,7 @@ public:
 	IC	bool	enabled					() {return m_enable;}
 	// -------------------------------------------------------------------
 	// Set methods
-		void		set_target_point		(const Fvector &position, u32 node = u32(-1));
+		void		set_target_point		(const Fvector &position, u32 node = static_cast<u32>(-1));
 		void		set_target_point		(u32 node);
 		void		set_retreat_from_point	(const Fvector &position);
 
@@ -135,7 +135,7 @@ public:
 	IC	void		set_distance_to_end		(float dist);
 
 		void		prepare_builder			();
-		void		detour_graph_points		(u32 game_graph_vertex_id = u32(-1));
+		void		detour_graph_points		(u32 game_graph_vertex_id = static_cast<u32>(-1));
 	IC	void		set_generic_parameters	();
 	
 

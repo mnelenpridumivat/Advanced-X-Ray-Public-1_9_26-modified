@@ -14,7 +14,7 @@ void init_ppmd_trained_stream	(ppmd_trained_stream* & dest)
 	IReader*			reader = FS.r_open(file_name);
 	R_ASSERT			(reader);
 	u32					buffer_size = reader->length();
-	u8*					buffer = (u8*)xr_malloc(buffer_size);
+	u8*					buffer = static_cast<u8*>(xr_malloc(buffer_size));
 	reader->r			(buffer,buffer_size);
 	FS.r_close			(reader);
 	dest				= xr_new<compression::ppmd::stream>(buffer,buffer_size);
@@ -42,7 +42,7 @@ void init_lzo	(u8* & dest_wm, u8* & wm_buffer, lzo_dictionary_buffer & dest_dict
 	R_ASSERT2			(FS.exist(file_name), "can't find configs\\mp\\lzo_updates.dic");
 	IReader*			reader = FS.r_open(file_name);
 	u32					buffer_size = reader->length();
-	u8*					buffer = (u8*)xr_malloc(buffer_size);
+	u8*					buffer = static_cast<u8*>(xr_malloc(buffer_size));
 	reader->r			(buffer,buffer_size);
 	FS.r_close			(reader);
 	

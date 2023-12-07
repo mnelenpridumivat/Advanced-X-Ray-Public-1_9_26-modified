@@ -47,7 +47,7 @@ CBlend*	anim_script_callback::play_cycle( IKinematicsAnimated* sa,const shared_s
 void	anim_script_callback::anim_callback		(CBlend*		B)
 {
 	
-	anim_script_callback* ths = ( ( anim_script_callback*) B->CallbackParam );
+	anim_script_callback* ths = static_cast<anim_script_callback*>(B->CallbackParam);
 	VERIFY( ths );
 	VERIFY( ths->is_set );
 

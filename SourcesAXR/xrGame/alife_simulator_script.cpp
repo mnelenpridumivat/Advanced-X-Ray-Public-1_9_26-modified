@@ -163,12 +163,12 @@ CSE_ALifeDynamicObject *CALifeSimulator__create	(CALifeSimulator *self, ALife::_
 CSE_Abstract *CALifeSimulator__spawn_item		(CALifeSimulator *self, LPCSTR section, const Fvector &position, u32 level_vertex_id, GameGraph::_GRAPH_ID game_vertex_id)
 {
 	THROW								(self);
-	return								(self->spawn_item(section,position,level_vertex_id,game_vertex_id,ALife::_OBJECT_ID(-1)));
+	return								(self->spawn_item(section,position,level_vertex_id,game_vertex_id,static_cast<ALife::_OBJECT_ID>(-1)));
 }
 
 CSE_Abstract *CALifeSimulator__spawn_item2		(CALifeSimulator *self, LPCSTR section, const Fvector &position, u32 level_vertex_id, GameGraph::_GRAPH_ID game_vertex_id, ALife::_OBJECT_ID id_parent)
 {
-	if (id_parent == ALife::_OBJECT_ID(-1))
+	if (id_parent == static_cast<ALife::_OBJECT_ID>(-1))
 		return							(self->spawn_item(section,position,level_vertex_id,game_vertex_id,id_parent));
 
 	CSE_ALifeDynamicObject				*object = ai().alife().objects().object(id_parent,true);
@@ -203,7 +203,7 @@ CSE_Abstract *CALifeSimulator__spawn_ammo		(CALifeSimulator *self, LPCSTR sectio
 //	if (id_parent == ALife::_OBJECT_ID(-1))
 //		return							(self->spawn_item(section,position,level_vertex_id,game_vertex_id,id_parent));
 	CSE_ALifeDynamicObject				*object = 0;
-	if (id_parent != ALife::_OBJECT_ID(-1)) {
+	if (id_parent != static_cast<ALife::_OBJECT_ID>(-1)) {
 		object							= ai().alife().objects().object(id_parent,true);
 		if (!object) {
 			Msg							("! invalid parent id [%d] specified",id_parent);
@@ -217,7 +217,7 @@ CSE_Abstract *CALifeSimulator__spawn_ammo		(CALifeSimulator *self, LPCSTR sectio
 		CSE_ALifeItemAmmo				*ammo = smart_cast<CSE_ALifeItemAmmo*>(item);
 		THROW							(ammo);
 		THROW							(ammo->m_boxSize >= ammo_to_spawn);
-		ammo->a_elapsed					= (u16)ammo_to_spawn;
+		ammo->a_elapsed					= static_cast<u16>(ammo_to_spawn);
 
 		return							(item);
 	}
@@ -231,7 +231,7 @@ CSE_Abstract *CALifeSimulator__spawn_ammo		(CALifeSimulator *self, LPCSTR sectio
 	CSE_ALifeItemAmmo					*ammo = smart_cast<CSE_ALifeItemAmmo*>(item);
 	THROW								(ammo);
 	THROW								(ammo->m_boxSize >= ammo_to_spawn);
-	ammo->a_elapsed						= (u16)ammo_to_spawn;
+	ammo->a_elapsed						= static_cast<u16>(ammo_to_spawn);
 
 	item->Spawn_Write					(packet,FALSE);
 	self->server().FreeID				(item->ID,0);
@@ -246,9 +246,19 @@ CSE_Abstract *CALifeSimulator__spawn_ammo		(CALifeSimulator *self, LPCSTR sectio
 	return								(self->server().Process_spawn(packet,clientID));
 }
 
-ALife::_SPAWN_ID CALifeSimulator__spawn_id		(CALifeSimulator *self, ALife::_SPAWN_STORY_ID spawn_story_id)
+/*ALife::_SPAWN_ID CALifeSimulator__spawn_id		(CALifeSimulator *self, ALife::_SPAWN_STORY_ID spawn_story_id)
 {
 	return								(((const CALifeSimulator *)self)->spawns().spawn_id(spawn_story_id));
+}*/
+
+ALife::_SPAWN_ID CALifeSimulator__spawn_id_number (CALifeSimulator* self, ALife::_SPAWN_STORY_ID spawn_story_id)
+{
+	return static_cast<const CALifeSimulator*>(self)->spawns().spawn_id(spawn_story_id);
+}
+
+ALife::_SPAWN_ID CALifeSimulator__spawn_id_str (CALifeSimulator* self, const char* obj_name)
+{
+	return static_cast<const CALifeSimulator*>(self)->spawns().spawn_id(obj_name);
 }
 
 void CALifeSimulator__release					(CALifeSimulator *self, CSE_Abstract *object, bool)
@@ -275,7 +285,7 @@ void CALifeSimulator__release					(CALifeSimulator *self, CSE_Abstract *object, 
 
 LPCSTR get_level_name							(const CALifeSimulator *self, int level_id)
 {
-	LPCSTR								result = *ai().game_graph().header().level((GameGraph::_LEVEL_ID)level_id).name();
+	LPCSTR								result = *ai().game_graph().header().level(static_cast<GameGraph::_LEVEL_ID>(level_id)).name();
 	return								(result);
 }
 
@@ -367,12 +377,12 @@ void CALifeSimulator::script_register			(lua_State *L)
 			.def("valid_object_id",			&valid_object_id)
 			.def("level_id",				&get_level_id)
 			.def("level_name",				&get_level_name)
-			.def("object",					(CSE_ALifeDynamicObject *(*) (const CALifeSimulator *,ALife::_OBJECT_ID))(alife_object))
-			.def("object",					(CSE_ALifeDynamicObject *(*) (const CALifeSimulator *,ALife::_OBJECT_ID, bool))(alife_object))
+			.def("object",					static_cast<CSE_ALifeDynamicObject *(*)(const CALifeSimulator*, ALife::_OBJECT_ID)>(alife_object))
+			.def("object",					static_cast<CSE_ALifeDynamicObject *(*)(const CALifeSimulator*, ALife::_OBJECT_ID, bool)>(alife_object))
 			.def("story_object",			(CSE_ALifeDynamicObject *(*) (const CALifeSimulator *,ALife::_STORY_ID))(alife_story_object))
-			.def("set_switch_online",		(void (CALifeSimulator::*) (ALife::_OBJECT_ID,bool))(&CALifeSimulator::set_switch_online))
-			.def("set_switch_offline",		(void (CALifeSimulator::*) (ALife::_OBJECT_ID,bool))(&CALifeSimulator::set_switch_offline))
-			.def("set_interactive",			(void (CALifeSimulator::*) (ALife::_OBJECT_ID,bool))(&CALifeSimulator::set_interactive))
+			.def("set_switch_online",		static_cast<void (CALifeSimulator::*)(ALife::_OBJECT_ID, bool)>(&CALifeSimulator::set_switch_online))
+			.def("set_switch_offline",		static_cast<void (CALifeSimulator::*)(ALife::_OBJECT_ID, bool)>(&CALifeSimulator::set_switch_offline))
+			.def("set_interactive",			static_cast<void (CALifeSimulator::*)(ALife::_OBJECT_ID, bool)>(&CALifeSimulator::set_interactive))
 			.def("kill_entity",				&CALifeSimulator::kill_entity)
 			.def("kill_entity",				&kill_entity0)
 			.def("kill_entity",				&kill_entity1)
@@ -386,7 +396,11 @@ void CALifeSimulator::script_register			(lua_State *L)
 			.def("create",					&CALifeSimulator__spawn_item)
 			.def("create_ammo",				&CALifeSimulator__spawn_ammo)
 			.def("release",					&CALifeSimulator__release)
-			.def("spawn_id",				&CALifeSimulator__spawn_id)
+			//.def("spawn_id",				&CALifeSimulator__spawn_id)
+			.def("spawn_id", &CALifeSimulator__spawn_id_number)
+			.def("spawn_id", &CALifeSimulator__spawn_id_str)
+			//.def("spawn_id", [](CALifeSimulator* self, ALife::_SPAWN_STORY_ID spawn_story_id) { return (((const CALifeSimulator*)self)->spawns().spawn_id(spawn_story_id)); })
+			//.def("spawn_id", [](CALifeSimulator* self, const char* obj_name) { return self->spawns().spawn_id(obj_name); })
 			.def("actor",					&get_actor)
 			//Alundaio: extend alife simulator exports
             .def("teleport_object", 		&teleport_object)

@@ -36,7 +36,7 @@ void CNightVisionEffector::Stop(const float factor, bool play_sound)
 {
 	CActor* pActor = smart_cast<CActor*>(Level().CurrentControlEntity());
 	if (!pActor)		return;
-	CEffectorPP* pp = pActor->Cameras().GetPPEffector((EEffectorPPType)effNightvision);
+	CEffectorPP* pp = pActor->Cameras().GetPPEffector(static_cast<EEffectorPPType>(effNightvision));
 	if (pp)
 	{
 		pp->Stop(factor);
@@ -66,7 +66,7 @@ void CNightVisionEffector::StopForScope(const float factor, bool play_sound)
 {
 	CActor* pActor = smart_cast<CActor*>(Level().CurrentControlEntity());
 	if (!pActor)		return;
-	CEffectorPP* pp = pActor->Cameras().GetPPEffector((EEffectorPPType)effNightvision);
+	CEffectorPP* pp = pActor->Cameras().GetPPEffector(static_cast<EEffectorPPType>(effNightvision));
 	if (pp)
 	{
 		pp->Stop(factor);
@@ -79,7 +79,7 @@ void CNightVisionEffector::StopOnlyEffector(const float factor)
 {
 	CActor* pActor = smart_cast<CActor*>(Level().CurrentControlEntity());
 	if (!pActor)		return;
-	CEffectorPP* pp = pActor->Cameras().GetPPEffector((EEffectorPPType)effNightvision);
+	CEffectorPP* pp = pActor->Cameras().GetPPEffector(static_cast<EEffectorPPType>(effNightvision));
 	if (pp)
 		pp->Stop(factor);
 }
@@ -88,7 +88,7 @@ bool CNightVisionEffector::IsActive()
 {
 	CActor* pActor = smart_cast<CActor*>(Level().CurrentControlEntity());
 	if (!pActor)		return false;
-	CEffectorPP* pp = pActor->Cameras().GetPPEffector((EEffectorPPType)effNightvision);
+	CEffectorPP* pp = pActor->Cameras().GetPPEffector(static_cast<EEffectorPPType>(effNightvision));
 	return (pp != NULL);
 }
 

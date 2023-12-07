@@ -33,7 +33,7 @@ CStateManagerGigant::CStateManagerGigant(CPseudoGigant *monster) : inherited(mon
 
 void CStateManagerGigant::execute()
 {
-	u32 state_id = u32(-1);
+	u32 state_id = static_cast<u32>(-1);
 
 	if (!object->is_under_control()) {
 		const CEntityAlive* enemy	= object->EnemyMan.get_enemy();

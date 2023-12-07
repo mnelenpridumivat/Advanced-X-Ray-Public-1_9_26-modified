@@ -79,7 +79,7 @@ void CHelicopter::UpdateHeliParticles	()
 //lighting
 	if(m_light_render->get_active()){
 		Fmatrix xf;
-		Fmatrix& M = K->LL_GetTransform(u16(m_light_bone));
+		Fmatrix& M = K->LL_GetTransform(static_cast<u16>(m_light_bone));
 		xf.mul		(XFORM(),M);
 		VERIFY(!fis_zero(DET(xf)));
 
@@ -91,7 +91,7 @@ void CHelicopter::UpdateHeliParticles	()
 			int frame;
 			u32 clr					= m_lanim->CalculateBGR(Device.fTimeGlobal,frame); // òþ÷ò¨ð•ðõª ò ¯þ¨üðªõ BGR
 			Fcolor					fclr;
-			fclr.set				((float)color_get_B(clr),(float)color_get_G(clr),(float)color_get_R(clr),1.f);
+			fclr.set				(static_cast<float>(color_get_B(clr)),static_cast<float>(color_get_G(clr)),static_cast<float>(color_get_R(clr)),1.f);
 			fclr.mul_rgb			(m_light_brightness/255.f);
 			m_light_render->set_color	(fclr);
 		}
@@ -335,7 +335,7 @@ void SHeliEnemy::reinit()
 {
 	type					= eEnemyNone;
 	destEnemyPos.set		(0.0f,0.0f,0.0f);
-	destEnemyID				=u16(-1);
+	destEnemyID				=static_cast<u16>(-1);
 	fStartFireTime			=-1.0f;
 }
 
@@ -357,7 +357,7 @@ void SHeliEnemy::Update()
 
 void SHeliEnemy::save(NET_Packet &output_packet)
 {
-	output_packet.w_s16		((s16)type);
+	output_packet.w_s16		(static_cast<s16>(type));
 	output_packet.w_vec3	(destEnemyPos);
 	output_packet.w_u16		(destEnemyID);
 
@@ -367,7 +367,7 @@ void SHeliEnemy::save(NET_Packet &output_packet)
 
 void SHeliEnemy::load(IReader &input_packet)
 {
-	type				= (EHeliHuntState)input_packet.r_s16();
+	type				= static_cast<EHeliHuntState>(input_packet.r_s16());
 	input_packet.r_fvector3	(destEnemyPos);
 	destEnemyID			= input_packet.r_u16();
 
@@ -423,7 +423,7 @@ void SHeliBodyState::LookAtPoint			(Fvector point, bool do_it)
 
 void SHeliBodyState::save(NET_Packet &output_packet)
 {
-	output_packet.w_s16((s16)type);
+	output_packet.w_s16(static_cast<s16>(type));
 	output_packet.w_u8(b_looking_at_point ? 1 : 0);    
 	output_packet.w_float(currBodyHPB.x);
 	output_packet.w_float(currBodyHPB.y);
@@ -432,7 +432,7 @@ void SHeliBodyState::save(NET_Packet &output_packet)
 
 void SHeliBodyState::load(IReader &input_packet)
 {
-	type				= (EHeliBodyState)input_packet.r_s16();
+	type				= static_cast<EHeliBodyState>(input_packet.r_s16());
 	b_looking_at_point	= !!input_packet.r_u8();
 	currBodyHPB.x			= input_packet.r_float();
 	currBodyHPB.y			= input_packet.r_float();

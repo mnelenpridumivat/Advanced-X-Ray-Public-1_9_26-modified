@@ -108,7 +108,7 @@ void CStalkerActionSolveZonePuzzle::finalize	()
 	if (!object().g_Alive())
 		return;
 
-	object().sound().remove_active_sounds		(u32(eStalkerSoundMaskNoHumming));
+	object().sound().remove_active_sounds		(static_cast<u32>(eStalkerSoundMaskNoHumming));
 }
 
 void CStalkerActionSolveZonePuzzle::execute		()

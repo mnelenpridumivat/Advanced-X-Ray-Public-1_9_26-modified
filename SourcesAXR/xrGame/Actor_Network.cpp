@@ -102,9 +102,9 @@ void CActor::net_Export	(NET_Packet& P)					// export to server
 	P.w_float /*w_angle8*/			(angle_normalize(unaffected_r_torso.yaw));//(r_torso.yaw);
 	P.w_float /*w_angle8*/			(angle_normalize(unaffected_r_torso.pitch));//(r_torso.pitch);
 	P.w_float /*w_angle8*/			(angle_normalize(unaffected_r_torso.roll));//(r_torso.roll);
-	P.w_u8				(u8(g_Team()));
-	P.w_u8				(u8(g_Squad()));
-	P.w_u8				(u8(g_Group()));
+	P.w_u8				(static_cast<u8>(g_Team()));
+	P.w_u8				(static_cast<u8>(g_Squad()));
+	P.w_u8				(static_cast<u8>(g_Group()));
 
 
 	//CSE_ALifeCreatureTrader
@@ -113,15 +113,15 @@ void CActor::net_Export	(NET_Packet& P)					// export to server
 
 	//CSE_ALifeCreatureActor
 	
-	u16 ms	= (u16)(mstate_real & 0x0000ffff);
-	P.w_u16				(u16(ms));
+	u16 ms	= static_cast<u16>(mstate_real & 0x0000ffff);
+	P.w_u16				(static_cast<u16>(ms));
 	P.w_sdir			(NET_SavedAccel);
 	Fvector				v = character_physics_support()->movement()->GetVelocity();
 	P.w_sdir			(v);//m_PhysicMovementControl.GetVelocity());
 //	P.w_float_q16		(fArmor,-500,1000);
 	P.w_float			(g_Radiation());
 
-	P.w_u8				(u8(inventory().GetActiveSlot()));
+	P.w_u8				(static_cast<u8>(inventory().GetActiveSlot()));
 	/////////////////////////////////////////////////
 	u16 NumItems		= PHGetSyncItemsNumber();
 	
@@ -353,7 +353,7 @@ void		CActor::net_Import_Base				( NET_Packet& P)
 //	m_dwMoney =			P.r_u32();
 
 	//CSE_ALifeCreatureActor
-	P.r_u16				(tmp			); N.mstate = u32(tmp);
+	P.r_u16				(tmp			); N.mstate = static_cast<u32>(tmp);
 	P.r_sdir			(N.p_accel		);
 	P.r_sdir			(N.p_velocity	);
 	float				fRRadiation;
@@ -376,7 +376,7 @@ void		CActor::net_Import_Base				( NET_Packet& P)
 		if (ActiveSlot == NO_ACTIVE_SLOT) inventory().SetActiveSlot(NO_ACTIVE_SLOT);
 		else 
 		{
-			if (inventory().GetActiveSlot() != u16(ActiveSlot))
+			if (inventory().GetActiveSlot() != static_cast<u16>(ActiveSlot))
 				inventory().Activate(ActiveSlot);
 		};
 	}
@@ -506,7 +506,7 @@ void	CActor::net_Import_Physic_proceed	( )
 
 BOOL CActor::net_Spawn		(CSE_Abstract* DC)
 {
-	m_holder_id				= ALife::_OBJECT_ID(-1);
+	m_holder_id				= static_cast<ALife::_OBJECT_ID>(-1);
 	m_feel_touch_characters = 0;
 	m_snd_noise			= 0.0f;
 	m_sndShockEffector	= NULL;
@@ -564,7 +564,7 @@ BOOL CActor::net_Spawn		(CSE_Abstract* DC)
 
 	//set_state_box( mstate_real );
 	//character_physics_support()->movement()->ActivateBox	(0);
-	if(E->m_holderID!=u16(-1))
+	if(E->m_holderID!=static_cast<u16>(-1))
 	{ 
 		character_physics_support()->movement()->DestroyCharacter();
 	}
@@ -675,13 +675,13 @@ BOOL CActor::net_Spawn		(CSE_Abstract* DC)
 	CALLBACK_TYPE	callback;
 	callback.bind	(this,&CActor::on_requested_spawn);
 	m_holder_id				= E->m_holderID;
-	if (E->m_holderID != ALife::_OBJECT_ID(-1))
+	if (E->m_holderID != static_cast<ALife::_OBJECT_ID>(-1))
 		if(!g_dedicated_server)
 			Level().client_spawn_manager().add(E->m_holderID,ID(),callback);
 	//F
 	//-------------------------------------------------------------
-	m_iLastHitterID = u16(-1);
-	m_iLastHittingWeaponID = u16(-1);
+	m_iLastHitterID = static_cast<u16>(-1);
+	m_iLastHittingWeaponID = static_cast<u16>(-1);
 	m_s16LastHittedElement = -1;
 	m_bWasHitted = false;
 	m_dwILastUpdateTime		= 0;
@@ -715,7 +715,7 @@ void CActor::net_Destroy	()
 {
 	inherited::net_Destroy	();
 
-	if (m_holder_id != ALife::_OBJECT_ID(-1))
+	if (m_holder_id != static_cast<ALife::_OBJECT_ID>(-1))
 		if(!g_dedicated_server)
 			Level().client_spawn_manager().remove	(m_holder_id,ID());
 
@@ -747,7 +747,7 @@ void CActor::net_Destroy	()
 
 	processing_deactivate();
 	m_holder=NULL;
-	m_holderID=u16(-1);
+	m_holderID=static_cast<u16>(-1);
 	
 	SetDefaultVisualOutfit(NULL);
 
@@ -811,10 +811,10 @@ void	CActor::SetCallbacks()
 	u16 spine1_bone		= V->LL_BoneID("bip01_spine1");
 	u16 shoulder_bone	= V->LL_BoneID("bip01_spine2");
 	u16 head_bone		= V->LL_BoneID("bip01_head");
-	V->LL_GetBoneInstance(u16(spine0_bone)).set_callback	(bctCustom,Spin0Callback,this);
-	V->LL_GetBoneInstance(u16(spine1_bone)).set_callback	(bctCustom,Spin1Callback,this);
-	V->LL_GetBoneInstance(u16(shoulder_bone)).set_callback	(bctCustom,ShoulderCallback,this);
-	V->LL_GetBoneInstance(u16(head_bone)).set_callback		(bctCustom,HeadCallback,this);
+	V->LL_GetBoneInstance(static_cast<u16>(spine0_bone)).set_callback	(bctCustom,Spin0Callback,this);
+	V->LL_GetBoneInstance(static_cast<u16>(spine1_bone)).set_callback	(bctCustom,Spin1Callback,this);
+	V->LL_GetBoneInstance(static_cast<u16>(shoulder_bone)).set_callback	(bctCustom,ShoulderCallback,this);
+	V->LL_GetBoneInstance(static_cast<u16>(head_bone)).set_callback		(bctCustom,HeadCallback,this);
 }
 void	CActor::ResetCallbacks()
 {
@@ -824,10 +824,10 @@ void	CActor::ResetCallbacks()
 	u16 spine1_bone		= V->LL_BoneID("bip01_spine1");
 	u16 shoulder_bone	= V->LL_BoneID("bip01_spine2");
 	u16 head_bone		= V->LL_BoneID("bip01_head");
-	V->LL_GetBoneInstance(u16(spine0_bone)).reset_callback	();
-	V->LL_GetBoneInstance(u16(spine1_bone)).reset_callback	();
-	V->LL_GetBoneInstance(u16(shoulder_bone)).reset_callback();
-	V->LL_GetBoneInstance(u16(head_bone)).reset_callback	();
+	V->LL_GetBoneInstance(static_cast<u16>(spine0_bone)).reset_callback	();
+	V->LL_GetBoneInstance(static_cast<u16>(spine1_bone)).reset_callback	();
+	V->LL_GetBoneInstance(static_cast<u16>(shoulder_bone)).reset_callback();
+	V->LL_GetBoneInstance(static_cast<u16>(head_bone)).reset_callback	();
 }
 
 void	CActor::OnChangeVisual()
@@ -1084,7 +1084,7 @@ void	CActor::CalculateInterpolationParams()
 	if (m_bInInterpolation)
 	{
 		u32 CurTime = Level().timeServer();
-		float factor	= float(CurTime - m_dwIStartTime)/(m_dwIEndTime - m_dwIStartTime);
+		float factor	= static_cast<float>(CurTime - m_dwIStartTime)/(m_dwIEndTime - m_dwIStartTime);
 		if (factor > 1.0f) factor = 1.0f;
 
 		float c = factor;
@@ -1143,7 +1143,7 @@ void	CActor::CalculateInterpolationParams()
 	float lV0 = State0.linear_vel.magnitude();
 	float lV1 = State1.linear_vel.magnitude();
 
-	u32		ConstTime = u32((fixed_step - physics_world()->FrameTime())*1000)+ Level().GetInterpolationSteps()*u32(fixed_step*1000);
+	u32		ConstTime = static_cast<u32>((fixed_step - physics_world()->FrameTime()) * 1000)+ Level().GetInterpolationSteps()*static_cast<u32>(fixed_step * 1000);
 
 	m_dwIStartTime = m_dwILastUpdateTime;
 	
@@ -1235,7 +1235,7 @@ void CActor::make_Interpolation	()
 			float factor = 0.0f;
 
 			if (m_dwIEndTime != m_dwIStartTime)
-				factor = float(CurTime - m_dwIStartTime)/(m_dwIEndTime - m_dwIStartTime);
+				factor = static_cast<float>(CurTime - m_dwIStartTime)/(m_dwIEndTime - m_dwIStartTime);
 			
 			Fvector NewPos;
 			NewPos.lerp(IStart.Pos, IEnd.Pos, factor);
@@ -1261,7 +1261,7 @@ void CActor::make_Interpolation	()
 				{
 					ResPosition.set(IPosL);
 					SpeedVector.sub(IEnd.Pos, IStart.Pos);
-					SpeedVector.div(float(m_dwIEndTime - m_dwIStartTime)/1000.0f);
+					SpeedVector.div(static_cast<float>(m_dwIEndTime - m_dwIStartTime)/1000.0f);
 				}break;
 			case 1: 
 				{
@@ -1358,7 +1358,7 @@ void CActor::save(NET_Packet &output_packet)
 
 	output_packet.w_u8(cam_active);
 
-	output_packet.w_u8(u8(m_bOutBorder));
+	output_packet.w_u8(static_cast<u8>(m_bOutBorder));
 	CUITaskWnd* task_wnd = HUD().GetGameUI()->PdaMenu().pUITaskWnd;
 	output_packet.w_u8(task_wnd->IsTreasuresEnabled() ? 1 : 0);
 	output_packet.w_u8(task_wnd->IsQuestNpcsEnabled() ? 1 : 0);
@@ -1381,7 +1381,7 @@ void CActor::load(IReader &input_packet)
 
 	cam_Active()->load(input_packet);
 
-	cam_Set(EActorCameras(input_packet.r_u8()));
+	cam_Set(static_cast<EActorCameras>(input_packet.r_u8()));
 
 	m_bOutBorder=!!(input_packet.r_u8());
 	CUITaskWnd* task_wnd = HUD().GetGameUI()->PdaMenu().pUITaskWnd;
@@ -1568,7 +1568,7 @@ void	CActor::OnRender_Network()
 		float c = 0;
 		for (int i=0; i<11; i++)
 		{
-			c = float(i) * 0.1f;
+			c = static_cast<float>(i) * 0.1f;
 			for (u32 k=0; k<3; k++)
 			{
 				point1S[k] = c*(c*(c*SCoeff[k][0]+SCoeff[k][1])+SCoeff[k][2])+SCoeff[k][3];
@@ -1587,7 +1587,7 @@ void	CActor::OnRender_Network()
 		//drawing speed vectors
 		for (i=0; i<2; i++)
 		{
-			c = float(i);
+			c = static_cast<float>(i);
 			for (u32 k=0; k<3; k++)
 			{
 				point1S[k] = c*(c*(c*SCoeff[k][0]+SCoeff[k][1])+SCoeff[k][2])+SCoeff[k][3];
@@ -1668,8 +1668,8 @@ void	CActor::OnRender_Network()
 				M.translate_add(state.position);
 				Level().debug_renderer().draw_obb				(M, half_dim, Color);
 
-				if (!PHGetSyncItem(u16(i))) continue;
-				PHGetSyncItem(u16(i))->get_State(state);
+				if (!PHGetSyncItem(static_cast<u16>(i))) continue;
+				PHGetSyncItem(static_cast<u16>(i))->get_State(state);
 
 				Color = color_rgba(0, 255, 0, 255);
 				M = Fidentity;
@@ -1792,8 +1792,8 @@ BOOL CActor::net_SaveRelevant()
 
 void				CActor::SetHitInfo				(CObject* who, CObject* weapon, s16 element, Fvector Pos, Fvector Dir)
 {
-	m_iLastHitterID = (who!= NULL) ? who->ID() : u16(-1);
-	m_iLastHittingWeaponID = (weapon != NULL) ? weapon->ID() : u16(-1);
+	m_iLastHitterID = (who!= NULL) ? who->ID() : static_cast<u16>(-1);
+	m_iLastHittingWeaponID = (weapon != NULL) ? weapon->ID() : static_cast<u16>(-1);
 	m_s16LastHittedElement = element;
 	m_fLastHealth = GetfHealth();
 	m_bWasHitted = true;
@@ -1808,7 +1808,7 @@ void				CActor::OnHitHealthLoss					(float NewHealth)
 	float fNewHealth = NewHealth;
 	m_bWasHitted = false;
 	
-	if (m_iLastHitterID != u16(-1))
+	if (m_iLastHitterID != static_cast<u16>(-1))
 	{
 #ifndef MASTER_GOLD
 		Msg("On hit health loss of actor[%d], last hitter[%d]", ID(), m_iLastHitterID);
@@ -1816,8 +1816,8 @@ void				CActor::OnHitHealthLoss					(float NewHealth)
 		NET_Packet P;
 		u_EventGen		(P,GE_GAME_EVENT,ID());
 		P.w_u16(GAME_EVENT_PLAYER_HITTED);
-		P.w_u16(u16(ID()&0xffff));
-		P.w_u16 (u16(m_iLastHitterID&0xffff));
+		P.w_u16(static_cast<u16>(ID() & 0xffff));
+		P.w_u16 (static_cast<u16>(m_iLastHitterID & 0xffff));
 		P.w_float(m_fLastHealth - fNewHealth);		
 		u_EventSend(P);
 	}	
@@ -1838,7 +1838,7 @@ void				CActor::OnCriticalHitHealthLoss			()
 		((pLastHittingWeapon && pLastHittingWeapon != pLastHitter) ? *(pLastHittingWeapon->cName()) : ""));
 #endif
 	//-------------------------------------------------------------------
-	if (m_iLastHitterID != u16(-1))
+	if (m_iLastHitterID != static_cast<u16>(-1))
 	{
 #ifndef MASTER_GOLD
 		Msg("On hit of actor[%d], last hitter[%d]", ID(), m_iLastHitterID);
@@ -1846,8 +1846,8 @@ void				CActor::OnCriticalHitHealthLoss			()
 		NET_Packet P;
 		u_EventGen		(P,GE_GAME_EVENT,ID());
 		P.w_u16(GAME_EVENT_PLAYER_HITTED);
-		P.w_u16(u16(ID()&0xffff));
-		P.w_u16 (u16(m_iLastHitterID&0xffff));
+		P.w_u16(static_cast<u16>(ID() & 0xffff));
+		P.w_u16 (static_cast<u16>(m_iLastHitterID & 0xffff));
 		P.w_float(m_fLastHealth);
 		u_EventSend(P);
 	}	
@@ -1883,7 +1883,7 @@ void				CActor::OnCriticalHitHealthLoss			()
 		{
 			IKinematics* pKinematics		= smart_cast<IKinematics*>(Visual());
 			VERIFY				(pKinematics);
-			u16 ParentBone = u16(m_s16LastHittedElement);
+			u16 ParentBone = static_cast<u16>(m_s16LastHittedElement);
 			while (ParentBone)
 			{
 				ParentBone = pKinematics->LL_GetData(ParentBone).GetParentID();
@@ -1901,11 +1901,11 @@ void				CActor::OnCriticalHitHealthLoss			()
 	NET_Packet P;
 	u_EventGen		(P,GE_GAME_EVENT,ID());
 	P.w_u16(GAME_EVENT_PLAYER_KILLED);
-	P.w_u16(u16(ID()&0xffff));
+	P.w_u16(static_cast<u16>(ID() & 0xffff));
 	P.w_u8	(KT_HIT);
-	P.w_u16 ((m_iLastHitterID) ? u16(m_iLastHitterID&0xffff) : 0);
-	P.w_u16 ((m_iLastHittingWeaponID && m_iLastHitterID != m_iLastHittingWeaponID) ? u16(m_iLastHittingWeaponID&0xffff) : 0);
-	P.w_u8	(u8(SpecialHit));
+	P.w_u16 ((m_iLastHitterID) ? static_cast<u16>(m_iLastHitterID & 0xffff) : 0);
+	P.w_u16 ((m_iLastHittingWeaponID && m_iLastHitterID != m_iLastHittingWeaponID) ? static_cast<u16>(m_iLastHittingWeaponID & 0xffff) : 0);
+	P.w_u8	(static_cast<u8>(SpecialHit));
 	u_EventSend(P);
 	//-------------------------------------------
 	if (GameID() != eGameIDSingle)
@@ -1941,10 +1941,10 @@ void				CActor::OnCriticalWoundHealthLoss		()
 	NET_Packet P;
 	u_EventGen		(P,GE_GAME_EVENT,ID());
 	P.w_u16(GAME_EVENT_PLAYER_KILLED);
-	P.w_u16(u16(ID()&0xffff));
+	P.w_u16(static_cast<u16>(ID() & 0xffff));
 	P.w_u8	(KT_BLEEDING);
-	P.w_u16 ((m_iLastHitterID) ? u16(m_iLastHitterID&0xffff) : 0);
-	P.w_u16	((m_iLastHittingWeaponID && m_iLastHitterID != m_iLastHittingWeaponID) ? u16(m_iLastHittingWeaponID&0xffff) : 0);
+	P.w_u16 ((m_iLastHitterID) ? static_cast<u16>(m_iLastHitterID & 0xffff) : 0);
+	P.w_u16	((m_iLastHittingWeaponID && m_iLastHitterID != m_iLastHittingWeaponID) ? static_cast<u16>(m_iLastHittingWeaponID & 0xffff) : 0);
 	P.w_u8	(SKT_NONE);
 	u_EventSend(P);
 };
@@ -1957,7 +1957,7 @@ void				CActor::OnCriticalRadiationHealthLoss	()
 	NET_Packet P;
 	u_EventGen		(P,GE_GAME_EVENT,ID());
 	P.w_u16(GAME_EVENT_PLAYER_KILLED);
-	P.w_u16(u16(ID()&0xffff));
+	P.w_u16(static_cast<u16>(ID() & 0xffff));
 	P.w_u8	(KT_RADIATION);
 	P.w_u16	(0);
 	P.w_u16	(0);
@@ -2009,7 +2009,7 @@ BOOL CActor::BonePassBullet(int boneID)
 	if(!pOutfit)
 	{
 		IKinematics* V			= smart_cast<IKinematics*>(Visual()); VERIFY(V);
-		CBoneInstance			&bone_instance = V->LL_GetBoneInstance(u16(boneID));
+		CBoneInstance			&bone_instance = V->LL_GetBoneInstance(static_cast<u16>(boneID));
 		return (bone_instance.get_param(3)> 0.5f);
 	}
 	return pOutfit->BonePassBullet(boneID);

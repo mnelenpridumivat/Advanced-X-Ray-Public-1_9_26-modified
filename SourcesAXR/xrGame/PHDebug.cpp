@@ -60,7 +60,7 @@ enum		EDBGPHDrawMode
 	dmCashedSecondary,
 	dmSimple
 } dbg_ph_draw_mode=dmSecondaryThread;
-u32			cash_draw_remove_time=u32(-1);
+u32			cash_draw_remove_time=static_cast<u32>(-1);
 
 struct SPHObjDBGDraw:public SPHDBGDrawAbsract
 {
@@ -243,7 +243,7 @@ void DBG_DrawRotation( float ang0, float ang1, const Fmatrix& m, const Fvector &
 	Fvector ln; ln.set( l ); ln.mul( size );
 
 	
-	const float ftess = (float)tessel;
+	const float ftess = static_cast<float>(tessel);
 	Fmatrix mm; rotate<ax>( mm, ang0 );
 	mm.mulA_43( m );
 	Fmatrix r;
@@ -520,7 +520,7 @@ void DBG_PHAbstructRender()
 	//capped_cylinder_ray_collision_test();
 }
 static void DBG_DrawTarckObj();
-static u32 previous_frame = u32(-1);
+static u32 previous_frame = static_cast<u32>(-1);
 void DBG_RenderUpdate( )
 {
 	if( Device.Paused() || Device.dwFrame == previous_frame || !(Device.fTimeDelta>EPS_S) )
@@ -585,8 +585,8 @@ void DBG_DrawStatBeforeFrameStep()
 	{
 		static float obj_count=0.f;
 		static float update_obj_count=0.f;
-		obj_count=obj_count*0.9f + float(physics_world()->ObjectsNumber())*0.1f;
-		update_obj_count=update_obj_count*0.9f + float(physics_world()->UpdateObjectsNumber())*0.1f;
+		obj_count=obj_count*0.9f + static_cast<float>(physics_world()->ObjectsNumber())*0.1f;
+		update_obj_count=update_obj_count*0.9f + static_cast<float>(physics_world()->UpdateObjectsNumber())*0.1f;
 		DBG_OutText("Active Phys Objects %3.0f",obj_count);
 		DBG_OutText("Active Phys Update Objects %3.0f",update_obj_count);
 	}
@@ -602,11 +602,11 @@ void DBG_DrawStatAfterFrameStep()
 		static float  fdbg_islands_num=0.f;
 		static float  fdbg_contacts_num=0.f;
 		static float  fdbg_tries_num=0.f;
-		fdbg_islands_num=0.9f*fdbg_islands_num+0.1f*float(dbg_islands_num);
-		fdbg_bodies_num=0.9f*fdbg_bodies_num+0.1f*float(dbg_bodies_num);
-		fdbg_joints_num=0.9f*fdbg_joints_num+0.1f*float(dbg_joints_num);
-		fdbg_contacts_num=0.9f*fdbg_contacts_num+0.1f*float(dbg_contacts_num);
-		fdbg_tries_num=0.9f*fdbg_tries_num+0.1f*float(dbg_tries_num);
+		fdbg_islands_num=0.9f*fdbg_islands_num+0.1f*static_cast<float>(dbg_islands_num);
+		fdbg_bodies_num=0.9f*fdbg_bodies_num+0.1f*static_cast<float>(dbg_bodies_num);
+		fdbg_joints_num=0.9f*fdbg_joints_num+0.1f*static_cast<float>(dbg_joints_num);
+		fdbg_contacts_num=0.9f*fdbg_contacts_num+0.1f*static_cast<float>(dbg_contacts_num);
+		fdbg_tries_num=0.9f*fdbg_tries_num+0.1f*static_cast<float>(dbg_tries_num);
 		DBG_OutText("Ph Number of active islands %3.0f",fdbg_islands_num);
 		DBG_OutText("Ph Number of active bodies %3.0f",fdbg_bodies_num);
 		DBG_OutText("Ph Number of active joints %4.0f",fdbg_joints_num);
@@ -620,15 +620,15 @@ void DBG_DrawStatAfterFrameStep()
 		static float fdbg_saved_tries_for_active_objects		=0;
 		static float fdbg_total_saved_tries						=0;
 
-		fdbg_saved_tries_for_active_objects=0.9f*fdbg_saved_tries_for_active_objects+0.1f*float(dbg_saved_tries_for_active_objects);
-		fdbg_total_saved_tries				=0.9f*fdbg_total_saved_tries+0.1f*float(dbg_total_saved_tries);
+		fdbg_saved_tries_for_active_objects=0.9f*fdbg_saved_tries_for_active_objects+0.1f*static_cast<float>(dbg_saved_tries_for_active_objects);
+		fdbg_total_saved_tries				=0.9f*fdbg_total_saved_tries+0.1f*static_cast<float>(dbg_total_saved_tries);
 		DBG_OutText("Ph Number of cashed tries in active objects %5.0f",fdbg_saved_tries_for_active_objects);
 		DBG_OutText("Ph Total number cashed %5.0f",fdbg_total_saved_tries);
 
 		static SInertVal fdbg_reused_queries_per_step(0.9f);
 		static SInertVal fdbg_new_queries_per_step(0.9f);
-		fdbg_reused_queries_per_step.new_val(float(dbg_reused_queries_per_step));
-		fdbg_new_queries_per_step.new_val(float(dbg_new_queries_per_step));
+		fdbg_reused_queries_per_step.new_val(static_cast<float>(dbg_reused_queries_per_step));
+		fdbg_new_queries_per_step.new_val(static_cast<float>(dbg_new_queries_per_step));
 		DBG_OutText("Ph tri_queries_per_step %5.2f",fdbg_new_queries_per_step.val);
 		DBG_OutText("Ph reused_tri_queries_per_step %5.2f",fdbg_reused_queries_per_step.val);
 		DBG_OutText("------------------------------");
@@ -762,7 +762,7 @@ enum
 	dbg_track_obj_blends_dump			= 1<< 10
 };
 */
-Flags32	dbg_track_obj_flags	={ u32(-1) & ~dbg_track_obj_blends_dump };
+Flags32	dbg_track_obj_flags	={ static_cast<u32>(-1) & ~dbg_track_obj_blends_dump };
 void DBG_AnimBlend(IKinematicsAnimated &ka, const CBlend &B )
 {
 	//UI().Font().pFontStat->SetHeight	(20.0f);
@@ -797,7 +797,7 @@ void DBG_AnimPartState( IKinematicsAnimated &ka, u16 part )
 	if( !dbg_track_obj_flags.test(1<<part) )
 		return;
 	DBG_OutText("=======================================");
-	const u16 n =(u16)ka.LL_PartBlendsCount( part );
+	const u16 n =static_cast<u16>(ka.LL_PartBlendsCount(part));
 	DBG_OutText( "bone part : %d num blends: %d", part, n );
 	
 	for(u16 i = 0 ; i < n; ++i )

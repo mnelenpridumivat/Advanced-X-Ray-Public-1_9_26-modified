@@ -246,7 +246,7 @@ void CEntityCondition::UpdateConditionTime()
 	if(m_bTimeValid)
 	{
 		if (_cur_time > m_iLastTimeCalled){
-			float x					= float(_cur_time-m_iLastTimeCalled)/1000.0f;
+			float x					= static_cast<float>(_cur_time - m_iLastTimeCalled)/1000.0f;
 			SetConditionDeltaTime	(x);
 
 		}else 
@@ -345,8 +345,8 @@ float CEntityCondition::HitOutfitEffect(float hit_power, ALife::EHitType hit_typ
 	if(!pInvOwner)
 		return hit_power;
 
-	CCustomOutfit* pOutfit = (CCustomOutfit*)pInvOwner->inventory().ItemFromSlot(OUTFIT_SLOT);
-	CHelmet* pHelmet = (CHelmet*)pInvOwner->inventory().ItemFromSlot(HELMET_SLOT);
+	CCustomOutfit* pOutfit = static_cast<CCustomOutfit*>(pInvOwner->inventory().ItemFromSlot(OUTFIT_SLOT));
+	CHelmet* pHelmet = static_cast<CHelmet*>(pInvOwner->inventory().ItemFromSlot(HELMET_SLOT));
 	if(!pOutfit && !pHelmet)
 		return hit_power;
 
@@ -589,7 +589,7 @@ void CEntityCondition::save	(NET_Packet &output_packet)
 		save_data						(m_fEntityMorale,output_packet);
 		save_data						(m_fPsyHealth,output_packet);
 
-		output_packet.w_u8				((u8)m_WoundVector.size());
+		output_packet.w_u8				(static_cast<u8>(m_WoundVector.size()));
 		for(WOUND_VECTOR_IT it = m_WoundVector.begin(); m_WoundVector.end() != it; it++)
 			(*it)->save(output_packet);
 	}

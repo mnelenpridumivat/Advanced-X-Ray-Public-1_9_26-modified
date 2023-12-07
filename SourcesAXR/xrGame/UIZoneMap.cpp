@@ -19,7 +19,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 CUIZoneMap::CUIZoneMap()
-:m_current_map_idx(u8(-1)),
+:m_current_map_idx(static_cast<u8>(-1)),
 visible(true)
 {	
 	m_activeMap = nullptr;
@@ -184,7 +184,7 @@ void CUIZoneMap::SetupCurrentMap()
 	m_activeMap->WorkingArea().set	(r);
 	
 	Fvector2						wnd_size;
-	float zoom_factor				= float(m_clipFrame.GetWidth())/100.0f;
+	float zoom_factor				= static_cast<float>(m_clipFrame.GetWidth())/100.0f;
 
 	LPCSTR ln						= Level().name().c_str();
 	if(	pGameIni->section_exist(ln) )
@@ -205,7 +205,7 @@ void CUIZoneMap::OnSectorChanged(int sector)
 {
 	if(!g_pGameLevel->pLevel->section_exist("sub_level_map") )
 		return;
-	u8			map_idx = u8(-1);
+	u8			map_idx = static_cast<u8>(-1);
 	string64	s_sector;
 	xr_sprintf	(s_sector, "%d", sector);
 	
@@ -221,7 +221,7 @@ void CUIZoneMap::OnSectorChanged(int sector)
 	string_path sub_texture;
 	xr_sprintf(sub_texture,"%s#%d", m_activeMap->m_texture.c_str(), m_current_map_idx);
 	
-	if(map_idx==u8(-1))
+	if(map_idx==static_cast<u8>(-1))
 		xr_sprintf(sub_texture,"%s", m_activeMap->m_texture.c_str());
 
 	m_activeMap->InitTextureEx(sub_texture, m_activeMap->m_shader_name.c_str());

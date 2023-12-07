@@ -39,12 +39,12 @@ void CStateGroupDragAbstract::initialize()
 	LPCSTR bones = ini->r_string( "capture_used_bones","bones" );
 
 	int				bone_number = _GetItemCount( bones );
-	u16				*vbones = (u16*)_alloca(bone_number*sizeof(u16));
+	u16				*vbones = static_cast<u16*>(_alloca(bone_number * sizeof(u16)));
 	u16				*I = vbones;
 	u16				*E = vbones + bone_number;
 	for ( ; I != E; ++I) {
 		string32	sbone;
-		_GetItem	( bones, int(I - vbones), sbone );
+		_GetItem	( bones, static_cast<int>(I - vbones), sbone );
 		*I			= K->LL_BoneID( sbone );
 		VERIFY		( *I != BI_NONE );
 	}
@@ -90,15 +90,15 @@ void CStateGroupDragAbstract::initialize()
 	IPHCapture *capture = object->character_physics_support()->movement()->PHCapture();
 	if (capture && !capture->Failed()) {
 		m_cover_vertex_id = object->Home->get_place_in_min_home();
-		if (m_cover_vertex_id != u32(-1)) {
+		if (m_cover_vertex_id != static_cast<u32>(-1)) {
 			m_cover_position	=  ai().level_graph().vertex_position(m_cover_vertex_id);
 		} else m_cover_position	= object->Position();
-		if (m_cover_vertex_id == u32(-1) || object->Position().distance_to(m_cover_position) < 2.f || !object->Home->at_min_home(m_cover_position)) {
+		if (m_cover_vertex_id == static_cast<u32>(-1) || object->Position().distance_to(m_cover_position) < 2.f || !object->Home->at_min_home(m_cover_position)) {
 			const CCoverPoint *point = object->CoverMan->find_cover(object->Home->get_home_point(), 1, object->Home->get_min_radius());
 			if (point)
 			{
 				m_cover_vertex_id = point->level_vertex_id();
-				if (m_cover_vertex_id != u32(-1))
+				if (m_cover_vertex_id != static_cast<u32>(-1))
 				{
 					m_cover_position	=  ai().level_graph().vertex_position(m_cover_vertex_id);
 				}
@@ -118,7 +118,7 @@ void CStateGroupDragAbstract::execute()
 	object->set_action				(ACT_DRAG);
 	object->anim().SetSpecParams	(ASP_MOVE_BKWD);
 
-	if (m_cover_vertex_id != u32(-1)) {
+	if (m_cover_vertex_id != static_cast<u32>(-1)) {
 		object->path().set_target_point			(m_cover_position, m_cover_vertex_id);
 	} else {
 		object->path().set_retreat_from_point	(object->EatedCorpse->Position());
@@ -160,7 +160,7 @@ bool CStateGroupDragAbstract::check_completion()
 		return true;
 	}
 
-	if (m_cover_vertex_id != u32(-1)) {		// valid vertex so wait path end
+	if (m_cover_vertex_id != static_cast<u32>(-1)) {		// valid vertex so wait path end
 		if (object->Position().distance_to(m_cover_position) < 2.f) 
 			return true;
 	} else {								// invalid vertex so check distanced that passed

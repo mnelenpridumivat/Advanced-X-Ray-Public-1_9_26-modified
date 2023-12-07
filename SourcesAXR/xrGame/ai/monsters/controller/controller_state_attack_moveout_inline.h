@@ -77,7 +77,7 @@ void CStateControlMoveOutAbstract::update_target_point()
 	}
 	
 	if (m_state == eMoveToNodeEnemyLastSeen) {
-		if (object->EnemyMan.get_my_vertex_enemy_last_seen() != u32(-1))
+		if (object->EnemyMan.get_my_vertex_enemy_last_seen() != static_cast<u32>(-1))
 			m_target_node		= object->EnemyMan.get_my_vertex_enemy_last_seen();
 		else 
 			m_target_node		= m_enemy_vertex;

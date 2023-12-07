@@ -221,7 +221,7 @@ TEMPLATE_SPECIALIZATION
 IC	void CAbstractGraph::save			(IWriter &stream)
 {
 	stream.open_chunk			(0);
-	stream.w_u32				((u32)vertices().size());
+	stream.w_u32				(static_cast<u32>(vertices().size()));
 	stream.close_chunk			();
 	
 	stream.open_chunk			(1);
@@ -252,7 +252,7 @@ IC	void CAbstractGraph::save			(IWriter &stream)
 
 			save_data			((*I).second->vertex_id(),stream);
 
-			stream.w_u32		((u32)(*I).second->edges().size());
+			stream.w_u32		(static_cast<u32>((*I).second->edges().size()));
 			const_iterator		i = (*I).second->edges().begin();
 			const_iterator		e = (*I).second->edges().end();
 			for ( ; i != e; ++i) {

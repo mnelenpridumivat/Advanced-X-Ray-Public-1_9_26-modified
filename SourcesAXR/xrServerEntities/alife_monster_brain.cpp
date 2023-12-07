@@ -49,7 +49,7 @@ CALifeMonsterBrain::CALifeMonsterBrain		(object_type *object)
 #ifdef XRGAME_EXPORTS
 	u32								hours,minutes,seconds;
 	sscanf							(pSettings->r_string(this->object().name(),"smart_terrain_choose_interval"),"%d:%d:%d",&hours,&minutes,&seconds);
-	m_time_interval					= (u32)generate_time(1,1,1,hours,minutes,seconds);
+	m_time_interval					= static_cast<u32>(generate_time(1, 1, 1, hours, minutes, seconds));
 #endif
 
 	m_can_choose_alife_tasks		= true;

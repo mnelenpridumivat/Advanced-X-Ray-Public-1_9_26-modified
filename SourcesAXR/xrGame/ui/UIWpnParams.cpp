@@ -237,10 +237,14 @@ void CUIWpnParams::SetInfo( CInventoryItem* slot_wpn, CInventoryItem& cur_wpn )
 
 		m_stAmmoType1.SetShader(InventoryUtilities::GetEquipmentIconsShader());
 		Frect				tex_rect;
-		tex_rect.x1			= float(pSettings->r_u32(ammo_types[0].c_str(), "inv_grid_x") * INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()));
-		tex_rect.y1			= float(pSettings->r_u32(ammo_types[0].c_str(), "inv_grid_y") * INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons()));
-		tex_rect.x2			= float(pSettings->r_u32(ammo_types[0].c_str(), "inv_grid_width") * INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()));
-		tex_rect.y2			= float(pSettings->r_u32(ammo_types[0].c_str(), "inv_grid_height") * INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons()));
+		tex_rect.x1			= static_cast<float>(pSettings->r_u32(ammo_types[0].c_str(), "inv_grid_x") * INV_GRID_WIDTH(
+			GameConstants::GetUseHQ_Icons()));
+		tex_rect.y1			= static_cast<float>(pSettings->r_u32(ammo_types[0].c_str(), "inv_grid_y") * INV_GRID_HEIGHT(
+			GameConstants::GetUseHQ_Icons()));
+		tex_rect.x2			= static_cast<float>(pSettings->r_u32(ammo_types[0].c_str(), "inv_grid_width") * INV_GRID_WIDTH(
+			GameConstants::GetUseHQ_Icons()));
+		tex_rect.y2			= static_cast<float>(pSettings->r_u32(ammo_types[0].c_str(), "inv_grid_height") * INV_GRID_HEIGHT(
+			GameConstants::GetUseHQ_Icons()));
 		tex_rect.rb.add		(tex_rect.lt);
 		m_stAmmoType1.SetTextureRect(tex_rect);
 		m_stAmmoType1.TextureOn();
@@ -258,10 +262,14 @@ void CUIWpnParams::SetInfo( CInventoryItem* slot_wpn, CInventoryItem& cur_wpn )
 		}
 		else
 		{
-			tex_rect.x1			= float(pSettings->r_u32(ammo_types[1].c_str(), "inv_grid_x") * INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()));
-			tex_rect.y1			= float(pSettings->r_u32(ammo_types[1].c_str(), "inv_grid_y") * INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons()));
-			tex_rect.x2			= float(pSettings->r_u32(ammo_types[1].c_str(), "inv_grid_width") * INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()));
-			tex_rect.y2			= float(pSettings->r_u32(ammo_types[1].c_str(), "inv_grid_height") * INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons()));
+			tex_rect.x1			= static_cast<float>(pSettings->r_u32(ammo_types[1].c_str(), "inv_grid_x") * INV_GRID_WIDTH(
+				GameConstants::GetUseHQ_Icons()));
+			tex_rect.y1			= static_cast<float>(pSettings->r_u32(ammo_types[1].c_str(), "inv_grid_y") * INV_GRID_HEIGHT(
+				GameConstants::GetUseHQ_Icons()));
+			tex_rect.x2			= static_cast<float>(pSettings->r_u32(ammo_types[1].c_str(), "inv_grid_width") * INV_GRID_WIDTH(
+				GameConstants::GetUseHQ_Icons()));
+			tex_rect.y2			= static_cast<float>(pSettings->r_u32(ammo_types[1].c_str(), "inv_grid_height") * INV_GRID_HEIGHT(
+				GameConstants::GetUseHQ_Icons()));
 			tex_rect.rb.add		(tex_rect.lt);
 		}
 		m_stAmmoType2.SetTextureRect(tex_rect);

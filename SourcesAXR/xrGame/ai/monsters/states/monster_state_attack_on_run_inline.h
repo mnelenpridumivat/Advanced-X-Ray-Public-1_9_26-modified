@@ -35,7 +35,7 @@ void ATTACK_ON_RUN_STATE::initialize()
 	object->m_time_last_attack_success	=	0;
 	object->path().prepare_builder			();
 
-	m_target_vertex						=	(u32)(-1);
+	m_target_vertex						=	static_cast<u32>(-1);
 	m_attacking							=	false;
 	
 	m_attack_side							=	!(rand()%2) ? left : right;
@@ -191,7 +191,7 @@ void   ATTACK_ON_RUN_STATE::update_aim_side ()
 	aim_side const	new_attack_side			=	(self_dir.x*self_to_enemy.z - self_dir.z*self_to_enemy.x > 0) ?
 												right : left;
 	
-	TTime const update_side_period			=	(TTime)(object->get_attack_on_move_update_side_period() * 1000);
+	TTime const update_side_period			=	static_cast<TTime>(object->get_attack_on_move_update_side_period() * 1000);
 
 	if ( current_time() > m_attack_side_chosen_time + update_side_period )
 	{
@@ -246,7 +246,7 @@ void   ATTACK_ON_RUN_STATE::update_movement_target ()
 	text_tree.add_line							("attacking", m_attacking);
 #endif // DEBUG_STATE
 
-	TTime const max_go_close_time			=	(TTime)(1000*object->get_attack_on_move_max_go_close_time());
+	TTime const max_go_close_time			=	static_cast<TTime>(1000 * object->get_attack_on_move_max_go_close_time());
 	float const	far_radius					=	object->get_attack_on_move_far_radius();
 	float const	attack_radius				=	object->get_attack_on_move_attack_radius();
 	float const	prepare_time				=	object->get_attack_on_move_prepare_time();
@@ -552,7 +552,7 @@ void   ATTACK_ON_RUN_STATE::update_attack ()
 					 
 			got_animation_info; VERIFY			(got_animation_info);
 
-			m_attack_end_time				=	current_time() + TTime(1000*attack_animation_length);
+			m_attack_end_time				=	current_time() + static_cast<TTime>(1000 * attack_animation_length);
 			object->anim().set_override_animation (anim, m_animation_index[m_attack_side]);
 		}
 	}

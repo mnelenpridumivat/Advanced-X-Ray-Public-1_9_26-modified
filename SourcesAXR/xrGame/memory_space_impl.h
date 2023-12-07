@@ -30,7 +30,7 @@ IC	void CObjectParams<T>::fill				(const T *game_object)
 	m_orientation			= game_object ? orientation(game_object) : SRotation(0.f,0.f,0.f);
 #endif
 	
-	m_level_vertex_id		= game_object ? game_object->ai_location().level_vertex_id() : u32(-1);
+	m_level_vertex_id		= game_object ? game_object->ai_location().level_vertex_id() : static_cast<u32>(-1);
 //	if (game_object && ai().get_level_graph() && ai().level_graph().valid_vertex_id(m_level_vertex_id) && !ai().level_graph().inside(m_level_vertex_id,game_object->Position())) {
 //		m_position			= ai().level_graph().vertex_position(m_level_vertex_id);
 //		m_position.y		= game_object->Position().y;
@@ -86,5 +86,5 @@ IC	void CMemoryObject<T>::fill				(const T *game_object, const T *self, const sq
 template <typename T>
 IC	u16 object_id(const T *object)
 {
-	return					(object ? u16(object->ID()) : u16(0xffff));
+	return					(object ? static_cast<u16>(object->ID()) : static_cast<u16>(0xffff));
 }

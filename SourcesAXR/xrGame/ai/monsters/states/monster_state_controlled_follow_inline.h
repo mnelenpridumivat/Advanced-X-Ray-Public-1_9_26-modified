@@ -63,7 +63,7 @@ void CStateMonsterControlledFollowAbstract::setup_substates()
 			data.vertex		= object->control().path_builder().restrictions().accessible_nearest(dest_pos, data.point);
 		} else {
 			data.point		= dest_pos;
-			data.vertex		= u32(-1);
+			data.vertex		= static_cast<u32>(-1);
 		}
 
 		data.action.action		= ACT_WALK_FWD;
@@ -73,7 +73,7 @@ void CStateMonsterControlledFollowAbstract::setup_substates()
 		data.completion_dist	= STOP_DISTANCE;
 		data.action.sound_type	= MonsterSound::eMonsterSoundIdle;
 		data.action.sound_delay = object->db().m_dwIdleSndDelay;
-		data.time_to_rebuild	= u32(-1);
+		data.time_to_rebuild	= static_cast<u32>(-1);
 
 		state->fill_data_with(&data, sizeof(SStateDataMoveToPointEx));
 

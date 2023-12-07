@@ -18,7 +18,7 @@ CStateMonsterHearInterestingSoundAbstract::CStateMonsterHearInterestingSound(_Ob
 TEMPLATE_SPECIALIZATION
 void CStateMonsterHearInterestingSoundAbstract::reselect_state()
 {
-	if (prev_substate == u32(-1)){
+	if (prev_substate == static_cast<u32>(-1)){
 		if (get_state(eStateHearInterestingSound_MoveToDest)->check_start_conditions()) 
 			select_state(eStateHearInterestingSound_MoveToDest);
 		else 
@@ -37,7 +37,7 @@ void CStateMonsterHearInterestingSoundAbstract::setup_substates()
 	if (current_substate == eStateHearInterestingSound_MoveToDest) {
 		SStateDataMoveToPoint data;
 		data.point			= get_target_position();
-		data.vertex			= u32(-1);
+		data.vertex			= static_cast<u32>(-1);
 		data.action.action	= ACT_WALK_FWD;
 		data.accelerated	= true;
 		data.braking		= false;

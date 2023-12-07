@@ -23,7 +23,7 @@ CCustomOutfit::CCustomOutfit()
 	m_flags.set(FUsingCondition, TRUE);
 
 	for(int i=0; i<ALife::eHitTypeMax; i++)
-		m_HitTypeProtection[(ALife::EHitType)i] = 1.0f;
+		m_HitTypeProtection[static_cast<ALife::EHitType>(i)] = 1.0f;
 
 	m_boneProtection = xr_new<SBoneProtections>();
 	m_artefact_count = 0;
@@ -183,7 +183,7 @@ void CCustomOutfit::Load(LPCSTR section)
 
 	m_full_icon_name		= pSettings->r_string( section, "full_icon_name" );
 	m_artefact_count 		= READ_IF_EXISTS( pSettings, r_u32, section, "artefact_count", 0 );
-	clamp( m_artefact_count, (u32)0, (u32)GameConstants::GetArtefactsCount());
+	clamp( m_artefact_count, static_cast<u32>(0), static_cast<u32>(GameConstants::GetArtefactsCount()));
 
 	m_BonesProtectionSect	= READ_IF_EXISTS(pSettings, r_string, section, "bones_koeff_protection",  "" );
 	bIsHelmetAvaliable		= !!READ_IF_EXISTS(pSettings, r_bool, section, "helmet_avaliable", true);
@@ -320,7 +320,7 @@ float CCustomOutfit::HitThroughArmor(float hit_power, s16 element, float ap, boo
 
 BOOL	CCustomOutfit::BonePassBullet					(int boneID)
 {
-	return m_boneProtection->getBonePassBullet(s16(boneID));
+	return m_boneProtection->getBonePassBullet(static_cast<s16>(boneID));
 }
 
 void	CCustomOutfit::OnMoveToSlot		(const SInvItemPlace& prev)
@@ -485,7 +485,7 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 	clamp( m_fPowerLoss, 0.0f, 1.0f );
 
 	result |= process_if_exists( section, "artefact_count", &CInifile::r_u32, m_artefact_count, test );
-	clamp( m_artefact_count, (u32)0, (u32)GameConstants::GetArtefactsCount());
+	clamp( m_artefact_count, static_cast<u32>(0), static_cast<u32>(GameConstants::GetArtefactsCount()));
 
 	result |= process_if_exists(section, "jump_speed", &CInifile::r_float, m_fJumpSpeed, test);
 	result |= process_if_exists(section, "walk_accel", &CInifile::r_float, m_fWalkAccel, test);

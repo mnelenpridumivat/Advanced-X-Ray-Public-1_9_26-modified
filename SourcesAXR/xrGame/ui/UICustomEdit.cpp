@@ -8,7 +8,7 @@
 
 CUICustomEdit::CUICustomEdit()
 {
-	m_editor_control = xr_new<text_editor::line_edit_control>( (u32)EDIT_BUF_SIZE );
+	m_editor_control = xr_new<text_editor::line_edit_control>( static_cast<u32>(EDIT_BUF_SIZE) );
 	Init( (u32)EDIT_BUF_SIZE );
 
 	TextItemControl()->SetVTextAlignment( valCenter );
@@ -224,7 +224,7 @@ void  CUICustomEdit::Draw()
 		{
 			string256 passText;
 			shared_str str(istr);
-			int sz = (int)str.size();
+			int sz = static_cast<int>(str.size());
 			for (int i = 0; i < sz; i++)
 				passText[i] = '*';
 			passText[sz] = 0;

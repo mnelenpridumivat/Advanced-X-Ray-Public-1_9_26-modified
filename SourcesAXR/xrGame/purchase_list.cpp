@@ -34,7 +34,7 @@ void CPurchaseList::process	(CInifile &ini_file, LPCSTR section, CInventoryOwner
 			game_object,
 			(*I).first,
 			atoi(_GetItem(*(*I).second,0,temp0)),
-			(float)atof(_GetItem(*(*I).second,1,temp1))
+			static_cast<float>(atof(_GetItem(*(*I).second, 1, temp1)))
 		);
 	}
 }
@@ -47,7 +47,7 @@ void CPurchaseList::process	(const CGameObject &owner, const shared_str &name, c
 	const Fvector			&position = owner.Position();
 	const u32				&level_vertex_id = owner.ai_location().level_vertex_id();
 	const ALife::_OBJECT_ID	&id = owner.ID();
-	CRandom					random((u32)(CPU::QPC() & u32(-1)));
+	CRandom					random(static_cast<u32>(CPU::QPC() & u32(-1)));
 	for (u32 i=0, j=0; i<count; ++i) {
 		if (random.randF() > probability)
 			continue;
@@ -61,9 +61,9 @@ void CPurchaseList::process	(const CGameObject &owner, const shared_str &name, c
 	m_deficits.insert			(
 		std::make_pair(
 			name,
-			(float)count*probability
+			static_cast<float>(count)*probability
 			/
-			_max((float)j,min_deficit_factor)
+			_max(static_cast<float>(j),min_deficit_factor)
 		)
 	);
 }

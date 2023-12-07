@@ -454,8 +454,8 @@ namespace SmartDynamicCast {
 					"SmartCast<%s*>(%s*) FAILED (result differs from the dynamic_cast) or object is CORRUPTED (0x%08x -> 0x%08x)!",
 					typeid(T1).name(),
 					typeid(T2).name(),
-					*(u32*)&test,
-					*(u32*)&temp
+					*static_cast<u32*>(&test),
+					*static_cast<u32*>(&temp)
 				)
 			);
 			return				(temp);
@@ -474,7 +474,7 @@ namespace SmartDynamicCast {
 			add_smart_cast_stats(typeid(T2*).name(),typeid(void*).name());
 #endif
 			if (!p)
-				return			((void*)0);
+				return			static_cast<void*>(0);
 			return				(dynamic_cast<void*>(p));
 		}
 	};

@@ -104,7 +104,7 @@ public:
 	LPCSTR					GetTitle_script			()							{return m_Title.c_str();}
 	void					SetPriority_script		(int _prio)					{m_priority	= _prio;}
 	int						GetPriority_script		()							{return m_priority;}
-	void					SetType_script			(int t)						{m_task_type = (ETaskType)t;}
+	void					SetType_script			(int t)						{m_task_type = static_cast<ETaskType>(t);}
 
 	LPCSTR					GetID_script			()							{return m_ID.c_str();}
 	void					SetID_script			(LPCSTR _id)				{m_ID = _id;}
@@ -115,7 +115,7 @@ public:
 	void					SetMapHint_script		(LPCSTR _hint)				{m_map_hint = _hint;}
 
 	void					SetMapLocation_script	(LPCSTR _mls)				{m_map_location = _mls;}
-	void					SetMapObjectID_script	(int _id)					{m_map_object_id = (u16)_id;}
+	void					SetMapObjectID_script	(int _id)					{m_map_object_id = static_cast<u16>(_id);}
 
 	void 					AddCompleteInfo_script	(LPCSTR _str);
 	void 					AddFailInfo_script		(LPCSTR _str);

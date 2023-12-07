@@ -173,7 +173,7 @@ void __stdcall reward_event_generator::AddRewardTask(u32 award_id)
 		Msg("! ERROR: can't reward player - not logged in");
 		return;
 	}
-	if ((m_rewarded >= m_max_rewards) && (m_max_rewards != u32(-1)))
+	if ((m_rewarded >= m_max_rewards) && (m_max_rewards != static_cast<u32>(-1)))
 	{
 		Msg("! You have been rewarded by award [%s], but maximum rewards per game reached... sorry :(",
 			gamespy_profile::get_award_name(tmp_award_type));

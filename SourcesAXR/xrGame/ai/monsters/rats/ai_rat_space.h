@@ -10,21 +10,21 @@
 
 namespace RatSpace {
 	enum ERatSounds {
-		eRatSoundDie = u32(0),
+		eRatSoundDie = static_cast<u32>(0),
 		eRatSoundInjuring,
 		eRatSoundAttack,
 		eRatSoundVoice,
 		eRatSoundEat,
-		eRatSoundDummy = u32(-1),
+		eRatSoundDummy = static_cast<u32>(-1),
 	};
 
 	enum ERatSoundMasks {
-		eRatSoundMaskAnySound	= u32(0),
-		eRatSoundMaskDie		= u32(-1),
-		eRatSoundMaskInjuring	= u32(-1),
-		eRatSoundMaskVoice		= u32(1 << 31) | 1,
-		eRatSoundMaskAttack		= u32(1 << 30) | 2,
-		eRatSoundMaskEat		= u32(1 << 30) | 4,
-		eRatSoundMaskDummy		= u32(-1),
+		eRatSoundMaskAnySound	= static_cast<u32>(0),
+		eRatSoundMaskDie		= static_cast<u32>(-1),
+		eRatSoundMaskInjuring	= static_cast<u32>(-1),
+		eRatSoundMaskVoice		= static_cast<u32>(1 << 31) | 1,
+		eRatSoundMaskAttack		= static_cast<u32>(1 << 30) | 2,
+		eRatSoundMaskEat		= static_cast<u32>(1 << 30) | 4,
+		eRatSoundMaskDummy		= static_cast<u32>(-1),
 	};
 }

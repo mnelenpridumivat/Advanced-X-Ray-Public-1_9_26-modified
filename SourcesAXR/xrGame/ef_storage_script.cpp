@@ -116,13 +116,15 @@ void CEF_Storage::script_register(lua_State *L)
 		def("ef_storage",&ef_storage),
 
 		class_<CEF_Storage>("cef_storage")
-			.def("evaluate",	(float (*)(CEF_Storage*,LPCSTR,CScriptGameObject*))(&evaluate))
-			.def("evaluate",	(float (*)(CEF_Storage*,LPCSTR,CScriptGameObject*,CScriptGameObject*))(&evaluate))
-			.def("evaluate",	(float (*)(CEF_Storage*,LPCSTR,CScriptGameObject*,CScriptGameObject*,CScriptGameObject*))(&evaluate))
-			.def("evaluate",	(float (*)(CEF_Storage*,LPCSTR,CScriptGameObject*,CScriptGameObject*,CScriptGameObject*,CScriptGameObject*))(&evaluate))
-			.def("evaluate",	(float (*)(CEF_Storage*,LPCSTR,CSE_ALifeObject*))(&evaluate))
-			.def("evaluate",	(float (*)(CEF_Storage*,LPCSTR,CSE_ALifeObject*,CSE_ALifeObject*))(&evaluate))
-			.def("evaluate",	(float (*)(CEF_Storage*,LPCSTR,CSE_ALifeObject*,CSE_ALifeObject*,CSE_ALifeObject*))(&evaluate))
-			.def("evaluate",	(float (*)(CEF_Storage*,LPCSTR,CSE_ALifeObject*,CSE_ALifeObject*,CSE_ALifeObject*,CSE_ALifeObject*))(&evaluate))
+			.def("evaluate",	static_cast<float (*)(CEF_Storage*, LPCSTR, CScriptGameObject*)>(&evaluate))
+			.def("evaluate",	static_cast<float (*)(CEF_Storage*, LPCSTR, CScriptGameObject*, CScriptGameObject*)>(&evaluate))
+			.def("evaluate",	static_cast<float (*)(CEF_Storage*, LPCSTR, CScriptGameObject*, CScriptGameObject*, CScriptGameObject*)>(&evaluate))
+			.def("evaluate",	static_cast<float (*)(CEF_Storage*, LPCSTR, CScriptGameObject*, CScriptGameObject*, CScriptGameObject*,
+				                                      CScriptGameObject*)>(&evaluate))
+			.def("evaluate",	static_cast<float (*)(CEF_Storage*, LPCSTR, CSE_ALifeObject*)>(&evaluate))
+			.def("evaluate",	static_cast<float (*)(CEF_Storage*, LPCSTR, CSE_ALifeObject*, CSE_ALifeObject*)>(&evaluate))
+			.def("evaluate",	static_cast<float (*)(CEF_Storage*, LPCSTR, CSE_ALifeObject*, CSE_ALifeObject*, CSE_ALifeObject*)>(&evaluate))
+			.def("evaluate",	static_cast<float (*)(CEF_Storage*, LPCSTR, CSE_ALifeObject*, CSE_ALifeObject*, CSE_ALifeObject*, CSE_ALifeObject*)>(&
+				     evaluate))
 	];
 }

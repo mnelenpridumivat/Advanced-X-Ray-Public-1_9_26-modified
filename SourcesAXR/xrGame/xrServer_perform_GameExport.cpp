@@ -18,7 +18,7 @@ void xrServer::Perform_game_export	()
 			NET_Packet		P;
 			u32				mode				= net_flags(TRUE,TRUE);
 			
-			xrClientData*	CL	= (xrClientData*)client;
+			xrClientData*	CL	= static_cast<xrClientData*>(client);
 			if (!CL->net_Accepted)
 				return;
 			P.w_begin							(M_SV_CONFIG_GAME);

@@ -116,7 +116,7 @@ void   text_tree::output (int current_indent, int indent, Columns& columns, OutF
 		}		
 	}
 
-	buffer += char(0);
+	buffer += static_cast<char>(0);
 
 	if ( strings.size() && buffer.size() )
 	{

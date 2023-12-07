@@ -155,10 +155,10 @@ u32	CTrade::GetItemPrice(PIItem pItem, bool b_buying)
 	if (pArtefact && (pThis.type == TT_ACTOR) && (pPartner.type == TT_TRADER)) {
 		CAI_Trader			*pTrader = smart_cast<CAI_Trader*>(pPartner.inv_owner);
 		VERIFY				(pTrader);
-		base_cost			= (float)pTrader->ArtefactPrice(pArtefact);
+		base_cost			= static_cast<float>(pTrader->ArtefactPrice(pArtefact));
 	}
 	else
-		base_cost			= (float)pItem->Cost();
+		base_cost			= static_cast<float>(pItem->Cost());
 	
 	// computing condition factor
 	// for "dead" weapon we use 10% from base cost, for "good" weapon we use full base cost
@@ -172,7 +172,7 @@ u32	CTrade::GetItemPrice(PIItem pItem, bool b_buying)
 	if (NO_GOODWILL == attitude)
 		relation_factor		= 0.f;
 	else
-		relation_factor		= float(attitude + 1000.f)/2000.f;
+		relation_factor		= static_cast<float>(attitude + 1000.f)/2000.f;
 
 	clamp					(relation_factor,0.f,1.f);
 
@@ -195,11 +195,11 @@ u32	CTrade::GetItemPrice(PIItem pItem, bool b_buying)
 
 
 	if (buying){
-		if( ! pThis.inv_owner->trade_parameters().enabled(CTradeParameters::action_buy(0),pItem->object().cNameSect()) ) return 0;
-		p_trade_factors		= &pThis.inv_owner->trade_parameters().factors(CTradeParameters::action_buy(0),pItem->object().cNameSect());
+		if( ! pThis.inv_owner->trade_parameters().enabled(static_cast<CTradeParameters::action_buy>(0),pItem->object().cNameSect()) ) return 0;
+		p_trade_factors		= &pThis.inv_owner->trade_parameters().factors(static_cast<CTradeParameters::action_buy>(0),pItem->object().cNameSect());
 	}else{
-		if( ! pThis.inv_owner->trade_parameters().enabled(CTradeParameters::action_sell(0),pItem->object().cNameSect()) ) return 0;
-		p_trade_factors		= &pThis.inv_owner->trade_parameters().factors(CTradeParameters::action_sell(0),pItem->object().cNameSect());
+		if( ! pThis.inv_owner->trade_parameters().enabled(static_cast<CTradeParameters::action_sell>(0),pItem->object().cNameSect()) ) return 0;
+		p_trade_factors		= &pThis.inv_owner->trade_parameters().factors(static_cast<CTradeParameters::action_sell>(0),pItem->object().cNameSect());
 	}
 	const CTradeFactors		&trade_factors = *p_trade_factors;
 

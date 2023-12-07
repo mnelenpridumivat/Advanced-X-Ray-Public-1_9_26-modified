@@ -222,7 +222,7 @@ void CCustomRocket::ObjectContactCallback(bool& do_colide,bool bo1,dContact& c ,
 	if(!l_this||l_this->m_contact.contact) return;
 
 	CGameObject *l_pOwner = l_pUD1 ? smart_cast<CGameObject*>(l_pUD1->ph_ref_object) : NULL;
-	if(!l_pOwner || l_pOwner == (CGameObject*)l_this) l_pOwner = l_pUD2 ? smart_cast<CGameObject*>(l_pUD2->ph_ref_object) : NULL;
+	if(!l_pOwner || l_pOwner == static_cast<CGameObject*>(l_this)) l_pOwner = l_pUD2 ? smart_cast<CGameObject*>(l_pUD2->ph_ref_object) : NULL;
 	if(!l_pOwner || l_pOwner != l_this->m_pOwner) 
 	{
 		if(l_this->m_pOwner) 

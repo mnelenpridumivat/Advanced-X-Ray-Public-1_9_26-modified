@@ -30,7 +30,7 @@ int   CHARACTER_REPUTATION::ValueToIndex    (CHARACTER_REPUTATION_VALUE val)
 	for(;it!=it_e;++it)
 	{
 		if(val < (*it).threshold)
-			return (int)std::distance(m_pItemDataVector->begin(), it);
+			return static_cast<int>(std::distance(m_pItemDataVector->begin(), it));
 	}
 	return inherited::GetMaxIndex();
 }
@@ -62,8 +62,8 @@ CHARACTER_GOODWILL CHARACTER_REPUTATION::relation		(int to)
 
 CHARACTER_GOODWILL  CHARACTER_REPUTATION::relation		(int from, int to)
 {
-	VERIFY(from >= 0 && from <(int)m_relation_table.table().size());
-	VERIFY(to >= 0 && to <(int)m_relation_table.table().size());
+	VERIFY(from >= 0 && from <static_cast<int>(m_relation_table.table().size()));
+	VERIFY(to >= 0 && to <static_cast<int>(m_relation_table.table().size()));
 	return m_relation_table.table()[from][to];
 }
 

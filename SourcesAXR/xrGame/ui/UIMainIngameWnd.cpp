@@ -355,11 +355,11 @@ void CUIMainIngameWnd::Draw()
 
 		static float cur_lum = luminocity;
 		cur_lum = luminocity*0.01f + cur_lum*0.99f;
-		UIMotionIcon->SetLuminosity((s16)iFloor(cur_lum*100.0f));
+		UIMotionIcon->SetLuminosity(static_cast<s16>(iFloor(cur_lum * 100.0f)));
 	}
 	if ( !pActor || !pActor->g_Alive() ) return;
 
-	UIMotionIcon->SetNoise((s16)(0xffff&iFloor(pActor->m_snd_noise*100)));
+	UIMotionIcon->SetNoise(static_cast<s16>(0xffff & iFloor(pActor->m_snd_noise * 100)));
 
 	UIMotionIcon->Draw();
 

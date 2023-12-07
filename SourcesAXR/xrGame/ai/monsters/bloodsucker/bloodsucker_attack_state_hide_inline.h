@@ -38,7 +38,7 @@ void CBloodsuckerStateAttackHideAbstract::initialize()
 {
 	inherited::initialize	();
 
-	m_target_node			= u32(-1);
+	m_target_node			= static_cast<u32>(-1);
 
 	object->start_invisible_predator();
 }
@@ -46,7 +46,7 @@ void CBloodsuckerStateAttackHideAbstract::initialize()
 TEMPLATE_SPECIALIZATION
 void CBloodsuckerStateAttackHideAbstract::reselect_state()
 {
-	if (prev_substate == u32(-1)) {
+	if (prev_substate == static_cast<u32>(-1)) {
 		select_state(eStateAttack_HideInCover);
 		return;
 	}
@@ -59,7 +59,7 @@ void CBloodsuckerStateAttackHideAbstract::finalize()
 {
 	inherited::finalize							();
 
-	if (m_target_node != u32(-1))
+	if (m_target_node != static_cast<u32>(-1))
 		monster_squad().get_squad(object)->unlock_cover(m_target_node);
 }
 
@@ -68,7 +68,7 @@ void CBloodsuckerStateAttackHideAbstract::critical_finalize()
 {
 	inherited::critical_finalize				();
 
-	if (m_target_node != u32(-1))
+	if (m_target_node != static_cast<u32>(-1))
 		monster_squad().get_squad(object)->unlock_cover(m_target_node);
 }
 
@@ -119,25 +119,25 @@ void CBloodsuckerStateAttackHideAbstract::check_force_state()
 TEMPLATE_SPECIALIZATION
 void CBloodsuckerStateAttackHideAbstract::select_camp_point()
 {
-	if (m_target_node != u32(-1))
+	if (m_target_node != static_cast<u32>(-1))
 		monster_squad().get_squad(object)->unlock_cover(m_target_node);
 
-	m_target_node = u32(-1);
+	m_target_node = static_cast<u32>(-1);
 	if (object->Home->has_home()) {
 		m_target_node							= object->Home->get_place_in_cover();
-		if (m_target_node == u32(-1)) {
+		if (m_target_node == static_cast<u32>(-1)) {
 			m_target_node						= object->Home->get_place();
 		}
 	} 
 
-	if (m_target_node == u32(-1)) {
+	if (m_target_node == static_cast<u32>(-1)) {
 		const CCoverPoint	*point = object->CoverMan->find_cover(object->Position(),10.f,30.f);
 		if (point) {
 			m_target_node				= point->level_vertex_id	();
 		} 
 	}
 
-	if (m_target_node == u32(-1)) 
+	if (m_target_node == static_cast<u32>(-1)) 
 		m_target_node = object->ai_location().level_vertex_id();
 
 

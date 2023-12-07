@@ -34,7 +34,7 @@ CStateManagerBurer::CStateManagerBurer(CBurer *monster) : inherited(monster)
 
 void CStateManagerBurer::execute()
 {
-	u32 state = u32(-1);
+	u32 state = static_cast<u32>(-1);
 
 	if (object->EnemyMan.get_enemy()) {
 		switch (object->EnemyMan.get_danger_type()) {

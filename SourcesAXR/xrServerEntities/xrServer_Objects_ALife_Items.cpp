@@ -65,7 +65,7 @@ CSE_ALifeInventoryItem::CSE_ALifeInventoryItem(LPCSTR caSection)
 			m_freeze_time	= 0;
 #endif
 
-	m_relevent_random.seed		(u32(CPU::GetCLK() & u32(-1)));
+	m_relevent_random.seed		(static_cast<u32>(CPU::GetCLK() & u32(-1)));
 	freezed						= false;
 }
 
@@ -113,7 +113,7 @@ const	u32		CSE_ALifeInventoryItem::random_limit			= 120;
 //if TRUE, then object sends update packet
 BOOL CSE_ALifeInventoryItem::Net_Relevant()
 {
-	if (base()->ID_Parent != u16(-1))
+	if (base()->ID_Parent != static_cast<u16>(-1))
 		return		FALSE;
 
 	if (!freezed)
@@ -148,7 +148,7 @@ void CSE_ALifeInventoryItem::UPDATE_Write	(NET_Packet &tNetPacket)
 	num_items.num_items				= m_u8NumItems;
 
 	R_ASSERT2						(
-		num_items.num_items < (u8(1) << 5),
+		num_items.num_items < (static_cast<u8>(1) << 5),
 		make_string("%d",num_items.num_items)
 		);
 
@@ -204,7 +204,7 @@ void CSE_ALifeInventoryItem::UPDATE_Read	(NET_Packet &tNetPacket)
 	m_u8NumItems					= num_items.num_items;
 
 	R_ASSERT2						(
-		m_u8NumItems < (u8(1) << 5),
+		m_u8NumItems < (static_cast<u8>(1) << 5),
 		make_string("%d",m_u8NumItems)
 		);
 	
@@ -500,11 +500,11 @@ CSE_ALifeItemWeapon::CSE_ALifeItemWeapon	(LPCSTR caSection) : CSE_ALifeItem(caSe
 
 	m_addon_flags.zero			();
 
-	m_scope_status				=	(EWeaponAddonStatus)pSettings->r_s32(s_name,"scope_status");
-	m_silencer_status			=	(EWeaponAddonStatus)pSettings->r_s32(s_name,"silencer_status");
-	m_grenade_launcher_status	=	(EWeaponAddonStatus)pSettings->r_s32(s_name,"grenade_launcher_status");
-	m_ef_main_weapon_type		= READ_IF_EXISTS(pSettings,r_u32,caSection,"ef_main_weapon_type",u32(-1));
-	m_ef_weapon_type			= READ_IF_EXISTS(pSettings,r_u32,caSection,"ef_weapon_type",u32(-1));
+	m_scope_status				=	static_cast<EWeaponAddonStatus>(pSettings->r_s32(s_name, "scope_status"));
+	m_silencer_status			=	static_cast<EWeaponAddonStatus>(pSettings->r_s32(s_name, "silencer_status"));
+	m_grenade_launcher_status	=	static_cast<EWeaponAddonStatus>(pSettings->r_s32(s_name, "grenade_launcher_status"));
+	m_ef_main_weapon_type		= READ_IF_EXISTS(pSettings,r_u32,caSection,"ef_main_weapon_type",static_cast<u32>(-1));
+	m_ef_weapon_type			= READ_IF_EXISTS(pSettings,r_u32,caSection,"ef_weapon_type",static_cast<u32>(-1));
 }
 
 CSE_ALifeItemWeapon::~CSE_ALifeItemWeapon	()
@@ -513,13 +513,13 @@ CSE_ALifeItemWeapon::~CSE_ALifeItemWeapon	()
 
 u32	CSE_ALifeItemWeapon::ef_main_weapon_type() const
 {
-	VERIFY	(m_ef_main_weapon_type != u32(-1));
+	VERIFY	(m_ef_main_weapon_type != static_cast<u32>(-1));
 	return	(m_ef_main_weapon_type);
 }
 
 u32	CSE_ALifeItemWeapon::ef_weapon_type() const
 {
-	VERIFY	(m_ef_weapon_type != u32(-1));
+	VERIFY	(m_ef_weapon_type != static_cast<u32>(-1));
 	return	(m_ef_weapon_type);
 }
 
@@ -690,10 +690,10 @@ void CSE_ALifeItemWeaponShotGun::UPDATE_Write	(NET_Packet& P)
 {
 	inherited::UPDATE_Write(P);
 
-	P.w_u8(u8(m_AmmoIDs.size()));
+	P.w_u8(static_cast<u8>(m_AmmoIDs.size()));
 	for (u32 i=0; i<m_AmmoIDs.size(); i++)
 	{
-		P.w_u8(u8(m_AmmoIDs[i]));
+		P.w_u8(static_cast<u8>(m_AmmoIDs[i]));
 	}
 }
 void CSE_ALifeItemWeaponShotGun::STATE_Read		(NET_Packet& P, u16 size)
@@ -829,7 +829,7 @@ void CSE_ALifeItemWeaponMagazinedWGL::FillProps			(LPCSTR pref, PropItemVec& ite
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifeItemAmmo::CSE_ALifeItemAmmo		(LPCSTR caSection) : CSE_ALifeItem(caSection)
 {
-	a_elapsed					= m_boxSize = (u16)pSettings->r_s32(caSection, "box_size");
+	a_elapsed					= m_boxSize = static_cast<u16>(pSettings->r_s32(caSection, "box_size"));
 	if (pSettings->section_exist(caSection) && pSettings->line_exist(caSection,"visual"))
         set_visual				(pSettings->r_string(caSection,"visual"));
 }
@@ -968,7 +968,7 @@ void CSE_ALifeItemArtefact::FillProps		(LPCSTR pref, PropItemVec& items)
 
 BOOL CSE_ALifeItemArtefact::Net_Relevant	()
 {
-	if (base()->ID_Parent == u16(-1))
+	if (base()->ID_Parent == static_cast<u16>(-1))
 		return TRUE;
 
 	return FALSE;
@@ -1099,7 +1099,7 @@ void CSE_ALifeItemDocument::FillProps		(LPCSTR pref, PropItemVec& items)
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifeItemGrenade::CSE_ALifeItemGrenade	(LPCSTR caSection): CSE_ALifeItem(caSection)
 {
-	m_ef_weapon_type	= READ_IF_EXISTS(pSettings,r_u32,caSection,"ef_weapon_type",u32(-1));
+	m_ef_weapon_type	= READ_IF_EXISTS(pSettings,r_u32,caSection,"ef_weapon_type",static_cast<u32>(-1));
 }
 
 CSE_ALifeItemGrenade::~CSE_ALifeItemGrenade	()
@@ -1108,7 +1108,7 @@ CSE_ALifeItemGrenade::~CSE_ALifeItemGrenade	()
 
 u32	CSE_ALifeItemGrenade::ef_weapon_type() const
 {
-	VERIFY	(m_ef_weapon_type != u32(-1));
+	VERIFY	(m_ef_weapon_type != static_cast<u32>(-1));
 	return	(m_ef_weapon_type);
 }
 
@@ -1185,7 +1185,7 @@ CSE_ALifeItemBolt::CSE_ALifeItemBolt		(LPCSTR caSection) : CSE_ALifeItem(caSecti
 	m_flags.set					(flUseSwitches,FALSE);
 	m_flags.set					(flSwitchOffline,FALSE);
 	m_can_save					= true;
-	m_ef_weapon_type			= READ_IF_EXISTS(pSettings,r_u32,caSection,"ef_weapon_type",u32(-1));
+	m_ef_weapon_type			= READ_IF_EXISTS(pSettings,r_u32,caSection,"ef_weapon_type",static_cast<u32>(-1));
 }
 
 CSE_ALifeItemBolt::~CSE_ALifeItemBolt		()
@@ -1194,7 +1194,7 @@ CSE_ALifeItemBolt::~CSE_ALifeItemBolt		()
 
 u32	CSE_ALifeItemBolt::ef_weapon_type() const
 {
-	VERIFY	(m_ef_weapon_type != u32(-1));
+	VERIFY	(m_ef_weapon_type != static_cast<u32>(-1));
 	return	(m_ef_weapon_type);
 }
 

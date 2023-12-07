@@ -356,7 +356,7 @@ bool game_cl_Deathmatch::CanBeReady				()
 	{		
 		const preset_items& _p	= pCurBuyMenu->GetPreset(_preset_idx_last);
 		bool Passed = false;
-		Passed = (_p.size()==0) ? 1 : (s32(pCurBuyMenu->GetPresetCost(_preset_idx_last)) <= local_player->money_for_round);
+		Passed = (_p.size()==0) ? 1 : (static_cast<s32>(pCurBuyMenu->GetPresetCost(_preset_idx_last)) <= local_player->money_for_round);
 		Passed |= pCurBuyMenu->IsIgnoreMoneyAndRank();
 		if (!Passed)
 		{
@@ -596,7 +596,7 @@ void game_cl_Deathmatch::shedule_Update			(u32 dt)
 						if (ps->m_bCurrentVoteAgreed == 1) NumAgreed++;
 					}
 					
-					xr_sprintf	(VoteTimeResStr, st.translate("mp_timeleft").c_str(), MinitsLeft, SecsLeft, float(NumAgreed)/players.size());
+					xr_sprintf	(VoteTimeResStr, st.translate("mp_timeleft").c_str(), MinitsLeft, SecsLeft, static_cast<float>(NumAgreed)/players.size());
 					m_game_ui->SetVoteTimeResultMsg(VoteTimeResStr);
 				};
 

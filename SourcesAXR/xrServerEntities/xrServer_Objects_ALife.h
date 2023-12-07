@@ -105,19 +105,19 @@ add_to_type_list(CSE_ALifeGraphPoint)
 
 SERVER_ENTITY_DECLARE_BEGIN2(CSE_ALifeObject,CSE_Abstract,CRandom)
 	enum {
-		flUseSwitches		= u32(1) << 0,
-		flSwitchOnline		= u32(1) << 1,
-		flSwitchOffline		= u32(1) << 2,
-		flInteractive		= u32(1) << 3,
-		flVisibleForAI		= u32(1) << 4,
-		flUsefulForAI		= u32(1) << 5,
-		flOfflineNoMove		= u32(1) << 6,
-		flUsedAI_Locations	= u32(1) << 7,
-		flGroupBehaviour	= u32(1) << 8,
-		flCanSave			= u32(1) << 9,
-		flVisibleForMap		= u32(1) << 10,
-		flUseSmartTerrains	= u32(1) << 11,
-		flCheckForSeparator	= u32(1) << 12,
+		flUseSwitches		= static_cast<u32>(1) << 0,
+		flSwitchOnline		= static_cast<u32>(1) << 1,
+		flSwitchOffline		= static_cast<u32>(1) << 2,
+		flInteractive		= static_cast<u32>(1) << 3,
+		flVisibleForAI		= static_cast<u32>(1) << 4,
+		flUsefulForAI		= static_cast<u32>(1) << 5,
+		flOfflineNoMove		= static_cast<u32>(1) << 6,
+		flUsedAI_Locations	= static_cast<u32>(1) << 7,
+		flGroupBehaviour	= static_cast<u32>(1) << 8,
+		flCanSave			= static_cast<u32>(1) << 9,
+		flVisibleForMap		= static_cast<u32>(1) << 10,
+		flUseSmartTerrains	= static_cast<u32>(1) << 11,
+		flCheckForSeparator	= static_cast<u32>(1) << 12,
 	};
 
 public:
@@ -424,9 +424,9 @@ private:
 
 public:
 	enum {
-		inventory_item_state_enabled	= u8(1) << 0,
-		inventory_item_angular_null		= u8(1) << 1,
-		inventory_item_linear_null		= u8(1) << 2//,
+		inventory_item_state_enabled	= static_cast<u8>(1) << 0,
+		inventory_item_angular_null		= static_cast<u8>(1) << 1,
+		inventory_item_linear_null		= static_cast<u8>(1) << 2//,
 		//animated						= u8(1) << 3
 	};
 	union mask_num_items {

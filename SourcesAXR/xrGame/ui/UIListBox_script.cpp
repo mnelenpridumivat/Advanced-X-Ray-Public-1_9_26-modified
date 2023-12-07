@@ -72,8 +72,8 @@ void CUIListBox::script_register(lua_State *L)
 		.def(							constructor<>())
 		.enum_("enum_connect_errcode")
 		[
-			value("ece_unique_nick_not_registred", int(ece_unique_nick_not_registred)),
-			value("ece_unique_nick_expired", int(ece_unique_nick_expired))
+			value("ece_unique_nick_not_registred", static_cast<int>(ece_unique_nick_not_registred)),
+			value("ece_unique_nick_expired", static_cast<int>(ece_unique_nick_expired))
 		]
 		.def("SetConnectionErrCb",		&CServerList::SetConnectionErrCb)
 		.def("ConnectToSelected",		&CServerList::ConnectToSelected)
@@ -105,11 +105,11 @@ void CUIListBox::script_register(lua_State *L)
 		class_<enum_exporter<EGameIDs> >("GAME_TYPE")
 		.enum_("gametype")
 		[
-			value("GAME_UNKNOWN",			int(-1)),
-			value("eGameIDDeathmatch",		int(eGameIDDeathmatch)),
-			value("eGameIDTeamDeathmatch",	int(eGameIDTeamDeathmatch)),
-			value("eGameIDArtefactHunt",	int(eGameIDArtefactHunt)),
-			value("eGameIDCaptureTheArtefact",int(eGameIDCaptureTheArtefact))
+			value("GAME_UNKNOWN",			static_cast<int>(-1)),
+			value("eGameIDDeathmatch",		static_cast<int>(eGameIDDeathmatch)),
+			value("eGameIDTeamDeathmatch",	static_cast<int>(eGameIDTeamDeathmatch)),
+			value("eGameIDArtefactHunt",	static_cast<int>(eGameIDArtefactHunt)),
+			value("eGameIDCaptureTheArtefact",static_cast<int>(eGameIDCaptureTheArtefact))
 		]
 		
 	];

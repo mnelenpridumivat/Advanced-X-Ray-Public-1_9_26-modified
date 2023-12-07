@@ -9,7 +9,7 @@
 CHitImmunity::CHitImmunity()
 {
 	for(int i=0; i<ALife::eHitTypeMax; i++)
-		m_HitImmunityKoefs[(ALife::EHitType)i] = 1.0f;
+		m_HitImmunityKoefs[static_cast<ALife::EHitType>(i)] = 1.0f;
 }
 
 

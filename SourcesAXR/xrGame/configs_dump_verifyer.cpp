@@ -36,7 +36,7 @@ static char* search_info_section(u8* buffer, u32 buffer_size)
 	{
 		if (!memcmp(rbegin, cd_info_secion, sstr_size))
 		{
-			return static_cast<char*>((void*)rbegin);
+			return static_cast<char*>(static_cast<void*>(rbegin));
 		}
 		--rbegin;
 		--r_size;

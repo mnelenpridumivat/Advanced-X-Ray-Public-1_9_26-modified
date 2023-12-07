@@ -47,12 +47,12 @@ IC shared_str animation_planner::cName					() const
 
 IC u32 animation_planner::default_idle_interval		()
 {
-	return				(u32(1000 * m_random.randF(m_idle_min_time, m_idle_max_time)));
+	return				static_cast<u32>(1000 * m_random.randF(m_idle_min_time, m_idle_max_time));
 }
 
 IC u32 animation_planner::default_lookout_interval()
 {
-	return				(u32(1000 * m_random.randF(m_lookout_min_time, m_lookout_max_time)));
+	return				static_cast<u32>(1000 * m_random.randF(m_lookout_min_time, m_lookout_max_time));
 }
 
 IC float const &animation_planner::idle_min_time		() const

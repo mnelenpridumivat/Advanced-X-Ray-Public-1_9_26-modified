@@ -36,7 +36,7 @@ namespace extrapolation
 	class points
 	{
 	public:
-				points			(): last_update( u32(-1) ){}
+				points			(): last_update( static_cast<u32>(-1) ){}
 		void	update			( const Fmatrix &m );
 		void	init			( const Fmatrix &m );
 		void	extrapolate 	( Fmatrix &m, float time ) const;

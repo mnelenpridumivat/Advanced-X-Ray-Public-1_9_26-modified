@@ -20,27 +20,27 @@ void CScriptObjectAction::script_register(lua_State *L)
 		class_<CScriptObjectAction>("object")
 			.enum_("state")
 			[
-				value("idle",					int(MonsterSpace::eObjectActionIdle)),
-				value("show",					int(MonsterSpace::eObjectActionShow)),		
-				value("hide",					int(MonsterSpace::eObjectActionHide)),		
-				value("take",					int(MonsterSpace::eObjectActionTake)),		
-				value("drop",					int(MonsterSpace::eObjectActionDrop)),		
-				value("strap",					int(MonsterSpace::eObjectActionStrapped)),		
-				value("aim1",					int(MonsterSpace::eObjectActionAim1)),		
-				value("aim2",					int(MonsterSpace::eObjectActionAim2)),		
-				value("reload",					int(MonsterSpace::eObjectActionReload1)),	
-				value("reload1",				int(MonsterSpace::eObjectActionReload1)),	
-				value("reload2",				int(MonsterSpace::eObjectActionReload2)),	
-				value("fire1",					int(MonsterSpace::eObjectActionFire1)),		
-				value("fire2",					int(MonsterSpace::eObjectActionFire2)),		
-				value("switch1",				int(MonsterSpace::eObjectActionSwitch1)),	
-				value("switch2",				int(MonsterSpace::eObjectActionSwitch2)),	
-				value("activate",				int(MonsterSpace::eObjectActionActivate)),
-				value("deactivate",				int(MonsterSpace::eObjectActionDeactivate)),
-				value("use",					int(MonsterSpace::eObjectActionUse)),
-				value("turn_on",				int(MonsterSpace::eObjectActionTurnOn)),
-				value("turn_off",				int(MonsterSpace::eObjectActionTurnOff)),
-				value("dummy",					int(MonsterSpace::eObjectActionDummy))
+				value("idle",					static_cast<int>(MonsterSpace::eObjectActionIdle)),
+				value("show",					static_cast<int>(MonsterSpace::eObjectActionShow)),		
+				value("hide",					static_cast<int>(MonsterSpace::eObjectActionHide)),		
+				value("take",					static_cast<int>(MonsterSpace::eObjectActionTake)),		
+				value("drop",					static_cast<int>(MonsterSpace::eObjectActionDrop)),		
+				value("strap",					static_cast<int>(MonsterSpace::eObjectActionStrapped)),		
+				value("aim1",					static_cast<int>(MonsterSpace::eObjectActionAim1)),		
+				value("aim2",					static_cast<int>(MonsterSpace::eObjectActionAim2)),		
+				value("reload",					static_cast<int>(MonsterSpace::eObjectActionReload1)),	
+				value("reload1",				static_cast<int>(MonsterSpace::eObjectActionReload1)),	
+				value("reload2",				static_cast<int>(MonsterSpace::eObjectActionReload2)),	
+				value("fire1",					static_cast<int>(MonsterSpace::eObjectActionFire1)),		
+				value("fire2",					static_cast<int>(MonsterSpace::eObjectActionFire2)),		
+				value("switch1",				static_cast<int>(MonsterSpace::eObjectActionSwitch1)),	
+				value("switch2",				static_cast<int>(MonsterSpace::eObjectActionSwitch2)),	
+				value("activate",				static_cast<int>(MonsterSpace::eObjectActionActivate)),
+				value("deactivate",				static_cast<int>(MonsterSpace::eObjectActionDeactivate)),
+				value("use",					static_cast<int>(MonsterSpace::eObjectActionUse)),
+				value("turn_on",				static_cast<int>(MonsterSpace::eObjectActionTurnOn)),
+				value("turn_off",				static_cast<int>(MonsterSpace::eObjectActionTurnOff)),
+				value("dummy",					static_cast<int>(MonsterSpace::eObjectActionDummy))
 			]
 			.def(								constructor<>())
 			.def(								constructor<CScriptGameObject*,MonsterSpace::EObjectAction>())
@@ -48,8 +48,8 @@ void CScriptObjectAction::script_register(lua_State *L)
 			.def(								constructor<MonsterSpace::EObjectAction>())
 			.def(								constructor<LPCSTR,MonsterSpace::EObjectAction>())
 			.def("action",						&CScriptObjectAction::SetObjectAction)
-			.def("object",						(void (CScriptObjectAction::*)(LPCSTR))(&CScriptObjectAction::SetObject))
-			.def("object",						(void (CScriptObjectAction::*)(CScriptGameObject*))(&CScriptObjectAction::SetObject))
-			.def("completed",					(bool (CScriptObjectAction::*)())(&CScriptObjectAction::completed))
+			.def("object",						static_cast<void (CScriptObjectAction::*)(LPCSTR)>(&CScriptObjectAction::SetObject))
+			.def("object",						static_cast<void (CScriptObjectAction::*)(CScriptGameObject*)>(&CScriptObjectAction::SetObject))
+			.def("completed",					static_cast<bool (CScriptObjectAction::*)()>(&CScriptObjectAction::completed))
 	];
 }

@@ -13,9 +13,9 @@
 #include "location_manager.h"
 
 enum ESelectionType {
-	eSelectionTypeMask = u32(0),
+	eSelectionTypeMask = static_cast<u32>(0),
 	eSelectionTypeRandomBranching,
-	eSelectionTypeDummy = u32(-1),
+	eSelectionTypeDummy = static_cast<u32>(-1),
 };
 
 template <

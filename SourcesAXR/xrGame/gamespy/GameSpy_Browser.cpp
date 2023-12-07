@@ -171,7 +171,7 @@ struct RefreshData
 };
 void	RefreshInternetList	(void * inData)
 {
-	RefreshData* pRData = (RefreshData*) inData;
+	RefreshData* pRData = static_cast<RefreshData*>(inData);
 	pRData->pGSBrowser->RefreshListInternet(pRData->FilterStr);
 	xr_delete(pRData);
 };
@@ -233,7 +233,7 @@ void			CGameSpy_Browser::RefreshList_Full(bool Local, const char* FilterStr)
 
 void __cdecl SBCallback(ServerBrowser sb, SBCallbackReason reason, SBServer server, void *instance)
 {
-	CGameSpy_Browser* pGSBrowser = (CGameSpy_Browser*) instance;
+	CGameSpy_Browser* pGSBrowser = static_cast<CGameSpy_Browser*>(instance);
 	if (!pGSBrowser) return;
 	switch (reason)
 	{
@@ -348,15 +348,15 @@ void	CGameSpy_Browser::ReadServerInfo	(ServerInfo* pServerInfo, void* pServer)
 	xr_sprintf(pServerInfo->m_ServerGameType, "%s", xrGS_SBServerGetStringValueA(pServer, m_pQR2->xrGS_RegisteredKey(GAMETYPE_KEY), "Unknown"));
 	pServerInfo->m_bPassword	= xrGS_SBServerGetBoolValueA(pServer, m_pQR2->xrGS_RegisteredKey(PASSWORD_KEY), SBFalse) == SBTrue;
 	pServerInfo->m_bUserPass	= xrGS_SBServerGetBoolValueA(pServer, m_pQR2->xrGS_RegisteredKey(G_USER_PASSWORD_KEY), SBFalse) == SBTrue;
-	pServerInfo->m_Ping = (s16)(xrGS_SBServerGetPing(pServer) & 0xffff);
-	pServerInfo->m_ServerNumPlayers = (s16)xrGS_SBServerGetIntValueA(pServer, m_pQR2->xrGS_RegisteredKey(NUMPLAYERS_KEY), 0);
-	pServerInfo->m_ServerMaxPlayers = (s16)xrGS_SBServerGetIntValueA(pServer, m_pQR2->xrGS_RegisteredKey(MAXPLAYERS_KEY), 32);
+	pServerInfo->m_Ping = static_cast<s16>(xrGS_SBServerGetPing(pServer) & 0xffff);
+	pServerInfo->m_ServerNumPlayers = static_cast<s16>(xrGS_SBServerGetIntValueA(pServer, m_pQR2->xrGS_RegisteredKey(NUMPLAYERS_KEY), 0));
+	pServerInfo->m_ServerMaxPlayers = static_cast<s16>(xrGS_SBServerGetIntValueA(pServer, m_pQR2->xrGS_RegisteredKey(MAXPLAYERS_KEY), 32));
 	xr_sprintf(pServerInfo->m_ServerUpTime, "%s", xrGS_SBServerGetStringValueA(pServer, m_pQR2->xrGS_RegisteredKey(SERVER_UP_TIME_KEY), "Unknown"));
-	pServerInfo->m_ServerNumTeams = (s16)xrGS_SBServerGetIntValueA(pServer, m_pQR2->xrGS_RegisteredKey(NUMTEAMS_KEY), 0);
-	pServerInfo->m_Port		= (s16)xrGS_SBServerGetIntValueA(pServer, m_pQR2->xrGS_RegisteredKey(HOSTPORT_KEY), 0);
-	pServerInfo->m_HPort	= (s16)xrGS_SBServerGetPublicQueryPort(pServer);
+	pServerInfo->m_ServerNumTeams = static_cast<s16>(xrGS_SBServerGetIntValueA(pServer, m_pQR2->xrGS_RegisteredKey(NUMTEAMS_KEY), 0));
+	pServerInfo->m_Port		= static_cast<s16>(xrGS_SBServerGetIntValueA(pServer, m_pQR2->xrGS_RegisteredKey(HOSTPORT_KEY), 0));
+	pServerInfo->m_HPort	= static_cast<s16>(xrGS_SBServerGetPublicQueryPort(pServer));
 	pServerInfo->m_bDedicated	= (xrGS_SBServerGetBoolValueA(pServer, m_pQR2->xrGS_RegisteredKey(DEDICATED_KEY), SBFalse)) == SBTrue;
-	pServerInfo->m_GameType = (u8)xrGS_SBServerGetIntValueA(pServer, m_pQR2->xrGS_RegisteredKey(GAMETYPE_NAME_KEY), 0);
+	pServerInfo->m_GameType = static_cast<u8>(xrGS_SBServerGetIntValueA(pServer, m_pQR2->xrGS_RegisteredKey(GAMETYPE_NAME_KEY), 0));
 	if (pServerInfo->m_GameType == 0)
 	{
 		pServerInfo->m_GameType = ParseStringToGameType(pServerInfo->m_ServerGameType);
@@ -470,12 +470,12 @@ void	CGameSpy_Browser::ReadServerInfo	(ServerInfo* pServerInfo, void* pServer)
 		PlayerInfo PInfo;
 		_snprintf_s(PInfo.Name, sizeof(PInfo.Name)-1, "%s", xrGS_SBServerGetPlayerStringValueA(pServer, i,	"player", "Unknown"));
 		PInfo.Name[sizeof(PInfo.Name)-1] = 0;
-		PInfo.Frags =		s16(xrGS_SBServerGetPlayerIntValueA(pServer, i,			"score", 0));
-		PInfo.Deaths =		u16(xrGS_SBServerGetPlayerIntValueA(pServer, i,			"deaths", 0));
-		PInfo.Rank =		u8(xrGS_SBServerGetPlayerIntValueA(pServer, i,			"skill", 0));
-		PInfo.Team =		u8(xrGS_SBServerGetPlayerIntValueA(pServer, i,			"team", 0));
+		PInfo.Frags =		static_cast<s16>(xrGS_SBServerGetPlayerIntValueA(pServer, i, "score", 0));
+		PInfo.Deaths =		static_cast<u16>(xrGS_SBServerGetPlayerIntValueA(pServer, i, "deaths", 0));
+		PInfo.Rank =		static_cast<u8>(xrGS_SBServerGetPlayerIntValueA(pServer, i, "skill", 0));
+		PInfo.Team =		static_cast<u8>(xrGS_SBServerGetPlayerIntValueA(pServer, i, "team", 0));
 		PInfo.Spectator =	(xrGS_SBServerGetPlayerIntValueA(pServer, i,				"spectator", 1)) != 0;
-		PInfo.Artefacts =	u8(xrGS_SBServerGetPlayerIntValueA(pServer, i,			"artefacts", 0));
+		PInfo.Artefacts =	static_cast<u8>(xrGS_SBServerGetPlayerIntValueA(pServer, i, "artefacts", 0));
 
 		pServerInfo->m_aPlayers.push_back(PInfo);
 	};
@@ -488,7 +488,7 @@ void	CGameSpy_Browser::ReadServerInfo	(ServerInfo* pServerInfo, void* pServer)
 		for (int i=0; i<pServerInfo->m_ServerNumTeams; i++)
 		{
 			TeamInfo TI;
-			TI.Score = u8(xrGS_SBServerGetTeamIntValueA(pServer, i, "t_score", 0));
+			TI.Score = static_cast<u8>(xrGS_SBServerGetTeamIntValueA(pServer, i, "t_score", 0));
 			pServerInfo->m_aTeams.push_back(TI);
 		}		
 	}

@@ -223,7 +223,7 @@ void CUILines::ParseText(bool force)
 		{
 			bool b_last_subl					= (sbl_idx==sbl_cnt-1);
 			CUISubLine& sbl						= line->m_subLines[sbl_idx];
-			u32 sub_len							= (u32)sbl.m_text.length();
+			u32 sub_len							= static_cast<u32>(sbl.m_text.length());
 			u32 curr_w_pos						= 0;
 			
 			u32 last_space_idx					= 0;
@@ -369,7 +369,7 @@ void CUILines::Draw(float x, float y)
 
 		if (uFlags.test(flPasswordMode))
 		{
-			int sz = (int)m_text.size();
+			int sz = static_cast<int>(m_text.size());
 			for (int i = 0; i < sz; i++)
 				passText[i] = '*';
 			passText[sz] = 0;
@@ -403,7 +403,7 @@ void CUILines::Draw(float x, float y)
 		u32 size		= m_lines.size();
 
 		m_pFont->SetAligment((CGameFont::EAligment)m_eTextAlign);
-		for (int i=0; i<(int)size; i++)
+		for (int i=0; i<static_cast<int>(size); i++)
 		{
 			pos.x			= x + GetIndentByAlign();
 			m_lines[i].Draw	(m_pFont, pos.x, pos.y);

@@ -192,7 +192,7 @@ bool CUIMpTradeWnd::TryToBuyItem(SBuyItemInfo* buy_itm, u32 buy_flags, SBuyItemI
 
 	if( (buy_flags&bf_normal) && _item_cost!=0)
 	{
-		int cost					= -(int)_item_cost;
+		int cost					= -static_cast<int>(_item_cost);
 		SetMoneyChangeString		(cost);
 	}
 	return						true;
@@ -289,7 +289,7 @@ void CUIMpTradeWnd::RenewShopItem(const shared_str& sect_name, bool b_just_bough
 
 void CUIMpTradeWnd::ItemToBelt(const shared_str& sectionName)
 {
-	R_ASSERT2(m_item_mngr->GetItemIdx(sectionName)!=u32(-1), sectionName.c_str() );
+	R_ASSERT2(m_item_mngr->GetItemIdx(sectionName)!=static_cast<u32>(-1), sectionName.c_str() );
 
 	CUIDragDropListEx*	pList			= GetMatchedListForItem(sectionName);
 
@@ -299,7 +299,7 @@ void CUIMpTradeWnd::ItemToBelt(const shared_str& sectionName)
 
 void CUIMpTradeWnd::ItemToRuck(const shared_str& sectionName, u8 addons)
 {
-	R_ASSERT2(m_item_mngr->GetItemIdx(sectionName)!=u32(-1), sectionName.c_str() );
+	R_ASSERT2(m_item_mngr->GetItemIdx(sectionName)!=static_cast<u32>(-1), sectionName.c_str() );
 
 	CUIDragDropListEx*	pList			= GetMatchedListForItem(sectionName);
 
@@ -310,7 +310,7 @@ void CUIMpTradeWnd::ItemToRuck(const shared_str& sectionName, u8 addons)
 
 void CUIMpTradeWnd::ItemToSlot(const shared_str& sectionName, u8 addons)
 {
-	R_ASSERT2(m_item_mngr->GetItemIdx(sectionName)!=u32(-1), sectionName.c_str() );
+	R_ASSERT2(m_item_mngr->GetItemIdx(sectionName)!=static_cast<u32>(-1), sectionName.c_str() );
 
 	CUIDragDropListEx*	pList			= GetMatchedListForItem(sectionName);
 

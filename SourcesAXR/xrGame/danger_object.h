@@ -13,7 +13,7 @@
 class CDangerObject {
 public:
 	enum EDangerType {
-		eDangerTypeBulletRicochet = u32(0),
+		eDangerTypeBulletRicochet = static_cast<u32>(0),
 		eDangerTypeAttackSound,
 		eDangerTypeEntityAttacked,
 		eDangerTypeEntityDeath,
@@ -21,14 +21,14 @@ public:
 		eDangerTypeAttacked,
 		eDangerTypeGrenade,
 		eDangerTypeEnemySound,
-		eDangerTypeDummy = u32(-1),
+		eDangerTypeDummy = static_cast<u32>(-1),
 	};
 
 	enum EDangerPerceiveType {
-		eDangerPerceiveTypeVisual = u32(0),
+		eDangerPerceiveTypeVisual = static_cast<u32>(0),
 		eDangerPerceiveTypeSound,
 		eDangerPerceiveTypeHit,
-		eDangerPerceiveTypeDummy = u32(-1),
+		eDangerPerceiveTypeDummy = static_cast<u32>(-1),
 	};
 
 private:

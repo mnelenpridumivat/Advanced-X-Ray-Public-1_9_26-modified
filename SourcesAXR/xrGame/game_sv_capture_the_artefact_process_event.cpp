@@ -10,7 +10,7 @@ void game_sv_CaptureTheArtefact::OnEvent(NET_Packet & tNetPacket, u16 type, u32 
 	case GAME_EVENT_PLAYER_KILL:
 		{
 			u16				ID = tNetPacket.r_u16();
-			xrClientData*	l_pC = (xrClientData*)get_client(ID);
+			xrClientData*	l_pC = static_cast<xrClientData*>(get_client(ID));
 			if (!l_pC)
 				break;
 

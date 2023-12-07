@@ -57,14 +57,14 @@ CEntityAlive::CEntityAlive() :
 	
 	monster_community		= xr_new<MONSTER_COMMUNITY>	();
 
-	m_ef_weapon_type		= u32(-1);
-	m_ef_detector_type		= u32(-1);
+	m_ef_weapon_type		= static_cast<u32>(-1);
+	m_ef_detector_type		= static_cast<u32>(-1);
 	b_eating				= false;
 	m_is_agresive			= false;
 	m_is_start_attack		= false;
 	m_use_timeout			= 5000;
 	m_used_time				= Device.dwTimeGlobal;
-	m_squad_index			= u8(-1);
+	m_squad_index			= static_cast<u8>(-1);
 
 	m_material_manager		= 0;
 }
@@ -196,8 +196,8 @@ void CEntityAlive::reload		(LPCSTR section)
 //	CEntityCondition::reload(section);
 
 	m_ef_creature_type		= pSettings->r_u32		(section,"ef_creature_type");
-	m_ef_weapon_type		= READ_IF_EXISTS(pSettings,r_u32,section,"ef_weapon_type",u32(-1));
-	m_ef_detector_type		= READ_IF_EXISTS(pSettings,r_u32,section,"ef_detector_type",u32(-1));
+	m_ef_weapon_type		= READ_IF_EXISTS(pSettings,r_u32,section,"ef_weapon_type",static_cast<u32>(-1));
+	m_ef_detector_type		= READ_IF_EXISTS(pSettings,r_u32,section,"ef_detector_type",static_cast<u32>(-1));
 
 	m_fFood					= 100*pSettings->r_float	(section,"ph_mass");
 }
@@ -317,7 +317,7 @@ void CEntityAlive::Die	(CObject* who)
 	if (!getDestroy() && (GameID() == eGameIDSingle)) {
 		NET_Packet		P;
 		u_EventGen		(P,GE_ASSIGN_KILLER,ID());
-		P.w_u16			(u16(who->ID()));
+		P.w_u16			(static_cast<u16>(who->ID()));
 		u_EventSend		(P);
 	}
 
@@ -364,7 +364,7 @@ void CEntityAlive::PHFreeze()
 void CEntityAlive::BloodyWallmarks (float P, const Fvector &dir, s16 element, 
 									const Fvector& position_in_object_space)
 {
-	if(BI_NONE == (u16)element)
+	if(BI_NONE == static_cast<u16>(element))
 		return;
 
 	//вычислить координаты попадания
@@ -373,7 +373,7 @@ void CEntityAlive::BloodyWallmarks (float P, const Fvector &dir, s16 element,
 	Fvector start_pos = position_in_object_space;
 	if(V)
 	{
-		Fmatrix& m_bone = (V->LL_GetBoneInstance(u16(element))).mTransform;
+		Fmatrix& m_bone = (V->LL_GetBoneInstance(static_cast<u16>(element))).mTransform;
 		m_bone.transform_tiny(start_pos);
 	}
 	XFORM().transform_tiny(start_pos);
@@ -465,14 +465,14 @@ void CEntityAlive::StartFireParticles(CWound* pWound)
 				pWound->GetParticleBoneNum(),
 				Fvector().set(0,1,0),
 				ID(), 
-				u32(float(m_dwMinBurnTime)*::Random.randF(0.5f,1.5f)), false);
+				static_cast<u32>(float(m_dwMinBurnTime) * ::Random.randF(0.5f, 1.5f)), false);
 		}
 		else
 		{
 			CParticlesPlayer::StartParticles(pWound->GetParticleName(), 
 				Fvector().set(0,1,0),
 				ID(), 
-				u32(float(m_dwMinBurnTime)*::Random.randF(0.5f,1.5f)), false);
+				static_cast<u32>(float(m_dwMinBurnTime) * ::Random.randF(0.5f, 1.5f)), false);
 		}
 	}
 }
@@ -494,7 +494,7 @@ void CEntityAlive::UpdateFireParticles()
 		{
 			CParticlesPlayer::AutoStopParticles(pWound->GetParticleName(),
 												pWound->GetParticleBoneNum(),
-												u32(float(m_dwMinBurnTime)*::Random.randF(0.5f,1.5f))
+												static_cast<u32>(float(m_dwMinBurnTime) * ::Random.randF(0.5f, 1.5f))
 												);
 			it = m_ParticleWounds.erase(it);
 			continue;
@@ -660,13 +660,13 @@ u32	CEntityAlive::ef_creature_type	() const
 
 u32	CEntityAlive::ef_weapon_type	() const
 {
-	VERIFY	(m_ef_weapon_type != u32(-1));
+	VERIFY	(m_ef_weapon_type != static_cast<u32>(-1));
 	return	(m_ef_weapon_type);
 }
 
 u32	 CEntityAlive::ef_detector_type	() const
 {
-	VERIFY	(m_ef_detector_type != u32(-1));
+	VERIFY	(m_ef_detector_type != static_cast<u32>(-1));
 	return	(m_ef_detector_type);
 }
 void CEntityAlive::PHGetLinearVell(Fvector& velocity)
@@ -956,14 +956,14 @@ Fvector	CEntityAlive::get_new_local_point_on_mesh	( u16& bone_id ) const
 
 Fvector CEntityAlive::get_last_local_point_on_mesh	( Fvector const& last_point, u16 bone_id ) const
 {
-	if ( bone_id == u16(-1) )
+	if ( bone_id == static_cast<u16>(-1) )
 		return							inherited::get_last_local_point_on_mesh( last_point, bone_id );
 
 	IKinematics* const kinematics		= smart_cast<IKinematics*>( Visual() );
 	VERIFY								( kinematics );
 
 	Fmatrix transform;
-	kinematics->Bone_GetAnimPos			( transform, bone_id, u8(-1), false );
+	kinematics->Bone_GetAnimPos			( transform, bone_id, static_cast<u8>(-1), false );
 
 	Fvector result;
 	transform.transform_tiny			( result, last_point );

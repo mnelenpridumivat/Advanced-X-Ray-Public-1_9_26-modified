@@ -36,7 +36,7 @@ void CBaseAction::init			(_object_type *object, LPCSTR action_name)
 {
 	m_storage			= 0;
 	m_object			= object;
-	m_weight			= _edge_value_type(1);
+	m_weight			= static_cast<_edge_value_type>(1);
 
 #ifdef LOG_ACTION
 	m_use_log			= false;

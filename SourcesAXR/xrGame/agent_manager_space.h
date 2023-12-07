@@ -10,22 +10,22 @@
 
 namespace AgentManager {
 	enum EProperties {
-		ePropertyOrders			= u32(0),
+		ePropertyOrders			= static_cast<u32>(0),
 		ePropertyItem,
 		ePropertyEnemy,
 		ePropertyDanger,
 
 		ePropertyScript,
-		ePropertyDummy			= u32(-1),
+		ePropertyDummy			= static_cast<u32>(-1),
 	};
 
 	enum EOperators {
-		eOperatorNoOrders		= u32(0),
+		eOperatorNoOrders		= static_cast<u32>(0),
 		eOperatorGatherItem,
 		eOperatorKillEnemy,
 		eOperatorReactOnDanger,
 
 		eOperatorScript,
-		eOperatorDummy			= u32(-1),
+		eOperatorDummy			= static_cast<u32>(-1),
 	};
 };

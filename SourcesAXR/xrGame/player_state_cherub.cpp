@@ -13,14 +13,14 @@ player_state_cherub::player_state_cherub(game_state_accumulator* owner) :
 {
 	m_kill_count		= 0;
 	m_art_take_time		= 0;
-	m_bearer_id			= u16(-1);
+	m_bearer_id			= static_cast<u16>(-1);
 }
 
 void player_state_cherub::reset_game()
 {
 	m_kill_count		= 0;
 	m_art_take_time		= 0;
-	m_bearer_id			= u16(-1);
+	m_bearer_id			= static_cast<u16>(-1);
 	m_bearer_name		= "";
 }
 
@@ -38,7 +38,7 @@ void player_state_cherub::OnPlayerDropArtefact	(game_PlayerState const * ps)
 {
 	if (ps->GameID == m_bearer_id)
 	{
-		m_bearer_id			= u16(-1);
+		m_bearer_id			= static_cast<u16>(-1);
 		m_bearer_name		= "";
 	}
 }
@@ -47,7 +47,7 @@ void player_state_cherub::OnPlayerBringArtefact	(game_PlayerState const * ps)
 {
 	if (ps->GameID == m_bearer_id)
 	{
-		m_bearer_id			= u16(-1);
+		m_bearer_id			= static_cast<u16>(-1);
 		m_bearer_name		= "";
 	}
 }
@@ -81,7 +81,7 @@ void player_state_cherub::OnPlayerKilled		(u16 killer_id, u16 target_id, u16 wea
 	if (killer_id != tmp_player_state->GameID)
 		return;
 
-	if (m_bearer_id == u16(-1))
+	if (m_bearer_id == static_cast<u16>(-1))
 		return;
 
 	if (m_bearer_name == tmp_player_state->getName())

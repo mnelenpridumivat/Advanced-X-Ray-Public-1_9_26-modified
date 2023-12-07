@@ -94,7 +94,7 @@ BOOL CRadioactiveZone::feel_touch_contact(CObject* O)
 	CActor* A = smart_cast<CActor*>(O);
 	if ( A )
 	{ 
-		if (!((CCF_Shape*)CFORM())->Contact(O))		return	FALSE;
+		if (!static_cast<CCF_Shape*>(CFORM())->Contact(O))		return	FALSE;
 		return										A->feel_touch_on_contact(this);
 	}else
 		return										FALSE;
@@ -142,7 +142,7 @@ void CRadioactiveZone::UpdateWorkload					(u32	dt)
 
 float CRadioactiveZone::nearest_shape_radius(SZoneObjectInfo* O)
 {
-	CCF_Shape* Sh		= (CCF_Shape*)CFORM();
+	CCF_Shape* Sh		= static_cast<CCF_Shape*>(CFORM());
 
 	if(Sh->Shapes().size()==1)
 	{

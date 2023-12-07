@@ -20,7 +20,7 @@ class CStalkerAnimationPair {
 #ifdef USE_HEAD_BONE_PART_FAKE
 public:
 	enum {
-		all_bone_parts = u16(0xf),
+		all_bone_parts = static_cast<u16>(0xf),
 	};
 #endif // USE_HEAD_BONE_PART_FAKE
 

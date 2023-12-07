@@ -28,7 +28,7 @@ void CStateMonsterHearDangerousSoundAbstract::reselect_state()
 		return;
 	}
 
-	if (prev_substate == u32(-1)){
+	if (prev_substate == static_cast<u32>(-1)){
 		select_state(eStateHearDangerousSound_Hide);
 		return;
 	}
@@ -61,7 +61,7 @@ void CStateMonsterHearDangerousSoundAbstract::setup_substates()
 		data.accel_type			= eAT_Aggressive;
 		data.distance			= 40.f;
 		data.action.action		= ACT_RUN;
-		data.action.sound_type	= (u32)MonsterSound::eMonsterSoundDummy;
+		data.action.sound_type	= static_cast<u32>(MonsterSound::eMonsterSoundDummy);
 		data.action.sound_delay = object->db().m_dwAttackSndDelay;
 
 		state->fill_data_with(&data, sizeof(SStateHideFromPoint));
@@ -74,7 +74,7 @@ void CStateMonsterHearDangerousSoundAbstract::setup_substates()
 		data.action			= ACT_STAND_IDLE;
 		data.spec_params	= ASP_STAND_SCARED;
 		data.time_out		= 2000;
-		data.sound_type	= (u32)MonsterSound::eMonsterSoundDummy;
+		data.sound_type	= static_cast<u32>(MonsterSound::eMonsterSoundDummy);
 		data.sound_delay = object->db().m_dwAttackSndDelay;
 
 		state->fill_data_with(&data, sizeof(SStateDataAction));
@@ -86,7 +86,7 @@ void CStateMonsterHearDangerousSoundAbstract::setup_substates()
 		SStateDataAction data;
 		data.action			= ACT_STAND_IDLE;
 		data.spec_params	= ASP_STAND_SCARED;
-		data.sound_type	= (u32)MonsterSound::eMonsterSoundDummy;
+		data.sound_type	= static_cast<u32>(MonsterSound::eMonsterSoundDummy);
 		data.sound_delay = object->db().m_dwAttackSndDelay;
 
 		state->fill_data_with(&data, sizeof(SStateDataAction));

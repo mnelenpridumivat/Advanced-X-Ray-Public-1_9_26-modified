@@ -94,7 +94,7 @@ void CControlJump::on_release()
 {
 	m_man->unlock						(this, ControlCom::eControlPath);
 
-	SControlDirectionData				*ctrl_data_dir = (SControlDirectionData*)m_man->data(this, ControlCom::eControlDir); 
+	SControlDirectionData				*ctrl_data_dir = static_cast<SControlDirectionData*>(m_man->data(this, ControlCom::eControlDir)); 
 	VERIFY								(ctrl_data_dir);
 	ctrl_data_dir->linear_dependency	= true;
 
@@ -171,10 +171,10 @@ void CControlJump::start_jump(const Fvector &point)
 			// node is checked, so try to build path
 			if (prepared) {
 
-				if (m_man->build_path_line(this, target_point, u32(-1), m_data.state_prepare_in_move.velocity_mask | MonsterMovement::eVelocityParameterStand)) {
+				if (m_man->build_path_line(this, target_point, static_cast<u32>(-1), m_data.state_prepare_in_move.velocity_mask | MonsterMovement::eVelocityParameterStand)) {
 					//---------------------------------------------------------------------------------------------------
 					// set path params
-					SControlPathBuilderData		*ctrl_path = (SControlPathBuilderData*)m_man->data(this, ControlCom::eControlPath); 
+					SControlPathBuilderData		*ctrl_path = static_cast<SControlPathBuilderData*>(m_man->data(this, ControlCom::eControlPath)); 
 					VERIFY						(ctrl_path);
 					ctrl_path->enable			= true;
 
@@ -228,7 +228,7 @@ void CControlJump::select_next_anim_state()
 
 	//---------------------------------------------------------------------------------------------------
 	// start new animation
-	SControlAnimationData		*ctrl_data = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+	SControlAnimationData		*ctrl_data = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 	VERIFY						(ctrl_data);
 	ctrl_data->global.actual	= false;
 
@@ -246,7 +246,7 @@ void CControlJump::select_next_anim_state()
 	
 	if (m_anim_state_current != eStateGlide) {
 		if (m_anim_state_current != eStatePrepare)
-			m_anim_state_current = EStateAnimJump(m_anim_state_current + 1);
+			m_anim_state_current = static_cast<EStateAnimJump>(m_anim_state_current + 1);
 		else 
 			m_anim_state_current = eStateGlide;
 	}
@@ -296,7 +296,7 @@ void CControlJump::update_frame()
 	if ( m_anim_state_current == eStateGlide && in_auto_aim() )
 	{
 		// set angular speed in exclusive force mode
-		SControlDirectionData * ctrl_data_dir = (SControlDirectionData*)m_man->data(this, ControlCom::eControlDir); 
+		SControlDirectionData * ctrl_data_dir = static_cast<SControlDirectionData*>(m_man->data(this, ControlCom::eControlDir)); 
 		VERIFY					(ctrl_data_dir);
 
 		ctrl_data_dir->heading.target_angle	= m_man->direction().angle_to_target(m_data.target_object->Position());
@@ -317,7 +317,7 @@ void CControlJump::update_frame()
 		//---------------------------------------------------------------------------------------------------------------------------------
 		// Set Velocity from path
 		//---------------------------------------------------------------------------------------------------------------------------------
-		SControlMovementData		*ctrl_move = (SControlMovementData*)m_man->data(this, ControlCom::eControlMovement); 
+		SControlMovementData		*ctrl_move = static_cast<SControlMovementData*>(m_man->data(this, ControlCom::eControlMovement)); 
 		VERIFY						(ctrl_move);
 
 		ctrl_move->velocity_target	= m_object->move().get_velocity_from_path();
@@ -358,7 +358,7 @@ bool CControlJump::is_on_the_ground()
 
 void CControlJump::grounding()
 {
-	if ((m_data.state_ground.velocity_mask == u32(-1)) || is_flag(SControlJumpData::eGroundSkip) || !m_data.state_ground.motion.valid()) {
+	if ((m_data.state_ground.velocity_mask == static_cast<u32>(-1)) || is_flag(SControlJumpData::eGroundSkip) || !m_data.state_ground.motion.valid()) {
 		stop();
 		return;
 	}
@@ -366,13 +366,13 @@ void CControlJump::grounding()
 	Fvector target_position;
 	target_position.mad(m_object->Position(), m_object->Direction(), m_build_line_distance);
 
-	if (!m_man->build_path_line(this, target_position, u32(-1), m_data.state_ground.velocity_mask | MonsterMovement::eVelocityParameterStand)) 
+	if (!m_man->build_path_line(this, target_position, static_cast<u32>(-1), m_data.state_ground.velocity_mask | MonsterMovement::eVelocityParameterStand)) 
 	{
 		stop						();
 	}
 	else 
 	{ 
-		SControlPathBuilderData		*ctrl_path = (SControlPathBuilderData*)m_man->data(this, ControlCom::eControlPath); 
+		SControlPathBuilderData		*ctrl_path = static_cast<SControlPathBuilderData*>(m_man->data(this, ControlCom::eControlPath)); 
 		VERIFY						(ctrl_path);
 		ctrl_path->enable			= true;
 		m_man->lock					(this, ControlCom::eControlPath);
@@ -422,7 +422,7 @@ void CControlJump::on_event(ControlCom::EEventType type, ControlCom::IEventData 
 {
 	if (type == ControlCom::eventVelocityBounce)
 	{
-		SEventVelocityBounce *event_data = (SEventVelocityBounce *)data;
+		SEventVelocityBounce *event_data = static_cast<SEventVelocityBounce*>(data);
 		// !TEMP!
 		if (  (event_data->m_ratio < 0) && !m_velocity_bounced && (m_jump_time != 0))
 		{
@@ -441,7 +441,7 @@ void CControlJump::on_event(ControlCom::EEventType type, ControlCom::IEventData 
 	} else if (type == ControlCom::eventAnimationStart) {
 		
 		// start new animation
-		SControlAnimationData		*ctrl_data = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+		SControlAnimationData		*ctrl_data = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 		VERIFY						(ctrl_data);
 		
 		if ((m_anim_state_current == eStateGlide) && (m_anim_state_prev == eStateGlide)) {
@@ -458,7 +458,7 @@ void CControlJump::on_event(ControlCom::EEventType type, ControlCom::IEventData 
 			//---------------------------------------------------------------------------------
 			
 			// set angular speed in exclusive force mode
-			SControlDirectionData					*ctrl_data_dir = (SControlDirectionData*)m_man->data(this, ControlCom::eControlDir); 
+			SControlDirectionData					*ctrl_data_dir = static_cast<SControlDirectionData*>(m_man->data(this, ControlCom::eControlDir)); 
 			VERIFY									(ctrl_data_dir);	
 
 			if ( !m_data.flags.test(SControlJumpData::eUseAutoAim) || !m_data.target_object )
@@ -600,7 +600,7 @@ bool CControlJump::can_jump(Fvector const& target, bool const aggressive_jump)
 	if ( m_time_next_allowed != 0 )
 	{
 		// in aggressive mode we can jump after 1/3 of m_delay_after_jump
-		if ( m_time_next_allowed - (int)aggressive_jump*(2*m_delay_after_jump/3) > Device.dwTimeGlobal) 
+		if ( m_time_next_allowed - static_cast<int>(aggressive_jump)*(2*m_delay_after_jump/3) > Device.dwTimeGlobal) 
 		{
 			return					false;
 		}
@@ -641,7 +641,7 @@ bool CControlJump::can_jump(Fvector const& target, bool const aggressive_jump)
 			VERIFY(m_data.state_prepare.motion.valid());
 		} else {
 			VERIFY(m_data.state_prepare_in_move.motion.valid());
-			VERIFY(m_data.state_prepare_in_move.velocity_mask != u32(-1));
+			VERIFY(m_data.state_prepare_in_move.velocity_mask != static_cast<u32>(-1));
 
 			// try to trace distance according to prepare animation
 			bool good_trace_res = false;

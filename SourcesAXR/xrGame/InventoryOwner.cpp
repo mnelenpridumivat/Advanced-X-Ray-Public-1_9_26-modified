@@ -182,7 +182,7 @@ void	CInventoryOwner::save	(NET_Packet &output_packet)
 	if(inventory().GetActiveSlot() == NO_ACTIVE_SLOT)
 		output_packet.w_u8((u8)NO_ACTIVE_SLOT);
 	else
-		output_packet.w_u8((u8)inventory().GetActiveSlot());
+		output_packet.w_u8(static_cast<u8>(inventory().GetActiveSlot()));
 
 	CharacterInfo().save(output_packet);
 	save_data	(m_game_name, output_packet);
@@ -244,7 +244,7 @@ void CInventoryOwner::UpdateInventoryOwner(u32 deltaT)
 //достать PDA из специального слота инвентаря
 CPda* CInventoryOwner::GetPDA() const
 {
-	return (CPda*)(m_inventory->ItemFromSlot(PDA_SLOT));
+	return static_cast<CPda*>(m_inventory->ItemFromSlot(PDA_SLOT));
 }
 
 CTrade* CInventoryOwner::GetTrade() 
@@ -638,7 +638,7 @@ bool CInventoryOwner::AllowItemToTrade 			(CInventoryItem const * item, const SI
 {
 	return						(
 		trade_parameters().enabled(
-			CTradeParameters::action_sell(0),
+			static_cast<CTradeParameters::action_sell>(0),
 			item->object().cNameSect()
 		)
 	);

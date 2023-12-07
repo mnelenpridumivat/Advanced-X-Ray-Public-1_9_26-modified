@@ -363,7 +363,7 @@ void CUIHudStatesWnd::UpdateIndicators( CActor* actor )
 
 	for ( int i = 0; i < it_max ; ++i ) // it_max = ALife::infl_max_count-1
 	{
-		UpdateIndicatorType( actor, (ALife::EInfluenceType)i );
+		UpdateIndicatorType( actor, static_cast<ALife::EInfluenceType>(i) );
 	}
 }
 
@@ -510,7 +510,7 @@ void CUIHudStatesWnd::DrawZoneIndicators()
 
 void CUIHudStatesWnd::FakeUpdateIndicatorType(u8 t, float power)
 {
-	ALife::EInfluenceType type = (ALife::EInfluenceType)t;
+	ALife::EInfluenceType type = static_cast<ALife::EInfluenceType>(t);
 	if ( type < ALife::infl_rad || ALife::infl_psi < type )
 	{
 		VERIFY2( 0, "Failed EIndicatorType for CStatic!" );

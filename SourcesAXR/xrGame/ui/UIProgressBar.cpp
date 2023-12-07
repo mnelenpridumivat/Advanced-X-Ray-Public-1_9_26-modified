@@ -16,7 +16,7 @@ CUIProgressBar::CUIProgressBar(void)
 	m_ProgressPos.x			= 0.0f;
 	m_ProgressPos.y			= 0.0f;
 	m_inertion				= 0.0f;
-	m_last_render_frame		= u32(-1);
+	m_last_render_frame		= static_cast<u32>(-1);
 	m_orient_mode			= om_horz;
 }
 

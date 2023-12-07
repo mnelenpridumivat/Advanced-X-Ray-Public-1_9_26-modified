@@ -269,7 +269,7 @@ float CLevel::GetDemoPlayPos() const
 	if (m_reader->eof())
 		return 1.f;
 	
-	return ( float(m_reader->tell()) / float(m_reader->length()) );
+	return ( static_cast<float>(m_reader->tell()) / static_cast<float>(m_reader->length()) );
 }
 
 message_filter*	 CLevel::GetMessageFilter()

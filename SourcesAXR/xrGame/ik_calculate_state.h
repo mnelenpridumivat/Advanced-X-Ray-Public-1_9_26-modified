@@ -43,8 +43,8 @@ struct calculate_state
 #ifdef DEBUG
 	int		count;
 #endif
-	calculate_state( ) : ref_bone( u16(-1) ),
-						calc_time(0), unstuck_time(u32(-1)), foot_step(false), idle(false), blending(false),
+	calculate_state( ) : ref_bone( static_cast<u16>(-1) ),
+						calc_time(0), unstuck_time(static_cast<u32>(-1)), foot_step(false), idle(false), blending(false),
 						anim_pos(Fidentity),
 						b2tob3( Fidentity ), speed_blend_l(0), speed_blend_a(0), pick(Fvector().set(0,-1,0))
 #ifdef DEBUG

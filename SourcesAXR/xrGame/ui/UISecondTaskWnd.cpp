@@ -180,9 +180,9 @@ UITaskListWndItem::UITaskListWndItem()
 {
 	m_task = NULL;
 	
-	m_color_states[0] = (u32)(-1);
-	m_color_states[1] = (u32)(-1);
-	m_color_states[2] = (u32)(-1);
+	m_color_states[0] = static_cast<u32>(-1);
+	m_color_states[1] = static_cast<u32>(-1);
+	m_color_states[2] = static_cast<u32>(-1);
 }
 
 UITaskListWndItem::~UITaskListWndItem()
@@ -215,9 +215,9 @@ bool UITaskListWndItem::init_task( CGameTask* task, UITaskListWnd* parent )
 	m_st_story = UIHelper::CreateStatic( xml, "second_task_wnd:task_item:st_story", this );
 	m_bt_focus = UIHelper::Create3tButton( xml, "second_task_wnd:task_item:btn_focus", this );
 	
-	m_color_states[stt_activ ] = CUIXmlInit::GetColor( xml, "second_task_wnd:task_item:activ",  0, (u32)(-1) );
-	m_color_states[stt_unread] = CUIXmlInit::GetColor( xml, "second_task_wnd:task_item:unread", 0, (u32)(-1) );
-	m_color_states[stt_read  ] = CUIXmlInit::GetColor( xml, "second_task_wnd:task_item:read",   0, (u32)(-1) );
+	m_color_states[stt_activ ] = CUIXmlInit::GetColor( xml, "second_task_wnd:task_item:activ",  0, static_cast<u32>(-1) );
+	m_color_states[stt_unread] = CUIXmlInit::GetColor( xml, "second_task_wnd:task_item:unread", 0, static_cast<u32>(-1) );
+	m_color_states[stt_read  ] = CUIXmlInit::GetColor( xml, "second_task_wnd:task_item:read",   0, static_cast<u32>(-1) );
 	update_view();
 	return true;
 }

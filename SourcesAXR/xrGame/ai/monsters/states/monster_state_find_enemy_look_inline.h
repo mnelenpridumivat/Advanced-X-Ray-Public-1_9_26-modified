@@ -71,7 +71,7 @@ void CStateMonsterFindEnemyLookAbstract::setup_substates()
 		
 		SStateDataMoveToPoint data;
 		data.point			= target_point;
-		data.vertex			= u32(-1);
+		data.vertex			= static_cast<u32>(-1);
 		data.accelerated	= true;
 		data.braking		= false;
 		data.accel_type 	= eAT_Aggressive;

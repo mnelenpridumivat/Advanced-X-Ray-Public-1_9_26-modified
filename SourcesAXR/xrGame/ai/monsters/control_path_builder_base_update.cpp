@@ -57,7 +57,7 @@ void CControlPathBuilderBase::update_target_point()
 
 void CControlPathBuilderBase::set_path_builder_params()
 {
-	SControlPathBuilderData	*ctrl_data = (SControlPathBuilderData *)m_man->data(this, ControlCom::eControlPath);
+	SControlPathBuilderData	*ctrl_data = static_cast<SControlPathBuilderData*>(m_man->data(this, ControlCom::eControlPath));
 	if (!ctrl_data) return;
 
 	ctrl_data->use_dest_orientation		= m_use_dest_orient;

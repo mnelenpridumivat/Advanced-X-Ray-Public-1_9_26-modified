@@ -44,12 +44,12 @@ void CControlPathBuilderBase::reset()
 	m_path_type						= MovementManager::ePathTypeLevelPath;
 	m_dest_dir.set					(0.f, 0.f, 0.f);
 	m_extrapolate					= false;
-	m_velocity_mask					= u32(-1);
-	m_desirable_mask				= u32(-1);
+	m_velocity_mask					= static_cast<u32>(-1);
+	m_desirable_mask				= static_cast<u32>(-1);
 	m_last_time_dir_set				= 0;
 	m_last_time_target_set			= 0;
 	m_reset_actuality				= false;
-	m_game_graph_target_vertex		= u32(-1);
+	m_game_graph_target_vertex		= static_cast<u32>(-1);
 
 	prepare_builder					();
 
@@ -106,7 +106,7 @@ void CControlPathBuilderBase::set_target_accessible(STarget &target, const Fvect
 		target.set_node	( m_man->path_builder().restrictions().accessible_nearest( position, new_position ) );
 		target.set_position( new_position );
 	} else {
-		target.set_node	( u32(-1) );
+		target.set_node	( static_cast<u32>(-1) );
 		target.set_position	( position );
 	}
 }

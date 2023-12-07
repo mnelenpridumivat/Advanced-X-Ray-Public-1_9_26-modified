@@ -31,6 +31,6 @@ void CSavedGameWrapper::script_register	(lua_State *L)
 			.def("level_name",		&CSavedGameWrapper::level_name)
 			.def("actor_health",	&CSavedGameWrapper::actor_health),
 
-		def("valid_saved_game",		(bool (*)(LPCSTR))(&valid_saved_game))
+		def("valid_saved_game",		static_cast<bool (*)(LPCSTR)>(&valid_saved_game))
 	];
 }

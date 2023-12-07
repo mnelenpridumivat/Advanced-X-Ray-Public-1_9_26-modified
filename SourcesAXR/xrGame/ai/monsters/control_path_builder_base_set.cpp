@@ -26,7 +26,7 @@ void CControlPathBuilderBase::prepare_builder()
 	m_time_global_failed_started	= 0;
 	m_time_path_updated_external	= 0;
 
-	m_game_graph_target_vertex	= u32(-1);
+	m_game_graph_target_vertex	= static_cast<u32>(-1);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -59,7 +59,7 @@ void CControlPathBuilderBase::set_retreat_from_point(const Fvector &position)
 	m_target_actual = m_target_actual && (m_target_set.position().similar(position));
 
 	// установить позицию
-	m_target_set.set	(position,u32(-1));	
+	m_target_set.set	(position,static_cast<u32>(-1));	
 
 	// установить глобальные параметры передвижения
 	m_target_type		= eRetreatFromTarget;

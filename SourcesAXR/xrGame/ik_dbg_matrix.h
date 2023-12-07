@@ -40,7 +40,7 @@ struct dbg_matrix
 		OBJ					=Fidentity;
 		OBJ_END				=Fidentity;
 		dbg_goal  = GOAL	=Fidentity;
-		ref_bone			= u16(-1);
+		ref_bone			= static_cast<u16>(-1);
 	}
 };
 struct SCalculateData;

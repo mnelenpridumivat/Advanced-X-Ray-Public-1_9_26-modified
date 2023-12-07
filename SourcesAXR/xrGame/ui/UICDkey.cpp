@@ -125,7 +125,7 @@ void CUICDkey::Draw()
 		out.y					= rect.top + (m_wndSize.y - _h)/2.0f;
 		
 		float	w_tmp			= 0.0f;
-		int i					= (int)xr_strlen( res1 );
+		int i					= static_cast<int>(xr_strlen(res1));
 		w_tmp					= TextItemControl()->m_pFont->SizeOf_( res1 );
 		UI().ClientToScreenScaledWidth( w_tmp );
 		out.x					= rect.left + w_tmp;

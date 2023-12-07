@@ -15,9 +15,9 @@
 class CScriptAnimationAction : public CScriptAbstractAction {
 public:
 	enum EGoalType {
-		eGoalTypeAnimation = u32(0),
+		eGoalTypeAnimation = static_cast<u32>(0),
 		eGoalTypeMental,
-		eGoalTypeDummy = u32(-1),
+		eGoalTypeDummy = static_cast<u32>(-1),
 	};
 
 public:

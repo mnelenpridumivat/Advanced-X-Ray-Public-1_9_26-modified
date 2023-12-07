@@ -25,7 +25,7 @@ bool SSFX_PDA_DoF_active = false;
 
 CPda::CPda(void)
 {
-	m_idOriginalOwner = u16(-1);
+	m_idOriginalOwner = static_cast<u16>(-1);
 	m_SpecificChracterOwner = nullptr;
 	TurnOff();
 	m_bZoomed = false;
@@ -109,7 +109,7 @@ void CPda::Load(LPCSTR section)
 
 		pda_light->set_range(range);
 		pda_light->set_hud_mode(true);
-		pda_light->set_type((IRender_Light::LT)m_iLightType);
+		pda_light->set_type(static_cast<IRender_Light::LT>(m_iLightType));
 		pda_light->set_cone(deg2rad(READ_IF_EXISTS(pSettings, r_float, section, "light_spot_angle", 1.f)));
 		pda_light->set_texture(READ_IF_EXISTS(pSettings, r_string, section, "spot_texture", nullptr));
 

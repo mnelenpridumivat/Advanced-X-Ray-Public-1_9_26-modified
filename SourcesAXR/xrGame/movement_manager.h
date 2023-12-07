@@ -121,7 +121,7 @@ protected:
 
 private:
 	enum EPathState {
-		ePathStateSelectGameVertex = u32(0),
+		ePathStateSelectGameVertex = static_cast<u32>(0),
 		ePathStateBuildGamePath,
 		ePathStateContinueGamePath,
 		
@@ -138,7 +138,7 @@ private:
 
 		ePathStateTeleport,
 		
-		ePathStateDummy = u32(-1),
+		ePathStateDummy = static_cast<u32>(-1),
 	};
 
 protected:

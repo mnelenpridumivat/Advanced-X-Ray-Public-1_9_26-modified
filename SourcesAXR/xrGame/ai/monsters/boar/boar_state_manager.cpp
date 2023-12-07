@@ -36,7 +36,7 @@ CStateManagerBoar::CStateManagerBoar(CAI_Boar *monster) : inherited(monster)
 
 void CStateManagerBoar::execute()
 {
-	u32 state_id = u32(-1);
+	u32 state_id = static_cast<u32>(-1);
 
 	if (!object->is_under_control()) {
 	

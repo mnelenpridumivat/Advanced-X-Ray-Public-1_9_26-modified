@@ -112,7 +112,7 @@ void CUIVotingCategory::OnBtn(int i)
 //	game_cl_mp* game = smart_cast<game_cl_mp*>(&Game());
 
 	//check buttons state, based on voting mask
-	u16 flag = 1<<(u16(i+1) & 0xff);
+	u16 flag = 1<<(static_cast<u16>(i + 1) & 0xff);
 	if (Game().IsVotingEnabled(flag))
 	{
 		switch (i){
@@ -175,7 +175,7 @@ void CUIVotingCategory::Update				()
 	//check buttons state, based on voting mask
 	for (int i = 0; i<7; i++)
 	{
-		u16 flag = 1<<(u16(i+1) & 0xff);
+		u16 flag = 1<<(static_cast<u16>(i + 1) & 0xff);
 		
 		btn[i]->Enable(Game().IsVotingEnabled(flag));
 		txt[i]->Enable(Game().IsVotingEnabled(flag));		

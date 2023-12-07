@@ -54,7 +54,7 @@ bool CtaGameArtefact::Action(s32 cmd, u32 flags)
 			return true;
 	}
 	
-	return inherited::Action((u16)cmd, flags);
+	return inherited::Action(static_cast<u16>(cmd), flags);
 }
 
 void CtaGameArtefact::OnStateSwitch(u32 S)

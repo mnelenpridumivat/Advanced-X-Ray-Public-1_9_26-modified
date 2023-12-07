@@ -37,12 +37,14 @@ IC	_associative_vector::associative_vector													(const key_compare &predi
 
 TEMPLATE_SPECIALIZATION
 template <typename _iterator_type>
-IC	_associative_vector::associative_vector(_iterator_type first, _iterator_type last, const key_compare& predicate = key_compare(), const allocator_type& allocator = allocator_type()) :
+IC _associative_vector::associative_vector(_iterator_type first, _iterator_type last,
+                                           const key_compare& predicate,
+                                           const allocator_type& allocator) :
 //	inherited			(first,last,allocator),
 	inherited			(first,last),
 	value_compare		(predicate)
 {
-	std::sort			(begin(),end(),(value_compare&)(*this));
+	std::sort			(begin(),end(),static_cast<value_compare&>(*this));
 }
 
 TEMPLATE_SPECIALIZATION
@@ -253,7 +255,7 @@ IC	typename _associative_vector::iterator _associative_vector::insert						(iter
 		)
 			return		(inherited::insert(where,value));
 
-	return				(insert(val).first);
+	return				(insert(value).first);
 }
 
 TEMPLATE_SPECIALIZATION
@@ -268,7 +270,7 @@ IC	void _associative_vector::insert														(_iterator_type first, _iterato
 	}
 
 	inherited::insert	(end(),first,last);
-	std::sort			(begin(),end(),(value_compare&)(*this));
+	std::sort			(begin(),end(),static_cast<value_compare&>(*this));
 }
 
 TEMPLATE_SPECIALIZATION
@@ -339,44 +341,44 @@ IC	typename _associative_vector::const_equal_range_result _associative_vector::e
 TEMPLATE_SPECIALIZATION
 IC	typename _associative_vector::self_type &_associative_vector::operator=					(const self_type &right)
 {
-	(inherited&)(*this)	= right;
+	static_cast<inherited&>(*this)	= right;
 	return				(*this);
 }
 
 TEMPLATE_SPECIALIZATION
 IC	bool _associative_vector::operator<														(const self_type &right) const
 {
-	return				(((const inherited &)(*this)) < right);
+	return				(static_cast<const inherited&>(*this) < right);
 }
 
 TEMPLATE_SPECIALIZATION
 IC	bool _associative_vector::operator<=													(const self_type &right) const
 {
-	return				!(right < left);
+	return				!(right < *this);
 }
 
 TEMPLATE_SPECIALIZATION
 IC	bool _associative_vector::operator>														(const self_type &right) const
 {
-	return				(right < left);
+	return				(right < *this);
 }
 
 TEMPLATE_SPECIALIZATION
 IC	bool _associative_vector::operator>=													(const self_type &right) const
 {
-	return				!(left < right);
+	return				!(*this < right);
 }
 
 TEMPLATE_SPECIALIZATION
 IC	bool _associative_vector::operator==													(const self_type &right) const
 {
-	return				(((const inherited &)(*this)) == right);
+	return				(static_cast<const inherited&>(*this) == right);
 }
 
 TEMPLATE_SPECIALIZATION
 IC	bool _associative_vector::operator!=													(const self_type &right) const
 {
-	return				!(left == right);
+	return				!(*this == right);
 }
 
 #undef TEMPLATE_SPECIALIZATION

@@ -54,8 +54,8 @@ void CStalkerSearchPlanner::finalize				()
 void CStalkerSearchPlanner::add_evaluators			()
 {
 	add_evaluator			(eWorldPropertyPureEnemy			,xr_new<CStalkerPropertyEvaluatorConst>		(true,"is_there_enemies_delayed"));
-	add_evaluator			(eWorldPropertyEnemyLocationReached	,xr_new<CStalkerPropertyEvaluatorMember>	((CPropertyStorage*)0,eWorldPropertyEnemyLocationReached,true,true,"enemy location reached"));
-	add_evaluator			(eWorldPropertyAmbushLocationReached,xr_new<CStalkerPropertyEvaluatorMember>	((CPropertyStorage*)0,eWorldPropertyAmbushLocationReached,true,true,"ambush location reached"));
+	add_evaluator			(eWorldPropertyEnemyLocationReached	,xr_new<CStalkerPropertyEvaluatorMember>	(static_cast<CPropertyStorage*>(0),eWorldPropertyEnemyLocationReached,true,true,"enemy location reached"));
+	add_evaluator			(eWorldPropertyAmbushLocationReached,xr_new<CStalkerPropertyEvaluatorMember>	(static_cast<CPropertyStorage*>(0),eWorldPropertyAmbushLocationReached,true,true,"ambush location reached"));
 }
 
 void CStalkerSearchPlanner::add_actions				()

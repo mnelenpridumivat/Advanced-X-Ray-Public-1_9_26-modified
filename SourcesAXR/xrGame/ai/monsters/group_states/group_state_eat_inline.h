@@ -103,7 +103,7 @@ void CStateGroupEatAbstract::reselect_state()
 
 	if (object->saved_state == eStateEat_Eat)
 	{
-		object->saved_state = u32(-1);
+		object->saved_state = static_cast<u32>(-1);
 		if (object->character_physics_support()->movement()->PHCapture())
 			object->character_physics_support()->movement()->PHReleaseObject();
 		select_state(eStateEat_Eat);					
@@ -124,7 +124,7 @@ void CStateGroupEatAbstract::reselect_state()
 		return; 
 	}*/
 
-	if ( prev_substate == u32(-1) )
+	if ( prev_substate == static_cast<u32>(-1) )
 	{
 		select_state(eStateEat_CorpseApproachWalk);
 		return;
@@ -216,7 +216,7 @@ void CStateGroupEatAbstract::setup_substates()
 
 		SStateDataMoveToPoint data;
 		data.point			= nearest_bone_pos;
-		data.vertex			= u32(-1);
+		data.vertex			= static_cast<u32>(-1);
 		data.action.action	= ACT_RUN;
 		data.accelerated	= true;
 		data.braking		= true;
@@ -297,7 +297,7 @@ void CStateGroupEatAbstract::setup_substates()
 
 		SStateDataMoveToPoint data;
 		data.point			= nearest_bone_pos;
-		data.vertex			= u32(-1);
+		data.vertex			= static_cast<u32>(-1);
 		data.action.action	= ACT_WALK_FWD;
 		data.accelerated	= true;
 		data.braking		= true;

@@ -20,7 +20,7 @@ IC void CCar::SWheel::applywheelCollisionParams(const dxGeomUserData *ud,bool& d
 {
 	if(ud&&ud->object_callbacks&&ud->object_callbacks->HasCallback(WheellCollisionCallback))
 	{
-		SWheelCollisionParams	&cp	=		*((SWheelCollisionParams*)(ud->callback_data))	;
+		SWheelCollisionParams	&cp	=		*static_cast<SWheelCollisionParams*>(ud->callback_data)	;
 		dSurfaceParameters		&sp	=		c.surface										;
 		sp.mu						*=		cp.mu_factor									;
 		MulSprDmp(sp.soft_cfm,sp.soft_cfm,cp.spring_factor,cp.damping_factor)				;
@@ -203,7 +203,7 @@ void CCar::SWheelDrive::Init()
 {
 	pwheel->Init();
 	gear_factor=pwheel->radius/pwheel->car->m_ref_radius;
-	CBoneData& bone_data= smart_cast<IKinematics*>(pwheel->car->Visual())->LL_GetData(u16(pwheel->bone_id));
+	CBoneData& bone_data= smart_cast<IKinematics*>(pwheel->car->Visual())->LL_GetData(static_cast<u16>(pwheel->bone_id));
 	switch(bone_data.IK_data.type)
 	{
 	case jtWheel:
@@ -243,7 +243,7 @@ void CCar::SWheelSteer::Init()
 	IKinematics* pKinematics=smart_cast<IKinematics*>(pwheel->car->Visual());
 	pwheel->Init();
 	(bone_map.find(pwheel->bone_id))->second.joint->GetLimits(lo_limit,hi_limit,0);
-	CBoneData& bone_data= pKinematics->LL_GetData(u16(pwheel->bone_id));
+	CBoneData& bone_data= pKinematics->LL_GetData(static_cast<u16>(pwheel->bone_id));
 	switch(bone_data.IK_data.type)
 	{
 	case jtWheel:	

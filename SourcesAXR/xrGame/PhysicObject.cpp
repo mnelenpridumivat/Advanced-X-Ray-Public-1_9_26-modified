@@ -38,7 +38,7 @@ BOOL CPhysicObject::net_Spawn(CSE_Abstract* DC)
 	CSE_Abstract			*e	= (CSE_Abstract*)(DC);
 	CSE_ALifeObjectPhysic	*po	= smart_cast<CSE_ALifeObjectPhysic*>(e);
 	R_ASSERT				(po);
-	m_type					= EPOType(po->type);
+	m_type					= static_cast<EPOType>(po->type);
 	m_mass					= po->mass;
 	m_collision_hit_callback= NULL;
 	m_anim_blend			= 0;
@@ -400,9 +400,9 @@ void CPhysicObject::AddElement(CPhysicsElement* root_e, int id)
 	IKinematics* K		= smart_cast<IKinematics*>(Visual());
 
 	CPhysicsElement* E	= P_create_Element();
-	CBoneInstance& B	= K->LL_GetBoneInstance(u16(id));
-	E->mXFORM.set		(K->LL_GetTransform(u16(id)));
-	Fobb bb			= K->LL_GetBox(u16(id));
+	CBoneInstance& B	= K->LL_GetBoneInstance(static_cast<u16>(id));
+	E->mXFORM.set		(K->LL_GetTransform(static_cast<u16>(id)));
+	Fobb bb			= K->LL_GetBox(static_cast<u16>(id));
 
 
 	if(bb.m_halfsize.magnitude()<0.05f)
@@ -427,7 +427,7 @@ void CPhysicObject::AddElement(CPhysicsElement* root_e, int id)
 		m_pPhysicsShell->add_Joint	(J);	
 	}
 
-	CBoneData& BD		= K->LL_GetData(u16(id));
+	CBoneData& BD		= K->LL_GetData(static_cast<u16>(id));
 	for (vecBonesIt it=BD.children.begin(); BD.children.end() != it; ++it){
 		AddElement		(E,(*it)->GetSelfID());
 	}
@@ -499,7 +499,7 @@ void CPhysicObject::InitServerObject(CSE_Abstract * D)
 	CPHSkeleton::InitServerObject(D);
 	CSE_ALifeObjectPhysic		*l_tpALifePhysicObject = smart_cast<CSE_ALifeObjectPhysic*>(D);
 	if(!l_tpALifePhysicObject)return;
-	l_tpALifePhysicObject->type			= u32(m_type);
+	l_tpALifePhysicObject->type			= static_cast<u32>(m_type);
 }
 ICollisionHitCallback*	CPhysicObject::	get_collision_hit_callback ()	
 {
@@ -569,8 +569,8 @@ void CPhysicObject::net_Export			(NET_Packet& P)
 	mask_num_items			num_items;
 	num_items.mask			= 0;
 	u16						temp = this->PHGetSyncItemsNumber();
-	R_ASSERT				(temp < (u16(1) << 5));
-	num_items.num_items		= u8(temp);
+	R_ASSERT				(temp < (static_cast<u16>(1) << 5));
+	num_items.num_items		= static_cast<u8>(temp);
 
 	if (State.enabled)									num_items.mask |= CSE_ALifeObjectPhysic::inventory_item_state_enabled;
 	if (fis_zero(State.angular_vel.square_magnitude()))	num_items.mask |= CSE_ALifeObjectPhysic::inventory_item_angular_null;
@@ -864,7 +864,7 @@ float CPhysicObject::interpolate_states(net_update_PItem const & first, net_upda
 	if (CurTime == last.dwTimeStamp)
 		return 0.f;
 
-	float factor = float(CurTime - last.dwTimeStamp) / float(last.dwTimeStamp - first.dwTimeStamp);
+	float factor = static_cast<float>(CurTime - last.dwTimeStamp) / static_cast<float>(last.dwTimeStamp - first.dwTimeStamp);
 	
 	ret_val = factor;
 	if (factor > 1.f)
@@ -902,7 +902,7 @@ bool	CPhysicObject::get_door_vectors	( Fvector& closed, Fvector& open ) const
 		return false;
 	
 	Fmatrix start_bone_pos;
-	K->Bone_GetAnimPos( start_bone_pos, door_bone, u8(-1), true );
+	K->Bone_GetAnimPos( start_bone_pos, door_bone, static_cast<u8>(-1), true );
 	
 	Fmatrix start_pos = Fmatrix().mul_43( XFORM(), start_bone_pos );
 	

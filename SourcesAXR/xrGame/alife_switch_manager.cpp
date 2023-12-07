@@ -60,7 +60,7 @@ void CALifeSwitchManager::add_online(CSE_ALifeDynamicObject *object, bool update
 	ClientID						clientID;
 	clientID.set					(server().GetServerClient() ? server().GetServerClient()->ID.value() : 0);
 	server().Process_spawn			(tNetPacket,clientID,FALSE,l_tpAbstract);
-	object->s_flags.and				(u16(-1) ^ M_SPAWN_UPDATE);
+	object->s_flags.and				(static_cast<u16>(-1) ^ M_SPAWN_UPDATE);
 
 	if (object->used_ai_locations() && !ai().level_graph().valid_vertex_id(object->m_tNodeID))
 	{
@@ -143,7 +143,7 @@ bool CALifeSwitchManager::synchronize_location(CSE_ALifeDynamicObject *I)
 	VERIFY3					(ai().level_graph().level_id() == ai().game_graph().vertex(I->m_tGraphID)->level_id(),*I->s_name,I->name_replace());
 	if (!I->children.empty()) {
 		u32					size = I->children.size();
-		ALife::_OBJECT_ID	*test = (ALife::_OBJECT_ID*)_alloca(size*sizeof(ALife::_OBJECT_ID));
+		ALife::_OBJECT_ID	*test = static_cast<ALife::_OBJECT_ID*>(_alloca(size * sizeof(ALife::_OBJECT_ID)));
 		Memory.mem_copy		(test,&*I->children.begin(),size*sizeof(ALife::_OBJECT_ID));
 		std::sort			(test,test + size);
 		for (u32 i=1; i<size; ++i) {

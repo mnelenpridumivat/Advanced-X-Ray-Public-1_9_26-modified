@@ -26,9 +26,9 @@ CALifeMonsterPatrolPathManager::CALifeMonsterPatrolPathManager	(object_type *obj
 	m_actual				= true;
 	m_completed				= true;
 	
-	m_current_vertex_index	= u32(-1);
-	m_previous_vertex_index	= u32(-1);
-	m_start_vertex_index	= u32(-1);
+	m_current_vertex_index	= static_cast<u32>(-1);
+	m_previous_vertex_index	= static_cast<u32>(-1);
+	m_start_vertex_index	= static_cast<u32>(-1);
 
 	start_type				(PatrolPathManager::ePatrolStartTypeNearest);
 	route_type				(PatrolPathManager::ePatrolRouteTypeContinue);
@@ -69,7 +69,7 @@ const Fvector &CALifeMonsterPatrolPathManager::target_position	() const
 
 void CALifeMonsterPatrolPathManager::select_nearest			()
 {
-	m_current_vertex_index				= u32(-1);
+	m_current_vertex_index				= static_cast<u32>(-1);
 	Fvector								global_position = ai().game_graph().vertex(object().get_object().m_tGraphID)->game_point();
 	float								best_distance = flt_max;
 	CPatrolPath::const_vertex_iterator	I = path().vertices().begin();
@@ -97,8 +97,8 @@ void CALifeMonsterPatrolPathManager::select_nearest			()
 
 void CALifeMonsterPatrolPathManager::actualize				()
 {
-	m_current_vertex_index				= u32(-1);
-	m_previous_vertex_index				= u32(-1);
+	m_current_vertex_index				= static_cast<u32>(-1);
+	m_previous_vertex_index				= static_cast<u32>(-1);
 	m_actual							= true;
 	m_completed							= false;
 

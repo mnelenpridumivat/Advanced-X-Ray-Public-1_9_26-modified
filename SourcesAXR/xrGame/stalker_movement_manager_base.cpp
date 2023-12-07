@@ -140,7 +140,7 @@ void stalker_movement_manager_base::reinit				()
 
 	VERIFY									(m_current.equal_to_target(m_target));
 
-	m_last_turn_index						= u32(-1);
+	m_last_turn_index						= static_cast<u32>(-1);
 }
 
 IC	void stalker_movement_manager_base::setup_head_speed		(stalker_movement_params& movement_params)
@@ -348,7 +348,7 @@ void stalker_movement_manager_base::setup_velocities		(stalker_movement_params& 
 		}
 		default : {
 			velocity_mask	|= eVelocityStanding;
-			velocity_mask	&= u32(-1) ^ (eVelocityNegativeVelocity | eVelocityPositiveVelocity);
+			velocity_mask	&= static_cast<u32>(-1) ^ (eVelocityNegativeVelocity | eVelocityPositiveVelocity);
 		}
 	}
 
@@ -374,7 +374,7 @@ void stalker_movement_manager_base::setup_velocities		(stalker_movement_params& 
 void stalker_movement_manager_base::parse_velocity_mask	(stalker_movement_params& movement_params)
 {
 	if (path().empty() || (detail().curr_travel_point_index() != m_last_turn_index))
-		m_last_turn_index		= u32(-1);
+		m_last_turn_index		= static_cast<u32>(-1);
 
 	sight_manager_enable_guard	guard(object().sight(), true);
 
@@ -426,7 +426,7 @@ void stalker_movement_manager_base::parse_velocity_mask	(stalker_movement_params
 		if (movement_params.m_mental_state != eMentalStateDanger) {
 			if (movement_params.m_mental_state == eMentalStatePanic) {
 				if (!fis_zero(path_direction_angle(),PI_DIV_8*.5f)) {
-					u32					temp = u32(-1);
+					u32					temp = static_cast<u32>(-1);
 					temp				^= eVelocityFree;
 					temp				^= eVelocityDanger;
 					temp				^= eVelocityPanic;

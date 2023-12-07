@@ -1,5 +1,5 @@
 enum{
-	flFullVote			= u16(1<<0),	//old vote sintax
+	flFullVote			= static_cast<u16>(1 << 0),	//old vote sintax
 	flVoteRestart		= (1<<1),
 	flVoteRestartFast	= (1<<2),
 	flVoteKick			= (1<<3),

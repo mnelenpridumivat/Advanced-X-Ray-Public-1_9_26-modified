@@ -11,15 +11,15 @@ void CGameTask::script_register(lua_State *L)
 			class_<enum_exporter<ETaskState> >("task")
 				.enum_("task_state")
 				[
-					value("fail",					int(eTaskStateFail)),
-					value("in_progress",			int(eTaskStateInProgress)),
-					value("completed",				int(eTaskStateCompleted)),
-					value("task_dummy",				int(eTaskStateDummy))
+					value("fail",					static_cast<int>(eTaskStateFail)),
+					value("in_progress",			static_cast<int>(eTaskStateInProgress)),
+					value("completed",				static_cast<int>(eTaskStateCompleted)),
+					value("task_dummy",				static_cast<int>(eTaskStateDummy))
 				]
 				.enum_("task_type")
 				[
-					value("storyline",				int(eTaskTypeStoryline)),
-					value("additional",				int(eTaskTypeAdditional))
+					value("storyline",				static_cast<int>(eTaskTypeStoryline)),
+					value("additional",				static_cast<int>(eTaskTypeAdditional))
 				],
 
 

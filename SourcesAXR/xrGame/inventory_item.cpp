@@ -292,7 +292,7 @@ bool CInventoryItem::Detach(const char* item_section_name, bool b_spawn_item)
 								smart_cast<CSE_ALifeDynamicObject*>(D);
 		R_ASSERT			(l_tpALifeDynamicObject);
 		
-		l_tpALifeDynamicObject->m_tNodeID = (g_dedicated_server)?u32(-1):object().ai_location().level_vertex_id();
+		l_tpALifeDynamicObject->m_tNodeID = (g_dedicated_server)?static_cast<u32>(-1):object().ai_location().level_vertex_id();
 			
 		// Fill
 		D->s_name			=	item_section_name;
@@ -302,12 +302,12 @@ bool CInventoryItem::Detach(const char* item_section_name, bool b_spawn_item)
 		D->ID				=	0xffff;
 		if (GameID() == eGameIDSingle)
 		{
-			D->ID_Parent		=	u16(object().H_Parent()->ID());
+			D->ID_Parent		=	static_cast<u16>(object().H_Parent()->ID());
 		}
 		else	// i'm not sure this is right
 		{		// but it is simpliest way to avoid exception in MP BuyWnd... [Satan]
 			if (object().H_Parent())
-				D->ID_Parent	=	u16(object().H_Parent()->ID());
+				D->ID_Parent	=	static_cast<u16>(object().H_Parent()->ID());
 			else
 				D->ID_Parent	= NULL;
 		}
@@ -384,7 +384,7 @@ void CInventoryItem::save(NET_Packet &packet)
 		return;
 	}
 
-	u8 _num_items			= (u8)object().PHGetSyncItemsNumber(); 
+	u8 _num_items			= static_cast<u8>(object().PHGetSyncItemsNumber()); 
 	packet.w_u8				(_num_items);
 	object().PHSaveState	(packet);
 }
@@ -640,8 +640,8 @@ void CInventoryItem::net_Export			(NET_Packet& P)
 	mask_inv_num_items			num_items;
 	num_items.mask			= 0;
 	u16						temp = object().PHGetSyncItemsNumber();
-	R_ASSERT				(temp < (u16(1) << 5));
-	num_items.num_items		= u8(temp);
+	R_ASSERT				(temp < (static_cast<u16>(1) << 5));
+	num_items.num_items		= static_cast<u8>(temp);
 
 	if (State.enabled)									num_items.mask |= CSE_ALifeInventoryItem::inventory_item_state_enabled;
 	if (fis_zero(State.angular_vel.square_magnitude()))	num_items.mask |= CSE_ALifeInventoryItem::inventory_item_angular_null;
@@ -1169,7 +1169,7 @@ float CInventoryItem::interpolate_states(net_update_IItem const & first, net_upd
 	if (CurTime == last.dwTimeStamp)
 		return 0.f;
 
-	float factor = float(CurTime - last.dwTimeStamp) / float(last.dwTimeStamp - first.dwTimeStamp);
+	float factor = static_cast<float>(CurTime - last.dwTimeStamp) / static_cast<float>(last.dwTimeStamp - first.dwTimeStamp);
 	
 	ret_val = factor;
 	if (factor > 1.f)
@@ -1271,8 +1271,8 @@ void CInventoryItem::UpdateXForm	()
 	//		boneL = boneR2;
 #pragma todo("TO ALL: serious performance problem")
 	V->CalculateBones	();
-	Fmatrix& mL			= V->LL_GetTransform(u16(boneL));
-	Fmatrix& mR			= V->LL_GetTransform(u16(boneR));
+	Fmatrix& mL			= V->LL_GetTransform(static_cast<u16>(boneL));
+	Fmatrix& mR			= V->LL_GetTransform(static_cast<u16>(boneR));
 	// Calculate
 	Fmatrix			mRes;
 	Fvector			R,D,N;
@@ -1481,7 +1481,7 @@ u16 CInventoryItem::object_id()const
 
 u16 CInventoryItem::parent_id() const
 {
-	return (object().H_Parent()) ? object().H_Parent()->ID() : u16(-1);
+	return (object().H_Parent()) ? object().H_Parent()->ID() : static_cast<u16>(-1);
 }
 
 void CInventoryItem::SetDropManual(BOOL val)

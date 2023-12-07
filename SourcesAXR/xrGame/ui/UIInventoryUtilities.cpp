@@ -116,7 +116,7 @@ bool InventoryUtilities::GreaterRoomInRuck(PIItem item1, PIItem item2)
 
 bool InventoryUtilities::FreeRoom_inBelt	(TIItemContainer& item_list, PIItem _item, int width, int height)
 {
-	bool*				ruck_room	= (bool*)alloca(width*height);
+	bool*				ruck_room	= static_cast<bool*>(alloca(width * height));
 
 	int		i,j,k,m;
 	int		place_row = 0,  place_col = 0;
@@ -312,7 +312,7 @@ const shared_str InventoryUtilities::GetTimeAsString(ALife::_TIME_ID time, ETime
 		break;
 	case etpTimeToSecondsAndDay:
 		{
-			int total_day = (int)( time/(1000*60*60*24) );
+			int total_day = static_cast<int>(time / (1000 * 60 * 60 * 24));
 			xr_sprintf(bufTime, sizeof(bufTime), "%dd %02i%c%02i%c%02i", total_day, hours, timeSeparator, mins, timeSeparator, secs);
 			break;
 		}

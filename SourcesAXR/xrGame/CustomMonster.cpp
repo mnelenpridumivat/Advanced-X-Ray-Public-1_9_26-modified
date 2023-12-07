@@ -218,7 +218,7 @@ void CCustomMonster::reinit		()
 	// Critical Wounds
 	//////////////////////////////////////////////////////////////////////////
 	
-	m_critical_wound_type			= u32(-1);
+	m_critical_wound_type			= static_cast<u32>(-1);
 	m_last_hit_time					= 0;
 	m_critical_wound_accumulator	= 0.f;
 	m_critical_wound_threshold		= pSettings->r_float(cNameSect(),"critical_wound_threshold");
@@ -278,9 +278,9 @@ void CCustomMonster::net_Export(NET_Packet& P)					// export to server
 	P.w_float /*w_angle8*/				(N.o_torso.yaw);
 	P.w_float /*w_angle8*/				(N.o_torso.pitch);
 	P.w_float /*w_angle8*/				(N.o_torso.roll);
-	P.w_u8					(u8(g_Team()));
-	P.w_u8					(u8(g_Squad()));
-	P.w_u8					(u8(g_Group()));
+	P.w_u8					(static_cast<u8>(g_Team()));
+	P.w_u8					(static_cast<u8>(g_Squad()));
+	P.w_u8					(static_cast<u8>(g_Group()));
 }
 
 void CCustomMonster::net_Import(NET_Packet& P)
@@ -324,7 +324,7 @@ void CCustomMonster::shedule_Update	( u32 DT )
 	VERIFY				(!NET.empty());
 	while ((NET.size()>2) && (NET[1].dwTimeStamp<dwTimeCL)) NET.pop_front();
 
-	float dt			= float(DT)/1000.f;
+	float dt			= static_cast<float>(DT)/1000.f;
 	// *** general stuff
 	if (g_Alive()) {
 		if ( false && g_mt_config.test(mtAiVision) )
@@ -424,7 +424,7 @@ void CCustomMonster::update_sound_player()
 void CCustomMonster::UpdateCL	()
 { 
 	START_PROFILE("CustomMonster/client_update")
-	m_client_update_delta		= (u32)std::min(Device.dwTimeGlobal - m_last_client_update_time, u32(100) );
+	m_client_update_delta		= static_cast<u32>(std::min(Device.dwTimeGlobal - m_last_client_update_time, u32(100)));
 	m_last_client_update_time	= Device.dwTimeGlobal;
 
 #ifdef DEBUG
@@ -492,7 +492,7 @@ void CCustomMonster::UpdateCL	()
 			u32	d1					= dwTime-A.dwTimeStamp;
 			u32	d2					= B.dwTimeStamp - A.dwTimeStamp;
 //			VERIFY					(d2);
-			float					factor = d2 ? (float(d1)/float(d2)) : 1.f;
+			float					factor = d2 ? (static_cast<float>(d1)/static_cast<float>(d2)) : 1.f;
 			Fvector					l_tOldPosition = Position();
 			NET_Last.lerp			(A,B,factor);
 			if (Local()) {
@@ -580,7 +580,7 @@ void CCustomMonster::eye_pp_s0			( )
 	// Eye matrix
 	IKinematics* V							= smart_cast<IKinematics*>(Visual());
 	V->CalculateBones						();
-	Fmatrix&	mEye						= V->LL_GetTransform(u16(eye_bone));
+	Fmatrix&	mEye						= V->LL_GetTransform(static_cast<u16>(eye_bone));
 	Fmatrix		X;							X.mul_43	(XFORM(),mEye);
 	VERIFY									(_valid(mEye));
 
@@ -654,7 +654,7 @@ void CCustomMonster::eye_pp_s2				( )
 	u32 dwTime			= Level().timeServer();
 	u32 dwDT			= dwTime-eye_pp_timestamp;
 	eye_pp_timestamp	= dwTime;
-	feel_vision_update						(this,eye_matrix.c,float(dwDT)/1000.f,memory().visual().transparency_threshold());
+	feel_vision_update						(this,eye_matrix.c,static_cast<float>(dwDT)/1000.f,memory().visual().transparency_threshold());
 	Device.Statistic->AI_Vis_RayTests.End	();
 }
 
@@ -1054,14 +1054,14 @@ void CCustomMonster::load (IReader &packet)
 bool CCustomMonster::update_critical_wounded	(const u16 &bone_id, const float &power)
 {
 	// object should not be critical wounded
-	VERIFY							(m_critical_wound_type == u32(-1));
+	VERIFY							(m_critical_wound_type == static_cast<u32>(-1));
 	// check 'multiple updates during last hit' situation
 	VERIFY							(Device.dwTimeGlobal >= m_last_hit_time);
 
 	if (m_critical_wound_threshold < 0) return (false);
 
 
-	float							time_delta = m_last_hit_time ? float(Device.dwTimeGlobal - m_last_hit_time)/1000.f : 0.f;
+	float							time_delta = m_last_hit_time ? static_cast<float>(Device.dwTimeGlobal - m_last_hit_time)/1000.f : 0.f;
 	m_critical_wound_accumulator	+= power - m_critical_wound_decrease_quant*time_delta;
 	clamp							(m_critical_wound_accumulator,0.f,m_critical_wound_threshold);
 
@@ -1159,7 +1159,7 @@ void CCustomMonster::OnRender()
 	}
 	{
 		u32					node = movement().level_dest_vertex_id();
-		if (node == u32(-1)) node = 0;
+		if (node == static_cast<u32>(-1)) node = 0;
 
 		Fvector				P1 = ai().level_graph().vertex_position(node);
 		P1.y				+= 1.f;
@@ -1372,7 +1372,7 @@ void CCustomMonster::ForceTransform(const Fmatrix& m)
 	character_physics_support()->ForceTransform( m );
 	const float block_damage_time_seconds = 2.f;
 	if(!IsGameTypeSingle())
-		character_physics_support()->movement()->BlockDamageSet( u64( block_damage_time_seconds/fixed_step ) );
+		character_physics_support()->movement()->BlockDamageSet( static_cast<u64>(block_damage_time_seconds / fixed_step) );
 }
 
 Fvector	CCustomMonster::spatial_sector_point	( )

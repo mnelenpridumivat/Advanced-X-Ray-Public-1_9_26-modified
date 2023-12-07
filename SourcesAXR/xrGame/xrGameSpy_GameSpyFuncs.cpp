@@ -34,7 +34,7 @@ void			xrGameSpyServer::CDKey_ShutDown()
 void			xrGameSpyServer::SendChallengeString_2_Client (IClient* C)
 {
 	if (!C) return;
-	xrGameSpyClientData* pClient = (xrGameSpyClientData*) C;
+	xrGameSpyClientData* pClient = static_cast<xrGameSpyClientData*>(C);
 
     m_GCDServer.CreateRandomChallenge(pClient->m_pChallengeString, 8);
 	//--------- Send Respond ---------------------------------------------
@@ -48,8 +48,8 @@ void			xrGameSpyServer::SendChallengeString_2_Client (IClient* C)
 
 void			xrGameSpyServer::OnCDKey_Validation				(int LocalID, int res, char* errormsg)
 {
-	ClientID ID; ID.set(u32(LocalID));
-	xrGameSpyClientData* CL = (xrGameSpyClientData*)  ID_to_client(ID);
+	ClientID ID; ID.set(static_cast<u32>(LocalID));
+	xrGameSpyClientData* CL = static_cast<xrGameSpyClientData*>(ID_to_client(ID));
 	if (0 != res)
 	{
 		CL->m_bCDKeyAuth = true;
@@ -61,14 +61,14 @@ void			xrGameSpyServer::OnCDKey_Validation				(int LocalID, int res, char* error
 	else
 	{
 		Msg						("CDKey: Validation failed - <%s>", errormsg);
-		SendConnectResult		(CL, u8(res), ecr_cdkey_validation_failed, errormsg);
+		SendConnectResult		(CL, static_cast<u8>(res), ecr_cdkey_validation_failed, errormsg);
 	}
 };
 
 void			xrGameSpyServer::OnCDKey_ReValidation			(int LocalID, int hint, char* challenge)
 {
-	ClientID ID; ID.set(u32(LocalID));
-	xrGameSpyClientData* CL = (xrGameSpyClientData*)  ID_to_client(ID);
+	ClientID ID; ID.set(static_cast<u32>(LocalID));
+	xrGameSpyClientData* CL = static_cast<xrGameSpyClientData*>(ID_to_client(ID));
 	if (!CL) return;
 	xr_strcpy(CL->m_pChallengeString, challenge);
 	CL->m_iCDKeyReauthHint = hint;

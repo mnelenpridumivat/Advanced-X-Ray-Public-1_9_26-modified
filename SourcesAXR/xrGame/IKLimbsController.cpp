@@ -55,7 +55,7 @@ void	CIKLimbsController::LimbSetup( )
 
 	IKinematicsAnimated *skeleton_animated = m_object->Visual( )->dcast_PKinematicsAnimated( );
 
-	_bone_chains.back( ).Create( ( u16 ) _bone_chains.size( )-1, skeleton_animated, true );
+	_bone_chains.back( ).Create( static_cast<u16>(_bone_chains.size())-1, skeleton_animated, true );
 }
 
 void	CIKLimbsController::LimbCalculate( SCalculateData &cd )
@@ -91,7 +91,7 @@ void	y_shift_bones( IKinematics* K, float shift )
 float	CIKLimbsController::LegLengthShiftLimit			( float current_shift, const SCalculateData cd[max_size] )
 {
 	float shift_down = -phInfinity;
-	const u16 sz =(u16)_bone_chains.size();
+	const u16 sz =static_cast<u16>(_bone_chains.size());
 	for(u16 j = 0; sz > j; ++j )
 		if( cd[j].state.foot_step )
 		{
@@ -107,7 +107,7 @@ float	CIKLimbsController::StaticObjectShift			( const SCalculateData cd[max_size
 		const float current_shift = _object_shift.shift();
 
 		u16 cnt = 0; float shift_up =0;
-		const u16 sz =(u16)_bone_chains.size();
+		const u16 sz =static_cast<u16>(_bone_chains.size());
 		for(u16 j = 0; sz > j; ++j )
 			if( cd[j].state.foot_step )
 			{
@@ -147,7 +147,7 @@ bool	CIKLimbsController::PredictObjectShift			(  const SCalculateData cd[max_siz
 	//float predict_shift_up = 0.f;
 	bool shift_down = false;
 	bool shift_up = false;
-	const u16 sz =(u16)_bone_chains.size();
+	const u16 sz =static_cast<u16>(_bone_chains.size());
 	float current_shift = _object_shift.shift();
 	for(u16 j = 0; sz > j; ++j )
 		if( !cd[j].state.foot_step )
@@ -203,7 +203,7 @@ void	CIKLimbsController::ObjectShift	( float static_shift, const SCalculateData 
 {
 	
 	u16 cnt_in_step = 0;
-	const u16 sz =(u16)_bone_chains.size();
+	const u16 sz =static_cast<u16>(_bone_chains.size());
 	for(u16 j = 0; sz > j; ++j )
 			if( cd[j].m_limb->foot_step() )
 					++cnt_in_step;
@@ -281,7 +281,7 @@ void CIKLimbsController::Calculate( )
 			ShiftObject( cd );
 	}
 
-	const u16 sz =(u16)_bone_chains.size();
+	const u16 sz =static_cast<u16>(_bone_chains.size());
 	for(u16 j = 0; sz > j; ++j )
 		cd[j].m_limb->SetGoal( cd[j] );
 
@@ -338,7 +338,7 @@ void _stdcall CIKLimbsController:: IKVisualCallback( IKinematics* K )
 		return;
 #endif
 	
-	CGameObject* O=( ( CGameObject* )K->GetUpdateCallbackParam());
+	CGameObject* O=static_cast<CGameObject*>(K->GetUpdateCallbackParam());
 	CPhysicsShellHolder*	Sh = smart_cast<CPhysicsShellHolder*>( O );
 	VERIFY( Sh );
 	CIKLimbsController* ik = Sh->character_ik_controller( );

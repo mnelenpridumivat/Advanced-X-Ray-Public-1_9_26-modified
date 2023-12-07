@@ -384,7 +384,7 @@ void CAI_Rat::select_next_home_position	()
 	GameGraph::_GRAPH_ID	tGraphID		= m_next_graph_point;
 	CGameGraph::const_iterator	i,e;
 	ai().game_graph().begin		(tGraphID,i,e);
-	int					iPointCount		= (int)movement().locations().vertex_types().size();
+	int					iPointCount		= static_cast<int>(movement().locations().vertex_types().size());
 	int					iBranches		= 0;
 	for ( ; i != e; ++i)
 		for (int j=0; j<iPointCount; ++j)
@@ -489,11 +489,11 @@ Fvector CAI_Rat::get_next_target_point()
 	if (!m_path)
 	{
 		m_walk_on_way = false;
-		m_current_way_point = u32(-1);
+		m_current_way_point = static_cast<u32>(-1);
 		return Position();
 	}
 
-	if (m_current_way_point == u32(-1))
+	if (m_current_way_point == static_cast<u32>(-1))
 	{
 		m_walk_on_way = false;
 		return Position();

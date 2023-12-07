@@ -168,7 +168,7 @@ struct CLoader {
 				mask					= stream.r_u32();
 				j						= 0;
 			}
-			*I							= !!(mask & (u32(1) << j));
+			*I							= !!(mask & (static_cast<u32>(1) << j));
 		}
 	};
 

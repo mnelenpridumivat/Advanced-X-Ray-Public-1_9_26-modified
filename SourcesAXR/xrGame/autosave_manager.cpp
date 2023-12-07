@@ -24,11 +24,11 @@ CAutosaveManager::CAutosaveManager			()
 	LPCSTR						section = alife_section;
 
 	sscanf						(pSettings->r_string(section,"autosave_interval"),"%d:%d:%d",&hours,&minutes,&seconds);
-	m_autosave_interval			= (u32)generate_time(1,1,1,hours,minutes,seconds);
+	m_autosave_interval			= static_cast<u32>(generate_time(1, 1, 1, hours, minutes, seconds));
 	m_last_autosave_time		= Device.dwTimeGlobal;
 
 	sscanf						(pSettings->r_string(section,"delay_autosave_interval"),"%d:%d:%d",&hours,&minutes,&seconds);
-	m_delay_autosave_interval	= (u32)generate_time(1,1,1,hours,minutes,seconds);
+	m_delay_autosave_interval	= static_cast<u32>(generate_time(1, 1, 1, hours, minutes, seconds));
 
 	m_not_ready_count			= 0;
 

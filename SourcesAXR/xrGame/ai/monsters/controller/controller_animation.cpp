@@ -65,7 +65,7 @@ void CControllerAnimation::on_event(ControlCom::EEventType type, ControlCom::IEv
 		case ControlCom::eventLegsAnimationEnd:		select_legs_animation();	break;
 		case ControlCom::eventAnimationSignal:	
 			{
-				SAnimationSignalEventData *event_data = (SAnimationSignalEventData *)data;
+				SAnimationSignalEventData *event_data = static_cast<SAnimationSignalEventData*>(data);
 				if (event_data->event_id == CControlAnimation::eAnimationHit) {
 					if (event_data->motion == m_torso[eTorsoPsyAttack])
 						m_controller->psy_fire();
@@ -207,7 +207,7 @@ void CControllerAnimation::select_torso_animation()
 {
 	if (m_wait_torso_anim_end) return;
 	
-	SControlAnimationData		*ctrl_data = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+	SControlAnimationData		*ctrl_data = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 	if (!ctrl_data) return;
 
 	MotionID target_motion;
@@ -252,7 +252,7 @@ void CControllerAnimation::select_legs_animation()
 	}
 	
 	// start new animation
-	SControlAnimationData		*ctrl_data = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+	SControlAnimationData		*ctrl_data = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 	if (!ctrl_data) return;
 	
 	if (ctrl_data->legs.get_motion() != m_legs[legs_action])

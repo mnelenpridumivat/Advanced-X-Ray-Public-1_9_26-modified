@@ -89,7 +89,7 @@ void CUIRankFraction::update_info( u8 sn )
 	xr_sprintf( buf, sizeof(buf), "%.0f", m_fraction_state.power );
 	m_power_value->SetText( buf );
 	
-	float gw = (float)m_fraction_state.get_actor_goodwill();
+	float gw = static_cast<float>(m_fraction_state.get_actor_goodwill());
 	if ( gw > 0.0f )
 	{
 		m_relation_center_plus->SetProgressPos( gw );

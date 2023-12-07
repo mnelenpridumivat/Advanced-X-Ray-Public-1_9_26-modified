@@ -9,7 +9,7 @@
 #pragma once
 
 IC	CScriptEffector::CScriptEffector	(int iType, float time) : 
-	CEffectorPP			(EEffectorPPType(iType),time,false)
+	CEffectorPP			(static_cast<EEffectorPPType>(iType),time,false)
 {
-	m_tEffectorType		= EEffectorPPType(iType);
+	m_tEffectorType		= static_cast<EEffectorPPType>(iType);
 }

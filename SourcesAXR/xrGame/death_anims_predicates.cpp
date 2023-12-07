@@ -33,7 +33,7 @@ type_motion::edirection	type_motion::dir( CEntityAlive& ea, const SHit& H, float
 	if( fis_zero( m ) )
 	{
 		edirection dr;
-		dr = (edirection) ::Random.randI( 0, (s32) not_definite );
+		dr = static_cast<edirection>(::Random.randI(0, (s32)not_definite));
 		VERIFY( dr < not_definite );
 		return	dr;
 	}

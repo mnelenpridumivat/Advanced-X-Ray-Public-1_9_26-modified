@@ -256,8 +256,8 @@ BOOL CTorch::net_Spawn(CSE_Abstract* DC)
 	light_render->set_volumetric_intensity(READ_IF_EXISTS(pUserData, r_float, m_light_section, "volumetric_intensity", 1.f));
 	light_render->set_volumetric_distance(READ_IF_EXISTS(pUserData, r_float, m_light_section, "volumetric_distance", 1.f));
 
-	light_render->set_type((IRender_Light::LT)(READ_IF_EXISTS(pUserData, r_u8, m_light_section, "type", 2)));
-	light_omni->set_type((IRender_Light::LT)(READ_IF_EXISTS(pUserData, r_u8, m_light_section, "omni_type", 1)));
+	light_render->set_type(static_cast<IRender_Light::LT>((READ_IF_EXISTS(pUserData, r_u8, m_light_section, "type", 2))));
+	light_omni->set_type(static_cast<IRender_Light::LT>((READ_IF_EXISTS(pUserData, r_u8, m_light_section, "omni_type", 1))));
 
 	//включить/выключить фонарик
 	Switch					(torch->m_active);
@@ -434,7 +434,7 @@ void CTorch::UpdateCL()
 	u32 clr					= lanim->CalculateBGR(Device.fTimeGlobal,frame); 
 
 	Fcolor					fclr;
-	fclr.set				((float)color_get_B(clr),(float)color_get_G(clr),(float)color_get_R(clr),1.f);
+	fclr.set				(static_cast<float>(color_get_B(clr)),static_cast<float>(color_get_G(clr)),static_cast<float>(color_get_R(clr)),1.f);
 	fclr.mul_rgb			(fBrightness/255.f);
 	if (can_use_dynamic_lights())
 	{

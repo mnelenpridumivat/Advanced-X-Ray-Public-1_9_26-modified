@@ -64,7 +64,7 @@ void vision_client::eye_pp_s2					()
 	u32							dwTime = Device.dwTimeGlobal;
 	u32							dwDT = dwTime - m_time_stamp;
 	m_time_stamp				= dwTime;
-	feel_vision_update			(m_object,m_position,float(dwDT)/1000.f,visual().transparency_threshold());
+	feel_vision_update			(m_object,m_position,static_cast<float>(dwDT)/1000.f,visual().transparency_threshold());
 
 	Device.Statistic->AI_Vis_RayTests.End	();
 }
@@ -95,7 +95,7 @@ void vision_client::shedule_Update				(u32 dt)
 		default					: NODEFAULT;
 	}
 
-	visual().update				(float(dt)/1000.f);
+	visual().update				(static_cast<float>(dt)/1000.f);
 }
 
 shared_str vision_client::shedule_Name			() const

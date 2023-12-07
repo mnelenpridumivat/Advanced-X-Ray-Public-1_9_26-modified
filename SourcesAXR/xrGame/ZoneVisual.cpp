@@ -73,11 +73,11 @@ void CVisualZone::Load(LPCSTR section)
 void CVisualZone::UpdateBlowout()
 {
 	inherited::UpdateBlowout();
-	if(m_dwAttackAnimaionStart >=(u32)m_iPreviousStateTime && 
-		m_dwAttackAnimaionStart	<(u32)m_iStateTime)
+	if(m_dwAttackAnimaionStart >=static_cast<u32>(m_iPreviousStateTime) && 
+		m_dwAttackAnimaionStart	<static_cast<u32>(m_iStateTime))
 				smart_cast<IKinematicsAnimated*>(Visual())->PlayCycle(m_attack_animation);
 		
-	if(m_dwAttackAnimaionEnd >=(u32)m_iPreviousStateTime && 
-		m_dwAttackAnimaionEnd	<(u32)m_iStateTime)
+	if(m_dwAttackAnimaionEnd >=static_cast<u32>(m_iPreviousStateTime) && 
+		m_dwAttackAnimaionEnd	<static_cast<u32>(m_iStateTime))
 				smart_cast<IKinematicsAnimated*>(Visual())->PlayCycle(m_idle_animation);
 }

@@ -17,7 +17,7 @@
 
 void CStalkerAnimationManager::head_play_callback		(CBlend *blend)
 {
-	CAI_Stalker				*object = (CAI_Stalker*)blend->CallbackParam;
+	CAI_Stalker				*object = static_cast<CAI_Stalker*>(blend->CallbackParam);
 	VERIFY					(object);
 
 	CStalkerAnimationPair	&pair = object->animation().head();
@@ -40,7 +40,7 @@ MotionID CStalkerAnimationManager::assign_head_animation	()
 	if (!sound.active_sound_count(true))
 		return				(animations[0]);
 
-	if (!sound.active_sound_type((u32)StalkerSpace::eStalkerSoundMaskMovingInDanger))
+	if (!sound.active_sound_type(static_cast<u32>(StalkerSpace::eStalkerSoundMaskMovingInDanger)))
 		return				(animations[1]);
 
 	return					(animations[0]);

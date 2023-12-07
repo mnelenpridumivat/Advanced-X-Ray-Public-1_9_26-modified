@@ -30,8 +30,8 @@ IC CGameGraph::CGameGraph											(const IReader &_stream)
 	IReader							&stream = const_cast<IReader&>(_stream);
 	m_header.load					(&stream);
 	R_ASSERT2						(header().version() == XRAI_CURRENT_VERSION,"Graph version mismatch!");
-	m_nodes							= (CVertex*)stream.pointer();
-	m_current_level_some_vertex_id	= _GRAPH_ID(-1);
+	m_nodes							= static_cast<CVertex*>(stream.pointer());
+	m_current_level_some_vertex_id	= static_cast<_GRAPH_ID>(-1);
 	m_enabled.assign				(header().vertex_count(),true);
 	u8								*temp = (u8*)(m_nodes + header().vertex_count());
 	temp							+= header().edge_count()*sizeof(CGameGraph::CEdge);
@@ -76,7 +76,7 @@ IC	float CGameGraph::distance										(const _GRAPH_ID tGraphID0, const _GRAPH_
 		if (value(tGraphID0,i) == tGraphID1)
 			return				(edge_weight(i));
 	R_ASSERT2					(false,"There is no proper graph point neighbour!");
-	return						(_GRAPH_ID(-1));
+	return						static_cast<_GRAPH_ID>(-1);
 }
 
 IC	bool CGameGraph::accessible										(u32 const vertex_id) const
@@ -98,7 +98,7 @@ IC	bool CGameGraph::valid_vertex_id								(u32 const vertex_id) const
 
 IC	void CGameGraph::begin											(u32 const vertex_id, const_iterator &start, const_iterator &end) const
 {
-	end							= (start = (const CEdge *)((BYTE *)m_nodes + vertex(_GRAPH_ID(vertex_id))->edge_offset())) + vertex(_GRAPH_ID(vertex_id))->edge_count();
+	end							= (start = (const CEdge *)((BYTE *)m_nodes + vertex(static_cast<_GRAPH_ID>(vertex_id))->edge_offset())) + vertex(static_cast<_GRAPH_ID>(vertex_id))->edge_count();
 }
 
 IC	const CGameGraph::_GRAPH_ID &CGameGraph::value					(u32 const vertex_id, const_iterator &i) const
@@ -128,8 +128,8 @@ IC	const u8 &CGameGraph::CHeader::version							() const
 
 IC	GameGraph::_LEVEL_ID GameGraph::CHeader::level_count			() const
 {
-	VERIFY						(m_levels.size() < (u32(1) << (8*sizeof(GameGraph::_LEVEL_ID))));
-	return						((GameGraph::_LEVEL_ID)m_levels.size());
+	VERIFY						(m_levels.size() < (static_cast<u32>(1) << (8*sizeof(GameGraph::_LEVEL_ID))));
+	return						static_cast<GameGraph::_LEVEL_ID>(m_levels.size());
 }
 
 IC	const GameGraph::_GRAPH_ID &GameGraph::CHeader::vertex_count	() const
@@ -256,14 +256,14 @@ IC	void CGameGraph::begin_spawn									(u32 const vertex_id, const_spawn_iterat
 
 IC	void CGameGraph::set_invalid_vertex								(_GRAPH_ID &vertex_id) const
 {
-	vertex_id					= _GRAPH_ID(-1);
+	vertex_id					= static_cast<_GRAPH_ID>(-1);
 	VERIFY						(!valid_vertex_id(vertex_id));
 }
 
 IC	GameGraph::_GRAPH_ID CGameGraph::vertex_id						(const CGameGraph::CVertex *vertex) const
 {
-	VERIFY						(valid_vertex_id(_GRAPH_ID(vertex - m_nodes)));
-	return						(_GRAPH_ID(vertex - m_nodes));
+	VERIFY						(valid_vertex_id(static_cast<_GRAPH_ID>(vertex - m_nodes)));
+	return						static_cast<_GRAPH_ID>(vertex - m_nodes);
 }
 
 IC	const GameGraph::_GRAPH_ID &CGameGraph::current_level_vertex	() const
@@ -316,8 +316,8 @@ IC	void GameGraph::CHeader::save									(IWriter *writer)
 	writer->w					(&m_death_point_count,	sizeof(m_death_point_count));
 	writer->w					(&m_guid,				sizeof(m_guid));
 	
-	VERIFY						(m_levels.size() < u32((1) << (8*sizeof(u8))));
-	writer->w_u8				((u8)m_levels.size());
+	VERIFY						(m_levels.size() < static_cast<u32>((1) << (8 * sizeof(u8))));
+	writer->w_u8				(static_cast<u8>(m_levels.size()));
 
 	LEVEL_MAP::iterator			I = m_levels.begin();
 	LEVEL_MAP::iterator			E = m_levels.end();
@@ -343,7 +343,7 @@ IC	void CGameGraph::set_current_level								(u32 const level_id)
 
 	VERIFY						(m_current_level_cross_table);
 
-	m_current_level_some_vertex_id = _GRAPH_ID(-1);
+	m_current_level_some_vertex_id = static_cast<_GRAPH_ID>(-1);
 	for (_GRAPH_ID i=0, n = header().vertex_count(); i<n; ++i) {
 		if (level_id != vertex(i)->level_id())
 			continue;

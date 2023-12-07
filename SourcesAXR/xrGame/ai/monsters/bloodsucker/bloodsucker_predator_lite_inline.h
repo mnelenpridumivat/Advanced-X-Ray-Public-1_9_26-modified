@@ -39,14 +39,14 @@ void CStateBloodsuckerPredatorLiteAbstract::initialize()
 
 	object->predator_start						();
 
-	m_target_node								= u32(-1);
+	m_target_node								= static_cast<u32>(-1);
 	m_freezed									= false;
 }
 
 TEMPLATE_SPECIALIZATION
 void CStateBloodsuckerPredatorLiteAbstract::reselect_state()
 {
-	if (prev_substate == u32(-1)) {
+	if (prev_substate == static_cast<u32>(-1)) {
 		if (enemy_see_me()) select_state(eStatePredator_MoveToCover);
 		else select_state(eStatePredator_LookOpenPlace);
 		return;
@@ -81,7 +81,7 @@ void CStateBloodsuckerPredatorLiteAbstract::finalize()
 	object->predator_stop						();
 	if (m_freezed)	object->predator_unfreeze	();
 
-	if (m_target_node != u32(-1)) 
+	if (m_target_node != static_cast<u32>(-1)) 
 		monster_squad().get_squad(object)->unlock_cover(m_target_node);
 }
 
@@ -92,7 +92,7 @@ void CStateBloodsuckerPredatorLiteAbstract::critical_finalize()
 	object->predator_stop						();
 	if (m_freezed)	object->predator_unfreeze	();
 
-	if (m_target_node != u32(-1)) 
+	if (m_target_node != static_cast<u32>(-1)) 
 		monster_squad().get_squad(object)->unlock_cover(m_target_node);
 }
 
@@ -187,7 +187,7 @@ void CStateBloodsuckerPredatorLiteAbstract::check_force_state()
 				(object->EnemyMan.get_enemy()->Position().distance_to(object->Position()) < 10.f)) {
 				object->set_berserk	();
 			} else 
-				current_substate	= u32(-1);
+				current_substate	= static_cast<u32>(-1);
 			
 		}
 	}
@@ -196,25 +196,25 @@ void CStateBloodsuckerPredatorLiteAbstract::check_force_state()
 TEMPLATE_SPECIALIZATION
 void CStateBloodsuckerPredatorLiteAbstract::select_camp_point()
 {
-	if (m_target_node != u32(-1)) 
+	if (m_target_node != static_cast<u32>(-1)) 
 		monster_squad().get_squad(object)->unlock_cover(m_target_node);
 	
-	m_target_node = u32(-1);
+	m_target_node = static_cast<u32>(-1);
 	if (object->Home->has_home()) {
 		m_target_node							= object->Home->get_place_in_cover();
-		if (m_target_node == u32(-1)) {
+		if (m_target_node == static_cast<u32>(-1)) {
 			m_target_node						= object->Home->get_place();
 		}
 	} 
 
-	if (m_target_node == u32(-1)) {
+	if (m_target_node == static_cast<u32>(-1)) {
 		const CCoverPoint	*point = object->CoverMan->find_cover(object->Position(),20.f,30.f);
 		if (point) {
 			m_target_node				= point->level_vertex_id	();
 		} 
 	}
 
-	if (m_target_node == u32(-1)) 
+	if (m_target_node == static_cast<u32>(-1)) 
 		m_target_node = object->ai_location().level_vertex_id();
 
 	monster_squad().get_squad(object)->lock_cover(m_target_node);

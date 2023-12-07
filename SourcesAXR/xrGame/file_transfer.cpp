@@ -644,12 +644,12 @@ void client_site::dbg_init_statgraph()
 	F->SetHeightI(0.015f);
 	F->OutSet	(360.f, 700.f);
 	F->SetColor	(D3DCOLOR_XRGB(0,255,0));
-	F->OutNext("%d", (int)data_max_chunk_size);
+	F->OutNext("%d", static_cast<int>(data_max_chunk_size));
 	F->OutSet	(360.f, 760.f);
-	F->OutNext("%d", (int)data_min_chunk_size);
+	F->OutNext("%d", static_cast<int>(data_min_chunk_size));
 	m_stat_graph = xr_new<CStatGraph>();
 	m_stat_graph->SetRect(400, 700, 200, 68, 0xff000000, 0xff000000);
-	m_stat_graph->SetMinMax(float(data_min_chunk_size), float(data_max_chunk_size), 1000);
+	m_stat_graph->SetMinMax(static_cast<float>(data_min_chunk_size), static_cast<float>(data_max_chunk_size), 1000);
 	m_stat_graph->SetStyle(CStatGraph::stBarLine);
 	m_stat_graph->AppendSubGraph(CStatGraph::stBarLine);
 }
@@ -669,7 +669,7 @@ void client_site::dbg_update_statgraph()
 	}
 	if (m_transfering)
 	{
-		m_stat_graph->AppendItem(float(m_transfering->get_chunk_size()), 0xff00ff00, 0);
+		m_stat_graph->AppendItem(static_cast<float>(m_transfering->get_chunk_size()), 0xff00ff00, 0);
 	}
 }
 #endif

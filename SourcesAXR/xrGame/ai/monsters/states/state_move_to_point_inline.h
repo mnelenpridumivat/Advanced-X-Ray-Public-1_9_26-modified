@@ -24,12 +24,12 @@ void CStateMonsterMoveToPointAbstract::execute()
 	object->path().set_distance_to_end		(data.completion_dist);
 
 	if (data.accelerated) {
-		object->anim().accel_activate	(EAccelType(data.accel_type));
+		object->anim().accel_activate	(static_cast<EAccelType>(data.accel_type));
 		object->anim().accel_set_braking (data.braking);
 	}
 
-	if (data.action.sound_type != u32(-1)) {
-		object->set_state_sound(data.action.sound_type, data.action.sound_delay == u32(-1));
+	if (data.action.sound_type != static_cast<u32>(-1)) {
+		object->set_state_sound(data.action.sound_type, data.action.sound_delay == static_cast<u32>(-1));
 	}
 }
 
@@ -83,12 +83,12 @@ void CStateMonsterMoveToPointExAbstract::execute()
 	}
 
 	if (data.accelerated) {
-		object->anim().accel_activate	    (EAccelType(data.accel_type));
+		object->anim().accel_activate	    (static_cast<EAccelType>(data.accel_type));
 		object->anim().accel_set_braking    (data.braking);
 	}
 
-	if (data.action.sound_type != u32(-1)) {
-		object->set_state_sound(data.action.sound_type, data.action.sound_delay == u32(-1));
+	if (data.action.sound_type != static_cast<u32>(-1)) {
+		object->set_state_sound(data.action.sound_type, data.action.sound_delay == static_cast<u32>(-1));
 	}
 }
 

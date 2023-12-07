@@ -186,8 +186,8 @@ TEMPLATE_SPECIALIZATION
 IC	void CPathManagerTemplate::invalidate_failed_info		()
 {
 	reset					();
-	m_failed_start_vertex_id= u32(-1);
-	m_failed_dest_vertex_id	= u32(-1);
+	m_failed_start_vertex_id= static_cast<u32>(-1);
+	m_failed_dest_vertex_id	= static_cast<u32>(-1);
 }
 
 #undef CPathManagerTemplate

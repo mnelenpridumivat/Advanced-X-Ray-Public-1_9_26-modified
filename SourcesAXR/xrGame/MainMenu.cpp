@@ -62,7 +62,7 @@ string128	ErrMsgBoxTemplate	[]	= {
 
 extern bool b_shniaganeed_pp;
 
-CMainMenu*	MainMenu()	{return (CMainMenu*)g_pGamePersistent->m_pMainMenu; };
+CMainMenu*	MainMenu()	{return static_cast<CMainMenu*>(g_pGamePersistent->m_pMainMenu); };
 //----------------------------------------------------------------------------------
 #define INIT_MSGBOX(_box, _template)	{ _box = xr_new<CUIMessageBoxEx>(); _box->InitMessageBox(_template);}
 //----------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ CMainMenu::CMainMenu	()
 {
 	m_Flags.zero					();
 	m_startDialog					= NULL;
-	m_screenshotFrame				= u32(-1);
+	m_screenshotFrame				= static_cast<u32>(-1);
 	g_pGamePersistent->m_pMainMenu	= this;
 	if (Device.b_is_Ready)			OnDeviceCreate();  	
 	ReadTextureInfo					();
@@ -106,7 +106,7 @@ CMainMenu::CMainMenu	()
 		g_statHint						= xr_new<CUIButtonHint>();
 		m_pGameSpyFull					= xr_new<CGameSpy_Full>();
 		
-		for (u32 i=0; i<u32(ErrMax); i++)
+		for (u32 i=0; i<static_cast<u32>(ErrMax); i++)
 		{
 			CUIMessageBoxEx*			pNewErrDlg;
 			INIT_MSGBOX					(pNewErrDlg, ErrMsgBoxTemplate[i]);
@@ -301,7 +301,7 @@ bool CMainMenu::ReloadUI()
 	m_startDialog->m_bWorkInPause= true;
 	m_startDialog->ShowDialog	(true);
 
-	m_activatedScreenRatio		= (float)Device.dwWidth/(float)Device.dwHeight > (UI_BASE_WIDTH/UI_BASE_HEIGHT+0.01f);
+	m_activatedScreenRatio		= static_cast<float>(Device.dwWidth)/static_cast<float>(Device.dwHeight) > (UI_BASE_WIDTH/UI_BASE_HEIGHT+0.01f);
 	return true;
 }
 
@@ -494,7 +494,7 @@ void CMainMenu::OnFrame()
 	if(IsActive())
 	{
 		CheckForErrorDlg();
-		bool b_is_16_9	= (float)Device.dwWidth/(float)Device.dwHeight > (UI_BASE_WIDTH/UI_BASE_HEIGHT+0.01f);
+		bool b_is_16_9	= static_cast<float>(Device.dwWidth)/static_cast<float>(Device.dwHeight) > (UI_BASE_WIDTH/UI_BASE_HEIGHT+0.01f);
 		if(b_is_16_9 !=m_activatedScreenRatio)
 		{
 			ReloadUI();
@@ -678,7 +678,7 @@ void	CMainMenu::OnLoadError				(LPCSTR module)
 
 void	CMainMenu::OnDownloadPatchProgress			(u64 bytesReceived, u64 totalSize)
 {
-	m_sPDProgress.Progress = (float(bytesReceived)/float(totalSize))*100.0f;
+	m_sPDProgress.Progress = (static_cast<float>(bytesReceived)/static_cast<float>(totalSize))*100.0f;
 };
 
 extern ENGINE_API string512  g_sLaunchOnExit_app;
@@ -767,7 +767,7 @@ bool CMainMenu::IsCDKeyIsValid()
 	for (int i=0; i<4; i++)
 	{
 		m_pGameSpyFull->GetGameSpyHTTP()->xrGS_GetGameID(&GameID, i);
-		if (VerifyClientCheck(CDKey, unsigned short (GameID)) == 1)
+		if (VerifyClientCheck(CDKey, static_cast<unsigned short>(GameID)) == 1)
 			return true;
 	};	
 	return false;

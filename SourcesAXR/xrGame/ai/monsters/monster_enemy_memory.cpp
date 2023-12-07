@@ -124,7 +124,7 @@ void CMonsterEnemyMemory::update()
 
 	// обновить опасность 
 	for (ENEMIES_MAP_IT it = m_objects.begin(); it != m_objects.end(); it++) {
-		u8		relation_value = u8(monster->tfGetRelationType(it->first));
+		u8		relation_value = static_cast<u8>(monster->tfGetRelationType(it->first));
 		float	dist = monster->Position().distance_to(it->second.position);
 		it->second.danger = (1 + relation_value*relation_value*relation_value) / (1 + dist);
 	}

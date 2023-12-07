@@ -215,7 +215,7 @@ u16 game_state_accumulator::get_object_id(CObject const * obj)
 
 	R_ASSERT2(m_item_mngr, "item manager not initialized");
 	u32 itm_index = m_item_mngr->GetItemIdx(obj->cNameSect());
-	if (itm_index == u32(-1))
+	if (itm_index == static_cast<u32>(-1))
 		return 0;
 	
 	VERIFY((itm_index & 0xffff0000) == 0);
@@ -364,7 +364,7 @@ bool game_state_accumulator::check_kill_params(u32 count,
 
 	kills_fetcher					tmp_predicate;
 	tmp_predicate.m_killer_name		= m_local_player->getName();
-	if (time_period == u32(-1))
+	if (time_period == static_cast<u32>(-1))
 	{
 		tmp_predicate.m_after_time		= m_last_player_spawn_time;
 	} else

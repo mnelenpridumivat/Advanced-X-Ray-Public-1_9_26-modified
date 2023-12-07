@@ -37,7 +37,7 @@ CMonsterSoundMemory::CMonsterSoundMemory()
 {
 	Sounds.reserve		(20);
 	m_time_help_sound	= 0;
-	m_help_node			= u32(-1);
+	m_help_node			= static_cast<u32>(-1);
 }
 CMonsterSoundMemory::~CMonsterSoundMemory()
 {

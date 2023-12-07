@@ -1,7 +1,7 @@
 #pragma once
 
 enum EEventType {
-	eventAnimationStart = u32(0),
+	eventAnimationStart = static_cast<u32>(0),
 	eventAnimationEnd,
 	eventSoundStart,
 	eventSoundEnd,

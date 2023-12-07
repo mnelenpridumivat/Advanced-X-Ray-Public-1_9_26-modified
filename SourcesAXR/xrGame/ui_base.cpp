@@ -19,7 +19,7 @@ void S2DVert::rotate_pt(const Fvector2& pivot, const float cosA, const float sin
 }
 void C2DFrustum::CreateFromRect	(const Frect& rect)
 {
-	m_rect.set(float(rect.x1), float(rect.y1), float(rect.x2), float(rect.y2) );
+	m_rect.set(static_cast<float>(rect.x1), static_cast<float>(rect.y1), static_cast<float>(rect.x2), static_cast<float>(rect.y2) );
 	planes.resize	(4);
 	planes[0].build	(rect.lt, Fvector2().set(-1, 0));
 	planes[1].build	(rect.lt, Fvector2().set( 0,-1));
@@ -99,12 +99,12 @@ sPoly2D* C2DFrustum::ClipPoly	(sPoly2D& S, sPoly2D& D) const
 
 void ui_core::OnDeviceReset()
 {
-	m_scale_.set		( float(Device.dwWidth)/UI_BASE_WIDTH, float(Device.dwHeight)/UI_BASE_HEIGHT );
+	m_scale_.set		( static_cast<float>(Device.dwWidth)/UI_BASE_WIDTH, static_cast<float>(Device.dwHeight)/UI_BASE_HEIGHT );
 
 	m_2DFrustum.CreateFromRect	(Frect().set(	0.0f,
 												0.0f,
-												float(Device.dwWidth),
-												float(Device.dwHeight)
+												static_cast<float>(Device.dwWidth),
+												static_cast<float>(Device.dwHeight)
 												));
 }
 
@@ -137,7 +137,7 @@ void ui_core::ClientToScreenScaledHeight(float& src_and_dest)	const
 void ui_core::AlignPixel(float& src_and_dest)	const
 {
 	if(m_currentPointType!=IUIRender::pttLIT)
-		src_and_dest		= (float)iFloor(src_and_dest);
+		src_and_dest		= static_cast<float>(iFloor(src_and_dest));
 }
 
 void ui_core::PushScissor(const Frect& r_tgt, bool overlapped)
@@ -226,17 +226,17 @@ void ui_core::pp_start()
 {
 	m_bPostprocess		= true;
 
-	m_pp_scale_.set	( float(::Render->getTarget()->get_width())/float(UI_BASE_WIDTH),	float(::Render->getTarget()->get_height())/float(UI_BASE_HEIGHT) );
+	m_pp_scale_.set	( static_cast<float>(::Render->getTarget()->get_width())/static_cast<float>(UI_BASE_WIDTH),	static_cast<float>(::Render->getTarget()->get_height())/static_cast<float>(UI_BASE_HEIGHT) );
 	m_2DFrustumPP.CreateFromRect(Frect().set(	0.0f,
 												0.0f,
-												float(::Render->getTarget()->get_width()),
-												float(::Render->getTarget()->get_height())
+												static_cast<float>(::Render->getTarget()->get_width()),
+												static_cast<float>(::Render->getTarget()->get_height())
 												));
 
 	m_current_scale			= &m_pp_scale_;
 	
-	g_current_font_scale.set(	float(::Render->getTarget()->get_width())/float(Device.dwWidth),	
-								float(::Render->getTarget()->get_height())/float(Device.dwHeight) );
+	g_current_font_scale.set(	static_cast<float>(::Render->getTarget()->get_width())/static_cast<float>(Device.dwWidth),	
+								static_cast<float>(::Render->getTarget()->get_height())/static_cast<float>(Device.dwHeight) );
 
 }
 
@@ -254,13 +254,13 @@ void ui_core::RenderFont()
 
 bool ui_core::is_widescreen()
 {
-	return (Device.dwWidth)/float(Device.dwHeight) > (UI_BASE_WIDTH/UI_BASE_HEIGHT +0.01f);
+	return (Device.dwWidth)/static_cast<float>(Device.dwHeight) > (UI_BASE_WIDTH/UI_BASE_HEIGHT +0.01f);
 }
 
 float ui_core::get_current_kx()
 {
-	float h		= float(Device.dwHeight);
-	float w		= float(Device.dwWidth);
+	float h		= static_cast<float>(Device.dwHeight);
+	float w		= static_cast<float>(Device.dwWidth);
 
 	float res = (h/w)/(UI_BASE_HEIGHT/UI_BASE_WIDTH);
 	return res;

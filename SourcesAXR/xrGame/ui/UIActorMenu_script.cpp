@@ -116,16 +116,16 @@ void CUIActorMenu::script_register(lua_State* L)
 			class_<enum_dummy<EDDListType>>("EDDListType")
 				.enum_("EDDListType")
 				[
-					value("iActorBag",				int(EDDListType::iActorBag)),
-					value("iActorBelt",				int(EDDListType::iActorBelt)),
-					value("iActorSlot",				int(EDDListType::iActorSlot)),
-					value("iActorTrade",			int(EDDListType::iActorTrade)),
-					value("iDeadBodyBag",			int(EDDListType::iDeadBodyBag)),
-					value("iInvalid",				int(EDDListType::iInvalid)),
-					value("iPartnerTrade",			int(EDDListType::iPartnerTrade)),
-					value("iPartnerTradeBag",		int(EDDListType::iPartnerTradeBag)),
-					value("iQuickSlot",				int(EDDListType::iQuickSlot)),
-					value("iTrashSlot",				int(EDDListType::iTrashSlot))
+					value("iActorBag",				static_cast<int>(EDDListType::iActorBag)),
+					value("iActorBelt",				static_cast<int>(EDDListType::iActorBelt)),
+					value("iActorSlot",				static_cast<int>(EDDListType::iActorSlot)),
+					value("iActorTrade",			static_cast<int>(EDDListType::iActorTrade)),
+					value("iDeadBodyBag",			static_cast<int>(EDDListType::iDeadBodyBag)),
+					value("iInvalid",				static_cast<int>(EDDListType::iInvalid)),
+					value("iPartnerTrade",			static_cast<int>(EDDListType::iPartnerTrade)),
+					value("iPartnerTradeBag",		static_cast<int>(EDDListType::iPartnerTradeBag)),
+					value("iQuickSlot",				static_cast<int>(EDDListType::iQuickSlot)),
+					value("iTrashSlot",				static_cast<int>(EDDListType::iTrashSlot))
 				],
 
 			class_<CUIActorMenu, CUIDialogWnd>("CUIActorMenu")

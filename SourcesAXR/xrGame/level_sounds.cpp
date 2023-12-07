@@ -35,7 +35,7 @@ void SStaticSound::Update(u32 game_time, u32 global_time)
 	float occluder_volume = SoundRender->get_occlusion(m_Position, .2f, occ);
 	float vol = m_Volume * occluder_volume;
 
-	if ((0==m_ActiveTime.x)&&(0==m_ActiveTime.y)||((int(game_time)>=m_ActiveTime.x)&&(int(game_time)<m_ActiveTime.y))){
+	if ((0==m_ActiveTime.x)&&(0==m_ActiveTime.y)||((static_cast<int>(game_time)>=m_ActiveTime.x)&&(static_cast<int>(game_time)<m_ActiveTime.y))){
 		if (0==m_Source._feedback()){
 			if ((0==m_PauseTime.x)&&(0==m_PauseTime.y)){    
 				m_Source.play_at_pos	(0,m_Position,sm_Looped);
@@ -102,10 +102,10 @@ BOOL SMusicTrack::in(u32 game_time)
 
 	if(!b_cross_midnight)
 	{
-		res					= ( (int(game_time) >= m_ActiveTime.x) && (int(game_time) < m_ActiveTime.y) );
+		res					= ( (static_cast<int>(game_time) >= m_ActiveTime.x) && (static_cast<int>(game_time) < m_ActiveTime.y) );
 	}else
 	{
-		res					= ( (int(game_time) >= m_ActiveTime.x) || (int(game_time) <= m_ActiveTime.y) );
+		res					= ( (static_cast<int>(game_time) >= m_ActiveTime.x) || (static_cast<int>(game_time) <= m_ActiveTime.y) );
 	}
 	return res;
 }

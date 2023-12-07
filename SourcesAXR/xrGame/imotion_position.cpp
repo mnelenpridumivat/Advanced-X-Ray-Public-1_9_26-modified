@@ -109,7 +109,7 @@ void disable_bone_calculation(IKinematics &K, bool v )
 		if( bi.callback_param()!=0 )
 			continue;
 #ifdef DEBUG
-		if( v && bi.callback_overwrite() == BOOL(v) )
+		if( v && bi.callback_overwrite() == static_cast<BOOL>(v) )
 			Msg( "! bone callback_overwrite may have different states" );
 #endif
 		bi.set_callback_overwrite( v );
@@ -196,7 +196,7 @@ void imotion_position::state_start( )
 		flags.set(fl_not_played,TRUE);
 		return;
 	}
-	move( float( Device.dwTimeDelta )/1000, *KA );
+	move( static_cast<float>(Device.dwTimeDelta)/1000, *KA );
 	if(flags.test(fl_switch_dm_toragdoll))
 			switch_to_free	( );
 	//K->CalculateBones_Invalidate();
@@ -236,7 +236,7 @@ static void save_fixes( IKinematics *K  )
 		if( bi.callback() == anim_bone_fix::callback )
 		{	
 			VERIFY( bi.callback_param());
-			anim_bone_fix* fix = (anim_bone_fix*) bi.callback_param();
+			anim_bone_fix* fix = static_cast<anim_bone_fix*>(bi.callback_param());
 			VERIFY( fix->bone == &bi );
 			saved_fixes.push_back( fix );
 		}
@@ -512,7 +512,7 @@ float imotion_position::move( float dt, IKinematicsAnimated& KA )
 		float	f_iterations = ceil( dt / max_collide_timedelta ) ;
 		VERIFY( f_iterations > 0.f );
 		collide_dt = dt/f_iterations;
-		iterations = u32( f_iterations );
+		iterations = static_cast<u32>(f_iterations);
 	}
 
 	for( u32 i = 0; i < iterations; ++i )
@@ -704,13 +704,13 @@ void	imotion_position::remove_root_callback()
 	VERIFY( K );
 	CBoneInstance &bi = K->LL_GetBoneInstance( 0 );
 	VERIFY( bi.callback() == rootbone_callback );
-	VERIFY( bi.callback_param() == (void*) this );
+	VERIFY( bi.callback_param() == static_cast<void*>(this) );
 	bi.reset_callback();
 }
 
 void	imotion_position::rootbone_callback	( CBoneInstance *BI )
 {
-	imotion_position *im = ( imotion_position* )BI->callback_param();
+	imotion_position *im = static_cast<imotion_position*>(BI->callback_param());
 	VERIFY( im );
 	if( !im->update_callback.update )
 		return;
@@ -720,7 +720,7 @@ void	imotion_position::rootbone_callback	( CBoneInstance *BI )
 	IKinematicsAnimated *KA = smart_cast<IKinematicsAnimated *>( K );
 	VERIFY( KA );
 	SKeyTable	keys;
-	KA->LL_BuldBoneMatrixDequatize( &K->LL_GetData( 0 ), u8(-1), keys );
+	KA->LL_BuldBoneMatrixDequatize( &K->LL_GetData( 0 ), static_cast<u8>(-1), keys );
 	
 	CKey *key = 0;
 	for( int i = 0; i < keys.chanel_blend_conts[0]; ++i )

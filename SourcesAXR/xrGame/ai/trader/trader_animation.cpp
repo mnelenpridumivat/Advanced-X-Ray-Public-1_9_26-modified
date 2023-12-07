@@ -27,13 +27,13 @@ void CTraderAnimation::reinit()
 /////////////////////////////////////////////////////////////////////////////////////////
 void  CTraderAnimation::global_callback(CBlend* B)
 {
-	CTraderAnimation *trader			= (CTraderAnimation*)B->CallbackParam;
+	CTraderAnimation *trader			= static_cast<CTraderAnimation*>(B->CallbackParam);
 	trader->m_motion_global.invalidate	();
 }
 
 void  CTraderAnimation::head_callback(CBlend* B)
 {
-	CTraderAnimation *trader			= (CTraderAnimation*)B->CallbackParam;
+	CTraderAnimation *trader			= static_cast<CTraderAnimation*>(B->CallbackParam);
 	trader->m_motion_head.invalidate	();
 }
 

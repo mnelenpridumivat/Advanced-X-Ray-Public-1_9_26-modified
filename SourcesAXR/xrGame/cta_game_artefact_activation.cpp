@@ -39,8 +39,8 @@ void CtaArtefactActivation::UpdateActivation()
 
 	VERIFY(!physics_world()->Processing());
 	m_cur_state_time				+=	Device.fTimeDelta;
-	if(m_cur_state_time				>=	m_activation_states[int(m_cur_activation_state)].m_time){
-		m_cur_activation_state		=	(EActivationStates)(int)(m_cur_activation_state+1);
+	if(m_cur_state_time				>=	m_activation_states[static_cast<int>(m_cur_activation_state)].m_time){
+		m_cur_activation_state		=	static_cast<EActivationStates>((int)(m_cur_activation_state + 1));
 		
 		if(m_cur_activation_state == eMax){
 			m_cur_activation_state = eNone;

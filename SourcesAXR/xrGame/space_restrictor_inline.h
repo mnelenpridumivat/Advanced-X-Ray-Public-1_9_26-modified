@@ -25,5 +25,5 @@ IC	void CSpaceRestrictor::actual			(bool value) const
 
 IC RestrictionSpace::ERestrictorTypes CSpaceRestrictor::restrictor_type	() const
 {
-	return RestrictionSpace::ERestrictorTypes(m_space_restrictor_type);
+	return static_cast<RestrictionSpace::ERestrictorTypes>(m_space_restrictor_type);
 }

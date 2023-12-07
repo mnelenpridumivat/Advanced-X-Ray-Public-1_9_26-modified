@@ -10,8 +10,8 @@
 
 namespace ScriptEngine {
 	enum EScriptProcessors {
-		eScriptProcessorLevel = u32(0),
+		eScriptProcessorLevel = static_cast<u32>(0),
 		eScriptProcessorGame,
-		eScriptProcessorDummy = u32(-1),
+		eScriptProcessorDummy = static_cast<u32>(-1),
 	};
 };

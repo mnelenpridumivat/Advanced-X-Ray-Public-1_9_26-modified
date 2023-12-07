@@ -22,7 +22,7 @@ CSoundPlayer::CSoundPlayer			(CObject *object)
 {
 	VERIFY							(object);
 	m_object						= object;
-	seed							(u32(CPU::QPC() & 0xffffffff));
+	seed							(static_cast<u32>(CPU::QPC() & 0xffffffff));
 	m_sound_prefix					= "";
 }
 
@@ -58,7 +58,7 @@ void CSoundPlayer::reload			(LPCSTR section)
 
 void CSoundPlayer::unload			()
 {
-	remove_active_sounds			(u32(-1));
+	remove_active_sounds			(static_cast<u32>(-1));
 	VERIFY							(m_playing_sounds.empty());
 }
 
@@ -182,7 +182,7 @@ void CSoundPlayer::play				(u32 internal_type, u32 max_start_time, u32 min_start
 	remove_inappropriate_sounds	(sound.m_synchro_mask);
 
 	CSoundSingle				sound_single;
-	(CSoundParams&)sound_single	= (CSoundParams&)sound;
+	static_cast<CSoundParams&>(sound_single)	= (CSoundParams&)sound;
 	sound_single.m_bone_id		= smart_cast<IKinematics*>(m_object->Visual())->LL_BoneID(sound.m_bone_name);
 	R_ASSERT					  (sound_single.m_bone_id != BI_NONE);
 
@@ -241,9 +241,9 @@ IC	Fvector CSoundPlayer::compute_sound_point(const CSoundSingle &sound)
 
 CSoundPlayer::CSoundCollection::CSoundCollection	(const CSoundCollectionParams &params)
 {
-	m_last_sound_id						= u32(-1);
+	m_last_sound_id						= static_cast<u32>(-1);
 
-	seed								(u32(CPU::QPC() & 0xffffffff));
+	seed								(static_cast<u32>(CPU::QPC() & 0xffffffff));
 	m_sounds.clear						();
 	for (int j=0, N = _GetItemCount(*params.m_sound_prefix); j<N; ++j) {
 		string_path						fn, s, temp;
@@ -288,7 +288,7 @@ const ref_sound &CSoundPlayer::CSoundCollection::random	(const u32 &id)
 {
 	VERIFY					(!m_sounds.empty());
 
-	if (id != u32(-1)) {
+	if (id != static_cast<u32>(-1)) {
 		m_last_sound_id		= id;
 		VERIFY				(id < m_sounds.size());
 		return				(*m_sounds[id]);

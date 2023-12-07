@@ -68,7 +68,7 @@ void CControlDirectionBase::set_heading(float value, bool force)
 //////////////////////////////////////////////////////////////////////////
 void CControlDirectionBase::update_frame()
 {
-	SControlDirectionData	*ctrl_data = (SControlDirectionData *)m_man->data(this, ControlCom::eControlDir);
+	SControlDirectionData	*ctrl_data = static_cast<SControlDirectionData*>(m_man->data(this, ControlCom::eControlDir));
 	if (!ctrl_data) return;
 
 	ctrl_data->heading.target_angle	= m_heading.target;

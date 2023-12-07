@@ -6,7 +6,7 @@ class CSE_Abstract;
 
 xrClientData* xrServer::SelectBestClientToMigrateTo	(CSE_Abstract* E, BOOL bForceAnother)
 {
-	return (xrClientData*)SV_Client;
+	return static_cast<xrClientData*>(SV_Client);
 //
 //	if (bForceAnother)
 //	{

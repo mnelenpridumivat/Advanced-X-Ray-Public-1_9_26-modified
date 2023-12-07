@@ -300,12 +300,12 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 	for ( u32 i = 0; i < ALife::infl_max_count; ++i )
 	{
 		shared_str const& sect = pSettings->r_string( af_section, "hit_absorbation_sect" );
-		val = artefact->m_HitTypeProtection[(ALife::EInfluenceType)i];
+		val = artefact->m_HitTypeProtection[static_cast<ALife::EInfluenceType>(i)];
 		if ( fis_zero(val) )
 		{
 			continue;
 		}
-		max_val = actor->conditions().GetZoneMaxPower( (ALife::EInfluenceType)i );
+		max_val = actor->conditions().GetZoneMaxPower( static_cast<ALife::EInfluenceType>(i) );
 		val /= max_val;
 		m_immunity_item[i]->SetValue(val, 2);
 

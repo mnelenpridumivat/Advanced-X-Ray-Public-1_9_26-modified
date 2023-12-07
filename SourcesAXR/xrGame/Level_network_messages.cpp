@@ -191,7 +191,7 @@ void CLevel::ClientReceive()
 				u32 NumSteps = physics_world()->CalcNumSteps(dTime);
 				SetNumCrSteps(NumSteps);
 
-				O->CrPr_SetActivationStep(u32(physics_world()->StepsNum()) - NumSteps);
+				O->CrPr_SetActivationStep(static_cast<u32>(physics_world()->StepsNum()) - NumSteps);
 				AddActor_To_Actors4CrPr(O);
 
 			}break;

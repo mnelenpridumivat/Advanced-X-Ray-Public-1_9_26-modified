@@ -1384,7 +1384,7 @@ void game_cl_CaptureTheArtefact::UpdateVotingTime(u32 current_time)
 			if (ps->m_bCurrentVoteAgreed == 1) NumAgreed++;
 		}
 		
-		xr_sprintf(VoteTimeResStr, st.translate("mp_timeleft").c_str(), MinitsLeft, SecsLeft, float(NumAgreed)/players.size());
+		xr_sprintf(VoteTimeResStr, st.translate("mp_timeleft").c_str(), MinitsLeft, SecsLeft, static_cast<float>(NumAgreed)/players.size());
 		if (m_game_ui)
 			m_game_ui->SetVoteTimeResultMsg(VoteTimeResStr);
 	};

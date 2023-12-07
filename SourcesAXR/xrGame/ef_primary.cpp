@@ -117,8 +117,8 @@ float CPersonalCreatureTypeFunction::ffGetValue()
 		result	= ef_storage().alife().member()->ef_creature_type();
 	}
 
-	VERIFY		(float(result) < m_fMaxResultValue + 1);
-	return		(float(result));
+	VERIFY		(static_cast<float>(result) < m_fMaxResultValue + 1);
+	return		static_cast<float>(result);
 }
 
 u32 CPersonalWeaponTypeFunction::dwfGetWeaponType()
@@ -138,7 +138,7 @@ float CPersonalWeaponTypeFunction::ffGetTheBestWeapon()
 	u32 dwBestWeapon = 0;
 	
 	if (ef_storage().non_alife().member() && ef_storage().non_alife().member_item())
-		return			(float(dwfGetWeaponType()));
+		return			static_cast<float>(dwfGetWeaponType());
 
 	if (ef_storage().non_alife().member()) {
 		const CInventoryOwner *tpInventoryOwner = smart_cast<const CInventoryOwner*>(ef_storage().non_alife().member());
@@ -166,7 +166,7 @@ float CPersonalWeaponTypeFunction::ffGetTheBestWeapon()
 		ef_storage().alife().member_item()	= ef_storage().alife().member()->m_tpCurrentBestWeapon;
 		dwBestWeapon			= dwfGetWeaponType();
 	}
-	return(float(dwBestWeapon));
+	return static_cast<float>(dwBestWeapon);
 }
 
 float CPersonalWeaponTypeFunction::ffGetValue()
@@ -174,13 +174,13 @@ float CPersonalWeaponTypeFunction::ffGetValue()
 	float			result;
 	if (ef_storage().non_alife().member())
 		if (ef_storage().non_alife().member()->natural_weapon())
-			result	= (float)ef_storage().non_alife().member()->ef_weapon_type();
+			result	= static_cast<float>(ef_storage().non_alife().member()->ef_weapon_type());
 		else
 			result	= ffGetTheBestWeapon();
 	else {
 		VERIFY2	(ef_storage().alife().member(),"No object specified for evaluation function");
 		if (ef_storage().alife().member()->natural_weapon())
-			result	= (float)ef_storage().alife().member()->ef_weapon_type();
+			result	= static_cast<float>(ef_storage().alife().member()->ef_weapon_type());
 		else
 			result	= ffGetTheBestWeapon();
 	}
@@ -293,22 +293,22 @@ u32 CPersonalMaxHealth::dwfGetDiscreteValue(u32 dwDiscretizationValue)
 			return(dwDiscretizationValue - 1);
 		else {
 			if (fTemp <= 30)
-				return(iFloor(1*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(1*static_cast<float>(dwDiscretizationValue)/10 + .5f));
 			if (fTemp <= 50)
-				return(iFloor(2*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(2*static_cast<float>(dwDiscretizationValue)/10 + .5f));
 			if (fTemp <= 80)
-				return(iFloor(3*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(3*static_cast<float>(dwDiscretizationValue)/10 + .5f));
 			if (fTemp <= 100)
-				return(iFloor(4*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(4*static_cast<float>(dwDiscretizationValue)/10 + .5f));
 			if (fTemp <= 150)
-				return(iFloor(5*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(5*static_cast<float>(dwDiscretizationValue)/10 + .5f));
 			if (fTemp <= 250)
-				return(iFloor(6*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(6*static_cast<float>(dwDiscretizationValue)/10 + .5f));
 			if (fTemp <= 500)
-				return(iFloor(7*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(7*static_cast<float>(dwDiscretizationValue)/10 + .5f));
 			if (fTemp <= 750)
-				return(iFloor(8*float(dwDiscretizationValue)/10 + .5f));
-			return(iFloor(9*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(8*static_cast<float>(dwDiscretizationValue)/10 + .5f));
+			return(iFloor(9*static_cast<float>(dwDiscretizationValue)/10 + .5f));
 		}
 }
 
@@ -321,8 +321,8 @@ float CEquipmentType::ffGetValue()
 		VERIFY2	(ef_storage().alife().member_item(),"No object specified for evaluation function");
 		result	= ef_storage().alife().member_item()->ef_equipment_type();
 	}
-	VERIFY		(float(result) < m_fMaxResultValue + 1.f);
-	return		(float(result));
+	VERIFY		(static_cast<float>(result) < m_fMaxResultValue + 1.f);
+	return		static_cast<float>(result);
 }
 
 float CItemDeterioration::ffGetValue()
@@ -365,8 +365,8 @@ float CMainWeaponType::ffGetValue()
 		VERIFY2	(ef_storage().alife().member_item(),"No object specified for evaluation function");
 		result	= ef_storage().alife().member_item()->ef_main_weapon_type();
 	}
-	VERIFY		(float(result) < m_fMaxResultValue + 1.f);
-	return		(float(result));
+	VERIFY		(static_cast<float>(result) < m_fMaxResultValue + 1.f);
+	return		static_cast<float>(result);
 }
 
 float CMainWeaponPreference::ffGetValue()
@@ -431,7 +431,7 @@ float CItemValue::ffGetValue()
 	else {
 		const CSE_ALifeInventoryItem	*l_tpALifeInventoryItem = smart_cast<const CSE_ALifeInventoryItem*>(ef_storage().alife().member_item());
 		R_ASSERT2				(l_tpALifeInventoryItem,"Non-item object specified for the ItemDeterioration evaluation function");
-		return					(float(l_tpALifeInventoryItem->m_dwCost));
+		return					static_cast<float>(l_tpALifeInventoryItem->m_dwCost);
 	}
 }
 
@@ -478,8 +478,8 @@ u32	 CWeaponAmmoCount::dwfGetDiscreteValue(u32 dwDiscretizationValue)
 				_GetItem		(l_tpALifeItemWeapon->m_caAmmoSections,0,S);
 				u32				l_dwBoxSize = pSettings->r_s32(S,"box_size");
 				if (fTemp <= 3*l_dwBoxSize)
-					return(iFloor(1*float(dwDiscretizationValue)/10 + .5f));
-				return(iFloor(2*float(dwDiscretizationValue)/10 + .5f));
+					return(iFloor(1*static_cast<float>(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(2*static_cast<float>(dwDiscretizationValue)/10 + .5f));
 			}
 			else
 				return(dwDiscretizationValue - 1);
@@ -495,8 +495,8 @@ float CEnemyAnomalyType::ffGetValue()
 		VERIFY2	(ef_storage().alife().enemy(),"No object specified for evaluation function");
 		result	= ef_storage().alife().enemy()->ef_anomaly_type();
 	}
-	VERIFY		(float(result) < m_fMaxResultValue + 1.f);
-	return		(float(result));
+	VERIFY		(static_cast<float>(result) < m_fMaxResultValue + 1.f);
+	return		static_cast<float>(result);
 
 }
 
@@ -524,8 +524,8 @@ float CDetectorType::ffGetValue()
 		else
 			result	= ef_storage().alife().member_item()->ef_detector_type();
 	}
-	VERIFY		(float(result) < m_fMaxResultValue + 1.f);
-	return		(float(result));
+	VERIFY		(static_cast<float>(result) < m_fMaxResultValue + 1.f);
+	return		static_cast<float>(result);
 }
 
 float CEnemyDistanceToGraphPoint::ffGetValue()

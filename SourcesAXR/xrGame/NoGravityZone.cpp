@@ -35,7 +35,7 @@ void CNoGravityZone::switchGravity(SZoneObjectInfo& io, bool val)
 		shell->set_ApplyByGravity(val);
 		if(!val&&shell->get_ApplyByGravity())
 		{
-			CPhysicsElement* e=shell->get_ElementByStoreOrder(u16(Random.randI(0,shell->get_ElementsNumber())));
+			CPhysicsElement* e=shell->get_ElementByStoreOrder(static_cast<u16>(Random.randI(0, shell->get_ElementsNumber())));
 			if(e->isActive()){
 				e->applyImpulseTrace(Fvector().random_point(e->getRadius()),Fvector().random_dir(),shell->getMass()*physics_world()->Gravity()*fixed_step,e->m_SelfID);
 
@@ -50,7 +50,7 @@ void CNoGravityZone::switchGravity(SZoneObjectInfo& io, bool val)
 	{
 		CEntityAlive* ea=smart_cast<CEntityAlive*>(io.object);
 		CPHMovementControl*mc=ea->character_physics_support()->movement();
-		mc->SetApplyGravity(BOOL(val));
+		mc->SetApplyGravity(static_cast<BOOL>(val));
 		mc->SetForcedPhysicsControl(!val);
 		if(!val&&mc->Environment()==CPHMovementControl::peOnGround)
 		{

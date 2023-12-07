@@ -29,14 +29,14 @@ Fvector4 convert(const Fvector4& v)
 
 bool enumCycle(void* data, int idx, const char** item)
 {
-    xr_vector<shared_str>* cycles = (xr_vector<shared_str>*)data;
+    xr_vector<shared_str>* cycles = static_cast<xr_vector<shared_str>*>(data);
     *item = (*cycles)[idx].c_str();
     return true;
 }
 
 bool enumWeather(void* data, int idx, const char** item)
 {
-    xr_vector<CEnvDescriptor*>* envs = (xr_vector<CEnvDescriptor*>*)data;
+    xr_vector<CEnvDescriptor*>* envs = static_cast<xr_vector<CEnvDescriptor*>*>(data);
     *item = (*envs)[idx]->m_identifier.c_str();
     return true;
 }
@@ -47,7 +47,7 @@ bool enumIniWithEmpty(void* data, int idx, const char** item)
 	if (idx == 0)
 		*item = empty;
 	else {
-		CInifile* ini = (CInifile*)data;
+		CInifile* ini = static_cast<CInifile*>(data);
 		*item = ini->sections()[idx - 1]->Name.c_str();
 	}
 	return true;
@@ -55,7 +55,7 @@ bool enumIniWithEmpty(void* data, int idx, const char** item)
 
 bool enumIni(void* data, int idx, const char** item)
 {
-	CInifile* ini = (CInifile*)data;
+	CInifile* ini = static_cast<CInifile*>(data);
 	*item = ini->sections()[idx]->Name.c_str();
 	return true;
 }
@@ -166,13 +166,13 @@ int count_digits(const char* s)
 	const char* p = s;
 	while (isdigit(*p))
 		p++;
-	return (int)(p - s);
+	return static_cast<int>(p - s);
 }
 
 int compare_naturally(const void* a_ptr, const void* b_ptr)
 {
-	const char* a = (const char*)a_ptr;
-	const char* b = (const char*)b_ptr;
+	const char* a = static_cast<const char*>(a_ptr);
+	const char* b = static_cast<const char*>(b_ptr);
 
 	for (;;) {
 		if (isdigit(*a) && isdigit(*b)) {
@@ -242,7 +242,7 @@ bool editTexture(const char* label, shared_str& texName)
 			}
 		if (ImGui_ListBox("", &cur,
 			[](void* data, int idx, const char** out_text) -> bool {
-				xr_vector<xr_string>* textures = (xr_vector<xr_string>*)data;
+				xr_vector<xr_string>* textures = static_cast<xr_vector<xr_string>*>(data);
 				*out_text = (*textures)[idx].c_str();
 				return true;
 			},
@@ -283,7 +283,7 @@ void ShowWeatherEditor(bool& show)
     CEnvironment& env = GamePersistent().Environment();
     CEnvDescriptor* cur = env.Current[0];
     u64 time = Level().GetEnvironmentGameTime() / 1000;
-    ImGui::Text("Time: %02d:%02d:%02d", int(time / (60 * 60) % 24), int(time / 60 % 60), int(time % 60));
+    ImGui::Text("Time: %02d:%02d:%02d", static_cast<int>(time / (60 * 60) % 24), static_cast<int>(time / 60 % 60), static_cast<int>(time % 60));
     float tf = Level().GetEnvironmentTimeFactor();
     if (ImGui::SliderFloat("Time factor", &tf, 0.0f, 1000.0f, "%.3f", ImGuiSliderFlags_Logarithmic))
         Level().SetEnvironmentTimeFactor(tf);
@@ -306,7 +306,7 @@ void ShowWeatherEditor(bool& show)
     if (ImGui::Combo("Current section", &sel, enumWeather, env.CurrentWeather, env.CurrentWeather->size())) {
         env.SetGameTime(env.CurrentWeather->at(sel)->exec_time + 0.5f, tf);
         time = time / (24 * 60 * 60) * 24 * 60 * 60 * 1000;
-        time += u64(env.CurrentWeather->at(sel)->exec_time * 1000 + 0.5f);
+        time += static_cast<u64>(env.CurrentWeather->at(sel)->exec_time * 1000 + 0.5f);
         Level().SetEnvironmentGameTimeFactor(time, tf);
         env.SetWeather(cycles[iCycle], true);
     }

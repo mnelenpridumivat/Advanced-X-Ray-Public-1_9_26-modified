@@ -37,7 +37,7 @@ void CStateZombieAttackRunAbstract::execute()
 	
 	// установка параметров функциональных блоков
 	object->path().set_target_point			(object->EnemyMan.get_enemy_position(), object->EnemyMan.get_enemy_vertex());
-	object->path().set_rebuild_time			(100 + u32(50.f * dist));
+	object->path().set_rebuild_time			(100 + static_cast<u32>(50.f * dist));
 	object->path().set_distance_to_end		(2.5f);
 	object->path().set_use_covers			(false);
 

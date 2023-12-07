@@ -13,5 +13,5 @@ enum {
 	ID_COUNTDOWN_4,
 	ID_COUNTDOWN_5,
 
-	ID_DM_forcedword		= u32(-1)
+	ID_DM_forcedword		= static_cast<u32>(-1)
 };

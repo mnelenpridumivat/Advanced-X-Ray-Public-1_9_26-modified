@@ -10,22 +10,22 @@
 
 namespace StalkerMovement {
 	enum eVelocities {
-		eVelocityStanding								= u32(1) <<  0,
-		eVelocityWalk									= u32(1) <<  1,
-		eVelocityRun									= u32(1) <<  2,
+		eVelocityStanding								= static_cast<u32>(1) <<  0,
+		eVelocityWalk									= static_cast<u32>(1) <<  1,
+		eVelocityRun									= static_cast<u32>(1) <<  2,
 		eVelocityMovementType							= eVelocityStanding | eVelocityWalk | eVelocityRun,
 
-		eVelocityStand									= u32(1) <<  3,
-		eVelocityCrouch									= u32(1) <<  4,
+		eVelocityStand									= static_cast<u32>(1) <<  3,
+		eVelocityCrouch									= static_cast<u32>(1) <<  4,
 		eVelocityBodyState								= eVelocityStand | eVelocityCrouch,
 
-		eVelocityDanger									= u32(1) <<  6,
-		eVelocityFree									= u32(1) <<  7,
-		eVelocityPanic									= u32(1) <<  8,
+		eVelocityDanger									= static_cast<u32>(1) <<  6,
+		eVelocityFree									= static_cast<u32>(1) <<  7,
+		eVelocityPanic									= static_cast<u32>(1) <<  8,
 		eVelocityMentalState							= eVelocityDanger | eVelocityFree | eVelocityPanic,
 
-		eVelocityPositiveVelocity						= u32(1) << 31,
-		eVelocityNegativeVelocity						= u32(1) << 30,
+		eVelocityPositiveVelocity						= static_cast<u32>(1) << 31,
+		eVelocityNegativeVelocity						= static_cast<u32>(1) << 30,
 
 		eVelocityStandingFreeStand						= eVelocityStanding | eVelocityFree | eVelocityStand,
 		eVelocityStandingPanicStand						= eVelocityStanding | eVelocityPanic | eVelocityStand,

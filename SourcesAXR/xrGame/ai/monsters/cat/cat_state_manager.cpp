@@ -42,7 +42,7 @@ CStateManagerCat::~CStateManagerCat()
 
 void CStateManagerCat::execute()
 {
-	u32 state_id = u32(-1);
+	u32 state_id = static_cast<u32>(-1);
 
 	const CEntityAlive* enemy	= object->EnemyMan.get_enemy();
 

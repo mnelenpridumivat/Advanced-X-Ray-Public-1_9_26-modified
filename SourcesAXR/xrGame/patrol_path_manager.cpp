@@ -128,7 +128,7 @@ void CPatrolPathManager::select_point(const Fvector &position, u32 &dest_vertex_
 				break;
 			}
 			case ePatrolStartTypeNext : {
-				if (m_prev_point_index != u32(-1)) {
+				if (m_prev_point_index != static_cast<u32>(-1)) {
 					if ((m_prev_point_index + 1) < m_path->vertex_count()) {
 						vertex				= m_path->vertex(m_prev_point_index+1);
 					} else {
@@ -201,13 +201,13 @@ void CPatrolPathManager::select_point(const Fvector &position, u32 &dest_vertex_
 	}
 	VERIFY3					(m_path->vertex(m_curr_point_index) || show_restrictions(m_object),*m_path_name,*m_game_object->cName());
 
-	m_game_object->callback	(GameObject::ePatrolPathInPoint)(m_game_object->lua_game_object(),u32(ScriptEntity::eActionTypeMovement),m_curr_point_index);
+	m_game_object->callback	(GameObject::ePatrolPathInPoint)(m_game_object->lua_game_object(),static_cast<u32>(ScriptEntity::eActionTypeMovement),m_curr_point_index);
 
 	u32							count = 0;		// количество разветвлений
 	float						sum = 0.f;		// сумма весов разветвления
 	vertex						= m_path->vertex(m_curr_point_index);
 	CPatrolPath::const_iterator	I = vertex->edges().begin(), E = vertex->edges().end();
-	u32							target = u32(-1);
+	u32							target = static_cast<u32>(-1);
 	
 	// вычислить количество разветвлений
 	for ( ; I != E; ++I) {
@@ -238,7 +238,7 @@ void CPatrolPathManager::select_point(const Fvector &position, u32 &dest_vertex_
 					target			= (*I).vertex_id();
 					break;
 				}
-				if (target != u32(-1))	break;
+				if (target != static_cast<u32>(-1))	break;
 
 				m_completed				= true;
 				return;
@@ -289,7 +289,7 @@ u32 CPatrolPathManager::get_next_point(u32 prev_point_index)
 	const CPatrolPath::CVertex *vertex	= m_path->vertex(prev_point_index);
 	
 	CPatrolPath::const_iterator	I		= vertex->edges().begin(), E = vertex->edges().end();
-	u32							target	= u32(-1);
+	u32							target	= static_cast<u32>(-1);
 
 	// вычислить количество разветвлений
 	for ( ; I != E; ++I) {
@@ -371,9 +371,9 @@ void CPatrolPathManager::set_start_point	(int point_index)
 
 void CPatrolPathManager::reset()
 {
-	m_curr_point_index		= u32(-1);
-	m_prev_point_index		= u32(-1);
-	m_start_point_index		= u32(-1);
+	m_curr_point_index		= static_cast<u32>(-1);
+	m_prev_point_index		= static_cast<u32>(-1);
+	m_start_point_index		= static_cast<u32>(-1);
 	
 	m_start_type			= ePatrolStartTypeDummy;
 	m_route_type			= ePatrolRouteTypeDummy;

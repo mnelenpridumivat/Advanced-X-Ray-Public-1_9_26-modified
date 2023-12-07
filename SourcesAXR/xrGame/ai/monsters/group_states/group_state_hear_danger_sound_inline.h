@@ -81,7 +81,7 @@ void CStateGroupHearDangerousSoundAbstract::setup_substates()
 				data.vertex		= object->control().path_builder().restrictions().accessible_nearest(dest_pos, data.point);
 			} else {
 				data.point		= dest_pos;
-				data.vertex		= u32(-1);
+				data.vertex		= static_cast<u32>(-1);
 			}
 		}
 		
@@ -111,7 +111,7 @@ void CStateGroupHearDangerousSoundAbstract::setup_substates()
 
 		m_target_node = object->Home->get_place_in_max_home_to_direction(home2sound);
 		
-		if (m_target_node == u32(-1))
+		if (m_target_node == static_cast<u32>(-1))
 		{
 			data.point			= object->Position();
 		} else {
@@ -125,7 +125,7 @@ void CStateGroupHearDangerousSoundAbstract::setup_substates()
 		data.accelerated		= true;
 		data.braking			= true;
 		data.accel_type 		= eAT_Aggressive;
-		data.action.sound_type	= (u32)MonsterSound::eMonsterSoundDummy;
+		data.action.sound_type	= static_cast<u32>(MonsterSound::eMonsterSoundDummy);
 		data.action.sound_delay = object->db().m_dwAttackSndDelay;
 
 		state->fill_data_with(&data, sizeof(SStateDataMoveToPointEx));

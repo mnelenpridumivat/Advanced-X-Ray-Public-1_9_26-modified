@@ -64,11 +64,11 @@ void CBurer::reload(LPCSTR section)
 	// add specific sounds
 	sound().add				(pSettings->r_string(section,"sound_gravi_attack"),	DEFAULT_SAMPLE_COUNT,	
 							SOUND_TYPE_MONSTER_ATTACKING,	MonsterSound::eHighPriority + 2,	
-							u32(MonsterSound::eBaseChannel),	eMonsterSoundGraviAttack, "head");
+							static_cast<u32>(MonsterSound::eBaseChannel),	eMonsterSoundGraviAttack, "head");
 
 	sound().add				(pSettings->r_string(section,"sound_tele_attack"),	DEFAULT_SAMPLE_COUNT,	
 							SOUND_TYPE_MONSTER_ATTACKING,	MonsterSound::eHighPriority + 3,	
-							u32(MonsterSound::eBaseChannel),	eMonsterSoundTeleAttack, "head");
+							static_cast<u32>(MonsterSound::eBaseChannel),	eMonsterSoundTeleAttack, "head");
 }
 
 void CBurer::ActivateShield () 
@@ -284,8 +284,8 @@ void CBurer::UpdateGraviObject()
 		return;
 	}
 
-	float dt = float(Device.dwTimeGlobal - m_gravi_object.time_last_update);
-	float dist = dt * float(m_gravi.speed)/1000.f;
+	float dt = static_cast<float>(Device.dwTimeGlobal - m_gravi_object.time_last_update);
+	float dist = dt * static_cast<float>(m_gravi.speed)/1000.f;
 		
 	if (dist < m_gravi.step) return;
 	
@@ -302,7 +302,7 @@ void CBurer::UpdateGraviObject()
 	dir.sub(enemy_center, new_pos);
 	dir.normalize();
 
-	float trace_dist = float(m_gravi.step);
+	float trace_dist = static_cast<float>(m_gravi.step);
 
 	collide::rq_result	l_rq;
 	if (Level().ObjectSpace.RayPick(new_pos, dir, trace_dist, collide::rqtBoth, l_rq, NULL)) {

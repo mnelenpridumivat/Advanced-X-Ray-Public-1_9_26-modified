@@ -27,10 +27,10 @@ namespace LevelGraph {
 	struct	SContour;
 
 	enum ELineIntersections {
-		eLineIntersectionNone		= u32(0),
-		eLineIntersectionCollinear	= u32(0),
-		eLineIntersectionIntersect	= u32(1),
-		eLineIntersectionEqual		= u32(2)
+		eLineIntersectionNone		= static_cast<u32>(0),
+		eLineIntersectionCollinear	= static_cast<u32>(0),
+		eLineIntersectionIntersect	= static_cast<u32>(1),
+		eLineIntersectionEqual		= static_cast<u32>(2)
 	};
 };
 

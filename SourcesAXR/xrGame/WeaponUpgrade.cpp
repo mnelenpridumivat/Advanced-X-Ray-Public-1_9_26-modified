@@ -143,13 +143,13 @@ bool CWeapon::install_upgrade_hit( LPCSTR section, bool test )
 	if ( result2 && !test )
 	{
 		string32 buffer;
-		fvHitPower[egdMaster] = (float)atof( _GetItem( *s_sHitPower, 0, buffer ) );
+		fvHitPower[egdMaster] = static_cast<float>(atof(_GetItem(*s_sHitPower, 0, buffer)));
 		fvHitPower[egdNovice] = fvHitPower[egdStalker] = fvHitPower[egdVeteran] = fvHitPower[egdMaster];
 
 		int num_game_diff_param = _GetItemCount( *s_sHitPower );
-		if ( num_game_diff_param > 1 ) { fvHitPower[egdVeteran]	= (float)atof( _GetItem( *s_sHitPower, 1, buffer ) ); }
-		if ( num_game_diff_param > 2 ) { fvHitPower[egdStalker]	= (float)atof( _GetItem( *s_sHitPower, 2, buffer ) ); }
-		if ( num_game_diff_param > 3 ) { fvHitPower[egdNovice]	= (float)atof( _GetItem( *s_sHitPower, 3, buffer ) ); }
+		if ( num_game_diff_param > 1 ) { fvHitPower[egdVeteran]	= static_cast<float>(atof(_GetItem(*s_sHitPower, 1, buffer))); }
+		if ( num_game_diff_param > 2 ) { fvHitPower[egdStalker]	= static_cast<float>(atof(_GetItem(*s_sHitPower, 2, buffer))); }
+		if ( num_game_diff_param > 3 ) { fvHitPower[egdNovice]	= static_cast<float>(atof(_GetItem(*s_sHitPower, 3, buffer))); }
 	}
 	result |= result2;
 
@@ -158,13 +158,13 @@ bool CWeapon::install_upgrade_hit( LPCSTR section, bool test )
 	if ( result2 && !test )
 	{
 		string32 buffer;
-		fvHitPowerCritical[egdMaster] = (float)atof(_GetItem(*s_sHitPowerCritical,0,buffer));
+		fvHitPowerCritical[egdMaster] = static_cast<float>(atof(_GetItem(*s_sHitPowerCritical, 0, buffer)));
 		fvHitPowerCritical[egdNovice] = fvHitPowerCritical[egdStalker] = fvHitPowerCritical[egdVeteran] = fvHitPowerCritical[egdMaster];
 
 		int num_game_diff_param = _GetItemCount(*s_sHitPowerCritical);
-		if ( num_game_diff_param > 1 ) { fvHitPowerCritical[egdVeteran]	= (float)atof(_GetItem(*s_sHitPowerCritical,1,buffer)); }
-		if ( num_game_diff_param > 2 ) { fvHitPowerCritical[egdStalker]	= (float)atof(_GetItem(*s_sHitPowerCritical,2,buffer)); }
-		if ( num_game_diff_param > 3 ) { fvHitPowerCritical[egdNovice]	= (float)atof(_GetItem(*s_sHitPowerCritical,3,buffer)); }
+		if ( num_game_diff_param > 1 ) { fvHitPowerCritical[egdVeteran]	= static_cast<float>(atof(_GetItem(*s_sHitPowerCritical, 1, buffer))); }
+		if ( num_game_diff_param > 2 ) { fvHitPowerCritical[egdStalker]	= static_cast<float>(atof(_GetItem(*s_sHitPowerCritical, 2, buffer))); }
+		if ( num_game_diff_param > 3 ) { fvHitPowerCritical[egdNovice]	= static_cast<float>(atof(_GetItem(*s_sHitPowerCritical, 3, buffer))); }
 	}
 	result |= result2;
 
@@ -208,7 +208,7 @@ bool CWeapon::install_upgrade_addon( LPCSTR section, bool test )
 	bool result2 = process_if_exists_set( section, "scope_status", &CInifile::r_s32, temp_int, test );
 	if ( result2 && !test )
 	{
-		m_eScopeStatus = (ALife::EWeaponAddonStatus)temp_int;
+		m_eScopeStatus = static_cast<ALife::EWeaponAddonStatus>(temp_int);
 		if ( m_eScopeStatus == ALife::eAddonAttachable || m_eScopeStatus == ALife::eAddonPermanent )
 		{
 			result |= process_if_exists( section, "holder_range_modifier", &CInifile::r_float, m_addon_holder_range_modifier, test );
@@ -268,11 +268,11 @@ bool CWeapon::install_upgrade_addon( LPCSTR section, bool test )
 
 	result |= result2;
 
-	temp_int = (int)m_eSilencerStatus;
+	temp_int = static_cast<int>(m_eSilencerStatus);
 	result2 = process_if_exists_set( section, "silencer_status", &CInifile::r_s32, temp_int, test );
 	if ( result2 && !test )
 	{
-		m_eSilencerStatus = (ALife::EWeaponAddonStatus)temp_int;
+		m_eSilencerStatus = static_cast<ALife::EWeaponAddonStatus>(temp_int);
 		if ( m_eSilencerStatus == ALife::eAddonAttachable || m_eSilencerStatus == ALife::eAddonPermanent )
 		{
 			m_sSilencerName	= pSettings->r_string( section, "silencer_name" );
@@ -294,11 +294,11 @@ bool CWeapon::install_upgrade_addon( LPCSTR section, bool test )
 	}
 	result |= result2;
 
-	temp_int = (int)m_eGrenadeLauncherStatus;
+	temp_int = static_cast<int>(m_eGrenadeLauncherStatus);
 	result2 = process_if_exists_set( section, "grenade_launcher_status", &CInifile::r_s32, temp_int, test );
 	if ( result2 && !test )
 	{
-		m_eGrenadeLauncherStatus = (ALife::EWeaponAddonStatus)temp_int;
+		m_eGrenadeLauncherStatus = static_cast<ALife::EWeaponAddonStatus>(temp_int);
 		if ( m_eGrenadeLauncherStatus == ALife::eAddonAttachable || m_eGrenadeLauncherStatus == ALife::eAddonPermanent )
 		{
 			m_sGrenadeLauncherName	= pSettings->r_string( section, "grenade_launcher_name" );

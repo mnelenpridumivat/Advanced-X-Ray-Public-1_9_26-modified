@@ -121,7 +121,7 @@ void CPhantom::net_Destroy	()
 // Animation Callbacks
 void CPhantom::animation_end_callback(CBlend* B)
 {
-	CPhantom *phantom				= (CPhantom*)B->CallbackParam;
+	CPhantom *phantom				= static_cast<CPhantom*>(B->CallbackParam);
 	switch (phantom->m_CurState){
 	case stBirth:	phantom->SwitchToState(stFly);	break;
 	case stContact:	phantom->SwitchToState(stIdle);	break;
@@ -321,11 +321,11 @@ void CPhantom::PsyHit(const CObject *object, float value)
 // Core events
 void CPhantom::save(NET_Packet &output_packet)
 {
-	output_packet.w_s32	(s32(m_CurState));
+	output_packet.w_s32	(static_cast<s32>(m_CurState));
 }
 void CPhantom::load(IReader &input_packet)
 {
-	SwitchToState	(EState(input_packet.r_s32()));
+	SwitchToState	(static_cast<EState>(input_packet.r_s32()));
 }
 void CPhantom::net_Export	(NET_Packet& P)					// export to server
 {
@@ -348,9 +348,9 @@ void CPhantom::net_Export	(NET_Packet& P)					// export to server
 	P.w_float /*w_angle8*/			(yaw);
 	P.w_float /*w_angle8*/			(pitch);
 	P.w_float /*w_angle8*/			(0);
-	P.w_u8				(u8(g_Team()));
-	P.w_u8				(u8(g_Squad()));
-	P.w_u8				(u8(g_Group()));
+	P.w_u8				(static_cast<u8>(g_Team()));
+	P.w_u8				(static_cast<u8>(g_Squad()));
+	P.w_u8				(static_cast<u8>(g_Group()));
 }
 
 void CPhantom::net_Import	(NET_Packet& P)

@@ -114,7 +114,7 @@ void	game_cl_GameState::net_import_state	(NET_Packet& P)
 
 	P.r_s32			(m_round);
 	P.r_u32			(m_start_time);
-	m_u16VotingEnabled = u16(P.r_u8());
+	m_u16VotingEnabled = static_cast<u16>(P.r_u8());
 	m_bServerControlHits = !!P.r_u8();	
 	m_WeaponUsageStatistic->SetCollectData(!!P.r_u8());
 
@@ -355,7 +355,7 @@ void game_cl_GameState::sv_GameEventGen(NET_Packet& P)
 {
 	P.w_begin	(M_EVENT);
 	P.w_u32		(Level().timeServer());
-	P.w_u16		( u16(GE_GAME_EVENT&0xffff) );
+	P.w_u16		( static_cast<u16>(GE_GAME_EVENT & 0xffff) );
 	P.w_u16		(0);//dest==0
 }
 

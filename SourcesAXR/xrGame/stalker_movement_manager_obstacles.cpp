@@ -28,7 +28,7 @@ static const u32 fail_check_time	= 1000;
 
 stalker_movement_manager_obstacles::stalker_movement_manager_obstacles	(CAI_Stalker *object) :
 	inherited						(object),
-	m_last_dest_vertex_id			(u32(-1)),
+	m_last_dest_vertex_id			(static_cast<u32>(-1)),
 	m_last_fail_time				(0),
 	m_failed_to_build_path			(false)
 {
@@ -124,7 +124,7 @@ bool stalker_movement_manager_obstacles::can_build_restricted_path	(const obstac
 			&m_temp_path,
 			evaluator_type(
 				type_max(_dist_type),
-				_iteration_type(-1),
+				static_cast<_iteration_type>(-1),
 				4096
 			)
 		);

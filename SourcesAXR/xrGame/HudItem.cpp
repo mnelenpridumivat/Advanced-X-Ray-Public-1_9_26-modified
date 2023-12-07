@@ -22,7 +22,7 @@ CHudItem::CHudItem()
 	AllowHudInertion			(TRUE);
 	m_bStopAtEndAnimIsRunning	= false;
 	m_current_motion_def		= NULL;
-	m_started_rnd_anim_idx		= u8(-1);
+	m_started_rnd_anim_idx		= static_cast<u8>(-1);
 }
 
 DLL_Pure *CHudItem::_construct	()
@@ -103,7 +103,7 @@ void CHudItem::SwitchState(u32 S)
 		// !!! Just single entry for given state !!!
 		NET_Packet				P;
 		object().u_EventGen		(P,GE_WPN_STATE_CHANGE,object().ID());
-		P.w_u8					(u8(S));
+		P.w_u8					(static_cast<u8>(S));
 		object().u_EventSend	(P);
 	}
 }
@@ -116,7 +116,7 @@ void CHudItem::OnEvent(NET_Packet& P, u16 type)
 		{
 			u8				S;
 			P.r_u8			(S);
-			OnStateSwitch	(u32(S));
+			OnStateSwitch	(static_cast<u32>(S));
 		}
 		break;
 	}
@@ -187,7 +187,7 @@ void CHudItem::SendHiddenItem()
 	{
 		NET_Packet				P;
 		object().u_EventGen		(P,GE_WPN_STATE_CHANGE,object().ID());
-		P.w_u8					(u8(eHiding));
+		P.w_u8					(static_cast<u8>(eHiding));
 		object().u_EventSend	(P, net_flags(TRUE, TRUE, FALSE, TRUE));
 	}
 }
@@ -206,8 +206,8 @@ void CHudItem::UpdateCL()
 			const xr_vector<motion_marks>&	marks = m_current_motion_def->marks;
 			if(!marks.empty())
 			{
-				float motion_prev_time = ((float)m_dwMotionCurrTm - (float)m_dwMotionStartTm)/1000.0f;
-				float motion_curr_time = ((float)Device.dwTimeGlobal - (float)m_dwMotionStartTm)/1000.0f;
+				float motion_prev_time = (static_cast<float>(m_dwMotionCurrTm) - static_cast<float>(m_dwMotionStartTm))/1000.0f;
+				float motion_curr_time = (static_cast<float>(Device.dwTimeGlobal) - static_cast<float>(m_dwMotionStartTm))/1000.0f;
 				
 				xr_vector<motion_marks>::const_iterator it = marks.begin();
 				xr_vector<motion_marks>::const_iterator it_e = marks.end();

@@ -27,7 +27,7 @@ void CSE_ALifeDynamicObject::on_spawn				()
 void CSE_ALifeDynamicObject::on_register			()
 {
 	CSE_ALifeObject		*object = this;
-	while (object->ID_Parent != ALife::_OBJECT_ID(-1)) {
+	while (object->ID_Parent != static_cast<ALife::_OBJECT_ID>(-1)) {
 		object			= ai().alife().objects().object(object->ID_Parent);
 		VERIFY			(object);
 	}
@@ -205,7 +205,7 @@ void CSE_ALifeInventoryBox::add_online	(const bool &update_registries)
 		l_tpALifeDynamicObject->o_Position		= object->o_Position;
 		l_tpALifeDynamicObject->m_tNodeID		= object->m_tNodeID;
 		object->alife().server().Process_spawn	(tNetPacket,clientID,FALSE,l_tpALifeInventoryItem->base());
-		l_tpALifeDynamicObject->s_flags.and		(u16(-1) ^ M_SPAWN_UPDATE);
+		l_tpALifeDynamicObject->s_flags.and		(static_cast<u16>(-1) ^ M_SPAWN_UPDATE);
 		l_tpALifeDynamicObject->m_bOnline		= true;
 	}
 
@@ -312,7 +312,7 @@ void CSE_ALifeCar::add_online(const bool& update_registries)
 		l_tpALifeDynamicObject->o_Position = object->o_Position;
 		l_tpALifeDynamicObject->m_tNodeID = object->m_tNodeID;
 		object->alife().server().Process_spawn(tNetPacket, clientID, FALSE, l_tpALifeInventoryItem->base());
-		l_tpALifeDynamicObject->s_flags. and (u16(-1) ^ M_SPAWN_UPDATE);
+		l_tpALifeDynamicObject->s_flags. and (static_cast<u16>(-1) ^ M_SPAWN_UPDATE);
 		l_tpALifeDynamicObject->m_bOnline = true;
 	}
 

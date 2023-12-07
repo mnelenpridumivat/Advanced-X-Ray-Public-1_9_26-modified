@@ -132,7 +132,7 @@ void Upgrade::construct( const shared_str& upgrade_id, Group& parental_group, Ma
 void Upgrade::log_hierarchy( LPCSTR nest )
 {
 	u32 sz =  (xr_strlen(nest) + 4) * sizeof(char);
-	PSTR	nest2 = (PSTR)_alloca( sz );
+	PSTR	nest2 = static_cast<PSTR>(_alloca(sz));
 	xr_strcpy( nest2, sz, nest );
 	xr_strcat( nest2, sz, "   " );
 	Msg( "%s<u> %s", nest2, id_str() );

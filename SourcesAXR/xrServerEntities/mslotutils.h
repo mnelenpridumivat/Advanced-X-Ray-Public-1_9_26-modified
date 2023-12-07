@@ -38,8 +38,8 @@ public:
 
 	inline BOOL	w_string(const char* dst){
 		size_t sz = _strlen(dst);
-		w_int((int)sz);
-		Write(dst,(int)(sz+1)); return TRUE;
+		w_int(static_cast<int>(sz));
+		Write(dst,static_cast<int>(sz + 1)); return TRUE;
 	};
 
 	inline BOOL	r_float(float& dst){

@@ -605,7 +605,7 @@ void  CUIMiniMap::Draw()
 	tt_offset.y				/= GetHeight();
 	
 	Fvector2				m_scale_;	
-	m_scale_.set			( float(Device.dwWidth)/UI_BASE_WIDTH, float(Device.dwHeight)/UI_BASE_HEIGHT );
+	m_scale_.set			( static_cast<float>(Device.dwWidth)/UI_BASE_WIDTH, static_cast<float>(Device.dwHeight)/UI_BASE_HEIGHT );
 	
 	for(u32 idx=0; idx<segments_count;++idx)
 	{

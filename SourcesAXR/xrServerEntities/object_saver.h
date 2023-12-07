@@ -54,7 +54,7 @@ struct CSaver {
 		template <typename T>
 		IC	static void save_data(const T &data, M &stream, const P &p)
 		{
-			stream.w_u32					((u32)data.size());
+			stream.w_u32					(static_cast<u32>(data.size()));
 			T::const_iterator				I = data.begin();
 			T::const_iterator				E = data.end();
 			for ( ; I != E; ++I)
@@ -121,7 +121,7 @@ struct CSaver {
 					j					= 0;
 				}
 				if (*I)
-					mask				|= u32(1) << j;
+					mask				|= static_cast<u32>(1) << j;
 			}
 			stream.w_u32				(mask);
 		}
@@ -130,7 +130,7 @@ struct CSaver {
 	template <typename T, int size>
 	IC	static void save_data(const svector<T,size> &data, M &stream, const P &p)
 	{
-		stream.w_u32					((u32)data.size());
+		stream.w_u32					(static_cast<u32>(data.size()));
 		svector<T,size>::const_iterator	I = data.begin();
 		svector<T,size>::const_iterator	E = data.end();
 		for ( ; I != E; ++I)
@@ -142,7 +142,7 @@ struct CSaver {
 	IC	static void save_data(const std::queue<T1,T2> &data, M &stream, const P &p)
 	{
 		std::queue<T1,T2>				temp = data;
-		stream.w_u32					((u32)data.size());
+		stream.w_u32					(static_cast<u32>(data.size()));
 		for ( ; !temp.empty(); temp.pop())
 			if (p(temp,temp.front()))
 				CSaver<M,P>::save_data	(temp.front(),stream,p);
@@ -152,7 +152,7 @@ struct CSaver {
 	IC	static void save_data(const T1<T2,T3> &data, M &stream, const P &p, bool)
 	{
 		T1<T2,T3>						temp = data;
-		stream.w_u32					((u32)data.size());
+		stream.w_u32					(static_cast<u32>(data.size()));
 		for ( ; !temp.empty(); temp.pop())
 			if (p(temp,temp.top()))
 				CSaver<M,P>::save_data	(temp.top(),stream,p);
@@ -162,7 +162,7 @@ struct CSaver {
 	IC	static void save_data(const T1<T2,T3,T4> &data, M &stream, const P &p, bool)
 	{
 		T1<T2,T3,T4>					temp = data;
-		stream.w_u32					((u32)data.size());
+		stream.w_u32					(static_cast<u32>(data.size()));
 		for ( ; !temp.empty(); temp.pop())
 			if (p(temp,temp.top()))
 				CSaver<M,P>::save_data	(temp.top(),stream,p);

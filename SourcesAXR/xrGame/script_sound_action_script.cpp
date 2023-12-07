@@ -19,15 +19,15 @@ void CScriptSoundAction::script_register(lua_State *L)
 		class_<CScriptSoundAction>("sound")
 			.enum_("type")
 			[
-				value("idle",					int(MonsterSound::eMonsterSoundIdle)),
-				value("eat",					int(MonsterSound::eMonsterSoundEat)),
-				value("attack",					int(MonsterSound::eMonsterSoundAggressive)),
-				value("attack_hit",				int(MonsterSound::eMonsterSoundAttackHit)),
-				value("take_damage",			int(MonsterSound::eMonsterSoundTakeDamage)),
-				value("die",					int(MonsterSound::eMonsterSoundDie)),
-				value("threaten",				int(MonsterSound::eMonsterSoundThreaten)),
-				value("steal",					int(MonsterSound::eMonsterSoundSteal)),
-				value("panic",					int(MonsterSound::eMonsterSoundPanic))
+				value("idle",					static_cast<int>(MonsterSound::eMonsterSoundIdle)),
+				value("eat",					static_cast<int>(MonsterSound::eMonsterSoundEat)),
+				value("attack",					static_cast<int>(MonsterSound::eMonsterSoundAggressive)),
+				value("attack_hit",				static_cast<int>(MonsterSound::eMonsterSoundAttackHit)),
+				value("take_damage",			static_cast<int>(MonsterSound::eMonsterSoundTakeDamage)),
+				value("die",					static_cast<int>(MonsterSound::eMonsterSoundDie)),
+				value("threaten",				static_cast<int>(MonsterSound::eMonsterSoundThreaten)),
+				value("steal",					static_cast<int>(MonsterSound::eMonsterSoundSteal)),
+				value("panic",					static_cast<int>(MonsterSound::eMonsterSoundPanic))
 			]
 
 			.def(								constructor<>())
@@ -50,12 +50,12 @@ void CScriptSoundAction::script_register(lua_State *L)
 			// trader specific
 			.def(								constructor<LPCSTR,LPCSTR,MonsterSpace::EMonsterHeadAnimType>())
 
-			.def("set_sound",					(void (CScriptSoundAction::*)(LPCSTR))(&CScriptSoundAction::SetSound))
-			.def("set_sound",					(void (CScriptSoundAction::*)(const CScriptSound &))(&CScriptSoundAction::SetSound))
+			.def("set_sound",					static_cast<void (CScriptSoundAction::*)(LPCSTR)>(&CScriptSoundAction::SetSound))
+			.def("set_sound",					static_cast<void (CScriptSoundAction::*)(const CScriptSound&)>(&CScriptSoundAction::SetSound))
 			.def("set_sound_type",				&CScriptSoundAction::SetSoundType)
 			.def("set_bone",					&CScriptSoundAction::SetBone)
 			.def("set_position",				&CScriptSoundAction::SetPosition)
 			.def("set_angles",					&CScriptSoundAction::SetAngles)
-			.def("completed",					(bool (CScriptSoundAction::*)())(&CScriptSoundAction::completed))
+			.def("completed",					static_cast<bool (CScriptSoundAction::*)()>(&CScriptSoundAction::completed))
 	];
 }

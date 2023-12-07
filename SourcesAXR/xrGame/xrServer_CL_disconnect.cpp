@@ -13,7 +13,7 @@ void xrServer::OnCL_Disconnected	(IClient* CL)
 	NET_Packet P;
 	P.B.count = 0;
 	P.w_clientID(CL->ID);
-	xrClientData* xrCData = (xrClientData*)(CL);
+	xrClientData* xrCData = static_cast<xrClientData*>(CL);
 	VERIFY(xrCData);
 	
 	if (!xrCData->ps)
@@ -36,7 +36,7 @@ void xrServer::OnCL_Disconnected	(IClient* CL)
 		for (; I!=E; ++I)
 		{
 			CSE_Abstract*	entity		= I->second;
-			if (entity->owner == CL)	PerformMigration	(entity,(xrClientData*)CL,SelectBestClientToMigrateTo(entity,TRUE));
+			if (entity->owner == CL)	PerformMigration	(entity,static_cast<xrClientData*>(CL),SelectBestClientToMigrateTo(entity,TRUE));
 		}
 	} else {
 		// Destroy entities

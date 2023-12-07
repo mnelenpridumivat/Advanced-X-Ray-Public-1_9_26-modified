@@ -46,7 +46,7 @@ void CAnimationSequencer::on_release()
 void CAnimationSequencer::play_selected()
 {
 	// start new animation
-	SControlAnimationData		*ctrl_data = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+	SControlAnimationData		*ctrl_data = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 	VERIFY						(ctrl_data);
 
 	ctrl_data->global.set_motion (m_data.motions[m_index]);

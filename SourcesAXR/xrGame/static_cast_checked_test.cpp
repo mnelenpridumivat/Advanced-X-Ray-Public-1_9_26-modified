@@ -18,11 +18,11 @@ B*			b0 = static_cast_checked<B*>		(&a);
 B&			b1 = static_cast_checked<B&>		(a);
 B const *	b2 = static_cast_checked<B const *>	(&a);
 B const &	b3 = static_cast_checked<B const &>	(a);
-B const *	b4 = static_cast_checked<B const *>	((A const *)&a);
-B const &	b5 = static_cast_checked<B const &>	((A const &)a);
+B const *	b4 = static_cast_checked<B const *>	(static_cast<A const*>(&a));
+B const &	b5 = static_cast_checked<B const &>	(static_cast<A const&>(a));
 // the next 2 lines won't compile
-B*			b6 = static_cast_checked<B*>		((A const *)&a);
-B&			b7 = static_cast_checked<B&>		((A const &)a);
+B*			b6 = static_cast_checked<B*>		(static_cast<A const*>(&a));
+B&			b7 = static_cast_checked<B&>		(static_cast<A const&>(a));
 
 // polymorphic test
 struct C {virtual ~C() {}};
@@ -33,8 +33,8 @@ D*			d0 = static_cast_checked<D*>		(&c);
 D&			d1 = static_cast_checked<D&>		(c);
 D const *	d2 = static_cast_checked<D const *>	(&c);
 D const &	d3 = static_cast_checked<D const &>	(c);
-D const *	d4 = static_cast_checked<D const *>	((C const *)&c);
-D const &	d5 = static_cast_checked<D const &>	((C const &)c);
+D const *	d4 = static_cast_checked<D const *>	(static_cast<C const*>(&c));
+D const &	d5 = static_cast_checked<D const &>	(static_cast<C const&>(c));
 // the next 2 lines won't compile
-D*			d6 = static_cast_checked<D*>		((C const *)&c);
-D&			d7 = static_cast_checked<D&>		((C const &)c);
+D*			d6 = static_cast_checked<D*>		(static_cast<C const*>(&c));
+D&			d7 = static_cast_checked<D&>		(static_cast<C const&>(c));

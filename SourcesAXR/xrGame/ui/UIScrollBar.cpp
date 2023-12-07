@@ -93,8 +93,8 @@ void CUIScrollBar::SetWidth(float width)
 	inherited::SetWidth(width);
 	if(m_bIsHorizontal)
 	{
-		float work_area = float(width) - m_DecButton->GetWidth() - m_IncButton->GetWidth();
-		m_ScrollWorkArea = work_area < 0.f ? 0 : int(work_area);
+		float work_area = static_cast<float>(width) - m_DecButton->GetWidth() - m_IncButton->GetWidth();
+		m_ScrollWorkArea = work_area < 0.f ? 0 : static_cast<int>(work_area);
 	}
 	UpdateScrollBar();
 }
@@ -105,8 +105,8 @@ void CUIScrollBar::SetHeight(float height)
 	inherited::SetHeight(height);
 	if(!m_bIsHorizontal)
 	{
-		float work_area = float(height) - m_DecButton->GetHeight() - m_IncButton->GetHeight();
-		m_ScrollWorkArea = work_area < 0.f ? 0 : int(work_area);
+		float work_area = static_cast<float>(height) - m_DecButton->GetHeight() - m_IncButton->GetHeight();
+		m_ScrollWorkArea = work_area < 0.f ? 0 : static_cast<int>(work_area);
 	}
 	UpdateScrollBar();
 }
@@ -144,7 +144,7 @@ void CUIScrollBar::UpdateScrollBar()
 	{
 		//уcтановить размер и положение каретки
 		if(m_iMaxPos==m_iMinPos)	m_iMaxPos++;
-		float box_sz				= float(m_ScrollWorkArea)*float(m_iPageSize ? m_iPageSize : 1)/float(m_iMaxPos-m_iMinPos);
+		float box_sz				= static_cast<float>(m_ScrollWorkArea)*static_cast<float>(m_iPageSize ? m_iPageSize : 1)/static_cast<float>(m_iMaxPos - m_iMinPos);
 		if(IsRelevant())
 		{
 			if(m_bIsHorizontal)
@@ -155,7 +155,7 @@ void CUIScrollBar::UpdateScrollBar()
 				m_ScrollBox->SetHeight	(GetHeight());
 				// set pos
 				int pos					= PosViewFromScroll(iFloor(m_ScrollBox->GetWidth()),iFloor(GetHeight()));
-				m_ScrollBox->SetWndPos	(Fvector2().set(float(pos), m_ScrollBox->GetWndRect().top));
+				m_ScrollBox->SetWndPos	(Fvector2().set(static_cast<float>(pos), m_ScrollBox->GetWndRect().top));
 				m_IncButton->SetWndPos	(Fvector2().set(GetWidth() - m_IncButton->GetWidth(), 0.0f));
 			}else
 			{
@@ -165,7 +165,7 @@ void CUIScrollBar::UpdateScrollBar()
 				m_ScrollBox->SetWidth	(GetWidth());
 				// set pos
 				int pos				= PosViewFromScroll(iFloor(m_ScrollBox->GetHeight()),iFloor(GetWidth()));
-				m_ScrollBox->SetWndPos	(Fvector2().set(m_ScrollBox->GetWndRect().left, float(pos)));
+				m_ScrollBox->SetWndPos	(Fvector2().set(m_ScrollBox->GetWndRect().left, static_cast<float>(pos)));
 				m_IncButton->SetWndPos	(Fvector2().set(0.0f, GetHeight() - m_IncButton->GetHeight()));
 			}
 		}

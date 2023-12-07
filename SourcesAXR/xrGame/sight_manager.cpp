@@ -217,7 +217,7 @@ void CSightManager::setup			(const CSightAction &sight_action)
 		return;
 
 	clear				();
-	add_action			(0,xr_new<CSightControlAction>(1.f,u32(-1),sight_action));
+	add_action			(0,xr_new<CSightControlAction>(1.f,static_cast<u32>(-1),sight_action));
 }
 
 void CSightManager::update			()

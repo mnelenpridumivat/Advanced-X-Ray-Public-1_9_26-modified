@@ -33,7 +33,7 @@ void CZombie::Load(LPCSTR section)
 	anim().accel_load			(section);
 	anim().accel_chain_add		(eAnimWalkFwd,		eAnimRun);
 
-	fake_death_count		= 1 + u8(Random.randI(pSettings->r_u8(section,"FakeDeathCount")));
+	fake_death_count		= 1 + static_cast<u8>(Random.randI(pSettings->r_u8(section, "FakeDeathCount")));
 	health_death_threshold	= pSettings->r_float(section,"StartFakeDeathHealthThreshold");
 
 	SVelocityParam &velocity_none		= move().get_velocity(MonsterMovement::eVelocityParameterIdle);	
@@ -87,7 +87,7 @@ void CZombie::reinit()
 	fakedeath_is_active		= false;
 	fake_death_left			= fake_death_count;
 
-	active_triple_idx		= u8(-1);
+	active_triple_idx		= static_cast<u8>(-1);
 }
 
 void CZombie::reload(LPCSTR section)
@@ -151,8 +151,8 @@ void	CZombie::Hit								(SHit* pHDS)
 	
 	if ((pHDS->hit_type == ALife::eHitTypeFireWound) && (Device.dwFrame != last_hit_frame)) {
 		if (!com_man().ta_is_active() && (time_resurrect + TIME_RESURRECT_RESTORE < Device.dwTimeGlobal) && (conditions().GetHealth() < health_death_threshold)) {
-			if (conditions().GetHealth() < (health_death_threshold - float(fake_death_count - fake_death_left) * health_death_threshold / fake_death_count)) {
-				active_triple_idx			= u8(Random.randI(FAKE_DEATH_TYPES_COUNT));
+			if (conditions().GetHealth() < (health_death_threshold - static_cast<float>(fake_death_count - fake_death_left) * health_death_threshold / fake_death_count)) {
+				active_triple_idx			= static_cast<u8>(Random.randI(FAKE_DEATH_TYPES_COUNT));
 				com_man().ta_activate		(anim_triple_death[active_triple_idx]);
 				move().stop					();
 				time_dead_start				= Device.dwTimeGlobal;
@@ -189,7 +189,7 @@ bool CZombie::fake_death_fall_down()
 {
 	if (com_man().ta_is_active()) return false;
 
-	com_man().ta_activate		(anim_triple_death[u8(Random.randI(FAKE_DEATH_TYPES_COUNT))]);
+	com_man().ta_activate		(anim_triple_death[static_cast<u8>(Random.randI(FAKE_DEATH_TYPES_COUNT))]);
 	move().stop					();
 	fakedeath_is_active = true;
 

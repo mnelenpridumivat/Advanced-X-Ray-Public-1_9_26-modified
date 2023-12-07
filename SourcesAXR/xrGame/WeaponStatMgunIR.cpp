@@ -11,12 +11,12 @@ void CWeaponStatMgun::OnMouseMove			(int dx, int dy)
 	float h,p;
 	m_destEnemyDir.getHP(h,p);
 	if (dx){
-		float d		= float(dx)*scale;
+		float d		= static_cast<float>(dx)*scale;
 		h			-= d;
 		SetDesiredDir						(h,p);
 	}
 	if (dy){
-		float d		= ((psMouseInvert.test(1))?-1:1)*float(dy)*scale*3.f/4.f;
+		float d		= ((psMouseInvert.test(1))?-1:1)*static_cast<float>(dy)*scale*3.f/4.f;
 		p			-= d;
 		SetDesiredDir						(h,p);
 	}

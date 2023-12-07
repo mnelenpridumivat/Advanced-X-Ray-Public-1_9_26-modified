@@ -14,8 +14,8 @@ struct SControlDirectionData : public ControlCom::IComData {
 struct SRotationEventData : public ControlCom::IEventData {
 
 	enum RotType {
-		eHeading		= u32(1) << 0,
-		ePitch			= u32(1) << 1,
+		eHeading		= static_cast<u32>(1) << 0,
+		ePitch			= static_cast<u32>(1) << 1,
 	};
 	u8 angle;
 };

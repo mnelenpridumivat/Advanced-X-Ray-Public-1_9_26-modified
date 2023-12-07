@@ -74,7 +74,7 @@ void CBaseMonster::Load(LPCSTR section)
 
 	m_pPhysics_support				->in_Load(section);
 
-	SetfHealth						( (float)pSettings->r_u32		(section,"Health"));
+	SetfHealth						( static_cast<float>(pSettings->r_u32(section, "Health")));
 
 	m_controlled					= smart_cast<CControlledEntityBase*>(this);
 
@@ -85,7 +85,7 @@ void CBaseMonster::Load(LPCSTR section)
 	m_anomaly_detector->load		(section);
 	CoverMan->load					();
 
-	m_rank							= (pSettings->line_exist(section,"rank")) ? int(pSettings->r_u32(section,"rank")) : 0;
+	m_rank							= (pSettings->line_exist(section,"rank")) ? static_cast<int>(pSettings->r_u32(section, "rank")) : 0;
 
 //	if (pSettings->line_exist(section,"Spawn_Inventory_Item_Section")) {
 //		m_item_section					= pSettings->r_string(section,"Spawn_Inventory_Item_Section");
@@ -340,7 +340,7 @@ void CBaseMonster::reinit()
 	m_offset_from_leader_chosen_tick	= 0;
 	m_offset_from_leader				= Fvector().set(0.f, 0.f, 0.f);	
 
-	m_action_target_node			= u32(-1);
+	m_action_target_node			= static_cast<u32>(-1);
 
 	m_first_tick_enemy_inaccessible		= 0;
 	m_last_tick_enemy_inaccessible		= 0;
@@ -355,8 +355,8 @@ BOOL CBaseMonster::net_Spawn (CSE_Abstract* DC)
 		return(FALSE);
 
 	CSE_Abstract							*e	= (CSE_Abstract*)(DC);
-	R_ASSERT2								(ai().get_level_graph() && ai().get_cross_table() && (ai().level_graph().level_id() != u32(-1)),"There is no AI-Map, level graph, cross table, or graph is not compiled into the game graph!");
-	monster_squad().register_member			((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(), this);
+	R_ASSERT2								(ai().get_level_graph() && ai().get_cross_table() && (ai().level_graph().level_id() != static_cast<u32>(-1)),"There is no AI-Map, level graph, cross table, or graph is not compiled into the game graph!");
+	monster_squad().register_member			(static_cast<u8>(g_Team()),static_cast<u8>(g_Squad()),static_cast<u8>(g_Group()), this);
 	settings_overrides						();
 
 
@@ -415,7 +415,7 @@ void CBaseMonster::net_Destroy()
 	
 	m_pPhysics_support->in_NetDestroy	();
 
-	monster_squad().remove_member		((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(),this);
+	monster_squad().remove_member		(static_cast<u8>(g_Team()),static_cast<u8>(g_Squad()),static_cast<u8>(g_Group()),this);
 
 	StopLights();
 
@@ -562,7 +562,7 @@ void CBaseMonster::fill_bones_body_parts	(LPCSTR body_part, CriticalWoundType wo
 		m_bones_body_parts.insert	(
 			std::make_pair(
 				kinematics->LL_BoneID((*I).first),
-				u32(wound_type)
+				static_cast<u32>(wound_type)
 			)
 		);
 }

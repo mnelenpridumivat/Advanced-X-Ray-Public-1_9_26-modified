@@ -104,13 +104,13 @@ void CAnimationTriple::select_next_state()
 
 	m_previous_state = m_current_state;
 	if (m_current_state != eStateExecute) 
-		m_current_state = EStateAnimTriple(m_current_state + 1);
+		m_current_state = static_cast<EStateAnimTriple>(m_current_state + 1);
 }
 
 void CAnimationTriple::play_selected()
 {
 	// start new animation
-	SControlAnimationData		*ctrl_data = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+	SControlAnimationData		*ctrl_data = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 	VERIFY						(ctrl_data);
 	
 	ctrl_data->global.set_motion (m_data.pool[m_current_state]);

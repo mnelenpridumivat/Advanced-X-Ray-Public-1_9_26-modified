@@ -407,7 +407,7 @@ add_to_type_list(CLevel)
 #undef script_type_list
 #define script_type_list save_type_list(CLevel)
 
-IC CLevel&				Level()		{ return *((CLevel*) g_pGameLevel);			}
+IC CLevel&				Level()		{ return *static_cast<CLevel*>(g_pGameLevel);			}
 IC game_cl_GameState&	Game()		{ return *Level().game;					}
 	u32					GameID();
 

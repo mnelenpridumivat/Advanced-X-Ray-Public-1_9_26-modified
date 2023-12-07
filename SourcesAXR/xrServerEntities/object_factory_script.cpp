@@ -88,7 +88,7 @@ void CObjectFactory::register_script	() const
 
 	const_iterator				B = clsids().begin();
 	for (auto const_it = B; const_it != clsids().end(); ++const_it)
-		instance = std::move(instance).enum_("_clsid")[luabind::value(*(*const_it)->script_clsid(), int(const_it - B))];
+		instance = std::move(instance).enum_("_clsid")[luabind::value(*(*const_it)->script_clsid(), static_cast<int>(const_it - B))];
 
 	luabind::module(ai().script_engine().lua())[std::move(instance)];
 }
@@ -99,8 +99,8 @@ void CObjectFactory::script_register(lua_State *L)
 	module(L)
 	[
 		class_<CObjectFactory>("object_factory")
-			.def("register",	(void (CObjectFactory::*)(LPCSTR,LPCSTR,LPCSTR,LPCSTR))(&CObjectFactory::register_script_class))
-			.def("register",	(void (CObjectFactory::*)(LPCSTR,LPCSTR,LPCSTR))(&CObjectFactory::register_script_class))
+			.def("register",	static_cast<void (CObjectFactory::*)(LPCSTR, LPCSTR, LPCSTR, LPCSTR)>(&CObjectFactory::register_script_class))
+			.def("register",	static_cast<void (CObjectFactory::*)(LPCSTR, LPCSTR, LPCSTR)>(&CObjectFactory::register_script_class))
 	];
 }
 

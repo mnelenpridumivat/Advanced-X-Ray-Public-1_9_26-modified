@@ -15,7 +15,7 @@ MONSTER_COMMUNITY_DATA::MONSTER_COMMUNITY_DATA (MONSTER_COMMUNITY_INDEX idx, MON
 {
 	index = idx;
 	id = idn;
-	team = (u8)atoi(team_str);
+	team = static_cast<u8>(atoi(team_str));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -71,8 +71,8 @@ int MONSTER_COMMUNITY::relation		(MONSTER_COMMUNITY_INDEX to)
 
 int  MONSTER_COMMUNITY::relation		(MONSTER_COMMUNITY_INDEX from, MONSTER_COMMUNITY_INDEX to)
 {
-	VERIFY(from >= 0 && from <(int)m_relation_table.table().size());
-	VERIFY(to >= 0 && to <(int)m_relation_table.table().size());
+	VERIFY(from >= 0 && from <static_cast<int>(m_relation_table.table().size()));
+	VERIFY(to >= 0 && to <static_cast<int>(m_relation_table.table().size()));
 
 	return m_relation_table.table()[from][to];
 }

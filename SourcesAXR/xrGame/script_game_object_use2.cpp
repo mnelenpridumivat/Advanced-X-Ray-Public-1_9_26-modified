@@ -257,7 +257,7 @@ CScriptSoundInfo CScriptGameObject::GetSoundInfo()
 			l_tpMonster->SoundMemory.GetSound(se, bDangerous);
 
 			const CGameObject *pO = smart_cast<const CGameObject *>(se.who);
-			ret_val.set((pO && !pO->getDestroy()) ?  pO->lua_game_object() : 0, bDangerous, se.position, se.power, int(se.time));
+			ret_val.set((pO && !pO->getDestroy()) ?  pO->lua_game_object() : 0, bDangerous, se.position, se.power, static_cast<int>(se.time));
 		}
 	} else {
 		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError,"CScriptGameObject : cannot access class member GetSoundInfo!");

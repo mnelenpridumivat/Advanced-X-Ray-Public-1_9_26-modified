@@ -134,7 +134,7 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_bNeed_CrPr				= false;
 	m_bIn_CrPr					= false;
 	m_dwNumSteps				= 0;
-	m_dwDeltaUpdate				= u32(fixed_step*1000);
+	m_dwDeltaUpdate				= static_cast<u32>(fixed_step * 1000);
 	m_dwLastNetUpdateTime		= 0;
 	//VERIFY						( physics_world() );
 	//physics_world()->set_step_time_callback((PhysicsStepTimeCallback*) &PhisStepsCallback);
@@ -676,8 +676,8 @@ void CLevel::OnFrame	()
 				F->SetHeightI	(0.015f);
 				F->OutSetI	(0.0f,0.5f);
 				F->SetColor	(D3DCOLOR_XRGB(0,255,0));
-				F->OutNext	("IN:  %4d/%4d (%2.1f%%)",	S->bytes_in_real,	S->bytes_in,	100.f*float(S->bytes_in_real)/float(S->bytes_in));
-				F->OutNext	("OUT: %4d/%4d (%2.1f%%)",	S->bytes_out_real,	S->bytes_out,	100.f*float(S->bytes_out_real)/float(S->bytes_out));
+				F->OutNext	("IN:  %4d/%4d (%2.1f%%)",	S->bytes_in_real,	S->bytes_in,	100.f*static_cast<float>(S->bytes_in_real)/static_cast<float>(S->bytes_in));
+				F->OutNext	("OUT: %4d/%4d (%2.1f%%)",	S->bytes_out_real,	S->bytes_out,	100.f*static_cast<float>(S->bytes_out_real)/static_cast<float>(S->bytes_out));
 				F->OutNext	("client_2_sever ping: %d",	net_Statistic.getPing());
 				F->OutNext	("SPS/Sended : %4d/%4d", S->dwBytesPerSec, S->dwBytesSended);
 				F->OutNext	("sv_urate/cl_urate : %4d/%4d", psNET_ServerUpdate, psNET_ClientUpdate);
@@ -695,7 +695,7 @@ void CLevel::OnFrame	()
 							//Server->game->get_option_s(*C->Name,"name",*C->Name),
 							C->ID.value(),
 							C->stats.getPing(),
-							float(C->stats.getBPS()),// /1024,
+							static_cast<float>(C->stats.getBPS()),// /1024,
 							C->stats.getMPS_Receive	(),
 							C->stats.getMPS_Send	(),
 							C->stats.getRetriedCount(),
@@ -734,7 +734,7 @@ void CLevel::OnFrame	()
 					pStatGraphR->SetStyle(CStatGraph::stBarLine);
 					pStatGraphR->AppendSubGraph(CStatGraph::stBarLine);
 				}
-				pStatGraphR->AppendItem(float(net_Statistic.getBPS()), 0xff00ff00, 0);
+				pStatGraphR->AppendItem(static_cast<float>(net_Statistic.getBPS()), 0xff00ff00, 0);
 				F->OutSet(20.f, 700.f);
 				F->OutNext("64 KBS");
 
@@ -786,8 +786,8 @@ void CLevel::OnFrame	()
 		static	float fRPC_Mult = 10.0f;
 		static	float fRPS_Mult = 1.0f;
 
-		pStatGraphR->AppendItem(float(m_dwRPC)*fRPC_Mult, 0xffff0000, 1);
-		pStatGraphR->AppendItem(float(m_dwRPS)*fRPS_Mult, 0xff00ff00, 0);
+		pStatGraphR->AppendItem(static_cast<float>(m_dwRPC)*fRPC_Mult, 0xffff0000, 1);
+		pStatGraphR->AppendItem(static_cast<float>(m_dwRPS)*fRPS_Mult, 0xff00ff00, 0);
 	};
 
 	ShowEditor();
@@ -1177,7 +1177,7 @@ void		CLevel::UpdateDeltaUpd	( u32 LastTime )
 {
 	u32 CurrentDelta = LastTime - m_dwLastNetUpdateTime;
 	if (CurrentDelta < m_dwDeltaUpdate) 
-		CurrentDelta = iFloor(float(m_dwDeltaUpdate * 10 + CurrentDelta) / 11);
+		CurrentDelta = iFloor(static_cast<float>(m_dwDeltaUpdate * 10 + CurrentDelta) / 11);
 
 	m_dwLastNetUpdateTime = LastTime;
 	m_dwDeltaUpdate = CurrentDelta;
@@ -1192,7 +1192,7 @@ void		CLevel::UpdateDeltaUpd	( u32 LastTime )
 
 void		CLevel::ReculcInterpolationSteps ()
 {
-	lvInterpSteps			= iFloor(float(m_dwDeltaUpdate) / (fixed_step*1000));
+	lvInterpSteps			= iFloor(static_cast<float>(m_dwDeltaUpdate) / (fixed_step*1000));
 	if (lvInterpSteps > 60) lvInterpSteps = 60;
 	if (lvInterpSteps < 3)	lvInterpSteps = 3;
 };
@@ -1253,22 +1253,22 @@ u8 CLevel::GetDayTime()
 	u32 hours;
 	GetGameDateTime(dummy32, dummy32, dummy32, hours, dummy32, dummy32, dummy32);
 	VERIFY	(hours<256);
-	return	u8(hours); 
+	return	static_cast<u8>(hours); 
 }
 
 float CLevel::GetGameDayTimeSec()
 {
-	return	(float(s64(GetGameTime() % (24*60*60*1000)))/1000.f);
+	return	(static_cast<float>(s64(GetGameTime() % (24 * 60 * 60 * 1000)))/1000.f);
 }
 
 u32 CLevel::GetGameDayTimeMS()
 {
-	return	(u32(s64(GetGameTime() % (24*60*60*1000))));
+	return	static_cast<u32>(s64(GetGameTime() % (24 * 60 * 60 * 1000)));
 }
 
 float CLevel::GetEnvironmentGameDayTimeSec()
 {
-	return	(float(s64(GetEnvironmentGameTime() % (24*60*60*1000)))/1000.f);
+	return	(static_cast<float>(s64(GetEnvironmentGameTime() % (24 * 60 * 60 * 1000)))/1000.f);
 }
 
 void CLevel::GetGameDateTime	(u32& year, u32& month, u32& day, u32& hours, u32& mins, u32& secs, u32& milisecs)
@@ -1421,7 +1421,7 @@ CZoneList::~CZoneList()
 
 ICF static BOOL GetPickDist_Callback(collide::rq_result& result, LPVOID params)
 {
-	collide::rq_result* RQ = (collide::rq_result*)params;
+	collide::rq_result* RQ = static_cast<collide::rq_result*>(params);
 	if (result.O)
 	{
 		if (Actor())

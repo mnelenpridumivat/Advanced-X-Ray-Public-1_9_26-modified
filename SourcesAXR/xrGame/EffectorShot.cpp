@@ -51,7 +51,7 @@ void CWeaponShotEffector::Shot( CWeapon* weapon )
 	m_single_shot = (weapon->GetCurrentFireMode() == 1);
 
 	float angle	= m_cam_recoil.Dispersion    * weapon->cur_silencer_koef.cam_dispersion;
-	angle      += m_cam_recoil.DispersionInc * weapon->cur_silencer_koef.cam_disper_inc * (float)m_shot_numer;
+	angle      += m_cam_recoil.DispersionInc * weapon->cur_silencer_koef.cam_disper_inc * static_cast<float>(m_shot_numer);
 	Shot2( angle );
 }
 

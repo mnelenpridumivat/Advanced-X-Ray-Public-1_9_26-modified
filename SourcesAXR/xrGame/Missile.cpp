@@ -75,7 +75,7 @@ void CMissile::Load(LPCSTR section)
 	m_vThrowPoint		= pSettings->r_fvector3(section,"throw_point");
 	m_vThrowDir			= pSettings->r_fvector3(section,"throw_dir");
 
-	m_ef_weapon_type	= READ_IF_EXISTS(pSettings,r_u32,section,"ef_weapon_type",u32(-1));
+	m_ef_weapon_type	= READ_IF_EXISTS(pSettings,r_u32,section,"ef_weapon_type",static_cast<u32>(-1));
 }
 
 BOOL CMissile::net_Spawn(CSE_Abstract* DC) 
@@ -156,7 +156,7 @@ void CMissile::spawn_fake_missile()
 		CSE_Abstract		*object = Level().spawn_item(
 			*cNameSect(),
 			Position(),
-			(g_dedicated_server)?u32(-1):ai_location().level_vertex_id(),
+			(g_dedicated_server)?static_cast<u32>(-1):ai_location().level_vertex_id(),
 			ID(),
 			true
 		);
@@ -406,8 +406,8 @@ void CMissile::UpdateXForm	()
 		boneL = boneR2;
 
 		V->CalculateBones	();
-		Fmatrix& mL			= V->LL_GetTransform(u16(boneL));
-		Fmatrix& mR			= V->LL_GetTransform(u16(boneR));
+		Fmatrix& mL			= V->LL_GetTransform(static_cast<u16>(boneL));
+		Fmatrix& mR			= V->LL_GetTransform(static_cast<u16>(boneR));
 
 		// Calculate
 		Fmatrix				mRes;
@@ -490,7 +490,7 @@ void CMissile::Throw()
 	if (Local() && H_Parent()) {
 		NET_Packet						P;
 		u_EventGen						(P,GE_OWNERSHIP_REJECT,ID());
-		P.w_u16							(u16(m_fake_missile->ID()));
+		P.w_u16							(static_cast<u16>(m_fake_missile->ID()));
 		u_EventSend						(P);
 	}
 }
@@ -674,7 +674,7 @@ void	CMissile::net_Relcase(CObject* O)
 	inherited::net_Relcase(O);
 	if(PPhysicsShell()&&PPhysicsShell()->isActive())
 	{
-		if(O==smart_cast<CObject*>((CPhysicsShellHolder*)PPhysicsShell()->get_CallbackData()))
+		if(O==smart_cast<CObject*>(static_cast<CPhysicsShellHolder*>(PPhysicsShell()->get_CallbackData())))
 		{
 			PPhysicsShell()->remove_ObjectContactCallback(ExitContactCallback);
 			PPhysicsShell()->set_CallbackData(NULL);
@@ -701,7 +701,7 @@ void CMissile::setup_physic_shell	()
 
 u32	CMissile::ef_weapon_type		() const
 {
-	VERIFY	(m_ef_weapon_type != u32(-1));
+	VERIFY	(m_ef_weapon_type != static_cast<u32>(-1));
 	return	(m_ef_weapon_type);
 }
 
@@ -737,7 +737,7 @@ void	 CMissile::ExitContactCallback(bool& do_colide,bool bo1,dContact& c,SGameMt
 		gd2 =PHRetrieveGeomUserData(c.geom.g1);
 		gd1 =PHRetrieveGeomUserData(c.geom.g2);
 	}
-	if(gd1&&gd2&&(CPhysicsShellHolder*)gd1->callback_data==gd2->ph_ref_object)	
+	if(gd1&&gd2&&static_cast<CPhysicsShellHolder*>(gd1->callback_data)==gd2->ph_ref_object)	
 																				do_colide=false;
 }
 

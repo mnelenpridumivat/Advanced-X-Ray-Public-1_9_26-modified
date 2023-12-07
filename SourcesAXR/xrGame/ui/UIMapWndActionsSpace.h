@@ -9,7 +9,7 @@ namespace UIMapWndActionsSpace {
 		ePropMapResized,
 		ePropMapIdle,
 		ePropMapCentered,
-		ePropDummy					= u16(-1),
+		ePropDummy					= static_cast<u16>(-1),
 	};
 
 	enum EWorldOperators {
@@ -17,6 +17,6 @@ namespace UIMapWndActionsSpace {
 		eOperatorMapMinimize,
 		eOperatorMapIdle,
 		eOperatorMapCenter,
-		eWorldOperatorDummy			= u16(-1),
+		eWorldOperatorDummy			= static_cast<u16>(-1),
 	};
 };

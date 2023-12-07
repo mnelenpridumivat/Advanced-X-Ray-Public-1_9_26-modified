@@ -124,7 +124,7 @@ void CStalkerAnimationManager::assign_bone_callbacks	()
 	m_head_params.m_forward			= true;
 
 	int								head_bone = kinematics->LL_BoneID(pSettings->r_string(section,"bone_head"));
-	kinematics->LL_GetBoneInstance	( u16(head_bone)).set_callback( bctCustom, &callback_rotation, &m_head_params);
+	kinematics->LL_GetBoneInstance	( static_cast<u16>(head_bone)).set_callback( bctCustom, &callback_rotation, &m_head_params);
 
 	m_shoulder_params.m_rotation	= &object().sight().current_shoulder_rotation();
 	m_shoulder_params.m_object		= &object();
@@ -132,7 +132,7 @@ void CStalkerAnimationManager::assign_bone_callbacks	()
 	m_shoulder_params.m_forward		= true;
 
 	int								shoulder_bone = kinematics->LL_BoneID(pSettings->r_string(section,"bone_shoulder"));
-	kinematics->LL_GetBoneInstance	(u16(shoulder_bone)).set_callback( bctCustom, &callback_rotation, &m_shoulder_params);
+	kinematics->LL_GetBoneInstance	(static_cast<u16>(shoulder_bone)).set_callback( bctCustom, &callback_rotation, &m_shoulder_params);
 
 	m_spine_params.m_rotation		= &object().sight().current_spine_rotation();
 	m_spine_params.m_object			= &object();
@@ -140,7 +140,7 @@ void CStalkerAnimationManager::assign_bone_callbacks	()
 	m_spine_params.m_forward		= true;
 
 	int								spine_bone = kinematics->LL_BoneID(pSettings->r_string(section,"bone_spin"));
-	kinematics->LL_GetBoneInstance	( u16(spine_bone) ).set_callback( bctCustom, &callback_rotation, &m_spine_params);
+	kinematics->LL_GetBoneInstance	( static_cast<u16>(spine_bone) ).set_callback( bctCustom, &callback_rotation, &m_spine_params);
 	
 //	remove_bone_callbacks	();
 }
@@ -164,7 +164,7 @@ void CStalkerAnimationManager::assign_bone_blend_callbacks	(bool const& forward_
 	m_head_params.m_forward			= forward_direction;
 
 	int								head_bone = kinematics->LL_BoneID(pSettings->r_string(section,"bone_head"));
-	kinematics->LL_GetBoneInstance	( u16(head_bone)).set_callback( bctCustom, &callback_rotation_blend, &m_head_params);
+	kinematics->LL_GetBoneInstance	( static_cast<u16>(head_bone)).set_callback( bctCustom, &callback_rotation_blend, &m_head_params);
 
 	m_shoulder_params.m_rotation	= &object().sight().current_shoulder_rotation();
 	m_shoulder_params.m_object		= &object();
@@ -172,7 +172,7 @@ void CStalkerAnimationManager::assign_bone_blend_callbacks	(bool const& forward_
 	m_shoulder_params.m_forward		= forward_direction;
 
 	int								shoulder_bone = kinematics->LL_BoneID(pSettings->r_string(section,"bone_shoulder"));
-	kinematics->LL_GetBoneInstance	( u16(shoulder_bone) ).set_callback( bctCustom, &callback_rotation_blend, &m_shoulder_params);
+	kinematics->LL_GetBoneInstance	( static_cast<u16>(shoulder_bone) ).set_callback( bctCustom, &callback_rotation_blend, &m_shoulder_params);
 
 	m_spine_params.m_rotation		= &object().sight().current_spine_rotation();
 	m_spine_params.m_object			= &object();
@@ -180,7 +180,7 @@ void CStalkerAnimationManager::assign_bone_blend_callbacks	(bool const& forward_
 	m_spine_params.m_forward		= forward_direction;
 
 	int								spine_bone = kinematics->LL_BoneID(pSettings->r_string(section,"bone_spin"));
-	kinematics->LL_GetBoneInstance	( u16(spine_bone) ).set_callback( bctCustom, &callback_rotation_blend, &m_spine_params);
+	kinematics->LL_GetBoneInstance	( static_cast<u16>(spine_bone) ).set_callback( bctCustom, &callback_rotation_blend, &m_spine_params);
 
 //	remove_bone_callbacks	();
 }
@@ -199,13 +199,13 @@ void CStalkerAnimationManager::remove_bone_callbacks	()
 	LPCSTR							section = *object().cNameSect();
 	
 	int								head_bone = kinematics->LL_BoneID(pSettings->r_string(section,"bone_head"));
-	kinematics->LL_GetBoneInstance	(u16(head_bone)).set_callback(bctCustom,0,0);
+	kinematics->LL_GetBoneInstance	(static_cast<u16>(head_bone)).set_callback(bctCustom,0,0);
 
 	int								shoulder_bone = kinematics->LL_BoneID(pSettings->r_string(section,"bone_shoulder"));
-	kinematics->LL_GetBoneInstance	(u16(shoulder_bone)).set_callback(bctCustom,0,0);
+	kinematics->LL_GetBoneInstance	(static_cast<u16>(shoulder_bone)).set_callback(bctCustom,0,0);
 
 	int								spin_bone = kinematics->LL_BoneID(pSettings->r_string(section,"bone_spin"));
-	kinematics->LL_GetBoneInstance	(u16(spin_bone)).set_callback(bctCustom,0,0);
+	kinematics->LL_GetBoneInstance	(static_cast<u16>(spin_bone)).set_callback(bctCustom,0,0);
 }
 
 bool CStalkerAnimationManager::forward_blend_callbacks	() const

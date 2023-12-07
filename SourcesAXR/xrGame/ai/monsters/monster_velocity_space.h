@@ -3,19 +3,19 @@
 namespace MonsterMovement {
 
 	enum EMovementParameters {
-		eVelocityParameterIdle			= u32(1) <<	 1,
-		eVelocityParameterStand			= u32(1) <<  4,
-		eVelocityParameterWalkNormal	= u32(1) <<  3,
-		eVelocityParameterRunNormal		= u32(1) <<  2,
+		eVelocityParameterIdle			= static_cast<u32>(1) <<	 1,
+		eVelocityParameterStand			= static_cast<u32>(1) <<  4,
+		eVelocityParameterWalkNormal	= static_cast<u32>(1) <<  3,
+		eVelocityParameterRunNormal		= static_cast<u32>(1) <<  2,
 
-		eVelocityParameterWalkDamaged	= u32(1) <<  5,
-		eVelocityParameterRunDamaged	= u32(1) <<  6,
-		eVelocityParameterSteal			= u32(1) <<  7,
-		eVelocityParameterDrag			= u32(1) <<  8,
-		eVelocityParameterInvisible		= u32(1) <<	 9,
-		eVelocityParameterRunAttack		= u32(1) <<	 10,
-		eVelocityParameterWalkSmelling	= u32(1) <<	 11,
-		eVelocityParameterWalkGrowl		= u32(1) <<	 12,
+		eVelocityParameterWalkDamaged	= static_cast<u32>(1) <<  5,
+		eVelocityParameterRunDamaged	= static_cast<u32>(1) <<  6,
+		eVelocityParameterSteal			= static_cast<u32>(1) <<  7,
+		eVelocityParameterDrag			= static_cast<u32>(1) <<  8,
+		eVelocityParameterInvisible		= static_cast<u32>(1) <<	 9,
+		eVelocityParameterRunAttack		= static_cast<u32>(1) <<	 10,
+		eVelocityParameterWalkSmelling	= static_cast<u32>(1) <<	 11,
+		eVelocityParameterWalkGrowl		= static_cast<u32>(1) <<	 12,
 
 		eVelocityParamsWalkGrowl		= eVelocityParameterStand		| eVelocityParameterWalkGrowl,
 		eVelocityParamsWalkSmelling		= eVelocityParameterStand		| eVelocityParameterWalkSmelling,
@@ -31,7 +31,7 @@ namespace MonsterMovement {
 		eVelocityParamsRunAttack		= eVelocityParameterRunAttack	| eVelocityParameterStand, 
 
 
-		eVelocityParameterCustom		= u32(1) <<	 12,
+		eVelocityParameterCustom		= static_cast<u32>(1) <<	 12,
 	};
 
 	enum EMovementParametersChimera {

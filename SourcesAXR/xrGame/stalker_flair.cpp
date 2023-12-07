@@ -16,7 +16,7 @@ stalker_flair::stalker_flair(game_state_accumulator* owner) :
 u32 const stalker_flair::get_u32_param()
 {
 	if (!m_art_spawn_time || !m_art_take_time)
-		return u32(-1);
+		return static_cast<u32>(-1);
 
 	return m_art_take_time - m_art_spawn_time;
 }

@@ -44,8 +44,8 @@ void CStateMonsterLookToUnprotectedAreaAbstract::execute()
 	object->anim().SetSpecParams			(data.spec_params);
 	object->dir().face_target				(target_point);
 
-	if (data.sound_type != u32(-1)) {
-		if (data.sound_delay != u32(-1))
+	if (data.sound_type != static_cast<u32>(-1)) {
+		if (data.sound_delay != static_cast<u32>(-1))
 			object->sound().play(data.sound_type, 0,0,data.sound_delay);
 		else 
 			object->sound().play(data.sound_type);

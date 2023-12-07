@@ -76,7 +76,7 @@ void CPlanner::update				()
 			show_current_world_state();
 			show_target_world_state	();
 			Msg						("%6d : Solution for object %s [%d vertices searched]",Device.dwTimeGlobal,object_name(),ai().graph_engine().solver_algorithm().data_storage().get_visited_node_count());
-			for (int i=0; i<(int)solution().size(); ++i)
+			for (int i=0; i<static_cast<int>(solution().size()); ++i)
 				Msg					("%s",action2string(solution()[i]));
 		}
 	}

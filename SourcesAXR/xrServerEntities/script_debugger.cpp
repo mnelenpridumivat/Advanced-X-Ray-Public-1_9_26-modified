@@ -54,7 +54,7 @@ LRESULT CScriptDebugger::DebugMessage(UINT nMsg, WPARAM wParam, LPARAM lParam)
 	case DMSG_GOTO_FILELINE:{
 			msg.w_int(DMSG_GOTO_FILELINE);
 			msg.w_string((char*)wParam);
-			msg.w_int((int)lParam);
+			msg.w_int(static_cast<int>(lParam));
 			SendMessageToIde(msg);
 		}break;
 
@@ -81,7 +81,7 @@ LRESULT CScriptDebugger::DebugMessage(UINT nMsg, WPARAM wParam, LPARAM lParam)
 		}break;
 
 	case DMSG_GOTO_STACKTRACE_LEVEL:{
-			m_callStack->GotoStackTraceLevel((int)wParam);
+			m_callStack->GotoStackTraceLevel(static_cast<int>(wParam));
 			StackLevelChanged();
 		}break;
 	
@@ -108,7 +108,7 @@ LRESULT CScriptDebugger::DebugMessage(UINT nMsg, WPARAM wParam, LPARAM lParam)
 		}break;
 
 	case DMSG_THREAD_CHANGED:{
-			int nThreadID = (int)wParam;
+			int nThreadID = static_cast<int>(wParam);
 			DrawThreadInfo(nThreadID);
 		}break;
 

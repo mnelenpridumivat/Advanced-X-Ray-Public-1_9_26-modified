@@ -308,7 +308,7 @@ void xrServer::MakeUpdatePackets()
 			tmpPacket.w_u16					(Test.ID);
 			tmpPacket.w_chunk_open8			(position);
 			Test.UPDATE_Write				(tmpPacket);
-			u32 ObjectSize					= u32(tmpPacket.w_tell()-position)-sizeof(u8);
+			u32 ObjectSize					= static_cast<u32>(tmpPacket.w_tell() - position)-sizeof(u8);
 			tmpPacket.w_chunk_close8		(position);
 
 			if (ObjectSize == 0)			continue;					
@@ -353,7 +353,7 @@ void xrServer::SendUpdatesToAll()
 	sendtofd.bind(this, &xrServer::SendGameUpdateTo);
 	ForEachClientDoSender(sendtofd);
 
-	if ((Device.dwTimeGlobal - m_last_update_time) >= u32(1000/psNET_ServerUpdate))
+	if ((Device.dwTimeGlobal - m_last_update_time) >= static_cast<u32>(1000 / psNET_ServerUpdate))
 	{
 		MakeUpdatePackets				();
 		SendUpdatePacketsToAll			();
@@ -822,7 +822,7 @@ void			xrServer::Server_Client_Check	( IClient* CL )
 	if( CL->process_id == GetCurrentProcessId() )
 	{
 		CL->flags.bLocal	= 1;
-		SV_Client			= (xrClientData*)CL;
+		SV_Client			= static_cast<xrClientData*>(CL);
 		Msg( "New SV client 0x%08x", SV_Client->ID.value());
 	}else
 	{

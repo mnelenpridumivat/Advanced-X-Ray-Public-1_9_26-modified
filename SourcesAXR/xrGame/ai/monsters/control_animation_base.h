@@ -127,7 +127,7 @@ public:
 	// FX's
 	void		FX_Play					(EHitSide side, float amount);
 
-	MotionID	get_motion_id			(EMotionAnim a, u32 index = u32(-1));
+	MotionID	get_motion_id			(EMotionAnim a, u32 index = static_cast<u32>(-1));
 
 protected:	
 

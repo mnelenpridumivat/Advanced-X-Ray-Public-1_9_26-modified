@@ -24,14 +24,14 @@ public:
 
 public:
 	enum aiming_type {
-		aiming_none				= u32(0),
-		aiming_weapon 			= u32(1),
-		aiming_head				= u32(2),
+		aiming_none				= static_cast<u32>(0),
+		aiming_weapon 			= static_cast<u32>(1),
+		aiming_head				= static_cast<u32>(2),
 	}; // enum
 	enum animation_frame_type {
-		animation_frame_none	= u32(0),
-		animation_frame_start 	= u32(1),
-		animation_frame_end		= u32(2),
+		animation_frame_none	= static_cast<u32>(0),
+		animation_frame_start 	= static_cast<u32>(1),
+		animation_frame_end		= static_cast<u32>(2),
 	}; // enum
 
 private:

@@ -10,7 +10,7 @@
 
 namespace ScriptEntity {
 	enum EActionType {
-		eActionTypeMovement = u32(0),
+		eActionTypeMovement = static_cast<u32>(0),
 		eActionTypeWatch,
 		eActionTypeAnimation,
 		eActionTypeSound,

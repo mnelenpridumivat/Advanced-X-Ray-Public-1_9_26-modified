@@ -50,12 +50,12 @@ add_to_type_list(CPureServerObject)
 SERVER_ENTITY_DECLARE_BEGIN3(CSE_Abstract,ISE_Abstract,CPureServerObject,CScriptValueContainer)
 public:
 	enum ESpawnFlags {
-		flSpawnEnabled				= u32(1 << 0),
-		flSpawnOnSurgeOnly			= u32(1 << 1),
-		flSpawnSingleItemOnly		= u32(1 << 2),
-		flSpawnIfDestroyedOnly		= u32(1 << 3),
-		flSpawnInfiniteCount		= u32(1 << 4),
-		flSpawnDestroyOnSpawn		= u32(1 << 5),
+		flSpawnEnabled				= static_cast<u32>(1 << 0),
+		flSpawnOnSurgeOnly			= static_cast<u32>(1 << 1),
+		flSpawnSingleItemOnly		= static_cast<u32>(1 << 2),
+		flSpawnIfDestroyedOnly		= static_cast<u32>(1 << 3),
+		flSpawnInfiniteCount		= static_cast<u32>(1 << 4),
+		flSpawnDestroyOnSpawn		= static_cast<u32>(1 << 5),
 	};
 
 private:

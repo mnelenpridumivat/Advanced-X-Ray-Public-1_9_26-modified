@@ -31,12 +31,12 @@ ENGINE_API  extern float psHUD_FOV_def;
 
 CWeaponMagazined::CWeaponMagazined(ESoundTypes eSoundType) : CWeapon()
 {
-	m_eSoundShow				= ESoundTypes(SOUND_TYPE_ITEM_TAKING | eSoundType);
-	m_eSoundHide				= ESoundTypes(SOUND_TYPE_ITEM_HIDING | eSoundType);
-	m_eSoundShot				= ESoundTypes(SOUND_TYPE_WEAPON_SHOOTING | eSoundType);
-	m_eSoundEmptyClick			= ESoundTypes(SOUND_TYPE_WEAPON_EMPTY_CLICKING | eSoundType);
-	m_eSoundReload				= ESoundTypes(SOUND_TYPE_WEAPON_RECHARGING | eSoundType);
-	m_eSoundClose				= ESoundTypes(SOUND_TYPE_WEAPON_RECHARGING);
+	m_eSoundShow				= static_cast<ESoundTypes>(SOUND_TYPE_ITEM_TAKING | eSoundType);
+	m_eSoundHide				= static_cast<ESoundTypes>(SOUND_TYPE_ITEM_HIDING | eSoundType);
+	m_eSoundShot				= static_cast<ESoundTypes>(SOUND_TYPE_WEAPON_SHOOTING | eSoundType);
+	m_eSoundEmptyClick			= static_cast<ESoundTypes>(SOUND_TYPE_WEAPON_EMPTY_CLICKING | eSoundType);
+	m_eSoundReload				= static_cast<ESoundTypes>(SOUND_TYPE_WEAPON_RECHARGING | eSoundType);
+	m_eSoundClose				= static_cast<ESoundTypes>(SOUND_TYPE_WEAPON_RECHARGING);
 	m_sounds_enabled			= true;
 
 	psWpnAnimsFlag = { 0 };
@@ -159,7 +159,7 @@ void CWeaponMagazined::Load	(LPCSTR section)
 		{
 			string16 sItem;
 			_GetItem(FireModesList.c_str(), i, sItem);
-			m_aFireModes.push_back	((s8)atoi(sItem));
+			m_aFireModes.push_back	(static_cast<s8>(atoi(sItem)));
 		}
 		
 		m_iCurFireMode = ModesCount - 1;
@@ -309,7 +309,7 @@ bool CWeaponMagazined::TryReload()
 			SwitchState			(eReload);
 			return				true;
 		}
-		else for(u8 i = 0; i < u8(m_ammoTypes.size()); ++i) 
+		else for(u8 i = 0; i < static_cast<u8>(m_ammoTypes.size()); ++i) 
 		{
 			for (u32 i = 0; i < m_ammoTypes.size(); ++i)
 			{
@@ -389,7 +389,7 @@ void CWeaponMagazined::UnloadMagazine(bool spawn_ammo)
 		--iAmmoElapsed;
 	}
 
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
+	VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
 
 	if (iAmmoElapsed < 0)
 		iAmmoElapsed = 0;
@@ -442,7 +442,7 @@ int CWeaponMagazined::CheckAmmoBeforeReload(u8& v_ammoType)
 
 	if (!ammo && !m_bLockType)
 	{
-		for (u8 i = 0; i < u8(m_ammoTypes.size()); ++i)
+		for (u8 i = 0; i < static_cast<u8>(m_ammoTypes.size()); ++i)
 		{
 			//проверить патроны всех подход€щих типов
 			ammo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(m_ammoTypes[i].c_str()));
@@ -495,7 +495,7 @@ void CWeaponMagazined::ReloadMagazine()
 		
 		if(!m_pCurrentAmmo && !m_bLockType) 
 		{
-			for(u8 i = 0; i < u8(m_ammoTypes.size()); ++i) 
+			for(u8 i = 0; i < static_cast<u8>(m_ammoTypes.size()); ++i) 
 			{
 				//проверить патроны всех подход€щих типов
 				m_pCurrentAmmo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny( m_ammoTypes[i].c_str() ));
@@ -520,7 +520,7 @@ void CWeaponMagazined::ReloadMagazine()
 		UnloadMagazine();
 	}
 
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
+	VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
 
 	if (m_DefaultCartridge.m_LocalAmmoType != m_ammoType)
 		m_DefaultCartridge.Load( m_ammoTypes[m_ammoType].c_str(), m_ammoType );
@@ -536,7 +536,7 @@ void CWeaponMagazined::ReloadMagazine()
 		m_magazine.push_back(l_cartridge);
 	}
 
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
+	VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
 
 	//выкинуть коробку патронов, если она пуста€
 	if(m_pCurrentAmmo && !m_pCurrentAmmo->m_boxCurr && OnServer()) 
@@ -549,7 +549,7 @@ void CWeaponMagazined::ReloadMagazine()
 		m_bLockType = false; 
 	}
 
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
+	VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
 }
 
 void CWeaponMagazined::OnStateSwitch	(u32 S)
@@ -822,7 +822,7 @@ void CWeaponMagazined::OnShot()
 		strconcat(sizeof(sndName), sndName, m_sSndShotCurrent.c_str(), "Actor");
 		if (m_sounds.FindSoundItem(sndName, false))
 		{
-			m_sounds.PlaySound(sndName, get_LastFP(), H_Root(), !!GetHUDmode(), false, (u8)-1);
+			m_sounds.PlaySound(sndName, get_LastFP(), H_Root(), !!GetHUDmode(), false, static_cast<u8>(-1));
 			return;
 		}
 	}
@@ -831,9 +831,9 @@ void CWeaponMagazined::OnShot()
 	strconcat(sizeof(sndName), sndName, m_sSndShotCurrent.c_str(), (iAmmoElapsed == 1) ? "Last" : "");
 
 	if (m_sounds.FindSoundItem(sndName, false))
-		m_sounds.PlaySound(sndName, get_LastFP(), H_Root(), !!GetHUDmode(), false, (u8)-1);
+		m_sounds.PlaySound(sndName, get_LastFP(), H_Root(), !!GetHUDmode(), false, static_cast<u8>(-1));
 	else
-		m_sounds.PlaySound(m_sSndShotCurrent.c_str(), get_LastFP(), H_Root(), !!GetHUDmode(), false, (u8)-1);
+		m_sounds.PlaySound(m_sSndShotCurrent.c_str(), get_LastFP(), H_Root(), !!GetHUDmode(), false, static_cast<u8>(-1));
 
 	// Ёхо выстрела
 	if (IsSilencerAttached() == false)
@@ -1248,12 +1248,12 @@ bool CWeaponMagazined::Attach(PIItem pIItem, bool b_send_event)
 			if (bUseAltScope)
 			{
 				if (*it == pIItem->object().cNameSect())
-					m_cur_scope = u8(it - m_scopes.begin());
+					m_cur_scope = static_cast<u8>(it - m_scopes.begin());
 			}
 			else
 			{
 				if (pSettings->r_string((*it), "scope_name") == pIItem->object().cNameSect())
-					m_cur_scope = u8(it - m_scopes.begin());
+					m_cur_scope = static_cast<u8>(it - m_scopes.begin());
 			}
 		}
 		m_flagsAddOnState |= CSE_ALifeItemWeapon::eWeaponAddonScope;
@@ -1644,7 +1644,7 @@ void CWeaponMagazined::OnZoomIn			()
 		CEffectorZoomInertion* S = smart_cast<CEffectorZoomInertion*>	(pActor->Cameras().GetCamEffector(eCEZoom));
 		if (!S)	
 		{
-			S = (CEffectorZoomInertion*)pActor->Cameras().AddCamEffector(xr_new<CEffectorZoomInertion> ());
+			S = static_cast<CEffectorZoomInertion*>(pActor->Cameras().AddCamEffector(xr_new<CEffectorZoomInertion>()));
 			S->Init(this);
 		};
 		S->SetRndSeed			(pActor->GetZoomRndSeed());
@@ -1752,7 +1752,7 @@ void CWeaponMagazined::net_Export	(NET_Packet& P)
 {
 	inherited::net_Export (P);
 
-	P.w_u8(u8(m_iCurFireMode&0x00ff));
+	P.w_u8(static_cast<u8>(m_iCurFireMode & 0x00ff));
 }
 
 void CWeaponMagazined::net_Import	(NET_Packet& P)
@@ -1887,7 +1887,7 @@ bool CWeaponMagazined::install_upgrade_impl( LPCSTR section, bool test )
 		{
 			string16 sItem;
 			_GetItem( str, i, sItem );
-			m_aFireModes.push_back( (s8)atoi(sItem) );
+			m_aFireModes.push_back( static_cast<s8>(atoi(sItem)) );
 		}
 		m_iCurFireMode = ModesCount - 1;
 	}

@@ -166,7 +166,7 @@ public:
 			NET_Packet					P;
 			l_pPlayer->u_EventGen		(P,GE_GAME_EVENT,l_pPlayer->ID()	);
 			P.w_u16						(GAME_EVENT_PLAYER_KILL);
-			P.w_u16						(u16(l_pPlayer->ID())	);
+			P.w_u16						(static_cast<u16>(l_pPlayer->ID())	);
 			l_pPlayer->u_EventSend		(P);
 		}
 	}
@@ -1177,7 +1177,7 @@ public:
 			}
 			void operator()(IClient* client)
 			{
-				xrClientData *l_pC	= (xrClientData*)client;
+				xrClientData *l_pC	= static_cast<xrClientData*>(client);
 				if (!l_pC)
 					return;
 				ip_address			Address;

@@ -202,7 +202,7 @@ void CUIBoosterInfo::SetInfo(CInventoryItem& pInvItem)
 			if(fis_zero(val))
 				continue;
 
-			EBoostParams type = (EBoostParams)i;
+			EBoostParams type = static_cast<EBoostParams>(i);
 			switch(type)
 			{
 				case eBoostHpRestore: 

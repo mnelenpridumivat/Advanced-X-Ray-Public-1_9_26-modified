@@ -22,7 +22,7 @@ void CStateMonsterMoveToRestrictorAbstract::execute()
 {
 	object->set_action					(ACT_RUN);
 	
-	object->anim().accel_activate		(EAccelType(eAT_Aggressive));
+	object->anim().accel_activate		(static_cast<EAccelType>(eAT_Aggressive));
 	object->anim().accel_set_braking	(true);
 	object->set_state_sound				(MonsterSound::eMonsterSoundIdle);
 }

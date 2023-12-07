@@ -20,7 +20,7 @@ void TryToDefuseWeapon(CWeapon const * weapon,
 
 s16	game_cl_Deathmatch::GetBuyMenuItemIndex		(u8 Addons, u8 ItemID)
 {
-	s16	ID = (s16(Addons) << 0x08) | s16(ItemID);
+	s16	ID = (static_cast<s16>(Addons) << 0x08) | static_cast<s16>(ItemID);
 	return ID;
 };
 
@@ -95,7 +95,7 @@ void game_cl_Deathmatch::OnBuyMenu_Ok	()
 //		P.w_s16((*pCurPresetItems)[s].BigID);
 //	}
 	
-	P.w_u16		(u16(tmpItems.size()));
+	P.w_u16		(static_cast<u16>(tmpItems.size()));
 	for (u8 s=0; s<tmpItems.size(); s++)
 	{
 		P.w_u8(tmpItems[s].SlotID);

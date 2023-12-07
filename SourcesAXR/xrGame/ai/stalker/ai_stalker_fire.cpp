@@ -412,7 +412,7 @@ void CAI_Stalker::update_best_item_info_impl()
 				if (memory().enemy().selected())
 					value							= ai().ef_storage().m_pfWeaponEffectiveness->ffGetValue();
 				else
-					value							= (float)(*I)->Cost();
+					value							= static_cast<float>((*I)->Cost());
 
 				if (!fsimilar(value,m_best_item_value) && (value < m_best_item_value))
 					continue;
@@ -571,7 +571,7 @@ public:
 
 IC BOOL ray_query_callback	(collide::rq_result& result, LPVOID params)
 {
-	ray_query_param						*param = (ray_query_param*)params;
+	ray_query_param						*param = static_cast<ray_query_param*>(params);
 	float								power = param->m_holder->feel_vision_mtl_transp(result.O,result.element);
 	param->m_power						*= power;
 
@@ -775,7 +775,7 @@ bool CAI_Stalker::fire_make_sense		()
 		return				(true);
 
 	u32						last_time_seen = memory().visual().visible_object_time_last_seen(enemy);
-	if (last_time_seen == u32(-1))
+	if (last_time_seen == static_cast<u32>(-1))
 		return				(false);
 
 	if (Device.dwTimeGlobal > last_time_seen + FIRE_MAKE_SENSE_INTERVAL)
@@ -845,7 +845,7 @@ void CAI_Stalker::notify_on_wounded_or_killed	(CObject *object)
 void CAI_Stalker::notify_on_wounded_or_killed	()
 {
 	ALife::_OBJECT_ID					last_hit_object_id = memory().hit().last_hit_object_id();
-	if (last_hit_object_id == ALife::_OBJECT_ID(-1))
+	if (last_hit_object_id == static_cast<ALife::_OBJECT_ID>(-1))
 		return;
 
 	CObject								*object = Level().Objects.net_Find(last_hit_object_id);

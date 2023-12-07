@@ -190,7 +190,7 @@ void CEnemyManager::remove_links			(CObject *object)
 {
 	// since we use no members in CEntityAlive during search,
 	// we just use the pinter itself, we can just statically cast object
-	OBJECTS::iterator			I = std::find(m_objects.begin(),m_objects.end(),(CEntityAlive*)object);
+	OBJECTS::iterator			I = std::find(m_objects.begin(),m_objects.end(),static_cast<CEntityAlive*>(object));
 	if (I != m_objects.end())
 		m_objects.erase			(I);
 
@@ -364,7 +364,7 @@ bool CEnemyManager::need_update				(const bool &only_wounded) const
 	u32	last_hit_time			= m_object->memory().hit().last_hit_time();
 	if (last_hit_time && (last_hit_time > m_last_enemy_change) ) {
 		ALife::_OBJECT_ID		enemy_id	= m_object->memory().hit().last_hit_object_id();
-		VERIFY					( enemy_id != ALife::_OBJECT_ID(-1) );
+		VERIFY					( enemy_id != static_cast<ALife::_OBJECT_ID>(-1) );
 		CObject const* enemy	= Level().Objects.net_Find(enemy_id);
 		VERIFY					(enemy);
 		CEntityAlive const*		alive_enemy = smart_cast<CEntityAlive const*>(enemy);

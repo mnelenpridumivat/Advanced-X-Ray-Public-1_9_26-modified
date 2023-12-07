@@ -28,5 +28,5 @@ enum {
 	ID_AF_TEAM2_RETURNED_ENEMY,
 
 
-	ID_AH_forcedword		= u32(-1)
+	ID_AH_forcedword		= static_cast<u32>(-1)
 };

@@ -30,14 +30,14 @@ void CControlRunAttack::activate()
 
 	//////////////////////////////////////////////////////////////////////////
 	
-	SControlDirectionData		*ctrl_dir = (SControlDirectionData*)m_man->data(this, ControlCom::eControlDir); 
+	SControlDirectionData		*ctrl_dir = static_cast<SControlDirectionData*>(m_man->data(this, ControlCom::eControlDir)); 
 	VERIFY						(ctrl_dir);
 	ctrl_dir->heading.target_speed	= 3.f;
 	ctrl_dir->heading.target_angle	= m_man->direction().angle_to_target(m_object->EnemyMan.get_enemy()->Position());
 
 	//////////////////////////////////////////////////////////////////////////
 	
-	SControlAnimationData		*ctrl_anim = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+	SControlAnimationData		*ctrl_anim = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 	VERIFY						(ctrl_anim);
 
 	ctrl_anim->global.set_motion ( smart_cast<IKinematicsAnimated*>(m_object->Visual())->ID_Cycle_Safe("stand_attack_run_0") );
@@ -85,7 +85,7 @@ void CControlRunAttack::on_event(ControlCom::EEventType type, ControlCom::IEvent
 	case ControlCom::eventAnimationStart: // handle blend params
 		{
 			// set animation speed
-			SControlAnimationData	*ctrl_data_anim = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+			SControlAnimationData	*ctrl_data_anim = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 			VERIFY					(ctrl_data_anim);
 
 			CBlend					*blend = m_man->animation().current_blend();
@@ -108,17 +108,17 @@ void CControlRunAttack::on_event(ControlCom::EEventType type, ControlCom::IEvent
 			Fvector					target_position;
 			target_position.mad		(m_object->Position(), dir, path_dist);
 
-			if (!m_man->build_path_line	(this, target_position, u32(-1), velocity_mask | MonsterMovement::eVelocityParameterStand)) {
+			if (!m_man->build_path_line	(this, target_position, static_cast<u32>(-1), velocity_mask | MonsterMovement::eVelocityParameterStand)) {
 				m_man->notify				(ControlCom::eventRunAttackEnd, 0);
 			} else { 
 				// enable path
-				SControlPathBuilderData		*ctrl_path = (SControlPathBuilderData*)m_man->data(this, ControlCom::eControlPath); 
+				SControlPathBuilderData		*ctrl_path = static_cast<SControlPathBuilderData*>(m_man->data(this, ControlCom::eControlPath)); 
 				VERIFY						(ctrl_path);
 				ctrl_path->enable			= true;
 
 				m_man->lock					(this, ControlCom::eControlPath);
 
-				SControlMovementData		*ctrl_move = (SControlMovementData*)m_man->data(this, ControlCom::eControlMovement); 
+				SControlMovementData		*ctrl_move = static_cast<SControlMovementData*>(m_man->data(this, ControlCom::eControlMovement)); 
 				VERIFY						(ctrl_move);
 				ctrl_move->velocity_target	= velocity.velocity.linear;
 				ctrl_move->acc				= flt_max;

@@ -29,7 +29,7 @@ SBuyItemInfo::SBuyItemInfo()
 
 SBuyItemInfo::~SBuyItemInfo()
 {
-	CInventoryItem*			iitem = (CInventoryItem*)m_cell_item->m_pData;
+	CInventoryItem*			iitem = static_cast<CInventoryItem*>(m_cell_item->m_pData);
 	xrFactory_Destroy		(&iitem->object());
 	delete_data				(m_cell_item);
 }
@@ -308,7 +308,7 @@ void CUIMpTradeWnd::CreateHelperItems (CUIDragDropListEx* list)
 		return;
 	}
 
-	CInventoryItem* parent_item					=	(CInventoryItem*)parent_list->GetItemIdx(0)->m_pData;
+	CInventoryItem* parent_item					=	static_cast<CInventoryItem*>(parent_list->GetItemIdx(0)->m_pData);
 	CWeapon*		wpn							=	smart_cast<CWeapon*>(parent_item);
 	R_ASSERT	   (wpn);
 
@@ -354,7 +354,7 @@ void CUIMpTradeWnd::UpdateCorrespondingItemsForList(CUIDragDropListEx* _list)
 	{
 		R_ASSERT(_list->ItemsCount()==1);
 
-		CInventoryItem* main_item	= (CInventoryItem*)_list->GetItemIdx(0)->m_pData;
+		CInventoryItem* main_item	= static_cast<CInventoryItem*>(_list->GetItemIdx(0)->m_pData);
 
 		while( bag_list->ItemsCount() )
 		{
@@ -395,7 +395,7 @@ void CUIMpTradeWnd::UpdateCorrespondingItemsForList(CUIDragDropListEx* _list)
 		for(u32 _i=0; _i<_bag_cnt; ++_i)
 		{
 			CUICellItem*	_ci					= bag_list->GetItemIdx(_i);
-			CInventoryItem* _ii					= (CInventoryItem*)_ci->m_pData;
+			CInventoryItem* _ii					= static_cast<CInventoryItem*>(_ci->m_pData);
 			
 			bNecessary							= _ii->IsNecessaryItem(bi->m_name_sect);
 

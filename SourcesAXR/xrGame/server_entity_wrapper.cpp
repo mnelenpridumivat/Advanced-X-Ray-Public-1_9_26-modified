@@ -30,7 +30,7 @@ void CServerEntityWrapper::save				(IWriter &stream)
 	stream.open_chunk		(0);
 
 	m_object->Spawn_Write	(net_packet,TRUE);
-	stream.w_u16			(u16(net_packet.B.count));
+	stream.w_u16			(static_cast<u16>(net_packet.B.count));
 	stream.w				(net_packet.B.data,net_packet.B.count);
 	
 	stream.close_chunk		();
@@ -40,7 +40,7 @@ void CServerEntityWrapper::save				(IWriter &stream)
 
 	net_packet.w_begin		(M_UPDATE);
 	m_object->UPDATE_Write	(net_packet);
-	stream.w_u16			(u16(net_packet.B.count));
+	stream.w_u16			(static_cast<u16>(net_packet.B.count));
 	stream.w				(net_packet.B.data,net_packet.B.count);
 
 //	u16						ID;

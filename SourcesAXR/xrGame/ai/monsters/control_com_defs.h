@@ -3,7 +3,7 @@
 namespace ControlCom {
 	enum EControlType {
 		// 1st level
-		eControlMovement	= u32(0),	// linear velocity
+		eControlMovement	= static_cast<u32>(0),	// linear velocity
 		eControlPath,					// path builder
 		eControlDir,					// model direction
 		eControlAnimation,				// animation manager
@@ -33,14 +33,14 @@ namespace ControlCom {
 		
 		eControllersCount,
 
-		eControlInvalid		= u32(-1)
+		eControlInvalid		= static_cast<u32>(-1)
 	};
 
 	struct	IComData	{};
 	struct	IEventData	{};
 
 	enum EEventType {
-		eventAnimationStart = u32(0),
+		eventAnimationStart = static_cast<u32>(0),
 		eventAnimationEnd,
 		eventLegsAnimationEnd,
 		eventTorsoAnimationEnd,
@@ -67,9 +67,9 @@ namespace ControlCom {
 	};
 
 	enum ECaptureType {
-		eCapturePath		= u32(1) << 0,
-		eCaptureMovement	= u32(1) << 1,
-		eCaptureDir			= u32(1) << 2,
+		eCapturePath		= static_cast<u32>(1) << 0,
+		eCaptureMovement	= static_cast<u32>(1) << 1,
+		eCaptureDir			= static_cast<u32>(1) << 2,
 	};
 };
 

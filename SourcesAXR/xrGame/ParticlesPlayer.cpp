@@ -53,7 +53,7 @@ void CParticlesPlayer::SBoneInfo::StopParticles(u16 sender_id, bool bDestroy)
 
 CParticlesPlayer::CParticlesPlayer ()
 {
-	bone_mask			= u64(1)<<u64(0);
+	bone_mask			= static_cast<u64>(1)<<static_cast<u64>(0);
 	
 	m_bActiveBones		= false;
 
@@ -88,12 +88,12 @@ void CParticlesPlayer::LoadParticles(IKinematics* K)
 			Fvector					offs;
 			sscanf					(*item.second,"%f,%f,%f",&offs.x,&offs.y,&offs.z);
 			m_Bones.push_back		(SBoneInfo(index,offs));
-			bone_mask				|= u64(1)<<u64(index);
+			bone_mask				|= static_cast<u64>(1)<<static_cast<u64>(index);
 		}
 	}
 	if(m_Bones.empty())
 	{
-		bone_mask			= u64(1)<<u64(0);
+		bone_mask			= static_cast<u64>(1)<<static_cast<u64>(0);
 		m_Bones.push_back	(SBoneInfo(K->LL_GetBoneRoot(),Fvector().set(0,0,0)));
 	}
 }
@@ -120,7 +120,7 @@ void	CParticlesPlayer::net_DestroyParticles	()
 CParticlesPlayer::SBoneInfo* CParticlesPlayer::get_nearest_bone_info(IKinematics* K, u16 bone_index)
 {
 	u16 play_bone	= bone_index;
-	while((BI_NONE!=play_bone)&&!(bone_mask&(u64(1)<<u64(play_bone))))
+	while((BI_NONE!=play_bone)&&!(bone_mask&(static_cast<u64>(1)<<static_cast<u64>(play_bone))))
 	{
 		play_bone	= K->LL_GetData(play_bone).GetParentID();
 	}
@@ -149,7 +149,7 @@ void CParticlesPlayer::StartParticles(const shared_str& particles_name, u16 bone
 	
 	particles_info.sender_id		= sender_id;
 
-	particles_info.life_time=auto_stop ? life_time : u32(-1);
+	particles_info.life_time=auto_stop ? life_time : static_cast<u32>(-1);
 	xform.getHPB(particles_info.angles);
 
 	Fmatrix m;m.setHPB(particles_info.angles.x,particles_info.angles.y,particles_info.angles.z);
@@ -170,7 +170,7 @@ void CParticlesPlayer::StartParticles(const shared_str& ps_name, const Fmatrix& 
 		SParticlesInfo &particles_info	=*it->AppendParticles(object,ps_name);
 		particles_info.sender_id	= sender_id;
 
-		particles_info.life_time=auto_stop ? life_time : u32(-1);
+		particles_info.life_time=auto_stop ? life_time : static_cast<u32>(-1);
 		xform.getHPB(particles_info.angles);
 		//начать играть партиклы
 
@@ -253,13 +253,13 @@ void CParticlesPlayer::UpdateParticles()
 			p_info.ps->UpdateParent(xform, parent_vel);
 
 			//обновить время существования
-			if(p_info.life_time!=u32(-1))
+			if(p_info.life_time!=static_cast<u32>(-1))
 			{
 				if(p_info.life_time>Device.dwTimeDelta)	p_info.life_time-=Device.dwTimeDelta;
 				else 
 				{
 					p_info.ps->Stop();
-					p_info.life_time=u32(-1);
+					p_info.life_time=static_cast<u32>(-1);
 				}
 			}
 			if(!p_info.ps->IsPlaying()){
@@ -299,7 +299,7 @@ u16 CParticlesPlayer::GetNearestBone	(IKinematics* K, u16 bone_id)
 {
 	u16 play_bone	= bone_id;
 
-	while((BI_NONE!=play_bone)&&!(bone_mask&(u64(1)<<u64(play_bone))))
+	while((BI_NONE!=play_bone)&&!(bone_mask&(static_cast<u64>(1)<<static_cast<u64>(play_bone))))
 	{
 		play_bone	= K->LL_GetData(play_bone).GetParentID();
 	}

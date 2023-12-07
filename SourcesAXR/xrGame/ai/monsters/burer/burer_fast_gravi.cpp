@@ -29,7 +29,7 @@ void CBurerFastGravi::deactivate()
 void CBurerFastGravi::on_event(ControlCom::EEventType type, ControlCom::IEventData *data)
 {
 	if (type == ControlCom::eventTAChange) {
-		STripleAnimEventData *event_data = (STripleAnimEventData *)data;
+		STripleAnimEventData *event_data = static_cast<STripleAnimEventData*>(data);
 		if (event_data->m_current_state == eStateExecute) {
 			process_hit();
 			m_object->com_man().ta_pointbreak();

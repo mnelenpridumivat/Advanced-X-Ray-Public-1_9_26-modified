@@ -63,5 +63,5 @@ public:
 				void		SetRenderable       (bool renderable) { psHUD_Flags.set(HUD_DRAW_RT2,renderable); }
 };
 
-IC CHUDManager&			HUD()		{ return *((CHUDManager*)g_hud);}
+IC CHUDManager&			HUD()		{ return *static_cast<CHUDManager*>(g_hud);}
 

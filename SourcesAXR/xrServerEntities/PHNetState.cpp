@@ -214,7 +214,7 @@ VERIFY( !(fsimilar(min.x,max.x)&&fsimilar(min.y,max.y)&&fsimilar(min.z,max.z)) )
 }
 SPHBonesData::SPHBonesData()
 {
-	bones_mask					=u64(-1);
+	bones_mask					=static_cast<u64>(-1);
 	root_bone					=0;
 
 	Fvector						_mn, _mx;
@@ -230,7 +230,7 @@ void SPHBonesData::net_Save(NET_Packet &P)
 	
 	P.w_vec3		(get_min());
 	P.w_vec3		(get_max());
-	P.w_u16			((u16)bones.size());//bones number;
+	P.w_u16			(static_cast<u16>(bones.size()));//bones number;
 	PHNETSTATE_I	i=bones.begin(),e=bones.end();
 	for(;e!=i;i++)
 	{

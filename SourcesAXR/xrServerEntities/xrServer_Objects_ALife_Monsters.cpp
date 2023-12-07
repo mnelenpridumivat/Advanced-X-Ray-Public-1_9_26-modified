@@ -57,7 +57,7 @@ void setup_location_types_section(GameGraph::TERRAIN_VECTOR &m_vertex_types, CIn
 			continue;
 
 		for (u32 j=0; j<GameGraph::LOCATION_TYPE_COUNT; ++j)
-			terrain_mask.tMask[j]	= GameGraph::_LOCATION_ID(atoi(_GetItem(S,j,I)));
+			terrain_mask.tMask[j]	= static_cast<GameGraph::_LOCATION_ID>(atoi(_GetItem(S, j, I)));
 		
 		m_vertex_types.push_back	(terrain_mask);
 	}
@@ -90,7 +90,7 @@ void setup_location_types_line(GameGraph::TERRAIN_VECTOR &m_vertex_types, LPCSTR
 
 	for (u32 i=0; i<N;) {
 		for (u32 j=0; j<GameGraph::LOCATION_TYPE_COUNT; ++j, ++i)
-			terrain_mask.tMask[j]	= GameGraph::_LOCATION_ID(atoi(_GetItem(string,i,I)));
+			terrain_mask.tMask[j]	= static_cast<GameGraph::_LOCATION_ID>(atoi(_GetItem(string, i, I)));
 		m_vertex_types.push_back	(terrain_mask);
 	}
 }
@@ -580,7 +580,7 @@ void CSE_ALifeTrader::STATE_Read			(NET_Packet &tNetPacket, u16 size)
 		
 	if ((m_wVersion > 29) && (m_wVersion < 118)) {
 		u32						l_dwCount	= tNetPacket.r_u32();
-		for (int i=0 ; i<(int)l_dwCount; ++i) {
+		for (int i=0 ; i<static_cast<int>(l_dwCount); ++i) {
 			shared_str			temp;
 			tNetPacket.r_stringZ(temp);
 			tNetPacket.r_u32	();
@@ -634,7 +634,7 @@ void CSE_ALifeTrader::FillProps				(LPCSTR _pref, PropItemVec& items)
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifeCustomZone::CSE_ALifeCustomZone	(LPCSTR caSection) : CSE_ALifeSpaceRestrictor(caSection)
 {
-	m_owner_id					= u32(-1);
+	m_owner_id					= static_cast<u32>(-1);
 //	m_maxPower					= pSettings->r_float(caSection,"min_start_power");
 	if (pSettings->line_exist(caSection,"hit_type"))
 		m_tHitType				= ALife::g_tfString2HitType(pSettings->r_string(caSection,"hit_type"));
@@ -950,9 +950,9 @@ CSE_ALifeCreatureAbstract::CSE_ALifeCreatureAbstract(LPCSTR caSection)	: CSE_ALi
 	m_fIntelligence				= 25.f;
 	m_fMorale					= 100.f;
 	m_ef_creature_type			= pSettings->r_u32(caSection,"ef_creature_type");
-	m_ef_weapon_type			= READ_IF_EXISTS(pSettings,r_u32,caSection,"ef_weapon_type",u32(-1));
-	m_ef_detector_type			= READ_IF_EXISTS(pSettings,r_u32,caSection,"ef_detector_type",u32(-1));
-	m_killer_id					= ALife::_OBJECT_ID(-1);
+	m_ef_weapon_type			= READ_IF_EXISTS(pSettings,r_u32,caSection,"ef_weapon_type",static_cast<u32>(-1));
+	m_ef_detector_type			= READ_IF_EXISTS(pSettings,r_u32,caSection,"ef_detector_type",static_cast<u32>(-1));
+	m_killer_id					= static_cast<ALife::_OBJECT_ID>(-1);
 	m_game_death_time			= 0;
 }
 
@@ -974,13 +974,13 @@ u32	CSE_ALifeCreatureAbstract::ef_creature_type	() const
 
 u32	 CSE_ALifeCreatureAbstract::ef_weapon_type	() const
 {
-	VERIFY						(m_ef_weapon_type != u32(-1));
+	VERIFY						(m_ef_weapon_type != static_cast<u32>(-1));
 	return						(m_ef_weapon_type);
 }
 
 u32	 CSE_ALifeCreatureAbstract::ef_detector_type() const
 {
-	VERIFY						(m_ef_detector_type != u32(-1));
+	VERIFY						(m_ef_detector_type != static_cast<u32>(-1));
 	return						(m_ef_detector_type);
 }
 
@@ -1003,7 +1003,7 @@ void CSE_ALifeCreatureAbstract::STATE_Write	(NET_Packet &tNetPacket)
 	save_data					(m_dynamic_out_restrictions,tNetPacket);
 	save_data					(m_dynamic_in_restrictions,tNetPacket);
 	tNetPacket.w_u16			( get_killer_id() );
-	R_ASSERT(!(get_health() > 0.0f && get_killer_id() != u16(-1)));
+	R_ASSERT(!(get_health() > 0.0f && get_killer_id() != static_cast<u16>(-1)));
 	tNetPacket.w_u64			(m_game_death_time);
 }
 
@@ -1117,7 +1117,7 @@ bool CSE_ALifeCreatureAbstract::can_switch_offline	() const
 
 void CSE_ALifeCreatureAbstract::set_health	(float const health_value)
 {
-	VERIFY( !((get_killer_id() != u16(-1)) && (health_value > 0.f)) );
+	VERIFY( !((get_killer_id() != static_cast<u16>(-1)) && (health_value > 0.f)) );
 	fHealth = health_value;
 }
 
@@ -1165,7 +1165,7 @@ CSE_ALifeMonsterAbstract::CSE_ALifeMonsterAbstract(LPCSTR caSection)	: CSE_ALife
 			imm_section = pSettings->r_string(caSection, "immunities_sect");
 		for ( ; I != E; ++I)
 		{
-			xr_strcpy			(S, ALife::g_cafHitType2String(ALife::EHitType(I - B)));
+			xr_strcpy			(S, ALife::g_cafHitType2String(static_cast<ALife::EHitType>(I - B)));
 			xr_strcat				(S,"_immunity");
 			*I					= READ_IF_EXISTS(pSettings,r_float,imm_section,S,1.f);
 		}
@@ -1353,7 +1353,7 @@ CSE_ALifeCreatureActor::CSE_ALifeCreatureActor	(LPCSTR caSection) : CSE_ALifeCre
 	fRadiation					= 0.f;
 	accel.set					(0.f,0.f,0.f);
 	velocity.set				(0.f,0.f,0.f);
-	m_holderID					=u16(-1);
+	m_holderID					=static_cast<u16>(-1);
 	mstate						= 0;
 }
 

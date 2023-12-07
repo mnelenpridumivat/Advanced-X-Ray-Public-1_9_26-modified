@@ -100,15 +100,15 @@ void CStateGroupRestAbstract::execute()
 				{
 					switch(object->get_number_animation())
 					{
-					case u32(8): 
+					case static_cast<u32>(8): 
 						object->set_current_animation(13);
 						break;
-					case u32(14): 
+					case static_cast<u32>(14): 
 						object->set_current_animation(12);
 						break;
-					case u32(12): 
+					case static_cast<u32>(12): 
 						object->set_current_animation(7);
-						object->saved_state = u32(-1);
+						object->saved_state = static_cast<u32>(-1);
 					    break;
 					default:
 					    break;
@@ -122,7 +122,7 @@ void CStateGroupRestAbstract::execute()
 						return;
 					}
 				}
-				if (time()<time_for_sleep && object->saved_state == eStateRest_Sleep && object->get_number_animation() == u32(13))
+				if (time()<time_for_sleep && object->saved_state == eStateRest_Sleep && object->get_number_animation() == static_cast<u32>(13))
 				{
 					select_state	(eStateRest_Sleep);
 					get_state_current()->execute();
@@ -155,9 +155,9 @@ void CStateGroupRestAbstract::execute()
 						prev_substate = current_substate;
 						return;
 					} else {
-						if (object->saved_state != eStateRest_Sleep && prev_substate==eStateCustom && object->get_number_animation() >= u32(8) && object->get_number_animation() < u32(12))
+						if (object->saved_state != eStateRest_Sleep && prev_substate==eStateCustom && object->get_number_animation() >= static_cast<u32>(8) && object->get_number_animation() < static_cast<u32>(12))
 						{
-							object->set_current_animation(object->get_number_animation() + u32(1));
+							object->set_current_animation(object->get_number_animation() + static_cast<u32>(1));
 							select_state	(eStateCustom);
 							object->b_state_check = false;
 							get_state_current()->execute();

@@ -202,7 +202,7 @@ void __cdecl stats_submitter::set_intension_cb(const SCInterfacePtr theInterface
 	char const * tmp_connection_id = my_inst->m_atlas_obj->GetConnectionId();
 	VERIFY(tmp_connection_id);
 	xr_strcpy(
-		static_cast<char*>((void*)my_inst->m_atlas_connection_id),
+		static_cast<char*>(static_cast<void*>(my_inst->m_atlas_connection_id)),
 		sizeof(my_inst->m_atlas_connection_id),
 		tmp_connection_id
 	);

@@ -42,7 +42,7 @@ CStateManagerDog::CStateManagerDog(CAI_Dog *monster) : inherited(monster)
 
 void CStateManagerDog::execute()
 {
-	u32   state_id = u32(-1);
+	u32   state_id = static_cast<u32>(-1);
 
 	CMonsterSquad* squad = monster_squad().get_squad(object);
 

@@ -29,7 +29,7 @@ BOOL CPPEffectorPsyDogAura::update()
 	if (m_effector_state == eStatePermanent) {
 		m_factor = 1.f;
 	} else {
-		m_factor = float(Device.dwTimeGlobal - m_time_state_started) / float(m_time_to_fade);
+		m_factor = static_cast<float>(Device.dwTimeGlobal - m_time_state_started) / static_cast<float>(m_time_to_fade);
 		if (m_effector_state == eStateFadeOut) m_factor = 1 - m_factor;
 
 		if (m_factor > 1) {

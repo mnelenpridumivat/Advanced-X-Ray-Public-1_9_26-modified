@@ -177,7 +177,7 @@ namespace MemorySpace {
 
 		IC	int		sound_type		() const
 		{
-			return					(int(m_sound_type));
+			return					static_cast<int>(m_sound_type);
 		}
 	};
 

@@ -54,7 +54,7 @@ bool   get_var (const char* name, u32& value)
 	bool	res	=	get_var(name, fval);
 	if ( res )
 	{
-		value	=	(u32)fval;
+		value	=	static_cast<u32>(fval);
 	}
 	return		res;
 }

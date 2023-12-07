@@ -26,13 +26,13 @@ void CStateGroupRestIdleAbstract::initialize()
 {
 	inherited::initialize();
 
-	m_target_node = u32(-1);
+	m_target_node = static_cast<u32>(-1);
 
 	if (object->b_end_state_eat)
 	{
 		m_target_node = object->Home->get_place_in_min_home();
 
-		if (m_target_node == u32(-1))
+		if (m_target_node == static_cast<u32>(-1))
 		{
 			const CCoverPoint *point = object->CoverMan->find_cover(object->Home->get_home_point(), 1, object->Home->get_min_radius());
 			if (!point) return;
@@ -41,7 +41,7 @@ void CStateGroupRestIdleAbstract::initialize()
 	} else {
 		m_target_node = object->Home->get_place_in_mid_home();
 
-		if (m_target_node == u32(-1))
+		if (m_target_node == static_cast<u32>(-1))
 		{
 			const CCoverPoint *point = object->CoverMan->find_cover(object->Home->get_home_point(), 1, object->Home->get_mid_radius());
 			if (!point) return;
@@ -77,17 +77,17 @@ TEMPLATE_SPECIALIZATION
 void CStateGroupRestIdleAbstract::reselect_state()
 {
 	if (object->saved_state == eStateRest_LookOpenPlace) {
-		object->saved_state = u32(-1);
+		object->saved_state = static_cast<u32>(-1);
 		select_state(eStateRest_WalkGraphPoint);
 		return;
 	}
 
-	if ((prev_substate == u32(-1) && m_target_node != u32(-1)) || (prev_substate == eStateRest_WalkGraphPoint)) {
+	if ((prev_substate == static_cast<u32>(-1) && m_target_node != static_cast<u32>(-1)) || (prev_substate == eStateRest_WalkGraphPoint)) {
 		select_state(eStateRest_WalkToCover);
 		return;
 	} 
 
-	if ((prev_substate == eStateRest_WalkToCover) || (prev_substate == u32(-1))) {
+	if ((prev_substate == eStateRest_WalkToCover) || (prev_substate == static_cast<u32>(-1))) {
 		object->saved_state = eStateRest_LookOpenPlace;
 		if (object->b_end_state_eat)
 		{
@@ -111,7 +111,7 @@ void CStateGroupRestIdleAbstract::setup_substates()
 	if (current_substate == eStateRest_WalkGraphPoint) {
 		SStateDataMoveToPointEx data;
 		data.vertex				= object->Home->get_place_in_mid_home();
-		if (data.vertex == u32(-1))
+		if (data.vertex == static_cast<u32>(-1))
 		{
 			data.vertex = object->ai_location().level_vertex_id();
 		}
@@ -119,16 +119,16 @@ void CStateGroupRestIdleAbstract::setup_substates()
 		if (object->Position().distance_to(data.point) > 8.f)
 		{
 			m_move_type = 1;
-			object->m_start_smelling = u32(-1);
+			object->m_start_smelling = static_cast<u32>(-1);
 		} else {
-			if (object->m_start_smelling == u32(-1) || object->m_start_smelling > u32(4) + object->m_smelling_count)
+			if (object->m_start_smelling == static_cast<u32>(-1) || object->m_start_smelling > static_cast<u32>(4) + object->m_smelling_count)
 			{
 				m_move_type = (Random.randI(2));
-				object->m_start_smelling = m_move_type ? u32(1) : u32(-1);
+				object->m_start_smelling = m_move_type ? static_cast<u32>(1) : static_cast<u32>(-1);
 				object->m_smelling_count = Random.randI(3);
 			} else {
 				m_move_type = 0;
-				object->m_start_smelling = object->m_start_smelling + u32(1);
+				object->m_start_smelling = object->m_start_smelling + static_cast<u32>(1);
 			}
 		}
 		data.action.action		= m_move_type ? ACT_WALK_FWD : ACT_HOME_WALK_SMELLING;
@@ -147,7 +147,7 @@ void CStateGroupRestIdleAbstract::setup_substates()
 	if (current_substate == eStateRest_WalkToCover) {
 		SStateDataMoveToPointEx data;
 		data.vertex				= m_target_node;
-		if (data.vertex == u32(-1))
+		if (data.vertex == static_cast<u32>(-1))
 		{
 			data.vertex = object->ai_location().level_vertex_id();
 		}
@@ -155,16 +155,16 @@ void CStateGroupRestIdleAbstract::setup_substates()
 		if (object->Position().distance_to(data.point) > 8.f)
 		{
 			m_move_type = 1;
-			object->m_start_smelling = u32(-1);
+			object->m_start_smelling = static_cast<u32>(-1);
 		} else {
-			if (object->m_start_smelling == u32(-1) || object->m_start_smelling > u32(4) + object->m_smelling_count)
+			if (object->m_start_smelling == static_cast<u32>(-1) || object->m_start_smelling > static_cast<u32>(4) + object->m_smelling_count)
 			{
 				m_move_type = (Random.randI(2));
-				object->m_start_smelling = m_move_type ? u32(1) : u32(-1);
+				object->m_start_smelling = m_move_type ? static_cast<u32>(1) : static_cast<u32>(-1);
 				object->m_smelling_count = Random.randI(3);
 			} else {
 				m_move_type = 0;
-				object->m_start_smelling = object->m_start_smelling + u32(1);
+				object->m_start_smelling = object->m_start_smelling + static_cast<u32>(1);
 			}
 		}
 		data.action.action		= m_move_type ? ACT_WALK_FWD : ACT_HOME_WALK_SMELLING;
@@ -203,7 +203,7 @@ void CStateGroupRestIdleAbstract::setup_substates()
 
 		data.action		= ACT_STAND_IDLE;
 		data.time_out	= 0;			// do not use time out
-		if (object->get_number_animation() == u32(6))
+		if (object->get_number_animation() == static_cast<u32>(6))
 		{
 			data.sound_type	= MonsterSound::eMonsterSoundThreaten;
 		} else {

@@ -65,7 +65,7 @@ BOOL CLevelChanger::net_Spawn	(CSE_Abstract* DC)
 	m_bSilentMode				= !!l_tpALifeLevelChanger->m_bSilentMode;
 	if (ai().get_level_graph()) {
 		//. this information should be computed in xrAI
-		ai_location().level_vertex	(ai().level_graph().vertex(u32(-1),Position()));
+		ai_location().level_vertex	(ai().level_graph().vertex(static_cast<u32>(-1),Position()));
 		ai_location().game_vertex	(ai().cross_table().vertex(ai_location().level_vertex_id()).game_vertex_id());
 	}
 
@@ -164,7 +164,7 @@ bool CLevelChanger::get_reject_pos(Fvector& p, Fvector& r)
 
 BOOL CLevelChanger::feel_touch_contact	(CObject *object)
 {
-	BOOL bRes	= (((CCF_Shape*)CFORM())->Contact(object));
+	BOOL bRes	= (static_cast<CCF_Shape*>(CFORM())->Contact(object));
 	bRes		= bRes && smart_cast<CActor*>(object) && smart_cast<CActor*>(object)->g_Alive();
 	return		bRes;
 }

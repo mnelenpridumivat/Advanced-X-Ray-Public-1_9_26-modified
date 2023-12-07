@@ -46,7 +46,7 @@ CALifeSimulatorBase::CALifeSimulatorBase	(xrServer *server, LPCSTR section)
 	m_registry_container		= 0;
 	m_upgrade_manager			= 0;
 
-	random().seed				(u32(CPU::QPC() & 0xffffffff));
+	random().seed				(static_cast<u32>(CPU::QPC() & 0xffffffff));
 	m_can_register_objects		= true;
 }
 
@@ -131,7 +131,7 @@ CSE_Abstract *CALifeSimulatorBase::spawn_item	(LPCSTR section, const Fvector &po
 
 	dynamic_object->m_tNodeID	= level_vertex_id;
 	dynamic_object->m_tGraphID	= game_vertex_id;
-	dynamic_object->m_tSpawnID	= u16(-1);
+	dynamic_object->m_tSpawnID	= static_cast<u16>(-1);
 
 	if (registration)
 		register_object				(dynamic_object,true);
@@ -199,7 +199,7 @@ void CALifeSimulatorBase::create(CSE_ALifeDynamicObject *&i, CSE_ALifeDynamicObj
 	tNetPacket.r_begin			(id);
 	i->UPDATE_Read				(tNetPacket);
 
-	R_ASSERT3					(!(i->used_ai_locations()) || (i->m_tNodeID != u32(-1)),"Invalid vertex for object ",i->name_replace());
+	R_ASSERT3					(!(i->used_ai_locations()) || (i->m_tNodeID != static_cast<u32>(-1)),"Invalid vertex for object ",i->name_replace());
 
 	i->m_tSpawnID				= tSpawnID;
 	if (!graph().actor() && smart_cast<CSE_ALifeCreatureActor*>(i))
@@ -274,7 +274,7 @@ void CALifeSimulatorBase::release	(CSE_Abstract *abstract, bool alife_query)
 	if (!object->children.empty()) {
 		u32							children_count = object->children.size();
 		u32							bytes = children_count*sizeof(ALife::_OBJECT_ID);
-		ALife::_OBJECT_ID			*children = (ALife::_OBJECT_ID*)_alloca(bytes);
+		ALife::_OBJECT_ID			*children = static_cast<ALife::_OBJECT_ID*>(_alloca(bytes));
 		CopyMemory					(children,&*object->children.begin(),bytes);
 
 		ALife::_OBJECT_ID			*I = children;
@@ -325,7 +325,7 @@ void CALifeSimulatorBase::assign_death_position(CSE_ALifeCreatureAbstract *tpALi
 	CGameGraph::const_spawn_iterator		i, e;
 	ai().game_graph().begin_spawn			(tGraphID,i,e);
 	VERIFY									(e == i + ai().game_graph().vertex(tGraphID)->death_point_count());
-	i										+= (e != i) ? random().random(s32(e - i)) : 0;
+	i										+= (e != i) ? random().random(static_cast<s32>(e - i)) : 0;
 	tpALifeCreatureAbstract->m_tGraphID		= tGraphID;
 #ifdef DEBUG
 	if (psAI_Flags.test(aiALife)) {

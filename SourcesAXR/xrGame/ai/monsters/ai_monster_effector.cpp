@@ -7,7 +7,7 @@
 // CMonsterEffector
 //////////////////////////////////////////////////////////////////////////
 CMonsterEffector::CMonsterEffector(const SPPInfo &ppi, float life_time, float attack_time, float release_time, float spec_factor) :
-		CEffectorPP(EEffectorPPType(eCEHit), life_time)
+		CEffectorPP(static_cast<EEffectorPPType>(eCEHit), life_time)
 {
 	state		= ppi;
 	m_total		= life_time;

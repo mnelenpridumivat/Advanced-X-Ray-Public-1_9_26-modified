@@ -87,7 +87,7 @@ void CUIAnimatedStatic::SetFrame(const u32 frameNum)
 void CUIAnimatedStatic::SetAnimPos(float pos){
 	R_ASSERT(pos >= 0 && pos <= 1);
 
-	u32 curFrame = u32(m_uFrameCount*pos);
+	u32 curFrame = static_cast<u32>(m_uFrameCount * pos);
 
 	if (curFrame != m_uCurFrame)
 	{
@@ -136,13 +136,13 @@ void CUISleepStatic::Update()
 	pos.x += parent_pos.x;
 	pos.y += parent_pos.y;
 
-	Frect r = Frect().set((float)start_pixel, 0.0f, (float)end_pixel, 128.0f);
+	Frect r = Frect().set(static_cast<float>(start_pixel), 0.0f, static_cast<float>(end_pixel), 128.0f);
 	m_UIStaticItem.SetTextureRect(r);
 	m_UIStaticItem.SetSize(Fvector2().set(iFloor((end_pixel-start_pixel)*UI().get_current_kx()), 128));
 	m_UIStaticItem.SetPos(pos.x, pos.y);
 	if(end_pixel2>0)
 	{
-		r.set((float)start_pixel2, 0.0f, (float)end_pixel2, 128.0f);
+		r.set(static_cast<float>(start_pixel2), 0.0f, static_cast<float>(end_pixel2), 128.0f);
 		m_UIStaticItem2.SetTextureRect(r);
 		m_UIStaticItem2.SetSize(Fvector2().set(iFloor(end_pixel2*UI().get_current_kx()), 128));
 		m_UIStaticItem2.SetPos(m_UIStaticItem.GetPosX()+m_UIStaticItem.GetSize().x, m_UIStaticItem.GetPosY());

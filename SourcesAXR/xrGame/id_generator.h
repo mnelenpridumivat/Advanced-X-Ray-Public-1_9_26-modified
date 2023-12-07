@@ -36,7 +36,7 @@ private:
 
 private:
 	enum {
-		m_tBlockCount			= u32(tMaxValue - tMinValue)/tBlockSize + 1,
+		m_tBlockCount			= static_cast<u32>(tMaxValue - tMinValue)/tBlockSize + 1,
 	};
 
 private:

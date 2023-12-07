@@ -54,7 +54,7 @@ void   CStatePoltergeistAttackHiddenAbstract::select_target_for_move ()
 
 		m_fly_left						=	left_side;
 		m_fly_side_select_tick			=	current_time() + 
-											(u32)(1000*object->get_fly_around_change_direction_time());
+											static_cast<u32>(1000 * object->get_fly_around_change_direction_time());
 	}
 
 	Fvector const 	enemy2self			=	-fly_radius * normalize(self2enemy) ;
@@ -122,7 +122,7 @@ void CStatePoltergeistAttackHiddenAbstract::execute()
 	}
 	else
 	{
-		current_substate	=	(u32)eStateUnknown;
+		current_substate	=	static_cast<u32>(eStateUnknown);
 		prev_substate		=	current_substate;
 	}
 

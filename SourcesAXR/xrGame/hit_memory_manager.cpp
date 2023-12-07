@@ -79,7 +79,7 @@ void CHitMemoryManager::Load				(LPCSTR section)
 void CHitMemoryManager::reinit				()
 {
 	m_hits					= 0;
-	m_last_hit_object_id	= ALife::_OBJECT_ID(-1);
+	m_last_hit_object_id	= static_cast<ALife::_OBJECT_ID>(-1);
 	m_last_hit_time			= 0;
 }
 
@@ -129,7 +129,7 @@ void CHitMemoryManager::add					(float amount, const Fvector &vLocalDir, const C
 	if (m_hits->end() == J) {
 		CHitObject						hit_object;
 
-		hit_object.fill					(entity_alive,m_object,!m_stalker ? squad_mask_type(-1) : m_stalker->agent_manager().member().mask(m_stalker));
+		hit_object.fill					(entity_alive,m_object,!m_stalker ? static_cast<squad_mask_type>(-1) : m_stalker->agent_manager().member().mask(m_stalker));
 		
 #ifdef USE_FIRST_GAME_TIME
 		hit_object.m_first_game_time	= Level().GetGameTime();
@@ -246,7 +246,7 @@ void CHitMemoryManager::remove(const MemorySpace::CHitObject* hit_object)
 void CHitMemoryManager::remove_links	(CObject *object)
 {
 	if (m_last_hit_object_id == object->ID()) {
-		m_last_hit_object_id	= ALife::_OBJECT_ID(-1);
+		m_last_hit_object_id	= static_cast<ALife::_OBJECT_ID>(-1);
 		m_last_hit_time			= 0;
 	}
 
@@ -274,7 +274,7 @@ void CHitMemoryManager::save	(NET_Packet &packet) const
 	if (!m_object->g_Alive())
 		return;
 
-	packet.w_u8					((u8)objects().size());
+	packet.w_u8					(static_cast<u8>(objects().size()));
 
 	HITS::const_iterator		I = objects().begin();
 	HITS::const_iterator		E = objects().end();

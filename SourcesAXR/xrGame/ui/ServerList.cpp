@@ -50,8 +50,8 @@ CServerList::CServerList()
 	
 	m_b_local						= false;
 
-	m_last_retreived_index			= u32(-1);
-	m_need_refresh_fr				= u32(-1);
+	m_last_retreived_index			= static_cast<u32>(-1);
+	m_need_refresh_fr				= static_cast<u32>(-1);
 }
 
 CServerList::~CServerList()
@@ -102,7 +102,7 @@ void CServerList::Update()
 
 bool CServerList::NeedToRefreshCurServer	()
 {
-	CUIListItemServer* pItem = (CUIListItemServer*)m_list[LST_SERVER].GetSelectedItem();
+	CUIListItemServer* pItem = static_cast<CUIListItemServer*>(m_list[LST_SERVER].GetSelectedItem());
 	if(!pItem)
 		return false;
 	return browser().HasAllKeys(pItem->GetInfo()->info.Index) == false;
@@ -189,7 +189,7 @@ void CServerList::FillUpDetailedServerInfo()
 	bool t2 = false;
 	bool spect = false;
 		
-	CUIListItemServer* pItem = (CUIListItemServer*)m_list[LST_SERVER].GetSelectedItem();
+	CUIListItemServer* pItem = static_cast<CUIListItemServer*>(m_list[LST_SERVER].GetSelectedItem());
 	if(pItem)
 	{
 		ServerInfo srvInfo;
@@ -368,7 +368,7 @@ void CServerList::UpdateSizes()
 {
 	float height = m_bShowServerInfo ? m_fListH[1] : m_fListH[0];
 	m_list[LST_SERVER].SetHeight(height);
-	int page_size = (m_list[LST_SERVER].GetSize()*m_list[LST_SERVER].GetItemHeight() < height) ? 0 : int(height);
+	int page_size = (m_list[LST_SERVER].GetSize()*m_list[LST_SERVER].GetItemHeight() < height) ? 0 : static_cast<int>(height);
 	m_list[LST_SERVER].ScrollBar()->SetPageSize(page_size);
 	m_list[LST_SERVER].ForceUpdate();
 
@@ -617,7 +617,7 @@ void	CServerList::RefreshList()
 
 void	CServerList::RefreshList_internal()
 {
-	m_need_refresh_fr				= u32(-1);
+	m_need_refresh_fr				= static_cast<u32>(-1);
 	SaveCurItem						();
 	m_list[LST_SERVER].Clear();
 	ClearSrvItems					();
@@ -661,7 +661,7 @@ void	CServerList::RefreshList_internal()
 
 void CServerList::RefreshQuick()
 {
-	CUIListItemServer* pItem = (CUIListItemServer*)m_list[LST_SERVER].GetSelectedItem();
+	CUIListItemServer* pItem = static_cast<CUIListItemServer*>(m_list[LST_SERVER].GetSelectedItem());
 	if(!pItem)
 		return;
 	browser().RefreshQuick(pItem->GetInfo()->info.Index);
@@ -700,7 +700,7 @@ void CServerList::SrvInfo2LstSrvInfo(const ServerInfo* pServerInfo)
 	address							+= itoa(pServerInfo->m_Port, port, 10);
 	m_itemInfo.info.address			= address.c_str();
 	m_itemInfo.info.map				= pServerInfo->m_SessionName;
-	m_itemInfo.info.game			= GameTypeToString( (EGameIDs)pServerInfo->m_GameType, true);
+	m_itemInfo.info.game			= GameTypeToString( static_cast<EGameIDs>(pServerInfo->m_GameType), true);
 	m_itemInfo.info.players.printf	("%d/%d", pServerInfo->m_ServerNumPlayers, pServerInfo->m_ServerMaxPlayers);
 	m_itemInfo.info.ping.printf		("%d", pServerInfo->m_Ping);
 	m_itemInfo.info.version			= pServerInfo->m_ServerVersion;
@@ -785,7 +785,7 @@ bool CServerList::sort_by_Version(int p1, int p2)
 
 void CServerList::SaveCurItem()
 {
-	CUIListItemServer* pItem = (CUIListItemServer*)m_list[LST_SERVER].GetSelectedItem();
+	CUIListItemServer* pItem = static_cast<CUIListItemServer*>(m_list[LST_SERVER].GetSelectedItem());
 	if(!pItem)
 	{
 		m_cur_item = -1;
@@ -806,14 +806,14 @@ void CServerList::RestoreCurItem()
 
 void CServerList::ResetCurItem()
 {
-	m_list[LST_SERVER].SetSelectedIDX(u32(-1));
+	m_list[LST_SERVER].SetSelectedIDX(static_cast<u32>(-1));
 	m_list[LST_SERVER].ScrollToBegin();
 }
 
 
 void CServerList::DestroySrvItems()
 {
-	m_last_retreived_index	= u32(-1);
+	m_last_retreived_index	= static_cast<u32>(-1);
 
 	m_list[LST_SERVER].Clear();
 	SrvItems_It it		= m_items_cache.begin	();
@@ -830,7 +830,7 @@ void CServerList::ClearSrvItems()
 	for(;it!=it_e;++it)
 		(*it).m_busy = false;
 
-	m_last_retreived_index	= u32(-1);
+	m_last_retreived_index	= static_cast<u32>(-1);
 }
 
 CUIListItemServer* CServerList::GetFreeItem()
@@ -838,7 +838,7 @@ CUIListItemServer* CServerList::GetFreeItem()
 	SrvItems_It it			= m_items_cache.begin();
 	SrvItems_It it_e		= m_items_cache.end();
 	
-	if(m_last_retreived_index != u32(-1))
+	if(m_last_retreived_index != static_cast<u32>(-1))
 		std::advance		(it, m_last_retreived_index);
 
 	for(;it!=it_e;++it)
@@ -846,7 +846,7 @@ CUIListItemServer* CServerList::GetFreeItem()
 		if(it->m_busy==false)
 		{
 			it->m_busy				= true;
-			m_last_retreived_index	= (u32)(it - m_items_cache.begin());
+			m_last_retreived_index	= static_cast<u32>(it - m_items_cache.begin());
 			return					it->m_ui_item;
 		}
 	}

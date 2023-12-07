@@ -83,7 +83,7 @@ CGamePersistent::CGamePersistent(void)
 	m_intro_event.bind			(this, &CGamePersistent::start_logo_intro);
 #ifdef DEBUG
 	m_frame_counter				= 0;
-	m_last_stats_frame			= u32(-2);
+	m_last_stats_frame			= static_cast<u32>(-2);
 #endif
 	// 
 	//dSetAllocHandler			(ode_alloc		);
@@ -703,7 +703,7 @@ void CGamePersistent::OnFrame	()
 			// Start _new level + demo
 			Engine.Event.Defer	("KERNEL:disconnect");
 			Engine.Event.Defer	("KERNEL:start",size_t(xr_strdup(_Trim(o_server))),size_t(xr_strdup(_Trim(o_client))));
-			Engine.Event.Defer	("GAME:demo",	size_t(xr_strdup(_Trim(o_demo))), u64(o_time));
+			Engine.Event.Defer	("GAME:demo",	size_t(xr_strdup(_Trim(o_demo))), static_cast<u64>(o_time));
 			uTime2Change		= 0xffffffff;	// Block changer until Event received
 		}
 	}
@@ -757,7 +757,7 @@ void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 		xr_sprintf				(cmd,"demo_play %s",demo);
 		Console->Execute	(cmd);
 		xr_free				(demo);
-		uTime2Change		= Device.TimerAsync() + u32(P2)*1000;
+		uTime2Change		= Device.TimerAsync() + static_cast<u32>(P2)*1000;
 	}
 }
 
@@ -773,7 +773,7 @@ void CGamePersistent::Statistics	(CGameFont* F)
 
 float CGamePersistent::MtlTransparent(u32 mtl_idx)
 {
-	return GMLib.GetMaterialByIdx((u16)mtl_idx)->fVisTransparencyFactor;
+	return GMLib.GetMaterialByIdx(static_cast<u16>(mtl_idx))->fVisTransparencyFactor;
 }
 static BOOL bRestorePause	= FALSE;
 static BOOL bEntryFlag		= TRUE;

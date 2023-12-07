@@ -67,12 +67,12 @@ void CSE_ALifeItemWeapon::script_register(lua_State *L)
 		)
         .enum_("addon_flag")
         [
-            value("eWeaponAddonGrenadeLauncher", int(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonGrenadeLauncher)),
-            value("eWeaponAddonScope", int(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonScope)),
-            value("eWeaponAddonSilencer", int(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonSilencer)),
-            value("eAddonAttachable", int(CSE_ALifeItemWeapon::EWeaponAddonStatus::eAddonAttachable)),
-            value("eAddonDisabled", int(CSE_ALifeItemWeapon::EWeaponAddonStatus::eAddonDisabled)),
-            value("eAddonPermanent", int(CSE_ALifeItemWeapon::EWeaponAddonStatus::eAddonPermanent))
+            value("eWeaponAddonGrenadeLauncher", static_cast<int>(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonGrenadeLauncher)),
+            value("eWeaponAddonScope", static_cast<int>(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonScope)),
+            value("eWeaponAddonSilencer", static_cast<int>(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonSilencer)),
+            value("eAddonAttachable", static_cast<int>(CSE_ALifeItemWeapon::EWeaponAddonStatus::eAddonAttachable)),
+            value("eAddonDisabled", static_cast<int>(CSE_ALifeItemWeapon::EWeaponAddonStatus::eAddonDisabled)),
+            value("eAddonPermanent", static_cast<int>(CSE_ALifeItemWeapon::EWeaponAddonStatus::eAddonPermanent))
         ]
 		.def("clone_addons",						&CSE_ALifeItemWeapon::clone_addons)
 	];

@@ -107,11 +107,11 @@ struct visual_data {
 struct ISE_Abstract {
 public:
 	enum {
-		flUpdateProperties			= u32(1 << 0),
-		flVisualChange				= u32(1 << 1),
-		flVisualAnimationChange		= u32(1 << 2),
-		flMotionChange				= u32(1 << 3),
-		flVisualAnimationPauseChange= u32(1 << 4),
+		flUpdateProperties			= static_cast<u32>(1 << 0),
+		flVisualChange				= static_cast<u32>(1 << 1),
+		flVisualAnimationChange		= static_cast<u32>(1 << 2),
+		flMotionChange				= static_cast<u32>(1 << 3),
+		flVisualAnimationPauseChange= static_cast<u32>(1 << 4),
 	};
 	Flags32							m_editor_flags;
 	IC	void						set_editor_flag			(u32 mask)	{m_editor_flags.set	(mask,TRUE);}

@@ -141,57 +141,57 @@ void CUIWindow::script_register(lua_State *L)
 			.enum_("events")
 			[
 	// CUIWindow
-				value("WINDOW_LBUTTON_DOWN",			int(WINDOW_LBUTTON_DOWN)),
-				value("WINDOW_RBUTTON_DOWN",			int(WINDOW_RBUTTON_DOWN)),
-				value("WINDOW_LBUTTON_UP",				int(WINDOW_LBUTTON_UP)),
-				value("WINDOW_RBUTTON_UP",				int(WINDOW_RBUTTON_UP)),
-				value("WINDOW_MOUSE_MOVE",				int(WINDOW_MOUSE_MOVE)),
-				value("WINDOW_LBUTTON_DB_CLICK",		int(WINDOW_LBUTTON_DB_CLICK)),
-				value("WINDOW_KEY_PRESSED",				int(WINDOW_KEY_PRESSED)),
-				value("WINDOW_KEY_RELEASED",			int(WINDOW_KEY_RELEASED)),
-				value("WINDOW_KEYBOARD_CAPTURE_LOST",	int(WINDOW_KEYBOARD_CAPTURE_LOST)),
+				value("WINDOW_LBUTTON_DOWN",			static_cast<int>(WINDOW_LBUTTON_DOWN)),
+				value("WINDOW_RBUTTON_DOWN",			static_cast<int>(WINDOW_RBUTTON_DOWN)),
+				value("WINDOW_LBUTTON_UP",				static_cast<int>(WINDOW_LBUTTON_UP)),
+				value("WINDOW_RBUTTON_UP",				static_cast<int>(WINDOW_RBUTTON_UP)),
+				value("WINDOW_MOUSE_MOVE",				static_cast<int>(WINDOW_MOUSE_MOVE)),
+				value("WINDOW_LBUTTON_DB_CLICK",		static_cast<int>(WINDOW_LBUTTON_DB_CLICK)),
+				value("WINDOW_KEY_PRESSED",				static_cast<int>(WINDOW_KEY_PRESSED)),
+				value("WINDOW_KEY_RELEASED",			static_cast<int>(WINDOW_KEY_RELEASED)),
+				value("WINDOW_KEYBOARD_CAPTURE_LOST",	static_cast<int>(WINDOW_KEYBOARD_CAPTURE_LOST)),
 
 
 	// CUIButton
-				value("BUTTON_CLICKED",					int(BUTTON_CLICKED)),
-				value("BUTTON_DOWN",					int(BUTTON_DOWN)),
+				value("BUTTON_CLICKED",					static_cast<int>(BUTTON_CLICKED)),
+				value("BUTTON_DOWN",					static_cast<int>(BUTTON_DOWN)),
 				
 	// CUITabControl
-				value("TAB_CHANGED",					int(TAB_CHANGED)),
+				value("TAB_CHANGED",					static_cast<int>(TAB_CHANGED)),
 
 	// CUICheckButton
-				value("CHECK_BUTTON_SET",				int(CHECK_BUTTON_SET)),
-				value("CHECK_BUTTON_RESET",				int(CHECK_BUTTON_RESET)),
+				value("CHECK_BUTTON_SET",				static_cast<int>(CHECK_BUTTON_SET)),
+				value("CHECK_BUTTON_RESET",				static_cast<int>(CHECK_BUTTON_RESET)),
 				
 	// CUIRadioButton
-				value("RADIOBUTTON_SET",				int(RADIOBUTTON_SET)),
+				value("RADIOBUTTON_SET",				static_cast<int>(RADIOBUTTON_SET)),
 
 	// CUIScrollBox
-				value("SCROLLBOX_MOVE",					int(SCROLLBOX_MOVE)),
+				value("SCROLLBOX_MOVE",					static_cast<int>(SCROLLBOX_MOVE)),
 				
 	// CUIScrollBar
-				value("SCROLLBAR_VSCROLL",				int(SCROLLBAR_VSCROLL)),
-				value("SCROLLBAR_HSCROLL",				int(SCROLLBAR_HSCROLL)),
+				value("SCROLLBAR_VSCROLL",				static_cast<int>(SCROLLBAR_VSCROLL)),
+				value("SCROLLBAR_HSCROLL",				static_cast<int>(SCROLLBAR_HSCROLL)),
 
 	// CUIListWnd
-				value("LIST_ITEM_CLICKED",				int(LIST_ITEM_CLICKED)),
-				value("LIST_ITEM_SELECT",				int(LIST_ITEM_SELECT)),
+				value("LIST_ITEM_CLICKED",				static_cast<int>(LIST_ITEM_CLICKED)),
+				value("LIST_ITEM_SELECT",				static_cast<int>(LIST_ITEM_SELECT)),
 	
 	// UIPropertiesBox
-				value("PROPERTY_CLICKED",				int(PROPERTY_CLICKED)),
+				value("PROPERTY_CLICKED",				static_cast<int>(PROPERTY_CLICKED)),
 
 	// CUIMessageBox
-				value("MESSAGE_BOX_OK_CLICKED",			int(MESSAGE_BOX_OK_CLICKED)),
-				value("MESSAGE_BOX_YES_CLICKED",		int(MESSAGE_BOX_YES_CLICKED)),
-				value("MESSAGE_BOX_NO_CLICKED",			int(MESSAGE_BOX_NO_CLICKED)),
-				value("MESSAGE_BOX_CANCEL_CLICKED",		int(MESSAGE_BOX_CANCEL_CLICKED)),
-				value("MESSAGE_BOX_COPY_CLICKED",		int(MESSAGE_BOX_COPY_CLICKED)),
-				value("MESSAGE_BOX_QUIT_GAME_CLICKED",	int(MESSAGE_BOX_QUIT_GAME_CLICKED)),
-				value("MESSAGE_BOX_QUIT_WIN_CLICKED",	int(MESSAGE_BOX_QUIT_WIN_CLICKED)),
+				value("MESSAGE_BOX_OK_CLICKED",			static_cast<int>(MESSAGE_BOX_OK_CLICKED)),
+				value("MESSAGE_BOX_YES_CLICKED",		static_cast<int>(MESSAGE_BOX_YES_CLICKED)),
+				value("MESSAGE_BOX_NO_CLICKED",			static_cast<int>(MESSAGE_BOX_NO_CLICKED)),
+				value("MESSAGE_BOX_CANCEL_CLICKED",		static_cast<int>(MESSAGE_BOX_CANCEL_CLICKED)),
+				value("MESSAGE_BOX_COPY_CLICKED",		static_cast<int>(MESSAGE_BOX_COPY_CLICKED)),
+				value("MESSAGE_BOX_QUIT_GAME_CLICKED",	static_cast<int>(MESSAGE_BOX_QUIT_GAME_CLICKED)),
+				value("MESSAGE_BOX_QUIT_WIN_CLICKED",	static_cast<int>(MESSAGE_BOX_QUIT_WIN_CLICKED)),
 
-				value("EDIT_TEXT_COMMIT",				int(EDIT_TEXT_COMMIT)),
+				value("EDIT_TEXT_COMMIT",				static_cast<int>(EDIT_TEXT_COMMIT)),
 	// CMainMenu
-				value("MAIN_MENU_RELOADED",				int(MAIN_MENU_RELOADED))
+				value("MAIN_MENU_RELOADED",				static_cast<int>(MAIN_MENU_RELOADED))
 			]
 	];
 }

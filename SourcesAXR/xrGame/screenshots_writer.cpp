@@ -47,7 +47,7 @@ u32	const writer::write_info(sha_process_yielder* yielder)
 		current_time(time_string));
 	
 	char*	info_start				= static_cast<char*>(
-		(void*)(m_buffer + m_buffer_info_pos));
+		static_cast<void*>(m_buffer + m_buffer_info_pos));
 	
 	info_start[0]					= 0;
 	xr_strcat(info_start, info_max_size, m_info_data.r_string(ss_info_secion, ss_player_name_key));

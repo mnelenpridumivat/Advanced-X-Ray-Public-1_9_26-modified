@@ -52,12 +52,12 @@ void CScriptCallStack::Add(const char *szDesc, const char *szFile, int nLine)
 void CScriptCallStack::SetStackTraceLevel(int nLevel)
 {
 	m_nCurrentLevel = nLevel;
-	VERIFY( nLevel>=0 || (u32)nLevel < m_files.size() );
+	VERIFY( nLevel>=0 || static_cast<u32>(nLevel) < m_files.size() );
 }
 
 void CScriptCallStack::GotoStackTraceLevel(int nLevel)
 {
-	if ( nLevel<0 || (u32)nLevel >= m_files.size() )
+	if ( nLevel<0 || static_cast<u32>(nLevel) >= m_files.size() )
 		return;
 
 	m_nCurrentLevel = nLevel;
@@ -65,7 +65,7 @@ void CScriptCallStack::GotoStackTraceLevel(int nLevel)
 	char * ppath = m_files[nLevel].path;
 	m_debugger->_SendMessage(	DMSG_GOTO_FILELINE,
 									(WPARAM)ppath,
-									(LPARAM)m_lines[nLevel]);
+									static_cast<LPARAM>(m_lines[nLevel]));
 
 }
 

@@ -42,7 +42,7 @@ IC	void CGameLocationSelector::reinit			(const CGameGraph *graph)
 	if (graph)
 		graph->set_invalid_vertex	(m_previous_vertex_id);
 	else
-		m_previous_vertex_id		= GameGraph::_GRAPH_ID(-1);
+		m_previous_vertex_id		= static_cast<GameGraph::_GRAPH_ID>(-1);
 }
 
 TEMPLATE_SPECIALIZATION
@@ -73,7 +73,7 @@ IC	void CGameLocationSelector::select_random_location(const _vertex_id_type star
 	VERIFY						(m_graph->valid_vertex_id(start_vertex_id));
 
 	if (!m_graph->valid_vertex_id(m_previous_vertex_id))
-		m_previous_vertex_id	= GameGraph::_GRAPH_ID(start_vertex_id);
+		m_previous_vertex_id	= static_cast<GameGraph::_GRAPH_ID>(start_vertex_id);
 
 	u32							branch_factor = 0;
 
@@ -147,7 +147,7 @@ IC	void CGameLocationSelector::select_random_location(const _vertex_id_type star
 				break;
 		}
 	}
-	m_previous_vertex_id		= GameGraph::_GRAPH_ID(start_vertex_id);
+	m_previous_vertex_id		= static_cast<GameGraph::_GRAPH_ID>(start_vertex_id);
 }
 
 TEMPLATE_SPECIALIZATION

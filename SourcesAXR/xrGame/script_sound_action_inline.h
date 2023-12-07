@@ -75,7 +75,7 @@ IC	CScriptSoundAction::CScriptSoundAction		(CScriptSound *sound, Fvector *tPosit
 IC	CScriptSoundAction::CScriptSoundAction		(MonsterSound::EType sound_type)
 {
 	m_monster_sound			= sound_type;
-	m_monster_sound_delay	= int (-1);
+	m_monster_sound_delay	= static_cast<int>(-1);
 	m_bCompleted			= false;
 }
 

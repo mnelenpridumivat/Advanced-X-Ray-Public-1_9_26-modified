@@ -80,7 +80,7 @@ game_cl_mp::game_cl_mp()
 	m_bSpectator_LookAt		= true;
 	m_bSpectator_FreeLook	= true;
 	m_bSpectator_TeamCamera	= true;
-	m_cur_MenuID			= u32(-1);
+	m_cur_MenuID			= static_cast<u32>(-1);
 	//-------------------------------------
 	LoadBonuses();
 	//-------------------------------------	
@@ -305,14 +305,14 @@ bool game_cl_mp::OnKeyboardPress(int key)
 				}
 				else
 				{
-					m_cur_MenuID = u32(-1);
+					m_cur_MenuID = static_cast<u32>(-1);
 				}
 				return true;
 			}break;
 		}		
 	}
 
-	m_cur_MenuID = u32(-1);
+	m_cur_MenuID = static_cast<u32>(-1);
 	return false;
 }
 
@@ -815,11 +815,11 @@ void game_cl_mp::OnPlayerKilled			(NET_Packet& P)
 {
 	CStringTable st;
 	//-----------------------------------------------------------
-	KILL_TYPE KillType = KILL_TYPE(P.r_u8());
+	KILL_TYPE KillType = static_cast<KILL_TYPE>(P.r_u8());
 	u16 KilledID = P.r_u16();
 	u16 KillerID = P.r_u16();
 	u16	WeaponID = P.r_u16();
-	SPECIAL_KILL_TYPE SpecialKill = SPECIAL_KILL_TYPE(P.r_u8());
+	SPECIAL_KILL_TYPE SpecialKill = static_cast<SPECIAL_KILL_TYPE>(P.r_u8());
 	if (m_reward_generator)
 		m_reward_generator->OnPlayerKilled(KillerID, KilledID, WeaponID, std::make_pair(KillType, SpecialKill));
 	//-----------------------------------------------------------
@@ -1108,7 +1108,7 @@ void	game_cl_mp::OnRankChanged	(u8 OldRank)
 
 void	game_cl_mp::net_import_update		(NET_Packet& P)
 {
-	u8 OldRank = u8(-1);
+	u8 OldRank = static_cast<u8>(-1);
 	s16 OldTeam = -1;
 	if (local_player) 
 	{
@@ -1127,7 +1127,7 @@ void	game_cl_mp::net_import_update		(NET_Packet& P)
 
 void	game_cl_mp::net_import_state		(NET_Packet& P)
 {
-	u8 OldRank = u8(-1);
+	u8 OldRank = static_cast<u8>(-1);
 	s16 OldTeam = -1;
 	if (local_player) 
 	{
@@ -1195,7 +1195,7 @@ void	game_cl_mp::OnEventMoneyChanged			(NET_Packet& P)
 	for (u8 i=0; i<NumBonuses; i++)
 	{
 		s32 BonusMoney = P.r_s32();
-		SPECIAL_KILL_TYPE BonusReason = SPECIAL_KILL_TYPE(P.r_u8());
+		SPECIAL_KILL_TYPE BonusReason = static_cast<SPECIAL_KILL_TYPE>(P.r_u8());
 		u8 BonusKills = (BonusReason == SKT_KIR)? P.r_u8() : 0;
 		TotalBonusMoney += BonusMoney;
 		//---------------------------------------------------------
@@ -1867,9 +1867,7 @@ void game_cl_mp::draw_all_active_binder_states()
 		{
 			fr_callback_binder & tmp_br = m_client_receiver_cbs[i];
 			F->OutNext("%s : %02u %% ", tmp_br.m_file_name.c_str(),
-				int(
-					(float(tmp_br.m_downloaded_size) / tmp_br.m_max_size) * 100
-				)
+				static_cast<int>((float(tmp_br.m_downloaded_size) / tmp_br.m_max_size) * 100)
 			);
 		}
 	}
@@ -1936,7 +1934,7 @@ void game_cl_mp::ReInitRewardGenerator(game_PlayerState* local_ps)
 {
 	if (!m_reward_generator)
 	{
-		m_reward_generator	= xr_new<award_system::reward_event_generator>(u32(-1));
+		m_reward_generator	= xr_new<award_system::reward_event_generator>(static_cast<u32>(-1));
 		m_reward_manager	= xr_new<award_system::reward_manager>(this);
 	}
 	m_reward_generator->init_player(local_ps);

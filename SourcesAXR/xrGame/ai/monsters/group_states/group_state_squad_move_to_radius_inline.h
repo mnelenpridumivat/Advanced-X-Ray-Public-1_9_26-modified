@@ -23,7 +23,7 @@ void CStateGroupSquadMoveToRadiusExAbstract::execute()
 	CMonsterSquad *squad	= monster_squad().get_squad(object);
 	if (squad && squad->SquadActive())
 	{
-		if (squad->get_index(object) != u8(-1)) {
+		if (squad->get_index(object) != static_cast<u8>(-1)) {
 			float m_Angle = (PI - PI_DIV_2) / (squad->squad_alife_count() - 1) * (squad->get_index(object) - 1);
 			float m_Delta_Angle = Random.randF(PI_DIV_3 / (squad->squad_alife_count() - 1));
 			float m_heading, m_pitch;
@@ -59,12 +59,12 @@ void CStateGroupSquadMoveToRadiusExAbstract::execute()
 	object->path().set_cover_params			(5.f, 30.f, 1.f, 30.f);
 
 	if (data.accelerated) {
-		object->anim().accel_activate	(EAccelType(data.accel_type));
+		object->anim().accel_activate	(static_cast<EAccelType>(data.accel_type));
 		object->anim().accel_set_braking (data.braking);
 	}
 
-	if (data.action.sound_type != u32(-1)) {
-		object->set_state_sound(data.action.sound_type, data.action.sound_delay == u32(-1));
+	if (data.action.sound_type != static_cast<u32>(-1)) {
+		object->set_state_sound(data.action.sound_type, data.action.sound_delay == static_cast<u32>(-1));
 	}
 }
 
@@ -119,12 +119,12 @@ void CStateGroupSquadMoveToRadiusAbstract::execute()
 	object->path().set_cover_params			(5.f, 30.f, 1.f, 30.f);
 
 	if (data.accelerated) {
-		object->anim().accel_activate	(EAccelType(data.accel_type));
+		object->anim().accel_activate	(static_cast<EAccelType>(data.accel_type));
 		object->anim().accel_set_braking (data.braking);
 	}
 
-	if (data.action.sound_type != u32(-1)) {
-		object->set_state_sound(data.action.sound_type, data.action.sound_delay == u32(-1));
+	if (data.action.sound_type != static_cast<u32>(-1)) {
+		object->set_state_sound(data.action.sound_type, data.action.sound_delay == static_cast<u32>(-1));
 	}
 }
 

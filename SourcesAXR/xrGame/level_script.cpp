@@ -307,7 +307,7 @@ u32	vertex_in_direction(u32 level_vertex_id, Fvector direction, float max_distan
 	direction.mul	(max_distance);
 	Fvector			start_position = ai().level_graph().vertex_position(level_vertex_id);
 	Fvector			finish_position = Fvector(start_position).add(direction);
-	u32				result = u32(-1);
+	u32				result = static_cast<u32>(-1);
 	ai().level_graph().farthest_vertex_in_direction(level_vertex_id,start_position,finish_position,result,0);
 	return			(ai().level_graph().valid_vertex_id(result) ? result : level_vertex_id);
 }
@@ -536,7 +536,7 @@ void enable_input()
 
 void spawn_phantom(const Fvector &position)
 {
-	Level().spawn_item("m_phantom", position, u32(-1), u16(-1), false);
+	Level().spawn_item("m_phantom", position, static_cast<u32>(-1), static_cast<u16>(-1), false);
 }
 
 Fbox get_bounding_volume()
@@ -581,7 +581,7 @@ void iterate_sounds2				(LPCSTR prefix, u32 max_count, luabind::object object, l
 float add_cam_effector(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func)
 {
 	CAnimatorCamEffectorScriptCB* e		= xr_new<CAnimatorCamEffectorScriptCB>(cb_func);
-	e->SetType					((ECamEffectorType)id);
+	e->SetType					(static_cast<ECamEffectorType>(id));
 	e->SetCyclic				(cyclic);
 	e->Start					(fn);
 	Actor()->Cameras().AddCamEffector(e);
@@ -593,7 +593,7 @@ float add_cam_effector2(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func, float ca
 	CAnimatorCamEffectorScriptCB* e		= xr_new<CAnimatorCamEffectorScriptCB>(cb_func);
 	e->m_bAbsolutePositioning	= true;
 	e->m_fov					= cam_fov;
-	e->SetType					((ECamEffectorType)id);
+	e->SetType					(static_cast<ECamEffectorType>(id));
 	e->SetCyclic				(cyclic);
 	e->Start					(fn);
 	Actor()->Cameras().AddCamEffector(e);
@@ -602,7 +602,7 @@ float add_cam_effector2(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func, float ca
 
 void remove_cam_effector(int id)
 {
-	Actor()->Cameras().RemoveCamEffector((ECamEffectorType)id );
+	Actor()->Cameras().RemoveCamEffector(static_cast<ECamEffectorType>(id) );
 }
 		
 float get_snd_volume()
@@ -654,7 +654,7 @@ void add_pp_effector(LPCSTR fn, int id, bool cyclic)
 
 void remove_pp_effector(int id)
 {
-	CPostprocessAnimator*	pp	= smart_cast<CPostprocessAnimator*>(Actor()->Cameras().GetPPEffector((EEffectorPPType)id));
+	CPostprocessAnimator*	pp	= smart_cast<CPostprocessAnimator*>(Actor()->Cameras().GetPPEffector(static_cast<EEffectorPPType>(id)));
 
 	if(pp) pp->Stop(1.0f);
 
@@ -662,14 +662,14 @@ void remove_pp_effector(int id)
 
 void set_pp_effector_factor(int id, float f, float f_sp)
 {
-	CPostprocessAnimator*	pp	= smart_cast<CPostprocessAnimator*>(Actor()->Cameras().GetPPEffector((EEffectorPPType)id));
+	CPostprocessAnimator*	pp	= smart_cast<CPostprocessAnimator*>(Actor()->Cameras().GetPPEffector(static_cast<EEffectorPPType>(id)));
 
 	if(pp) pp->SetDesiredFactor(f,f_sp);
 }
 
 void set_pp_effector_factor2(int id, float f)
 {
-	CPostprocessAnimator*	pp	= smart_cast<CPostprocessAnimator*>(Actor()->Cameras().GetPPEffector((EEffectorPPType)id));
+	CPostprocessAnimator*	pp	= smart_cast<CPostprocessAnimator*>(Actor()->Cameras().GetPPEffector(static_cast<EEffectorPPType>(id)));
 
 	if(pp) pp->SetCurrentFactor(f);
 }
@@ -681,21 +681,21 @@ int g_community_goodwill(LPCSTR _community, int _entity_id)
 	 CHARACTER_COMMUNITY c;
 	 c.set					(_community);
 
- 	return RELATION_REGISTRY().GetCommunityGoodwill(c.index(), u16(_entity_id));
+ 	return RELATION_REGISTRY().GetCommunityGoodwill(c.index(), static_cast<u16>(_entity_id));
  }
 
 void g_set_community_goodwill(LPCSTR _community, int _entity_id, int val)
 {
 	CHARACTER_COMMUNITY	c;
 	c.set					(_community);
-	RELATION_REGISTRY().SetCommunityGoodwill(c.index(), u16(_entity_id), val);
+	RELATION_REGISTRY().SetCommunityGoodwill(c.index(), static_cast<u16>(_entity_id), val);
 }
 
 void g_change_community_goodwill(LPCSTR _community, int _entity_id, int val)
 {
 	CHARACTER_COMMUNITY	c;
 	c.set					(_community);
-	RELATION_REGISTRY().ChangeCommunityGoodwill(c.index(), u16(_entity_id), val);
+	RELATION_REGISTRY().ChangeCommunityGoodwill(c.index(), static_cast<u16>(_entity_id), val);
 }
 
 int g_get_community_relation( LPCSTR comm_from, LPCSTR comm_to )
@@ -1019,7 +1019,7 @@ u8 get_active_cam()
 {
 	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
 	if (actor)
-		return (u8)actor->active_cam();
+		return static_cast<u8>(actor->active_cam());
 
 	return 255;
 }
@@ -1028,7 +1028,7 @@ void set_active_cam(u8 mode)
 {
 	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
 	if (actor && mode <= eacMaxCam)
-		actor->cam_Set((EActorCameras)mode);
+		actor->cam_Set(static_cast<EActorCameras>(mode));
 }
 
 //ability to update level netpacket
@@ -1130,12 +1130,13 @@ void CLevel::script_register(lua_State *L)
 
 		def("show_indicators",					show_indicators),
 		def("show_weapon",						show_weapon),
-		def("add_call",							((void (*) (const luabind::functor<bool> &,const luabind::functor<void> &)) &add_call)),
-		def("add_call",							((void (*) (const luabind::object &,const luabind::functor<bool> &,const luabind::functor<void> &)) &add_call)),
-		def("add_call",							((void (*) (const luabind::object &, LPCSTR, LPCSTR)) &add_call)),
-		def("remove_call",						((void (*) (const luabind::functor<bool> &,const luabind::functor<void> &)) &remove_call)),
-		def("remove_call",						((void (*) (const luabind::object &,const luabind::functor<bool> &,const luabind::functor<void> &)) &remove_call)),
-		def("remove_call",						((void (*) (const luabind::object &, LPCSTR, LPCSTR)) &remove_call)),
+		def("add_call",							static_cast<void (*)(const luabind::functor<bool>&, const luabind::functor<void>&)>(&add_call)),
+		def("add_call",							static_cast<void (*)(const luabind::object&, const luabind::functor<bool>&, const luabind::functor<void>&)>(&add_call)),
+		def("add_call",							static_cast<void (*)(const luabind::object&, LPCSTR, LPCSTR)>(&add_call)),
+		def("remove_call",						static_cast<void (*)(const luabind::functor<bool>&, const luabind::functor<void>&)>(&remove_call)),
+		def("remove_call",						static_cast<void (*)(const luabind::object&, const luabind::functor<bool>&, const luabind::functor<void>&)>(&
+			    remove_call)),
+		def("remove_call",						static_cast<void (*)(const luabind::object&, LPCSTR, LPCSTR)>(&remove_call)),
 		def("remove_calls_for_object",			remove_calls_for_object),
 		def("present",							is_level_present),
 		def("disable_input",					disable_input),
@@ -1217,16 +1218,16 @@ void CLevel::script_register(lua_State *L)
 	class_< xrTime >("CTime")
 		.enum_("date_format")
 		[
-			value("DateToDay",		int(InventoryUtilities::edpDateToDay)),
-			value("DateToMonth",	int(InventoryUtilities::edpDateToMonth)),
-			value("DateToYear",		int(InventoryUtilities::edpDateToYear))
+			value("DateToDay",		static_cast<int>(InventoryUtilities::edpDateToDay)),
+			value("DateToMonth",	static_cast<int>(InventoryUtilities::edpDateToMonth)),
+			value("DateToYear",		static_cast<int>(InventoryUtilities::edpDateToYear))
 		]
 		.enum_("time_format")
 		[
-			value("TimeToHours",	int(InventoryUtilities::etpTimeToHours)),
-			value("TimeToMinutes",	int(InventoryUtilities::etpTimeToMinutes)),
-			value("TimeToSeconds",	int(InventoryUtilities::etpTimeToSeconds)),
-			value("TimeToMilisecs",	int(InventoryUtilities::etpTimeToMilisecs))
+			value("TimeToHours",	static_cast<int>(InventoryUtilities::etpTimeToHours)),
+			value("TimeToMinutes",	static_cast<int>(InventoryUtilities::etpTimeToMinutes)),
+			value("TimeToSeconds",	static_cast<int>(InventoryUtilities::etpTimeToSeconds)),
+			value("TimeToMilisecs",	static_cast<int>(InventoryUtilities::etpTimeToMilisecs))
 		]
 		.def(						constructor<>()				)
 		.def(						constructor<const xrTime&>())

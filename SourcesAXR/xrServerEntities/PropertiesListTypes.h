@@ -107,7 +107,7 @@ public:
     virtual xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText){return "";}
     virtual bool		Equal			(PropValue* val)
     {
-    	CustomValue<T>* prop = (CustomValue<T>*)val;
+    	CustomValue<T>* prop = static_cast<CustomValue<T>*>(val);
         return (*value==*prop->value);
     }
     virtual const T&	GetValue		(){return *value; }
@@ -263,7 +263,7 @@ public:
 						CaptionValue	(const shared_str& val){value=val;}
     virtual xr_string	GetDrawText		(TOnDrawTextEvent)	{return value.c_str()?value.c_str():"";}
     virtual	void		ResetValue		(){;}
-    virtual	bool		Equal			(PropValue* val)	{return (value==((CaptionValue*)val)->value);}
+    virtual	bool		Equal			(PropValue* val)	{return (value==static_cast<CaptionValue*>(val)->value);}
     bool				ApplyValue		(const shared_str& val){value=val; return false;}
 };
 
@@ -282,7 +282,7 @@ public:
     virtual	void		ResetValue		(){;}
     virtual	bool		Equal			(PropValue* val)
     {
-    	if (!OnTestEqual.empty()){bool res=true; OnTestEqual(this,(CanvasValue*)val,res); return res;}
+    	if (!OnTestEqual.empty()){bool res=true; OnTestEqual(this,static_cast<CanvasValue*>(val),res); return res;}
     	return false;
     }
 };
@@ -387,7 +387,7 @@ public:
     }
     virtual bool		Equal			(PropValue* val)
     {
-        return (0==xr_strcmp(value,((CTextValue*)val)->value));
+        return (0==xr_strcmp(value,static_cast<CTextValue*>(val)->value));
     }
     bool				ApplyValue		(LPCSTR val)
     {
@@ -563,7 +563,7 @@ public:
         else 			return HaveCaption()?caption[GetValueEx()?1:0].c_str():"";
         return			draw_val;
     }
-    virtual bool		Equal			(PropValue* val){return !!value->equal(*((FlagValue<T>*)val)->value,mask);}
+    virtual bool		Equal			(PropValue* val){return !!value->equal(*static_cast<FlagValue<T>*>(val)->value,mask);}
     virtual const T&	GetValue		()				{return *value; }
     virtual void		ResetValue		()				{value->set(mask,init_value.is(mask));}
     virtual bool		GetValueEx		()				{return !!value->is(mask);}
@@ -599,7 +599,7 @@ public:
     {
         xr_string		draw_val;
         if (!OnDrawText.empty())	OnDrawText(this, draw_val);
-        else			for(int i=0; token[i].name; i++) if (token[i].id==(int)GetValue()) return token[i].name;
+        else			for(int i=0; token[i].name; i++) if (token[i].id==static_cast<int>(GetValue())) return token[i].name;
         return draw_val;
     }
 };
@@ -624,7 +624,7 @@ public:
     {
         xr_string draw_val;
         if (!OnDrawText.empty())	OnDrawText(this, draw_val);
-        else			for(u32 k=0; k<token_count; k++) if ((T)token[k].id==GetValue()) return *token[k].name;
+        else			for(u32 k=0; k<token_count; k++) if (static_cast<T>(token[k].id)==GetValue()) return *token[k].name;
         return draw_val;
     }
 };
@@ -661,7 +661,7 @@ public:
 						RListValue		(shared_str* val, shared_str* _items, u32 cnt):RTextValue(val),items(_items),item_count(cnt){};
 	virtual bool		Equal			(PropValue* val)
     {
-        if (items!=((RListValue*)val)->items){
+        if (items!=static_cast<RListValue*>(val)->items){
         	m_Owner->m_Flags.set(PropItem::flDisabled,TRUE); 
         	return false;
         }
@@ -676,7 +676,7 @@ public:
 						CListValue		(LPSTR val, u32 sz, xr_string* _items, u32 cnt):CTextValue(val,sz),items(_items),item_count(cnt){};
 	virtual bool		Equal			(PropValue* val)
     {
-        if (items!=((CListValue*)val)->items){
+        if (items!=static_cast<CListValue*>(val)->items){
         	m_Owner->m_Flags.set(PropItem::flDisabled,TRUE); 
         	return false;
         }

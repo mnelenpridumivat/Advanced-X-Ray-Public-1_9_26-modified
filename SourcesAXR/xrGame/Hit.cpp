@@ -95,7 +95,7 @@ void SHit::Read_Packet_Cont		(NET_Packet	Packet)
 		aim_bullet				= Packet.r_u16()!=0;
 	else
 		aim_bullet				= false;
-	hit_type				= (ALife::EHitType)Packet.r_u16();	//hit type
+	hit_type				= static_cast<ALife::EHitType>(Packet.r_u16());	//hit type
 
 	if (hit_type == ALife::eHitTypeFireWound)
 	{
@@ -119,7 +119,7 @@ void SHit::Write_Packet_Cont		(NET_Packet	&Packet)
 	Packet.w_float		(impulse);
 	if (IsGameTypeSingle())
 		Packet.w_u16		(aim_bullet!=0);
-	Packet.w_u16		(u16(hit_type&0xffff));	
+	Packet.w_u16		(static_cast<u16>(hit_type & 0xffff));	
 	if (hit_type == ALife::eHitTypeFireWound)
 	{
 		Packet.w_float	(armor_piercing);
@@ -134,8 +134,8 @@ void SHit::Write_Packet			(NET_Packet	&Packet)
 {
 	Packet.w_begin	(M_EVENT);
 	Packet.w_u32		(Time);
-	Packet.w_u16		(u16(PACKET_TYPE&0xffff));
-	Packet.w_u16		(u16(DestID&0xffff));
+	Packet.w_u16		(static_cast<u16>(PACKET_TYPE & 0xffff));
+	Packet.w_u16		(static_cast<u16>(DestID & 0xffff));
 
 	Write_Packet_Cont (Packet);	
 };

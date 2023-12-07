@@ -77,7 +77,7 @@ void CUIFixedScrollBar::UpdateScrollBar()
 		//уcтановить размер и положение каретки
 		if(m_iMaxPos==m_iMinPos)	
 			m_iMaxPos++;
-		float box_sz = float(m_ScrollWorkArea)*float(m_iPageSize ? m_iPageSize : 1)/float(m_iMaxPos-m_iMinPos);
+		float box_sz = static_cast<float>(m_ScrollWorkArea)*static_cast<float>(m_iPageSize ? m_iPageSize : 1)/static_cast<float>(m_iMaxPos - m_iMinPos);
 		if(IsRelevant())
 		{
 			if(m_bIsHorizontal)
@@ -87,7 +87,7 @@ void CUIFixedScrollBar::UpdateScrollBar()
 				m_ScrollBox->SetWidth(box_sz);
 				// set pos
 				int pos	= PosViewFromScroll(iFloor(box_sz),iFloor(GetHeight()));
-				m_ScrollBox->SetWndPos(Fvector2().set(float(pos), m_ScrollBox->GetWndRect().top));
+				m_ScrollBox->SetWndPos(Fvector2().set(static_cast<float>(pos), m_ScrollBox->GetWndRect().top));
 				m_IncButton->SetWndPos(Fvector2().set(GetWidth() - m_IncButton->GetWidth(), 0.0f));
 			}
 			else
@@ -97,7 +97,7 @@ void CUIFixedScrollBar::UpdateScrollBar()
 				m_ScrollBox->SetHeight(box_sz);
 				// set pos
 				int pos	= PosViewFromScroll(iFloor(box_sz),iFloor(GetWidth()));
-				m_ScrollBox->SetWndPos(Fvector2().set(m_ScrollBox->GetWndRect().left, float(pos)));
+				m_ScrollBox->SetWndPos(Fvector2().set(m_ScrollBox->GetWndRect().left, static_cast<float>(pos)));
 				m_IncButton->SetWndPos(Fvector2().set(0.0f, GetHeight() - m_IncButton->GetHeight()));
 			}
 		}

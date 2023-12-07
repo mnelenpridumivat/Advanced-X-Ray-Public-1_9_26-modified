@@ -108,7 +108,7 @@ void CUILine::ProcessNewLines()
 		{
 			CUISubLine sbLine;
 			if (pos)
-                sbLine = *m_subLines[i].Cut2Pos((int)pos-1);
+                sbLine = *m_subLines[i].Cut2Pos(static_cast<int>(pos)-1);
 			sbLine.m_last_in_line = true;
 			m_subLines.insert(m_subLines.begin()+i, sbLine);
 			m_subLines[i+1].m_text.erase(0,2);
@@ -136,7 +136,7 @@ int CUILine::GetSize(){
 	int sz = 0;
 	int size = m_subLines.size();
 	for (int i=0; i<size; i++)
-		sz += (int)m_subLines[i].m_text.size();
+		sz += static_cast<int>(m_subLines[i].m_text.size());
 
 	return sz;
 }

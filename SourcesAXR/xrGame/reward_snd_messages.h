@@ -4,7 +4,7 @@
 enum {
 	ID_REWARD_RANGE_START	= 500,
 
-	ID_forcedword		= u32(-1)
+	ID_forcedword		= static_cast<u32>(-1)
 };
 
 

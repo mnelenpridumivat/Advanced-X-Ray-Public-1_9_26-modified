@@ -57,7 +57,7 @@ IC	const CALifeGraphRegistry::GRAPH_REGISTRY &CALifeGraphRegistry::objects	() co
 template <typename F>
 IC	void CALifeGraphRegistry::iterate_objects			(GameGraph::_GRAPH_ID game_vertex_id, const F& f)
 {
-	iterate						(((CGraphPointInfo&)(objects()[game_vertex_id])).objects(),f);
+	iterate						(static_cast<CGraphPointInfo&>(objects()[game_vertex_id]).objects(),f);
 }
 
 template <typename F, typename C>

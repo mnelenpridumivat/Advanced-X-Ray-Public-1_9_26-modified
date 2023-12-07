@@ -282,7 +282,7 @@ void CCustomDetector::Load(LPCSTR section)
 
 		detector_light->set_range(m_fLightRange);
 		detector_light->set_hud_mode(true);
-		detector_light->set_type((IRender_Light::LT)m_iLightType);
+		detector_light->set_type(static_cast<IRender_Light::LT>(m_iLightType));
 		detector_light->set_cone(deg2rad(READ_IF_EXISTS(pSettings, r_float, section, "light_spot_angle", 1.f)));
 		detector_light->set_texture(READ_IF_EXISTS(pSettings, r_string, section, "spot_texture", nullptr));
 

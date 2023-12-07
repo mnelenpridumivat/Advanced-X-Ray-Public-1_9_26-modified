@@ -90,7 +90,7 @@ void SBullet::Init(const Fvector& position,
 	m_u8ColorID				= cartridge.param_s.u8ColorID;
 
 	bullet_material_idx		= cartridge.bullet_material_idx;
-	VERIFY					( u16(-1) != bullet_material_idx );
+	VERIFY					( static_cast<u16>(-1) != bullet_material_idx );
 
 	flags.allow_tracer		= !!cartridge.m_flags.test(CCartridge::cfTracer);
 	flags.allow_ricochet	= !!cartridge.m_flags.test(CCartridge::cfRicochet);
@@ -213,7 +213,7 @@ SBullet& CBulletManager::AddBullet(const Fvector& position,
 {
 	VERIFY						( m_thread_id == GetCurrentThreadId() );
 
-	VERIFY						(u16(-1)!=cartridge.bullet_material_idx);
+	VERIFY						(static_cast<u16>(-1)!=cartridge.bullet_material_idx);
 //	u32 CurID					= Level().CurrentControlEntity()->ID();
 //	u32 OwnerID					= sender_id;
 	m_Bullets.push_back			(SBullet());
@@ -251,8 +251,8 @@ void CBulletManager::UpdateWorkload()
 	// in the reversed order
 	BulletVec::reverse_iterator	i = m_Bullets.rbegin();
 	BulletVec::reverse_iterator	e = m_Bullets.rend();
-	for (u16 j=u16(e - i); i != e; ++i, --j) {
-		if ( process_bullet( rq_storage, *i, u32(time_delta*g_bullet_time_factor)) )
+	for (u16 j=static_cast<u16>(e - i); i != e; ++i, --j) {
+		if ( process_bullet( rq_storage, *i, static_cast<u32>(time_delta * g_bullet_time_factor)) )
 			continue;
 
 		VERIFY					(j > 0);
@@ -707,7 +707,7 @@ static void update_bullet			(
 
 BOOL CBulletManager::firetrace_callback	(collide::rq_result& result, LPVOID params)
 {
-	bullet_test_callback_data& data = *(bullet_test_callback_data*)params;
+	bullet_test_callback_data& data = *static_cast<bullet_test_callback_data*>(params);
 	SBullet& bullet					= *data.pBullet;
 	
 	Fvector& collide_position		= data.collide_position;
@@ -737,7 +737,7 @@ BOOL CBulletManager::firetrace_callback	(collide::rq_result& result, LPVOID para
 	if (!kinematics)
 		return						(FALSE);
 
-	CBoneData const& bone_data		= kinematics->LL_GetData( (u16)result.element );
+	CBoneData const& bone_data		= kinematics->LL_GetData( static_cast<u16>(result.element) );
 	bullet_manager.RegisterEvent	( EVENT_HIT, TRUE, &bullet, collide_position, result, bone_data.game_mtl_idx );
 	return							(FALSE);
 }
@@ -828,7 +828,7 @@ static bool try_update_bullet				(SBullet& bullet, Fvector const& gravity, float
 
 bool CBulletManager::process_bullet			(collide::rq_results & storage, SBullet& bullet, u32 const delta_time)
 {
-	float const time_delta		= float(delta_time)/1000.f;
+	float const time_delta		= static_cast<float>(delta_time)/1000.f;
 	Fvector const gravity		= Fvector().set( 0.f, -m_fGravityConst, 0.f);
 
 	float const	air_resistance	= (GameID() == eGameIDSingle) ? m_fAirResistanceK : bullet.air_resistance;

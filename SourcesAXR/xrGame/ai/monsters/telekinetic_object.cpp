@@ -110,7 +110,7 @@ void CTelekineticObject::raise(float step)
 	Fvector dir;
 	dir.set(0.f,1.0f,0.f);
 
-	float elem_size = float(object->m_pPhysicsShell->Elements().size());
+	float elem_size = static_cast<float>(object->m_pPhysicsShell->Elements().size());
 	dir.mul(elem_size*elem_size*strength);
 
 	if (OnServer()) 
@@ -233,7 +233,7 @@ void CTelekineticObject::fire(const Fvector &target, float power)
 		{
 		// выполнить бросок
 			for (u32 i=0;i<object->m_pPhysicsShell->get_ElementsNumber();i++) 
-				object->m_pPhysicsShell->get_ElementByStoreOrder(u16(i))->applyImpulse(dir, power * 20.f * object->m_pPhysicsShell->getMass() / object->m_pPhysicsShell->Elements().size());
+				object->m_pPhysicsShell->get_ElementByStoreOrder(static_cast<u16>(i))->applyImpulse(dir, power * 20.f * object->m_pPhysicsShell->getMass() / object->m_pPhysicsShell->Elements().size());
 			
 		};
 };

@@ -28,7 +28,7 @@ CStateMonsterFindEnemyAbstract::~CStateMonsterFindEnemy()
 TEMPLATE_SPECIALIZATION
 void CStateMonsterFindEnemyAbstract::reselect_state()
 {
-	if (prev_substate == u32(-1)) {
+	if (prev_substate == static_cast<u32>(-1)) {
 		select_state(eStateFindEnemy_Run);
 		return;
 	}

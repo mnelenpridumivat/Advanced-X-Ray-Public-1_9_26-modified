@@ -13,13 +13,13 @@
 
 enum ERoundEnd_Result
 {
-	eRoundEnd_Finish		= u32(0),
+	eRoundEnd_Finish		= static_cast<u32>(0),
 	eRoundEnd_GameRestarted,
 	eRoundEnd_GameRestartedFast,
 	eRoundEnd_TimeLimit,
 	eRoundEnd_FragLimit,
 	eRoundEnd_ArtrefactLimit,
-	eRoundEnd_Force			= u32(-1)
+	eRoundEnd_Force			= static_cast<u32>(-1)
 };
 
 class CSE_Abstract;

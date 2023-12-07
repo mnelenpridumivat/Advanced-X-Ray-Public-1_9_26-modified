@@ -22,7 +22,7 @@ protected:
 	void				SetRelation				(ALife::ERelationType relation, CHARACTER_GOODWILL goodwill);
 	void				ResetAllStrings			();
 	void				UpdateRelation			();
-	bool				hasOwner()			{return (m_ownerID!=u16(-1));}
+	bool				hasOwner()			{return (m_ownerID!=static_cast<u16>(-1));}
 	// Biography
 	CUIScrollView*		pUIBio;
 	bool				m_bForceUpdate;

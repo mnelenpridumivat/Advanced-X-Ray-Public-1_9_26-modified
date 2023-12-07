@@ -51,8 +51,8 @@ protected:
 		{ 
 			return (BigID) == (ID);
 		}
-		void		set(s16 Big) { SlotID = u8((Big>>0x08) & 0x00ff); ItemID = u8(Big & 0x00ff); BigID = Big;}
-		void		set(u8 Slot, u8 Item) { SlotID = Slot; ItemID = Item; BigID = (s16(SlotID) << 0x08) | s16(ItemID); };
+		void		set(s16 Big) { SlotID = static_cast<u8>((Big >> 0x08) & 0x00ff); ItemID = static_cast<u8>(Big & 0x00ff); BigID = Big;}
+		void		set(u8 Slot, u8 Item) { SlotID = Slot; ItemID = Item; BigID = (static_cast<s16>(SlotID) << 0x08) | static_cast<s16>(ItemID); };
 	};
 
 	DEF_VECTOR						(PRESET_ITEMS, PresetItem);

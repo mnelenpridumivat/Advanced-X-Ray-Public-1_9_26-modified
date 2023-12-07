@@ -20,17 +20,17 @@ void CScriptHit::script_register(lua_State *L)
 		class_<CScriptHit>("hit")
 			.enum_("hit_type")
 			[
-				value("burn",					int(ALife::eHitTypeBurn)),
-				value("shock",					int(ALife::eHitTypeShock)),
-				value("strike",					int(ALife::eHitTypeStrike)),
-				value("wound",					int(ALife::eHitTypeWound)),
-				value("radiation",				int(ALife::eHitTypeRadiation)),
-				value("telepatic",				int(ALife::eHitTypeTelepatic)),
-				value("chemical_burn",			int(ALife::eHitTypeChemicalBurn)),
-				value("explosion",				int(ALife::eHitTypeExplosion)),
-				value("fire_wound",				int(ALife::eHitTypeFireWound)),
-				value("light_burn",				int(ALife::eHitTypeLightBurn)),
-				value("dummy",					int(ALife::eHitTypeMax))
+				value("burn",					static_cast<int>(ALife::eHitTypeBurn)),
+				value("shock",					static_cast<int>(ALife::eHitTypeShock)),
+				value("strike",					static_cast<int>(ALife::eHitTypeStrike)),
+				value("wound",					static_cast<int>(ALife::eHitTypeWound)),
+				value("radiation",				static_cast<int>(ALife::eHitTypeRadiation)),
+				value("telepatic",				static_cast<int>(ALife::eHitTypeTelepatic)),
+				value("chemical_burn",			static_cast<int>(ALife::eHitTypeChemicalBurn)),
+				value("explosion",				static_cast<int>(ALife::eHitTypeExplosion)),
+				value("fire_wound",				static_cast<int>(ALife::eHitTypeFireWound)),
+				value("light_burn",				static_cast<int>(ALife::eHitTypeLightBurn)),
+				value("dummy",					static_cast<int>(ALife::eHitTypeMax))
 			]
 			.def_readwrite("power",				&CScriptHit::m_fPower)
 			.def_readwrite("direction",			&CScriptHit::m_tDirection)

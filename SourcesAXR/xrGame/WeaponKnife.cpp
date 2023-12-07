@@ -27,7 +27,7 @@ CWeaponKnife::CWeaponKnife()
 {
 	SetState				( eHidden );
 	SetNextState			( eHidden );
-	knife_material_idx		= (u16)-1;
+	knife_material_idx		= static_cast<u16>(-1);
 	fHitImpulse_cur			= 0.0f;
 
 	m_Hit1Distance			= 1.f;
@@ -147,7 +147,7 @@ void CWeaponKnife::KnifeStrike(const Fvector& pos, const Fvector& dir)
 	if (real_victim)
 	{
 		float new_khit = m_eHitType == m_eHitType_1 ? 
-			float(m_Splash1PerVictimsHCount) : float(m_Splash2HitsCount);
+			static_cast<float>(m_Splash1PerVictimsHCount) : static_cast<float>(m_Splash2HitsCount);
 		MakeShot(pos, dir, new_khit);
 		return;
 	}
@@ -378,8 +378,8 @@ void CWeaponKnife::LoadFireParams(LPCSTR section)
 	s_sHitPower_2			= pSettings->r_string_wb	(section, "hit_power_2" );
 	s_sHitPowerCritical_2	= pSettings->r_string_wb	(section, "hit_power_critical_2" );
 	
-	fvHitPower_2[egdMaster]			= (float)atof(_GetItem(*s_sHitPower_2,0,buffer));//первый параметр - это хит для уровня игры мастер
-	fvHitPowerCritical_2[egdMaster]	= (float)atof(_GetItem(*s_sHitPowerCritical_2,0,buffer));//первый параметр - это хит для уровня игры мастер
+	fvHitPower_2[egdMaster]			= static_cast<float>(atof(_GetItem(*s_sHitPower_2, 0, buffer)));//первый параметр - это хит для уровня игры мастер
+	fvHitPowerCritical_2[egdMaster]	= static_cast<float>(atof(_GetItem(*s_sHitPowerCritical_2, 0, buffer)));//первый параметр - это хит для уровня игры мастер
 
 	fvHitPower_2[egdNovice] = fvHitPower_2[egdStalker] = fvHitPower_2[egdVeteran] = fvHitPower_2[egdMaster];//изначально параметры для других уровней сложности такие же
 	fvHitPowerCritical_2[egdNovice] = fvHitPowerCritical_2[egdStalker] = fvHitPowerCritical_2[egdVeteran] = fvHitPowerCritical_2[egdMaster];//изначально параметры для других уровней сложности такие же
@@ -387,29 +387,29 @@ void CWeaponKnife::LoadFireParams(LPCSTR section)
 	int num_game_diff_param=_GetItemCount(*s_sHitPower_2);//узнаём колличество параметров для хитов
 	if (num_game_diff_param>1)//если задан второй параметр хита
 	{
-		fvHitPower_2[egdVeteran] = (float)atof(_GetItem(*s_sHitPower_2,1,buffer));//то вычитываем его для уровня ветерана
+		fvHitPower_2[egdVeteran] = static_cast<float>(atof(_GetItem(*s_sHitPower_2, 1, buffer)));//то вычитываем его для уровня ветерана
 	}
 	if (num_game_diff_param>2)//если задан третий параметр хита
 	{
-		fvHitPower_2[egdStalker] = (float)atof(_GetItem(*s_sHitPower_2,2,buffer));//то вычитываем его для уровня сталкера
+		fvHitPower_2[egdStalker] = static_cast<float>(atof(_GetItem(*s_sHitPower_2, 2, buffer)));//то вычитываем его для уровня сталкера
 	}
 	if (num_game_diff_param>3)//если задан четвёртый параметр хита
 	{
-		fvHitPower_2[egdNovice]  = (float)atof(_GetItem(*s_sHitPower_2,3,buffer));//то вычитываем его для уровня новичка
+		fvHitPower_2[egdNovice]  = static_cast<float>(atof(_GetItem(*s_sHitPower_2, 3, buffer)));//то вычитываем его для уровня новичка
 	}
 
 	num_game_diff_param=_GetItemCount(*s_sHitPowerCritical_2);//узнаём колличество параметров
 	if (num_game_diff_param>1)//если задан второй параметр хита
 	{
-		fvHitPowerCritical_2[egdVeteran] = (float)atof(_GetItem(*s_sHitPowerCritical_2,1,buffer));//то вычитываем его для уровня ветерана
+		fvHitPowerCritical_2[egdVeteran] = static_cast<float>(atof(_GetItem(*s_sHitPowerCritical_2, 1, buffer)));//то вычитываем его для уровня ветерана
 	}
 	if (num_game_diff_param>2)//если задан третий параметр хита
 	{
-		fvHitPowerCritical_2[egdStalker] = (float)atof(_GetItem(*s_sHitPowerCritical_2,2,buffer));//то вычитываем его для уровня сталкера
+		fvHitPowerCritical_2[egdStalker] = static_cast<float>(atof(_GetItem(*s_sHitPowerCritical_2, 2, buffer)));//то вычитываем его для уровня сталкера
 	}
 	if (num_game_diff_param>3)//если задан четвёртый параметр хита
 	{
-		fvHitPowerCritical_2[egdNovice]  = (float)atof(_GetItem(*s_sHitPowerCritical_2,3,buffer));//то вычитываем его для уровня новичка
+		fvHitPowerCritical_2[egdNovice]  = static_cast<float>(atof(_GetItem(*s_sHitPowerCritical_2, 3, buffer)));//то вычитываем его для уровня новичка
 	}
 
 	fHitImpulse_2		= pSettings->r_float	(section, "hit_impulse_2" );
@@ -456,7 +456,7 @@ void CWeaponKnife::OnRender()
 	{
 		Fmatrix	sphere	= Fmatrix().scale(0.05f, 0.05f, 0.05f);
 		sphere.c		= *i;
-		u8				hit_color = u8(255 * hit_power);
+		u8				hit_color = static_cast<u8>(255 * hit_power);
 		hit_power		*= m_NextHitDivideFactor;
 		renderer.draw_ellipse(sphere, D3DCOLOR_XRGB(hit_color, 50, 0));
 	}
@@ -678,7 +678,7 @@ void CWeaponKnife::fill_shots_list(victims_shapes_list_t & victims_shapres,
 				curr_bone.m_victim_id);
 			if (m_perv_hits_count && (tmp_vhits_iter == m_victims_hits_count.end()))
 			{
-				m_victims_hits_count.insert(std::make_pair(curr_bone.m_victim_id, u16(1)));
+				m_victims_hits_count.insert(std::make_pair(curr_bone.m_victim_id, static_cast<u16>(1)));
 			} else if (m_perv_hits_count && (tmp_vhits_iter->second < m_perv_hits_count))
 			{
 				++tmp_vhits_iter->second;

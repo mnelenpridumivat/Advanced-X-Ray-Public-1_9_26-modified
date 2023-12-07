@@ -157,7 +157,7 @@ void _MinimizeND::ComputeDomain (const float* afT0, const float* afT1,
 TEMPLATE_SPECIALIZATION
 float _MinimizeND::LineFunction (float fT, void* pvUserData)
 {
-    _MinimizeND* pkThis = (_MinimizeND*) pvUserData;
+    _MinimizeND* pkThis = static_cast<MinimizeND<m_iDimensions>*>(pvUserData);
 
     for (int i = 0; i < m_iDimensions; i++)
     {

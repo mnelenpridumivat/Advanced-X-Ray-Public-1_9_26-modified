@@ -31,7 +31,7 @@ void CStateMonsterHittedAbstract::reselect_state()
 		return;
 	}
 
-	if (prev_substate == u32(-1)) {
+	if (prev_substate == static_cast<u32>(-1)) {
 		select_state(eStateHitted_Hide);
 		return;
 	}

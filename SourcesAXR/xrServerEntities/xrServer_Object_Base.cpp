@@ -29,7 +29,7 @@
 	{
 		NODEFAULT;
 #	ifdef DEBUG
-		return(*(IPropHelper*)0);
+		return(*static_cast<IPropHelper*>(0));
 #	endif
 	}
 
@@ -132,7 +132,7 @@ CSE_Abstract::CSE_Abstract					(LPCSTR caSection)
 
 		if ( config ) {
 			int					size = config->length()*sizeof(char);
-			LPSTR				temp = (LPSTR)_alloca(size + 1);
+			LPSTR				temp = static_cast<LPSTR>(_alloca(size + 1));
 			CopyMemory			(temp,config->pointer(),size);
 			temp[size]			= 0;
 			m_ini_string		= temp;
@@ -209,9 +209,9 @@ void CSE_Abstract::Spawn_Write				(NET_Packet	&tNetPacket, BOOL bLocal)
 
 	s_flags.set					(M_SPAWN_VERSION,TRUE);
 	if (bLocal)
-		tNetPacket.w_u16		(u16(s_flags.flags|M_SPAWN_OBJECT_LOCAL) );
+		tNetPacket.w_u16		(static_cast<u16>(s_flags.flags | M_SPAWN_OBJECT_LOCAL) );
 	else
-		tNetPacket.w_u16		(u16(s_flags.flags&~(M_SPAWN_OBJECT_LOCAL|M_SPAWN_OBJECT_ASPLAYER)));
+		tNetPacket.w_u16		(static_cast<u16>(s_flags.flags & ~(M_SPAWN_OBJECT_LOCAL | M_SPAWN_OBJECT_ASPLAYER)));
 	
 	tNetPacket.w_u16			(SPAWN_VERSION);
 
@@ -221,7 +221,7 @@ void CSE_Abstract::Spawn_Write				(NET_Packet	&tNetPacket, BOOL bLocal)
 
 
 	//client object custom data serialization SAVE
-	u16 client_data_size		= (u16)client_data.size(); //не может быть больше 256 байт
+	u16 client_data_size		= static_cast<u16>(client_data.size()); //не может быть больше 256 байт
 	tNetPacket.w_u16			(client_data_size);
 //	Msg							("SERVER:saving:save:%d bytes:%d:%s",client_data_size,ID,s_name_replace ? s_name_replace : "");
 	if (client_data_size > 0) {
@@ -244,7 +244,7 @@ void CSE_Abstract::Spawn_Write				(NET_Packet	&tNetPacket, BOOL bLocal)
 	u32	position				= tNetPacket.w_tell();
 	tNetPacket.w_u16			(0);
 	STATE_Write					(tNetPacket);
-	u16 size					= u16(tNetPacket.w_tell() - position);
+	u16 size					= static_cast<u16>(tNetPacket.w_tell() - position);
 //#ifdef XRSE_FACTORY_EXPORTS
 	R_ASSERT3					((m_tClassID == CLSID_SPECTATOR) || (size > sizeof(size)),
 		"object isn't successfully saved, get your backup :(",name_replace());

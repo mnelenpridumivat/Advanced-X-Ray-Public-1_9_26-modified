@@ -28,28 +28,28 @@ void CHelicopter::script_register(lua_State *L)
 			.def(constructor<>())
 			.enum_("state")
 				[
-					value("eAlive",									int(CHelicopter::eAlive)),
-					value("eDead",									int(CHelicopter::eDead))
+					value("eAlive",									static_cast<int>(CHelicopter::eAlive)),
+					value("eDead",									static_cast<int>(CHelicopter::eDead))
 				]
 			.enum_("movement_state")
 				[
-					value("eMovNone",								int(eMovNone)),
-					value("eMovToPoint",							int(eMovToPoint)),
-					value("eMovPatrolPath",							int(eMovPatrolPath)),
-					value("eMovRoundPath",							int(eMovRoundPath)),
-					value("eMovLanding",							int(eMovLanding)),
-					value("eMovTakeOff",							int(eMovTakeOff))
+					value("eMovNone",								static_cast<int>(eMovNone)),
+					value("eMovToPoint",							static_cast<int>(eMovToPoint)),
+					value("eMovPatrolPath",							static_cast<int>(eMovPatrolPath)),
+					value("eMovRoundPath",							static_cast<int>(eMovRoundPath)),
+					value("eMovLanding",							static_cast<int>(eMovLanding)),
+					value("eMovTakeOff",							static_cast<int>(eMovTakeOff))
 				]
 			.enum_("hunt_state")
 				[
-					value("eEnemyNone",								int(eEnemyNone)),
-					value("eEnemyPoint",							int(eEnemyPoint)),
-					value("eEnemyEntity",							int(eEnemyEntity))
+					value("eEnemyNone",								static_cast<int>(eEnemyNone)),
+					value("eEnemyPoint",							static_cast<int>(eEnemyPoint)),
+					value("eEnemyEntity",							static_cast<int>(eEnemyEntity))
 				]
 			.enum_("body_state")
 				[
-					value("eBodyByPath",							int(eBodyByPath)),
-					value("eBodyToPoint",							int(eBodyToPoint))
+					value("eBodyByPath",							static_cast<int>(eBodyByPath)),
+					value("eBodyToPoint",							static_cast<int>(eBodyToPoint))
 				]
 
 				.def("GetState",							&CHelicopter::state_script)
@@ -76,8 +76,8 @@ void CHelicopter::script_register(lua_State *L)
 				.def("GetDistanceToDestPosition",			&CHelicopter::GetDistanceToDestPosition)
 
 				.def("ClearEnemy",							&CHelicopter::UnSetEnemy)
-				.def("SetEnemy",							(void (CHelicopter::*)(CScriptGameObject*)) &CHelicopter::SetEnemy)
-				.def("SetEnemy",							(void (CHelicopter::*)(Fvector*)) &CHelicopter::SetEnemy)
+				.def("SetEnemy",							static_cast<void (CHelicopter::*)(CScriptGameObject*)>(&CHelicopter::SetEnemy))
+				.def("SetEnemy",							static_cast<void (CHelicopter::*)(Fvector*)>(&CHelicopter::SetEnemy))
 				.def("GoPatrolByPatrolPath",				&CHelicopter::goPatrolByPatrolPath)
 				.def("GoPatrolByRoundPath",					&CHelicopter::goByRoundPath)
 				.def("SetDestPosition",						&CHelicopter::SetDestPosition)
@@ -85,8 +85,8 @@ void CHelicopter::script_register(lua_State *L)
 				.def("SetFireTrailLength",					&CHelicopter::SetFireTrailLength)
 				.def("SetBarrelDirTolerance",				&CHelicopter::SetBarrelDirTolerance)
 
-				.def("UseFireTrail",						(bool (CHelicopter::*)(void)) &CHelicopter::UseFireTrail)
-				.def("UseFireTrail",						(void (CHelicopter::*)(bool)) &CHelicopter::UseFireTrail)
+				.def("UseFireTrail",						static_cast<bool (CHelicopter::*)(void)>(&CHelicopter::UseFireTrail))
+				.def("UseFireTrail",						static_cast<void (CHelicopter::*)(bool)>(&CHelicopter::UseFireTrail))
 
 				.def("Die",									&CHelicopter::DieHelicopter)
 				.def("StartFlame",							&CHelicopter::StartFlame)

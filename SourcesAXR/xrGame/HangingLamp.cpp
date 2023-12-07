@@ -43,7 +43,7 @@ void CHangingLamp::RespawnInit()
 	Init();
 	if(Visual()){
 		IKinematics* K = smart_cast<IKinematics*>(Visual());
-		K->LL_SetBonesVisible(u64(-1));
+		K->LL_SetBonesVisible(static_cast<u64>(-1));
 		K->CalculateBones_Invalidate();
 		K->CalculateBones	(TRUE);
 	}
@@ -192,7 +192,7 @@ BOOL	CHangingLamp::net_SaveRelevant	()
 void	CHangingLamp::	save			(NET_Packet &output_packet)
 {
 	inherited::save(output_packet);
-	output_packet.w_u8((u8)m_bState);
+	output_packet.w_u8(static_cast<u8>(m_bState));
 
 }
 void	CHangingLamp::load				(IReader &input_packet)
@@ -250,7 +250,7 @@ void CHangingLamp::UpdateCL	()
 			int frame;
 			u32 clr					= lanim->CalculateBGR(Device.fTimeGlobal,frame); // возвращает в формате BGR
 			Fcolor					fclr;
-			fclr.set				((float)color_get_B(clr),(float)color_get_G(clr),(float)color_get_R(clr),1.f);
+			fclr.set				(static_cast<float>(color_get_B(clr)),static_cast<float>(color_get_G(clr)),static_cast<float>(color_get_R(clr)),1.f);
 			fclr.mul_rgb			(fBrightness/255.f);
 			light_render->set_color	(fclr);
 			if (glow_render)		glow_render->set_color	(fclr);

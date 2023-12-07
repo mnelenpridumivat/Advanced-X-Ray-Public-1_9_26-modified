@@ -40,36 +40,36 @@
 static u64 generate_time_impl	(u32 years, u32 months, u32 days, u32 hours, u32 minutes, u32 seconds, u32 milliseconds)
 {
 	u64 const extra_day_count	= ((years % 400 == 0) || ((years % 4 == 0) && (years % 100 != 0))) ? 1 : 0;
-	u64 const years_minus_1		= u64(years - 1);
+	u64 const years_minus_1		= static_cast<u64>(years - 1);
 	u64	result					= years_minus_1*365 + years_minus_1/4 - years_minus_1/100 + years_minus_1/400;
-	if (months >  1) result		+= u64(31);
-	if (months >  2) result		+= u64(28 + extra_day_count);
-	if (months >  3) result		+= u64(31);
-	if (months >  4) result		+= u64(30);
-	if (months >  5) result		+= u64(31);
-	if (months >  6) result		+= u64(30);
-	if (months >  7) result		+= u64(31);
-	if (months >  8) result		+= u64(31);
-	if (months >  9) result		+= u64(30);
-	if (months > 10) result		+= u64(31);
-	if (months > 11) result		+= u64(30);
-	result						+= u64(days - 1);
-	result						= result*u64(24) + u64(hours);
-	result						= result*u64(60) + u64(minutes);
-	result						= result*u64(60) + u64(seconds);
-	result						= result*u64(1000) + u64(milliseconds);
+	if (months >  1) result		+= static_cast<u64>(31);
+	if (months >  2) result		+= static_cast<u64>(28 + extra_day_count);
+	if (months >  3) result		+= static_cast<u64>(31);
+	if (months >  4) result		+= static_cast<u64>(30);
+	if (months >  5) result		+= static_cast<u64>(31);
+	if (months >  6) result		+= static_cast<u64>(30);
+	if (months >  7) result		+= static_cast<u64>(31);
+	if (months >  8) result		+= static_cast<u64>(31);
+	if (months >  9) result		+= static_cast<u64>(30);
+	if (months > 10) result		+= static_cast<u64>(31);
+	if (months > 11) result		+= static_cast<u64>(30);
+	result						+= static_cast<u64>(days - 1);
+	result						= result*static_cast<u64>(24) + static_cast<u64>(hours);
+	result						= result*static_cast<u64>(60) + static_cast<u64>(minutes);
+	result						= result*static_cast<u64>(60) + static_cast<u64>(seconds);
+	result						= result*static_cast<u64>(1000) + static_cast<u64>(milliseconds);
 	return						(result);
 }
 
 static void split_time_impl		(u64 time, u32 &years, u32 &months, u32 &days, u32 &hours, u32 &minutes, u32 &seconds, u32 &milliseconds)
 {
-	milliseconds				= u32(time%1000);
+	milliseconds				= static_cast<u32>(time % 1000);
 	time						/= 1000;
-	seconds						= u32(time%60);
+	seconds						= static_cast<u32>(time % 60);
 	time						/= 60;
-	minutes						= u32(time%60);
+	minutes						= static_cast<u32>(time % 60);
 	time						/= 60;
-	hours						= u32(time%24);
+	hours						= static_cast<u32>(time % 24);
 	time						/= 24;
 
 	u64 const p0				= time/(400*365 + 100 - 4 + 1);
@@ -78,9 +78,9 @@ static void split_time_impl		(u64 time, u32 &years, u32 &months, u32 &days, u32 
 	time						-= p1*(100*365 + 25 - 1);
 	u64 const p2				= time/(4*365 + 1);
 	time						-= p2*(4*365 + 1);
-	u64 const p3				= _min(u32(time)/365, 3);
+	u64 const p3				= _min(static_cast<u32>(time)/365, 3);
 	time						-= p3*365;
-	years						= u32(400*p0 + 100*p1 + 4*p2 + p3 + 1);
+	years						= static_cast<u32>(400 * p0 + 100 * p1 + 4 * p2 + p3 + 1);
 	++time;
 
 	u64 const extra_day_count	= ((years % 400 == 0) || ((years % 4 == 0) && (years % 100 != 0))) ? 1 : 0;
@@ -121,7 +121,7 @@ static void split_time_impl		(u64 time, u32 &years, u32 &months, u32 &days, u32 
 		++months;
 		time					-= 30;
 	}}}}}}}}}}}
-	days						= u32(time);
+	days						= static_cast<u32>(time);
 }
 
 u64	generate_time				(u32 years, u32 months, u32 days, u32 hours, u32 minutes, u32 seconds, u32 milliseconds)

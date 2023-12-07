@@ -527,7 +527,7 @@ void	game_sv_mp::RespawnPlayer			(ClientID id_who, bool NoSpectator)
 		//------------------------------------------------------------
 		if (pOwner->owner != m_server->GetServerClient())
 		{
-			pOwner->owner = (xrClientData*)m_server->GetServerClient();
+			pOwner->owner = static_cast<xrClientData*>(m_server->GetServerClient());
 		};
 		//------------------------------------------------------------
 		//remove spectator entity
@@ -570,7 +570,7 @@ void	game_sv_mp::SpawnPlayer(ClientID id, LPCSTR N)
 	
 	if (pA) 
 	{
-		pA->s_team				=	u8(ps_who->team);
+		pA->s_team				=	static_cast<u8>(ps_who->team);
 		assign_RP				(pA, ps_who);
 		SetSkin					(E, pA->s_team, ps_who->skin);
 		ps_who->resetFlag		(GAME_PLAYER_FLAG_VERY_VERY_DEAD);
@@ -608,7 +608,7 @@ void game_sv_mp::AllowDeadBodyRemove(ClientID id, u16 GameID)
 	CSE_Abstract* pSObject = get_entity_from_eid(GameID);
 
 	if (pSObject)
-		pSObject->owner = (xrClientData*)m_server->GetServerClient();
+		pSObject->owner = static_cast<xrClientData*>(m_server->GetServerClient());
 
 	CObject* pObject =  Level().Objects.net_Find(GameID);
 	
@@ -1160,7 +1160,7 @@ void game_sv_mp::OnVoteStart				(LPCSTR VoteCommand, ClientID sender)
 	P.w_stringZ(m_voting_string);
 	m_started_player = tmp_functor.pStartedPlayer ? tmp_functor.pStartedPlayer->ps->getName() : "";
 	P.w_stringZ(m_started_player);
-	P.w_u32(u32(g_sv_mp_fVoteTime*60000));
+	P.w_u32(static_cast<u32>(g_sv_mp_fVoteTime * 60000));
 	u_EventSend(P);
 	//-----------------------------------------------------------------------------	
 };
@@ -1173,7 +1173,7 @@ void game_sv_mp::SendActiveVotingTo(ClientID const & receiver)
 	P.w_stringZ(m_voting_string);
 	P.w_stringZ(m_started_player);
 	u32 CurTime = Level().timeServer();
-	u32 EndVoteTime = m_uVoteStartTime + u32(g_sv_mp_fVoteTime * 60000);
+	u32 EndVoteTime = m_uVoteStartTime + static_cast<u32>(g_sv_mp_fVoteTime * 60000);
 	if (EndVoteTime <= CurTime)
 		return;
 	P.w_u32(EndVoteTime - CurTime);
@@ -1212,7 +1212,7 @@ void		game_sv_mp::UpdateVote				()
 	bool VoteSucceed = false;
 	u32 CurTime = Level().timeServer();
 	
-	if (m_uVoteStartTime + u32(g_sv_mp_fVoteTime*60000) > CurTime)
+	if (m_uVoteStartTime + static_cast<u32>(g_sv_mp_fVoteTime * 60000) > CurTime)
 	{
 		if (vote_stats.NumAgreed > (NumAgainst + vote_stats.NumParticipated))
 		{
@@ -1224,9 +1224,9 @@ void		game_sv_mp::UpdateVote				()
 	else
 	{
 		if (g_sv_mp_bCountParticipants) 
-			VoteSucceed = (float(vote_stats.NumAgreed)/float(vote_stats.NumParticipated + NumAgainst)) >= g_sv_mp_fVoteQuota;
+			VoteSucceed = (static_cast<float>(vote_stats.NumAgreed)/static_cast<float>(vote_stats.NumParticipated + NumAgainst)) >= g_sv_mp_fVoteQuota;
 		else
-			VoteSucceed = (float(vote_stats.NumAgreed)/float(vote_stats.NumToCount)) >= g_sv_mp_fVoteQuota;
+			VoteSucceed = (static_cast<float>(vote_stats.NumAgreed)/static_cast<float>(vote_stats.NumToCount)) >= g_sv_mp_fVoteQuota;
 	};
 
 	SetVotingActive(false);
@@ -1309,7 +1309,7 @@ void	game_sv_mp::SetPlayersDefItems		(game_PlayerState* ps)
 	if (ps->team<0) return;
 	//-------------------------------------------
 	//fill player with default items
-	if (ps->team < s16(TeamList.size()))
+	if (ps->team < static_cast<s16>(TeamList.size()))
 	{
 		DEF_ITEMS_LIST	aDefItems = TeamList[ps->team].aDefaultItems;
 
@@ -1340,10 +1340,10 @@ void	game_sv_mp::SetPlayersDefItems		(game_PlayerState* ps)
 			
 			xr_strcpy(NewItemStr,sizeof(NewItemStr),pSettings->r_string(RankStr, ItemStr));
 //			if (!GetTeamItem_ByName(&pWpnS, &(TeamList[ps->team].aWeapons), NewItemStr)) continue;
-			if (m_strWeaponsData->GetItemIdx(NewItemStr) == u32(-1)) continue;
+			if (m_strWeaponsData->GetItemIdx(NewItemStr) == static_cast<u32>(-1)) continue;
 
 //			*pItemID = pWpnS->SlotItem_ID;
-			*pItemID = u16(m_strWeaponsData->GetItemIdx(NewItemStr) & 0xffff);
+			*pItemID = static_cast<u16>(m_strWeaponsData->GetItemIdx(NewItemStr) & 0xffff);
 		}
 	}
 	//---------------------------------------------------
@@ -1356,18 +1356,18 @@ void	game_sv_mp::SetPlayersDefItems		(game_PlayerState* ps)
 		
 		shared_str WeaponName = m_strWeaponsData->GetItemName((*pItemID) & 0x00FF);
 		if (!xr_strcmp(*WeaponName, "mp_wpn_knife")) continue;
-		u16 AmmoID = u16(-1);
+		u16 AmmoID = static_cast<u16>(-1);
 		if (pSettings->line_exist(WeaponName, "ammo_class"))
 		{
 			string1024 wpnAmmos, BaseAmmoName;
 			xr_strcpy(wpnAmmos, pSettings->r_string(WeaponName, "ammo_class"));
 			_GetItem(wpnAmmos, 0, BaseAmmoName);
-			AmmoID = u16(m_strWeaponsData->GetItemIdx(BaseAmmoName)&0xffff);
+			AmmoID = static_cast<u16>(m_strWeaponsData->GetItemIdx(BaseAmmoName) & 0xffff);
 		};
 //		if (!pWpnS->WeaponBaseAmmo.size()) continue;
 //		WeaponDataStruct* pWpnAmmo = NULL;
 //		if (!GetTeamItem_ByName(&pWpnAmmo, &(TeamList[ps->team].aWeapons), *(pWpnS->WeaponBaseAmmo))) continue;
-		if (AmmoID == u16(-1)) continue;
+		if (AmmoID == static_cast<u16>(-1)) continue;
 		
 //		ps->pItemList.push_back(pWpnAmmo->SlotItem_ID);
 //		ps->pItemList.push_back(pWpnAmmo->SlotItem_ID);
@@ -1400,10 +1400,10 @@ void game_sv_mp::ClearPlayerState(game_PlayerState* ps)
 void game_sv_mp::OnPlayerKilled(NET_Packet P)
 {
 	u16 KilledID = P.r_u16();
-	KILL_TYPE KillType = KILL_TYPE(P.r_u8());
+	KILL_TYPE KillType = static_cast<KILL_TYPE>(P.r_u8());
 	u16 KillerID = P.r_u16();
 	u16	WeaponID = P.r_u16();
-	SPECIAL_KILL_TYPE SpecialKill = SPECIAL_KILL_TYPE(P.r_u8());
+	SPECIAL_KILL_TYPE SpecialKill = static_cast<SPECIAL_KILL_TYPE>(P.r_u8());
 
 	game_PlayerState* ps_killer = get_eid(KillerID);
 	game_PlayerState* ps_killed = get_eid(KilledID);
@@ -1462,11 +1462,11 @@ void	game_sv_mp::SendPlayerKilledMessage	(u16 KilledID, KILL_TYPE KillType, u16 
 	GenerateGameMessage (P);
 	P.w_u32				(GAME_EVENT_PLAYER_KILLED);
 
-	P.w_u8	(u8(KillType));
+	P.w_u8	(static_cast<u8>(KillType));
 	P.w_u16	(KilledID);
 	P.w_u16	(KillerID);
 	P.w_u16	(WeaponID);
-	P.w_u8	(u8(SpecialKill));
+	P.w_u8	(static_cast<u8>(SpecialKill));
 
 	struct player_killed_sender
 	{
@@ -1581,7 +1581,7 @@ void	game_sv_mp::LoadRanks	()
 			string16						temp;
 			float f = 1.0f;
 			if (r <= NumRanks)
-				f = float(atof(_GetItem(RDEB_str.c_str(), r, temp)));
+				f = static_cast<float>(atof(_GetItem(RDEB_str.c_str(), r, temp)));
 			NewRank.m_aRankDiff_ExpBonus.push_back(f);
 		};
 
@@ -1660,14 +1660,14 @@ void	game_sv_mp::UpdatePlayersMoney		()
 			P.w_s32(ps->money_for_round);
 			P.w_s32(ps->money_added);	
 			ps->money_added = 0;
-			P.w_u8(u8(ps->m_aBonusMoney.size() & 0xff));
+			P.w_u8(static_cast<u8>(ps->m_aBonusMoney.size() & 0xff));
 			if (!ps->m_aBonusMoney.empty())
 			{
 				for (u32 i=0; i<ps->m_aBonusMoney.size(); i++)
 				{
 					Bonus_Money_Struct* pBMS = &(ps->m_aBonusMoney[i]);
 					P.w_s32(pBMS->Money);
-					P.w_u8(u8(pBMS->Reason & 0xff));
+					P.w_u8(static_cast<u8>(pBMS->Reason & 0xff));
 					if (pBMS->Reason == SKT_KIR) P.w_u8(pBMS->Kills);
 				};
 				ps->m_aBonusMoney.clear();
@@ -1705,7 +1705,7 @@ void	game_sv_mp::Player_AddBonusMoney	(game_PlayerState* ps, s32 MoneyAmount, SP
 {
 	if (!ps) return;
 	//-----------------------------
-	if (MoneyAmount) ps->m_aBonusMoney.push_back(Bonus_Money_Struct(MoneyAmount, u8(Reason & 0xff), Kill));
+	if (MoneyAmount) ps->m_aBonusMoney.push_back(Bonus_Money_Struct(MoneyAmount, static_cast<u8>(Reason & 0xff), Kill));
 	//-----------------------------
 	Player_AddMoney(ps, MoneyAmount);
 	//-----------------------------
@@ -1714,7 +1714,7 @@ void	game_sv_mp::Player_AddBonusMoney	(game_PlayerState* ps, s32 MoneyAmount, SP
 void	game_sv_mp::Player_AddMoney			(game_PlayerState* ps, s32 MoneyAmount)
 {
 	if (!ps) return;
-	TeamStruct* pTeam		= GetTeamData(u8(ps->team));
+	TeamStruct* pTeam		= GetTeamData(static_cast<u8>(ps->team));
 
 	s64 TotalMoney = ps->money_for_round;
 
@@ -1726,7 +1726,7 @@ void	game_sv_mp::Player_AddMoney			(game_PlayerState* ps, s32 MoneyAmount)
 	if (TotalMoney > 1000000)
 		TotalMoney = 1000000;
 
-	ps->money_for_round = s32(TotalMoney);
+	ps->money_for_round = static_cast<s32>(TotalMoney);
 	//---------------------------------------
 	Game().m_WeaponUsageStatistic->OnPlayerAddMoney(ps, MoneyAmount);
 	//---------------------------------------	
@@ -1738,7 +1738,7 @@ void game_sv_mp::ReadOptions(shared_str &options)
 	inherited::ReadOptions(options);
 
 	u8 SpectatorModes						= SpectatorModes_Pack();
-	SpectatorModes							= u8(get_option_i(*options,"spectrmds",s32(SpectatorModes)) & 0x00ff);
+	SpectatorModes							= static_cast<u8>(get_option_i(*options, "spectrmds", s32(SpectatorModes)) & 0x00ff);
 	SpectatorModes_UnPack					(SpectatorModes);
 
 	g_sv_dwMaxClientPing					= get_option_i(*options,"maxping",g_sv_dwMaxClientPing);
@@ -1750,7 +1750,7 @@ void game_sv_mp::ReadOptions(shared_str &options)
 	u32 hours = 0, mins = 0;
 	sscanf									(StartTime,"%d:%d",&hours,&mins);
 	u64 StartEnvGameTime					= generate_time	(1,1,1,hours,mins,0,0);
-	float EnvTimeFactor						= float(atof(TimeFactor))*GetEnvironmentGameTimeFactor();
+	float EnvTimeFactor						= static_cast<float>(atof(TimeFactor))*GetEnvironmentGameTimeFactor();
 
 	SetEnvironmentGameTimeFactor			(StartEnvGameTime,EnvTimeFactor);
 	SetGameTimeFactor						(StartEnvGameTime,g_fTimeFactor);

@@ -90,7 +90,7 @@ void CScriptZone::net_Relcase			(CObject *O)
 
 BOOL CScriptZone::feel_touch_contact	(CObject* O)
 {
-	return						(((CCF_Shape*)CFORM())->Contact(O));
+	return						(static_cast<CCF_Shape*>(CFORM())->Contact(O));
 }
 
 #ifdef DEBUG
@@ -101,7 +101,7 @@ void CScriptZone::OnRender()
 	//RCache.OnFrameEnd();
 	Fvector l_half; l_half.set(.5f, .5f, .5f);
 	Fmatrix l_ball, l_box;
-	xr_vector<CCF_Shape::shape_def> &l_shapes = ((CCF_Shape*)CFORM())->Shapes();
+	xr_vector<CCF_Shape::shape_def> &l_shapes = static_cast<CCF_Shape*>(CFORM())->Shapes();
 	xr_vector<CCF_Shape::shape_def>::iterator l_pShape;
 	
 	for(l_pShape = l_shapes.begin(); l_shapes.end() != l_pShape; ++l_pShape) 

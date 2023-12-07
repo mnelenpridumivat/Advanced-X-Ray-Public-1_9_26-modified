@@ -5,7 +5,7 @@ namespace secure_messaging
 {
 
 seed_generator::seed_generator() :
-	m_random(static_cast<s32>(CPU::QPC() & u32(-1)))
+	m_random(static_cast<s32>(CPU::QPC() & static_cast<u32>(-1)))
 {
 };
 seed_generator::~seed_generator()
@@ -99,7 +99,7 @@ inline u32 const xray_crypt(void* buffer, u32 buffer_size, key_t const & sec_key
 	{
 		VERIFY(crypt_action == xr_decrypt);
 		u32 shift_value = (sizeof(s32) - rest_bytes) * 8;
-		ret_checksum	+= u32(next_raw_word) & (u32(-1) >> shift_value);
+		ret_checksum	+= static_cast<u32>(next_raw_word) & (static_cast<u32>(-1) >> shift_value);
 	}
 	return ret_checksum;
 }

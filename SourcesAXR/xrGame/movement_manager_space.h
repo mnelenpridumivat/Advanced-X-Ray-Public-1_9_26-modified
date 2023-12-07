@@ -10,11 +10,11 @@
 
 namespace MovementManager {
 	enum EPathType {
-		ePathTypeGamePath = u32(0),
+		ePathTypeGamePath = static_cast<u32>(0),
 		ePathTypeLevelPath,
 		ePathTypePatrolPath,
 		ePathTypeNoPath,
-		ePathTypeDummy = u32(-1),
+		ePathTypeDummy = static_cast<u32>(-1),
 	};
 };
 

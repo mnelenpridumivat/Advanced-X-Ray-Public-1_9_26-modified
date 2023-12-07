@@ -727,7 +727,7 @@ void CActor::StopAnyMove()
 
 	if (this == Level().CurrentViewEntity())
 	{
-		g_player_hud->OnMovementChanged((EMoveCommand)0);
+		g_player_hud->OnMovementChanged(static_cast<EMoveCommand>(0));
 	}
 }
 

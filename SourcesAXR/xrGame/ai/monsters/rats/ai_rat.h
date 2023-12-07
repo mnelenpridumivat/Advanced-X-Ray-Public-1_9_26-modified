@@ -173,7 +173,7 @@ protected:
 
 	// Graph
 	enum ERatAction {
-		eRatActionNone = u32(0),
+		eRatActionNone = static_cast<u32>(0),
 		eRatActionAttackBegin,
 		eRatActionAttackEnd,
 	};

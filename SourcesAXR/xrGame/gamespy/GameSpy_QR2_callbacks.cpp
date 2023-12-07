@@ -15,7 +15,7 @@ extern u32 g_sv_dwMaxClientPing;
 void __cdecl callback_serverkey(int keyid, qr2_buffer_t outbuf, void *userdata)
 {
 	if (!userdata) return;
-	xrGameSpyServer* pServer = (xrGameSpyServer*) userdata;
+	xrGameSpyServer* pServer = static_cast<xrGameSpyServer*>(userdata);
 	if (!pServer) return;
 	CGameSpy_QR2* pQR2 = pServer->QR2();
 	if (!pQR2) return;
@@ -107,9 +107,9 @@ void __cdecl callback_serverkey(int keyid, qr2_buffer_t outbuf, void *userdata)
 
 void __cdecl callback_playerkey(int keyid, int index, qr2_buffer_t outbuf, void *userdata)
 {
-	xrGameSpyServer* pServer = (xrGameSpyServer*) userdata;
+	xrGameSpyServer* pServer = static_cast<xrGameSpyServer*>(userdata);
 	if (!pServer) return;
-	if (u32(index) >= pServer->GetClientsCount()) return;
+	if (static_cast<u32>(index) >= pServer->GetClientsCount()) return;
 	CGameSpy_QR2* pQR2 = pServer->QR2();
 	if (!pQR2) return;
 
@@ -136,7 +136,7 @@ void __cdecl callback_playerkey(int keyid, int index, qr2_buffer_t outbuf, void 
 	if (pServer->IsDedicated())
 	{
 		index_searcher tmp_predicate(index+1);
-		if (u32(index+1) >= pServer->GetClientsCount()) return;
+		if (static_cast<u32>(index + 1) >= pServer->GetClientsCount()) return;
 		pCD = static_cast<xrGameSpyClientData*>(
 			pServer->FindClient(tmp_predicate)
 		);
@@ -172,14 +172,14 @@ void __cdecl callback_playerkey(int keyid, int index, qr2_buffer_t outbuf, void 
 
 void __cdecl callback_teamkey(int keyid, int index, qr2_buffer_t outbuf, void *userdata)
 {
-	xrGameSpyServer* pServer = (xrGameSpyServer*) userdata;
+	xrGameSpyServer* pServer = static_cast<xrGameSpyServer*>(userdata);
 	if (!pServer) return;
 	
 	CGameSpy_QR2* pQR2 = pServer->QR2();
 	if (!pQR2) return;
 
 	game_sv_Deathmatch* gmDM = smart_cast<game_sv_Deathmatch*>(pServer->game);
-	if (!gmDM || u32(index) >= gmDM->GetNumTeams()) return;
+	if (!gmDM || static_cast<u32>(index) >= gmDM->GetNumTeams()) return;
 
 	switch (keyid)
 	{
@@ -194,7 +194,7 @@ void __cdecl callback_teamkey(int keyid, int index, qr2_buffer_t outbuf, void *u
 void __cdecl callback_keylist(qr2_key_type keytype, qr2_keybuffer_t keybuffer, void *userdata)
 {
 	if (!userdata) return;
-	xrGameSpyServer* pServer = (xrGameSpyServer*) userdata;
+	xrGameSpyServer* pServer = static_cast<xrGameSpyServer*>(userdata);
 	CGameSpy_QR2* pQR2 = pServer->QR2();
 	if (!pQR2) return;
 	
@@ -277,7 +277,7 @@ void __cdecl callback_keylist(qr2_key_type keytype, qr2_keybuffer_t keybuffer, v
 int __cdecl callback_count(qr2_key_type keytype, void *userdata)
 {
 	if (!userdata) return 0;
-	xrGameSpyServer* pServer = (xrGameSpyServer*) userdata;
+	xrGameSpyServer* pServer = static_cast<xrGameSpyServer*>(userdata);
 	switch (keytype)
 	{
 	case key_player:
@@ -310,7 +310,7 @@ int __cdecl callback_count(qr2_key_type keytype, void *userdata)
 void __cdecl callback_adderror(qr2_error_t error, gsi_char *errmsg, void *userdata)
 {
 	Msg("! Error while adding this server to master list ->%s.", errmsg);
-	xrGameSpyServer* pServer = (xrGameSpyServer*) userdata;
+	xrGameSpyServer* pServer = static_cast<xrGameSpyServer*>(userdata);
 	if (pServer) pServer->OnError_Add(error);
 	
 };

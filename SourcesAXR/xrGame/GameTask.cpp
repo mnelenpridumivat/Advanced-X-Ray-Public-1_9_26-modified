@@ -66,7 +66,7 @@ void CGameTask::OnArrived()
 
 void CGameTask::CreateMapLocation( bool on_load )
 {
-	if ( m_map_object_id == u16(-1) || m_map_location.size() == 0 )
+	if ( m_map_object_id == static_cast<u16>(-1) || m_map_location.size() == 0 )
 	{
 		return;
 	}
@@ -119,7 +119,7 @@ void CGameTask::RemoveMapLocations(bool notify)
 
 	m_map_location			= 0;
 	m_linked_map_location	= NULL;
-	m_map_object_id			= u16(-1);
+	m_map_object_id			= static_cast<u16>(-1);
 }
 
 void CGameTask::ChangeMapLocation( LPCSTR new_map_location, u16 new_map_object_id )

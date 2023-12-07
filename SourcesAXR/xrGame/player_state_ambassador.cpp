@@ -9,7 +9,7 @@ namespace award_system
 player_state_ambassador::player_state_ambassador(game_state_accumulator* owner) :
 	inherited(owner)
 {
-	m_shots_count		= u32(-1);
+	m_shots_count		= static_cast<u32>(-1);
 	m_art_drop_count	= 0;
 	m_delivered			= false;
 }
@@ -24,7 +24,7 @@ u32 const player_state_ambassador::get_u32_param()
 
 void player_state_ambassador::reset_game()
 {
-	m_shots_count		= u32(-1);
+	m_shots_count		= static_cast<u32>(-1);
 	m_art_drop_count	= 0;
 	m_delivered			= false;
 }

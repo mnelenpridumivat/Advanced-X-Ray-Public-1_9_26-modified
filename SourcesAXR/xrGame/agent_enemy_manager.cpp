@@ -48,7 +48,7 @@ IC	u32 population(const u32 &b) {
 }
 
 IC	u32 population(const u64 &b) {
-	return	( population( (u32)b ) + population(u32(b >> 32)) );
+	return	( population( static_cast<u32>(b) ) + population(static_cast<u32>(b >> 32)) );
 }
 
 struct CEnemyFiller {
@@ -107,7 +107,7 @@ void CAgentEnemyManager::fill_enemies			()
 	VERIFY								(!m_enemies.empty());
 
 	{
-		for (int i=0, n=(int)m_wounded.size(); i<n; ++i) {
+		for (int i=0, n=static_cast<int>(m_wounded.size()); i<n; ++i) {
 			const CEntityAlive			*enemy = m_wounded[i].first;
 			ENEMIES::const_iterator		I = std::find(m_enemies.begin(),m_enemies.end(),enemy);
 			if (I != m_enemies.end())
@@ -264,10 +264,10 @@ void CAgentEnemyManager::permutate_enemies		()
 		ENEMIES::const_iterator	e = m_enemies.end();
 		for ( ; i != e; ++i) {
 			if ((*i).m_mask.is(member_mask))
-				(*I)->enemies().push_back	(u32(i - b));
+				(*I)->enemies().push_back	(static_cast<u32>(i - b));
 
 			if ((*i).m_distribute_mask.is(member_mask)) {
-				(*I)->selected_enemy		(u32(i - b));
+				(*I)->selected_enemy		(static_cast<u32>(i - b));
 				enemy_selected				= true;
 			}
 		}
@@ -423,7 +423,7 @@ void CAgentEnemyManager::assign_wounded			()
 #endif // DEBUG
 
 	u32						previous_wounded_count = m_wounded.size();
-	WOUNDED_ENEMY			*previous_wounded = (WOUNDED_ENEMY*)_alloca(previous_wounded_count*sizeof(WOUNDED_ENEMY));
+	WOUNDED_ENEMY			*previous_wounded = static_cast<WOUNDED_ENEMY*>(_alloca(previous_wounded_count * sizeof(WOUNDED_ENEMY)));
 	std::copy				(m_wounded.begin(),m_wounded.end(),previous_wounded);
 	m_wounded.clear			();
 
@@ -459,7 +459,7 @@ void CAgentEnemyManager::assign_wounded			()
 			if ((*I).first->Position().distance_to_sqr((*i)->object().Position()) > _sqr(wounded_enemy_reached_distance))
 				continue;
 
-			if (wounded_processor((*J).m_object) != ALife::_OBJECT_ID(-1))
+			if (wounded_processor((*J).m_object) != static_cast<ALife::_OBJECT_ID>(-1))
 				continue;
 
 			wounded_processor			((*J).m_object,(*I).second.first);
@@ -486,7 +486,7 @@ void CAgentEnemyManager::assign_wounded			()
 					continue;
 
 				squad_mask_type						J = (*I).m_mask.get();
-				J									&= (assigned ^ squad_mask_type(-1));
+				J									&= (assigned ^ static_cast<squad_mask_type>(-1));
 				for ( ; J; J &= J - 1) {
 					squad_mask_type					K = (J & (J - 1)) ^ J;
 					CAgentMemberManager::iterator	i = object().member().member(K);
@@ -565,7 +565,7 @@ void CAgentEnemyManager::assign_wounded			()
 
 //		Msg							("wounded enemy [%s] is assigned to member [%s]",*enemy->m_object->cName(),*processor->cName());
 
-		if (wounded_processor(enemy->m_object) == ALife::_OBJECT_ID(-1))
+		if (wounded_processor(enemy->m_object) == static_cast<ALife::_OBJECT_ID>(-1))
 			wounded_processor		(enemy->m_object,processor->ID());
 
 		squad_mask_type				mask = object().member().mask(processor);
@@ -648,7 +648,7 @@ ALife::_OBJECT_ID CAgentEnemyManager::wounded_processor	(const CEntityAlive *obj
 			return					((*I).second.first);
 	}
 
-	return							(ALife::_OBJECT_ID(-1));
+	return							static_cast<ALife::_OBJECT_ID>(-1);
 }
 
 class find_wounded_predicate {
@@ -687,7 +687,7 @@ void CAgentEnemyManager::wounded_processed		(const CEntityAlive *object, bool va
 	WOUNDED_ENEMIES::iterator		I = std::find_if(m_wounded.begin(),m_wounded.end(),find_wounded_predicate(object));
 	if (I == m_wounded.end())
 		return;
-	VERIFY							((*I).second.first != ALife::_OBJECT_ID(-1));
+	VERIFY							((*I).second.first != static_cast<ALife::_OBJECT_ID>(-1));
 //	VERIFY							(!(*I).second.second);
 	(*I).second.second				= true;
 }

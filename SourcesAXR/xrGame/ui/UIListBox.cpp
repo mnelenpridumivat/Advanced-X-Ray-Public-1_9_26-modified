@@ -146,7 +146,7 @@ u32 CUIListBox::GetSelectedIDX()
 			++_idx;
 		}
 	}
-	return u32(-1);
+	return static_cast<u32>(-1);
 }
 
 LPCSTR CUIListBox::GetText(int idx)

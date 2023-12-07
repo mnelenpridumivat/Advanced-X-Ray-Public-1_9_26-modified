@@ -10,13 +10,13 @@ player_blitzkrieg::player_blitzkrieg(game_state_accumulator* owner) :
 	inherited(owner)
 {
 	m_art_drop_count	= 0;
-	m_deliver_time		= u32(-1);
+	m_deliver_time		= static_cast<u32>(-1);
 }
 
 void player_blitzkrieg::reset_game()
 {
 	m_art_drop_count	= 0;
-	m_deliver_time		= u32(-1);
+	m_deliver_time		= static_cast<u32>(-1);
 	m_take_time			= 0;
 }
 
@@ -30,7 +30,7 @@ void player_blitzkrieg::OnPlayerTakeArtefact(game_PlayerState const * ps)
 	{
 		m_take_time = 0;
 	}
-	m_deliver_time	= u32(-1);
+	m_deliver_time	= static_cast<u32>(-1);
 }
 
 void player_blitzkrieg::OnPlayerDropArtefact(game_PlayerState const * ps)
@@ -54,7 +54,7 @@ void player_blitzkrieg::OnPlayerBringArtefact(game_PlayerState const * ps)
 		m_deliver_time = Device.dwTimeGlobal - m_take_time;
 	} else
 	{
-		m_deliver_time = u32(-1);
+		m_deliver_time = static_cast<u32>(-1);
 	}
 	m_art_drop_count = 0;
 }

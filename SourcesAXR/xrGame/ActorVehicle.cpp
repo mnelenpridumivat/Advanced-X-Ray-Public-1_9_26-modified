@@ -47,7 +47,7 @@ void CActor::attach_Vehicle(CHolderCustom* vehicle)
 
 	ResetCallbacks();
 	u16 head_bone = pK->LL_BoneID("bip01_head");
-	pK->LL_GetBoneInstance(u16(head_bone)).set_callback(bctPhysics, VehicleHeadCallback, this);
+	pK->LL_GetBoneInstance(static_cast<u16>(head_bone)).set_callback(bctPhysics, VehicleHeadCallback, this);
 
 	character_physics_support()->movement()->DestroyCharacter();
 	mstate_wishful = 0;
@@ -90,7 +90,7 @@ void CActor::detach_Vehicle()
 	IKinematicsAnimated* V= smart_cast<IKinematicsAnimated*>(Visual()); R_ASSERT(V);
 	V->PlayCycle		(m_anims->m_normal.legs_idle);
 	V->PlayCycle		(m_anims->m_normal.m_torso_idle);
-	m_holderID=u16(-1);
+	m_holderID=static_cast<u16>(-1);
 
 	SetWeaponHideState(INV_STATE_CAR, false);
 }

@@ -132,7 +132,7 @@ void CAI_Stalker::react_on_grenades		()
 				sound().play		(StalkerSpace::eStalkerSoundGrenadeAlarm);
 			else
 				if (missile->Position().distance_to(Position()) < FRIENDLY_GRENADE_ALARM_DIST) {
-					u32 const time	= missile->destroy_time() >= Device.dwTimeGlobal ? u32(missile->destroy_time() - Device.dwTimeGlobal) : 0;
+					u32 const time	= missile->destroy_time() >= Device.dwTimeGlobal ? static_cast<u32>(missile->destroy_time() - Device.dwTimeGlobal) : 0;
 					sound().play	( StalkerSpace::eStalkerSoundFriendlyGrenadeAlarm, time + 1500, time + 1000 );
 				}
 		}

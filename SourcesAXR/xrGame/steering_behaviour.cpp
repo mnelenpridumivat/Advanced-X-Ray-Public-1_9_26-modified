@@ -26,7 +26,7 @@ namespace detail
 	vec   random_vec ()
 	{
 		struct local {
-			static float random_component () { return -1.f + 2.f*(rand()/(float)RAND_MAX); }
+			static float random_component () { return -1.f + 2.f*(rand()/static_cast<float>(RAND_MAX)); }
 		};
 
 		return normalize( cr_fvector3(local::random_component(),

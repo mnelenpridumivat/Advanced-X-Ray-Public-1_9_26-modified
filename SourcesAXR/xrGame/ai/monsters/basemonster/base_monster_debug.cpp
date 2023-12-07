@@ -43,7 +43,7 @@ CBaseMonster::SDebugInfo CBaseMonster::show_debug_info()
  	}
 
 	float y				= 200;
-	float x				= (m_show_debug_info == 1) ? 40.f : float(::Render->getTarget()->get_width() / 2) + 40.f;
+	float x				= (m_show_debug_info == 1) ? 40.f : static_cast<float>(::Render->getTarget()->get_width() / 2) + 40.f;
 	const float delta_y	= 12;
 
 	string256	text;
@@ -284,9 +284,9 @@ void CBaseMonster::debug_fsm()
 		default:										xr_sprintf(st,"Undefined State ::");			break;
 	}
 	
-	DBG().object_info(this,this).remove_item (u32(0));
-	DBG().object_info(this,this).remove_item (u32(1));
-	DBG().object_info(this,this).remove_item (u32(2));
+	DBG().object_info(this,this).remove_item (static_cast<u32>(0));
+	DBG().object_info(this,this).remove_item (static_cast<u32>(1));
+	DBG().object_info(this,this).remove_item (static_cast<u32>(2));
 
 	DBG().object_info(this,this).add_item	 (*cName(), D3DCOLOR_XRGB(255,0,0), 0);
 	DBG().object_info(this,this).add_item	 (st, D3DCOLOR_XRGB(255,0,0), 1);
@@ -471,18 +471,18 @@ void   add_debug_info (debug::text_tree& root_s, CScriptEntityAction* p_action)
 		pcstr const path_name				=	 move_action.m_path_name.c_str();
 
 		movement_action_s.add_line("Path_Name", path_name ? path_name : "-");
-		movement_action_s.add_line("Move_Action", (int)move_action.m_tMoveAction);
+		movement_action_s.add_line("Move_Action", static_cast<int>(move_action.m_tMoveAction));
 		movement_action_s.add_line("Dist_To_End", move_action.m_fDistToEnd);
-		movement_action_s.add_line("Speed_Param", (int)move_action.m_tSpeedParam);
+		movement_action_s.add_line("Speed_Param", static_cast<int>(move_action.m_tSpeedParam));
 		movement_action_s.add_line("Prev_Patrol_Point", move_action.m_previous_patrol_point);
 		movement_action_s.add_line("Speed", move_action.m_fSpeed);
 		movement_action_s.add_line("Goal_Type", move_action.m_tGoalType);
 		movement_action_s.add_line("Node_ID", move_action.m_tNodeID);
-		movement_action_s.add_line("Patrol_Path_Start", (int)move_action.m_tPatrolPathStart);
-		movement_action_s.add_line("Patrol_Path_Stop", (int)move_action.m_tPatrolPathStop);
-		movement_action_s.add_line("Path_Type", (int)move_action.m_tPathType);
-		movement_action_s.add_line("Body_State", (int)move_action.m_tBodyState);
-		movement_action_s.add_line("Movement_Type", (int)move_action.m_tMovementType);			
+		movement_action_s.add_line("Patrol_Path_Start", static_cast<int>(move_action.m_tPatrolPathStart));
+		movement_action_s.add_line("Patrol_Path_Stop", static_cast<int>(move_action.m_tPatrolPathStop));
+		movement_action_s.add_line("Path_Type", static_cast<int>(move_action.m_tPathType));
+		movement_action_s.add_line("Body_State", static_cast<int>(move_action.m_tBodyState));
+		movement_action_s.add_line("Movement_Type", static_cast<int>(move_action.m_tMovementType));			
 	}
 }
 

@@ -227,9 +227,9 @@ bool CLevelGraph::create_straight_path(u32 start_vertex_id, const Fvector &start
 u32	 CLevelGraph::check_position_in_direction_slow	(u32 start_vertex_id, const Fvector2 &start_position, const Fvector2 &finish_position) const
 {
 	if (!valid_vertex_position(v3d(finish_position)))
-		return				(u32(-1));
+		return				static_cast<u32>(-1);
 
-	u32						cur_vertex_id = start_vertex_id, prev_vertex_id = u32(-1);
+	u32						cur_vertex_id = start_vertex_id, prev_vertex_id = static_cast<u32>(-1);
 	Fbox2					box;
 	Fvector2				identity, start, dest, dir;
 
@@ -257,7 +257,7 @@ u32	 CLevelGraph::check_position_in_direction_slow	(u32 start_vertex_id, const F
 			if (box.pick_exact(start,dir)) {
 
 				if (dest_xz == v->position().xz()) {
-					return	(is_accessible(next_vertex_id) ? next_vertex_id : u32(-1));
+					return	(is_accessible(next_vertex_id) ? next_vertex_id : static_cast<u32>(-1));
 				}
 				Fvector2		temp;
 				temp.add		(box.min,box.max);
@@ -267,7 +267,7 @@ u32	 CLevelGraph::check_position_in_direction_slow	(u32 start_vertex_id, const F
 					continue;
 				
 				if (!is_accessible(next_vertex_id))
-					return		(u32(-1));
+					return		static_cast<u32>(-1);
 
 				cur_sqr			= dist;
 				found			= true;
@@ -277,7 +277,7 @@ u32	 CLevelGraph::check_position_in_direction_slow	(u32 start_vertex_id, const F
 			}
 		}
 		if (!found) {
-			return			(u32(-1));
+			return			static_cast<u32>(-1);
 		}
 	}
 }
@@ -285,7 +285,7 @@ u32	 CLevelGraph::check_position_in_direction_slow	(u32 start_vertex_id, const F
 bool CLevelGraph::check_vertex_in_direction_slow	(u32 start_vertex_id, const Fvector2 &start_position, u32 finish_vertex_id) const
 {
 	Fvector					finish_position = vertex_position(finish_vertex_id);
-	u32						cur_vertex_id = start_vertex_id, prev_vertex_id = u32(-1);
+	u32						cur_vertex_id = start_vertex_id, prev_vertex_id = static_cast<u32>(-1);
 	Fbox2					box;
 	Fvector2				identity, start, dest, dir;
 
@@ -478,7 +478,7 @@ float CLevelGraph::cover_in_direction(float fAngle, float b1, float b0, float b3
 
 bool CLevelGraph::neighbour_in_direction	(const Fvector &direction, u32 start_vertex_id) const
 {
-	u32						cur_vertex_id = start_vertex_id, prev_vertex_id = u32(-1);
+	u32						cur_vertex_id = start_vertex_id, prev_vertex_id = static_cast<u32>(-1);
 	Fbox2					box;
 	Fvector2				identity, start, dest, dir;
 

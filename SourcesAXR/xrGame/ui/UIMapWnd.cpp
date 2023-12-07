@@ -102,16 +102,16 @@ void CUIMapWnd::Init(LPCSTR xml_name, LPCSTR start_from)
 
 		m_UIMainScrollH					= xr_new<CUIFixedScrollBar>(); m_UIMainScrollH->SetAutoDelete(true);
 		m_UIMainScrollH->InitScrollBar	(Fvector2().set(r.left+dx, r.bottom-sy), true);
-		m_UIMainScrollH->SetStepSize	( _max( 1, (int)(m_UILevelFrame->GetWidth()*0.1f) ) );
-		m_UIMainScrollH->SetPageSize	( (int)m_UILevelFrame->GetWidth() ); // iFloor
+		m_UIMainScrollH->SetStepSize	( _max( 1, static_cast<int>(m_UILevelFrame->GetWidth() * 0.1f) ) );
+		m_UIMainScrollH->SetPageSize	( static_cast<int>(m_UILevelFrame->GetWidth()) ); // iFloor
 		AttachChild						(m_UIMainScrollH);
 		Register						(m_UIMainScrollH);
 		AddCallback						(m_UIMainScrollH, SCROLLBAR_HSCROLL,CUIWndCallback::void_function(this,&CUIMapWnd::OnScrollH));
 
 		m_UIMainScrollV					= xr_new<CUIFixedScrollBar>(); m_UIMainScrollV->SetAutoDelete(true);
 		m_UIMainScrollV->InitScrollBar	(Fvector2().set(r.right-sx, r.top+dy), false);
-		m_UIMainScrollV->SetStepSize	( _max( 1, (int)(m_UILevelFrame->GetHeight()*0.1f) ) );
-		m_UIMainScrollV->SetPageSize	( (int)m_UILevelFrame->GetHeight() );
+		m_UIMainScrollV->SetStepSize	( _max( 1, static_cast<int>(m_UILevelFrame->GetHeight() * 0.1f) ) );
+		m_UIMainScrollV->SetPageSize	( static_cast<int>(m_UILevelFrame->GetHeight()) );
 		AttachChild						(m_UIMainScrollV);
 		Register						(m_UIMainScrollV);
 		AddCallback						(m_UIMainScrollV,SCROLLBAR_VSCROLL,CUIWndCallback::void_function(this,&CUIMapWnd::OnScrollV));
@@ -254,7 +254,7 @@ void CUIMapWnd::RemoveMapToRender		(CUICustomMap* m)
 void CUIMapWnd::SetTargetMap			(const shared_str& name, const Fvector2& pos, bool bZoomIn)
 {
 	u16	idx								= GetIdxByName			(name);
-	if (idx!=u16(-1)){
+	if (idx!=static_cast<u16>(-1)){
 		CUICustomMap* lm				= GetMapByIdx			(idx);
 		SetTargetMap					(lm, pos, bZoomIn);
 	}
@@ -263,7 +263,7 @@ void CUIMapWnd::SetTargetMap			(const shared_str& name, const Fvector2& pos, boo
 void CUIMapWnd::SetTargetMap			(const shared_str& name, bool bZoomIn)
 {
 	u16	idx								= GetIdxByName			(name);
-	if (idx!=u16(-1)){
+	if (idx!=static_cast<u16>(-1)){
 		CUICustomMap* lm				= GetMapByIdx			(idx);
 		SetTargetMap					(lm, bZoomIn);
 	}
@@ -482,7 +482,7 @@ void CUIMapWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 
 CUICustomMap* CUIMapWnd::GetMapByIdx(u16 idx)
 {
-	VERIFY							(idx!=u16(-1));
+	VERIFY							(idx!=static_cast<u16>(-1));
 	GameMapsPairIt it				= m_GameMaps.begin();
 	std::advance					(it, idx);
 	return							it->second;
@@ -493,9 +493,9 @@ u16 CUIMapWnd::GetIdxByName(const shared_str& map_name)
 	GameMapsPairIt it				= m_GameMaps.find(map_name);
 	if(it==m_GameMaps.end()){	
 		Msg							("~ Level Map '%s' not registered",map_name.c_str());
-		return						u16(-1);
+		return						static_cast<u16>(-1);
 	}
-	return (u16)std::distance		(m_GameMaps.begin(),it);
+	return static_cast<u16>(std::distance(m_GameMaps.begin(), it));
 }
 
 void CUIMapWnd::UpdateScroll()
@@ -516,7 +516,7 @@ void CUIMapWnd::OnScrollV(CUIWindow*, void*)
 {
 	if ( m_scroll_mode && GlobalMap())
 	{
-		MoveScrollV( -1.0f * float(m_UIMainScrollV->GetScrollPos()));
+		MoveScrollV( -1.0f * static_cast<float>(m_UIMainScrollV->GetScrollPos()));
 	}
 }
 
@@ -524,7 +524,7 @@ void CUIMapWnd::OnScrollH(CUIWindow*, void*)
 {
 	if ( m_scroll_mode && GlobalMap())
 	{
-		MoveScrollH( -1.0f * float(m_UIMainScrollH->GetScrollPos()) );
+		MoveScrollH( -1.0f * static_cast<float>(m_UIMainScrollH->GetScrollPos()) );
 	}
 }
 
@@ -589,7 +589,7 @@ void CUIMapWnd::ViewActor()
 
 	CUICustomMap* lm			= NULL;
 	u16	idx						= GetIdxByName( Level().name() );
-	if ( idx != u16(-1) )
+	if ( idx != static_cast<u16>(-1) )
 	{
 		lm						= GetMapByIdx( idx );
 	}

@@ -93,7 +93,7 @@ public:
 
 					CObjectInfo		() {setup();}
 
-			void	add_item		(LPCSTR text, u32 color, u32 id = u32(-1));
+			void	add_item		(LPCSTR text, u32 color, u32 id = static_cast<u32>(-1));
 			
 			void	draw_info		(float x, float &y);
 		IC	void	setup			(const Fvector &shift = SHIFT_POS_DEFAULT, float delta = DELTA_HEIGHT_DEFAULT) {m_shift_pos.set(shift); m_delta_height = delta;}
@@ -119,7 +119,7 @@ public:
 		typedef CItemBase<STextItem> inherited;
 
 	public: 
-			void	add_item		(LPCSTR text, float x, float y, u32 color, u32 id = u32(-1));
+			void	add_item		(LPCSTR text, float x, float y, u32 color, u32 id = static_cast<u32>(-1));
 			void	draw_text		();
 	};
 
@@ -131,7 +131,7 @@ public:
 		float		radius;
 
 		enum {
-			ePoint	= u32(0),
+			ePoint	= static_cast<u32>(0),
 			eLine,
 			eBox
 		} ptype;
@@ -166,9 +166,9 @@ public:
 	class CLevelInfo : public CItemBase<SLevelItem> {
 		typedef CItemBase<SLevelItem> inherited;
 	public:
-		void	add_item		(const Fvector &pos, u32 color, u32 id = u32(-1));
-		void	add_item		(const Fvector &pos1, const Fvector &pos2, u32 color, u32 id = u32(-1));
-		void	add_item		(const Fvector &pos, float radius, u32 color, u32 id = u32(-1));
+		void	add_item		(const Fvector &pos, u32 color, u32 id = static_cast<u32>(-1));
+		void	add_item		(const Fvector &pos1, const Fvector &pos2, u32 color, u32 id = static_cast<u32>(-1));
+		void	add_item		(const Fvector &pos, float radius, u32 color, u32 id = static_cast<u32>(-1));
 		void	draw_info		();
 	};
 

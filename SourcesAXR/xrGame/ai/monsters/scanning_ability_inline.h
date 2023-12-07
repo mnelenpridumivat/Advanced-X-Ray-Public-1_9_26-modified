@@ -86,7 +86,7 @@ void CScanningAbilityAbstract::schedule_update()
 		if ( vel > velocity_threshold) {
 			
 			// трейсить не чаще, чем scan_trace_time_freq
-			if (time_last_trace + u32(1000 / scan_trace_time_freq) < Device.dwTimeGlobal) {
+			if (time_last_trace + static_cast<u32>(1000 / scan_trace_time_freq) < Device.dwTimeGlobal) {
 				time_last_trace = Device.dwTimeGlobal;
 				scan_value		+= vel;
 			}
@@ -123,7 +123,7 @@ void CScanningAbilityAbstract::frame_update(u32 dt)
 
 	if (scan_value < 0) scan_value = 0.f;
 	else if (scan_value > 0) {
-		scan_value -= decrease_value * float(dt) / 1000;
+		scan_value -= decrease_value * static_cast<float>(dt) / 1000;
 	}
 }
 

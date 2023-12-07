@@ -91,7 +91,7 @@ CPHMovementControl::CPHMovementControl(CObject* parent)
 	fCollisionDamageFactor=1.f;
 	in_dead_area_count	=0;
 	bNonInteractiveMode =false;
-	block_damage_step_end = u64(-1);
+	block_damage_step_end = static_cast<u64>(-1);
 }
 
 
@@ -225,14 +225,14 @@ void CPHMovementControl::UpdateCollisionDamage( )
 	const ICollisionDamageInfo* di=m_character->CollisionDamageInfo();
  	fContactSpeed=di->ContactVelocity();
 
-	if(block_damage_step_end!=u64(-1))
+	if(block_damage_step_end!=static_cast<u64>(-1))
 	{
 		if( physics_world()->StepsNum() < block_damage_step_end )
 		{
 			fContactSpeed = 0.f;
 			return;
 		} else 
-			block_damage_step_end = u64(-1);
+			block_damage_step_end = static_cast<u64>(-1);
 	}
 
 // calc new
@@ -376,7 +376,7 @@ void CPHMovementControl::Calculate(const xr_vector<DetailPathManager::STravelPat
 
 		//////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////////////////////
-		if((m_path_size-1)>(int)travel_point)
+		if((m_path_size-1)>static_cast<int>(travel_point))
 			dir.sub(path[travel_point+1].position,path[travel_point].position);
 		else
 			dir.sub(path[travel_point].position,new_position);
@@ -432,7 +432,7 @@ void CPHMovementControl::Calculate(const xr_vector<DetailPathManager::STravelPat
 			else		  PathDIrPoint(path,index,m_path_distance,precision,dir);
 			
 	
-			travel_point=(u32)index;
+			travel_point=static_cast<u32>(index);
 			m_start_index=index;
 			if(fis_zero(speed)) dir.set(0,0,0);
 		}
@@ -918,7 +918,7 @@ void CPHMovementControl::Load					(LPCSTR section){
 	};
 
 	if(pSettings->line_exist(section,"actor_restrictor"))
-		SetRestrictionType(ERestrictionType(pSettings->r_token(section,"actor_restrictor",retrictor_types)));
+		SetRestrictionType(static_cast<ERestrictionType>(pSettings->r_token(section, "actor_restrictor", retrictor_types)));
 	fCollisionDamageFactor=READ_IF_EXISTS(pSettings,r_float,section,"ph_collision_damage_factor",fCollisionDamageFactor);
 	R_ASSERT3(fCollisionDamageFactor<=1.f,"ph_collision_damage_factor >1.",section);
 	SetCrashSpeeds	(cs_min,cs_max);
@@ -1210,7 +1210,7 @@ void CPHMovementControl::CreateCharacter()
 #endif
 	m_character->SetPosition(vPosition);
 	m_character->SetCollisionDamageFactor(fCollisionDamageFactor*fCollisionDamageFactor);
-	trying_times[0]=trying_times[1]=trying_times[2]=trying_times[3]=u32(-1);
+	trying_times[0]=trying_times[1]=trying_times[2]=trying_times[3]=static_cast<u32>(-1);
 	trying_poses[0].set(vPosition);
 	trying_poses[1].set(vPosition);
 	trying_poses[2].set(vPosition);
@@ -1322,7 +1322,7 @@ struct STraceBorderQParams
 
 BOOL CPHMovementControl::BorderTraceCallback(collide::rq_result& result, LPVOID params)
 {
-	STraceBorderQParams& p	= *(STraceBorderQParams*)params;
+	STraceBorderQParams& p	= *static_cast<STraceBorderQParams*>(params);
 	u16 mtl_idx			=	GAMEMTL_NONE_IDX;
 	CDB::TRI* T			=	NULL;
 	if(result.O){
@@ -1464,7 +1464,7 @@ void CPHMovementControl::VirtualMoveTo( const Fvector	&in_pos, Fvector &out_pos 
 	float		fsteps_num		= ceil( n );
 	u32			steps_num		= iCeil( n );
 	clamp( fsteps_num, 0.f, fmove_steps_max_num );
-	clamp<u32>( steps_num, u32(0), move_steps_max_num );
+	clamp<u32>( steps_num, static_cast<u32>(0), move_steps_max_num );
 
 	
 					move_time		= fixed_step * fsteps_num;

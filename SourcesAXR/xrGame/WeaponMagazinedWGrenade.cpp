@@ -205,7 +205,7 @@ void  CWeaponMagazinedWGrenade::PerformSwitchGL()
 	while(m_magazine.size()) { l_magazine.push_back(m_magazine.back()); m_magazine.pop_back(); }
 	while(m_magazine2.size()) { m_magazine.push_back(m_magazine2.back()); m_magazine2.pop_back(); }
 	while(l_magazine.size()) { m_magazine2.push_back(l_magazine.back()); l_magazine.pop_back(); }
-	iAmmoElapsed = (int)m_magazine.size();
+	iAmmoElapsed = static_cast<int>(m_magazine.size());
 
 	m_BriefInfo_CalcFrame = 0;
 }
@@ -398,7 +398,7 @@ void  CWeaponMagazinedWGrenade::LaunchGrenade()
 			VERIFY				(m_magazine.size());
 			m_magazine.pop_back	();
 			--iAmmoElapsed;
-			VERIFY((u32)iAmmoElapsed == m_magazine.size());
+			VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
 
 			NET_Packet					P;
 			u_EventGen					(P,GE_LAUNCH_ROCKET,ID());

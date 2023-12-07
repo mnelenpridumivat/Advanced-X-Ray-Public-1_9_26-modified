@@ -48,7 +48,7 @@ void CStateBurerAttackTele<Object>::execute()
 			if ( !time_started )
 			{
 				float const time				=	object->anim().get_animation_length (eAnimTelekinesis, 0);
-				m_anim_end_tick					=	current_time() + TTime(time*1000);
+				m_anim_end_tick					=	current_time() + static_cast<TTime>(time * 1000);
 				time_started					=	Device.dwTimeGlobal;
 			}
 			else
@@ -70,7 +70,7 @@ void CStateBurerAttackTele<Object>::execute()
 			object->anim().set_override_animation	(eAnimTeleFire, 0);
 			ExecuteTeleFire							();
 			float const time					=	object->anim().get_animation_length (eAnimTeleFire, 0);
-			m_anim_end_tick						=	current_time() + TTime(time*1000);
+			m_anim_end_tick						=	current_time() + static_cast<TTime>(time * 1000);
 			m_action							=	ACTION_WAIT_FIRE_END;
 			break;
 		}
@@ -407,7 +407,7 @@ public:
 template <typename Object>
 void CStateBurerAttackTele<Object>::SelectObjects()
 {
-	const u32 max = std::min(tele_objects.size(), (u32)this->object->m_tele_max_handled_objects);
+	const u32 max = std::min(tele_objects.size(), static_cast<u32>(this->object->m_tele_max_handled_objects));
 
 	if (this->object->CTelekinesis::get_objects_count() > max)
 		return;

@@ -15,7 +15,7 @@ player_death_counter::player_death_counter(game_state_accumulator* owner) :
 u32 const player_death_counter::get_u32_param()
 {
 	game_PlayerState* tmp_local_player = m_owner->get_local_player();
-	u32 death_count = tmp_local_player ? static_cast<u32>(tmp_local_player->m_iDeaths) : u32(-1);
+	u32 death_count = tmp_local_player ? static_cast<u32>(tmp_local_player->m_iDeaths) : static_cast<u32>(-1);
 	return death_count;
 }
 

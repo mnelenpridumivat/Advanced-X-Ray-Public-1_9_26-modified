@@ -20,7 +20,7 @@ rnd_motion*	rnd_motion::	setup		( IKinematicsAnimated* k, LPCSTR s )
 	VERIFY( k );
 	VERIFY( s );
 
-	const u16 nb =( u16 )_GetItemCount( s );
+	const u16 nb =static_cast<u16>(_GetItemCount(s));
 	for(u16 i = 0 ; nb > i ; ++i )
 	{
 		string64 n;
@@ -96,7 +96,7 @@ type_motion* type_motion::setup( IKinematicsAnimated* k, CInifile const * ini, L
 		for( int i = 0; num > i; ++i)
 		{
 			string1024 sdir_anim;
-			set_motion( k, u16(i), _GetItem( line, i, sdir_anim, '/' ) );
+			set_motion( k, static_cast<u16>(i), _GetItem( line, i, sdir_anim, '/' ) );
 #ifdef	DEBUG
 			if( death_anim_debug )
 				Msg("death anims: load: loaded %s from section %s for %s", sdir_anim, section, type );

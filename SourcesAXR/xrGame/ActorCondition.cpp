@@ -292,7 +292,7 @@ void CActorCondition::UpdateCondition()
 
 		if(IsGameTypeSingle())
 		{
-			CEffectorCam* ce = Actor()->Cameras().GetCamEffector((ECamEffectorType)effAlcohol);
+			CEffectorCam* ce = Actor()->Cameras().GetCamEffector(static_cast<ECamEffectorType>(effAlcohol));
 			if(ce)
 				RemoveEffector(m_object,effAlcohol);
 		}
@@ -340,7 +340,7 @@ void CActorCondition::UpdateCondition()
 
 	if ( IsGameTypeSingle() )
 	{	
-		CEffectorCam* ce = Actor()->Cameras().GetCamEffector((ECamEffectorType)effAlcohol);
+		CEffectorCam* ce = Actor()->Cameras().GetCamEffector(static_cast<ECamEffectorType>(effAlcohol));
 		if	((m_fAlcohol>0.0001f) ){
 			if(!ce){
 				AddEffector(m_object,effAlcohol, "effector_alcohol", GET_KOEFF_FUNC(this, &CActorCondition::GetAlcohol));
@@ -350,7 +350,7 @@ void CActorCondition::UpdateCondition()
 				RemoveEffector(m_object,effAlcohol);
 		}
 
-		CEffectorCam* ceDrugs = Actor()->Cameras().GetCamEffector((ECamEffectorType)effDrugs);
+		CEffectorCam* ceDrugs = Actor()->Cameras().GetCamEffector(static_cast<ECamEffectorType>(effDrugs));
 		if ((m_fDrugs > 0.0001f)) 
 		{
 			if (!ceDrugs) 
@@ -420,7 +420,7 @@ void CActorCondition::UpdateBoosters()
 {
 	for(u8 i=0;i<eBoostMaxCount;i++)
 	{
-		BOOSTER_MAP::iterator it = m_booster_influences.find((EBoostParams)i);
+		BOOSTER_MAP::iterator it = m_booster_influences.find(static_cast<EBoostParams>(i));
 		if(it!=m_booster_influences.end())
 		{
 			it->second.fBoostTime -= m_fDeltaTime/(IsGameTypeSingle()?Level().GetGameTimeFactor():1.0f);
@@ -613,7 +613,7 @@ void CActorCondition::UpdateThirst()
 //M.F.S. Team Intoxication
 void CActorCondition::UpdateIntoxication()
 {
-	CEffectorCam* ce = Actor()->Cameras().GetCamEffector((ECamEffectorType)effIntoxication);
+	CEffectorCam* ce = Actor()->Cameras().GetCamEffector(static_cast<ECamEffectorType>(effIntoxication));
 	if ((m_fIntoxication>=m_fIntoxicationCritical))
 	{
 		if (!ce) 
@@ -657,7 +657,7 @@ void CActorCondition::UpdateSleepeness()
 			funct();
 	}
 
-	CEffectorCam* ce = Actor()->Cameras().GetCamEffector((ECamEffectorType)effSleepeness);
+	CEffectorCam* ce = Actor()->Cameras().GetCamEffector(static_cast<ECamEffectorType>(effSleepeness));
 	if (m_fSleepeness <= m_fSleepenessCritical)
 	{
 		if (!ce && pSettings->section_exist("effector_sleepeness"))
@@ -786,7 +786,7 @@ void CActorCondition::UpdatePsyHealth()
 			m_fDeltaHealth -= m_fV_PsyHealth_Health * GetPsy() * m_fDeltaTime;
 	}
 
-	CEffectorPP* ppePsyHealth = object().Cameras().GetPPEffector((EEffectorPPType)effPsyHealth);
+	CEffectorPP* ppePsyHealth = object().Cameras().GetPPEffector(static_cast<EEffectorPPType>(effPsyHealth));
 
 	if (!fsimilar(GetPsyHealth(), 1.0f, 0.05f))
 	{
@@ -918,11 +918,11 @@ void CActorCondition::save(NET_Packet &output_packet)
 	save_data			(m_curr_medicine_influence.fWithdrawal, output_packet);
 	save_data			(m_curr_medicine_influence.fDrugs, output_packet);
 
-	output_packet.w_u8((u8)m_booster_influences.size());
+	output_packet.w_u8(static_cast<u8>(m_booster_influences.size()));
 	BOOSTER_MAP::iterator b = m_booster_influences.begin(), e = m_booster_influences.end();
 	for(; b!=e; b++)
 	{
-		output_packet.w_u8((u8)b->second.m_type);
+		output_packet.w_u8(static_cast<u8>(b->second.m_type));
 		output_packet.w_float(b->second.fBoostValue);
 		output_packet.w_float(b->second.fBoostTime);
 	}
@@ -965,7 +965,7 @@ void CActorCondition::load(IReader &input_packet)
 	for(; cntr>0; cntr--)
 	{
 		SBooster B;
-		B.m_type = (EBoostParams)input_packet.r_u8();
+		B.m_type = static_cast<EBoostParams>(input_packet.r_u8());
 		B.fBoostValue = input_packet.r_float();
 		B.fBoostTime = input_packet.r_float();
 		m_booster_influences[B.m_type] = B;
@@ -1471,7 +1471,7 @@ CActorDeathEffector::CActorDeathEffector	(CActorCondition* parent, LPCSTR sect)	
 	m_death_sound.play_at_pos(0,Fvector().set(0,0,0),sm_2D);
 
 
-	SBaseEffector* pe		= Actor()->Cameras().GetPPEffector((EEffectorPPType)effActorDeath);
+	SBaseEffector* pe		= Actor()->Cameras().GetPPEffector(static_cast<EEffectorPPType>(effActorDeath));
 	pe->m_on_b_remove_callback = SBaseEffector::CB_ON_B_REMOVE(this, &CActorDeathEffector::OnPPEffectorReleased);
 	m_b_actual				= true;	
 	m_start_health			= m_pParent->health();

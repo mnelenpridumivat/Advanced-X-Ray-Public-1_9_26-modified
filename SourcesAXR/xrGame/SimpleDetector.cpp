@@ -24,7 +24,7 @@ void CSimpleDetector::CreateUI()
 
 CUIArtefactDetectorSimple&  CSimpleDetector::ui()
 {
-	return *((CUIArtefactDetectorSimple*)m_ui);
+	return *static_cast<CUIArtefactDetectorSimple*>(m_ui);
 }
 
 void CSimpleDetector::UpdateAf()

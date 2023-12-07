@@ -71,7 +71,7 @@ bool CBaseMonster::AssignGamePathIfNeeded (Fvector const target_pos, u32 const l
 
 	if ( !level_vertex_is_valid )
 	{
-		if ( m_action_target_pos == target_pos && m_action_target_node != u32(-1) )
+		if ( m_action_target_pos == target_pos && m_action_target_node != static_cast<u32>(-1) )
 		{
 			target_level_vertex			=	m_action_target_node;
 			level_vertex_is_valid		=	true;
@@ -81,7 +81,7 @@ bool CBaseMonster::AssignGamePathIfNeeded (Fvector const target_pos, u32 const l
 			u32 const path_node			=	path().get_target_found_node();
 			if ( path().is_target_actual() && 
 				 path().get_target_set() == target_pos && 
-				 path_node != u32(-1) )
+				 path_node != static_cast<u32>(-1) )
 			{
 				target_level_vertex		=	path_node;
 				level_vertex_is_valid	=	ai().level_graph().valid_vertex_id(target_level_vertex);
@@ -106,7 +106,7 @@ bool CBaseMonster::AssignGamePathIfNeeded (Fvector const target_pos, u32 const l
 		}
 	}
 
-	m_action_target_node				=	u32(-1);
+	m_action_target_node				=	static_cast<u32>(-1);
 	return									false;
 }
 
@@ -171,7 +171,7 @@ bool CBaseMonster::bfAssignMovement (CScriptEntityAction *tpEntityAction)
 			control().path_builder().patrol().set_start_type	(l_tMovementAction.m_tPatrolPathStart);
 			control().path_builder().patrol().set_route_type	(l_tMovementAction.m_tPatrolPathStop);
 			control().path_builder().patrol().set_random		(l_tMovementAction.m_bRandom);
-			if (l_tMovementAction.m_previous_patrol_point != u32(-1)) {
+			if (l_tMovementAction.m_previous_patrol_point != static_cast<u32>(-1)) {
 				control().path_builder().patrol().set_previous_point(l_tMovementAction.m_previous_patrol_point);
 			}
 			break;
@@ -194,7 +194,7 @@ bool CBaseMonster::bfAssignMovement (CScriptEntityAction *tpEntityAction)
 											=	ai().alife().groups().object(i_am->m_group_id);
 
 			ALife::_OBJECT_ID leader_id		=	group.commander_id();
-			bool const should_follow_leader	=	leader_id != (ALife::_OBJECT_ID)(-1) && leader_id != ID();
+			bool const should_follow_leader	=	leader_id != static_cast<ALife::_OBJECT_ID>(-1) && leader_id != ID();
 			CCustomMonster* const leader	=	should_follow_leader ? 
 												smart_cast<CCustomMonster*>( Level().Objects.net_Find(leader_id) ) : 
 												NULL;
@@ -215,7 +215,7 @@ bool CBaseMonster::bfAssignMovement (CScriptEntityAction *tpEntityAction)
 					GenerateNewOffsetFromLeader();
 				}
 
-				u32	 vertex_id	=	u32(-1);
+				u32	 vertex_id	=	static_cast<u32>(-1);
 				for ( u32 tries=0; tries<3; ++tries )
 				{
 					vertex_id	=	ai().level_graph().check_position_in_direction
@@ -354,15 +354,15 @@ bool CBaseMonster::bfAssignSound(CScriptEntityAction *tpEntityAction)
 	}
 
 	switch (l_tAction.m_monster_sound) {
-	case	eMonsterSoundIdle:			sound().play(eMonsterSoundIdle,			0, 0, (l_tAction.m_monster_sound_delay == int(-1)) ? db().m_dwIdleSndDelay		: l_tAction.m_monster_sound_delay);		break;
-	case 	eMonsterSoundEat:			sound().play(eMonsterSoundEat,			0, 0, (l_tAction.m_monster_sound_delay == int(-1)) ? db().m_dwEatSndDelay		: l_tAction.m_monster_sound_delay);		break;
-	case 	eMonsterSoundAggressive:	sound().play(eMonsterSoundAggressive,	0, 0, (l_tAction.m_monster_sound_delay == int(-1)) ? db().m_dwAttackSndDelay	: l_tAction.m_monster_sound_delay);		break;
+	case	eMonsterSoundIdle:			sound().play(eMonsterSoundIdle,			0, 0, (l_tAction.m_monster_sound_delay == static_cast<int>(-1)) ? db().m_dwIdleSndDelay		: l_tAction.m_monster_sound_delay);		break;
+	case 	eMonsterSoundEat:			sound().play(eMonsterSoundEat,			0, 0, (l_tAction.m_monster_sound_delay == static_cast<int>(-1)) ? db().m_dwEatSndDelay		: l_tAction.m_monster_sound_delay);		break;
+	case 	eMonsterSoundAggressive:	sound().play(eMonsterSoundAggressive,	0, 0, (l_tAction.m_monster_sound_delay == static_cast<int>(-1)) ? db().m_dwAttackSndDelay	: l_tAction.m_monster_sound_delay);		break;
 	case	eMonsterSoundAttackHit:		sound().play(eMonsterSoundAttackHit);	break;
 	case	eMonsterSoundTakeDamage:	sound().play(eMonsterSoundTakeDamage);	break;
 	case	eMonsterSoundDie:			sound().play(eMonsterSoundDie);			break;
-	case	eMonsterSoundThreaten:		sound().play(eMonsterSoundThreaten,		0, 0, (l_tAction.m_monster_sound_delay == int(-1)) ? db().m_dwAttackSndDelay : l_tAction.m_monster_sound_delay);		break;
-	case	eMonsterSoundSteal:			sound().play(eMonsterSoundSteal,		0, 0, (l_tAction.m_monster_sound_delay == int(-1)) ? db().m_dwAttackSndDelay : l_tAction.m_monster_sound_delay);		break;
-	case	eMonsterSoundPanic:			sound().play(eMonsterSoundPanic,		0, 0, (l_tAction.m_monster_sound_delay == int(-1)) ? db().m_dwAttackSndDelay : l_tAction.m_monster_sound_delay);		break;
+	case	eMonsterSoundThreaten:		sound().play(eMonsterSoundThreaten,		0, 0, (l_tAction.m_monster_sound_delay == static_cast<int>(-1)) ? db().m_dwAttackSndDelay : l_tAction.m_monster_sound_delay);		break;
+	case	eMonsterSoundSteal:			sound().play(eMonsterSoundSteal,		0, 0, (l_tAction.m_monster_sound_delay == static_cast<int>(-1)) ? db().m_dwAttackSndDelay : l_tAction.m_monster_sound_delay);		break;
+	case	eMonsterSoundPanic:			sound().play(eMonsterSoundPanic,		0, 0, (l_tAction.m_monster_sound_delay == static_cast<int>(-1)) ? db().m_dwAttackSndDelay : l_tAction.m_monster_sound_delay);		break;
 	}
 
 	return				(true);
@@ -458,8 +458,8 @@ void CBaseMonster::ProcessScripts()
 
 #ifdef DEBUG	
 	if (psAI_Flags.test(aiMonsterDebug)) {
-		DBG().object_info(this,this).remove_item (u32(0));
-		DBG().object_info(this,this).remove_item (u32(1));
+		DBG().object_info(this,this).remove_item (static_cast<u32>(0));
+		DBG().object_info(this,this).remove_item (static_cast<u32>(1));
 		DBG().object_info(this,this).add_item	 (*cName(), D3DCOLOR_XRGB(255,0,0), 0);
 		DBG().object_info(this,this).add_item	 ("Under script", D3DCOLOR_XRGB(255,0,0), 1);
 	} else {

@@ -85,7 +85,7 @@ CPatrolPoint &CPatrolPoint::load_raw						(const CLevelGraph *level_graph, const
 		m_level_vertex_id	= level_graph->vertex_id(position);
 	}
 	else
-		m_level_vertex_id	= u32(-1);
+		m_level_vertex_id	= static_cast<u32>(-1);
 #ifdef DEBUG
 	m_initialized		= true;
 #endif
@@ -156,7 +156,7 @@ CPatrolPoint &CPatrolPoint::position( Fvector position ) {
     m_level_vertex_id = level_graph->vertex_id( pos );
   }
   else
-    m_level_vertex_id = u32( -1 );
+    m_level_vertex_id = static_cast<u32>(-1);
   correct_position( level_graph, &ai().cross_table(), &ai().game_graph() );
 
   return *this;

@@ -112,7 +112,10 @@ SRotation CAI_Rat::sub_rotation()
 
 CAI_Rat::ERatStates CAI_Rat::get_state()
 {
-	return ERatStates(dwfChooseAction(m_dwActionRefreshRate,m_fAttackSuccessProbability,m_fAttackSuccessProbability,m_fAttackSuccessProbability,m_fAttackSuccessProbability,g_Team(),g_Squad(),g_Group(),aiRatAttackMelee,aiRatAttackMelee,aiRatAttackMelee,aiRatRetreat,aiRatRetreat,this,30.f));
+	return static_cast<ERatStates>(dwfChooseAction(m_dwActionRefreshRate, m_fAttackSuccessProbability, m_fAttackSuccessProbability,
+	                                               m_fAttackSuccessProbability, m_fAttackSuccessProbability, g_Team(), g_Squad(),
+	                                               g_Group(), aiRatAttackMelee, aiRatAttackMelee, aiRatAttackMelee, aiRatRetreat,
+	                                               aiRatRetreat, this, 30.f));
 }
 
 bool CAI_Rat::switch_if_porsuit()

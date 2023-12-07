@@ -91,7 +91,7 @@ void CPatternFunction::vfLoadEF(LPCSTR caFileName)
 		m_tpPatterns[i].dwaVariableIndexes = xr_alloc<u32>(m_tpPatterns[i].dwCardinality);
 		F->r		(m_tpPatterns[i].dwaVariableIndexes,m_tpPatterns[i].dwCardinality*sizeof(u32));
 		u32			m_dwComplexity = 1;
-		for (int j=0; j<(int)m_tpPatterns[i].dwCardinality; ++j)
+		for (int j=0; j<static_cast<int>(m_tpPatterns[i].dwCardinality); ++j)
 			m_dwComplexity *= m_dwaAtomicFeatureRange[m_tpPatterns[i].dwaVariableIndexes[j]];
 		m_dwParameterCount += m_dwComplexity;
 	}

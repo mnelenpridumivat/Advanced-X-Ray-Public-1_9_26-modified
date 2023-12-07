@@ -21,11 +21,11 @@ u32 const double_shot_double_kill::get_u32_param()
 		++last_shot;
 		kills_times_t::const_iterator	first_shot = m_kills.begin();
 		if ((last_shot->m_shot_number - first_shot->m_shot_number) != 1)
-			return u32(-1);
+			return static_cast<u32>(-1);
 
 		return (last_shot->m_shot_time - first_shot->m_shot_time);
 	}
-	return u32(-1);
+	return static_cast<u32>(-1);
 }
 
 void double_shot_double_kill::reset_game()

@@ -26,7 +26,7 @@ public:
 	IC	u32		random	(u32 range)
 	{
 		m_seed	= 0x08088405*m_seed + 1;
-		return	(u32(u64(m_seed)*u64(range) >> 32));
+		return	static_cast<u32>(u64(m_seed) * u64(range) >> 32);
 	}
 };
 

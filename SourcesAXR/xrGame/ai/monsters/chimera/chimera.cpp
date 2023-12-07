@@ -139,7 +139,7 @@ void   CChimera::reinit ()
 											 0,//"jump_attack_0",
 											 "jump_attack_1", 
 											 "jump_attack_2", 
-											 u32(-1),//MonsterMovement::eVelocityParameterRunNormal,
+											 static_cast<u32>(-1),//MonsterMovement::eVelocityParameterRunNormal,
 											 MonsterMovement::eChimeraVelocityParameterJumpGround,
 											 0);
 }

@@ -118,10 +118,10 @@ private:
 	friend	CLevel;
 
 	enum EventType {
-		EVENT_HIT	= u8(0),
+		EVENT_HIT	= static_cast<u8>(0),
 		EVENT_REMOVE,
 
-		EVENT_DUMMY = u8(-1),
+		EVENT_DUMMY = static_cast<u8>(-1),
 	};
 	struct	_event			{
 		EventType			Type;

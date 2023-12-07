@@ -143,9 +143,9 @@ class CHelicopter : 	public CEntity,
 	typedef CEntity inherited;
 public:
 	enum EHeliState {
-		eAlive							= u32(0),
+		eAlive							= static_cast<u32>(0),
 		eDead,
-		eForce = u32(-1)
+		eForce = static_cast<u32>(-1)
 	}; 
 
 
@@ -260,7 +260,7 @@ public:
 	int								state_script()		{return m_curState;};
 
 	void							setState	(CHelicopter::EHeliState s);
-	void							setState_script	(u32 s)					{setState((CHelicopter::EHeliState)s);};
+	void							setState_script	(u32 s)					{setState(static_cast<CHelicopter::EHeliState>(s));};
 
 	void							init		();
 	virtual	void					reinit		();
@@ -279,7 +279,7 @@ public:
 	virtual void					SpawnInitPhysics	(CSE_Abstract	*D);
 	virtual CPhysicsShellHolder*	PPhysicsShellHolder	()						{return PhysicsShellHolder();}
 	virtual void					net_Save			(NET_Packet& P);
-	virtual	BOOL					net_SaveRelevant	()						{return (inherited::net_SaveRelevant() && BOOL(PPhysicsShell()!=NULL))||m_exploded;};					
+	virtual	BOOL					net_SaveRelevant	()						{return (inherited::net_SaveRelevant() && static_cast<BOOL>(PPhysicsShell() != NULL))||m_exploded;};					
 
 	virtual void					renderable_Render				()			{ inherited::renderable_Render();};
 	virtual BOOL					renderable_ShadowGenerate		()			{ return FALSE;	}

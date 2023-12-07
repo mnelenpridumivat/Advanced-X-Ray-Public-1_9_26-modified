@@ -145,8 +145,8 @@ void CAgentMemberManager::unregister_in_combat	(const CAI_Stalker *object)
 #endif // DEBUG
 
 	squad_mask_type				m = mask(object);
-	m_actuality					= m_actuality && ((m_combat_mask & (squad_mask_type(-1) ^ m)) == m_combat_mask);
-	m_combat_mask				&= squad_mask_type(-1) ^ m;
+	m_actuality					= m_actuality && ((m_combat_mask & (static_cast<squad_mask_type>(-1) ^ m)) == m_combat_mask);
+	m_combat_mask				&= static_cast<squad_mask_type>(-1) ^ m;
 }
 
 bool CAgentMemberManager::registered_in_combat	(const CAI_Stalker *object) const
@@ -233,7 +233,7 @@ MemorySpace::squad_mask_type CAgentMemberManager::mask	(const ALife::_OBJECT_ID 
 {
 	const_iterator		I = std::find_if(members().begin(),members().end(), CMemberPredicate2(object_id));
 	VERIFY				(I != members().end());
-	return				(MemorySpace::squad_mask_type(1) << (I - members().begin()));
+	return				(static_cast<MemorySpace::squad_mask_type>(1) << (I - members().begin()));
 }
 
 CMemberOrder *CAgentMemberManager::get_member	(const ALife::_OBJECT_ID &object_id)

@@ -76,7 +76,7 @@ void CALifeStorageManager::save	(LPCSTR save_name_no_check, bool update_name)
 	string_path					temp;
 	FS.update_path				(temp,"$game_saves$",m_save_name);
 	IWriter						*writer = FS.w_open(temp);
-	writer->w_u32				(u32(-1));
+	writer->w_u32				(static_cast<u32>(-1));
 	writer->w_u32				(ALIFE_VERSION);
 	
 	writer->w_u32				(source_count);

@@ -11,7 +11,7 @@ COMMUNITY_DATA::COMMUNITY_DATA (CHARACTER_COMMUNITY_INDEX idx, CHARACTER_COMMUNI
 {
 	index = idx;
 	id = idn;
-	team = (u8)atoi(team_str);
+	team = static_cast<u8>(atoi(team_str));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -62,16 +62,16 @@ CHARACTER_GOODWILL CHARACTER_COMMUNITY::relation		(CHARACTER_COMMUNITY_INDEX to)
 
 CHARACTER_GOODWILL  CHARACTER_COMMUNITY::relation		(CHARACTER_COMMUNITY_INDEX from, CHARACTER_COMMUNITY_INDEX to)
 {
-	VERIFY(from >= 0 && from <(int)m_relation_table.table().size());
-	VERIFY(to >= 0 && to <(int)m_relation_table.table().size());
+	VERIFY(from >= 0 && from <static_cast<int>(m_relation_table.table().size()));
+	VERIFY(to >= 0 && to <static_cast<int>(m_relation_table.table().size()));
 	
 	return m_relation_table.table()[from][to];
 }
 
 void  CHARACTER_COMMUNITY::set_relation			(CHARACTER_COMMUNITY_INDEX from, CHARACTER_COMMUNITY_INDEX to, CHARACTER_GOODWILL goodwill)
 {
-	VERIFY(from >= 0 && from <(int)m_relation_table.table().size());
-	VERIFY(to >= 0 && to <(int)m_relation_table.table().size());
+	VERIFY(from >= 0 && from <static_cast<int>(m_relation_table.table().size()));
+	VERIFY(to >= 0 && to <static_cast<int>(m_relation_table.table().size()));
 	VERIFY(goodwill != NO_GOODWILL);
 
 	m_relation_table.table()[from][to] = goodwill;
@@ -79,7 +79,7 @@ void  CHARACTER_COMMUNITY::set_relation			(CHARACTER_COMMUNITY_INDEX from, CHARA
 
 float  CHARACTER_COMMUNITY::sympathy			(CHARACTER_COMMUNITY_INDEX comm)
 {
-	VERIFY(comm >= 0 && comm <(int)m_sympathy_table.table().size());
+	VERIFY(comm >= 0 && comm <static_cast<int>(m_sympathy_table.table().size()));
 	return m_sympathy_table.table()[comm][0];
 }
 

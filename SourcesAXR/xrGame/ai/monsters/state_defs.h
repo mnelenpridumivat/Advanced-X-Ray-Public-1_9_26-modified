@@ -1,7 +1,7 @@
 #pragma once
 
 enum EMonsterState {
-	eGlobalState					= u32(1) << 15,
+	eGlobalState					= static_cast<u32>(1) << 15,
 
 	// -------------------------------------------------------------
 	
@@ -182,7 +182,7 @@ enum EMonsterState {
 	// -------------------------------------------------------------
 
 
-	eStateUnknown					= u32(-1),
+	eStateUnknown					= static_cast<u32>(-1),
 };
 
 #define is_state(state, type) (((state & type) == type) && (state != eStateUnknown))

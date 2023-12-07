@@ -52,8 +52,8 @@ void Limb::init(const Matrix  T,
 		const float *mmin,
 		const float *mmax) 
 {
-    euler1 = short(s1);
-    euler2 = short(s2);
+    euler1 = static_cast<short>(s1);
+    euler2 = static_cast<short>(s2);
     check_limits = 0; 
     solve = 0;
     x3 = 0.0; 
@@ -299,7 +299,7 @@ void Limb::get_R1psi(AngleIntList psi[])
 
     EulerPsiSolver E(euler1, c, s, o, low, high);
     E.SolvePsiRanges(f1, f2);
-    num_singular = (short)E.Singularities(singular_pts);
+    num_singular = static_cast<short>(E.Singularities(singular_pts));
 
     Intersect(f1[0], f1[1], temp);
     Intersect(temp, f1[2], psi[0]);
@@ -340,7 +340,7 @@ void Limb::get_R1R2psi(AngleIntList psi[])
 
     EulerPsiSolver E(euler1, c, s, o, low, high);
     E.SolvePsiRanges(f1, f2);
-    num_singular = (short) E.Singularities(singular_pts);
+    num_singular = static_cast<short>(E.Singularities(singular_pts));
 
     low[0] = min[6];
     low[1] = min[5];
@@ -352,7 +352,7 @@ void Limb::get_R1R2psi(AngleIntList psi[])
 
     EulerPsiSolver E2(euler2, c2, s2, o2, low, high);
     E2.SolvePsiRanges(g1, g2);
-    num_singular =num_singular+  (short)E2.Singularities(singular_pts + num_singular);
+    num_singular =num_singular+  static_cast<short>(E2.Singularities(singular_pts + num_singular));
 
     // There are four families of solutions (f1,g1),(f1,g2),(f2,g1),(f2,g2)
 
@@ -425,7 +425,7 @@ int Limb::GetJointIntervals(Matrix  G,
 int Limb::SetGoalPos(const float g[3], const Matrix  E, int limits)
 {
     solve = SolvePosOnly;
-    check_limits = (short)limits;
+    check_limits = static_cast<short>(limits);
 
     int success = set_goal_pos(g, E);
 
@@ -442,7 +442,7 @@ int Limb::SetGoalPos(const float g[3], const Matrix  E, int limits)
 int Limb::SetGoal(const Matrix  G, int limits)
 {
     int success = set_goal(G);
-    check_limits = (short)(!!limits);
+    check_limits = static_cast<short>(!!limits);
 
     solve = SolvePosAndOrientation;
     if (limits && success)

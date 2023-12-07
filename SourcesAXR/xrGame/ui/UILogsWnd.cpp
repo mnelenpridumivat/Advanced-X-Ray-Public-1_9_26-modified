@@ -34,7 +34,7 @@
 extern u64	generate_time	(u32 years, u32 months, u32 days, u32 hours, u32 minutes, u32 seconds, u32 milliseconds = 0);
 extern void	split_time		(u64 time, u32 &years, u32 &months, u32 &days, u32 &hours, u32 &minutes, u32 &seconds, u32 &milliseconds);
 
-u64 const day2ms			= u64( 24 * 60 * 60 * 1000 );
+u64 const day2ms			= static_cast<u64>(24 * 60 * 60 * 1000);
 
 CUILogsWnd::CUILogsWnd()
 {
@@ -306,7 +306,7 @@ void CUILogsWnd::NextPeriod( CUIWindow* w, void* d )
 ALife::_TIME_ID CUILogsWnd::GetShiftPeriod( ALife::_TIME_ID datetime, int shift_day )
 {
 	datetime -= (datetime % day2ms);
-	datetime += (u64)shift_day * day2ms;
+	datetime += static_cast<u64>(shift_day) * day2ms;
 	return datetime;
 }
 

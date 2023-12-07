@@ -23,7 +23,7 @@ private:
 protected:
 	enum{
 		flShowFragList	= (1<<1),
-		fl_force_dword	= u32(-1)	};
+		fl_force_dword	= static_cast<u32>(-1)	};
 
 
 	UITeamPanels*					m_pTeamPanels;

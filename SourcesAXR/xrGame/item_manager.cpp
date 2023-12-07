@@ -90,7 +90,7 @@ float CItemManager::evaluate		(const CGameObject *object) const
 	const CInventoryItem	*inventory_item = smart_cast<const CInventoryItem*>(object);
 	VERIFY					(inventory_item);
 	VERIFY					(inventory_item->useful_for_NPC());
-	return					(1000000.f - (float)inventory_item->Cost());
+	return					(1000000.f - static_cast<float>(inventory_item->Cost()));
 }
 
 void CItemManager::update			()
@@ -126,7 +126,7 @@ void CItemManager::remove_links		(CObject *object)
 {
 	// since we use no members in CGameObject during search,
 	// we just use the pinter itself, we can just statically cast object
-	OBJECTS::iterator		I = std::find(m_objects.begin(),m_objects.end(),(CGameObject*)object);
+	OBJECTS::iterator		I = std::find(m_objects.begin(),m_objects.end(),static_cast<CGameObject*>(object));
 	if (I != m_objects.end())
 		m_objects.erase		(I);
 

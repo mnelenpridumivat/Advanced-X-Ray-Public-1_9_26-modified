@@ -44,7 +44,7 @@ void best_scores_store::reset_scores()
 	{
 		m_result_scores.insert(
 			std::make_pair(
-				enum_best_score_type(bsidx),
+				static_cast<enum_best_score_type>(bsidx),
 				0
 			)
 		);

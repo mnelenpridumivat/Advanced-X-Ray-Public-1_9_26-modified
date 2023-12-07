@@ -32,7 +32,7 @@ enum ESingleGameDifficulty{
 	egdVeteran			= 2,
 	egdMaster			= 3,
 	egdCount,
-	egd_force_u32		= u32(-1)
+	egd_force_u32		= static_cast<u32>(-1)
 };
 
 extern ESingleGameDifficulty g_SingleGameDifficulty;

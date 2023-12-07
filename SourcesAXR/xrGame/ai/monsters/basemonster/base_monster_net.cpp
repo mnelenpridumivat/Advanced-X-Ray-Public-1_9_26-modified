@@ -15,7 +15,7 @@ void CBaseMonster::net_Save			(NET_Packet& P)
 
 BOOL CBaseMonster::net_SaveRelevant	()
 {
-	return (inherited::net_SaveRelevant() || BOOL(PPhysicsShell()!=NULL));
+	return (inherited::net_SaveRelevant() || static_cast<BOOL>(PPhysicsShell() != NULL));
 }
 
 void CBaseMonster::net_Export(NET_Packet& P) 
@@ -33,9 +33,9 @@ void CBaseMonster::net_Export(NET_Packet& P)
 	P.w_float /*w_angle8*/				(N.o_torso.yaw);
 	P.w_float /*w_angle8*/				(N.o_torso.pitch);
 	P.w_float /*w_angle8*/				(N.o_torso.roll);
-	P.w_u8					(u8(g_Team()));
-	P.w_u8					(u8(g_Squad()));
-	P.w_u8					(u8(g_Group()));
+	P.w_u8					(static_cast<u8>(g_Team()));
+	P.w_u8					(static_cast<u8>(g_Squad()));
+	P.w_u8					(static_cast<u8>(g_Group()));
 
 	GameGraph::_GRAPH_ID		l_game_vertex_id = ai_location().game_vertex_id();
 	P.w						(&l_game_vertex_id,			sizeof(l_game_vertex_id));

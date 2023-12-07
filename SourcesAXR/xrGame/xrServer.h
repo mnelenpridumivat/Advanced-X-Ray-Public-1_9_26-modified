@@ -142,9 +142,9 @@ private:
 			u8,			// block id type
 			u16,		// chunk id type
 			0,			// min value
-			u16(-2),	// max value
+			static_cast<u16>(-2),	// max value
 			256,		// block size
-			u16(-1)		// invalid id
+			static_cast<u16>(-1)		// invalid id
 		> id_generator_type;
 
 private:
@@ -250,7 +250,7 @@ public:
 	CSE_Abstract*			GetEntity			(u32 Num);
 	u32 const				GetLastUpdatesSize	() const { return m_last_updates_size; };
 
-	xrClientData*			ID_to_client		(ClientID ID, bool ScanAll = false ) { return (xrClientData*)(IPureServer::ID_to_client( ID, ScanAll)); }
+	xrClientData*			ID_to_client		(ClientID ID, bool ScanAll = false ) { return static_cast<xrClientData*>(IPureServer::ID_to_client(ID, ScanAll)); }
 	CSE_Abstract*			ID_to_entity		(u16 ID);
 
 	// main

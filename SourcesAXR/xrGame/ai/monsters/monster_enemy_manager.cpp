@@ -16,8 +16,8 @@ CMonsterEnemyManager::CMonsterEnemyManager()
 	forced							= false;
 	prev_enemy						= 0;
 	danger_type						= eNone;
-	my_vertex_enemy_last_seen		= u32(-1);
-	enemy_vertex_enemy_last_seen	= u32(-1);
+	my_vertex_enemy_last_seen		= static_cast<u32>(-1);
+	enemy_vertex_enemy_last_seen	= static_cast<u32>(-1);
 	m_time_updated					= 0;
 	m_time_start_see_enemy			= 0;
 }
@@ -70,7 +70,7 @@ void CMonsterEnemyManager::update()
 		if (monster->SoundMemory.get_sound_from_object	(enemy, sound_elem)) {
 			if (sound_elem.time > time_last_seen) {
 				position		= sound_elem.position;
-				vertex			= u32(-1);
+				vertex			= static_cast<u32>(-1);
 				time_last_seen	= sound_elem.time;
 			}
 		}
@@ -178,7 +178,7 @@ void CMonsterEnemyManager::reinit()
 	danger_type					= eNone;
 
 	my_vertex_enemy_last_seen		= monster->ai_location().level_vertex_id();
-	enemy_vertex_enemy_last_seen	= u32(-1);
+	enemy_vertex_enemy_last_seen	= static_cast<u32>(-1);
 
 	m_time_updated				= 0;
 	m_time_start_see_enemy		= 0;

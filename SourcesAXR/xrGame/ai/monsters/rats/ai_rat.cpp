@@ -86,8 +86,8 @@ void CAI_Rat::init()
 	m_turning				= false;
 	time_to_next_attack =	2000;
 	time_old_attack		=	0;
-	m_squad_count		=	u32(-1);
-	m_current_way_point	=	u32(-1);
+	m_squad_count		=	static_cast<u32>(-1);
+	m_current_way_point	=	static_cast<u32>(-1);
 }
 
 void CAI_Rat::init_state_manager		()
@@ -125,11 +125,11 @@ void CAI_Rat::reload					(LPCSTR	section)
 	inherited::reload		(section);
 	CEatableItem::reload	(section);
 	LPCSTR					head_bone_name = pSettings->r_string(section,"bone_head");
-	sound().add		(pSettings->r_string(section,"sound_death"),	100, SOUND_TYPE_MONSTER_DYING,		0, u32(eRatSoundMaskDie),		eRatSoundDie,		head_bone_name);
-	sound().add		(pSettings->r_string(section,"sound_hit"),		100, SOUND_TYPE_MONSTER_INJURING,	1, u32(eRatSoundMaskInjuring),	eRatSoundInjuring,	head_bone_name);
-	sound().add		(pSettings->r_string(section,"sound_attack"),	100, SOUND_TYPE_MONSTER_ATTACKING,	2, u32(eRatSoundMaskAttack),	eRatSoundAttack,	head_bone_name);
-	sound().add		(pSettings->r_string(section,"sound_voice"),	100, SOUND_TYPE_MONSTER_TALKING,	4, u32(eRatSoundMaskVoice),		eRatSoundVoice,		head_bone_name);
-	sound().add		(pSettings->r_string(section,"sound_eat"),		100, SOUND_TYPE_MONSTER_EATING	,	3, u32(eRatSoundMaskEat),		eRatSoundEat,		head_bone_name);
+	sound().add		(pSettings->r_string(section,"sound_death"),	100, SOUND_TYPE_MONSTER_DYING,		0, static_cast<u32>(eRatSoundMaskDie),		eRatSoundDie,		head_bone_name);
+	sound().add		(pSettings->r_string(section,"sound_hit"),		100, SOUND_TYPE_MONSTER_INJURING,	1, static_cast<u32>(eRatSoundMaskInjuring),	eRatSoundInjuring,	head_bone_name);
+	sound().add		(pSettings->r_string(section,"sound_attack"),	100, SOUND_TYPE_MONSTER_ATTACKING,	2, static_cast<u32>(eRatSoundMaskAttack),	eRatSoundAttack,	head_bone_name);
+	sound().add		(pSettings->r_string(section,"sound_voice"),	100, SOUND_TYPE_MONSTER_TALKING,	4, static_cast<u32>(eRatSoundMaskVoice),		eRatSoundVoice,		head_bone_name);
+	sound().add		(pSettings->r_string(section,"sound_eat"),		100, SOUND_TYPE_MONSTER_EATING	,	3, static_cast<u32>(eRatSoundMaskEat),		eRatSoundEat,		head_bone_name);
 }
 
 void CAI_Rat::Die(CObject* who)
@@ -223,7 +223,7 @@ BOOL CAI_Rat::net_Spawn	(CSE_Abstract* DC)
 	if (!CEatableItem::net_Spawn(DC))
 		return(FALSE);
 
-	monster_squad().register_member			((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(), this);
+	monster_squad().register_member			(static_cast<u8>(g_Team()),static_cast<u8>(g_Squad()),static_cast<u8>(g_Group()), this);
 
 	// personal characteristics
 	movement().m_body.current.yaw	= movement().m_body.target.yaw	= -tpSE_Rat->o_torso.yaw;
@@ -258,7 +258,7 @@ BOOL CAI_Rat::net_Spawn	(CSE_Abstract* DC)
 	//	m_tNextGP						= tpSE_Rat->m_tNextGraphID;
 	m_current_graph_point			= m_next_graph_point = ai_location().game_vertex_id();
 
-	int								iPointCount	= (int)movement().locations().vertex_types().size();
+	int								iPointCount	= static_cast<int>(movement().locations().vertex_types().size());
 	for (int j=0; j<iPointCount; ++j)
 		if (ai().game_graph().mask(movement().locations().vertex_types()[j].tMask,ai().game_graph().vertex(ai_location().game_vertex_id())->vertex_type())) {
 			m_time_to_change_graph_point= Device.dwTimeGlobal + ::Random32.random(60000) + 60000;
@@ -317,7 +317,7 @@ void CAI_Rat::net_Destroy()
 {
 	inherited::net_Destroy();
 	CEatableItem::net_Destroy();
-	monster_squad().remove_member		((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(),this);
+	monster_squad().remove_member		(static_cast<u8>(g_Team()),static_cast<u8>(g_Squad()),static_cast<u8>(g_Group()),this);
 }
 
 void CAI_Rat::net_Export(NET_Packet& P)
@@ -335,9 +335,9 @@ void CAI_Rat::net_Export(NET_Packet& P)
 	P.w_float				(N.o_torso.yaw);
 	P.w_float				(N.o_torso.pitch);
 	P.w_float				(N.o_torso.roll);
-	P.w_u8					(u8(g_Team()));
-	P.w_u8					(u8(g_Squad()));
-	P.w_u8					(u8(g_Group()));
+	P.w_u8					(static_cast<u8>(g_Team()));
+	P.w_u8					(static_cast<u8>(g_Squad()));
+	P.w_u8					(static_cast<u8>(g_Group()));
 
 	GameGraph::_GRAPH_ID		l_game_vertex_id = ai_location().game_vertex_id();
 	P.w						(&l_game_vertex_id,			sizeof(l_game_vertex_id));
@@ -483,7 +483,7 @@ void CAI_Rat::UpdateCL			()
 
 		if (squad && 
 			((squad->GetLeader() != this && !squad->GetLeader()->g_Alive()) ||
-			squad->get_index(this) == u8(-1))
+			squad->get_index(this) == static_cast<u8>(-1))
 			) squad->SetLeader(this);
 
 		if (squad &&

@@ -620,7 +620,7 @@ int SRS::R1Psi(Matrix C, Matrix s, Matrix o)
 {
     Matrix R0;
 
-    SolveR1((float) 0, R0);
+    SolveR1(static_cast<float>(0), R0);
 
     // 
     // R1(psi)  = R0*R(n,psi) 
@@ -641,7 +641,7 @@ int SRS::R1R2Psi(Matrix C, Matrix s, Matrix o,
 {
     Matrix R0, Temp;
 
-    SolveR1((float) 0, R0);
+    SolveR1(static_cast<float>(0), R0);
 
     // 
     // R1(psi)  = R0*R(n,psi) 

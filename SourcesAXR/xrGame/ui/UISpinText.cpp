@@ -106,7 +106,7 @@ void CUISpinText::OnBtnDownClick()
 
 bool CUISpinText::CanPressUp()
 {
-	return m_curItem < (int)m_list.size() - 1;
+	return m_curItem < static_cast<int>(m_list.size()) - 1;
 }
 
 bool CUISpinText::CanPressDown()

@@ -76,7 +76,7 @@ void CStalkerActionGetItemToKill::initialize	()
 {
 	inherited::initialize	();
 
-	object().sound().remove_active_sounds(u32(eStalkerSoundMaskNoHumming));
+	object().sound().remove_active_sounds(static_cast<u32>(eStalkerSoundMaskNoHumming));
 
 	object().sight().setup	(CSightAction(object().m_best_found_item_to_kill ? &object().m_best_found_item_to_kill->object() : 0,true));
 
@@ -130,7 +130,7 @@ void CStalkerActionMakeItemKilling::initialize	()
 {
 	inherited::initialize			();
 
-	object().sound().remove_active_sounds	(u32(eStalkerSoundMaskNoHumming));
+	object().sound().remove_active_sounds	(static_cast<u32>(eStalkerSoundMaskNoHumming));
 
 	object().sight().clear	();
 	object().sight().add_action(eSightActionTypeWatchItem,xr_new<CSightControlAction>(1.f,3000,CSightAction(SightManager::eSightTypePathDirection)));
@@ -254,7 +254,7 @@ void CStalkerActionRetreatFromEnemy::execute		()
 
 _edge_value_type CStalkerActionRetreatFromEnemy::weight	(const CSConditionState &condition0, const CSConditionState &condition1) const
 {
-	return								(_edge_value_type(100));
+	return								static_cast<_edge_value_type>(100);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -532,7 +532,7 @@ void CStalkerActionTakeCover::execute		()
 CStalkerActionLookOut::CStalkerActionLookOut(CAI_Stalker *object, LPCSTR action_name) :
 	inherited(object,action_name)
 {
-	m_crouch_look_out_random.seed				(u32(CPU::QPC() & 0xffffffff));
+	m_crouch_look_out_random.seed				(static_cast<u32>(CPU::QPC() & 0xffffffff));
 	m_last_change_time							= 0;
 }
 

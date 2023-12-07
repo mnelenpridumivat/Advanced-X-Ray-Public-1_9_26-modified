@@ -58,7 +58,7 @@ CExplosive::CExplosive(void)
 	m_fUpThrowFactor		= 0.f;
 
 
-	m_eSoundExplode			= ESoundTypes(SOUND_TYPE_WEAPON_SHOOTING);
+	m_eSoundExplode			= static_cast<ESoundTypes>(SOUND_TYPE_WEAPON_SHOOTING);
 
 
 	m_eHitTypeBlast			= ALife::eHitTypeExplosion;
@@ -191,12 +191,12 @@ struct SExpQParams
 //проверка на попадание "осколком" по объекту
 ICF static BOOL grenade_hit_callback(collide::rq_result& result, LPVOID params)
 {
-	SExpQParams& ep	= *(SExpQParams*)params;
+	SExpQParams& ep	= *static_cast<SExpQParams*>(params);
 	u16 mtl_idx			= GAMEMTL_NONE_IDX;
 	if(result.O){
 		IKinematics* V  = 0;
 		if (0!=(V=smart_cast<IKinematics*>(result.O->Visual()))){
-			CBoneData& B= V->LL_GetData((u16)result.element);
+			CBoneData& B= V->LL_GetData(static_cast<u16>(result.element));
 			mtl_idx		= B.game_mtl_idx;
 		}
 	}else{
@@ -211,7 +211,7 @@ ICF static BOOL grenade_hit_callback(collide::rq_result& result, LPVOID params)
 	if(ph_dbg_draw_mask.test(phDbgDrawExplosions))
 	{
 		Fvector p;p.set(ep.l_dir);p.mul(result.range);p.add(ep.source_p);
-		u8 c	=u8(shoot_factor*255.f);
+		u8 c	=static_cast<u8>(shoot_factor * 255.f);
 		DBG_DrawPoint(p,0.1f,D3DCOLOR_XRGB(255-c,0,c));
 	}
 #endif
@@ -338,7 +338,7 @@ void CExplosive::Explode()
 	if (ps_detail_enable_collision)
 	{
 		if (actor_position.distance_to(pos) <= ps_detail_collision_radius)
-			level_detailcoll_points.push_back(DetailCollisionPoint(pos, m_iCurrentParentID != g_actor->ID() ? -m_iCurrentParentID : (u16)-2, m_fBlastRadius, 0.3f, 1.5f, true));
+			level_detailcoll_points.push_back(DetailCollisionPoint(pos, m_iCurrentParentID != g_actor->ID() ? -m_iCurrentParentID : static_cast<u16>(-2), m_fBlastRadius, 0.3f, 1.5f, true));
 	}
 
 	// Interactive Grass FX
@@ -356,10 +356,10 @@ void CExplosive::Explode()
 	//играем звук взрыва
 
 	CObject* who = nullptr;
-	if (Initiator() != ALife::_OBJECT_ID(-1))
+	if (Initiator() != static_cast<ALife::_OBJECT_ID>(-1))
 		who = Level().Objects.net_Find(Initiator());
 
-	m_layered_sounds.PlaySound("sndExplode", pos, smart_cast<CObject*>(this), false, false, (u8)-1);
+	m_layered_sounds.PlaySound("sndExplode", pos, smart_cast<CObject*>(this), false, false, static_cast<u8>(-1));
 	
 	//показываем эффекты
 
@@ -784,7 +784,7 @@ void CExplosive::net_Relcase(CObject* O)
 	if (GameID() == eGameIDSingle)
 	{
 		if(O->ID()==m_iCurrentParentID)
-			m_iCurrentParentID=u16(-1);
+			m_iCurrentParentID=static_cast<u16>(-1);
 	}
 	
 	BLASTED_OBJECTS_I I=std::find(m_blasted_objects.begin(),m_blasted_objects.end(),smart_cast<CPhysicsShellHolder*>(O));
@@ -797,7 +797,7 @@ void CExplosive::net_Relcase(CObject* O)
 u16	CExplosive::Initiator()
 {
 	u16 initiator=CurrentParentID();
-	if(initiator==u16(-1))initiator=cast_game_object()->ID();
+	if(initiator==static_cast<u16>(-1))initiator=cast_game_object()->ID();
 	return initiator;
 }
 

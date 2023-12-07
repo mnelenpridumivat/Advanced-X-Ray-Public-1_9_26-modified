@@ -81,10 +81,10 @@ protected:
 
 private:
 	enum EDirectionType {
-		eDirectionTypeFP = u32(0),
-		eDirectionTypeFN = u32(1),
-		eDirectionTypeSP = u32(0),
-		eDirectionTypeSN = u32(2),
+		eDirectionTypeFP = static_cast<u32>(0),
+		eDirectionTypeFN = static_cast<u32>(1),
+		eDirectionTypeSP = static_cast<u32>(0),
+		eDirectionTypeSN = static_cast<u32>(2),
 		eDirectionTypePP = eDirectionTypeFP | eDirectionTypeSP, // both linear velocities are positive
 		eDirectionTypeNN = eDirectionTypeFN | eDirectionTypeSN, // both linear velocities are negative
 		eDirectionTypePN = eDirectionTypeFP | eDirectionTypeSN, // the first linear velocity is positive, the second one - negative

@@ -10,7 +10,7 @@
 
 namespace ObjectHandlerSpace {
 	enum EWorldProperties {
-		eWorldPropertyItemID		= u32(0),
+		eWorldPropertyItemID		= static_cast<u32>(0),
 		eWorldPropertyHidden,
 		eWorldPropertyShown,
 		eWorldPropertyStrapped,
@@ -51,13 +51,13 @@ namespace ObjectHandlerSpace {
 		eWorldPropertyUsed,
 		eWorldPropertyUseEnough,
 
-		eWorldPropertyNoItems				= u32((u16(-1) << 16) | eWorldPropertyItemID),
-		eWorldPropertyNoItemsIdle			= u32((u16(-1) << 16) | eWorldPropertyIdle),
-		eWorldPropertyDummy					= u32(-1),
+		eWorldPropertyNoItems				= static_cast<u32>((u16(-1) << 16) | eWorldPropertyItemID),
+		eWorldPropertyNoItemsIdle			= static_cast<u32>((u16(-1) << 16) | eWorldPropertyIdle),
+		eWorldPropertyDummy					= static_cast<u32>(-1),
 	};
 
 	enum EWorldOperators {
-		eWorldOperatorShow			= u32(0),
+		eWorldOperatorShow			= static_cast<u32>(0),
 		eWorldOperatorDoShow,
 		eWorldOperatorHide,
 		eWorldOperatorDrop,
@@ -96,7 +96,7 @@ namespace ObjectHandlerSpace {
 		eWorldOperatorPrepare,
 		eWorldOperatorUse,
 
-		eWorldOperatorNoItemsIdle	= u32((u16(-1) << 16) | eWorldOperatorIdle),
-		eWorldOperatorDummy			= u32(-1),
+		eWorldOperatorNoItemsIdle	= static_cast<u32>((u16(-1) << 16) | eWorldOperatorIdle),
+		eWorldOperatorDummy			= static_cast<u32>(-1),
 	};
 };

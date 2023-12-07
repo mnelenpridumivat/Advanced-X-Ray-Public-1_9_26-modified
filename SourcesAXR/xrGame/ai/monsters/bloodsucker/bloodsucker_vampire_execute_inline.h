@@ -40,7 +40,7 @@ void CStateBloodsuckerVampireExecuteAbstract::initialize()
 	NET_Packet			P;
 	Actor()->u_EventGen	(P, GEG_PLAYER_WEAPON_HIDE_STATE, Actor()->ID());
 	P.w_u16				(INV_STATE_BLOCK_ALL);
-	P.w_u8				(u8(true));
+	P.w_u8				(static_cast<u8>(true));
 	Actor()->u_EventSend(P);
 
 	Actor()->set_inventory_disabled	(true);
@@ -117,7 +117,7 @@ void CStateBloodsuckerVampireExecuteAbstract::show_hud()
 
 	Actor()->u_EventGen	(P, GEG_PLAYER_WEAPON_HIDE_STATE, Actor()->ID());
 	P.w_u16				(INV_STATE_BLOCK_ALL);
-	P.w_u8				(u8(false));
+	P.w_u8				(static_cast<u8>(false));
 	Actor()->u_EventSend(P);
 }
 

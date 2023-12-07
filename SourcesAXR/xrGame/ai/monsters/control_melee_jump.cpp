@@ -52,7 +52,7 @@ void CControlMeleeJump::activate()
 	float		anim_time		= m_man->animation().motion_time(motion, m_object->Visual());	
 
 	// set yaw
-	SControlDirectionData		*ctrl_data_dir = (SControlDirectionData*)m_man->data(this, ControlCom::eControlDir); 
+	SControlDirectionData		*ctrl_data_dir = static_cast<SControlDirectionData*>(m_man->data(this, ControlCom::eControlDir)); 
 	VERIFY						(ctrl_data_dir);	
 	ctrl_data_dir->heading.target_angle		= target_yaw;
 
@@ -64,7 +64,7 @@ void CControlMeleeJump::activate()
 	VERIFY									(!fis_zero(ctrl_data_dir->heading.target_speed));
 
 	// set animation
-	SControlAnimationData		*ctrl_data = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+	SControlAnimationData		*ctrl_data = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 	VERIFY						(ctrl_data);
 
 	ctrl_data->global.set_motion (motion);
@@ -73,7 +73,7 @@ void CControlMeleeJump::activate()
 
 void CControlMeleeJump::on_release()
 {
-	SControlDirectionData				*ctrl_data_dir = (SControlDirectionData*)m_man->data(this, ControlCom::eControlDir); 
+	SControlDirectionData				*ctrl_data_dir = static_cast<SControlDirectionData*>(m_man->data(this, ControlCom::eControlDir)); 
 	VERIFY								(ctrl_data_dir);
 	ctrl_data_dir->linear_dependency	= true;
 

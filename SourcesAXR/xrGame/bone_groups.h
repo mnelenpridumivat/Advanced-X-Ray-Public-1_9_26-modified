@@ -17,7 +17,7 @@ public:
 		gid_eyes,
 		gid_spine,
 	};//enum enum_group_id
-	static u16 const gid_any	= u16(-1);
+	static u16 const gid_any	= static_cast<u16>(-1);
 
 				bone_group	();
 				~bone_group	();

@@ -451,7 +451,7 @@ CUICellItem* CUIActorMenu::CurrentItem()
 
 PIItem CUIActorMenu::CurrentIItem()
 {
-	return	(m_pCurrentCellItem)? (PIItem)m_pCurrentCellItem->m_pData : NULL;
+	return	(m_pCurrentCellItem)? static_cast<PIItem>(m_pCurrentCellItem->m_pData) : NULL;
 }
 
 void CUIActorMenu::SetCurrentItem(CUICellItem* itm)
@@ -477,7 +477,7 @@ void CUIActorMenu::InfoCurItem( CUICellItem* cell_item )
 		m_ItemInfo->InitItem( NULL );
 		return;
 	}
-	PIItem current_item = (PIItem)cell_item->m_pData;
+	PIItem current_item = static_cast<PIItem>(cell_item->m_pData);
 
 	PIItem compare_item = NULL;
 	u16    compare_slot = current_item->BaseSlot();
@@ -489,7 +489,7 @@ void CUIActorMenu::InfoCurItem( CUICellItem* cell_item )
 	if(GetMenuMode()==mmTrade)
 	{
 		CInventoryOwner* item_owner = smart_cast<CInventoryOwner*>(current_item->m_pInventory->GetOwner());
-		u32 item_price = u32(-1);
+		u32 item_price = static_cast<u32>(-1);
 		if(item_owner && item_owner==m_pActorInvOwner)
 			item_price = m_partner_trade->GetItemPrice(current_item, true);
 		else
@@ -504,7 +504,7 @@ void CUIActorMenu::InfoCurItem( CUICellItem* cell_item )
 			for( u32 j = 0; j < cell_item->ChildsCount(); ++j )
 			{
 				u32 tmp_price	= 0;
-				PIItem jitem	= (PIItem)cell_item->Child(j)->m_pData;
+				PIItem jitem	= static_cast<PIItem>(cell_item->Child(j)->m_pData);
 				CInventoryOwner* ammo_owner = smart_cast<CInventoryOwner*>(jitem->m_pInventory->GetOwner());
 				if(ammo_owner && ammo_owner==m_pActorInvOwner)
 					tmp_price = m_partner_trade->GetItemPrice(jitem, true);
@@ -519,18 +519,18 @@ void CUIActorMenu::InfoCurItem( CUICellItem* cell_item )
 		}
 
 		if(	!current_item->CanTrade() || 
-			(!m_pPartnerInvOwner->trade_parameters().enabled(CTradeParameters::action_buy(0), 
+			(!m_pPartnerInvOwner->trade_parameters().enabled(static_cast<CTradeParameters::action_buy>(0), 
 															current_item->object().cNameSect()) &&
 			item_owner && item_owner==m_pActorInvOwner)
 		)
-			m_ItemInfo->InitItem	( cell_item, compare_item, u32(-1), "st_no_trade_tip_1" );
+			m_ItemInfo->InitItem	( cell_item, compare_item, static_cast<u32>(-1), "st_no_trade_tip_1" );
 		else if(current_item->GetCondition()<m_pPartnerInvOwner->trade_parameters().buy_item_condition_factor)
-			m_ItemInfo->InitItem	( cell_item, compare_item, u32(-1), "st_no_trade_tip_2" );
+			m_ItemInfo->InitItem	( cell_item, compare_item, static_cast<u32>(-1), "st_no_trade_tip_2" );
 		else
 			m_ItemInfo->InitItem	( cell_item, compare_item, item_price );
 	}
 	else
-		m_ItemInfo->InitItem	( cell_item, compare_item, u32(-1));
+		m_ItemInfo->InitItem	( cell_item, compare_item, static_cast<u32>(-1));
 
 //	m_ItemInfo->InitItem	( current_item, compare_item );
 	float dx_pos = GetWndRect().left;
@@ -657,7 +657,7 @@ void CUIActorMenu::clear_highlight_lists()
 }
 void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 {
-	PIItem item = (PIItem)cell_item->m_pData;
+	PIItem item = static_cast<PIItem>(cell_item->m_pData);
 	if(!item)
 		return;
 
@@ -813,7 +813,7 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 }
 void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 {
-	PIItem item = (PIItem)cell_item->m_pData;
+	PIItem item = static_cast<PIItem>(cell_item->m_pData);
 	if ( !item )
 	{
 		return;
@@ -891,7 +891,7 @@ void CUIActorMenu::highlight_ammo_for_weapon( PIItem weapon_item, CUIDragDropLis
 	for ( u32 i = 0; i < cnt; ++i )
 	{
 		CUICellItem* ci = ddlist->GetItemIdx(i);
-		PIItem item = (PIItem)ci->m_pData;
+		PIItem item = static_cast<PIItem>(ci->m_pData);
 		if ( !item )
 		{
 			continue;
@@ -935,7 +935,7 @@ void CUIActorMenu::highlight_weapons_for_ammo( PIItem ammo_item, CUIDragDropList
 	for ( u32 i = 0; i < cnt; ++i )
 	{
 		CUICellItem* ci = ddlist->GetItemIdx(i);
-		PIItem item = (PIItem)ci->m_pData;
+		PIItem item = static_cast<PIItem>(ci->m_pData);
 		if ( !item )
 		{
 			continue;
@@ -982,7 +982,7 @@ void CUIActorMenu::highlight_weapons_for_ammo( PIItem ammo_item, CUIDragDropList
 
 bool CUIActorMenu::highlight_addons_for_weapon( PIItem weapon_item, CUICellItem* ci )
 {
-	PIItem item = (PIItem)ci->m_pData;
+	PIItem item = static_cast<PIItem>(ci->m_pData);
 	if ( !item )
 	{
 		return false;
@@ -1029,7 +1029,7 @@ void CUIActorMenu::highlight_weapons_for_addon( PIItem addon_item, CUIDragDropLi
 	for ( u32 i = 0; i < cnt; ++i )
 	{
 		CUICellItem* ci = ddlist->GetItemIdx(i);
-		PIItem item = (PIItem)ci->m_pData;
+		PIItem item = static_cast<PIItem>(ci->m_pData);
 		if ( !item )
 		{
 			continue;
@@ -1316,7 +1316,7 @@ void CUIActorMenu::HighlightForEachInSlot(const luabind::functor<bool>& functor,
 	for (u32 i = 0; i < cnt; ++i)
 	{
 		CUICellItem* ci = slot_list->GetItemIdx(i);
-		PIItem item = (PIItem)ci->m_pData;
+		PIItem item = static_cast<PIItem>(ci->m_pData);
 		if (!item)
 			continue;
 

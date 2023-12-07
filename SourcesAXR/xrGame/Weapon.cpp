@@ -85,8 +85,8 @@ CWeapon::CWeapon()
 	m_strapped_mode_rifle = false;
 	m_can_be_strapped_rifle = false;
 	m_can_be_strapped		= false;
-	m_ef_main_weapon_type	= u32(-1);
-	m_ef_weapon_type		= u32(-1);
+	m_ef_main_weapon_type	= static_cast<u32>(-1);
+	m_ef_weapon_type		= static_cast<u32>(-1);
 	m_UIScope				= NULL;
 	m_set_next_ammoType_on_reload = undefined_ammo_type;
 	m_crosshair_inertion	= 0.f;
@@ -340,8 +340,8 @@ void CWeapon::UpdateXForm	()
 
 	V->CalculateBones_Invalidate();
 	V->CalculateBones(true);
-	Fmatrix& mL				= V->LL_GetTransform(u16(boneL));
-	Fmatrix& mR				= V->LL_GetTransform(u16(boneR));
+	Fmatrix& mL				= V->LL_GetTransform(static_cast<u16>(boneL));
+	Fmatrix& mR				= V->LL_GetTransform(static_cast<u16>(boneR));
 	// Calculate
 	Fmatrix					mRes;
 	Fvector					R,D,N;
@@ -622,7 +622,7 @@ void CWeapon::Load		(LPCSTR section)
 		vLoadedFirePoint2= vLoadedFirePoint;
 
 	// hands
-	eHandDependence		= EHandDependence(pSettings->r_s32(section,"hand_dependence"));
+	eHandDependence		= static_cast<EHandDependence>(pSettings->r_s32(section, "hand_dependence"));
 	m_bIsSingleHanded	= true;
 	if (pSettings->line_exist(section, "single_handed"))
 		m_bIsSingleHanded	= !!pSettings->r_bool(section, "single_handed");
@@ -632,9 +632,9 @@ void CWeapon::Load		(LPCSTR section)
 
 
 	// информация о возможных апгрейдах и их визуализации в инвентаре
-	m_eScopeStatus			 = (ALife::EWeaponAddonStatus)pSettings->r_s32(section,"scope_status");
-	m_eSilencerStatus		 = (ALife::EWeaponAddonStatus)pSettings->r_s32(section,"silencer_status");
-	m_eGrenadeLauncherStatus = (ALife::EWeaponAddonStatus)pSettings->r_s32(section,"grenade_launcher_status");
+	m_eScopeStatus			 = static_cast<ALife::EWeaponAddonStatus>(pSettings->r_s32(section, "scope_status"));
+	m_eSilencerStatus		 = static_cast<ALife::EWeaponAddonStatus>(pSettings->r_s32(section, "silencer_status"));
+	m_eGrenadeLauncherStatus = static_cast<ALife::EWeaponAddonStatus>(pSettings->r_s32(section, "grenade_launcher_status"));
 
 	m_zoom_params.m_bZoomEnabled		= !!pSettings->r_bool(section,"zoom_enabled");
 	m_zoom_params.m_fZoomRotateTime		= pSettings->r_float(section,"zoom_rotate_time");
@@ -706,7 +706,7 @@ void CWeapon::Load		(LPCSTR section)
 
 
 	m_bHasTracers			= !!READ_IF_EXISTS(pSettings, r_bool, section, "tracers", true);
-	m_u8TracerColorID		= READ_IF_EXISTS(pSettings, r_u8, section, "tracers_color_ID", u8(-1));
+	m_u8TracerColorID		= READ_IF_EXISTS(pSettings, r_u8, section, "tracers_color_ID", static_cast<u8>(-1));
 
 	string256						temp;
 	for (int i=egdNovice; i<egdCount; ++i) 
@@ -821,7 +821,7 @@ void CWeapon::Load		(LPCSTR section)
 		flashlight_render->set_texture(READ_IF_EXISTS(pSettings, r_string, m_light_section, "spot_texture", nullptr));
 
 		flashlight_omni = ::Render->light_create();
-		flashlight_omni->set_type((IRender_Light::LT)(READ_IF_EXISTS(pSettings, r_u8, m_light_section, "omni_type", 2))); //KRodin: вообще omni это обычно поинт, но поинт светит во все стороны от себя, поэтому тут спот используется по умолчанию.
+		flashlight_omni->set_type(static_cast<IRender_Light::LT>((READ_IF_EXISTS(pSettings, r_u8, m_light_section, "omni_type", 2)))); //KRodin: вообще omni это обычно поинт, но поинт светит во все стороны от себя, поэтому тут спот используется по умолчанию.
 		flashlight_omni->set_shadow(false);
 
 		const Fcolor oclr = READ_IF_EXISTS(pSettings, r_fcolor, m_light_section, b_r2 ? "omni_color_r2" : "omni_color", (Fcolor{ 1.0f , 1.0f , 1.0f , 0.0f }));
@@ -1067,7 +1067,7 @@ BOOL CWeapon::net_Spawn		(CSE_Abstract* DC)
 
 	m_dwWeaponIndependencyTime = 0;
 
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
+	VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
 	m_bAmmoWasSpawned		= false;
 
 
@@ -1102,10 +1102,10 @@ void CWeapon::net_Export(NET_Packet& P)
 
 	u8 need_upd				= IsUpdating() ? 1 : 0;
 	P.w_u8					(need_upd);
-	P.w_u16					(u16(iAmmoElapsed));
+	P.w_u16					(static_cast<u16>(iAmmoElapsed));
 	P.w_u8					(m_flagsAddOnState);
 	P.w_u8					(m_ammoType);
-	P.w_u8					((u8)GetState());
+	P.w_u8					(static_cast<u8>(GetState()));
 	P.w_u8					((u8)IsZoomed());
 	P.w_u8					((u8)m_cur_scope);
 }
@@ -1167,7 +1167,7 @@ void CWeapon::net_Import(NET_Packet& P)
 		}break;
 	}
 	
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
+	VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
 }
 
 void CWeapon::save(NET_Packet &output_packet)
@@ -1227,8 +1227,8 @@ void CWeapon::OnEvent(NET_Packet& P, u16 type)
 			else
 				m_set_next_ammoType_on_reload = NextAmmo;
 
-			if (OnClient()) SetAmmoElapsed(int(AmmoElapsed));			
-			OnStateSwitch	(u32(state));
+			if (OnClient()) SetAmmoElapsed(static_cast<int>(AmmoElapsed));			
+			OnStateSwitch	(static_cast<u32>(state));
 		}
 		break;
 	default:
@@ -1321,10 +1321,10 @@ void CWeapon::SendHiddenItem()
 		// !!! Just single entry for given state !!!
 		NET_Packet		P;
 		CHudItem::object().u_EventGen		(P,GE_WPN_STATE_CHANGE,CHudItem::object().ID());
-		P.w_u8			(u8(eHiding));
-		P.w_u8			(u8(m_sub_state));
+		P.w_u8			(static_cast<u8>(eHiding));
+		P.w_u8			(static_cast<u8>(m_sub_state));
 		P.w_u8			(m_ammoType);
-		P.w_u8			(u8(iAmmoElapsed & 0xff));
+		P.w_u8			(static_cast<u8>(iAmmoElapsed & 0xff));
 		P.w_u8			(m_set_next_ammoType_on_reload);
 		CHudItem::object().u_EventSend		(P, net_flags(TRUE, TRUE, FALSE, TRUE));
 		SetPending		(TRUE);
@@ -1479,7 +1479,7 @@ void CWeapon::UpdateLaser()
 				int frame;
 				const u32 clr = laser_lanim->CalculateBGR(Device.fTimeGlobal, frame);
 
-				Fcolor fclr{ (float)color_get_B(clr), (float)color_get_G(clr), (float)color_get_R(clr), 1.f };
+				Fcolor fclr{ static_cast<float>(color_get_B(clr)), static_cast<float>(color_get_G(clr)), static_cast<float>(color_get_R(clr)), 1.f };
 				fclr.mul_rgb(laser_fBrightness / 255.f);
 				laser_light_render->set_color(fclr);
 			}
@@ -1551,7 +1551,7 @@ void CWeapon::UpdateFlashlight()
 				int frame;
 				const u32 clr = flashlight_lanim->CalculateBGR(Device.fTimeGlobal, frame);
 
-				Fcolor fclr{ (float)color_get_B(clr), (float)color_get_G(clr), (float)color_get_R(clr), 1.f };
+				Fcolor fclr{ static_cast<float>(color_get_B(clr)), static_cast<float>(color_get_G(clr)), static_cast<float>(color_get_R(clr)), 1.f };
 				fclr.mul_rgb(flashlight_fBrightness / 255.f);
 				flashlight_render->set_color(fclr);
 				flashlight_omni->set_color(fclr);
@@ -1732,7 +1732,7 @@ bool CWeapon::SwitchAmmoType( u32 flags )
 	bool b1, b2;
 	do 
 	{
-		l_newType = u8( (u32(l_newType+1)) % m_ammoTypes.size() );
+		l_newType = static_cast<u8>((u32(l_newType + 1)) % m_ammoTypes.size());
 		b1 = (l_newType != m_ammoType);
 		b2 = unlimited_ammo() ? false : ( !m_pInventory->GetAny( m_ammoTypes[l_newType].c_str() ) );						
 	} while( b1 && b2 );
@@ -1767,7 +1767,7 @@ void CWeapon::SpawnAmmo(u32 boxCurr, LPCSTR ammoSect, u32 ParentID)
 	{	
 		CSE_ALifeItemAmmo *l_pA		= smart_cast<CSE_ALifeItemAmmo*>(D);
 		R_ASSERT					(l_pA);
-		l_pA->m_boxSize				= (u16)pSettings->r_s32(ammoSect, "box_size");
+		l_pA->m_boxSize				= static_cast<u16>(pSettings->r_s32(ammoSect, "box_size"));
 		D->s_name					= ammoSect;
 		D->set_name_replace			("");
 //.		D->s_gameid					= u8(GameID());
@@ -1776,19 +1776,19 @@ void CWeapon::SpawnAmmo(u32 boxCurr, LPCSTR ammoSect, u32 ParentID)
 		if (ParentID == 0xffffffff)	
 			D->ID_Parent			= (u16)H_Parent()->ID();
 		else
-			D->ID_Parent			= (u16)ParentID;
+			D->ID_Parent			= static_cast<u16>(ParentID);
 
 		D->ID_Phantom				= 0xffff;
 		D->s_flags.assign			(M_SPAWN_OBJECT_LOCAL);
 		D->RespawnTime				= 0;
-		l_pA->m_tNodeID				= g_dedicated_server ? u32(-1) : ai_location().level_vertex_id();
+		l_pA->m_tNodeID				= g_dedicated_server ? static_cast<u32>(-1) : ai_location().level_vertex_id();
 
 		if(boxCurr == 0xffffffff) 	
 			boxCurr					= l_pA->m_boxSize;
 
 		while(boxCurr) 
 		{
-			l_pA->a_elapsed			= (u16)(boxCurr > l_pA->m_boxSize ? l_pA->m_boxSize : boxCurr);
+			l_pA->a_elapsed			= static_cast<u16>(boxCurr > l_pA->m_boxSize ? l_pA->m_boxSize : boxCurr);
 			NET_Packet				P;
 			D->Spawn_Write			(P, TRUE);
 			Level().Send			(P,net_flags(TRUE));
@@ -1818,7 +1818,7 @@ int CWeapon::GetSuitableAmmoTotal( bool use_item_to_spawn ) const
 	m_BriefInfo_CalcFrame = Device.dwFrame;
 
 	m_iAmmoCurrentTotal = 0;
-	for ( u8 i = 0; i < u8(m_ammoTypes.size()); ++i ) 
+	for ( u8 i = 0; i < static_cast<u8>(m_ammoTypes.size()); ++i ) 
 	{
 		m_iAmmoCurrentTotal += GetAmmoCount_forType( m_ammoTypes[i] );
 
@@ -2350,10 +2350,10 @@ void CWeapon::SwitchState(u32 S)
 		// !!! Just single entry for given state !!!
 		NET_Packet		P;
 		CHudItem::object().u_EventGen		(P,GE_WPN_STATE_CHANGE,CHudItem::object().ID());
-		P.w_u8			(u8(S));
-		P.w_u8			(u8(m_sub_state));
+		P.w_u8			(static_cast<u8>(S));
+		P.w_u8			(static_cast<u8>(m_sub_state));
 		P.w_u8			(m_ammoType);
-		P.w_u8			(u8(iAmmoElapsed & 0xff));
+		P.w_u8			(static_cast<u8>(iAmmoElapsed & 0xff));
 		P.w_u8			(m_set_next_ammoType_on_reload);
 		CHudItem::object().u_EventSend		(P, net_flags(TRUE, TRUE, FALSE, TRUE));
 	}
@@ -2361,7 +2361,7 @@ void CWeapon::SwitchState(u32 S)
 
 void CWeapon::OnMagazineEmpty	()
 {
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
+	VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
 }
 
 
@@ -2454,8 +2454,8 @@ void CWeapon::reload			(LPCSTR section)
 		m_can_be_strapped_rifle = false;
 	}
 
-	m_ef_main_weapon_type	= READ_IF_EXISTS(pSettings,r_u32,section,"ef_main_weapon_type",u32(-1));
-	m_ef_weapon_type		= READ_IF_EXISTS(pSettings,r_u32,section,"ef_weapon_type",u32(-1));
+	m_ef_main_weapon_type	= READ_IF_EXISTS(pSettings,r_u32,section,"ef_main_weapon_type",static_cast<u32>(-1));
+	m_ef_weapon_type		= READ_IF_EXISTS(pSettings,r_u32,section,"ef_weapon_type",static_cast<u32>(-1));
 }
 
 void CWeapon::create_physic_shell()
@@ -2589,7 +2589,7 @@ float _lerp(const float& _val_a, const float& _val_b, const float& _factor)
 
 static BOOL pick_trace_callback(collide::rq_result& result, LPVOID params)
 {
-	collide::rq_result* RQ = (collide::rq_result*)params;
+	collide::rq_result* RQ = static_cast<collide::rq_result*>(params);
 	if (!result.O)
 	{
 		// получить треугольник и узнать его материал
@@ -2735,7 +2735,7 @@ void CWeapon::UpdateHudAdditional(Fmatrix& trans)
 
 	//============= Подготавливаем общие переменные =============//
 
-	clamp(idx, u8(0), u8(1));
+	clamp(idx, static_cast<u8>(0), static_cast<u8>(1));
 	bool bForAim = (idx == 1);
 
 	float fInertiaPower = GetInertionPowerFactor();
@@ -2990,7 +2990,7 @@ void CWeapon::SetAmmoElapsed(int ammo_count)
 {
 	iAmmoElapsed				= ammo_count;
 
-	u32 uAmmo					= u32(iAmmoElapsed);
+	u32 uAmmo					= static_cast<u32>(iAmmoElapsed);
 
 	if (uAmmo != m_magazine.size())
 	{
@@ -3011,13 +3011,13 @@ void CWeapon::SetAmmoElapsed(int ammo_count)
 
 u32	CWeapon::ef_main_weapon_type	() const
 {
-	VERIFY	(m_ef_main_weapon_type != u32(-1));
+	VERIFY	(m_ef_main_weapon_type != static_cast<u32>(-1));
 	return	(m_ef_main_weapon_type);
 }
 
 u32	CWeapon::ef_weapon_type	() const
 {
-	VERIFY	(m_ef_weapon_type != u32(-1));
+	VERIFY	(m_ef_weapon_type != static_cast<u32>(-1));
 	return	(m_ef_weapon_type);
 }
 

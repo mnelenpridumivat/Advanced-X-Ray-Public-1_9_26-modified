@@ -200,7 +200,7 @@ bool CUIButton::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 void CUIButton::SetAccelerator(int iAccel, int idx)	
 {
 	VERIFY(idx>=0 && idx<4); 
-	m_uAccelerator[idx] = s16(iAccel);
+	m_uAccelerator[idx] = static_cast<s16>(iAccel);
 }
 
 const int CUIButton::GetAccelerator(int idx) const			
@@ -214,8 +214,8 @@ bool CUIButton::IsAccelerator(int iAccel) const
 	bool res = GetAccelerator(0)==iAccel || GetAccelerator(1)==iAccel;
 	if(!res)
 	{
-		res =	((m_uAccelerator[2]!=-1) ? is_binded((EGameActions)GetAccelerator(2), iAccel) : false) || 
-				((m_uAccelerator[3]!=-1) ? is_binded((EGameActions)GetAccelerator(3), iAccel) : false);
+		res =	((m_uAccelerator[2]!=-1) ? is_binded(static_cast<EGameActions>(GetAccelerator(2)), iAccel) : false) || 
+				((m_uAccelerator[3]!=-1) ? is_binded(static_cast<EGameActions>(GetAccelerator(3)), iAccel) : false);
 	}
 	return res;
 }

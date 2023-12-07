@@ -397,7 +397,7 @@ u32 attachable_hud_item::anim_play(const shared_str& anm_name_b, BOOL bMixIn, co
 	if (speed == 1.f)
 		speed = anm->m_anim_speed != 0 ? anm->m_anim_speed : CalcMotionSpeed(anm_name_b);
 
-	rnd_idx					= (u8)Random.randI(anm->m_animations.size()) ;
+	rnd_idx					= static_cast<u8>(Random.randI(anm->m_animations.size())) ;
 	const motion_descr& M	= anm->m_animations[ rnd_idx ];
 
 	u32 ret					= g_player_hud->anim_play(m_attach_place_idx, M.mid, bMixIn, md, speed);
@@ -477,7 +477,7 @@ player_hud::player_hud()
 	m_attached_items[1]		= NULL;
 	m_transform.identity();
 	m_transform_2.identity();
-	script_anim_part = u8(-1);
+	script_anim_part = static_cast<u8>(-1);
 	script_anim_offset_factor = 0.f;
 	script_anim_item_model	= nullptr;
 	m_item_pos.identity();
@@ -1006,7 +1006,7 @@ void player_hud::update(const Fmatrix& cam_trans)
 		update_script_item();
 
 	// single hand offset smoothing + syncing back to other hand animation on end
-	if (script_anim_part != u8(-1))
+	if (script_anim_part != static_cast<u8>(-1))
 	{
 		script_anim_offset_factor += Device.fTimeDelta * 2.5f;
 
@@ -1179,7 +1179,7 @@ void player_hud::updateMovementLayerState()
 		anm->Stop(false);
 	}
 
-	bool need_blend = (script_anim_part != u8(-1) || (m_attached_items[0] && m_attached_items[0]->m_parent_hud_item->NeedBlendAnm()) || (m_attached_items[1] && m_attached_items[1]->m_parent_hud_item->NeedBlendAnm()));
+	bool need_blend = (script_anim_part != static_cast<u8>(-1) || (m_attached_items[0] && m_attached_items[0]->m_parent_hud_item->NeedBlendAnm()) || (m_attached_items[1] && m_attached_items[1]->m_parent_hud_item->NeedBlendAnm()));
 
 	if (pActor->AnyMove() && need_blend)
 	{
@@ -1266,7 +1266,7 @@ float player_hud::SetBlendAnmTime(LPCSTR name, float time)
 void player_hud::StopScriptAnim()
 {
 	u8 part = script_anim_part;
-	script_anim_part = u8(-1);
+	script_anim_part = static_cast<u8>(-1);
 	script_anim_item_model = nullptr;
 
 	updateMovementLayerState();
@@ -1274,7 +1274,7 @@ void player_hud::StopScriptAnim()
 	if (part != 2 && !m_attached_items[part])
 		re_sync_anim(part + 1);
 	else
-		OnMovementChanged((ACTOR_DEFS::EMoveCommand)0);
+		OnMovementChanged(static_cast<ACTOR_DEFS::EMoveCommand>(0));
 }
 
 player_hud_motion_container* player_hud::get_hand_motions(LPCSTR section)
@@ -1297,13 +1297,13 @@ player_hud_motion_container* player_hud::get_hand_motions(LPCSTR section)
 
 u32 player_hud::anim_play(u16 part, const MotionID& M, BOOL bMixIn, const CMotionDef*& md, float speed, u16 override_part)
 {
-	u16 part_id = u16(-1);
+	u16 part_id = static_cast<u16>(-1);
 	if (attached_item(0) && attached_item(1))
 		part_id = m_model->partitions().part_id((part == 0) ? "right_hand" : "left_hand");
 
-	if (override_part != u16(-1))
+	if (override_part != static_cast<u16>(-1))
 		part_id = override_part;
-	else if (script_anim_part != u8(-1))
+	else if (script_anim_part != static_cast<u8>(-1))
 	{
 		if (script_anim_part != 2)
 			part_id = script_anim_part == 0 ? 1 : 0;
@@ -1311,7 +1311,7 @@ u32 player_hud::anim_play(u16 part, const MotionID& M, BOOL bMixIn, const CMotio
 			return 0;
 	}
 
-	if (part_id == u16(-1))
+	if (part_id == static_cast<u16>(-1))
 	{
 		for (u8 pid = 0; pid < 3; pid++)
 		{
@@ -1670,7 +1670,7 @@ bool player_hud::allow_script_anim()
 		return false;
 	else if (m_attached_items[1] && m_attached_items[1]->m_parent_hud_item->IsPending())
 		return false;
-	else if (script_anim_part != u8(-1))
+	else if (script_anim_part != static_cast<u8>(-1))
 		return false;
 
 	return true;

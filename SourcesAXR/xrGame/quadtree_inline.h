@@ -96,8 +96,8 @@ IC	void CSQuadTree::insert		(_object_type *object)
 		if (depth == m_max_depth) {
 			CListItem			*list_item = m_list_items->get_object();
 			list_item->m_object = object;
-			list_item->m_next	= (CListItem*)((void*)(*node));
-			*node				= (CQuadNode*)((void*)list_item);
+			list_item->m_next	= static_cast<CListItem*>((void*)(*node));
+			*node				= static_cast<CQuadNode*>((void*)list_item);
 			++m_leaf_count;
 			return;
 		}
@@ -129,7 +129,7 @@ IC	_object_type *CSQuadTree::find	(const Fvector &position) const
 		VERIFY			(index < 4);
 
 		if (depth == m_max_depth) {
-			CListItem	*leaf = ((CListItem*)((void*)(node)));
+			CListItem	*leaf = static_cast<CListItem*>((void*)(node));
 			for ( ; leaf; leaf = leaf->m_next)
 				if (leaf->m_object->position().similar(position))
 					return	(leaf->m_object);
@@ -158,7 +158,7 @@ IC	void CSQuadTree::nearest	(const Fvector &position, float radius, xr_vector<_o
 
 	if (depth == m_max_depth) {
 		float		radius_sqr = _sqr(radius);
-		CListItem	*leaf = ((CListItem*)((void*)(node)));
+		CListItem	*leaf = static_cast<CListItem*>((void*)(node));
 		for ( ; leaf; leaf = leaf->m_next)
 			if (leaf->m_object->position().distance_to_xz_sqr(position) <= radius_sqr)
 				objects.push_back	(leaf->m_object);
@@ -241,8 +241,8 @@ IC	_object_type *CSQuadTree::remove		(const _object_type *object, CQuadNode *&no
 {
 	VERIFY			(node);
 	if (depth == m_max_depth) {
-		CListItem	*&node_leaf = ((CListItem*&)((void*&)(node)));
-		CListItem	*leaf = ((CListItem*)((void*&)(node)));
+		CListItem	*&node_leaf = (CListItem*&)((void*&)(node));
+		CListItem	*leaf = (CListItem*&)((void*&)(node));
 		CListItem	*leaf_prev = 0;
 		for ( ; leaf; leaf_prev = leaf, leaf = leaf->m_next)
 			if (leaf->m_object == object) {
@@ -275,7 +275,7 @@ IC	void CSQuadTree::all		(xr_vector<_object_type*> &objects, CQuadNode *node, in
 		return;
 
 	if (depth == m_max_depth) {
-		CListItem				*leaf = ((CListItem*)((void*)(node)));
+		CListItem				*leaf = static_cast<CListItem*>((void*)(node));
 		for ( ; leaf; leaf = leaf->m_next)
 			objects.push_back	(leaf->m_object);
 		return;
@@ -288,7 +288,7 @@ IC	void CSQuadTree::all		(xr_vector<_object_type*> &objects, CQuadNode *node, in
 }
 
 TEMPLATE_SPECIALIZATION
-IC	void CSQuadTree::all		(xr_vector<_object_type*> &objects, bool clear = true) const
+IC	void CSQuadTree::all		(xr_vector<_object_type*> &objects, bool clear) const
 {
 	if (clear)
 		objects.clear			();

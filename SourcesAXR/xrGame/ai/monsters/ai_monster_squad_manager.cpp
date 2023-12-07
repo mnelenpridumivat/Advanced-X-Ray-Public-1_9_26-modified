@@ -87,7 +87,7 @@ CMonsterSquad *CMonsterSquadManager::get_squad(u8 team_id, u8 squad_id, u8 group
 
 CMonsterSquad *CMonsterSquadManager::get_squad(const CEntity *entity)
 {
-	return get_squad((u8)entity->g_Team(),(u8)entity->g_Squad(),(u8)entity->g_Group());
+	return get_squad(static_cast<u8>(entity->g_Team()),static_cast<u8>(entity->g_Squad()),static_cast<u8>(entity->g_Group()));
 }
 
 void CMonsterSquadManager::update(CEntity *entity)

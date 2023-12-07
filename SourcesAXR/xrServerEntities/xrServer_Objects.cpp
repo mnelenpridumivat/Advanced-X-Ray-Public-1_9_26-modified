@@ -52,7 +52,7 @@ void CSE_Shape::cform_read					(NET_Packet	&tNetPacket)
 
 void CSE_Shape::cform_write					(NET_Packet	&tNetPacket)
 {
-	tNetPacket.w_u8				(u8(shapes.size()));
+	tNetPacket.w_u8				(static_cast<u8>(shapes.size()));
 	for (u32 i=0; i<shapes.size(); ++i) 
 	{
 		shape_def				&S = shapes[i];
@@ -126,7 +126,7 @@ void CSE_Spectator::FillProps				(LPCSTR pref, PropItemVec& items)
 ////////////////////////////////////////////////////////////////////////////
 CSE_Temporary::CSE_Temporary				(LPCSTR caSection) : CSE_Abstract(caSection)
 {
-	m_tNodeID					= u32(-1);
+	m_tNodeID					= static_cast<u32>(-1);
 }
 
 CSE_Temporary::~CSE_Temporary				()
@@ -217,7 +217,7 @@ void CSE_SpawnGroup::FillProps				(LPCSTR pref, PropItemVec& values)
 ////////////////////////////////////////////////////////////////////////////
 CSE_PHSkeleton::CSE_PHSkeleton(LPCSTR caSection)
 {
-	source_id					= u16(-1);
+	source_id					= static_cast<u16>(-1);
 	_flags.zero					();
 }
 
@@ -271,7 +271,7 @@ void CSE_PHSkeleton::load(NET_Packet &tNetPacket)
 {
 	_flags.assign				(tNetPacket.r_u8());
 	data_load					(tNetPacket);
-	source_id					=u16(-1);//.
+	source_id					=static_cast<u16>(-1);//.
 }
 void CSE_PHSkeleton::UPDATE_Write(NET_Packet &tNetPacket)
 {

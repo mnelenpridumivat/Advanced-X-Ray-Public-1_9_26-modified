@@ -8,7 +8,7 @@ protected:
 	typedef CState<_Object>* state_ptr;
 
 	enum {
-		eStateWalk			= u32(0),
+		eStateWalk			= static_cast<u32>(0),
 		eStateFaceEnemy,
 		eStateThreaten,
 		eStateSteal

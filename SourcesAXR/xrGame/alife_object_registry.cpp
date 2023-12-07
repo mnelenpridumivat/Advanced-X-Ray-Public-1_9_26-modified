@@ -33,14 +33,14 @@ void CALifeObjectRegistry::save				(IWriter &memory_stream, CSE_ALifeDynamicObje
 	NET_Packet					tNetPacket;
 	// Spawn
 	object->Spawn_Write			(tNetPacket,TRUE);
-	memory_stream.w_u16			(u16(tNetPacket.B.count));
+	memory_stream.w_u16			(static_cast<u16>(tNetPacket.B.count));
 	memory_stream.w				(tNetPacket.B.data,tNetPacket.B.count);
 
 	// Update
 	tNetPacket.w_begin			(M_UPDATE);
 	object->UPDATE_Write		(tNetPacket);
 
-	memory_stream.w_u16			(u16(tNetPacket.B.count));
+	memory_stream.w_u16			(static_cast<u16>(tNetPacket.B.count));
 	memory_stream.w				(tNetPacket.B.data,tNetPacket.B.count);
 
 	ALife::OBJECT_VECTOR::const_iterator	I = object->children.begin();
@@ -63,7 +63,7 @@ void CALifeObjectRegistry::save				(IWriter &memory_stream)
 	memory_stream.open_chunk	(OBJECT_CHUNK_DATA);
 
 	u32							position = memory_stream.tell();
-	memory_stream.w_u32			(u32(-1));
+	memory_stream.w_u32			(static_cast<u32>(-1));
 
 	u32							object_count = 0;
 	OBJECT_REGISTRY::iterator	I = m_objects.begin();
@@ -133,7 +133,7 @@ void CALifeObjectRegistry::load				(IReader &file_stream)
 	m_objects.clear				();
 
 	u32							count = file_stream.r_u32();
-	CSE_ALifeDynamicObject		**objects = (CSE_ALifeDynamicObject**)_alloca(count*sizeof(CSE_ALifeDynamicObject*));
+	CSE_ALifeDynamicObject		**objects = static_cast<CSE_ALifeDynamicObject**>(_alloca(count * sizeof(CSE_ALifeDynamicObject*)));
 
 	CSE_ALifeDynamicObject		**I = objects;
 	CSE_ALifeDynamicObject		**E = objects + count;

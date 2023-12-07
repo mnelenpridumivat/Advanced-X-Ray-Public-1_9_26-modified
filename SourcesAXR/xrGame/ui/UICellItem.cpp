@@ -151,7 +151,7 @@ void CUICellItem::Update()
 
 void CUICellItem::UpdateIndicators()
 {
-	PIItem item = (PIItem)m_pData;
+	PIItem item = static_cast<PIItem>(m_pData);
 	if ( item )
 	{
 		m_has_upgrade	= item->has_any_upgrades();
@@ -300,7 +300,7 @@ void CUICellItem::UpdateConditionProgressBar()
 {
 	if (m_pParentList && m_pParentList->GetConditionProgBarVisibility())
 	{
-		PIItem itm = (PIItem)m_pData;
+		PIItem itm = static_cast<PIItem>(m_pData);
 
 		if (itm && itm->IsUsingCondition())
 		{
@@ -329,7 +329,7 @@ void CUICellItem::UpdatePortionsProgressBar()
 {
 	if (m_pParentList && m_pParentList->GetConditionProgBarVisibility())
 	{
-		PIItem itm = (PIItem)m_pData;
+		PIItem itm = static_cast<PIItem>(m_pData);
 		CEatableItem* pEatable = smart_cast<CEatableItem*>(itm);
 
 		if (pEatable && pEatable->m_iConstPortions > 1 && pEatable->m_iConstPortions <= 8)
@@ -411,7 +411,7 @@ void CUICellItem::UpdateChargeLevelProgressBar()
 {
 	if (m_pParentList && m_pParentList->GetConditionProgBarVisibility())
 	{
-		PIItem itm = (PIItem)m_pData;
+		PIItem itm = static_cast<PIItem>(m_pData);
 		CTorch* torch = smart_cast<CTorch*>(itm);
 		CCustomDetector* artefact_detector = smart_cast<CCustomDetector*>(itm);
 		CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly*>(itm);

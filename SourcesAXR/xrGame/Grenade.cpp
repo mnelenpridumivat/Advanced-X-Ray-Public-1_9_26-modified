@@ -18,7 +18,7 @@ CGrenade::CGrenade(void)
 {
 
 	m_destroy_callback.clear();
-	m_eSoundCheckout = ESoundTypes(SOUND_TYPE_WEAPON_RECHARGING);
+	m_eSoundCheckout = static_cast<ESoundTypes>(SOUND_TYPE_WEAPON_RECHARGING);
 }
 
 CGrenade::~CGrenade(void) 
@@ -43,7 +43,7 @@ void CGrenade::Load(LPCSTR section)
 
 void CGrenade::Hit					(SHit* pHDS)
 {
-	if( ALife::eHitTypeExplosion==pHDS->hit_type && m_grenade_detonation_threshold_hit<pHDS->damage()&&CExplosive::Initiator()==u16(-1)) 
+	if( ALife::eHitTypeExplosion==pHDS->hit_type && m_grenade_detonation_threshold_hit<pHDS->damage()&&CExplosive::Initiator()==static_cast<u16>(-1)) 
 	{
 		CExplosive::SetCurrentParentID(pHDS->who->ID());
 		Destroy();

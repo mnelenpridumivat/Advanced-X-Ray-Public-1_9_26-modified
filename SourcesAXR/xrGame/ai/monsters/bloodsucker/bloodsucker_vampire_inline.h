@@ -42,7 +42,7 @@ void CStateBloodsuckerVampireAbstract::initialize()
 TEMPLATE_SPECIALIZATION
 void CStateBloodsuckerVampireAbstract::reselect_state()
 {
-	u32 state_id = u32(-1);
+	u32 state_id = static_cast<u32>(-1);
 		
 	// check if we can start execute
 	if (prev_substate == eStateVampire_ApproachEnemy) {
@@ -62,7 +62,7 @@ void CStateBloodsuckerVampireAbstract::reselect_state()
 		state_id = eStateVampire_Hide;
 
 	// else just 
-	if (state_id == u32(-1)) state_id = eStateVampire_ApproachEnemy;
+	if (state_id == static_cast<u32>(-1)) state_id = eStateVampire_ApproachEnemy;
 
 	select_state(state_id);	
 }
@@ -73,7 +73,7 @@ void CStateBloodsuckerVampireAbstract::check_force_state()
 	// check if we can start execute
 	if (prev_substate == eStateVampire_ApproachEnemy) {
 		if (get_state(eStateVampire_Execute)->check_start_conditions())
-			current_substate = u32(-1);
+			current_substate = static_cast<u32>(-1);
 	}
 }
 

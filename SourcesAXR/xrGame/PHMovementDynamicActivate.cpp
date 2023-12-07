@@ -16,7 +16,7 @@
 bool CPHMovementControl:: ActivateBoxDynamic(DWORD id,int num_it/*=8*/,int num_steps/*5*/,float resolve_depth/*=0.01f*/)
 {
 	bool  character_exist=CharacterExist();
-	if(character_exist&&trying_times[id]!=u32(-1))
+	if(character_exist&&trying_times[id]!=static_cast<u32>(-1))
 	{
 		
 		//Fvector dif;dif.sub(trying_poses[id],cast_fv(dBodyGetPosition(m_character->get_body())));
@@ -93,7 +93,7 @@ bool CPHMovementControl:: ActivateBoxDynamic(DWORD id,int num_it/*=8*/,int num_s
 	}
 	else
 	{
-		trying_times[id]=u32(-1);
+		trying_times[id]=static_cast<u32>(-1);
 	}
 	return ret;
 }

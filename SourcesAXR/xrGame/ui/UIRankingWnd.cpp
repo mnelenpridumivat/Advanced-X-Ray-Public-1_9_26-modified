@@ -79,7 +79,7 @@ void CUIRankingWnd::Init()
 	xml.Load( CONFIG_PATH, UI_PATH, PDA_RANKING_XML );
 
 	CUIXmlInit::InitWindow( xml, "main_wnd", 0, this );
-	m_delay				= (u32)xml.ReadAttribInt( "main_wnd", 0, "delay",	3000 );
+	m_delay				= static_cast<u32>(xml.ReadAttribInt("main_wnd", 0, "delay", 3000));
 
 	m_background				= UIHelper::CreateFrameWindow(xml, "background", this);
 	m_down_background			= UIHelper::CreateFrameWindow(xml, "down_background", this);
@@ -105,7 +105,7 @@ void CUIRankingWnd::Init()
 	XML_NODE* node = xml.NavigateToNode( "stat_info", 0 );
 	xml.SetLocalRoot( node );
 
-	m_stat_count = (u32)xml.GetNodesNum( node, "stat" );
+	m_stat_count = static_cast<u32>(xml.GetNodesNum(node, "stat"));
 	u32 value_color = CUIXmlInit::GetColor( xml, "value", 0, 0xFFffffff );
 
 	for ( u8 i = 0; i < m_stat_count; ++i )
@@ -263,10 +263,10 @@ void CUIRankingWnd::get_favorite_weapon()
 				m_favorite_weapon_icon->SetShader(InventoryUtilities::GetOutfitUpgradeIconsShader());
 
 			Frect				tex_rect;
-			tex_rect.x1			= float(pSettings->r_u32(str, "upgr_icon_x"));
-			tex_rect.y1			= float(pSettings->r_u32(str, "upgr_icon_y"));
-			tex_rect.x2			= float(pSettings->r_u32(str, "upgr_icon_width"));
-			tex_rect.y2			= float(pSettings->r_u32(str, "upgr_icon_height"));
+			tex_rect.x1			= static_cast<float>(pSettings->r_u32(str, "upgr_icon_x"));
+			tex_rect.y1			= static_cast<float>(pSettings->r_u32(str, "upgr_icon_y"));
+			tex_rect.x2			= static_cast<float>(pSettings->r_u32(str, "upgr_icon_width"));
+			tex_rect.y2			= static_cast<float>(pSettings->r_u32(str, "upgr_icon_height"));
 			tex_rect.rb.add		(tex_rect.lt);
 			m_favorite_weapon_icon->SetTextureRect(tex_rect);
 			m_favorite_weapon_icon->TextureOn();

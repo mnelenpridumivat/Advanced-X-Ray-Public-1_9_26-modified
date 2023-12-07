@@ -106,18 +106,18 @@ struct SVelocityParam {
 
 	void	Load (LPCSTR section, LPCSTR line) {
 		string32 buffer;
-		velocity.linear			= float(atof(_GetItem(pSettings->r_string(section,line),0,buffer)));
-		velocity.angular_real	= float(atof(_GetItem(pSettings->r_string(section,line),1,buffer)));
-		velocity.angular_path	= float(atof(_GetItem(pSettings->r_string(section,line),2,buffer)));
-		min_factor				= float(atof(_GetItem(pSettings->r_string(section,line),3,buffer)));
-		max_factor				= float(atof(_GetItem(pSettings->r_string(section,line),4,buffer)));
+		velocity.linear			= static_cast<float>(atof(_GetItem(pSettings->r_string(section, line), 0, buffer)));
+		velocity.angular_real	= static_cast<float>(atof(_GetItem(pSettings->r_string(section, line), 1, buffer)));
+		velocity.angular_path	= static_cast<float>(atof(_GetItem(pSettings->r_string(section, line), 2, buffer)));
+		min_factor				= static_cast<float>(atof(_GetItem(pSettings->r_string(section, line), 3, buffer)));
+		max_factor				= static_cast<float>(atof(_GetItem(pSettings->r_string(section, line), 4, buffer)));
 	}
 };
 
 
 // Activities
 enum EMotionAnim {
-	eAnimStandIdle			= u32(0),
+	eAnimStandIdle			= static_cast<u32>(0),
 	eAnimCapturePrepare,
 	eAnimStandTurnLeft,
 	eAnimStandTurnRight,
@@ -228,12 +228,12 @@ enum EMotionAnim {
 	eAnimFastStandTurnRight,
 
 	eAnimCount,
-	eAnimUndefined			= u32(-1)
+	eAnimUndefined			= static_cast<u32>(-1)
 };
 
 // Generic actions
 enum EAction {
-	ACT_STAND_IDLE	= u32(0),
+	ACT_STAND_IDLE	= static_cast<u32>(0),
 	ACT_SIT_IDLE,
 	ACT_LIE_IDLE,
 	ACT_WALK_FWD,
@@ -249,7 +249,7 @@ enum EAction {
 	ACT_LOOK_AROUND,
 	ACT_HOME_WALK_GROWL,
 	ACT_HOME_WALK_SMELLING,
-	ACT_NONE		= u32(-1)
+	ACT_NONE		= static_cast<u32>(-1)
 };
 
 enum EPState {
@@ -400,7 +400,7 @@ struct t_fx_index {
 };
 
 enum EHitSide {
-	eSideFront	= u32(0),
+	eSideFront	= static_cast<u32>(0),
 	eSideBack,
 	eSideLeft,
 	eSideRight

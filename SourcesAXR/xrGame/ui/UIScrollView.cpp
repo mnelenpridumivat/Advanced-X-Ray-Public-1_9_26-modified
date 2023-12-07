@@ -259,7 +259,7 @@ void CUIScrollView::OnScrollV			(CUIWindow*, void*)
 {
 	int s_pos					= m_VScrollBar->GetScrollPos();
 	Fvector2 w_pos				= m_pad->GetWndPos();
-	m_pad->SetWndPos			(Fvector2().set(w_pos.x,float(-s_pos)));
+	m_pad->SetWndPos			(Fvector2().set(w_pos.x,static_cast<float>(-s_pos)));
 	m_visible_rgn.set			(-1,-1);
 }
 

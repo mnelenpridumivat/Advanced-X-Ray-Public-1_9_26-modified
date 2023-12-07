@@ -131,7 +131,7 @@ void CMovementManager::set_game_dest_vertex		(const GameGraph::_GRAPH_ID &game_v
 
 GameGraph::_GRAPH_ID CMovementManager::game_dest_vertex_id() const
 {
-	return					(GameGraph::_GRAPH_ID(game_path().dest_vertex_id()));
+	return					static_cast<GameGraph::_GRAPH_ID>(game_path().dest_vertex_id());
 }
 
 void CMovementManager::set_level_dest_vertex	(u32 const& level_vertex_id)
@@ -274,7 +274,7 @@ bool CMovementManager::actual_all				() const
 void CMovementManager::teleport					(u32 game_vertex_id)
 {
 	NET_Packet				net_packet;
-	GameGraph::_GRAPH_ID	_game_vertex_id = (GameGraph::_GRAPH_ID)game_vertex_id;
+	GameGraph::_GRAPH_ID	_game_vertex_id = static_cast<GameGraph::_GRAPH_ID>(game_vertex_id);
 	u32						_level_vertex_id = ai().game_graph().vertex(_game_vertex_id)->level_vertex_id();
 	Fvector					position = ai().game_graph().vertex(_game_vertex_id)->level_point();
 	object().u_EventGen		(net_packet,GE_TELEPORT_OBJECT,object().ID());

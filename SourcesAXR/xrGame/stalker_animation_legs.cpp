@@ -36,7 +36,7 @@ const float direction_angles[]			= {
 
 void CStalkerAnimationManager::legs_play_callback			(CBlend *blend)
 {
-	CAI_Stalker					*object = (CAI_Stalker*)blend->CallbackParam;
+	CAI_Stalker					*object = static_cast<CAI_Stalker*>(blend->CallbackParam);
 	VERIFY						(object);
 
 	CStalkerAnimationPair		&pair = object->animation().legs();
@@ -101,7 +101,7 @@ void CStalkerAnimationManager::legs_assign_direction		(float switch_factor, cons
 	}
 
 	VERIFY						(m_direction_start <= Device.dwTimeGlobal);
-	if ((Device.dwTimeGlobal - m_direction_start) <= (u32)iFloor(switch_factor*direction_switch_interval))
+	if ((Device.dwTimeGlobal - m_direction_start) <= static_cast<u32>(iFloor(switch_factor * direction_switch_interval)))
 		return;
 
 	m_direction_start			= Device.dwTimeGlobal;

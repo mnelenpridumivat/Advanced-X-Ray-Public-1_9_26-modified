@@ -92,8 +92,8 @@ IC	void CSoundMemoryManager::update_sound_threshold			()
 		m_self_sound_factor*
 		m_sound_threshold*
 		exp(
-			float(Device.dwTimeGlobal - m_last_sound_time)/
-			float(m_sound_decrease_quant)*
+			static_cast<float>(Device.dwTimeGlobal - m_last_sound_time)/
+			static_cast<float>(m_sound_decrease_quant)*
 			log(m_decrease_factor)
 		),
 		m_min_sound_threshold
@@ -103,7 +103,7 @@ IC	void CSoundMemoryManager::update_sound_threshold			()
 
 IC	u32	 CSoundMemoryManager::priority	(const MemorySpace::CSoundObject &sound) const
 {
-	u32					priority = u32(-1);
+	u32					priority = static_cast<u32>(-1);
 	xr_map<ESoundTypes,u32>::const_iterator	I = m_priorities.begin();
 	xr_map<ESoundTypes,u32>::const_iterator	E = m_priorities.end();
 	for ( ; I != E; ++I)
@@ -272,7 +272,7 @@ void CSoundMemoryManager::add			(const CObject *object, int sound_type, const Fv
 	if (m_sounds->end() == J) {
 		CSoundObject			sound_object;
 
-		sound_object.fill		(game_object,self,ESoundTypes(sound_type),sound_power,!m_stalker ? squad_mask_type(-1) : m_stalker->agent_manager().member().mask(m_stalker));
+		sound_object.fill		(game_object,self,static_cast<ESoundTypes>(sound_type),sound_power,!m_stalker ? static_cast<squad_mask_type>(-1) : m_stalker->agent_manager().member().mask(m_stalker));
 		if (!game_object)
 			sound_object.m_object_params.m_position = position;
 #ifdef USE_FIRST_GAME_TIME
@@ -284,7 +284,7 @@ void CSoundMemoryManager::add			(const CObject *object, int sound_type, const Fv
 		add						(sound_object);
 	}
 	else {
-		(*J).fill				(game_object,self,ESoundTypes(sound_type),sound_power,(!m_stalker ? (*J).m_squad_mask.get() : ((*J).m_squad_mask.get() | m_stalker->agent_manager().member().mask(m_stalker))));
+		(*J).fill				(game_object,self,static_cast<ESoundTypes>(sound_type),sound_power,(!m_stalker ? (*J).m_squad_mask.get() : ((*J).m_squad_mask.get() | m_stalker->agent_manager().member().mask(m_stalker))));
 		if (!game_object)
 			(*J).m_object_params.m_position = position;
 	}
@@ -318,7 +318,7 @@ void CSoundMemoryManager::update()
 
 #ifdef USE_SELECTED_SOUND
 	xr_delete					(m_selected_sound);
-	u32							priority = u32(-1);
+	u32							priority = static_cast<u32>(-1);
 	xr_vector<CSoundObject>::const_iterator	I = m_sounds->begin();
 	xr_vector<CSoundObject>::const_iterator	E = m_sounds->end();
 	for ( ; I != E; ++I) {
@@ -389,12 +389,12 @@ void CSoundMemoryManager::save	(NET_Packet &packet) const
 	if (!m_object->g_Alive())
 		return;
 
-	packet.w_u8					((u8)objects().size());
+	packet.w_u8					(static_cast<u8>(objects().size()));
 
 	SOUNDS::const_iterator		I = objects().begin();
 	SOUNDS::const_iterator		E = objects().end();
 	for ( ; I != E; ++I) {
-		packet.w_u16			((*I).m_object ? (*I).m_object->ID() : ALife::_OBJECT_ID(-1));
+		packet.w_u16			((*I).m_object ? (*I).m_object->ID() : static_cast<ALife::_OBJECT_ID>(-1));
 		// object params
 		packet.w_u32			((*I).m_object_params.m_level_vertex_id);
 		packet.w_vec3			((*I).m_object_params.m_position);
@@ -440,7 +440,7 @@ void CSoundMemoryManager::load	(IReader &packet)
 		delayed_object.m_object_id	= packet.r_u16();
 
 		CSoundObject				&object = delayed_object.m_sound_object;
-		if (delayed_object.m_object_id != ALife::_OBJECT_ID(-1))
+		if (delayed_object.m_object_id != static_cast<ALife::_OBJECT_ID>(-1))
 			object.m_object			= smart_cast<CGameObject*>(Level().Objects.net_Find(delayed_object.m_object_id));
 		else
 			object.m_object			= 0;
@@ -476,10 +476,10 @@ void CSoundMemoryManager::load	(IReader &packet)
 		object.m_first_level_time	= packet.r_u32();
 		object.m_first_level_time	+= Device.dwTimeGlobal;
 #endif // USE_FIRST_LEVEL_TIME
-		object.m_sound_type			= (ESoundTypes)packet.r_u32();
+		object.m_sound_type			= static_cast<ESoundTypes>(packet.r_u32());
 		object.m_power				= packet.r_float();
 
-		if (object.m_object || (delayed_object.m_object_id == ALife::_OBJECT_ID(-1)) ) {
+		if (object.m_object || (delayed_object.m_object_id == static_cast<ALife::_OBJECT_ID>(-1)) ) {
 			add						(object,true);
 			continue;
 		}

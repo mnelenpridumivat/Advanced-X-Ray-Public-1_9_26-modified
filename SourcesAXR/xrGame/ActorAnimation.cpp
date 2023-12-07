@@ -303,7 +303,7 @@ void CActor::steer_Vehicle(float angle)
 
 void legs_play_callback		(CBlend *blend)
 {
-	CActor					*object = (CActor*)blend->CallbackParam;
+	CActor					*object = static_cast<CActor*>(blend->CallbackParam);
 	VERIFY					(object);
 	object->m_current_legs.invalidate();
 }

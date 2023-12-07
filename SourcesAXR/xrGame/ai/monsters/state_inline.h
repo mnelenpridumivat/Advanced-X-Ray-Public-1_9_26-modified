@@ -24,7 +24,7 @@ CStateAbstract::~CState()
 TEMPLATE_SPECIALIZATION
 void CStateAbstract::reinit()
 {
-	if (current_substate != u32(-1)) get_state_current()->critical_finalize();
+	if (current_substate != static_cast<u32>(-1)) get_state_current()->critical_finalize();
 
 	for (STATE_MAP_IT it = substates.begin(); it != substates.end(); it++) 
 		it->second->reinit();
@@ -38,8 +38,8 @@ void CStateAbstract::initialize()
 {
 	time_state_started	= Device.dwTimeGlobal;
 
-	current_substate	= u32(-1); // means need reselect state
-	prev_substate		= u32(-1);
+	current_substate	= static_cast<u32>(-1); // means need reselect state
+	prev_substate		= static_cast<u32>(-1);
 }
 
 TEMPLATE_SPECIALIZATION
@@ -50,12 +50,12 @@ void CStateAbstract::execute()
 	check_force_state();
 
 	// если состояние не выбрано, перевыбрать
-	if (current_substate == u32(-1)) {
+	if (current_substate == static_cast<u32>(-1)) {
 		reselect_state();
 		
 		#ifdef DEBUG
 		// Lain: added
-			if ( current_substate == u32(-1) )
+			if ( current_substate == static_cast<u32>(-1) )
 			{
 				debug::text_tree tree;
 				if ( CBaseMonster* p_monster = smart_cast<CBaseMonster*>(object) )
@@ -64,7 +64,7 @@ void CStateAbstract::execute()
 				}
 				
 				debug::log_text_tree(tree);
-				VERIFY(current_substate != u32(-1)); 
+				VERIFY(current_substate != static_cast<u32>(-1)); 
 			}
 		#endif
 	}
@@ -79,7 +79,7 @@ void CStateAbstract::execute()
 	// проверить на завершение текущего состояния
 	if (state->check_completion()) {
 		state->finalize();
-		current_substate = u32(-1);
+		current_substate = static_cast<u32>(-1);
 	} 
 }
 
@@ -92,15 +92,15 @@ void CStateAbstract::finalize()
 TEMPLATE_SPECIALIZATION
 void CStateAbstract::critical_finalize()
 {
-	if (current_substate != u32(-1)) get_state_current()->critical_finalize();
+	if (current_substate != static_cast<u32>(-1)) get_state_current()->critical_finalize();
 	reset();
 }
 
 TEMPLATE_SPECIALIZATION
 void CStateAbstract::reset() 
 {
-	current_substate	= u32(-1);
-	prev_substate		= u32(-1);
+	current_substate	= static_cast<u32>(-1);
+	prev_substate		= static_cast<u32>(-1);
 	time_state_started	= 0;
 }
 
@@ -111,7 +111,7 @@ void CStateAbstract::select_state(u32 new_state_id)
 	CSState *state;
 
 	// если предыдущее состояние активно, завершить его
-	if (current_substate != u32(-1)) {
+	if (current_substate != static_cast<u32>(-1)) {
 		state = get_state(current_substate);
 		state->critical_finalize();
 	}
@@ -170,7 +170,7 @@ void   CStateAbstract::add_debug_info (debug::text_tree& root_s)
 		for ( SubStates::const_iterator i=substates.begin(), e=substates.end();
 			  i!=e; ++i )
 		{
-			TextTree& current_state_s = root_s.add_line(EMonsterState((*i).first));
+			TextTree& current_state_s = root_s.add_line(static_cast<EMonsterState>((*i).first));
 			if ( current_substate == (*i).first )
 			{
 				if ( (*i).second )
@@ -191,7 +191,7 @@ void   CStateAbstract::add_debug_info (debug::text_tree& root_s)
 TEMPLATE_SPECIALIZATION
 CStateAbstract *CStateAbstract::get_state_current()
 {
-	if (substates.empty() || (current_substate == u32(-1))) return 0;
+	if (substates.empty() || (current_substate == static_cast<u32>(-1))) return 0;
 	
 	STATE_MAP_IT it = substates.find(current_substate);
 	VERIFY(it != substates.end());
@@ -201,10 +201,10 @@ CStateAbstract *CStateAbstract::get_state_current()
 TEMPLATE_SPECIALIZATION
 EMonsterState CStateAbstract::get_state_type()
 {
-	if (substates.empty() || (current_substate == u32(-1))) return eStateUnknown;
+	if (substates.empty() || (current_substate == static_cast<u32>(-1))) return eStateUnknown;
 	
 	EMonsterState state = get_state_current()->get_state_type();
-	return ( (state == eStateUnknown) ? EMonsterState(current_substate) : state);
+	return ( (state == eStateUnknown) ? static_cast<EMonsterState>(current_substate) : state);
 }
 
 TEMPLATE_SPECIALIZATION

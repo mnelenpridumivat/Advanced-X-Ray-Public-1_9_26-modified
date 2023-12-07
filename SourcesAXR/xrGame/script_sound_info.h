@@ -27,7 +27,7 @@ public:
 		position	= p_position;
 		power		= p_power;
 		time		= p_time;
-		dangerous	= int(p_danger);
+		dangerous	= static_cast<int>(p_danger);
 	}
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

@@ -235,7 +235,7 @@ struct attachable_hud_item
 
 	player_hud_motion_container		m_hand_motions;
 			
-			attachable_hud_item		(player_hud* pparent):m_parent(pparent),m_upd_firedeps_frame(u32(-1)),m_parent_hud_item(NULL){}
+			attachable_hud_item		(player_hud* pparent):m_parent(pparent),m_upd_firedeps_frame(static_cast<u32>(-1)),m_parent_hud_item(NULL){}
 			~attachable_hud_item	();
 	void load						(const shared_str& sect_name);
 	void update						(bool bForce);
@@ -280,7 +280,7 @@ public:
 	void			render_hud			();	
 	void			render_item_ui		();
 	bool			render_item_ui_query();
-	u32				anim_play			(u16 part, const MotionID& M, BOOL bMixIn, const CMotionDef*& md, float speed, u16 override_part = u16(-1));
+	u32				anim_play			(u16 part, const MotionID& M, BOOL bMixIn, const CMotionDef*& md, float speed, u16 override_part = static_cast<u16>(-1));
 	u32				script_anim_play	(u8 hand, LPCSTR itm_name, LPCSTR anm_name, bool bMixIn = true, float speed = 1.f);
 	const shared_str& section_name		() const {return m_sect_name;}
 

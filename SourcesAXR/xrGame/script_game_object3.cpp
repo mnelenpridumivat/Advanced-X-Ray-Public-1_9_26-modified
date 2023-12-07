@@ -261,7 +261,7 @@ float CScriptGameObject::GetCurrentOutfitProtection(int hit_type)
 	CCustomOutfit* o = smart_cast<CCustomOutfit*>(current_equipment);
 	if(!o)				return 0.0f;
 
-	return		o->GetDefHitTypeProtection(ALife::EHitType(hit_type));
+	return		o->GetDefHitTypeProtection(static_cast<ALife::EHitType>(hit_type));
 }
 
 CScriptGameObject *CScriptGameObject::GetFood() const
@@ -371,7 +371,7 @@ int	CScriptGameObject::animation_count		() const
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CGameObject : cannot access class member clear_animations!");
 		return			(-1);
 	}
-	return				((int)stalker->animation().script_animations().size());
+	return				static_cast<int>(stalker->animation().script_animations().size());
 }
 
 Flags32 CScriptGameObject::get_actor_relation_flags () const
@@ -432,7 +432,7 @@ u32 CScriptGameObject::get_dest_game_vertex_id()
 		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CAI_Stalker : cannot access class member get_dest_level_vertex_id!");
 	else
 		return (stalker->movement().game_dest_vertex_id());
-	return u32(-1);
+	return static_cast<u32>(-1);
 }
 
 u32 CScriptGameObject::get_dest_level_vertex_id()
@@ -443,7 +443,7 @@ u32 CScriptGameObject::get_dest_level_vertex_id()
 	else
 		return stalker->movement().level_dest_vertex_id();
 
-	return u32(-1);
+	return static_cast<u32>(-1);
 }
 
 void CScriptGameObject::set_dest_level_vertex_id(u32 level_vertex_id)
@@ -502,7 +502,7 @@ CHARACTER_RANK_VALUE CScriptGameObject::GetRank		()
 	CAI_Stalker					*stalker = smart_cast<CAI_Stalker*>(&object());
 	if (!stalker) {
 		ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"CAI_Stalker : cannot access class member GetRank!");
-		return					(CHARACTER_RANK_VALUE(0));
+		return					static_cast<CHARACTER_RANK_VALUE>(0);
 	}
 	else
 		return					(stalker->Rank());
@@ -1123,7 +1123,7 @@ void CScriptGameObject::sell_condition			(CScriptIniFile *ini_file, LPCSTR secti
 		return;
 	}
 
-	inventory_owner->trade_parameters().process	(CTradeParameters::action_sell(0),*ini_file,section);
+	inventory_owner->trade_parameters().process	(static_cast<CTradeParameters::action_sell>(0),*ini_file,section);
 }
 
 void CScriptGameObject::sell_condition			(float friend_factor, float enemy_factor)
@@ -1135,7 +1135,7 @@ void CScriptGameObject::sell_condition			(float friend_factor, float enemy_facto
 	}
 
 	inventory_owner->trade_parameters().default_factors	(
-		CTradeParameters::action_sell(0),
+		static_cast<CTradeParameters::action_sell>(0),
 		CTradeFactors(
 			friend_factor,
 			enemy_factor
@@ -1151,7 +1151,7 @@ void CScriptGameObject::buy_condition			(CScriptIniFile *ini_file, LPCSTR sectio
 		return;
 	}
 
-	inventory_owner->trade_parameters().process	(CTradeParameters::action_buy(0),*ini_file,section);
+	inventory_owner->trade_parameters().process	(static_cast<CTradeParameters::action_buy>(0),*ini_file,section);
 }
 
 void CScriptGameObject::buy_condition			(float friend_factor, float enemy_factor)
@@ -1163,7 +1163,7 @@ void CScriptGameObject::buy_condition			(float friend_factor, float enemy_factor
 	}
 
 	inventory_owner->trade_parameters().default_factors	(
-		CTradeParameters::action_buy(0),
+		static_cast<CTradeParameters::action_buy>(0),
 		CTradeFactors(
 			friend_factor,
 			enemy_factor
@@ -1180,7 +1180,7 @@ void CScriptGameObject::show_condition			(CScriptIniFile *ini_file, LPCSTR secti
 	}
 
 	inventory_owner->trade_parameters().process	(
-		CTradeParameters::action_show(0),
+		static_cast<CTradeParameters::action_show>(0),
 		*ini_file,
 		section
 	);
@@ -1213,13 +1213,13 @@ void CScriptGameObject::buy_item_condition_factor(float factor)
 
 void sell_condition								(CScriptIniFile *ini_file, LPCSTR section)
 {
-	default_trade_parameters().process	(CTradeParameters::action_sell(0),*ini_file,section);
+	default_trade_parameters().process	(static_cast<CTradeParameters::action_sell>(0),*ini_file,section);
 }
 
 void sell_condition								(float friend_factor, float enemy_factor)
 {
 	default_trade_parameters().default_factors	(
-		CTradeParameters::action_sell(0),
+		static_cast<CTradeParameters::action_sell>(0),
 		CTradeFactors(
 			friend_factor,
 			enemy_factor
@@ -1229,13 +1229,13 @@ void sell_condition								(float friend_factor, float enemy_factor)
 
 void buy_condition								(CScriptIniFile *ini_file, LPCSTR section)
 {
-	default_trade_parameters().process	(CTradeParameters::action_buy(0),*ini_file,section);
+	default_trade_parameters().process	(static_cast<CTradeParameters::action_buy>(0),*ini_file,section);
 }
 
 void buy_condition								(float friend_factor, float enemy_factor)
 {
 	default_trade_parameters().default_factors	(
-		CTradeParameters::action_buy(0),
+		static_cast<CTradeParameters::action_buy>(0),
 		CTradeFactors(
 			friend_factor,
 			enemy_factor
@@ -1245,7 +1245,7 @@ void buy_condition								(float friend_factor, float enemy_factor)
 
 void show_condition								(CScriptIniFile *ini_file, LPCSTR section)
 {
-	default_trade_parameters().process	(CTradeParameters::action_show(0),*ini_file,section);
+	default_trade_parameters().process	(static_cast<CTradeParameters::action_show>(0),*ini_file,section);
 }
 
 LPCSTR CScriptGameObject::sound_prefix			() const
@@ -1490,7 +1490,7 @@ u8 CScriptGameObject::GetRestrictionType()
 	if (restr)
 		return restr->m_space_restrictor_type;
 
-	return u8(-1);
+	return static_cast<u8>(-1);
 }
 
 void CScriptGameObject::SetRestrictionType(u8 type)
@@ -1500,7 +1500,7 @@ void CScriptGameObject::SetRestrictionType(u8 type)
 	{
 		restr->m_space_restrictor_type = type;
 		if (type != RestrictionSpace::eRestrictorTypeNone)
-			Level().space_restriction_manager().register_restrictor(restr, RestrictionSpace::ERestrictorTypes(type));
+			Level().space_restriction_manager().register_restrictor(restr, static_cast<RestrictionSpace::ERestrictorTypes>(type));
 	}
 }
 

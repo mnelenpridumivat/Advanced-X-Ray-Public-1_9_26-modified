@@ -40,16 +40,16 @@ SArtefactActivation::~SArtefactActivation()
 
 void SArtefactActivation::Load()
 {
-	for(int i=0; i<(int)eMax; ++i)
+	for(int i=0; i<static_cast<int>(eMax); ++i)
 		m_activation_states.push_back(SStateDef());
 
 	LPCSTR activation_seq = pSettings->r_string(*m_af->cNameSect(),"artefact_activation_seq");
 
 
-	m_activation_states[(int)eStarting].Load(activation_seq,	"starting");
-	m_activation_states[(int)eFlying].Load(activation_seq,		"flying");
-	m_activation_states[(int)eBeforeSpawn].Load(activation_seq,	"idle_before_spawning");
-	m_activation_states[(int)eSpawnZone].Load(activation_seq,	"spawning");
+	m_activation_states[static_cast<int>(eStarting)].Load(activation_seq,	"starting");
+	m_activation_states[static_cast<int>(eFlying)].Load(activation_seq,		"flying");
+	m_activation_states[static_cast<int>(eBeforeSpawn)].Load(activation_seq,	"idle_before_spawning");
+	m_activation_states[static_cast<int>(eSpawnZone)].Load(activation_seq,	"spawning");
 
 }
 
@@ -88,8 +88,8 @@ void SArtefactActivation::UpdateActivation()
 
 	VERIFY(!physics_world()->Processing());
 	m_cur_state_time				+=	Device.fTimeDelta;
-	if(m_cur_state_time				>=	m_activation_states[int(m_cur_activation_state)].m_time){
-		m_cur_activation_state		=	(EActivationStates)(int)(m_cur_activation_state+1);
+	if(m_cur_state_time				>=	m_activation_states[static_cast<int>(m_cur_activation_state)].m_time){
+		m_cur_activation_state		=	static_cast<EActivationStates>((int)(m_cur_activation_state + 1));
 		
 		if(m_cur_activation_state == eMax){
 			m_cur_activation_state = eNone;
@@ -129,7 +129,7 @@ void SArtefactActivation::PhDataUpdate(float step)
 void SArtefactActivation::ChangeEffects()
 {
 	VERIFY(!physics_world()->Processing());
-	SStateDef& state_def = m_activation_states[(int)m_cur_activation_state];
+	SStateDef& state_def = m_activation_states[static_cast<int>(m_cur_activation_state)];
 	
 	if(m_snd._feedback())
 		m_snd.stop();
@@ -175,14 +175,14 @@ void SArtefactActivation::SpawnAnomaly()
 	string128 tmp;
 	LPCSTR str			= pSettings->r_string("artefact_spawn_zones",*m_af->cNameSect());
 	VERIFY3(3==_GetItemCount(str),"Bad record format in artefact_spawn_zones",str);
-	float zone_radius	= (float)atof(_GetItem(str,1,tmp));
+	float zone_radius	= static_cast<float>(atof(_GetItem(str, 1, tmp)));
 	LPCSTR zone_sect	= _GetItem(str,0,tmp); //must be last call of _GetItem... (LPCSTR !!!)
 
 		Fvector pos;
 		m_af->Center(pos);
 		CSE_Abstract		*object = Level().spawn_item(	zone_sect,
 															pos,
-															(g_dedicated_server)?u32(-1):m_af->ai_location().level_vertex_id(),
+															(g_dedicated_server)?static_cast<u32>(-1):m_af->ai_location().level_vertex_id(),
 															0xffff,
 															true
 		);
@@ -229,15 +229,15 @@ void SArtefactActivation::SStateDef::Load(LPCSTR section, LPCSTR name)
 
 	string128 tmp;
 
-	m_time			= (float)atof(		_GetItem(str,0,tmp) );
+	m_time			= static_cast<float>(atof(_GetItem(str, 0, tmp)));
 	
 	m_snd			= clear_brackets(	_GetItem(str,1,tmp) )	;
 
-	m_light_color.r = (float)atof(		_GetItem(str,2,tmp) );
-	m_light_color.g = (float)atof(		_GetItem(str,3,tmp) );
-	m_light_color.b = (float)atof(		_GetItem(str,4,tmp) );
+	m_light_color.r = static_cast<float>(atof(_GetItem(str, 2, tmp)));
+	m_light_color.g = static_cast<float>(atof(_GetItem(str, 3, tmp)));
+	m_light_color.b = static_cast<float>(atof(_GetItem(str, 4, tmp)));
 
-	m_light_range	= (float)atof(		_GetItem(str,5,tmp) );
+	m_light_range	= static_cast<float>(atof(_GetItem(str, 5, tmp)));
 
 	m_particle		= clear_brackets(	_GetItem(str,6,tmp) );
 	m_animation		= clear_brackets(	_GetItem(str,7,tmp) );

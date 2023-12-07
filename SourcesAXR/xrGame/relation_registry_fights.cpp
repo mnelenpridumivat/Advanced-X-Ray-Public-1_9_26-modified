@@ -71,7 +71,7 @@ RELATION_REGISTRY::FIGHT_DATA* RELATION_REGISTRY::FindFight(u16 object_id, bool 
 bool fight_time_pred(RELATION_REGISTRY::FIGHT_DATA& fight_data)
 {
 	//(c) время которое про драку помнит реестр (иначе считать неактуальным)
-	static u32 fight_remember_time	= u32(1000.f * pSettings->r_float(ACTIONS_POINTS_SECT, "fight_remember_time"));	
+	static u32 fight_remember_time	= static_cast<u32>(1000.f * pSettings->r_float(ACTIONS_POINTS_SECT, "fight_remember_time"));	
 
 	u32 time_delta =  Device.dwTimeGlobal - fight_data.time;
 	if( time_delta > fight_remember_time)

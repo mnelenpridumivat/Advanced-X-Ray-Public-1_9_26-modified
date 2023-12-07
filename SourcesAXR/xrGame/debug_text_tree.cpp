@@ -53,7 +53,7 @@ namespace detail
 
 			if ( !s_params.cur_row )
 			{
-				UI().Font().pFontStat->OutSet((float)s_params.ori_x, (float)s_params.ori_y);
+				UI().Font().pFontStat->OutSet(static_cast<float>(s_params.ori_x), static_cast<float>(s_params.ori_y));
 			}			
 
 			if ( s_params.cur_row % 2 )

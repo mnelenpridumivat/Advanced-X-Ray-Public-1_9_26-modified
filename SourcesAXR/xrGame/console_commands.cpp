@@ -217,8 +217,8 @@ static void full_memory_stats	( )
 	u32		_game_lua		= game_lua_memory_usage();
 	u32		_render			= ::Render->memory_usage();
 #endif // SEVERAL_ALLOCATORS
-	int		_eco_strings	= (int)g_pStringContainer->stat_economy			();
-	int		_eco_smem		= (int)g_pSharedMemoryContainer->stat_economy	();
+	int		_eco_strings	= static_cast<int>(g_pStringContainer->stat_economy());
+	int		_eco_smem		= static_cast<int>(g_pSharedMemoryContainer->stat_economy());
 	u32		m_base=0,c_base=0,m_lmaps=0,c_lmaps=0;
 
 
@@ -306,7 +306,7 @@ public:
 		{
 			for (int i = 0; i < count; ++i)
 			{
-				CSE_Abstract* entity = tpGame->alife().spawn_item(Name, pos, Actor()->ai_location().level_vertex_id(), Actor()->ai_location().game_vertex_id(), ALife::_OBJECT_ID(-1));
+				CSE_Abstract* entity = tpGame->alife().spawn_item(Name, pos, Actor()->ai_location().level_vertex_id(), Actor()->ai_location().game_vertex_id(), static_cast<ALife::_OBJECT_ID>(-1));
 
 				if (CSE_ALifeAnomalousZone* anom = smart_cast<CSE_ALifeAnomalousZone*>(entity))
 				{
@@ -552,7 +552,7 @@ public:
 			int id1=-1, id2=-1;
 			sscanf(args ,"%d %d",&id1,&id2);
 			if ((-1 != id1) && (-1 != id2))
-				if (_max(id1,id2) > (int)ai().game_graph().header().vertex_count() - 1)
+				if (_max(id1,id2) > static_cast<int>(ai().game_graph().header().vertex_count()) - 1)
 					Msg("! there are only %d vertexes!",ai().game_graph().header().vertex_count());
 				else
 					if (_min(id1,id2) < 0)
@@ -1375,7 +1375,7 @@ public:
 		u32				value2;
 		
 		sscanf			(param2,"%u",&value2);
-		monster->set_show_debug_info (u8(value2));
+		monster->set_show_debug_info (static_cast<u8>(value2));
 	}
 };
 
@@ -1440,7 +1440,7 @@ public:
 			  return;
 		  }
 #endif
-		  physics_world()->SetGravity(float(atof(args)));
+		  physics_world()->SetGravity(static_cast<float>(atof(args)));
 	  }
 	  virtual void	Status	(TStatus& S)
 	{	
@@ -1461,7 +1461,7 @@ public:
 	  {};
 	  virtual void	Execute	(LPCSTR args)
 	  {
-		  float				step_count = (float)atof(args);
+		  float				step_count = static_cast<float>(atof(args));
 #ifndef		DEBUG
 		  clamp				(step_count,50.f,200.f);
 #endif
@@ -1664,7 +1664,7 @@ public:
 					CCC_TimeFactor	(LPCSTR N) : IConsole_Command(N) {}
 	virtual void	Execute			(LPCSTR args)
 	{
-		float				time_factor = (float)atof(args);
+		float				time_factor = static_cast<float>(atof(args));
 		clamp				(time_factor,EPS,1000.f);
 		Device.time_factor	(time_factor);
 		psSpeedOfSound = time_factor;
@@ -2157,7 +2157,7 @@ public:
 	CCC_MaskCheat(LPCSTR N, Flags32* V, u32 M) : CCC_Mask(N, V, M){}
 
 	virtual void	Execute(LPCSTR args) {
-#ifndef DEBUG
+#ifndef ALLOW_CHEATS
 		if (g_pGamePersistent && (mask == AF_GODMODE || mask == AF_UNLIMITEDAMMO)) {
 			GAME_NEWS_DATA				news_data;
 			news_data.m_type = (GAME_NEWS_DATA::eNewsType)0;

@@ -277,7 +277,7 @@ void CSE_ALifeOnlineOfflineGroup::notify_on_member_death(MEMBER *member)
 
 void CSE_ALifeOnlineOfflineGroup::on_before_register	()
 {
-	m_tGraphID					= GameGraph::_GRAPH_ID(-1);
+	m_tGraphID					= static_cast<GameGraph::_GRAPH_ID>(-1);
 	m_flags.set					(flUsedAI_Locations,FALSE);
 }
 
@@ -286,7 +286,7 @@ void CSE_ALifeOnlineOfflineGroup::on_after_game_load	()
 	if (m_members.empty())
 		return;
 
-	ALife::_OBJECT_ID			*temp = (ALife::_OBJECT_ID*)_alloca(m_members.size()*sizeof(ALife::_OBJECT_ID));
+	ALife::_OBJECT_ID			*temp = static_cast<ALife::_OBJECT_ID*>(_alloca(m_members.size() * sizeof(ALife::_OBJECT_ID)));
 	ALife::_OBJECT_ID			*i = temp, *e = temp + m_members.size();
 
 	{

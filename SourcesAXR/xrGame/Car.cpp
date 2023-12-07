@@ -300,7 +300,7 @@ void CCar::SaveNetState(NET_Packet& P)
 		xr_map<u16,SDoor>::iterator i,e;
 		i=m_doors.begin();
 		e=m_doors.end();
-		P.w_u16(u16(m_doors.size()));
+		P.w_u16(static_cast<u16>(m_doors.size()));
 		for(;i!=e;++i)
 			i->second.SaveNetState(P);
 	}
@@ -309,7 +309,7 @@ void CCar::SaveNetState(NET_Packet& P)
 		xr_map<u16,SWheel>::iterator i,e;
 		i=m_wheels_map.begin();
 		e=m_wheels_map.end();
-		P.w_u16(u16(m_wheels_map.size()));
+		P.w_u16(static_cast<u16>(m_wheels_map.size()));
 		for(;i!=e;++i)
 			i->second.SaveNetState(P);
 	}
@@ -666,7 +666,7 @@ bool CCar::attach_Actor(CGameObject* actor)
 	else if (ini->line_exist("car_definition", "driver_place")) 
 	{
 		id=K->LL_BoneID(ini->r_string("car_definition","driver_place"));
-		CBoneInstance& instance = K->LL_GetBoneInstance(u16(id));
+		CBoneInstance& instance = K->LL_GetBoneInstance(static_cast<u16>(id));
 		driver_xform.set(instance.mTransform);
 	}
 	else 
@@ -674,7 +674,7 @@ bool CCar::attach_Actor(CGameObject* actor)
 
 		Owner()->setVisible(0);
 		id=K->LL_GetBoneRoot();
-		CBoneInstance& instance = K->LL_GetBoneInstance(u16(id));
+		CBoneInstance& instance = K->LL_GetBoneInstance(static_cast<u16>(id));
 		driver_xform.set(instance.mTransform);
 	}
 	m_sits_transforms.set(driver_xform);
@@ -1003,12 +1003,12 @@ void CCar::Init()
 			xr_map   <u16,SWheel>::iterator i=m_wheels_map.find(index);
 			
 			if(i!=m_wheels_map.end())
-					i->second.CDamagableHealthItem::Init(float(atof(*item.second)),2);
+					i->second.CDamagableHealthItem::Init(static_cast<float>(atof(*item.second)),2);
 			else 
 			{
 				xr_map   <u16,SDoor>::iterator i=m_doors.find(index);
 				R_ASSERT3(i!=m_doors.end(),"only wheel and doors bones allowed for damage defs",*item.first);
-				i->second.CDamagableHealthItem::Init(float(atof(*item.second)),1);
+				i->second.CDamagableHealthItem::Init(static_cast<float>(atof(*item.second)),1);
 			}
 
 		}
@@ -1531,7 +1531,7 @@ bool CCar::Use(const Fvector& pos,const Fvector& dir,const Fvector& foot_pos)
 		for (int k=0; k<y; ++k)
 		{
 			collide::rq_result* I = R.r_begin()+k;
-			if(is_Door((u16)I->element,i)) 
+			if(is_Door(static_cast<u16>(I->element),i)) 
 			{
 				bool front=i->second.IsFront(pos,dir);
 				if((Owner()&&!front)||(!Owner()&&front))i->second.Use();
@@ -1806,7 +1806,7 @@ void CCar::PhDataUpdate(float step)
 		if(brp)
 			HandBreak();
 //////////////////////////////////////////////////////////
-	for (int k=0; k<(int)m_doors_update.size(); ++k){
+	for (int k=0; k<static_cast<int>(m_doors_update.size()); ++k){
 		SDoor* D = m_doors_update[k];
 		if (!D->update)
 		{
@@ -2042,15 +2042,15 @@ void CCar::ASCUpdate()
 {
 	for(u16 i=0;i<cAsCallsnum;++i)
 	{
-		EAsyncCalls c=EAsyncCalls(1<<i);
-		if(async_calls.test(u16(c)))ASCUpdate(c);
+		EAsyncCalls c=static_cast<EAsyncCalls>(1 << i);
+		if(async_calls.test(static_cast<u16>(c)))ASCUpdate(c);
 	}
 
 }
 
 void CCar::ASCUpdate(EAsyncCalls c)
 {
-	async_calls.set(u16(c),FALSE);
+	async_calls.set(static_cast<u16>(c),FALSE);
 	switch(c) {
 	case ascSndTransmission:m_car_sound->TransmissionSwitch();break;
 	case ascSndStall:m_car_sound->Stop();break;
@@ -2061,7 +2061,7 @@ void CCar::ASCUpdate(EAsyncCalls c)
 
 void CCar::AscCall(EAsyncCalls c)
 {
-	async_calls.set(u16(c),TRUE);
+	async_calls.set(static_cast<u16>(c),TRUE);
 }
 
 bool CCar::CanRemoveObject()
@@ -2071,12 +2071,12 @@ bool CCar::CanRemoveObject()
 
 void		CCar::SetExplodeTime				(u32 et)	
 {
-	CDelayedActionFuse::Initialize(float(et)/1000.f,CDamagableItem::DamageLevelToHealth(2));
+	CDelayedActionFuse::Initialize(static_cast<float>(et)/1000.f,CDamagableItem::DamageLevelToHealth(2));
 }
 u32			CCar::ExplodeTime					()			
 {
 	if(CDelayedActionFuse::isInitialized())
-				return u32(CDelayedActionFuse::Time())*1000;
+				return static_cast<u32>(CDelayedActionFuse::Time())*1000;
 	else return 0;
 }
 

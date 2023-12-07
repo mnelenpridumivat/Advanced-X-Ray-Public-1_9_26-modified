@@ -10,13 +10,13 @@
 
 namespace ScriptStorage {
 	enum ELuaMessageType {
-		eLuaMessageTypeInfo = u32(0),
+		eLuaMessageTypeInfo = static_cast<u32>(0),
 		eLuaMessageTypeError,
 		eLuaMessageTypeMessage,
 		eLuaMessageTypeHookCall,
 		eLuaMessageTypeHookReturn,
 		eLuaMessageTypeHookLine,
 		eLuaMessageTypeHookCount,
-		eLuaMessageTypeHookTailReturn = u32(-1),
+		eLuaMessageTypeHookTailReturn = static_cast<u32>(-1),
 	};
 }

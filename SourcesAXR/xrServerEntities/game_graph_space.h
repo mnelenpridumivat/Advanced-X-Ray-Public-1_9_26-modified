@@ -23,7 +23,7 @@ namespace GameGraph {
 
 	enum {
 		LOCATION_TYPE_COUNT = 4,
-		LOCATION_COUNT		= (u32(1) << (8*sizeof(_LOCATION_ID))),
+		LOCATION_COUNT		= (static_cast<u32>(1) << (8*sizeof(_LOCATION_ID))),
 	};
 
 #ifdef AI_COMPILER

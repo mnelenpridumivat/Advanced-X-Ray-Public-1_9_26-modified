@@ -62,7 +62,7 @@ u32	CPatrolPathParams::point			(LPCSTR name) const
 {
 	if (m_path->point(name))
 		return			(m_path->point(name)->vertex_id());
-	return				(u32(-1));
+	return				static_cast<u32>(-1);
 }
 
 u32	CPatrolPathParams::point			(const Fvector &point) const
@@ -73,7 +73,7 @@ u32	CPatrolPathParams::point			(const Fvector &point) const
 bool CPatrolPathParams::flag			(u32 index, u8 flag_index) const
 {
 	VERIFY				(m_path->vertex(index));
-	return				(!!(m_path->vertex(index)->data().flags() & (u32(1) << flag_index)));
+	return				(!!(m_path->vertex(index)->data().flags() & (static_cast<u32>(1) << flag_index)));
 }
 
 Flags32 CPatrolPathParams::flags		(u32 index) const

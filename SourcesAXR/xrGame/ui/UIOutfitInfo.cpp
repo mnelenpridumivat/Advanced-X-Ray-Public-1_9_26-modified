@@ -240,7 +240,7 @@ void CUIOutfitInfo::UpdateInfo( CCustomOutfit* cur_outfit, CCustomOutfit* slot_o
 			continue;
 		}
 		
-		ALife::EHitType hit_type = (ALife::EHitType)i;
+		ALife::EHitType hit_type = static_cast<ALife::EHitType>(i);
 		float max_power = actor->conditions().GetZoneMaxPower( hit_type );
 
 		float cur = cur_outfit->GetDefHitTypeProtection( hit_type );
@@ -319,7 +319,7 @@ void CUIOutfitInfo::UpdateInfo( CHelmet* cur_helmet, CHelmet* slot_helmet )
 			continue;
 		}
 		
-		ALife::EHitType hit_type = (ALife::EHitType)i;
+		ALife::EHitType hit_type = static_cast<ALife::EHitType>(i);
 		float max_power = actor->conditions().GetZoneMaxPower( hit_type );
 
 		float cur = cur_helmet->GetDefHitTypeProtection( hit_type );

@@ -115,7 +115,7 @@ bool CUIActorMenu::SetInfoCurUpgrade( Upgrade_type* upgrade_type, CInventoryItem
 
 PIItem CUIActorMenu::get_upgrade_item()
 {
-	return	(m_upgrade_selected)? (PIItem)m_upgrade_selected->m_pData : NULL;
+	return	(m_upgrade_selected)? static_cast<PIItem>(m_upgrade_selected->m_pData) : NULL;
 }
 
 void CUIActorMenu::SeparateUpgradeItem()

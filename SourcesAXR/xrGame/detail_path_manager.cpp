@@ -19,7 +19,7 @@
 CDetailPathManager::CDetailPathManager	(CRestrictedObject *object)
 {
 	m_restricted_object		= object;
-	m_dest_vertex_id		= u32(-1);
+	m_dest_vertex_id		= static_cast<u32>(-1);
 }
 
 CDetailPathManager::~CDetailPathManager	()
@@ -32,10 +32,10 @@ void CDetailPathManager::reinit			()
 	m_failed				= false;
 	m_start_position		= Fvector().set(0,0,0);
 	m_dest_position			= Fvector().set(0,0,0);
-	m_current_travel_point	= u32(-1);
+	m_current_travel_point	= static_cast<u32>(-1);
 	m_path_type				= eDetailPathTypeSmooth;
 	m_path.clear			();
-	m_desirable_mask		= u32(-1);
+	m_desirable_mask		= static_cast<u32>(-1);
 	m_velocity_mask			= 0;
 	m_try_min_time			= false;
 	m_use_dest_orientation	= false;

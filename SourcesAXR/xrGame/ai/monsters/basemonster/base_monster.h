@@ -305,7 +305,7 @@ public:
 
 	// -----------------------------------------------------------------------------
 	enum EMonsterType {
-		eMonsterTypeUniversal	= u32(0),
+		eMonsterTypeUniversal	= static_cast<u32>(0),
 		eMonsterTypeIndoor,
 		eMonsterTypeOutdoor,
 	} m_monster_type;
@@ -464,7 +464,7 @@ protected:
 	// Critical Wounded
 	//////////////////////////////////////////////////////////////////////////
 	enum {
-		critical_wound_type_head	= u32(0),
+		critical_wound_type_head	= static_cast<u32>(0),
 		critical_wound_type_torso,
 		critical_wound_type_legs
 	};

@@ -41,7 +41,7 @@ void   ChimeraAttackState<Object>::initialize ()
 {
 	inherited::initialize						();
 	object->MeleeChecker.init_attack			();
-	m_target_vertex							=	(u32)(-1);
+	m_target_vertex							=	static_cast<u32>(-1);
 	m_allow_jump							=	false;
 	m_last_jump_time						=	current_time();
 	m_attack_jump							=	false;
@@ -108,7 +108,7 @@ bool   ChimeraAttackState<Object>::check_if_jump_possible (Fvector const& target
 	if ( !ai().level_graph().valid_vertex_position(target) )
 		return									false;
 
-	if ( object->com_man().get_jump_control()->jump_intersect_geometry(target, (CObject*)object->EnemyMan.get_enemy()) )
+	if ( object->com_man().get_jump_control()->jump_intersect_geometry(target, (CObject*)(object->EnemyMan.get_enemy())) )
 		return									false;
 
 	return										true;
@@ -128,7 +128,7 @@ bool   ChimeraAttackState<Object>::jump (Fvector const& target, bool attack_jump
 	m_allow_jump							=	true;
 	bool const jumped						=	object->com_man().jump_if_possible
 												(target, 
-												 (CEntityAlive * )object->EnemyMan.get_enemy(), 
+												 const_cast<CEntityAlive*>(object->EnemyMan.get_enemy()), 
 												 attack_jump,	// use_direction_to_target
 												 true,			// use velocity bounce
 												 true);
@@ -262,7 +262,7 @@ bool   ChimeraAttackState<Object>::select_target_for_jump (enum_action const	act
 
 	VERIFY										(self2enemy_mag < m_min_run_distance);
 	VERIFY										(get_attack_radius() >= 4);
-	float	const	attack_radius			=	3 + float(rand() % (u32)(get_attack_radius() - 3) );
+	float	const	attack_radius			=	3 + static_cast<float>(rand() % (u32)(get_attack_radius() - 3));
 
 	Fvector	const	enemy_dir				=	normalize(enemy->Direction());
 	Fvector	const	behind_point			=	enemy_pos - (enemy_dir * attack_radius);
@@ -402,7 +402,7 @@ void   ChimeraAttackState<Object>::execute ()
 			{
 				m_state						=	state_prepare_jump;
 				float		length			=	object->anim().get_animation_length(eAnimUpperAttack, 0);
-				m_state_end_tick			=	current_time() + u32(length * 1000);
+				m_state_end_tick			=	current_time() + static_cast<u32>(length * 1000);
 			}
 			else
 			{

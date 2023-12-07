@@ -57,20 +57,20 @@ void CAI_Crow::SSound::Load	(LPCSTR prefix)
 
 void CAI_Crow::SSound::SetPosition	(const Fvector& pos)
 {
-	for (int i=0; i<(int)m_Sounds.size(); ++i)
+	for (int i=0; i<static_cast<int>(m_Sounds.size()); ++i)
 		if (m_Sounds[i]._feedback())
 			m_Sounds[i].set_position(pos);
 }
 
 void CAI_Crow::SSound::Unload		()
 {
-	for (int i=0; i<(int)m_Sounds.size(); ++i)
+	for (int i=0; i<static_cast<int>(m_Sounds.size()); ++i)
 		::Sound->destroy	(m_Sounds[i]);
 }
 
 void cb_OnHitEndPlaying			(CBlend* B)
 {
-	((CAI_Crow*)B->CallbackParam)->OnHitEndPlaying(B);
+	static_cast<CAI_Crow*>(B->CallbackParam)->OnHitEndPlaying(B);
 }
 
 void CAI_Crow::OnHitEndPlaying	(CBlend* /**B/**/)
@@ -320,7 +320,7 @@ void CAI_Crow::renderable_Render	()
 }
 void CAI_Crow::shedule_Update		(u32 DT)
 {
-	float fDT				= float(DT)/1000.F;
+	float fDT				= static_cast<float>(DT)/1000.F;
 	spatial.type			&=~STYPE_VISIBLEFORAI;
 
 	inherited::shedule_Update(DT);
@@ -389,9 +389,9 @@ void CAI_Crow::net_Export	(NET_Packet& P)					// export to server
 	P.w_float 			(pitch);
 	P.w_float 			(0);
 
-	P.w_u8				(u8(g_Team()));
-	P.w_u8				(u8(g_Squad()));
-	P.w_u8				(u8(g_Group()));
+	P.w_u8				(static_cast<u8>(g_Team()));
+	P.w_u8				(static_cast<u8>(g_Squad()));
+	P.w_u8				(static_cast<u8>(g_Group()));
 }
 //---------------------------------------------------------------------
 void CAI_Crow::net_Import	(NET_Packet& P)
@@ -442,7 +442,7 @@ void CAI_Crow::HitImpulse	(float	/**amount/**/,		Fvector& /**vWorldDir/**/, Fvec
 //---------------------------------------------------------------------
 void CAI_Crow::CreateSkeleton()
 {
-	m_pPhysicsShell=P_build_Shell(this,false,(BONE_P_MAP*)0);//P_build_SimpleShell(this,0.3f,false);
+	m_pPhysicsShell=P_build_Shell(this,false,static_cast<BONE_P_MAP*>(0));//P_build_SimpleShell(this,0.3f,false);
 	m_pPhysicsShell->SetMaterial(smart_cast<IKinematics*>(Visual())->LL_GetData(smart_cast<IKinematics*>(Visual())->LL_GetBoneRoot()).game_mtl_idx);
 }
 

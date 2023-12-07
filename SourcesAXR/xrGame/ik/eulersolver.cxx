@@ -325,9 +325,9 @@ EulerPsiSolver::EulerPsiSolver(int etype,
     EulerTableEntry *e = euler_entry(euler_type);
 
     jt_type = e->simple_jt_type;
-    index[0] =(short) e->simple_jt;
-    index[1] =(short)  e->complex_jt1;
-    index[2] = (short) e->complex_jt2;
+    index[0] =static_cast<short>(e->simple_jt);
+    index[1] =static_cast<short>(e->complex_jt1);
+    index[2] = static_cast<short>(e->complex_jt2);
 
     float a0, b0, c0, a1, b1, c1, a2, b2, c2;
 
@@ -345,7 +345,7 @@ EulerPsiSolver::EulerPsiSolver(int etype,
     j2.init(e->simple_jt_type, a1, b1, c1, a2, b2, c2, a0, b0, c0, 
 	    low[e->complex_jt2], high[e->complex_jt2]);
 
-    num_singular = (short) j1.Singularities(singular);
+    num_singular = static_cast<short>(j1.Singularities(singular));
 }
 
 

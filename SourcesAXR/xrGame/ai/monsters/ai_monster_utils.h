@@ -80,11 +80,11 @@ IC void read_delay(LPCSTR section, LPCSTR name, u32 &delay_min, u32 &delay_max)
 	string128 tempst;	
 
 	if (_GetItemCount(delay) == 2) {
-		delay_min = u32(atoi(_GetItem(delay,0,tempst)));
-		delay_max = u32(atoi(_GetItem(delay,1,tempst)));
+		delay_min = static_cast<u32>(atoi(_GetItem(delay, 0, tempst)));
+		delay_max = static_cast<u32>(atoi(_GetItem(delay, 1, tempst)));
 	} else {
 		delay_min	= 0;
-		delay_max	= u32(atoi(delay));
+		delay_max	= static_cast<u32>(atoi(delay));
 	}
 }
 
@@ -95,7 +95,7 @@ IC void read_distance(LPCSTR section, LPCSTR name, float &dist_min, float &dist_
 
 	VERIFY			(_GetItemCount(dist) == 2);
 	
-	dist_min		= float(atof(_GetItem(dist,0,tempst)));
-	dist_max		= float(atof(_GetItem(dist,1,tempst)));
+	dist_min		= static_cast<float>(atof(_GetItem(dist, 0, tempst)));
+	dist_max		= static_cast<float>(atof(_GetItem(dist, 1, tempst)));
 }
 

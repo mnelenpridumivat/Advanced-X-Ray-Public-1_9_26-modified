@@ -57,8 +57,8 @@ void action::load_animations	(luabind::object const &table)
 		luabind::object			tmp = *I;
 		Fvector	const			&pos = parse_fvector(tmp, "position");
 		shared_str				anim_id = parse_string(tmp, "animation");
-		MonsterSpace::EBodyState body_state = (MonsterSpace::EBodyState)parse_int(tmp, "body_state");
-		MonsterSpace::EMovementType movement_type = (MonsterSpace::EMovementType)parse_int(tmp, "movement_type");
+		MonsterSpace::EBodyState body_state = static_cast<MonsterSpace::EBodyState>(parse_int(tmp, "body_state"));
+		MonsterSpace::EMovementType movement_type = static_cast<MonsterSpace::EMovementType>(parse_int(tmp, "movement_type"));
 		animation_action		*animation = xr_new<animation_action>(pos, anim_id, body_state, movement_type);
 		m_animations.push_back	(animation);
 	}

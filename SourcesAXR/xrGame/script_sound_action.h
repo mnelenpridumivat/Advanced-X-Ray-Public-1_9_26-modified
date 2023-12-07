@@ -18,9 +18,9 @@
 class CScriptSoundAction : public CScriptAbstractAction {
 public:
 	enum EGoalType {
-		eGoalTypeSoundAttached = u32(0),
+		eGoalTypeSoundAttached = static_cast<u32>(0),
 		eGoalTypeSoundPosition,
-		eGoalTypeDummy = u32(-1),
+		eGoalTypeDummy = static_cast<u32>(-1),
 	};
 
 public:

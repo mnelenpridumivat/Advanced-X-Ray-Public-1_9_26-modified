@@ -45,7 +45,7 @@ void CStalkerGetDistancePlanner::add_evaluators			()
 	add_evaluator			(
 		eWorldPropertyInCover,
 		xr_new<CStalkerPropertyEvaluatorMember>(
-			(CPropertyStorage*)0,//&CScriptActionPlanner::m_storage,
+			static_cast<CPropertyStorage*>(0),//&CScriptActionPlanner::m_storage,
 			eWorldPropertyInCover,
 			true,
 			true,

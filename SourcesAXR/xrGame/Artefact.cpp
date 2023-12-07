@@ -175,7 +175,7 @@ BOOL CArtefact::net_Spawn(CSE_Abstract* DC)
 	SwitchAfParticles				(true);
 
 	StartLights();
-	m_CarringBoneID					= u16(-1);
+	m_CarringBoneID					= static_cast<u16>(-1);
 	IKinematicsAnimated	*K			= smart_cast<IKinematicsAnimated*>(Visual());
 	if(K)
 		K->PlayCycle("idle");
@@ -215,7 +215,7 @@ void CArtefact::OnH_A_Chield()
 		if (K)
 			m_CarringBoneID			= K->LL_BoneID("bip01_head");
 		else
-			m_CarringBoneID = u16(-1);
+			m_CarringBoneID = static_cast<u16>(-1);
 	}
 	if(m_detectorObj)
 	{
@@ -378,8 +378,8 @@ void CArtefact::UpdateDegradation(void)
 
 				for (size_t i = 0; i < ALife::infl_max_count; ++i)
 				{
-					if (!fis_zero(artefact->m_HitTypeProtection[(ALife::EInfluenceType)i]) && !fis_zero(m_ConstHitTypeProtection[(ALife::EInfluenceType)i]))
-						artefact->m_HitTypeProtection[(ALife::EInfluenceType)i] = (m_ConstHitTypeProtection[(ALife::EInfluenceType)i] / 100) * percent;
+					if (!fis_zero(artefact->m_HitTypeProtection[static_cast<ALife::EInfluenceType>(i)]) && !fis_zero(m_ConstHitTypeProtection[static_cast<ALife::EInfluenceType>(i)]))
+						artefact->m_HitTypeProtection[static_cast<ALife::EInfluenceType>(i)] = (m_ConstHitTypeProtection[static_cast<ALife::EInfluenceType>(i)] / 100) * percent;
 				}
 
 				//Lights
@@ -583,8 +583,8 @@ void CArtefact::UpdateXForm()
 		boneL = boneR2;
 
 		V->CalculateBones	();
-		Fmatrix& mL			= V->LL_GetTransform(u16(boneL));
-		Fmatrix& mR			= V->LL_GetTransform(u16(boneR));
+		Fmatrix& mL			= V->LL_GetTransform(static_cast<u16>(boneL));
+		Fmatrix& mR			= V->LL_GetTransform(static_cast<u16>(boneR));
 
 		// Calculate
 		Fmatrix				mRes;
@@ -780,7 +780,7 @@ void SArtefactDetectorsSupport::UpdateOnFrame()
 			m_currPatrolPath->begin(m_currPatrolVertex,b,e);
 			if(b!=e)
 			{
-				std::advance(b, ::Random.randI(s32(e-b)));
+				std::advance(b, ::Random.randI(static_cast<s32>(e - b)));
 				m_currPatrolVertex	= m_currPatrolPath->vertex((*b).vertex_id());
 				m_destPoint			= m_currPatrolVertex->data().position();
 			}	

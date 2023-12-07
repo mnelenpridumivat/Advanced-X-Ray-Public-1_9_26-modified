@@ -37,7 +37,7 @@ void CStateMonsterTestStateAbstract::setup_substates()
 			data.vertex		= object->control().path_builder().restrictions().accessible_nearest(dest_pos, data.point);
 		} else {
 			data.point		= dest_pos;
-			data.vertex		= u32(-1);
+			data.vertex		= static_cast<u32>(-1);
 		}
 
 		data.action.action		= ACT_RUN;
@@ -79,13 +79,13 @@ void CStateMonsterTestCoverAbstract::check_force_state()
 {
 	if (m_last_node	!= object->m_target_node) {
 		m_last_node			= object->m_target_node;
-		current_substate	= u32(-1);
+		current_substate	= static_cast<u32>(-1);
 		return;
 	}
 	
 	if (current_substate == eStateAttack_CampInCover)
 		if (object->ai_location().level_vertex_id() != m_last_node)
-			current_substate = u32(-1);
+			current_substate = static_cast<u32>(-1);
 }
 TEMPLATE_SPECIALIZATION
 void CStateMonsterTestCoverAbstract::reselect_state()

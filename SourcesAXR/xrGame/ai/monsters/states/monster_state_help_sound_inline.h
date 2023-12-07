@@ -29,14 +29,14 @@ bool CStateMonsterHearHelpSoundAbstract::check_start_conditions()
 TEMPLATE_SPECIALIZATION
 bool CStateMonsterHearHelpSoundAbstract::check_completion()
 {
-	if (current_substate == u32(-1)) return true;
+	if (current_substate == static_cast<u32>(-1)) return true;
 	return false;
 }
 
 TEMPLATE_SPECIALIZATION
 void CStateMonsterHearHelpSoundAbstract::reselect_state()
 {
-	if (prev_substate == u32(-1))
+	if (prev_substate == static_cast<u32>(-1))
 		select_state(eStateHearHelpSound_MoveToDest);
 	else if (prev_substate == eStateHearHelpSound_MoveToDest) 
 		select_state(eStateHearHelpSound_LookAround);

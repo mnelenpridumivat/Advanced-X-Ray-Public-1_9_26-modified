@@ -163,7 +163,7 @@ void moving_objects::fill_nearest_moving		(moving_object *object)
 	);
 
 	u32							size = m_nearest_moving.size();
-	moving_object				**temp = (moving_object**)_alloca(size*sizeof(moving_object*));
+	moving_object				**temp = static_cast<moving_object**>(_alloca(size * sizeof(moving_object*)));
 	std::copy					(m_nearest_moving.begin(),m_nearest_moving.end(),temp);
 	std::sort					(temp, temp + size);
 	m_nearest_moving.erase		(
@@ -307,7 +307,7 @@ bool moving_objects::fill_collisions			(moving_object *object, const Fvector &ob
 
 	{
 		u32							collision_count = m_collisions.size();
-		COLLISION_TIME				*collisions = (COLLISION_TIME*)_alloca(collision_count*sizeof(COLLISION_TIME));
+		COLLISION_TIME				*collisions = static_cast<COLLISION_TIME*>(_alloca(collision_count * sizeof(COLLISION_TIME)));
 		std::copy					(m_collisions.begin(), m_collisions.end(), collisions);
 		COLLISION_TIME				*I = collisions;
 		COLLISION_TIME				*E = collisions + collision_count;
@@ -459,7 +459,7 @@ void moving_objects::resolve_collisions			()
 	m_previous_collisions		= m_collisions;
 
 	u32							collidee_count = m_collisions.size()*2 + m_visited_emitters.size();
-	moving_object				**collidees = (moving_object **)_alloca(collidee_count*sizeof(moving_object*));
+	moving_object				**collidees = static_cast<moving_object**>(_alloca(collidee_count * sizeof(moving_object*)));
 	{
 		moving_object			**J = collidees;
 		{
@@ -480,11 +480,11 @@ void moving_objects::resolve_collisions			()
 		}
 
 		std::sort				(collidees, collidees + collidee_count);
-		collidee_count			= u32(std::unique(collidees, collidees + collidee_count) - collidees);
+		collidee_count			= static_cast<u32>(std::unique(collidees, collidees + collidee_count) - collidees);
 	}
 
 	u32							decision_count = collidee_count;
-	decision					*decisions = (decision*)_alloca(decision_count*sizeof(decision));
+	decision					*decisions = static_cast<decision*>(_alloca(decision_count * sizeof(decision)));
 
 	{
 		moving_object			**I = collidees;

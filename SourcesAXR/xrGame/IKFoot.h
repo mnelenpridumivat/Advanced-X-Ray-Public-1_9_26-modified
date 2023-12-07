@@ -7,7 +7,7 @@ struct local_vector
 {
 	Fvector v;
 	u16		bone;
-	local_vector(): bone( u16(-1) ), v( Fvector().set( 0, 0, 0 ) ){ }
+	local_vector(): bone( static_cast<u16>(-1) ), v( Fvector().set( 0, 0, 0 ) ){ }
 };
 
 class	IKinematics;

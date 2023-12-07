@@ -39,7 +39,7 @@ private:
 
 private:
 	enum {
-		bone_id0			= u32(0),
+		bone_id0			= static_cast<u32>(0),
 		bone_id1,
 		weapon_bone_id0,
 		weapon_bone_id1,

@@ -139,7 +139,7 @@ void CGameObject::net_Destroy	()
 	inherited::net_Destroy						();
 	setReady									(FALSE);
 	
-	if (Level().IsDemoPlayStarted() && ID() == u16(-1))
+	if (Level().IsDemoPlayStarted() && ID() == static_cast<u16>(-1))
 	{
 		Msg("Destroying demo_spectator object");
 	} else
@@ -288,7 +288,7 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 		cName_set					(E->name_replace());
 	bool demo_spectator = false;
 	
-	if (Level().IsDemoPlayStarted() && E->ID == u16(-1))
+	if (Level().IsDemoPlayStarted() && E->ID == static_cast<u16>(-1))
 	{
 		Msg("* Spawning demo spectator ...");
 		demo_spectator = true;
@@ -326,7 +326,7 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 #pragma warning(pop)
 	}
 
-	m_story_id						= ALife::_STORY_ID(-1);
+	m_story_id						= static_cast<ALife::_STORY_ID>(-1);
 	if (O)
 		m_story_id					= O->m_story_id;
 
@@ -549,11 +549,11 @@ void CGameObject::spawn_supplies()
 				j			= atoi(_GetItem(V,0,temp)); //count
 			
 			if(NULL!=strstr(V,"prob="))
-				p			=(float)atof(strstr(V,"prob=")+5);
+				p			=static_cast<float>(atof(strstr(V, "prob=") + 5));
 			if (fis_zero(p))p = 1.f;
 			if (!j)	j		= 1;
 			if(NULL!=strstr(V,"cond="))
-				f_cond		= (float)atof(strstr(V,"cond=")+5);
+				f_cond		= static_cast<float>(atof(strstr(V, "cond=") + 5));
 			bScope			=	(NULL!=strstr(V,"scope"));
 			bSilencer		=	(NULL!=strstr(V,"silencer"));
 			bLauncher		=	(NULL!=strstr(V,"launcher"));
@@ -737,8 +737,8 @@ void CGameObject::u_EventGen(NET_Packet& P, u32 type, u32 dest)
 {
 	P.w_begin	(M_EVENT);
 	P.w_u32		(Level().timeServer());
-	P.w_u16		(u16(type&0xffff));
-	P.w_u16		(u16(dest&0xffff));
+	P.w_u16		(static_cast<u16>(type & 0xffff));
+	P.w_u16		(static_cast<u16>(dest & 0xffff));
 }
 
 void CGameObject::u_EventSend(NET_Packet& P, u32 dwFlags )
@@ -880,14 +880,14 @@ u32	CGameObject::ef_creature_type		() const
 {
 	string16	temp; CLSID2TEXT(CLS_ID,temp);
 	R_ASSERT3	(false,"Invalid creature type request, virtual function is not properly overridden!",temp);
-	return		(u32(-1));
+	return		static_cast<u32>(-1);
 }
 
 u32	CGameObject::ef_equipment_type		() const
 {
 	string16	temp; CLSID2TEXT(CLS_ID,temp);
 	R_ASSERT3	(false,"Invalid equipment type request, virtual function is not properly overridden!",temp);
-	return		(u32(-1));
+	return		static_cast<u32>(-1);
 //	return		(6);
 }
 
@@ -895,7 +895,7 @@ u32	CGameObject::ef_main_weapon_type	() const
 {
 	string16	temp; CLSID2TEXT(CLS_ID,temp);
 	R_ASSERT3	(false,"Invalid main weapon type request, virtual function is not properly overridden!",temp);
-	return		(u32(-1));
+	return		static_cast<u32>(-1);
 //	return		(5);
 }
 
@@ -903,14 +903,14 @@ u32	CGameObject::ef_anomaly_type		() const
 {
 	string16	temp; CLSID2TEXT(CLS_ID,temp);
 	R_ASSERT3	(false,"Invalid anomaly type request, virtual function is not properly overridden!",temp);
-	return		(u32(-1));
+	return		static_cast<u32>(-1);
 }
 
 u32	CGameObject::ef_weapon_type			() const
 {
 	string16	temp; CLSID2TEXT(CLS_ID,temp);
 	R_ASSERT3	(false,"Invalid weapon type request, virtual function is not properly overridden!",temp);
-	return		(u32(-1));
+	return		static_cast<u32>(-1);
 //	return		(u32(0));
 }
 
@@ -918,7 +918,7 @@ u32	CGameObject::ef_detector_type		() const
 {
 	string16	temp; CLSID2TEXT(CLS_ID,temp);
 	R_ASSERT3	(false,"Invalid detector type request, virtual function is not properly overridden!",temp);
-	return		(u32(-1));
+	return		static_cast<u32>(-1);
 }
 
 void CGameObject::net_Relcase			(CObject* O)
@@ -1076,7 +1076,7 @@ void render_box						(IRenderVisual *visual, const Fmatrix &xform, const Fvector
 		return;
 
 	Fmatrix					matrix;
-	Fvector					*points = (Fvector*)_alloca(visible_bone_count*8*sizeof(Fvector));
+	Fvector					*points = static_cast<Fvector*>(_alloca(visible_bone_count * 8 * sizeof(Fvector)));
 	Fvector					*I = points;
 	for (u16 i=0; i<bone_count; ++i) {
 		if (!kinematics->LL_GetBoneVisible(i))

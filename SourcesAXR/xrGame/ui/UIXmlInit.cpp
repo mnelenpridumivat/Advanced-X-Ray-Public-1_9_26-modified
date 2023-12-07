@@ -1334,6 +1334,6 @@ bool CUIXmlInit::InitHintWindow(CUIXml& xml_doc, LPCSTR path, int index, UIHintW
 	LPCSTR hint_text = xml_doc.Read( path, index, "no hint" );
 	pWnd->set_hint_text_ST( hint_text );
 
-	pWnd->set_hint_delay( (u32)xml_doc.ReadAttribInt( path, index, "delay" ) );
+	pWnd->set_hint_delay( static_cast<u32>(xml_doc.ReadAttribInt(path, index, "delay")) );
 	return true;
 }

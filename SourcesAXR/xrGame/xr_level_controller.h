@@ -90,7 +90,7 @@ enum	EGameActions
 
 	kLASTACTION,
 	kNOTBINDED,
-	kFORCEDWORD		= u32(-1)
+	kFORCEDWORD		= static_cast<u32>(-1)
 };
 
 struct _keyboard		

@@ -141,7 +141,7 @@ const typename ITEM_DATA* CSINI_IdToIndex::GetById (const T_ID& str_id, bool no_
 TEMPLATE_SPECIALIZATION
 const typename ITEM_DATA* CSINI_IdToIndex::GetByIndex(T_INDEX index, bool no_assert)
 {
-	if((size_t)index>=m_pItemDataVector->size())
+	if(static_cast<size_t>(index)>=m_pItemDataVector->size())
 	{
 		if(!no_assert)
 			Debug.fatal(DEBUG_INFO,"item by index not found in section %s, line %s", section_name, line_name);

@@ -29,7 +29,7 @@ CObjectPropertyEvaluatorState::CObjectPropertyEvaluatorState	(CWeapon *item, CAI
 CObjectPropertyEvaluatorState::_value_type CObjectPropertyEvaluatorState::evaluate	()
 {
 	VERIFY			(m_item);
-	return			(_value_type((m_item->GetState() == m_state) == m_equality));
+	return			static_cast<_value_type>((m_item->GetState() == m_state) == m_equality);
 }
 
 CObjectPropertyEvaluatorWeaponHidden::CObjectPropertyEvaluatorWeaponHidden(CWeapon *item, CAI_Stalker *owner):
@@ -56,9 +56,9 @@ CObjectPropertyEvaluatorAmmo::CObjectPropertyEvaluatorAmmo	(CWeapon *item, CAI_S
 CObjectPropertyEvaluatorAmmo::_value_type CObjectPropertyEvaluatorAmmo::evaluate	()
 {
 	if (!m_ammo_type)
-		return		(_value_type(!!m_item->GetSuitableAmmoTotal()));
+		return		static_cast<_value_type>(!!m_item->GetSuitableAmmoTotal());
 	else
-		return		(_value_type(false));
+		return		static_cast<_value_type>(false);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -74,9 +74,9 @@ CObjectPropertyEvaluatorEmpty::CObjectPropertyEvaluatorEmpty(CWeapon *item, CAI_
 CObjectPropertyEvaluatorEmpty::_value_type CObjectPropertyEvaluatorEmpty::evaluate	()
 {
 	if (!m_ammo_type)
-		return		(_value_type(!m_item->GetAmmoElapsed()));
+		return		static_cast<_value_type>(!m_item->GetAmmoElapsed());
 	else
-		return		(_value_type(false));
+		return		static_cast<_value_type>(false);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -92,9 +92,9 @@ CObjectPropertyEvaluatorFull::CObjectPropertyEvaluatorFull	(CWeapon *item, CAI_S
 CObjectPropertyEvaluatorFull::_value_type CObjectPropertyEvaluatorFull::evaluate	()
 {
 	if (!m_ammo_type)
-		return		(_value_type(m_item->GetAmmoElapsed() == m_item->GetAmmoMagSize()));
+		return		static_cast<_value_type>(m_item->GetAmmoElapsed() == m_item->GetAmmoMagSize());
 	else
-		return		(_value_type(false));
+		return		static_cast<_value_type>(false);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -111,9 +111,9 @@ CObjectPropertyEvaluatorReady::_value_type CObjectPropertyEvaluatorReady::evalua
 {
 	if (!m_ammo_type)
 //		return		(_value_type(!m_item->IsMisfire() && m_item->GetAmmoElapsed()));
-		return		(_value_type(!m_item->IsMisfire() && (m_item->GetAmmoElapsed() && (m_item->GetState() != CWeapon::eReload))));
+		return		static_cast<_value_type>(!m_item->IsMisfire() && (m_item->GetAmmoElapsed() && (m_item->GetState() != CWeapon::eReload)));
 	else
-		return		(_value_type(false));
+		return		static_cast<_value_type>(false);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -170,7 +170,7 @@ CObjectPropertyEvaluatorMissile::CObjectPropertyEvaluatorMissile	(CMissile *item
 CObjectPropertyEvaluatorMissile::_value_type CObjectPropertyEvaluatorMissile::evaluate	()
 {
 	VERIFY			(m_item);
-	return			(_value_type((m_item->GetState() == m_state) == m_equality));
+	return			static_cast<_value_type>((m_item->GetState() == m_state) == m_equality);
 }
 
 //////////////////////////////////////////////////////////////////////////

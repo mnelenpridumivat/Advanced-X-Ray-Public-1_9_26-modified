@@ -61,7 +61,7 @@ IC	MemorySpace::squad_mask_type CAgentMemberManager::mask(const CAI_Stalker *obj
 {
 	const_iterator			I = std::find_if(members().begin(),members().end(), CMemberPredicate(object));
 	VERIFY					(I != members().end());
-	return					(MemorySpace::squad_mask_type(1) << (I - members().begin()));
+	return					(static_cast<MemorySpace::squad_mask_type>(1) << (I - members().begin()));
 }
 
 IC	CAgentMemberManager::iterator CAgentMemberManager::member		(MemorySpace::squad_mask_type mask)

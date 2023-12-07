@@ -23,10 +23,10 @@ struct HUD_SOUND_ITEM
 										const CObject* parent,
 										bool hud_mode,
 										bool looped = false,
-										u8 index=u8(-1));
+										u8 index=static_cast<u8>(-1));
 
 	static void PlaySoundAdd(HUD_SOUND_ITEM& snd, //--#SM+#--
-		const Fvector& position, const CObject* parent, bool hud_mode, bool looped = false, u8 index = u8(-1));
+		const Fvector& position, const CObject* parent, bool hud_mode, bool looped = false, u8 index = static_cast<u8>(-1));
 
 	static void		StopSound		(	HUD_SOUND_ITEM& snd);
 
@@ -86,7 +86,7 @@ public:
 													const CObject* parent,
 													bool hud_mode,
 													bool looped = false,
-													u8 index=u8(-1));
+													u8 index=static_cast<u8>(-1));
 
 	HUD_SOUND_ITEM*				FindSoundItem(LPCSTR alias, bool b_assert);
 
@@ -110,7 +110,7 @@ public:
 	~HUD_SOUND_COLLECTION_LAYERED();
 	HUD_SOUND_ITEM* FindSoundItem(LPCSTR alias, bool b_assert);
 	void PlaySound(LPCSTR alias, const Fvector& position, const CObject* parent, bool hud_mode, bool looped = false,
-		u8 index = u8(-1));
+		u8 index = static_cast<u8>(-1));
 	void StopSound(LPCSTR alias);
 	void StopAllSounds();
 	void LoadSound(LPCSTR section, LPCSTR line, LPCSTR alias, bool exclusive = false, int type = sg_SourceType);

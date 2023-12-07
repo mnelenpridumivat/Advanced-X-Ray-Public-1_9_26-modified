@@ -188,7 +188,7 @@ void game_cl_ArtefactHunt::TranslateGameMessage	(u32 msg, NET_Packet& P)
 			xr_sprintf(tmp, "%s%s", "%s%s %s", *st.translate("mp_has_tak_art"));
 
 			xr_sprintf(Text, tmp, 
-				CTeamInfo::GetTeam_color_tag(int(Team)), 
+				CTeamInfo::GetTeam_color_tag(static_cast<int>(Team)), 
 				pPlayer->getName(), 
 				Color_Main,
 				Color_Artefact);
@@ -219,7 +219,7 @@ void game_cl_ArtefactHunt::TranslateGameMessage	(u32 msg, NET_Packet& P)
             xr_sprintf(tmp, "%s%s", "%s%s %s", *st.translate("mp_has_drop_art"));
 
 			xr_sprintf(Text, tmp, 
-				CTeamInfo::GetTeam_color_tag(int(Team)), 
+				CTeamInfo::GetTeam_color_tag(static_cast<int>(Team)), 
 				pPlayer->getName(), 
 				Color_Main,
 				Color_Artefact);
@@ -243,8 +243,8 @@ void game_cl_ArtefactHunt::TranslateGameMessage	(u32 msg, NET_Packet& P)
 			xr_sprintf(tmp, "%s%s", "%s%s %s", *st.translate("mp_scores"));
 
 			xr_sprintf(Text, tmp, 
-				CTeamInfo::GetTeam_color_tag(int(Team)), 
-				CTeamInfo::GetTeam_name(int(Team)),
+				CTeamInfo::GetTeam_color_tag(static_cast<int>(Team)), 
+				CTeamInfo::GetTeam_name(static_cast<int>(Team)),
 				Color_Main);
 			if(CurrentGameUI()) CurrentGameUI()->CommonMessageOut(Text);
 			
@@ -447,8 +447,8 @@ void game_cl_ArtefactHunt::shedule_Update			(u32 dt)
 				{
 					u32 CurTime = Level().timeServer();
 					u32 dTime;
-					if (s32(CurTime) > dReinforcementTime) dTime = 0;
-					else dTime = iCeil(float(dReinforcementTime - CurTime) / 1000);
+					if (static_cast<s32>(CurTime) > dReinforcementTime) dTime = 0;
+					else dTime = iCeil(static_cast<float>(dReinforcementTime - CurTime) / 1000);
 							
 					string128 _buff;
 					m_game_ui->m_pReinforcementInidcator->SetText(itoa(dTime,_buff,10));
@@ -758,7 +758,7 @@ void	game_cl_ArtefactHunt::OnSellItemsFromRuck		()
 
 	NET_Packet	P;
 	pCurActor->u_EventGen(P, GEG_PLAYER_ITEM_SELL, pCurActor->ID());
-	P.w_u16(u16(pCurActor->inventory().m_ruck.size() & 0xffff));
+	P.w_u16(static_cast<u16>(pCurActor->inventory().m_ruck.size() & 0xffff));
 	for ( ; IRuck != ERuck; ++IRuck) 
 	{		
 		PIItem pItem = *IRuck;

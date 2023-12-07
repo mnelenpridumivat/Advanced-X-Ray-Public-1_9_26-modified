@@ -28,7 +28,7 @@
 
 bool bfGetActionSuccessProbability(GroupHierarchyHolder::MEMBER_REGISTRY &Members, const xr_vector<const CEntityAlive *> &VisibleEnemies, float fMinProbability, CBaseFunction &fSuccessProbabilityFunction)
 {
-	int i = 0, j = 0, I = (int)Members.size(), J = (int)VisibleEnemies.size();
+	int i = 0, j = 0, I = static_cast<int>(Members.size()), J = static_cast<int>(VisibleEnemies.size());
 	xr_vector<const CEntityAlive*>::const_iterator	II = VisibleEnemies.begin();
 	for ( ; (i < I) && (j < J); ) {
 		ai().ef_storage().non_alife().member() = smart_cast<CEntityAlive *>(Members[i]);
@@ -108,12 +108,12 @@ u32 dwfChooseAction(u32 dwActionRefreshRate, float fMinProbability0, float fMinP
 
 	GroupHierarchyHolder::MEMBER_REGISTRY	Members;
 	if (!tpEntity)
-		for (int k=0; k<(int)Group.members().size(); ++k) {
+		for (int k=0; k<static_cast<int>(Group.members().size()); ++k) {
 			if (Group.members()[k]->g_Alive() && ((Group.members()[k]->spatial.type & STYPE_VISIBLEFORAI) == STYPE_VISIBLEFORAI))
 				Members.push_back(Group.members()[k]);
 		}
 	else
-		for (int k=0; k<(int)Group.members().size(); ++k) {
+		for (int k=0; k<static_cast<int>(Group.members().size()); ++k) {
 			if (Group.members()[k]->g_Alive() && ((Group.members()[k]->spatial.type & STYPE_VISIBLEFORAI) == STYPE_VISIBLEFORAI))
 				if (tpEntity->Position().distance_to(Group.members()[k]->Position()) < fGroupDistance) {
 

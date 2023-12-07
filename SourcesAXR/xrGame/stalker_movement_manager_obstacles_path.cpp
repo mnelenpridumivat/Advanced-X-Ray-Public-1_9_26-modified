@@ -73,7 +73,7 @@ void stalker_movement_manager_obstacles::save_current_state		()
 
 	m_saved_state					= true;
 	m_level_path.swap				(level_path_path());
-	m_detail_current_index			= detail().path().empty() ? u32(-1) : detail().curr_travel_point_index();
+	m_detail_current_index			= detail().path().empty() ? static_cast<u32>(-1) : detail().curr_travel_point_index();
 	m_detail_path.swap				(detail().path());
 #ifdef DEBUG
 	m_detail_key_points.swap		(detail().key_points());

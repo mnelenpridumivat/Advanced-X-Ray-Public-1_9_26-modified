@@ -60,7 +60,7 @@ void CObjectHandlerPlanner::set_goal	(MonsterSpace::EObjectAction object_action,
 		condition_id		= uid(game_object->ID(), goal);
 	}
 	else
-		condition_id		= u32(eWorldPropertyNoItemsIdle);
+		condition_id		= static_cast<u32>(eWorldPropertyNoItemsIdle);
 
 #ifdef DEBUG
 	if (m_use_log) {
@@ -270,12 +270,12 @@ void CObjectHandlerPlanner::setup	(CAI_Stalker *object)
 
 	init_storage				();
 
-	add_evaluator				(u32(eWorldPropertyNoItems),			xr_new<CObjectPropertyEvaluatorNoItems>(m_object));
-	add_evaluator				(u32(eWorldPropertyNoItemsIdle),		xr_new<CObjectPropertyEvaluatorConst>(false));
+	add_evaluator				(static_cast<u32>(eWorldPropertyNoItems),			xr_new<CObjectPropertyEvaluatorNoItems>(m_object));
+	add_evaluator				(static_cast<u32>(eWorldPropertyNoItemsIdle),		xr_new<CObjectPropertyEvaluatorConst>(false));
 	action						= xr_new<CSObjectActionBase>(m_object,m_object,&m_storage,"no items idle");
 	add_condition				(action,0xffff,eWorldPropertyItemID,true);
 	add_effect					(action,0xffff,eWorldPropertyIdle,	true);
-	add_operator				(u32(eWorldOperatorNoItemsIdle),action);
+	add_operator				(static_cast<u32>(eWorldOperatorNoItemsIdle),action);
 
 	set_goal					(MonsterSpace::eObjectActionIdle,0,0,0,0,0);
 

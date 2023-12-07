@@ -76,7 +76,7 @@ void CStateControllerAttackAbstract::execute()
 
 	if ( !object->enemy_accessible() && state_id == eStateAttack_Run )
 	{
-		current_substate			=	(u32)eStateUnknown;
+		current_substate			=	static_cast<u32>(eStateUnknown);
 		prev_substate				=	current_substate;
 
 		Fvector dir_xz				=	object->Direction();

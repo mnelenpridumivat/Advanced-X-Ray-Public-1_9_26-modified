@@ -25,18 +25,18 @@ void CPatrolPathParams::script_register(lua_State *L)
 		class_<CPatrolPathParams>("patrol")
 			.enum_("start")
 			[
-				value("start",					int(PatrolPathManager::ePatrolStartTypeFirst)),
-				value("stop",					int(PatrolPathManager::ePatrolStartTypeLast)),
-				value("nearest",				int(PatrolPathManager::ePatrolStartTypeNearest)),
-				value("custom",					int(PatrolPathManager::ePatrolStartTypePoint)),
-				value("next",					int(PatrolPathManager::ePatrolStartTypeNext)),
-				value("dummy",					int(PatrolPathManager::ePatrolStartTypeDummy))
+				value("start",					static_cast<int>(PatrolPathManager::ePatrolStartTypeFirst)),
+				value("stop",					static_cast<int>(PatrolPathManager::ePatrolStartTypeLast)),
+				value("nearest",				static_cast<int>(PatrolPathManager::ePatrolStartTypeNearest)),
+				value("custom",					static_cast<int>(PatrolPathManager::ePatrolStartTypePoint)),
+				value("next",					static_cast<int>(PatrolPathManager::ePatrolStartTypeNext)),
+				value("dummy",					static_cast<int>(PatrolPathManager::ePatrolStartTypeDummy))
 			]
 			.enum_("stop")
 			[
-				value("stop",					int(PatrolPathManager::ePatrolRouteTypeStop)),
-				value("continue",				int(PatrolPathManager::ePatrolRouteTypeContinue)),
-				value("dummy",					int(PatrolPathManager::ePatrolRouteTypeDummy))
+				value("stop",					static_cast<int>(PatrolPathManager::ePatrolRouteTypeStop)),
+				value("continue",				static_cast<int>(PatrolPathManager::ePatrolRouteTypeContinue)),
+				value("dummy",					static_cast<int>(PatrolPathManager::ePatrolRouteTypeDummy))
 			]
 			.def(								constructor<LPCSTR>())
 			.def(								constructor<LPCSTR,const PatrolPathManager::EPatrolStartType>())
@@ -48,8 +48,8 @@ void CPatrolPathParams::script_register(lua_State *L)
 			.def("game_vertex_id",				&CPatrolPathParams::game_vertex_id)
 			.def("point",						&CPatrolPathParams__point)
 			.def("name",						&CPatrolPathParams::name)
-			.def("index",						(u32			(CPatrolPathParams::*)(LPCSTR)			const)	(&CPatrolPathParams::point))
-			.def("get_nearest",					(u32			(CPatrolPathParams::*)(const Fvector &) const)	(&CPatrolPathParams::point))
+			.def("index",						static_cast<u32 (CPatrolPathParams::*)(LPCSTR) const>(&CPatrolPathParams::point))
+			.def("get_nearest",					static_cast<u32 (CPatrolPathParams::*)(const Fvector&) const>(&CPatrolPathParams::point))
 			.def("flag",						&CPatrolPathParams::flag)
 			.def("flags",						&CPatrolPathParams::flags)
 			.def("terminal",					&CPatrolPathParams::terminal)

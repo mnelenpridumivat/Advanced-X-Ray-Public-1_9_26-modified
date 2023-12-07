@@ -24,7 +24,7 @@ void CSightAction::initialize					()
 	m_start_time					= Device.dwTimeGlobal;
 	m_state_fire_switch_time		= Device.dwTimeGlobal;
 	m_already_switched				= false;
-	m_internal_state				= u32(-1);
+	m_internal_state				= static_cast<u32>(-1);
 	
 	if (SightManager::eSightTypeCoverLookOver == m_sight_type)
 		initialize_cover_look_over	();
@@ -336,14 +336,14 @@ void CSightAction::predict_object_position		( bool use_exact_position )
 		VERIFY					( Device.dwTimeGlobal >= current_position.dwTime );
 
 		CObject::SavedPosition previous_position = m_object_to_look->ps_Element( count - 2 );
-		for (int i=3; (current_position.dwTime == previous_position.dwTime) && (i<=(int)count); ++i)
+		for (int i=3; (current_position.dwTime == previous_position.dwTime) && (i<=static_cast<int>(count)); ++i)
 			previous_position	= m_object_to_look->ps_Element( count - i );
 
 		if ( Device.dwTimeGlobal - previous_position.dwTime < 300 ) {
 			if ( current_position.dwTime > previous_position.dwTime ) {
 				Fvector offset				= Fvector().sub( current_position.vPosition, previous_position.vPosition );
 				offset.y					= 0.f;
-				Fvector const velocity		= Fvector(offset).div( float(current_position.dwTime - previous_position.dwTime)/1000.f );
+				Fvector const velocity		= Fvector(offset).div( static_cast<float>(current_position.dwTime - previous_position.dwTime)/1000.f );
 				extern float g_aim_predict_time;
 				float const predict_time	= g_aim_predict_time;//*Device.fTimeDelta;
 				m_vector3d.mad				( velocity, predict_time );

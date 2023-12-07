@@ -24,7 +24,7 @@ void ammunition_group::init_ammunition_group(CItemMgr const * item_manager,
 	{
 		_GetItem		(weapons_string.c_str(), i, dststr);
 		u32 itm_index	= item_manager->GetItemIdx(dststr);
-		if (itm_index != u32(-1))
+		if (itm_index != static_cast<u32>(-1))
 		{
 			VERIFY((itm_index & 0xffff0000) == 0);
 			m_wpn_groups.push_back(

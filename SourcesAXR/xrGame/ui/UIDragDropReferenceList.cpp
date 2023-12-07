@@ -75,7 +75,7 @@ CUICellItem* CUIDragDropReferenceList::RemoveItem(CUICellItem* itm, bool force_r
 	Ivector2 vec2 = m_container->GetItemPos(itm);
 	if(vec2.x!=-1&&vec2.y!=-1)
 	{
-		u8 index = u8(vec2.x);
+		u8 index = static_cast<u8>(vec2.x);
 		xr_strcpy(ACTOR_DEFS::g_quick_use_slots[index], "");
 		m_references[index]->SetTextureColor(color_rgba(255,255,255,0));
 	}
@@ -140,7 +140,7 @@ void CUIDragDropReferenceList::OnItemDBClick(CUIWindow* w, void* pData)
 	ITEMS_REFERENCES_VEC_IT it = std::find(m_references.begin(), m_references.end(), ref);
 	if(it != m_references.end())
 	{
-		u8 index = u8(it-m_references.begin());
+		u8 index = static_cast<u8>(it - m_references.begin());
 		CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
 		if(actor)
 		{
@@ -182,7 +182,7 @@ void CUIDragDropReferenceList::OnItemDrop(CUIWindow* w, void* pData)
 			Ivector2 vec2 = m_container->GetItemPos(itm);
 			if(vec2.x!=-1&&vec2.y!=-1)
 			{
-				u8 index = u8(vec2.x);
+				u8 index = static_cast<u8>(vec2.x);
 				shared_str tmp = ACTOR_DEFS::g_quick_use_slots[vec.x];
 				xr_strcpy(ACTOR_DEFS::g_quick_use_slots[vec.x], ACTOR_DEFS::g_quick_use_slots[index]);
 				xr_strcpy(ACTOR_DEFS::g_quick_use_slots[index], tmp.c_str());

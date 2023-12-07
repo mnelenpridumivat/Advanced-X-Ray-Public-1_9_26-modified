@@ -32,7 +32,7 @@ CObjectActionCommand::CObjectActionCommand(CInventoryItem *item, CAI_Stalker *ow
 void CObjectActionCommand::initialize	()
 {
 	inherited::initialize();
-	object().inventory().Action((u16)m_command,CMD_START);
+	object().inventory().Action(static_cast<u16>(m_command),CMD_START);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -127,7 +127,7 @@ static bool try_advance_ammo		(CWeapon const& weapon)
 {
 	VERIFY				(weapon.m_pInventory);
 	CInventory&			inventory = *weapon.m_pInventory;
-	for(u8 i = 0; i < u8(weapon.m_ammoTypes.size()); ++i) 
+	for(u8 i = 0; i < static_cast<u8>(weapon.m_ammoTypes.size()); ++i) 
 	{
 		LPCSTR l_ammoType = weapon.m_ammoTypes[i].c_str();
 
@@ -847,7 +847,7 @@ void CObjectActionDrop::initialize		()
 
 	NET_Packet				P;
 	m_object->u_EventGen	(P,GE_OWNERSHIP_REJECT,m_object->ID());
-	P.w_u16					(u16(m_item->object().ID()));
+	P.w_u16					(static_cast<u16>(m_item->object().ID()));
 	m_object->u_EventSend	(P);
 }
 

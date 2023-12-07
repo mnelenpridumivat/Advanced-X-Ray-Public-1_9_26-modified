@@ -68,20 +68,20 @@ void	CGameSpy_GCD_Server::CreateRandomChallenge(char* challenge, int nchars)
 	challenge[nchars] = 0;
 	while (nchars--)
 	{
-		challenge[nchars] = char('a' + ::Random.randI(26));
+		challenge[nchars] = static_cast<char>('a' + ::Random.randI(26));
 	};
 }
 
 //--------------------------- CD Key callbacks -----------------------------------
 void __cdecl ClientAuthorizeCallback(int productid, int localid, int authenticated, char *errmsg, void *instance)
 {
-	xrGameSpyServer* pServer = (xrGameSpyServer*) (instance);
+	xrGameSpyServer* pServer = static_cast<xrGameSpyServer*>(instance);
 	if (pServer) pServer->OnCDKey_Validation(localid, authenticated, errmsg);
 };
 
 void __cdecl ClientReAuthorizeCallback(int gameid, int localid, int hint, char *challenge, void *instance)
 {
-	xrGameSpyServer* pServer = (xrGameSpyServer*) (instance);
+	xrGameSpyServer* pServer = static_cast<xrGameSpyServer*>(instance);
 	if (pServer) pServer->OnCDKey_ReValidation(localid, hint, challenge);
 };
 

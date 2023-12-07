@@ -86,7 +86,7 @@ void CSE_ALifeObject::spawn_supplies		(LPCSTR ini_string)
                             spawn_count = 1;
 
                         if (NULL != strstr(V, "cond="))
-                            f_cond = (float)atof(strstr(V, "cond=") + 5);
+                            f_cond = static_cast<float>(atof(strstr(V, "cond=") + 5));
 
                         bScope = (NULL != strstr(V, "scope"));
                         bSilencer = (NULL != strstr(V, "silencer"));

@@ -147,7 +147,7 @@ void CZoneCampfire::UpdateWorkload(u32 dt)
 	inherited::UpdateWorkload(dt);
 	if(m_turn_time>Device.dwTimeGlobal)
 	{
-		float k = float(m_turn_time-Device.dwTimeGlobal)/float(OVL_TIME);
+		float k = static_cast<float>(m_turn_time - Device.dwTimeGlobal)/static_cast<float>(OVL_TIME);
 
 		if(m_turned_on)
 		{
@@ -165,9 +165,9 @@ void CZoneCampfire::UpdateWorkload(u32 dt)
 			int frame = 0;
 			u32 clr		= m_pIdleLAnim->CalculateBGR(Device.fTimeGlobal,frame);
 			Fcolor		fclr;
-			fclr.set	(	((float)color_get_B(clr)/255.f)*k,
-							((float)color_get_G(clr)/255.f)*k,
-							((float)color_get_R(clr)/255.f)*k,
+			fclr.set	(	(static_cast<float>(color_get_B(clr))/255.f)*k,
+							(static_cast<float>(color_get_G(clr))/255.f)*k,
+							(static_cast<float>(color_get_R(clr))/255.f)*k,
 							1.f);
 			
 			float range = m_fIdleLightRange + 0.25f*::Random.randF(-1.f,1.f);

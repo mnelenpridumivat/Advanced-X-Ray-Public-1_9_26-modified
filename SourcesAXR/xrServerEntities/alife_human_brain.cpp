@@ -56,10 +56,10 @@ CALifeHumanBrain::CALifeHumanBrain			(object_type *object) : inherited(object)
 #endif
 
 	for (int i=0, n=m_cpEquipmentPreferences.size(); i<n; ++i)
-		m_cpEquipmentPreferences[i]	= u8(::Random.randI(3));
+		m_cpEquipmentPreferences[i]	= static_cast<u8>(::Random.randI(3));
 
 	for (int i=0, n=m_cpMainWeaponPreferences.size(); i<n; ++i)
-		m_cpMainWeaponPreferences[i]= u8(::Random.randI(3));
+		m_cpMainWeaponPreferences[i]= static_cast<u8>(::Random.randI(3));
 }
 
 CALifeHumanBrain::~CALifeHumanBrain			()

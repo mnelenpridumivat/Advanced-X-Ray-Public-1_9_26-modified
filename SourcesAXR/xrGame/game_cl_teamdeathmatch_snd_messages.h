@@ -18,5 +18,5 @@ enum {
 	ID_TEAM2_RANK_3,
 	ID_TEAM2_RANK_4,
 
-	ID_TDM_forcedword		= u32(-1)
+	ID_TDM_forcedword		= static_cast<u32>(-1)
 };

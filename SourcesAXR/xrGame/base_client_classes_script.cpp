@@ -222,7 +222,7 @@ void CPatrolPointScript::script_register( lua_State *L ) {
     .def_readwrite( "m_level_vertex_id", &CPatrolPoint::m_level_vertex_id )
     .def_readwrite( "m_game_vertex_id",  &CPatrolPoint::m_game_vertex_id )
     .property( "m_name", &CPatrolPointScript::getName, &CPatrolPointScript::setName )
-    .def( "position", ( CPatrolPoint& ( CPatrolPoint::* ) ( Fvector ) ) ( &CPatrolPoint::position ) )
+    .def( "position", static_cast<CPatrolPoint& (CPatrolPoint::*)(Fvector)>(&CPatrolPoint::position) )
   ];
 }
 
@@ -232,7 +232,7 @@ void CPatrolPathScript::script_register( lua_State *L ) {
     class_<CPatrolPath>( "CPatrolPath" )
     .def( constructor<>() )
     .def( "add_point", &CPatrolPath::add_point )
-    .def( "point", ( CPatrolPoint ( CPatrolPath::* ) ( u32 ) ) ( &CPatrolPath::point ) )
+    .def( "point", static_cast<CPatrolPoint (CPatrolPath::*)(u32)>(&CPatrolPath::point) )
     .def( "add_vertex", &CPatrolPath::add_vertex )
   ];
 }

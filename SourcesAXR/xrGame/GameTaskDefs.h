@@ -5,7 +5,7 @@ enum ETaskState{
 	eTaskStateFail			= 0,
 	eTaskStateInProgress,
 	eTaskStateCompleted,
-	eTaskStateDummy			= u16(-1)
+	eTaskStateDummy			= static_cast<u16>(-1)
 };
 
 // all task has `storyline`-type now (10.10.2008)(sea)
@@ -14,7 +14,7 @@ enum ETaskType{
 	eTaskTypeAdditional,
 //	eTaskTypeInsignificant,
 //	eTaskTypeCount,
-	eTaskTypeDummy	= u16(-1)
+	eTaskTypeDummy	= static_cast<u16>(-1)
 };
 
 

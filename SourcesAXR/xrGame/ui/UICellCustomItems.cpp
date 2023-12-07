@@ -34,7 +34,7 @@ struct is_helper_pred
 
 CUIInventoryCellItem::CUIInventoryCellItem(CInventoryItem* itm)
 {
-	m_pData											= (void*)itm;
+	m_pData											= static_cast<void*>(itm);
 
 	inherited::SetShader							(InventoryUtilities::GetEquipmentIconsShader());
 
@@ -156,7 +156,7 @@ void CUIInventoryCellItem::Update()
 
 void CUIInventoryCellItem::UpdateItemText()
 {
-	const u32	helper_count	=  	(u32)std::count_if(m_childs.begin(), m_childs.end(), detail::is_helper_pred()) 
+	const u32	helper_count	=  	static_cast<u32>(std::count_if(m_childs.begin(), m_childs.end(), detail::is_helper_pred())) 
 									+ IsHelper() ? 1 : 0;
 
 	const u32	count			=	ChildsCount() + 1 - helper_count;
@@ -208,7 +208,7 @@ u32 CUIAmmoCellItem::CalculateAmmoCount()
 
 		if ( !child->IsHelper() )
 		{
-			total += ((CUIAmmoCellItem*)(*it))->object()->m_boxCurr;
+			total += static_cast<CUIAmmoCellItem*>(*it)->object()->m_boxCurr;
 		}
 	}
 

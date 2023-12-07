@@ -65,10 +65,10 @@ void CUIMpChangeMapAdm::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 void CUIMpChangeMapAdm::OnItemSelect()
 {
 	u32 idx	= lst->GetSelectedIDX();
-	if(idx==u32(-1))		
+	if(idx==static_cast<u32>(-1))		
 		return;
 
-	const SGameTypeMaps& M = gMapListHelper.GetMapListFor((EGameIDs)GameID());
+	const SGameTypeMaps& M = gMapListHelper.GetMapListFor(static_cast<EGameIDs>(GameID()));
 	const shared_str& name = M.m_map_names[idx].map_name;
 	LPSTR map_ver = NULL;
 	STRCONCAT(map_ver, "[", M.m_map_names[idx].map_ver.c_str() ? M.m_map_names[idx].map_ver.c_str() : "unknown", "]");
@@ -88,7 +88,7 @@ void CUIMpChangeMapAdm::OnItemSelect()
 void CUIMpChangeMapAdm::OnBtnOk()
 {
 	u32 idx	= lst->GetSelectedIDX();
-	const SGameTypeMaps& M = gMapListHelper.GetMapListFor((EGameIDs)GameID());
+	const SGameTypeMaps& M = gMapListHelper.GetMapListFor(static_cast<EGameIDs>(GameID()));
 	if(idx>=0 && idx<M.m_map_names.size())
 	{	
 		const shared_str& name = M.m_map_names[idx].map_name;
@@ -102,7 +102,7 @@ void CUIMpChangeMapAdm::OnBtnOk()
 void CUIMpChangeMapAdm::FillUpList()
 {
 	lst->Clear();
-	const SGameTypeMaps& M = gMapListHelper.GetMapListFor((EGameIDs)GameID());
+	const SGameTypeMaps& M = gMapListHelper.GetMapListFor(static_cast<EGameIDs>(GameID()));
 	u32 cnt	= M.m_map_names.size();
 	for (u32 i=0; i<cnt; ++i)
 	{

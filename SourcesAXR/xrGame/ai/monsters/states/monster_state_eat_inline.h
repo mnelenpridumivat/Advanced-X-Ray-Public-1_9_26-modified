@@ -74,7 +74,7 @@ void CStateMonsterEatAbstract::critical_finalize()
 TEMPLATE_SPECIALIZATION
 void CStateMonsterEatAbstract::reselect_state()
 {
-	if (prev_substate == u32(-1)) {select_state(eStateEat_CorpseApproachRun);return;}
+	if (prev_substate == static_cast<u32>(-1)) {select_state(eStateEat_CorpseApproachRun);return;}
 	if (prev_substate == eStateEat_CorpseApproachRun) { select_state(eStateEat_CheckCorpse); return; }
 	
 	if (prev_substate == eStateEat_CheckCorpse) { 
@@ -146,7 +146,7 @@ void CStateMonsterEatAbstract::setup_substates()
 #endif
 		SStateDataMoveToPoint data;
 		data.point			= nearest_bone_pos;
-		data.vertex			= u32(-1);
+		data.vertex			= static_cast<u32>(-1);
 		data.action.action	= ACT_RUN;
 		data.accelerated	= true;
 		data.braking		= true;
@@ -215,7 +215,7 @@ void CStateMonsterEatAbstract::setup_substates()
 		
 		SStateDataMoveToPoint data;
 		data.point			= nearest_bone_pos;
-		data.vertex			= u32(-1);
+		data.vertex			= static_cast<u32>(-1);
 		data.action.action	= ACT_WALK_FWD;
 		data.accelerated	= true;
 		data.braking		= true;

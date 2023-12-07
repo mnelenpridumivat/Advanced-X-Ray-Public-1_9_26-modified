@@ -61,13 +61,13 @@ Fvector	CScriptGameObject::Center()
 
 BIND_FUNCTION10	(&object(),	CScriptGameObject::Position,			CGameObject,	Position,			Fvector,						Fvector());
 BIND_FUNCTION10	(&object(),	CScriptGameObject::Direction,			CGameObject,	Direction,			Fvector,						Fvector());
-BIND_FUNCTION10	(&object(),	CScriptGameObject::Mass,		CPhysicsShellHolder,	GetMass,			float,							float(-1));
-BIND_FUNCTION10	(&object(),	CScriptGameObject::ID,					CGameObject,	ID,					u16,							u16(-1));
+BIND_FUNCTION10	(&object(),	CScriptGameObject::Mass,		CPhysicsShellHolder,	GetMass,			float,							static_cast<float>(-1));
+BIND_FUNCTION10	(&object(),	CScriptGameObject::ID,					CGameObject,	ID,					u16,							static_cast<u16>(-1));
 BIND_FUNCTION10	(&object(),	CScriptGameObject::getVisible,			CGameObject,	getVisible,			BOOL,							FALSE);
 //BIND_FUNCTION01	(&object(),	CScriptGameObject::setVisible,			CGameObject,	setVisible,			BOOL,							BOOL);
 BIND_FUNCTION10	(&object(),	CScriptGameObject::getEnabled,			CGameObject,	getEnabled,			BOOL,							FALSE);
 //BIND_FUNCTION01	(&object(),	CScriptGameObject::setEnabled,			CGameObject,	setEnabled,			BOOL,							BOOL);
-BIND_FUNCTION10	(&object(),	CScriptGameObject::story_id,			CGameObject,	story_id,			ALife::_STORY_ID,				ALife::_STORY_ID(-1));
+BIND_FUNCTION10	(&object(),	CScriptGameObject::story_id,			CGameObject,	story_id,			ALife::_STORY_ID,				static_cast<ALife::_STORY_ID>(-1));
 BIND_FUNCTION10	(&object(),	CScriptGameObject::DeathTime,			CEntity,		GetLevelDeathTime,	u32,							0);
 BIND_FUNCTION10	(&object(),	CScriptGameObject::MaxHealth,			CEntity,		GetMaxHealth,		float,							-1);
 BIND_FUNCTION10	(&object(),	CScriptGameObject::Accuracy,			CInventoryOwner,GetWeaponAccuracy,	float,							-1);
@@ -126,7 +126,7 @@ u32 CScriptGameObject::game_vertex_id		() const
 
 CScriptIniFile *CScriptGameObject::spawn_ini			() const
 {
-	return			((CScriptIniFile*)object().spawn_ini());
+	return			static_cast<CScriptIniFile*>(object().spawn_ini());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -329,7 +329,7 @@ u32 CScriptGameObject::get_current_patrol_point_index()
 	CCustomMonster		*monster = smart_cast<CCustomMonster*>(&object());
 	if (!monster) {
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CGameObject : cannot call [get_current_patrol_point_index()]!");
-		return			(u32(-1));
+		return			static_cast<u32>(-1);
 	}
 	return				(monster->movement().patrol().get_current_point_index());
 }
@@ -699,19 +699,19 @@ u32	CScriptGameObject::vertex_in_direction(u32 level_vertex_id, Fvector directio
 	CCustomMonster	*monster = smart_cast<CCustomMonster*>(&object());
 	if (!monster) {
 		ai().script_engine().script_log			(ScriptStorage::eLuaMessageTypeError,"CCustomMonster : cannot access class member vertex_in_direction!");
-		return		(u32(-1));
+		return		static_cast<u32>(-1);
 	}
 
 	if (!monster->movement().restrictions().accessible(level_vertex_id)) {
 		ai().script_engine().script_log			(ScriptStorage::eLuaMessageTypeError,"CCustomMonster::vertex_in_direction - start vertex id is not accessible!");
-		return		(u32(-1));
+		return		static_cast<u32>(-1);
 	}
 
 	direction.normalize_safe();
 	direction.mul	(max_distance);
 	Fvector			start_position = ai().level_graph().vertex_position(level_vertex_id);
 	Fvector			finish_position = Fvector(start_position).add(direction);
-	u32				result = u32(-1);
+	u32				result = static_cast<u32>(-1);
 	monster->movement().restrictions().add_border(level_vertex_id,max_distance);
 	ai().level_graph().farthest_vertex_in_direction(level_vertex_id,start_position,finish_position,result,0,true);
 	monster->movement().restrictions().remove_border();

@@ -26,7 +26,7 @@ IC	u16	CObjectHandlerPlanner::current_action_object_id	() const
 
 IC	u16	CObjectHandlerPlanner::action_object_id		(_condition_type action_id) const
 {
-	return				u16(action_id >> 16);
+	return				static_cast<u16>(action_id >> 16);
 }
 
 IC	void CObjectHandlerPlanner::add_condition			(CActionBase<CAI_Stalker> *action, u16 id, ObjectHandlerSpace::EWorldProperties property, _value_type value)

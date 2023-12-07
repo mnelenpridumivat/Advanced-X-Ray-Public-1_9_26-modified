@@ -25,7 +25,7 @@ void CStateMonsterHittedMoveOutAbstract::execute()
 			select_target		();
 	}
 	
-	if (target.node != u32(-1))
+	if (target.node != static_cast<u32>(-1))
 		object->path().set_target_point	(target.position, target.node);
 	else
 		object->path().set_target_point	(object->HitMemory.get_last_hit_position());
@@ -55,7 +55,7 @@ TEMPLATE_SPECIALIZATION
 void CStateMonsterHittedMoveOutAbstract::select_target()
 {
 	if (!object->GetCoverCloseToPoint(object->HitMemory.get_last_hit_position(), 10.f, 20.f, 0.f, 15.f, target.position, target.node)){
-		target.node = u32(-1);
+		target.node = static_cast<u32>(-1);
 	}
 }
 

@@ -17,9 +17,9 @@ class CParticlesObject;
 class CScriptParticleAction : public CScriptAbstractAction {
 public:
 	enum EGoalType {
-		eGoalTypeParticleAttached = u32(0),
+		eGoalTypeParticleAttached = static_cast<u32>(0),
 		eGoalTypeParticlePosition,
-		eGoalTypeDummy = u32(-1),
+		eGoalTypeDummy = static_cast<u32>(-1),
 	};
 
 public:

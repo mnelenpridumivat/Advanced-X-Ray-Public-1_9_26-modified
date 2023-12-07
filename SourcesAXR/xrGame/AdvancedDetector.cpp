@@ -23,7 +23,7 @@ void CAdvancedDetector::CreateUI()
 
 CUIArtefactDetectorAdv&  CAdvancedDetector::ui()
 {
-	return *((CUIArtefactDetectorAdv*)m_ui);
+	return *static_cast<CUIArtefactDetectorAdv*>(m_ui);
 }
 
 void CAdvancedDetector::UpdateAf()
@@ -102,7 +102,7 @@ void CUIArtefactDetectorAdv::construct(CAdvancedDetector* p)
 	m_target_dir.set	(0,0,0);
 	m_curr_ang_speed	= 0.0f;
 	m_cur_y_rot			= 0.0f;
-	m_bid				= u16(-1);
+	m_bid				= static_cast<u16>(-1);
 }
 
 CUIArtefactDetectorAdv::~CUIArtefactDetectorAdv()
@@ -116,7 +116,7 @@ void CUIArtefactDetectorAdv::SetValue(const float val1, const Fvector& val2)
 
 void CUIArtefactDetectorAdv::update()
 {
-	if(NULL==m_parent->HudItemData() || m_bid == u16(-1))	return;
+	if(NULL==m_parent->HudItemData() || m_bid == static_cast<u16>(-1))	return;
 	inherited::update();
 	attachable_hud_item* itm		= m_parent->HudItemData();
 	R_ASSERT						(itm);

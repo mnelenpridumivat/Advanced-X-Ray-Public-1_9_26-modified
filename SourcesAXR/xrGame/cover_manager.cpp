@@ -122,7 +122,7 @@ void CCoverManager::clear_covers			(PointVector &covers)
 			continue;
 		}
 
-		smart_cover::cover	*cover = (smart_cover::cover*)*I;
+		smart_cover::cover	*cover = static_cast<smart_cover::cover*>(*I);
 		xr_delete			(cover);
 	}
 	

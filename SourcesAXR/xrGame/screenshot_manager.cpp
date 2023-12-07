@@ -106,15 +106,15 @@ void screenshot_manager::prepare_image()
 	u32*	rgba	= reinterpret_cast<u32*>(++sizes); //then RGBA data
 	rgb24map*	dest	= reinterpret_cast<rgb24map*>(rgba); //WARNING sorce and dest stored in one place ...
 	
-	float	dx = float(*width) / RESULT_WIDTH;
-	float	dy = float(*height) / RESULT_HEIGHT;
+	float	dx = static_cast<float>(*width) / RESULT_WIDTH;
+	float	dy = static_cast<float>(*height) / RESULT_HEIGHT;
 	
 	//removin alfa byte with resize(first pixel)
 	for (int y = 0; y < RESULT_HEIGHT; ++y)
 	{
 		for (int x = 0; x < RESULT_WIDTH; ++x)
 		{
-			int rgba_index = (u32(dy * y) * (*width)) + u32(dx * x);
+			int rgba_index = (static_cast<u32>(dy * y) * (*width)) + static_cast<u32>(dx * x);
 			(*dest)[y][x].r = *reinterpret_cast<u8*>(&rgba[rgba_index]);
 			(*dest)[y][x].g = *(reinterpret_cast<u8*>(&rgba[rgba_index]) + 1);
 			(*dest)[y][x].b = *(reinterpret_cast<u8*>(&rgba[rgba_index]) + 2);

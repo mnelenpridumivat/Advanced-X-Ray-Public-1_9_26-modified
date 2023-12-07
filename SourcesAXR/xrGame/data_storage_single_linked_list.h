@@ -44,7 +44,7 @@ struct CDataStorageSingleLinkedList {
 		CGraphVertex		*m_list_tail;
 
 	public:
-		IC						CDataStorage		(const u32 vertex_count, const _dist_type _max_distance = _dist_type(u32(-1)));
+		IC						CDataStorage		(const u32 vertex_count, const _dist_type _max_distance = _dist_type(static_cast<u32>(-1)));
 		virtual					~CDataStorage		();
 		IC		void			init				();
 		IC		bool			is_opened_empty		() const;

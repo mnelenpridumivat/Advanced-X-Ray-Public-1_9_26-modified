@@ -44,7 +44,7 @@ void CStateManagerPoltergeist::reinit()
 
 void CStateManagerPoltergeist::execute()
 {
-	u32 state_id = u32(-1);
+	u32 state_id = static_cast<u32>(-1);
 
 	if ( object->EnemyMan.get_enemy() && object->detected_enemy() )
 	{

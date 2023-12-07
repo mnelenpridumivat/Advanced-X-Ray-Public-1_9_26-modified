@@ -98,10 +98,10 @@ CCharacterPhysicsSupport::CCharacterPhysicsSupport( EType atype, CEntityAlive* a
 	m_collision_hit_callback( NULL ),
 	m_interactive_animation( NULL ),
 	m_physics_shell_animated( NULL ),
-	m_physics_shell_animated_time_destroy( u32(-1) ),
+	m_physics_shell_animated_time_destroy( static_cast<u32>(-1) ),
 	m_weapon_attach_bone( 0 ),
 	m_active_item_obj( 0 ),
-	m_hit_valide_time(u32(-1)),
+	m_hit_valide_time(static_cast<u32>(-1)),
 	m_collision_activating_delay(NULL)
 {
 	m_flags.assign( 0 );
@@ -845,7 +845,7 @@ static const u32 physics_shell_animated_destroy_delay = 3000;
 void	CCharacterPhysicsSupport::	destroy_animation_collision		( )
 {
  	xr_delete( m_physics_shell_animated );
-	m_physics_shell_animated_time_destroy = u32(-1);
+	m_physics_shell_animated_time_destroy = static_cast<u32>(-1);
 }
 void CCharacterPhysicsSupport::create_animation_collision		( )
 {
@@ -1025,20 +1025,20 @@ void	CCharacterPhysicsSupport::	AddActiveWeaponCollision		()
 	CPhysicsShell *weapon_shell = P_build_Shell( &active_weapon_item->object(), true, (BONE_P_MAP*) (0), true );
 
 	VERIFY( m_pPhysicsShell );
-	CPhysicsElement* weapon_attach_bone = m_pPhysicsShell->get_PhysicsParrentElement( (u16)br );
+	CPhysicsElement* weapon_attach_bone = m_pPhysicsShell->get_PhysicsParrentElement( static_cast<u16>(br) );
 
-	bone_chain_disable( (u16)br, weapon_attach_bone->m_SelfID, *m_pPhysicsShell->PKinematics() );
+	bone_chain_disable( static_cast<u16>(br), weapon_attach_bone->m_SelfID, *m_pPhysicsShell->PKinematics() );
 	if(bl != br && bl!=-1 )
 	{
-		CPhysicsElement* p = m_pPhysicsShell->get_PhysicsParrentElement( (u16) bl );
+		CPhysicsElement* p = m_pPhysicsShell->get_PhysicsParrentElement( static_cast<u16>(bl) );
 		VERIFY( p );
-		bone_chain_disable( (u16)bl, p->m_SelfID, *m_pPhysicsShell->PKinematics() );
+		bone_chain_disable( static_cast<u16>(bl), p->m_SelfID, *m_pPhysicsShell->PKinematics() );
 	}
 	if(br2!=bl && br2 != br && br2!=-1 )
 	{
-		CPhysicsElement* p = m_pPhysicsShell->get_PhysicsParrentElement( (u16) br2 );
+		CPhysicsElement* p = m_pPhysicsShell->get_PhysicsParrentElement( static_cast<u16>(br2) );
 		VERIFY( p );
-		bone_chain_disable( (u16)br2, weapon_attach_bone->m_SelfID, *m_pPhysicsShell->PKinematics() );
+		bone_chain_disable( static_cast<u16>(br2), weapon_attach_bone->m_SelfID, *m_pPhysicsShell->PKinematics() );
 	}
 
 	CPhysicsElement* weapon_element		= weapon_shell->get_ElementByStoreOrder( 0 );
@@ -1117,7 +1117,7 @@ void	CCharacterPhysicsSupport::	CreateShell						( CObject* who, Fvector& dp, Fv
 	if( m_eType != etBitting )
 		K->LL_SetBoneRoot( anim_root );
 	
-	for( u16 I = K->LL_BoneCount( )-1; I!=u16(-1); --I )
+	for( u16 I = K->LL_BoneCount( )-1; I!=static_cast<u16>(-1); --I )
 				K->LL_GetBoneInstance( I ).reset_callback( );
 //
 	if( anim_mov_ctrl )	//we do not whant to move by long animation in root 

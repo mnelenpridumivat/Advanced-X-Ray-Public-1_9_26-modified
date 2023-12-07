@@ -41,16 +41,16 @@ void CControlPathBuilder::reinit()
 	m_data.try_min_time				= true;
 
 	m_data.target_position.set		(0.f,0.f,0.f);
-	m_data.target_node				= u32(-1);
+	m_data.target_node				= static_cast<u32>(-1);
 
 	m_data.enable					= false;
 	m_data.extrapolate				= false;
 
-	m_data.velocity_mask			= u32(-1);
-	m_data.desirable_mask			= u32(-1);
+	m_data.velocity_mask			= static_cast<u32>(-1);
+	m_data.desirable_mask			= static_cast<u32>(-1);
 
 	m_data.path_type				= MovementManager::ePathTypeLevelPath;
-	m_data.game_graph_target_vertex	= u32(-1);
+	m_data.game_graph_target_vertex	= static_cast<u32>(-1);
 }
 
 void CControlPathBuilder::update_schedule() 
@@ -61,7 +61,7 @@ void CControlPathBuilder::update_schedule()
 	// position and node will be in valid state
 	if (m_data.path_type != MovementManager::ePathTypePatrolPath) {
 		if (!accessible(m_data.target_position) || 
-			( (m_data.target_node != u32(-1)) && (!accessible(m_data.target_node)) )) {
+			( (m_data.target_node != static_cast<u32>(-1)) && (!accessible(m_data.target_node)) )) {
 				return;
 			}
 	}
@@ -89,8 +89,8 @@ void CControlPathBuilder::update_schedule()
 		set_path_type						(m_data.path_type);
 		if (m_data.path_type == MovementManager::ePathTypeGamePath) {
 			// check if we have alife task
-			if (m_data.game_graph_target_vertex != u32(-1)) {
-				set_game_dest_vertex					(GameGraph::_GRAPH_ID(m_data.game_graph_target_vertex));
+			if (m_data.game_graph_target_vertex != static_cast<u32>(-1)) {
+				set_game_dest_vertex					(static_cast<GameGraph::_GRAPH_ID>(m_data.game_graph_target_vertex));
 				game_selector().set_selection_type		(eSelectionTypeMask);
 			} else 
 				// else just wandering through the game graph
@@ -99,7 +99,7 @@ void CControlPathBuilder::update_schedule()
 			// set target
 			// TODO: make it VERIFY
 //			VERIFY3(m_data.target_node != u32(-1), "Error: Object set wrong path params! Object name:",*inherited_com::m_object->cName());
-			if (m_data.target_node == u32(-1)) return;
+			if (m_data.target_node == static_cast<u32>(-1)) return;
 
 			detail().set_dest_position		(m_data.target_position);
 			set_level_dest_vertex			(m_data.target_node);
@@ -132,7 +132,7 @@ bool CControlPathBuilder::build_special(const Fvector &target, u32 node, u32 vel
 {
 	if (!accessible(target)) return false;
 	
-	if (node == u32(-1)) {
+	if (node == static_cast<u32>(-1)) {
 		// нода в прямой видимости?
 		restrictions().add_border(object().Position(), target);
 		node = ai().level_graph().check_position_in_direction(object().ai_location().level_vertex_id(),object().Position(),target);
@@ -256,7 +256,7 @@ bool CControlPathBuilder::get_node_in_radius(u32 src_node, float min_radius, flo
 		restrictions().add_border		(vertex_position,new_pos);
 		dest_node		= ai().level_graph().check_position_in_direction(src_node, vertex_position, new_pos);
 		restrictions().remove_border	();
-		if (dest_node != u32(-1) && accessible(dest_node)) return true;
+		if (dest_node != static_cast<u32>(-1) && accessible(dest_node)) return true;
 	}
 	return false;
 }

@@ -86,7 +86,7 @@ void CHUDTarget::ShowCrosshair(bool b)
 float fCurrentPickPower;
 ICF static BOOL pick_trace_callback(collide::rq_result& result, LPVOID params)
 {
-	SPickParam*	pp			= (SPickParam*)params;
+	SPickParam*	pp			= static_cast<SPickParam*>(params);
 //	collide::rq_result* RQ	= pp->RQ;
 	++pp->pass;
 
@@ -243,7 +243,7 @@ void CHUDTarget::Render()
 							if (fuzzyShowInfo>0.5f)
 							{
 								CStringTable	strtbl		;
-								F->SetColor	(subst_alpha(C,u8(iFloor(255.f*(fuzzyShowInfo-0.5f)*2.f))));
+								F->SetColor	(subst_alpha(C,static_cast<u8>(iFloor(255.f * (fuzzyShowInfo - 0.5f) * 2.f))));
 								F->OutNext	("%s", *strtbl.translate(others_inv_owner->Name()) );
 								F->OutNext	("%s", *strtbl.translate(others_inv_owner->CharacterInfo().Community().id()) );
 							}
@@ -261,7 +261,7 @@ void CHUDTarget::Render()
 							float hud_info_item_y3 = CurrentGameUI()->UIMainIngameWnd->hud_info_item_y3;
 							int height = l_pI->GetInvGridRect().y2;
 							float pos = hud_info_item_y1;
-							F->SetColor	(subst_alpha(C,u8(iFloor(255.f*(fuzzyShowInfo-0.5f)*2.f))));
+							F->SetColor	(subst_alpha(C,static_cast<u8>(iFloor(255.f * (fuzzyShowInfo - 0.5f) * 2.f))));
 							if (height == 2)
 								pos = hud_info_item_y2;
 							else if (height == 3)
@@ -301,7 +301,7 @@ void CHUDTarget::Render()
 						{
 							clamp(fuzzyShowInfo,0.f,1.f);
 							int alpha_C = iFloor(255.f*(fuzzyShowInfo-0.5f)*2.f);
-							u8 alpha_b	= u8(alpha_C & 0x00ff);
+							u8 alpha_b	= static_cast<u8>(alpha_C & 0x00ff);
 							F->SetColor	(subst_alpha(C,alpha_b));
 							F->OutNext	("%s",*PP.RQ.O->cName());
 						}
@@ -327,7 +327,7 @@ void CHUDTarget::Render()
 	}
 
 	Fvector2 scr_size;
-	scr_size.set(float(Device.dwWidth), float(Device.dwHeight));
+	scr_size.set(static_cast<float>(Device.dwWidth), static_cast<float>(Device.dwHeight));
 	float size_x = scr_size.x * di_size;
 	float size_y = scr_size.y * di_size;
 

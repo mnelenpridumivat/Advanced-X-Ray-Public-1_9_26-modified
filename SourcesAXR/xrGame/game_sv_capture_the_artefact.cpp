@@ -62,8 +62,8 @@ u32		game_sv_CaptureTheArtefact::Get_ArtefactReturningTime_msec	() {return g_sv_
 u32		game_sv_CaptureTheArtefact::Get_ActivatedArtefactRet		() {return g_sv_cta_activatedArtefactRet;};	
 u32		game_sv_CaptureTheArtefact::Get_PlayerScoresDelayTime_msec	() {return g_sv_cta_PlayerScoresDelayTime * 1000;};
 
-BOOL	game_sv_CaptureTheArtefact::isFriendlyFireEnabled	()	{return (int(g_sv_tdm_fFriendlyFireModifier*100.0f) > 0);};
-float	game_sv_CaptureTheArtefact::GetFriendlyFire			()	{return (int(g_sv_tdm_fFriendlyFireModifier*100.0f) > 0) ? g_sv_tdm_fFriendlyFireModifier : 0.0f;};
+BOOL	game_sv_CaptureTheArtefact::isFriendlyFireEnabled	()	{return (static_cast<int>(g_sv_tdm_fFriendlyFireModifier * 100.0f) > 0);};
+float	game_sv_CaptureTheArtefact::GetFriendlyFire			()	{return (static_cast<int>(g_sv_tdm_fFriendlyFireModifier * 100.0f) > 0) ? g_sv_tdm_fFriendlyFireModifier : 0.0f;};
 int		game_sv_CaptureTheArtefact::Get_TeamKillLimit		()	{return g_sv_tdm_iTeamKillLimit;};
 BOOL	game_sv_CaptureTheArtefact::Get_TeamKillPunishment	()	{return g_sv_tdm_bTeamKillPunishment;};
 BOOL	game_sv_CaptureTheArtefact::Get_FriendlyIndicators	()	{return g_sv_tdm_bFriendlyIndicators	; };
@@ -249,13 +249,13 @@ void game_sv_CaptureTheArtefact::SM_SwitchOnNextActivePlayer()
 	CObject* pNewObject				= NULL;
 	if (!tmp_functor.PPlayersCount)
 	{
-		xrClientData*	C			= (xrClientData*) m_server->GetServerClient();
+		xrClientData*	C			= static_cast<xrClientData*>(m_server->GetServerClient());
 		pNewObject					= Level().Objects.net_Find(C->ps->GameID);
 	}
 	else
 	{
 		xrClientData*	C			= tmp_functor.PossiblePlayers[
-				::Random.randI((int)tmp_functor.PPlayersCount) ];
+				::Random.randI(static_cast<int>(tmp_functor.PPlayersCount)) ];
 
 		pNewObject					=  Level().Objects.net_Find(C->ps->GameID);
 		CActor* pActor				= smart_cast<CActor*>(pNewObject);
@@ -317,13 +317,13 @@ void game_sv_CaptureTheArtefact::net_Export_State(NET_Packet& P, ClientID id_to)
 	P.w_s32(greenTeam.score);
 	P.w_s32(blueTeam.score);
 
-	P.w_u8			(u8(Get_FriendlyIndicators()));
-	P.w_u8			(u8(Get_FriendlyNames()));
-	P.w_u8			(u8(Get_BearerCanSprint()));
-	P.w_u8			(u8(Get_ActivatedArtefactRet() != 0));
+	P.w_u8			(static_cast<u8>(Get_FriendlyIndicators()));
+	P.w_u8			(static_cast<u8>(Get_FriendlyNames()));
+	P.w_u8			(static_cast<u8>(Get_BearerCanSprint()));
+	P.w_u8			(static_cast<u8>(Get_ActivatedArtefactRet() != 0));
 	P.w_float		(g_sv_cta_artefactsBaseRadius);
 
-	P.w_u8			(u8(m_bInWarmUp));
+	P.w_u8			(static_cast<u8>(m_bInWarmUp));
 	P.w_s16			(static_cast<s16>(GetTimeLimit()));
 }
 void game_sv_CaptureTheArtefact::net_Export_Update(NET_Packet& P, ClientID id_to, ClientID id)
@@ -486,7 +486,7 @@ void game_sv_CaptureTheArtefact::OnPlayerReady(ClientID id_who)
 		game_PlayerState*	ps			= get_id	(id_who);
 		CSE_Abstract*		pOwner		= xrCData->owner;
 
-		xrClientData* xrSCData			= (xrClientData*)m_server->GetServerClient();
+		xrClientData* xrSCData			= static_cast<xrClientData*>(m_server->GetServerClient());
 		if (xrSCData && xrSCData->ID == id_who && m_bSpectatorMode) 
 		{
 			SM_SwitchOnNextActivePlayer	();
@@ -525,7 +525,7 @@ void game_sv_CaptureTheArtefact::OnPlayerReady(ClientID id_who)
 				SetPlayersDefItems(ps);
 			}
 			SpawnWeaponsForActor(pOwner, ps);
-			TeamStruct * pTeam = GetTeamData(u8(ps->team));
+			TeamStruct * pTeam = GetTeamData(static_cast<u8>(ps->team));
 			VERIFY(pTeam);
 			Player_AddMoney(ps, pTeam->m_iM_ClearRunBonus);	
 		}
@@ -766,7 +766,7 @@ void game_sv_CaptureTheArtefact::BalanceTeams()
 		R_ASSERT(tmp_functor.LowestPlayer);
 		///////// move player to opposite team
 		game_PlayerState* ps	= tmp_functor.LowestPlayer->ps;
-		ps->team = u8(MinTeam);
+		ps->team = static_cast<u8>(MinTeam);
 		NumToMove--;
 	}
 }
@@ -1039,7 +1039,7 @@ void game_sv_CaptureTheArtefact::LoadAnomalySet()
 		if (!level_ini_file->line_exist(CTA_ANOMALY_SET_BASE_NAME, set_id_str))
 			continue;
 		
-		m_AnomalySet.push_back	(std::make_pair(TAnomaliesVector(), u8(0)));
+		m_AnomalySet.push_back	(std::make_pair(TAnomaliesVector(), static_cast<u8>(0)));
 
 		if (!LoadAnomaliesItems(set_id_str, m_AnomalySet.back().first))
 			m_AnomalySet.erase	(m_AnomalySet.end() - 1);
@@ -1261,7 +1261,7 @@ void game_sv_CaptureTheArtefact::LoadDefItemsForTeam(const shared_str& caSection
 	for (u32 i = 0; i < count; ++i)
 	{
 		_GetItem(DefItems, i, ItemName);
-		pDefItems->push_back(u16(m_strWeaponsData->GetItemIdx(ItemName)&0xffff));
+		pDefItems->push_back(static_cast<u16>(m_strWeaponsData->GetItemIdx(ItemName) & 0xffff));
 	};
 };
 
@@ -1271,12 +1271,12 @@ void game_sv_CaptureTheArtefact::SpawnWeaponsForActor(CSE_Abstract* pE, game_Pla
 	VERIFY2(pA, "owner not an Actor");
 	if (!pA) return;
 
-	if (!(ps->team < s16(TeamList.size()))) return;
+	if (!(ps->team < static_cast<s16>(TeamList.size()))) return;
 	
 	while (ps->pItemList.size())
 	{
 		u16 ItemID = ps->pItemList.front();
-		SpawnWeapon4Actor	(pA->ID, *m_strWeaponsData->GetItemName(ItemID& 0x00FF), u8((ItemID & 0xFF00)>>0x08), ps->pItemList);
+		SpawnWeapon4Actor	(pA->ID, *m_strWeaponsData->GetItemName(ItemID& 0x00FF), static_cast<u8>((ItemID & 0xFF00) >> 0x08), ps->pItemList);
 		//Game().m_WeaponUsageStatistic->OnWeaponBought(ps, *m_strWeaponsData->GetItemName(ItemID& 0x00FF));
 		R_ASSERT(ps->pItemList.size());
 		ps->pItemList.erase(ps->pItemList.begin());
@@ -1334,7 +1334,7 @@ bool game_sv_CaptureTheArtefact::OnKillResult(KILL_RES KillResult, game_PlayerSt
 			{
 				s32 ResMoney = pTeam->m_iM_KillRival;
 				if (pKiller->testFlag(GAME_PLAYER_FLAG_INVINCIBLE))
-					ResMoney = s32(ResMoney * pTeam->m_fInvinsibleKillModifier);
+					ResMoney = static_cast<s32>(ResMoney * pTeam->m_fInvinsibleKillModifier);
 				Player_AddMoney(pKiller, ResMoney);
 			};
 			res = true;
@@ -1455,7 +1455,7 @@ void game_sv_CaptureTheArtefact::OnGiveBonus(KILL_RES KillResult, game_PlayerSta
 			{
 				string64 tmpStr;
 				xr_sprintf(tmpStr, "%d_kill_in_row", pKiller->m_iKillsInRowCurr);
-				Player_AddBonusMoney(pKiller, READ_IF_EXISTS(pSettings, r_s32, "mp_bonus_money", tmpStr,0), SKT_KIR, u8(pKiller->m_iKillsInRowCurr & 0xff));
+				Player_AddBonusMoney(pKiller, READ_IF_EXISTS(pSettings, r_s32, "mp_bonus_money", tmpStr,0), SKT_KIR, static_cast<u8>(pKiller->m_iKillsInRowCurr & 0xff));
 			};			
 		}break;
 	default:
@@ -1558,12 +1558,12 @@ void game_sv_CaptureTheArtefact::ProcessPlayerDeath(game_PlayerState *playerStat
 	playerState->m_iDeaths++;
 	playerState->m_iKillsInRowCurr = 0;
 	
-	TeamStruct * pTeam = GetTeamData(u8(playerState->team));
+	TeamStruct * pTeam = GetTeamData(static_cast<u8>(playerState->team));
 	VERIFY(pTeam);
 	Player_AddMoney(playerState, pTeam->m_iM_ClearRunBonus);
 	//here we will set the flag that player not bought items yet...
 	
-	xrClientData*	l_pC = (xrClientData*)get_client(playerState->GameID);
+	xrClientData*	l_pC = static_cast<xrClientData*>(get_client(playerState->GameID));
 	if (l_pC)
 	{
 		TGameIDToBoughtFlag::iterator buyer_iter = m_dead_buyers.find(l_pC->ID);
@@ -1758,9 +1758,9 @@ BOOL game_sv_CaptureTheArtefact::OnTouchItem(CSE_ActorMP *actor, CSE_Abstract *i
 				
 				m_server->Perform_transfer(PacketReject, PacketTake, e_child_item, item, actor);
 
-				EventPack.w_u8(u8(PacketReject.B.count));
+				EventPack.w_u8(static_cast<u8>(PacketReject.B.count));
 				EventPack.w(&PacketReject.B.data, PacketReject.B.count);
-				EventPack.w_u8(u8(PacketTake.B.count));
+				EventPack.w_u8(static_cast<u8>(PacketTake.B.count));
 				EventPack.w(&PacketTake.B.data, PacketTake.B.count);
 			}
 			if (EventPack.B.count > 2)
@@ -1924,7 +1924,7 @@ void game_sv_CaptureTheArtefact::OnDetachItem(CSE_ActorMP *actor, CSE_Abstract *
 				(e_item->m_tClassID == CLSID_DEVICE_TORCH))
 			{
 				to_destroy.push_back	(e_item);
-			} else if (m_strWeaponsData->GetItemIdx(e_item->s_name) != u32(-1))
+			} else if (m_strWeaponsData->GetItemIdx(e_item->s_name) != static_cast<u32>(-1))
 			{
 				if (!smart_cast<CSE_ALifeItemCustomOutfit*>(e_item))
 				{
@@ -1944,9 +1944,9 @@ void game_sv_CaptureTheArtefact::OnDetachItem(CSE_ActorMP *actor, CSE_Abstract *
 			tr_it != tr_it_e; ++tr_it)
 		{
 			m_server->Perform_transfer(PacketReject, PacketTake, *tr_it, actor, item);
-			EventPack.w_u8(u8(PacketReject.B.count));
+			EventPack.w_u8(static_cast<u8>(PacketReject.B.count));
 			EventPack.w(&PacketReject.B.data, PacketReject.B.count);
-			EventPack.w_u8(u8(PacketTake.B.count));
+			EventPack.w_u8(static_cast<u8>(PacketTake.B.count));
 			EventPack.w(&PacketTake.B.data, PacketTake.B.count);
 		}
 		
@@ -2343,7 +2343,7 @@ BOOL game_sv_CaptureTheArtefact::CheckForRoundEnd()
 	}
 	if (!GetTimeLimit())
 		return FALSE;
-	if ( (Level().timeServer() - StartTime()) > u32(GetTimeLimit()*60000) )
+	if ( (Level().timeServer() - StartTime()) > static_cast<u32>(GetTimeLimit() * 60000) )
 	{
 		if (teams[etGreenTeam].score != teams[etBlueTeam].score)
 		{
@@ -2456,7 +2456,7 @@ void game_sv_CaptureTheArtefact::OnPostCreate(u16 id_who)
 	if (!zone_name)
 		return;
 
-	TGIDCPair				id_pair = std::make_pair(id_who, u8(0));
+	TGIDCPair				id_pair = std::make_pair(id_who, static_cast<u8>(0));
 	
 	m_AnomalyIds.insert(
 		std::make_pair(

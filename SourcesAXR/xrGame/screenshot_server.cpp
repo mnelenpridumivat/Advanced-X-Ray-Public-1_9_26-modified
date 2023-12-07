@@ -50,10 +50,10 @@ void clientdata_proxy::make_screenshot(ClientID const & admin_id, ClientID const
 	ssr_packet.w_u8					(e_screenshot_request);	//make screenshot
 
 	//alligning size to GAME_EVENT_PLAYER_KILLED message size
-	ssr_packet.w_u16		(u16(Random.randI(2)));	//food for thought for crackers :)
-	ssr_packet.w_u16		(u16(Random.randI(2)));
-	ssr_packet.w_u16		(u16(Random.randI(2)));
-	ssr_packet.w_u8			(u8(Random.randI(2)));
+	ssr_packet.w_u16		(static_cast<u16>(Random.randI(2)));	//food for thought for crackers :)
+	ssr_packet.w_u16		(static_cast<u16>(Random.randI(2)));
+	ssr_packet.w_u16		(static_cast<u16>(Random.randI(2)));
+	ssr_packet.w_u8			(static_cast<u8>(Random.randI(2)));
 
 	Level().Server->SecureSendTo	(tmp_cheater, ssr_packet, net_flags(TRUE, TRUE));
 	
@@ -89,10 +89,10 @@ void clientdata_proxy::make_config_dump(ClientID const & admin_id, ClientID cons
 	ssr_packet.w_u8					(e_configs_request);	//make screenshot
 
 	//alligning size to GAME_EVENT_PLAYER_KILLED message size
-	ssr_packet.w_u16		(u16(Random.randI(2)));	//food for thought for crackers :)
-	ssr_packet.w_u16		(u16(Random.randI(2)));
-	ssr_packet.w_u16		(u16(Random.randI(2)));
-	ssr_packet.w_u8			(u8(Random.randI(2)));
+	ssr_packet.w_u16		(static_cast<u16>(Random.randI(2)));	//food for thought for crackers :)
+	ssr_packet.w_u16		(static_cast<u16>(Random.randI(2)));
+	ssr_packet.w_u16		(static_cast<u16>(Random.randI(2)));
+	ssr_packet.w_u8			(static_cast<u8>(Random.randI(2)));
 
 	Level().Server->SecureSendTo	(tmp_cheater, ssr_packet, net_flags(TRUE, TRUE));
 	

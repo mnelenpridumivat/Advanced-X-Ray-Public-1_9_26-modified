@@ -96,7 +96,7 @@ private:
 
 public:
 	enum EAnimationEventType {
-		eAnimationHit		= u32(0),
+		eAnimationHit		= static_cast<u32>(0),
 		eAnimationCustom
 	};
 };

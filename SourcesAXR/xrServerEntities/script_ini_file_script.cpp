@@ -19,14 +19,14 @@ CScriptIniFile *get_system_ini()
 #ifdef XRGAME_EXPORTS
 CScriptIniFile *get_game_ini()
 {
-	return	((CScriptIniFile*)pGameIni);
+	return	static_cast<CScriptIniFile*>(pGameIni);
 }
 #endif // XRGAME_EXPORTS
 
 bool r_line(CScriptIniFile *self, LPCSTR S, int L,	luabind::internal_string &N, luabind::internal_string &V)
 {
 	THROW3			(self->section_exist(S),"Cannot find section",S);
-	THROW2			((int)self->line_count(S) > L,"Invalid line number");
+	THROW2			(static_cast<int>(self->line_count(S)) > L,"Invalid line number");
 	
 	N				= "";
 	V				= "";
@@ -46,16 +46,13 @@ bool r_line(CScriptIniFile *self, LPCSTR S, int L,	luabind::internal_string &N, 
 #pragma warning(disable:4238)
 CScriptIniFile *create_ini_file	(LPCSTR ini_string)
 {
-	return			(
-		(CScriptIniFile*)
-		xr_new<CInifile>(
-			&IReader			(
-				(void*)ini_string,
-				xr_strlen(ini_string)
-			),
-			FS.get_path("$game_config$")->m_Path
-		)
-	);
+	return			static_cast<CScriptIniFile*>(xr_new<CInifile>(
+		&IReader(
+			(void*)ini_string,
+			xr_strlen(ini_string)
+		),
+		FS.get_path("$game_config$")->m_Path
+	));
 }
 #pragma warning(pop)
 

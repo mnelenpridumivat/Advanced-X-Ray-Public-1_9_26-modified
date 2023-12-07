@@ -61,12 +61,12 @@ void CStepManager::reload(LPCSTR section)
 	for (u32 i=0; pSettings->r_line(anim_section,i,&anim_name,&val); ++i) {
 		_GetItem (val,0,cur_elem);
 
-		param.cycles = u8(atoi(cur_elem));
+		param.cycles = static_cast<u8>(atoi(cur_elem));
 		R_ASSERT(param.cycles >= 1);
 
 		for (u32 j=0;j<m_legs_count;j++) {
-			_GetItem	(val,1+j*2,		cur_elem);		param.step[j].time	= float(atof(cur_elem));
-			_GetItem	(val,1+j*2+1,	cur_elem);		param.step[j].power	= float(atof(cur_elem));
+			_GetItem	(val,1+j*2,		cur_elem);		param.step[j].time	= static_cast<float>(atof(cur_elem));
+			_GetItem	(val,1+j*2+1,	cur_elem);		param.step[j].power	= static_cast<float>(atof(cur_elem));
 			VERIFY		(_valid(param.step[j].power));			
 		}
 		
@@ -177,7 +177,7 @@ void CStepManager::update(bool b_hud_view)
 			continue;
 
 		// вычислить смещённое время шага в соответствии с параметрами анимации ходьбы
-		u32 offset_time = m_time_anim_started + u32(1000 * (cycle_anim_time * (m_step_info.cur_cycle-1) + cycle_anim_time * step.step[i].time));
+		u32 offset_time = m_time_anim_started + static_cast<u32>(1000 * (cycle_anim_time * (m_step_info.cur_cycle - 1) + cycle_anim_time * step.step[i].time));
 		if (offset_time <= cur_time)
 		{
 
@@ -211,7 +211,7 @@ void CStepManager::update(bool b_hud_view)
 				Fvector::generate_orthonormal_basis(pos.k, pos.j, pos.i);
 
 				// установить позицию
-				pos.c.set(get_foot_position(ELegType(i)));
+				pos.c.set(get_foot_position(static_cast<ELegType>(i)));
 
 				ps->UpdateParent(pos,Fvector().set(0.f,0.f,0.f));
 				GamePersistent().ps_needtoplay.push_back(ps);
@@ -228,10 +228,10 @@ void CStepManager::update(bool b_hud_view)
 
 	// определить текущий цикл
 	if (m_step_info.cur_cycle < step.cycles)
-		m_step_info.cur_cycle = 1 + u8(float(cur_time - m_time_anim_started) / (1000.f * cycle_anim_time));
+		m_step_info.cur_cycle = 1 + static_cast<u8>(float(cur_time - m_time_anim_started) / (1000.f * cycle_anim_time));
 
 	// если анимация циклическая...
-	u32 time_anim_end = m_time_anim_started + u32(get_blend_time() * 1000);		// время завершения работы анимации
+	u32 time_anim_end = m_time_anim_started + static_cast<u32>(get_blend_time() * 1000);		// время завершения работы анимации
 	if (!m_blend->stop_at_end && (time_anim_end < cur_time)) {
 		
 		m_time_anim_started		= time_anim_end;
@@ -309,14 +309,15 @@ void CStepManager::material_sound::play_next(SGameMtlPair* mtl_pair, CEntityAliv
 	Fvector sound_pos	= object->Position();
 	sound_pos.y			+= 0.5;
 
-	if( last_mtl_pair!= mtl_pair || m_last_step_sound_played == u8(-1) )
+	if( last_mtl_pair!= mtl_pair || m_last_step_sound_played == static_cast<u8>(-1) )
 	{
-		m_last_step_sound_played	= u8( Random.randI(mtl_pair->StepSounds.size()) );
+		m_last_step_sound_played	= static_cast<u8>(Random.randI(mtl_pair->StepSounds.size()));
 		last_mtl_pair				= mtl_pair; 
 	} else 
 	{
 		
-		u8 new_played = u8 ( ( m_last_step_sound_played + 1 +  Random.randI(mtl_pair->StepSounds.size()-1) ) % mtl_pair->StepSounds.size() );
+		u8 new_played = static_cast<u8>((m_last_step_sound_played + 1 + Random.randI(mtl_pair->StepSounds.size() - 1)) % mtl_pair->StepSounds.
+			size());
 	
 		m_last_step_sound_played = new_played;
 	}

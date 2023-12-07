@@ -22,11 +22,11 @@ bool CUIMpTradeWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 	if(keyboard_action==WINDOW_KEY_PRESSED && dik==DIK_NUMPAD7)
 	{
 		if(GetRank()>0)
-			SetRank( clampr(u32(GetRank()-1),u32(0),u32(4) ) );
+			SetRank( clampr(static_cast<u32>(GetRank() - 1),static_cast<u32>(0),static_cast<u32>(4) ) );
 	}
 	if(keyboard_action==WINDOW_KEY_PRESSED && dik==DIK_NUMPAD8)
 	{
-		SetRank( clampr(u32(GetRank()+1),u32(0),u32(4) ) );
+		SetRank( clampr(static_cast<u32>(GetRank() + 1),static_cast<u32>(0),static_cast<u32>(4) ) );
 	}
 #endif
 
@@ -87,13 +87,13 @@ void CUIMpTradeWnd::UpdateMoneyIndicator()
 		for(u32 i=_preset_idx_last; i<=_preset_idx_3; ++i)
 		{
 			CUITextWnd* st					= m_static_preset_money[i];
-			_cost							= GetPresetCost((ETradePreset)i);
+			_cost							= GetPresetCost(static_cast<ETradePreset>(i));
 			xr_sprintf						(buff, "%d", _cost);
 			st->SetText						(buff);
 			bool b_has_enought_money		= _cost<=GetMoneyAmount();
 			u32 clr							= (b_has_enought_money)?m_text_color_money_positive:m_text_color_money_negative;
 			st->SetTextColor				(clr);
-			const preset_items&		v		= GetPreset((ETradePreset)i);
+			const preset_items&		v		= GetPreset(static_cast<ETradePreset>(i));
 			m_btns_preset[i]->Enable		(b_has_enought_money && v.size()!=0);
 		}
 	}
@@ -140,7 +140,7 @@ CUICellItem* CUIMpTradeWnd::CurrentItem()
 
 CInventoryItem* CUIMpTradeWnd::CurrentIItem()
 {
-	return	(m_pCurrentCellItem)?(CInventoryItem*)m_pCurrentCellItem->m_pData : NULL;
+	return	(m_pCurrentCellItem)?static_cast<CInventoryItem*>(m_pCurrentCellItem->m_pData) : NULL;
 }
 LPCSTR _team_names[]=
 {
@@ -386,7 +386,7 @@ CUIDragDropListEx*	CUIMpTradeWnd::GetMatchedListForItem(const shared_str& sect_n
 		if(!ci)
 			return				m_list[e_player_bag];
 
-		CInventoryItem* ii = (CInventoryItem*)ci->m_pData;
+		CInventoryItem* ii = static_cast<CInventoryItem*>(ci->m_pData);
 
 		if(!ii->IsNecessaryItem(sect_name))
 			return				m_list[e_player_bag];
@@ -412,7 +412,7 @@ const shared_str& CUIMpTradeWnd::GetWeaponNameByIndex(u8 grpNum, u8 idx)
 {
 //	return _fake;
 	if (idx >= m_item_mngr->GetItemsCount()) return _fake;
-	return m_item_mngr->GetItemName(u32(idx));
+	return m_item_mngr->GetItemName(static_cast<u32>(idx));
 }
 
 
@@ -421,7 +421,7 @@ void CUIMpTradeWnd::GetWeaponIndexByName(const shared_str& sectionName, u8 &grpN
 	
 	u32 idx__	= m_item_mngr->GetItemIdx(sectionName);
 	grpNum		= 0;
-	idx			= (u8)idx__;
+	idx			= static_cast<u8>(idx__);
 }
 
 
@@ -502,7 +502,7 @@ void CUIMpTradeWnd::SetMoneyAmount(u32 money)
 	VERIFY			(money>=0);
 	m_money			= money;
 	if(m_bIgnoreMoneyAndRank)
-		m_money		= u32(-1);
+		m_money		= static_cast<u32>(-1);
 }
 
 void CUIMpTradeWnd::ResetItems()

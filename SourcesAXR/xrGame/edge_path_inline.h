@@ -44,7 +44,7 @@ IC	void CEdgePathBuilder::get_edge_path	(xr_vector<_edge_type> &path, CGraphVert
 {
 	CGraphVertex			*t1 = best, *t2 = best->back();
 	for (u32 i=1; t2; t1 = t2, t2 = t2->back(), ++i) ;
-	u32						n = (u32)path.size(); 
+	u32						n = static_cast<u32>(path.size()); 
 
 	path.resize				(n + --i);
 	t2						= best;

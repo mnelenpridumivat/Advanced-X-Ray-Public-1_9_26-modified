@@ -164,7 +164,7 @@ public:
 		eSubstateReloadInProcess,
 		eSubstateReloadEnd,
 	};
-	enum { undefined_ammo_type = u8(-1) };
+	enum { undefined_ammo_type = static_cast<u8>(-1) };
 
 	IC BOOL					IsValid				()	const		{	return iAmmoElapsed;						}
 	// Does weapon need's update?
@@ -177,7 +177,7 @@ public:
 
 	BOOL					AutoSpawnAmmo		() const		{ return m_bAutoSpawnAmmo; };
 	bool					IsTriStateReload	() const		{ return m_bTriStateReload;}
-	EWeaponSubStates		GetReloadState		() const		{ return (EWeaponSubStates)m_sub_state;}
+	EWeaponSubStates		GetReloadState		() const		{ return static_cast<EWeaponSubStates>(m_sub_state);}
 protected:
 	bool					m_bTriStateReload;
 	// a misfire happens, you'll need to rearm weapon

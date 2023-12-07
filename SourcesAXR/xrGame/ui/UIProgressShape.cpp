@@ -26,7 +26,7 @@ void CUIProgressShape::SetPos(float pos){
 }
 
 void CUIProgressShape::SetPos(int pos, int max){
-	m_stage					= float(pos)/float(max);
+	m_stage					= static_cast<float>(pos)/static_cast<float>(max);
 	if (m_bText)
 	{
 		string256 _buff;
@@ -53,13 +53,13 @@ void _make_rot_tex(Fvector2& pt, float src, float sin_a, float cos_a)
 
 float calc_color(u32 idx, u32 total, float stage, float max_stage, bool blend)
 {
-	float kk = ( stage/max_stage ) *  (float(total+1));
+	float kk = ( stage/max_stage ) *  static_cast<float>(total + 1);
 	if ( blend )
 	{
-		return ( 1/(exp((float(idx)-kk)*0.9f)+1.0f) );
+		return ( 1/(exp((static_cast<float>(idx)-kk)*0.9f)+1.0f) );
 	}
 	
-	if ( (float)idx < kk )
+	if ( static_cast<float>(idx) < kk )
 	{
 		return 1.0f;
 	}
@@ -145,7 +145,7 @@ void CUIProgressShape::Draw()
 		tp1.set(tp);
 		tx1.set(tx);
 
-		curr_angle					+= angle_range/float(m_sectorCount);
+		curr_angle					+= angle_range/static_cast<float>(m_sectorCount);
 
 		sin_a						= _sin(curr_angle);
 		cos_a						= _cos(curr_angle);

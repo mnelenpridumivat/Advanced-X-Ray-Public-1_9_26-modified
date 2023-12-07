@@ -181,7 +181,7 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	m_fFeelGrenadeTime      =	1.0f;
 	
 	m_holder				=	NULL;
-	m_holderID				=	u16(-1);
+	m_holderID				=	static_cast<u16>(-1);
 
 
 #ifdef DEBUG
@@ -214,8 +214,8 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	m_anims					= xr_new<SActorMotions>();
 	m_vehicle_anims			= xr_new<SActorVehicleAnims>();
 	m_entity_condition		= NULL;
-	m_iLastHitterID			= u16(-1);
-	m_iLastHittingWeaponID	= u16(-1);
+	m_iLastHitterID			= static_cast<u16>(-1);
+	m_iLastHittingWeaponID	= static_cast<u16>(-1);
 	m_statistic_manager		= NULL;
 	//-----------------------------------------------------------------------------------
 	m_memory				= g_dedicated_server ? 0 : xr_new<CActorMemory>(this);
@@ -416,9 +416,9 @@ void CActor::Load	(LPCSTR section )
 if(!g_dedicated_server)
 {
 	LPCSTR hit_snd_sect = pSettings->r_string(section,"hit_sounds");
-	for(int hit_type=0; hit_type<(int)ALife::eHitTypeMax; ++hit_type)
+	for(int hit_type=0; hit_type<static_cast<int>(ALife::eHitTypeMax); ++hit_type)
 	{
-		LPCSTR hit_name = ALife::g_cafHitType2String((ALife::EHitType)hit_type);
+		LPCSTR hit_name = ALife::g_cafHitType2String(static_cast<ALife::EHitType>(hit_type));
 		LPCSTR hit_snds = READ_IF_EXISTS(pSettings, r_string, hit_snd_sect, hit_name, "");
 		int cnt = _GetItemCount(hit_snds);
 		string128		tmp;
@@ -577,7 +577,7 @@ void	CActor::Hit(SHit* pHDS)
 				S.set_volume(10.0f);
 				if(!m_sndShockEffector){
 					m_sndShockEffector = xr_new<SndShockEffector>();
-					m_sndShockEffector->Start(this, float(S.get_length_sec()*1000.0f), HDS.damage() );
+					m_sndShockEffector->Start(this, static_cast<float>(S.get_length_sec() * 1000.0f), HDS.damage() );
 				}
 			}
 			else
@@ -694,7 +694,7 @@ void CActor::HitMark	(float P,
 	{
 		HUD().HitMarked				(0, P, dir);
 
-		CEffectorCam* ce			= Cameras().GetCamEffector((ECamEffectorType)effFireHit);
+		CEffectorCam* ce			= Cameras().GetCamEffector(static_cast<ECamEffectorType>(effFireHit));
 		if( ce )					return;
 
 		int id						= -1;
@@ -1042,7 +1042,7 @@ void CActor::UpdateCL	()
 	SetZoomAimingMode		(false);
 	CWeapon* pWeapon		= smart_cast<CWeapon*>(inventory().ActiveItem());	
 
-	cam_Update(float(Device.dwTimeDelta)/1000.0f, currentFOV());
+	cam_Update(static_cast<float>(Device.dwTimeDelta)/1000.0f, currentFOV());
 
 	if(Level().CurrentEntity() && this->ID()==Level().CurrentEntity()->ID() )
 	{
@@ -1280,7 +1280,7 @@ void CActor::shedule_Update	(u32 DT)
 	}
 
 	clamp					(DT,0u,100u);
-	float	dt	 			=  float(DT)/1000.f;
+	float	dt	 			=  static_cast<float>(DT)/1000.f;
 
 	// Check controls, create accel, prelimitary setup "mstate_real"
 	
@@ -1656,7 +1656,7 @@ void CActor::RenderIndicator			(Fvector dpos, float r1, float r2, const ui_shade
 
 	UIRender->StartPrimitive(4, IUIRender::ptTriStrip, IUIRender::pttLIT);
 
-	CBoneInstance& BI = smart_cast<IKinematics*>(Visual())->LL_GetBoneInstance(u16(m_head));
+	CBoneInstance& BI = smart_cast<IKinematics*>(Visual())->LL_GetBoneInstance(static_cast<u16>(m_head));
 	Fmatrix M;
 	smart_cast<IKinematics*>(Visual())->CalculateBones	();
 	M.mul						(XFORM(),BI.mTransform);
@@ -1706,7 +1706,7 @@ void CActor::RenderText				(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 {
 	if (!g_Alive()) return;
 	
-	CBoneInstance& BI = smart_cast<IKinematics*>(Visual())->LL_GetBoneInstance(u16(m_head));
+	CBoneInstance& BI = smart_cast<IKinematics*>(Visual())->LL_GetBoneInstance(static_cast<u16>(m_head));
 	Fmatrix M;
 	smart_cast<IKinematics*>(Visual())->CalculateBones	();
 	M.mul						(XFORM(),BI.mTransform);
@@ -1772,7 +1772,7 @@ void CActor::ForceTransform(const Fmatrix& m)
 	character_physics_support()->ForceTransform( m );
 	const float block_damage_time_seconds = 2.f;
 	if(!IsGameTypeSingle())
-		character_physics_support()->movement()->BlockDamageSet( u64( block_damage_time_seconds/fixed_step ) );
+		character_physics_support()->movement()->BlockDamageSet( static_cast<u64>(block_damage_time_seconds / fixed_step) );
 }
 
 ENGINE_API extern float		psHUD_FOV;
@@ -2169,13 +2169,13 @@ float CActor::GetProtection_ArtefactsOnBelt( ALife::EHitType hit_type )
 void	CActor::SetZoomRndSeed		(s32 Seed)
 {
 	if (0 != Seed) m_ZoomRndSeed = Seed;
-	else m_ZoomRndSeed = s32(Level().timeServer_Async());
+	else m_ZoomRndSeed = static_cast<s32>(Level().timeServer_Async());
 };
 
 void	CActor::SetShotRndSeed		(s32 Seed)
 {
 	if (0 != Seed) m_ShotRndSeed = Seed;
-	else m_ShotRndSeed = s32(Level().timeServer_Async());
+	else m_ShotRndSeed = static_cast<s32>(Level().timeServer_Async());
 };
 
 void CActor::spawn_supplies			()
@@ -2187,7 +2187,7 @@ void CActor::spawn_supplies			()
 
 void CActor::AnimTorsoPlayCallBack(CBlend* B)
 {
-	CActor* actor		= (CActor*)B->CallbackParam;
+	CActor* actor		= static_cast<CActor*>(B->CallbackParam);
 	actor->m_bAnimTorsoPlayed = FALSE;
 }
 
@@ -2700,7 +2700,7 @@ bool CActor::use_HolderEx(CHolderCustom* object, bool bForce)
 				SetCallbacks();
 
 				m_holder = NULL;
-				m_holderID = u16(-1);
+				m_holderID = static_cast<u16>(-1);
 
 				IKinematicsAnimated* V = smart_cast<IKinematicsAnimated*>(Visual()); R_ASSERT(V);
 				V->PlayCycle(m_anims->m_normal.legs_idle);
@@ -2708,7 +2708,7 @@ bool CActor::use_HolderEx(CHolderCustom* object, bool bForce)
 
 				IKinematics* pK = smart_cast<IKinematics*>(Visual());
 				u16 head_bone = pK->LL_BoneID("bip01_head");
-				pK->LL_GetBoneInstance(u16(head_bone)).set_callback(bctPhysics, HeadCallback, this);
+				pK->LL_GetBoneInstance(static_cast<u16>(head_bone)).set_callback(bctPhysics, HeadCallback, this);
 			}
 		}
 		return true;
@@ -2748,7 +2748,7 @@ bool CActor::use_HolderEx(CHolderCustom* object, bool bForce)
 
 				IKinematics* pK = smart_cast<IKinematics*>(Visual());
 				u16 head_bone = pK->LL_BoneID("bip01_head");
-				pK->LL_GetBoneInstance(u16(head_bone)).set_callback(bctPhysics, VehicleHeadCallback, this);
+				pK->LL_GetBoneInstance(static_cast<u16>(head_bone)).set_callback(bctPhysics, VehicleHeadCallback, this);
 
 				CCar* car = smart_cast<CCar*>(object);
 				if (car)

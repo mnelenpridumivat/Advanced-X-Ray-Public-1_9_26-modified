@@ -45,7 +45,7 @@ void CControlRotationJump::on_release()
 {
 	m_man->unlock		(this, ControlCom::eControlPath);
 
-	SControlDirectionData				*ctrl_data_dir = (SControlDirectionData*)m_man->data(this, ControlCom::eControlDir); 
+	SControlDirectionData				*ctrl_data_dir = static_cast<SControlDirectionData*>(m_man->data(this, ControlCom::eControlDir)); 
 	VERIFY								(ctrl_data_dir);
 	ctrl_data_dir->linear_dependency	= true;
 
@@ -90,7 +90,7 @@ void CControlRotationJump::stop_at_once()
 	m_time = m_man->animation().motion_time(m_right_side ? m_data.anim_stop_rs : m_data.anim_stop_ls, m_object->Visual());	
 
 	// set angular speed in exclusive force mode
-	SControlDirectionData					*ctrl_data_dir = (SControlDirectionData*)m_man->data(this, ControlCom::eControlDir); 
+	SControlDirectionData					*ctrl_data_dir = static_cast<SControlDirectionData*>(m_man->data(this, ControlCom::eControlDir)); 
 	VERIFY									(ctrl_data_dir);	
 
 	float target_yaw;
@@ -115,7 +115,7 @@ void CControlRotationJump::stop_at_once()
 	m_stage									= eStop;	
 
 	// start new animation
-	SControlAnimationData		*ctrl_data = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+	SControlAnimationData		*ctrl_data = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 	VERIFY						(ctrl_data);
 
 	ctrl_data->global.set_motion (m_right_side ? m_data.anim_stop_rs : m_data.anim_stop_ls);
@@ -138,7 +138,7 @@ void CControlRotationJump::build_line_first()
 	
 	
 	// set angular speed in exclusive force mode
-	SControlDirectionData					*ctrl_data_dir = (SControlDirectionData*)m_man->data(this, ControlCom::eControlDir); 
+	SControlDirectionData					*ctrl_data_dir = static_cast<SControlDirectionData*>(m_man->data(this, ControlCom::eControlDir)); 
 	VERIFY									(ctrl_data_dir);	
 
 	float target_yaw						= angle_normalize(-m_object->Direction().getH() + (m_right_side ? m_data.turn_angle : -m_data.turn_angle));
@@ -157,23 +157,23 @@ void CControlRotationJump::build_line_first()
 	Fvector target_position;
 	target_position.mad(m_object->Position(), m_object->Direction(), m_dist);
 
-	if (!m_man->build_path_line(this, target_position, u32(-1), velocity_mask)) {
+	if (!m_man->build_path_line(this, target_position, static_cast<u32>(-1), velocity_mask)) {
 		m_man->notify				(ControlCom::eventRotationJumpEnd, 0);
 	} else { 
 		// enable path
-		SControlPathBuilderData		*ctrl_path = (SControlPathBuilderData*)m_man->data(this, ControlCom::eControlPath); 
+		SControlPathBuilderData		*ctrl_path = static_cast<SControlPathBuilderData*>(m_man->data(this, ControlCom::eControlPath)); 
 		VERIFY						(ctrl_path);
 		ctrl_path->enable			= true;
 		
 		m_man->lock					(this, ControlCom::eControlPath);
 
-		SControlMovementData		*ctrl_move = (SControlMovementData*)m_man->data(this, ControlCom::eControlMovement); 
+		SControlMovementData		*ctrl_move = static_cast<SControlMovementData*>(m_man->data(this, ControlCom::eControlMovement)); 
 		VERIFY						(ctrl_move);
 		ctrl_move->velocity_target	= m_target_velocity;
 		ctrl_move->acc				= _abs(m_accel);
 
 		// start new animation
-		SControlAnimationData		*ctrl_data = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+		SControlAnimationData		*ctrl_data = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 		VERIFY						(ctrl_data);
 
 		ctrl_data->global.set_motion (m_right_side ? m_data.anim_stop_rs : m_data.anim_stop_ls);
@@ -202,7 +202,7 @@ void CControlRotationJump::build_line_second()
 	m_dist = (m_target_velocity*m_target_velocity - m_start_velocity*m_start_velocity) / (2*m_accel);
 
 	// set angular speed in exclusive force mode
-	SControlDirectionData					*ctrl_data_dir = (SControlDirectionData*)m_man->data(this, ControlCom::eControlDir); 
+	SControlDirectionData					*ctrl_data_dir = static_cast<SControlDirectionData*>(m_man->data(this, ControlCom::eControlDir)); 
 	VERIFY									(ctrl_data_dir);	
 
 	Fvector					dir_to_enemy;
@@ -229,23 +229,23 @@ void CControlRotationJump::build_line_second()
 	Fvector target_position;
 	target_position.mad(m_object->Position(), dir_to_enemy, m_dist);
 
-	if (!m_man->build_path_line(this, target_position, u32(-1), velocity_mask)) {
+	if (!m_man->build_path_line(this, target_position, static_cast<u32>(-1), velocity_mask)) {
 		m_man->notify				(ControlCom::eventRotationJumpEnd, 0);
 	} else { 
 		// enable path
-		SControlPathBuilderData		*ctrl_path = (SControlPathBuilderData*)m_man->data(this, ControlCom::eControlPath); 
+		SControlPathBuilderData		*ctrl_path = static_cast<SControlPathBuilderData*>(m_man->data(this, ControlCom::eControlPath)); 
 		VERIFY						(ctrl_path);
 		ctrl_path->enable			= true;
 
 		m_man->lock					(this, ControlCom::eControlPath);
 
-		SControlMovementData		*ctrl_move = (SControlMovementData*)m_man->data(this, ControlCom::eControlMovement); 
+		SControlMovementData		*ctrl_move = static_cast<SControlMovementData*>(m_man->data(this, ControlCom::eControlMovement)); 
 		VERIFY						(ctrl_move);
 		ctrl_move->velocity_target	= m_target_velocity;
 		ctrl_move->acc				= m_accel;
 
 		// start new animation
-		SControlAnimationData		*ctrl_data = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+		SControlAnimationData		*ctrl_data = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 		VERIFY						(ctrl_data);
 
 		ctrl_data->global.set_motion (m_right_side ? m_data.anim_run_rs : m_data.anim_run_ls);

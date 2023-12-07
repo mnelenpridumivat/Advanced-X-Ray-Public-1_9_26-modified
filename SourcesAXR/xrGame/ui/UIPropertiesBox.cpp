@@ -206,7 +206,7 @@ void CUIPropertiesBox::AutoUpdateSize()
 {
 	Fvector2 sz				= GetWndSize();
 	sz.y					= m_UIListWnd.GetItemHeight()*m_UIListWnd.GetSize()+ m_UIListWnd.GetVertIndent();
-	sz.x					= float(m_UIListWnd.GetLongestLength()+m_UIListWnd.GetHorizIndent()) + 2;
+	sz.x					= static_cast<float>(m_UIListWnd.GetLongestLength() + m_UIListWnd.GetHorizIndent()) + 2;
 	SetWndSize				(sz);
 	m_UIListWnd.SetWndSize	(GetWndSize());
 	m_UIListWnd.UpdateChildrenLenght();

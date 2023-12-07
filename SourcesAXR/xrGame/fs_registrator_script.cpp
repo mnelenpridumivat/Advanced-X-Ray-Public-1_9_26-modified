@@ -112,7 +112,7 @@ FS_file_list_ex::FS_file_list_ex(LPCSTR path, u32 flags, LPCSTR mask)
 		FS_item& itm			= m_file_items.back();
 		ZeroMemory				(itm.name,sizeof(itm.name));
 		xr_strcat					(itm.name,it->name.c_str());
-		itm.modif				= (u32)it->time_write;
+		itm.modif				= static_cast<u32>(it->time_write);
 		itm.size				= it->size;
 	}
 
@@ -193,27 +193,27 @@ void fs_registrator::script_register(lua_State *L)
 		class_<CLocatorAPI>("FS")
 			.enum_("FS_sort_mode")
 			[
-				value("FS_sort_by_name_up",				int(FS_file_list_ex::eSortByNameUp)),
-				value("FS_sort_by_name_down",			int(FS_file_list_ex::eSortByNameDown)),
-				value("FS_sort_by_size_up",				int(FS_file_list_ex::eSortBySizeUp)),
-				value("FS_sort_by_size_down",			int(FS_file_list_ex::eSortBySizeDown)),
-				value("FS_sort_by_modif_up",			int(FS_file_list_ex::eSortByModifUp)),
-				value("FS_sort_by_modif_down",			int(FS_file_list_ex::eSortByModifDown))
+				value("FS_sort_by_name_up",				static_cast<int>(FS_file_list_ex::eSortByNameUp)),
+				value("FS_sort_by_name_down",			static_cast<int>(FS_file_list_ex::eSortByNameDown)),
+				value("FS_sort_by_size_up",				static_cast<int>(FS_file_list_ex::eSortBySizeUp)),
+				value("FS_sort_by_size_down",			static_cast<int>(FS_file_list_ex::eSortBySizeDown)),
+				value("FS_sort_by_modif_up",			static_cast<int>(FS_file_list_ex::eSortByModifUp)),
+				value("FS_sort_by_modif_down",			static_cast<int>(FS_file_list_ex::eSortByModifDown))
 			]
 			.enum_("FS_List")
 			[
-				value("FS_ListFiles",					int(FS_ListFiles)),
-				value("FS_ListFolders",					int(FS_ListFolders)),
-				value("FS_ClampExt",					int(FS_ClampExt)),
-				value("FS_RootOnly",					int(FS_RootOnly))
+				value("FS_ListFiles",					static_cast<int>(FS_ListFiles)),
+				value("FS_ListFolders",					static_cast<int>(FS_ListFolders)),
+				value("FS_ClampExt",					static_cast<int>(FS_ClampExt)),
+				value("FS_RootOnly",					static_cast<int>(FS_RootOnly))
 			]
 			.def("path_exist",							&CLocatorAPI::path_exist)
 			.def("update_path",							&update_path_script)
 			.def("get_path",							&CLocatorAPI::get_path)
 			.def("append_path",							&CLocatorAPI::append_path)
 			
-			.def("file_delete",							(void	(CLocatorAPI::*)(LPCSTR,LPCSTR)) (&CLocatorAPI::file_delete))
-			.def("file_delete",							(void	(CLocatorAPI::*)(LPCSTR)) (&CLocatorAPI::file_delete))
+			.def("file_delete",							static_cast<void (CLocatorAPI::*)(LPCSTR, LPCSTR)>(&CLocatorAPI::file_delete))
+			.def("file_delete",							static_cast<void (CLocatorAPI::*)(LPCSTR)>(&CLocatorAPI::file_delete))
 
 			.def("dir_delete",							&dir_delete_script)
 			.def("dir_delete",							&dir_delete_script_2)
@@ -222,16 +222,16 @@ void fs_registrator::script_register(lua_State *L)
 			.def("file_length",							&CLocatorAPI::file_length)
 			.def("file_copy",							&CLocatorAPI::file_copy)
 
-			.def("exist",								(const CLocatorAPI::file*	(CLocatorAPI::*)(LPCSTR)) (&CLocatorAPI::exist))
-			.def("exist",								(const CLocatorAPI::file*	(CLocatorAPI::*)(LPCSTR, LPCSTR)) (&CLocatorAPI::exist))
+			.def("exist",								static_cast<const CLocatorAPI::file* (CLocatorAPI::*)(LPCSTR)>(&CLocatorAPI::exist))
+			.def("exist",								static_cast<const CLocatorAPI::file* (CLocatorAPI::*)(LPCSTR, LPCSTR)>(&CLocatorAPI::exist))
 
 			.def("get_file_age",						&CLocatorAPI::get_file_age)
 			.def("get_file_age_str",					&get_file_age_str)
-			.def("r_open",								(IReader*	(CLocatorAPI::*)(LPCSTR,LPCSTR)) (&CLocatorAPI::r_open))
-			.def("r_open",								(IReader*	(CLocatorAPI::*)(LPCSTR)) (&CLocatorAPI::r_open))
-			.def("r_close",								(void (CLocatorAPI::*)(IReader *&))(&CLocatorAPI::r_close))
+			.def("r_open",								static_cast<IReader* (CLocatorAPI::*)(LPCSTR, LPCSTR)>(&CLocatorAPI::r_open))
+			.def("r_open",								static_cast<IReader* (CLocatorAPI::*)(LPCSTR)>(&CLocatorAPI::r_open))
+			.def("r_close",								static_cast<void (CLocatorAPI::*)(IReader*&)>(&CLocatorAPI::r_close))
 
-			.def("w_open",								(IWriter*	(CLocatorAPI::*)(LPCSTR,LPCSTR)) (&CLocatorAPI::w_open))
+			.def("w_open",								static_cast<IWriter* (CLocatorAPI::*)(LPCSTR, LPCSTR)>(&CLocatorAPI::w_open))
 			.def("w_open",								(IWriter*	(CLocatorAPI::*)(LPCSTR)) (&CLocatorAPI::w_close))
 			.def("w_close",								&CLocatorAPI::w_close)
 

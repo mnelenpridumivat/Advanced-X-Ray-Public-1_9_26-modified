@@ -28,8 +28,8 @@ public:
 
 private:
 	enum {
-		MAX_RESTRICTION_PER_TYPE_COUNT	= u32(128),
-		dummy							= u32(-1),
+		MAX_RESTRICTION_PER_TYPE_COUNT	= static_cast<u32>(128),
+		dummy							= static_cast<u32>(-1),
 	};
 
 private:

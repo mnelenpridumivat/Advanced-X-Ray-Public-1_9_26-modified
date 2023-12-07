@@ -53,7 +53,7 @@ bool CAI_Stalker::tradable_item					(CInventoryItem *inventory_item, const u16 &
 
 	return				(
 		trade_parameters().enabled(
-			CTradeParameters::action_sell(0),
+			static_cast<CTradeParameters::action_sell>(0),
 			inventory_item->object().cNameSect()
 		)
 	);
@@ -80,12 +80,12 @@ void CAI_Stalker::transfer_item					(CInventoryItem *item, CGameObject *old_owne
 	NET_Packet			P;
 	CGameObject			*O = old_owner;
 	O->u_EventGen		(P,GE_TRADE_SELL,O->ID());
-	P.w_u16				(u16(item->object().ID()));
+	P.w_u16				(static_cast<u16>(item->object().ID()));
 	O->u_EventSend		(P);
 
 	O					= new_owner;
 	O->u_EventGen		(P,GE_TRADE_BUY,O->ID());
-	P.w_u16				(u16(item->object().ID()));
+	P.w_u16				(static_cast<u16>(item->object().ID()));
 	O->u_EventSend		(P);
 }
 
@@ -261,7 +261,7 @@ void CAI_Stalker::update_sell_info					()
 	m_temp_items.clear		();
 	m_current_trader		= 0;
 	m_total_money			= get_money();
-	u32						money_delta = fill_items(inventory(),this,ALife::_OBJECT_ID(-1));
+	u32						money_delta = fill_items(inventory(),this,static_cast<ALife::_OBJECT_ID>(-1));
 	m_total_money			+= money_delta;
 	std::sort				(m_temp_items.begin(),m_temp_items.end());
 	select_items			();
@@ -288,7 +288,7 @@ bool CAI_Stalker::can_sell							(CInventoryItem* item)
 bool CAI_Stalker::AllowItemToTrade 					(CInventoryItem const * item, const SInvItemPlace& place) const
 {
 	if (!g_Alive())
-		return				(trade_parameters().enabled(CTradeParameters::action_show(0),item->object().cNameSect()));
+		return				(trade_parameters().enabled(static_cast<CTradeParameters::action_show>(0),item->object().cNameSect()));
 
 	return					(const_cast<CAI_Stalker*>(this)->can_sell(const_cast<CInventoryItem*>(item)));
 }
@@ -346,8 +346,8 @@ bool CAI_Stalker::conflicted						(const CInventoryItem *item, const CWeapon *ne
 
 	u32						weapon_rank = get_rank(weapon->cNameSect());
 
-	if (weapon_rank != (u32)new_weapon_rank)
-		return				(weapon_rank >= (u32)new_weapon_rank);
+	if (weapon_rank != static_cast<u32>(new_weapon_rank))
+		return				(weapon_rank >= static_cast<u32>(new_weapon_rank));
 
 	return					(true);
 }

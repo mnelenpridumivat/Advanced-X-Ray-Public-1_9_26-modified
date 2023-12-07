@@ -247,7 +247,7 @@ bool CUISkinSelectorWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 		return false;
 	}
 
-	int right_border = (int)m_skins.size();
+	int right_border = static_cast<int>(m_skins.size());
 	if (right_border > 9)
 		right_border = 9;
 
@@ -299,7 +299,7 @@ void CUISkinSelectorWnd::OnKeyLeft()
 
 void CUISkinSelectorWnd::OnKeyRight()
 {
-	if (m_firstSkin + 6 < (int)m_skins.size())
+	if (m_firstSkin + 6 < static_cast<int>(m_skins.size()))
 	{
 		m_firstSkin++;
 		UpdateSkins();
@@ -325,14 +325,14 @@ void CUISkinSelectorWnd::SetVisibleForBtn(ESKINMENU_BTN btn, bool state){
 }
 
 void CUISkinSelectorWnd::SetCurSkin(int skin){
-	R_ASSERT2(skin>= -1 && skin <= (int)m_skins.size(), "invalid skin index");
+	R_ASSERT2(skin>= -1 && skin <= static_cast<int>(m_skins.size()), "invalid skin index");
 
 	m_iActiveIndex = skin;
 
 	if (m_iActiveIndex != -1 && (m_iActiveIndex< m_firstSkin || m_iActiveIndex > m_firstSkin + 5))
 	{
-		if (m_iActiveIndex > (int)m_skins.size() - 6)
-			m_firstSkin = (int)m_skins.size() - 6;
+		if (m_iActiveIndex > static_cast<int>(m_skins.size()) - 6)
+			m_firstSkin = static_cast<int>(m_skins.size()) - 6;
 		else
             m_firstSkin = m_iActiveIndex;
 	}

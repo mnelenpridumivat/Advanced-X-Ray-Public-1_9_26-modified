@@ -46,8 +46,8 @@ void awards_store::reset_awards()
 	{
 		m_awards_result.insert(
 			std::make_pair(
-				enum_awards_t(aidx),
-				award_data(u16(0), u32(0))
+				static_cast<enum_awards_t>(aidx),
+				award_data(static_cast<u16>(0), static_cast<u32>(0))
 			)
 		);
 	};

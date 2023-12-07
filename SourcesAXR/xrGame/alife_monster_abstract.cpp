@@ -203,9 +203,9 @@ void CSE_ALifeMonsterAbstract::vfCheckForPopulationChanges	()
 	ALife::_TIME_ID				l_tTimeID = ai().alife().time_manager().game_time();
 	if (l_tTimeID >= l_tpALifeGroupAbstract->m_tNextBirthTime) {
 		ai().ef_storage().alife().member() = this;
-		l_tpALifeGroupAbstract->m_tNextBirthTime = l_tTimeID + ALife::_TIME_ID(ai().ef_storage().m_pfBirthSpeed->ffGetValue()*24*60*60*1000);
+		l_tpALifeGroupAbstract->m_tNextBirthTime = l_tTimeID + static_cast<ALife::_TIME_ID>(ai().ef_storage().m_pfBirthSpeed->ffGetValue() * 24 * 60 * 60 * 1000);
 		if (randF(100) < ai().ef_storage().m_pfBirthProbability->ffGetValue()) {
-			u32					l_dwBornCount = iFloor(float(l_tpALifeGroupAbstract->m_wCount)*randF(.5f,1.5f)*ai().ef_storage().m_pfBirthPercentage->ffGetValue()/100.f + .5f);
+			u32					l_dwBornCount = iFloor(static_cast<float>(l_tpALifeGroupAbstract->m_wCount)*randF(.5f,1.5f)*ai().ef_storage().m_pfBirthPercentage->ffGetValue()/100.f + .5f);
 			if (l_dwBornCount) {
 				l_tpALifeGroupAbstract->m_tpMembers.resize(l_tpALifeGroupAbstract->m_wCount + l_dwBornCount);
 				ALife::OBJECT_IT	I = l_tpALifeGroupAbstract->m_tpMembers.begin() + l_tpALifeGroupAbstract->m_wCount;
@@ -214,7 +214,7 @@ void CSE_ALifeMonsterAbstract::vfCheckForPopulationChanges	()
 					CSE_Abstract		*l_tpAbstract = alife().create	(l_tpALifeGroupAbstract,this);
 					*I					= l_tpAbstract->ID;
 				}
-				l_tpALifeGroupAbstract->m_wCount = l_tpALifeGroupAbstract->m_wCount + u16(l_dwBornCount);
+				l_tpALifeGroupAbstract->m_wCount = l_tpALifeGroupAbstract->m_wCount + static_cast<u16>(l_dwBornCount);
 			}
 		}
 	}

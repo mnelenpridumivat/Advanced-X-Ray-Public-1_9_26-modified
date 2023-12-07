@@ -54,12 +54,12 @@ typedef struct tagSoundElement
 		return (value < s.value);
 	}
 	IC void SetConvert(const CObject* who, int eType, const Fvector &position, float power, TTime time) {
-		this->who = who; type = ConvertSoundType((ESoundTypes)eType); this->position = position; this->power = power; this->time = time;
+		this->who = who; type = ConvertSoundType(static_cast<ESoundTypes>(eType)); this->position = position; this->power = power; this->time = time;
 	}
 	TSoundDangerValue ConvertSoundType(ESoundTypes stype);
 
 	void CalcValue(TTime cur_time, Fvector cur_pos) {
-		value = FACTOR_SOUND_TYPE * u32(NONE_DANGEROUS_SOUND - WEAPON_SHOOTING) - iFloor(FACTOR_DISTANCE * cur_pos.distance_to(position)) - FACTOR_DELTA_TIME * iFloor(float((cur_time - time) / 1000)) + FACTOR_SOUND_POWER * iFloor(power);
+		value = FACTOR_SOUND_TYPE * static_cast<u32>(NONE_DANGEROUS_SOUND - WEAPON_SHOOTING) - iFloor(FACTOR_DISTANCE * cur_pos.distance_to(position)) - FACTOR_DELTA_TIME * iFloor(static_cast<float>((cur_time - time) / 1000)) + FACTOR_SOUND_POWER * iFloor(power);
 	}
 
 } SoundElem;
@@ -100,7 +100,7 @@ public:
 
 	// help sounds
 	bool		hear_help_sound			();
-	u32			hear_help_sound_node	(){VERIFY(m_help_node != u32(-1)); return m_help_node;}
+	u32			hear_help_sound_node	(){VERIFY(m_help_node != static_cast<u32>(-1)); return m_help_node;}
 
 	void		check_help_sound		(int eType, u32 node);
 };

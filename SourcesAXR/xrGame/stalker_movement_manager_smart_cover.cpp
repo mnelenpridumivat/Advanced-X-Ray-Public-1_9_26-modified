@@ -189,7 +189,7 @@ void stalker_movement_manager_smart_cover::reach_enter_location			(u32 const& ti
 	Fvector								position;
 	m_target.cover()->object().XFORM().transform_tiny(position, current_transition().animation().position());
 
-	u32									level_vertex_id	= ai().level_graph().vertex( u32(-1), position);
+	u32									level_vertex_id	= ai().level_graph().vertex( static_cast<u32>(-1), position);
 	if (!accessible(level_vertex_id) || !accessible(position)) {
 		if (!ai().level_graph().inside(level_vertex_id,position))
 			position				= ai().level_graph().vertex_position(level_vertex_id);
@@ -346,7 +346,7 @@ void stalker_movement_manager_smart_cover::loophole_path					(smart_cover::cover
 	shared_str				target = smart_cover::transform_vertex(target_raw, false);
 
 	typedef GraphEngineSpace::CBaseParameters	CBaseParameters;
-	CBaseParameters			parameters(u32(-1),u32(-1),u32(-1));
+	CBaseParameters			parameters(static_cast<u32>(-1),static_cast<u32>(-1),static_cast<u32>(-1));
 	path.clear_not_free		();
 	R_ASSERT2				(
 		ai().graph_engine().search(

@@ -61,7 +61,7 @@ void CPHDestroyable::GenSpawnReplace(u16 ref_id,LPCSTR section,shared_str visual
 
 	// Send
 	D->s_name			= section;//*cNameSect()
-	D->ID_Parent		= u16(-1);
+	D->ID_Parent		= static_cast<u16>(-1);
 	InitServerObject	(D);
 	if (OnServer())
 	{

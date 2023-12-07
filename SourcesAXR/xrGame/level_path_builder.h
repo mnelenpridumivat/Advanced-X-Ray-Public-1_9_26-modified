@@ -27,7 +27,7 @@ private:
 
 private:
 	enum {
-		time_to_wait_after_fail	= u32(2000),
+		time_to_wait_after_fail	= static_cast<u32>(2000),
 	};
 
 public:

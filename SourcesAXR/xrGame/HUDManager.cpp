@@ -312,7 +312,7 @@ void CHUDManager::HitMarked( int idx, float power, const Fvector& dir )
 {
 	HitMarker.Hit			(dir);
 	clamp					(power,0.0f,1.0f);
-	pInput->feedback		(u16(iFloor(u16(-1)*power)), u16(iFloor(u16(-1)*power)), 0.5f);
+	pInput->feedback		(static_cast<u16>(iFloor(u16(-1) * power)), static_cast<u16>(iFloor(u16(-1) * power)), 0.5f);
 }
 
 bool CHUDManager::AddGrenade_ForMark( CGrenade* grn )

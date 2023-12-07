@@ -183,7 +183,7 @@ void CAI_Trader::OnEvent		(NET_Packet& P, u16 type)
 			{
 				NET_Packet				P;
 				u_EventGen				(P,GE_OWNERSHIP_REJECT,ID());
-				P.w_u16					(u16(Obj->ID()));
+				P.w_u16					(static_cast<u16>(Obj->ID()));
 				u_EventSend				(P);
 			}
 			break;
@@ -217,7 +217,7 @@ void CAI_Trader::feel_touch_new				(CObject* O)
 		Msg("Taking item %s!",*I->object().cName());
 		NET_Packet		P;
 		u_EventGen		(P,GE_OWNERSHIP_TAKE,ID());
-		P.w_u16			(u16(I->object().ID()));
+		P.w_u16			(static_cast<u16>(I->object().ID()));
 		u_EventSend		(P);
 	}
 }
@@ -231,7 +231,7 @@ void CAI_Trader::DropItemSendMessage(CObject *O)
 	// We doesn't have similar weapon - pick up it
 	NET_Packet				P;
 	u_EventGen				(P,GE_OWNERSHIP_REJECT,ID());
-	P.w_u16					(u16(O->ID()));
+	P.w_u16					(static_cast<u16>(O->ID()));
 	u_EventSend				(P);
 }
 

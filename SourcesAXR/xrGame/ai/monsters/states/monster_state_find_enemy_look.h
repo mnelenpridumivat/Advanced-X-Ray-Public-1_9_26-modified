@@ -15,7 +15,7 @@ class CStateMonsterFindEnemyLook : public CState<_Object> {
 	Fvector		start_position;
 
 	enum {
-		eMoveToPoint = u32(0),
+		eMoveToPoint = static_cast<u32>(0),
 		eLookAround,
 		eTurnToPoint
 	} ;

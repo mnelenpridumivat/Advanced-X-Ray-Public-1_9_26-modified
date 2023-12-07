@@ -119,7 +119,7 @@ const typename ITEM_DATA* CSXML_IdToIndex::GetById (const shared_str& str_id, bo
 TEMPLATE_SPECIALIZATION
 const typename ITEM_DATA* CSXML_IdToIndex::GetByIndex(int index, bool no_assert)
 {
-	if((size_t)index>=m_pItemDataVector->size())
+	if(static_cast<size_t>(index)>=m_pItemDataVector->size())
 	{
 		R_ASSERT3(no_assert, "item by index not found in files", file_str);
 		return NULL;

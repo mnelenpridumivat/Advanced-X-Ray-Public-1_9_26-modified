@@ -428,7 +428,7 @@ void CBaseMonster::Die(CObject* who)
 	else
 		sound().play			(MonsterSound::eMonsterSoundDie);
 
-	monster_squad().remove_member	((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(),this);
+	monster_squad().remove_member	(static_cast<u8>(g_Team()),static_cast<u8>(g_Squad()),static_cast<u8>(g_Group()),this);
 
 	if ( m_grouping_behaviour )
 	{
@@ -551,9 +551,9 @@ void CBaseMonster::ChangeTeam(int team, int squad, int group)
 #endif // DEBUG
 
 	// remove from current team
-	monster_squad().remove_member	((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(),this);
+	monster_squad().remove_member	(static_cast<u8>(g_Team()),static_cast<u8>(g_Squad()),static_cast<u8>(g_Group()),this);
 	inherited::ChangeTeam			(team,squad,group);
-	monster_squad().register_member	((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(), this);
+	monster_squad().register_member	(static_cast<u8>(g_Team()),static_cast<u8>(g_Squad()),static_cast<u8>(g_Group()), this);
 
 	if ( m_grouping_behaviour )
 	{
@@ -594,19 +594,19 @@ void CBaseMonster::set_state_sound(u32 type, bool once)
 				// check distance to actor
 
 				if (Actor()->Position().distance_to(Position()) > db().m_fDistantIdleSndRange) {
-					delay = u32(float(db().m_dwDistantIdleSndDelay) * _sqrt(float(objects_count)));
+					delay = static_cast<u32>(float(db().m_dwDistantIdleSndDelay) * _sqrt(float(objects_count)));
 					type  = MonsterSound::eMonsterSoundIdleDistant;
 				} else {
-					delay = u32(float(db().m_dwIdleSndDelay) * _sqrt(float(objects_count)));
+					delay = static_cast<u32>(float(db().m_dwIdleSndDelay) * _sqrt(float(objects_count)));
 				}
 				
 				break;
 			case MonsterSound::eMonsterSoundEat:
-				delay = u32(float(db().m_dwEatSndDelay) * _sqrt(float(objects_count)));
+				delay = static_cast<u32>(float(db().m_dwEatSndDelay) * _sqrt(float(objects_count)));
 				break;
 			case MonsterSound::eMonsterSoundAggressive:
 			case MonsterSound::eMonsterSoundPanic:
-				delay = u32(float(db().m_dwAttackSndDelay) * _sqrt(float(objects_count)));
+				delay = static_cast<u32>(float(db().m_dwAttackSndDelay) * _sqrt(float(objects_count)));
 				break;
 			}
 
@@ -726,7 +726,7 @@ void CBaseMonster::TranslateActionToPathParams()
 u32 CBaseMonster::get_attack_rebuild_time()
 {
 	float dist = EnemyMan.get_enemy()->Position().distance_to(Position());
-	return (100 + u32(20.f * dist));
+	return (100 + static_cast<u32>(20.f * dist));
 }
 
 void CBaseMonster::on_kill_enemy(const CEntity *obj)
@@ -1037,7 +1037,7 @@ void CBaseMonster::update_eyes_visibility ()
 	u16 const left_eye_bone_id	=	skeleton->LL_BoneID(m_left_eye_bone_name);
 	u16 const right_eye_bone_id	=	skeleton->LL_BoneID(m_right_eye_bone_name);
 
-	R_ASSERT						(left_eye_bone_id != u16(-1) && right_eye_bone_id != u16(-1));
+	R_ASSERT						(left_eye_bone_id != static_cast<u16>(-1) && right_eye_bone_id != static_cast<u16>(-1));
 
 	bool eyes_visible			=	!g_Alive() || get_screen_space_coverage_diagonal() > 0.05f;
 

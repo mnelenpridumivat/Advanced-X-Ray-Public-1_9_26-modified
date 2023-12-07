@@ -106,7 +106,7 @@ void object::OnRender		()
 	u32								Color = D3DCOLOR_XRGB(0,255,0);
 
 	typedef xr_vector<CCF_Shape::shape_def>	Shapes;
-	Shapes							&l_shapes = ((CCF_Shape*)CFORM())->Shapes();
+	Shapes							&l_shapes = static_cast<CCF_Shape*>(CFORM())->Shapes();
 	Shapes::iterator				l_pShape;
 	CDebugRenderer					&renderer = Level().debug_renderer();
 	for (l_pShape = l_shapes.begin(); l_shapes.end() != l_pShape; ++l_pShape) {

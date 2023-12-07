@@ -136,7 +136,7 @@ void CALifeUpdateManager::shedule_Update	(u32 dt)
 
 void CALifeUpdateManager::set_process_time	(int microseconds)
 {
-	graph().set_process_time		(float(microseconds) - float(microseconds)*update_monster_factor()/1000000.f);
+	graph().set_process_time		(static_cast<float>(microseconds) - static_cast<float>(microseconds)*update_monster_factor()/1000000.f);
 }
 
 void CALifeUpdateManager::objects_per_update(const u32 &objects_per_update)
@@ -170,8 +170,8 @@ bool CALifeUpdateManager::change_level	(NET_Packet &net_packet)
 	Fvector							safe_angles				= graph().actor()->o_Angle;
 	SRotation						safe_torso				= graph().actor()->o_torso;
 	
-	GameGraph::_GRAPH_ID			holder_safe_graph_vertex_id = GameGraph::_GRAPH_ID(-1);
-	u32								holder_safe_level_vertex_id = u32(-1);
+	GameGraph::_GRAPH_ID			holder_safe_graph_vertex_id = static_cast<GameGraph::_GRAPH_ID>(-1);
+	u32								holder_safe_level_vertex_id = static_cast<u32>(-1);
 	Fvector							holder_safe_position = Fvector().set(flt_max,flt_max,flt_max);
 	Fvector							holder_safe_angles = Fvector().set(flt_max,flt_max,flt_max);
 	CSE_ALifeObject					*holder = 0;
@@ -279,7 +279,7 @@ void CALifeUpdateManager::load			(LPCSTR game_name, bool no_assert, bool new_onl
 		Level().OnAlifeSimulatorLoaded();
 
 #ifdef DEBUG
-	Msg									("* Loading alife simulator is successfully completed (%7.3f Mb)",float(Memory.mem_usage() - memory_usage)/1048576.0);
+	Msg									("* Loading alife simulator is successfully completed (%7.3f Mb)",static_cast<float>(Memory.mem_usage() - memory_usage)/1048576.0);
 #endif
 	g_pGamePersistent->SetLoadStageTitle("st_server_connecting");
 	g_pGamePersistent->LoadTitle		(true, g_pGameLevel->name());
@@ -288,7 +288,7 @@ void CALifeUpdateManager::load			(LPCSTR game_name, bool no_assert, bool new_onl
 void CALifeUpdateManager::reload		(LPCSTR section)
 {
 	CALifeSimulatorBase::reload			(section);
-	set_process_time					((int)m_max_process_time);
+	set_process_time					(static_cast<int>(m_max_process_time));
 	objects_per_update					(m_objects_per_update);
 }
 
@@ -336,9 +336,9 @@ void CALifeUpdateManager::set_interactive		(ALife::_OBJECT_ID id, bool value)
 void CALifeUpdateManager::jump_to_level			(LPCSTR level_name) const
 {
 	const CGameGraph::SLevel			&level = ai().game_graph().header().level(level_name);
-	GameGraph::_GRAPH_ID				dest = GameGraph::_GRAPH_ID(-1);
+	GameGraph::_GRAPH_ID				dest = static_cast<GameGraph::_GRAPH_ID>(-1);
 	GraphEngineSpace::CGameLevelParams	evaluator(level.id());
-	bool								failed = !ai().graph_engine().search(ai().game_graph(),graph().actor()->m_tGraphID,GameGraph::_GRAPH_ID(-1),0,evaluator);
+	bool								failed = !ai().graph_engine().search(ai().game_graph(),graph().actor()->m_tGraphID,static_cast<GameGraph::_GRAPH_ID>(-1),0,evaluator);
 	if (failed) {
 #ifndef MASTER_GOLD
 		Msg								("! Cannot build path via game graph from the current level to the level %s!",level_name);
@@ -360,7 +360,7 @@ void CALifeUpdateManager::jump_to_level			(LPCSTR level_name) const
 		}
 	}
 	else
-		dest							= (GameGraph::_GRAPH_ID)evaluator.selected_vertex_id();
+		dest							= static_cast<GameGraph::_GRAPH_ID>(evaluator.selected_vertex_id());
 	NET_Packet							net_packet;
 	net_packet.w_begin					(M_CHANGE_LEVEL);
 	net_packet.w						(&dest,sizeof(dest));

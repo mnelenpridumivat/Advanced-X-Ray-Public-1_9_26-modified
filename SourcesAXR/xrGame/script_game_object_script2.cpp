@@ -39,32 +39,32 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 	return std::move(instance)
 		.enum_("relation")
 		[
-			value("friend",					int(ALife::eRelationTypeFriend)),
-			value("neutral",				int(ALife::eRelationTypeNeutral)),
-			value("enemy",					int(ALife::eRelationTypeEnemy)),
-			value("dummy",					int(ALife::eRelationTypeDummy))
+			value("friend",					static_cast<int>(ALife::eRelationTypeFriend)),
+			value("neutral",				static_cast<int>(ALife::eRelationTypeNeutral)),
+			value("enemy",					static_cast<int>(ALife::eRelationTypeEnemy)),
+			value("dummy",					static_cast<int>(ALife::eRelationTypeDummy))
 		]
 		.enum_("action_types")
 		[
-			value("movement",				int(ScriptEntity::eActionTypeMovement)),
-			value("watch",					int(ScriptEntity::eActionTypeWatch)),
-			value("animation",				int(ScriptEntity::eActionTypeAnimation)),
-			value("sound",					int(ScriptEntity::eActionTypeSound)),
-			value("particle",				int(ScriptEntity::eActionTypeParticle)),
-			value("object",					int(ScriptEntity::eActionTypeObject)),
-			value("action_type_count",		int(ScriptEntity::eActionTypeCount))
+			value("movement",				static_cast<int>(ScriptEntity::eActionTypeMovement)),
+			value("watch",					static_cast<int>(ScriptEntity::eActionTypeWatch)),
+			value("animation",				static_cast<int>(ScriptEntity::eActionTypeAnimation)),
+			value("sound",					static_cast<int>(ScriptEntity::eActionTypeSound)),
+			value("particle",				static_cast<int>(ScriptEntity::eActionTypeParticle)),
+			value("object",					static_cast<int>(ScriptEntity::eActionTypeObject)),
+			value("action_type_count",		static_cast<int>(ScriptEntity::eActionTypeCount))
 		]
 		.enum_("EPathType")
 		[
-			value("game_path",				int(MovementManager::ePathTypeGamePath)),
-			value("level_path",				int(MovementManager::ePathTypeLevelPath)),
-			value("patrol_path",			int(MovementManager::ePathTypePatrolPath)),
-			value("no_path",				int(MovementManager::ePathTypeNoPath))
+			value("game_path",				static_cast<int>(MovementManager::ePathTypeGamePath)),
+			value("level_path",				static_cast<int>(MovementManager::ePathTypeLevelPath)),
+			value("patrol_path",			static_cast<int>(MovementManager::ePathTypePatrolPath)),
+			value("no_path",				static_cast<int>(MovementManager::ePathTypeNoPath))
 		]
 		.enum_("ESelectionType")
 		[
-			value("alifeMovementTypeMask",	int(eSelectionTypeMask)),
-			value("alifeMovementTypeRandom",int(eSelectionTypeRandomBranching))
+			value("alifeMovementTypeMask",	static_cast<int>(eSelectionTypeMask)),
+			value("alifeMovementTypeRandom",static_cast<int>(eSelectionTypeRandomBranching))
 		]
 	
 //		.property("visible",				&CScriptGameObject::getVisible,			&CScriptGameObject::setVisible)
@@ -113,8 +113,8 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("set_visual_memory_enabled",	&CScriptGameObject::SetVisualMemoryEnabled)
 		.def("kill",						&CScriptGameObject::Kill)
 		.def("hit",							&CScriptGameObject::Hit)
-		.def("play_cycle",					(void (CScriptGameObject::*)(LPCSTR))(&CScriptGameObject::play_cycle))
-		.def("play_cycle",					(void (CScriptGameObject::*)(LPCSTR,bool))(&CScriptGameObject::play_cycle))
+		.def("play_cycle",					static_cast<void (CScriptGameObject::*)(LPCSTR)>(&CScriptGameObject::play_cycle))
+		.def("play_cycle",					static_cast<void (CScriptGameObject::*)(LPCSTR, bool)>(&CScriptGameObject::play_cycle))
 		.def("fov",							&CScriptGameObject::GetFOV)
 		.def("range",						&CScriptGameObject::GetRange)
 		.def("relation",					&CScriptGameObject::GetRelationType)
@@ -136,17 +136,22 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("object",						(CScriptGameObject *(CScriptGameObject::*)(int))(&CScriptGameObject::GetObjectByIndex))
 		.def("active_item",					&CScriptGameObject::GetActiveItem)
 		
-		.def("set_callback",				(void (CScriptGameObject::*)(GameObject::ECallbackType, const luabind::functor<void> &))(&CScriptGameObject::SetCallback))
-		.def("set_callback",				(void (CScriptGameObject::*)(GameObject::ECallbackType, const luabind::functor<void> &, const luabind::object &))(&CScriptGameObject::SetCallback))
-		.def("set_callback",				(void (CScriptGameObject::*)(GameObject::ECallbackType))(&CScriptGameObject::SetCallback))
+		.def("set_callback",				static_cast<void (CScriptGameObject::*)(GameObject::ECallbackType, const luabind::functor<void>&)>(&
+			     CScriptGameObject::SetCallback))
+		.def("set_callback",				static_cast<void (CScriptGameObject::*)(GameObject::ECallbackType, const luabind::functor<void>&,
+			     const luabind::object&)>(&CScriptGameObject::SetCallback))
+		.def("set_callback",				static_cast<void (CScriptGameObject::*)(GameObject::ECallbackType)>(&CScriptGameObject::SetCallback))
 
-		.def("set_patrol_extrapolate_callback",	(void (CScriptGameObject::*)())(&CScriptGameObject::set_patrol_extrapolate_callback))
-		.def("set_patrol_extrapolate_callback",	(void (CScriptGameObject::*)(const luabind::functor<bool> &))(&CScriptGameObject::set_patrol_extrapolate_callback))
-		.def("set_patrol_extrapolate_callback",	(void (CScriptGameObject::*)(const luabind::functor<bool> &, const luabind::object &))(&CScriptGameObject::set_patrol_extrapolate_callback))
+		.def("set_patrol_extrapolate_callback",	static_cast<void (CScriptGameObject::*)()>(&CScriptGameObject::set_patrol_extrapolate_callback))
+		.def("set_patrol_extrapolate_callback",	static_cast<void (CScriptGameObject::*)(const luabind::functor<bool>&)>(&
+			     CScriptGameObject::set_patrol_extrapolate_callback))
+		.def("set_patrol_extrapolate_callback",	static_cast<void (CScriptGameObject::*)(const luabind::functor<bool>&, const luabind::object&)>(&
+			     CScriptGameObject::set_patrol_extrapolate_callback))
 
-		.def("set_enemy_callback",			(void (CScriptGameObject::*)())(&CScriptGameObject::set_enemy_callback))
-		.def("set_enemy_callback",			(void (CScriptGameObject::*)(const luabind::functor<bool> &))(&CScriptGameObject::set_enemy_callback))
-		.def("set_enemy_callback",			(void (CScriptGameObject::*)(const luabind::functor<bool> &, const luabind::object &))(&CScriptGameObject::set_enemy_callback))
+		.def("set_enemy_callback",			static_cast<void (CScriptGameObject::*)()>(&CScriptGameObject::set_enemy_callback))
+		.def("set_enemy_callback",			static_cast<void (CScriptGameObject::*)(const luabind::functor<bool>&)>(&CScriptGameObject::set_enemy_callback))
+		.def("set_enemy_callback",			static_cast<void (CScriptGameObject::*)(const luabind::functor<bool>&, const luabind::object&)>(&
+			     CScriptGameObject::set_enemy_callback))
 
 		.def("patrol",						&CScriptGameObject::GetPatrolPathName)
 
@@ -227,8 +232,8 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 
 		// base monster
 		.def("skip_transfer_enemy",			&CScriptGameObject::skip_transfer_enemy)
-		.def("set_home",					(void (CScriptGameObject::*)(LPCSTR,float,float,bool,float))(&CScriptGameObject::set_home))
-		.def("set_home",					(void (CScriptGameObject::*)(u32,float,float,bool,float))(&CScriptGameObject::set_home))
+		.def("set_home",					static_cast<void (CScriptGameObject::*)(LPCSTR, float, float, bool, float)>(&CScriptGameObject::set_home))
+		.def("set_home",					static_cast<void (CScriptGameObject::*)(u32, float, float, bool, float)>(&CScriptGameObject::set_home))
 		.def("remove_home",					&CScriptGameObject::remove_home)
 		.def("berserk",						&CScriptGameObject::berserk)
 		.def("can_script_capture",			&CScriptGameObject::can_script_capture)
@@ -244,8 +249,8 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("deadbody_can_take",			&CScriptGameObject::deadbody_can_take)
 		.def("deadbody_can_take_status",	&CScriptGameObject::deadbody_can_take_status)
 
-		.def("can_select_weapon",			(bool (CScriptGameObject::*)() const)&CScriptGameObject::can_select_weapon)
-		.def("can_select_weapon",			(void (CScriptGameObject::*)(bool))&CScriptGameObject::can_select_weapon)
+		.def("can_select_weapon",			static_cast<bool (CScriptGameObject::*)() const>(&CScriptGameObject::can_select_weapon))
+		.def("can_select_weapon",			static_cast<void (CScriptGameObject::*)(bool)>(&CScriptGameObject::can_select_weapon))
 		// searchlight
 		.def("get_current_direction",		&CScriptGameObject::GetCurrentDirection)
 
@@ -270,10 +275,10 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("set_psy_factor",				&CScriptGameObject::SetPsyFactor			)
 
 		//
-		.def("set_desired_position",		(void (CScriptGameObject::*)())(&CScriptGameObject::set_desired_position))
-		.def("set_desired_position",		(void (CScriptGameObject::*)(const Fvector *))(&CScriptGameObject::set_desired_position))
-		.def("set_desired_direction",		(void (CScriptGameObject::*)())(&CScriptGameObject::set_desired_direction))
-		.def("set_desired_direction",		(void (CScriptGameObject::*)(const Fvector *))(&CScriptGameObject::set_desired_direction))
+		.def("set_desired_position",		static_cast<void (CScriptGameObject::*)()>(&CScriptGameObject::set_desired_position))
+		.def("set_desired_position",		static_cast<void (CScriptGameObject::*)(const Fvector*)>(&CScriptGameObject::set_desired_position))
+		.def("set_desired_direction",		static_cast<void (CScriptGameObject::*)()>(&CScriptGameObject::set_desired_direction))
+		.def("set_desired_direction",		static_cast<void (CScriptGameObject::*)(const Fvector*)>(&CScriptGameObject::set_desired_direction))
 		.def("set_patrol_path",				&CScriptGameObject::set_patrol_path)
 		.def("inactualize_patrol_path",		&CScriptGameObject::inactualize_patrol_path)
 		.def("inactualize_level_path",		&CScriptGameObject::inactualize_level_path)
@@ -285,8 +290,8 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("set_movement_selection_type",	&CScriptGameObject::set_movement_selection_type)
 		.def("level_vertex_id",				&CScriptGameObject::level_vertex_id)
 		.def("game_vertex_id",				&CScriptGameObject::game_vertex_id)
-		.def("add_animation",				(void (CScriptGameObject::*)(LPCSTR, bool, bool))(&CScriptGameObject::add_animation))
-		.def("add_animation",				(void (CScriptGameObject::*)(LPCSTR, bool, Fvector, Fvector, bool))(&CScriptGameObject::add_animation))
+		.def("add_animation",				static_cast<void (CScriptGameObject::*)(LPCSTR, bool, bool)>(&CScriptGameObject::add_animation))
+		.def("add_animation",				static_cast<void (CScriptGameObject::*)(LPCSTR, bool, Fvector, Fvector, bool)>(&CScriptGameObject::add_animation))
 		.def("clear_animations",			&CScriptGameObject::clear_animations)
 		.def("animation_count",				&CScriptGameObject::animation_count)
 		.def("animation_slot",				&CScriptGameObject::animation_slot)
@@ -300,8 +305,8 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 
 		.def("eat",							&CScriptGameObject::eat)
 
-		.def("extrapolate_length",			(float (CScriptGameObject::*)() const)(&CScriptGameObject::extrapolate_length))
-		.def("extrapolate_length",			(void (CScriptGameObject::*)(float))(&CScriptGameObject::extrapolate_length))
+		.def("extrapolate_length",			static_cast<float (CScriptGameObject::*)() const>(&CScriptGameObject::extrapolate_length))
+		.def("extrapolate_length",			static_cast<void (CScriptGameObject::*)(float)>(&CScriptGameObject::extrapolate_length))
 
 		.def("set_fov",						&CScriptGameObject::set_fov)
 		.def("set_range",					&CScriptGameObject::set_range)
@@ -310,8 +315,8 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 
 		.def("set_actor_position",			&CScriptGameObject::SetActorPosition)
 		.def("set_actor_direction",			&CScriptGameObject::SetActorDirection)
-		.def("disable_hit_marks",			(void (CScriptGameObject::*)	(bool))&CScriptGameObject::DisableHitMarks)
-		.def("disable_hit_marks",			(bool (CScriptGameObject::*)	() const)&CScriptGameObject::DisableHitMarks)
+		.def("disable_hit_marks",			static_cast<void (CScriptGameObject::*)(bool)>(&CScriptGameObject::DisableHitMarks))
+		.def("disable_hit_marks",			static_cast<bool (CScriptGameObject::*)() const>(&CScriptGameObject::DisableHitMarks))
 		.def("get_movement_speed",			&CScriptGameObject::GetMovementSpeed)
 
 		.def("set_npc_position",			&CScriptGameObject::SetNpcPosition)
@@ -326,43 +331,44 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 #ifdef DEBUG
 		.def("debug_planner",				&CScriptGameObject::debug_planner)
 #endif // DEBUG
-		.def("invulnerable",				(bool (CScriptGameObject::*)() const)&CScriptGameObject::invulnerable)
-		.def("invulnerable",				(void (CScriptGameObject::*)(bool))&CScriptGameObject::invulnerable)
+		.def("invulnerable",				static_cast<bool (CScriptGameObject::*)() const>(&CScriptGameObject::invulnerable))
+		.def("invulnerable",				static_cast<void (CScriptGameObject::*)(bool)>(&CScriptGameObject::invulnerable))
 
 		.def("get_smart_cover_description",	&CScriptGameObject::get_smart_cover_description)
 		.def("set_visual_name",				&CScriptGameObject::set_visual_name)
 		.def("get_visual_name",				&CScriptGameObject::get_visual_name)
 
-		.def("can_throw_grenades",			(bool (CScriptGameObject::*)	() const)&CScriptGameObject::can_throw_grenades)
-		.def("can_throw_grenades",			(void (CScriptGameObject::*)	(bool ))&CScriptGameObject::can_throw_grenades)
+		.def("can_throw_grenades",			static_cast<bool (CScriptGameObject::*)() const>(&CScriptGameObject::can_throw_grenades))
+		.def("can_throw_grenades",			static_cast<void (CScriptGameObject::*)(bool)>(&CScriptGameObject::can_throw_grenades))
 
-		.def("group_throw_time_interval",	(u32 (CScriptGameObject::*)		() const)&CScriptGameObject::group_throw_time_interval)
-		.def("group_throw_time_interval",	(void (CScriptGameObject::*)	(u32 ))&CScriptGameObject::group_throw_time_interval)
+		.def("group_throw_time_interval",	static_cast<u32 (CScriptGameObject::*)() const>(&CScriptGameObject::group_throw_time_interval))
+		.def("group_throw_time_interval",	static_cast<void (CScriptGameObject::*)(u32)>(&CScriptGameObject::group_throw_time_interval))
 
 		.def("register_in_combat",			&CScriptGameObject::register_in_combat)
 		.def("unregister_in_combat",		&CScriptGameObject::unregister_in_combat)
 		.def("find_best_cover",				&CScriptGameObject::find_best_cover)
 
-		.def("use_smart_covers_only",		(bool (CScriptGameObject::*)	() const)&CScriptGameObject::use_smart_covers_only)
-		.def("use_smart_covers_only",		(void (CScriptGameObject::*)	(bool ))&CScriptGameObject::use_smart_covers_only)
+		.def("use_smart_covers_only",		static_cast<bool (CScriptGameObject::*)() const>(&CScriptGameObject::use_smart_covers_only))
+		.def("use_smart_covers_only",		static_cast<void (CScriptGameObject::*)(bool)>(&CScriptGameObject::use_smart_covers_only))
 
 		.def("in_smart_cover",				&CScriptGameObject::in_smart_cover)
 
-		.def("set_dest_smart_cover",		(void (CScriptGameObject::*)	(LPCSTR))&CScriptGameObject::set_dest_smart_cover)
-		.def("set_dest_smart_cover",		(void (CScriptGameObject::*)	())&CScriptGameObject::set_dest_smart_cover)
+		.def("set_dest_smart_cover",		static_cast<void (CScriptGameObject::*)(LPCSTR)>(&CScriptGameObject::set_dest_smart_cover))
+		.def("set_dest_smart_cover",		static_cast<void (CScriptGameObject::*)()>(&CScriptGameObject::set_dest_smart_cover))
 		.def("get_dest_smart_cover",		(CCoverPoint const* (CScriptGameObject::*) ())&CScriptGameObject::get_dest_smart_cover)
 		.def("get_dest_smart_cover_name",	&CScriptGameObject::get_dest_smart_cover_name)
 
-		.def("set_dest_loophole",			(void (CScriptGameObject::*)	(LPCSTR))&CScriptGameObject::set_dest_loophole)
-		.def("set_dest_loophole",			(void (CScriptGameObject::*)	())&CScriptGameObject::set_dest_loophole)
+		.def("set_dest_loophole",			static_cast<void (CScriptGameObject::*)(LPCSTR)>(&CScriptGameObject::set_dest_loophole))
+		.def("set_dest_loophole",			static_cast<void (CScriptGameObject::*)()>(&CScriptGameObject::set_dest_loophole))
 
-		.def("set_smart_cover_target",		(void (CScriptGameObject::*)	(Fvector))&CScriptGameObject::set_smart_cover_target)
-		.def("set_smart_cover_target",		(void (CScriptGameObject::*)	(CScriptGameObject*))&CScriptGameObject::set_smart_cover_target)
-		.def("set_smart_cover_target",		(void (CScriptGameObject::*)	())&CScriptGameObject::set_smart_cover_target)
+		.def("set_smart_cover_target",		static_cast<void (CScriptGameObject::*)(Fvector)>(&CScriptGameObject::set_smart_cover_target))
+		.def("set_smart_cover_target",		static_cast<void (CScriptGameObject::*)(CScriptGameObject*)>(&CScriptGameObject::set_smart_cover_target))
+		.def("set_smart_cover_target",		static_cast<void (CScriptGameObject::*)()>(&CScriptGameObject::set_smart_cover_target))
 
-		.def("set_smart_cover_target_selector",	(void (CScriptGameObject::*)(luabind::functor<void>))&CScriptGameObject::set_smart_cover_target_selector)
-		.def("set_smart_cover_target_selector",	(void (CScriptGameObject::*)(luabind::functor<void>, luabind::object))&CScriptGameObject::set_smart_cover_target_selector)
-		.def("set_smart_cover_target_selector",	(void (CScriptGameObject::*)())&CScriptGameObject::set_smart_cover_target_selector)
+		.def("set_smart_cover_target_selector",	static_cast<void (CScriptGameObject::*)(luabind::functor<void>)>(&CScriptGameObject::set_smart_cover_target_selector))
+		.def("set_smart_cover_target_selector",	static_cast<void (CScriptGameObject::*)(luabind::functor<void>, luabind::object)>(&
+			     CScriptGameObject::set_smart_cover_target_selector))
+		.def("set_smart_cover_target_selector",	static_cast<void (CScriptGameObject::*)()>(&CScriptGameObject::set_smart_cover_target_selector))
 
 		.def("set_smart_cover_target_idle",				&CScriptGameObject::set_smart_cover_target_idle)
 		.def("set_smart_cover_target_lookout",			&CScriptGameObject::set_smart_cover_target_lookout)
@@ -371,16 +377,16 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("set_smart_cover_target_idle",				&CScriptGameObject::set_smart_cover_target_idle)
 		.def("set_smart_cover_target_default",			&CScriptGameObject::set_smart_cover_target_default)
 
-		.def("idle_min_time",				(void (CScriptGameObject::*)	(float))&CScriptGameObject::idle_min_time)
+		.def("idle_min_time",				static_cast<void (CScriptGameObject::*)(float)>(&CScriptGameObject::idle_min_time))
 		.def("idle_min_time",				(float (CScriptGameObject::*)	() const)&CScriptGameObject::idle_min_time)
 
-		.def("idle_max_time",				(void (CScriptGameObject::*)	(float))&CScriptGameObject::idle_max_time)
+		.def("idle_max_time",				static_cast<void (CScriptGameObject::*)(float)>(&CScriptGameObject::idle_max_time))
 		.def("idle_max_time",				(float (CScriptGameObject::*)	() const)&CScriptGameObject::idle_max_time)
 
-		.def("lookout_min_time",			(void (CScriptGameObject::*)	(float))&CScriptGameObject::lookout_min_time)
+		.def("lookout_min_time",			static_cast<void (CScriptGameObject::*)(float)>(&CScriptGameObject::lookout_min_time))
 		.def("lookout_min_time",			(float (CScriptGameObject::*)	() const)&CScriptGameObject::lookout_min_time)
 
-		.def("lookout_max_time",			(void (CScriptGameObject::*)	(float))&CScriptGameObject::lookout_max_time)
+		.def("lookout_max_time",			static_cast<void (CScriptGameObject::*)(float)>(&CScriptGameObject::lookout_max_time))
 		.def("lookout_max_time",			(float (CScriptGameObject::*)	() const)&CScriptGameObject::lookout_max_time)
 
 		.def("in_loophole_fov",				&CScriptGameObject::in_loophole_fov)
@@ -388,17 +394,17 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("in_loophole_range",			&CScriptGameObject::in_loophole_range)
 		.def("in_current_loophole_range",	&CScriptGameObject::in_current_loophole_range)
 
-		.def("apply_loophole_direction_distance",	(void (CScriptGameObject::*)	(float))&CScriptGameObject::apply_loophole_direction_distance)
-		.def("apply_loophole_direction_distance",	(float (CScriptGameObject::*)	() const)&CScriptGameObject::apply_loophole_direction_distance)
+		.def("apply_loophole_direction_distance",	static_cast<void (CScriptGameObject::*)(float)>(&CScriptGameObject::apply_loophole_direction_distance))
+		.def("apply_loophole_direction_distance",	static_cast<float (CScriptGameObject::*)() const>(&CScriptGameObject::apply_loophole_direction_distance))
 
 		.def("movement_target_reached",			&CScriptGameObject::movement_target_reached)
 		.def("suitable_smart_cover",			&CScriptGameObject::suitable_smart_cover)
 
-		.def("take_items_enabled",				(void (CScriptGameObject::*)	(bool))&CScriptGameObject::take_items_enabled)
-		.def("take_items_enabled",				(bool (CScriptGameObject::*)	() const)&CScriptGameObject::take_items_enabled)
+		.def("take_items_enabled",				static_cast<void (CScriptGameObject::*)(bool)>(&CScriptGameObject::take_items_enabled))
+		.def("take_items_enabled",				static_cast<bool (CScriptGameObject::*)() const>(&CScriptGameObject::take_items_enabled))
 
-		.def("death_sound_enabled",				(void (CScriptGameObject::*)	(bool))&CScriptGameObject::death_sound_enabled)
-		.def("death_sound_enabled",				(bool (CScriptGameObject::*)	() const)&CScriptGameObject::death_sound_enabled)
+		.def("death_sound_enabled",				static_cast<void (CScriptGameObject::*)(bool)>(&CScriptGameObject::death_sound_enabled))
+		.def("death_sound_enabled",				static_cast<bool (CScriptGameObject::*)() const>(&CScriptGameObject::death_sound_enabled))
 
 		.def("register_door_for_npc",			&CScriptGameObject::register_door)
 		.def("unregister_door_for_npc",			&CScriptGameObject::unregister_door)

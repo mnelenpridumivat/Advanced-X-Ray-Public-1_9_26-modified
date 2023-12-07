@@ -34,7 +34,7 @@ CStalkerActionCombatBase::CStalkerActionCombatBase	(CAI_Stalker *object, LPCSTR 
 void CStalkerActionCombatBase::initialize			()
 {
 	inherited::initialize		();
-	object().sound().remove_active_sounds	(u32(eStalkerSoundMaskNoHumming));
+	object().sound().remove_active_sounds	(static_cast<u32>(eStalkerSoundMaskNoHumming));
 }
 
 void CStalkerActionCombatBase::finalize				()

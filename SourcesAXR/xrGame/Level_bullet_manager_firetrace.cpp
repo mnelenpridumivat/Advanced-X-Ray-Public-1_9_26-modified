@@ -38,7 +38,7 @@ extern float gCheckHitK;
 //return TRUE-тестировать объект / FALSE-пропустить объект
 BOOL CBulletManager::test_callback(const collide::ray_defs& rd, CObject* object, LPVOID params)
 {
-	bullet_test_callback_data* pData	= (bullet_test_callback_data*)params;
+	bullet_test_callback_data* pData	= static_cast<bullet_test_callback_data*>(params);
 	SBullet* bullet = pData->pBullet;
 
 	if( (object->ID() == bullet->parent_id)		&&  
@@ -294,8 +294,8 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 
 	if(V)
 	{
-		VERIFY3(V->LL_GetBoneVisible(u16(E.R.element)),*E.R.O->cNameVisual(),V->LL_BoneName_dbg(u16(E.R.element)));
-		Fmatrix& m_bone = (V->LL_GetBoneInstance(u16(E.R.element))).mTransform;
+		VERIFY3(V->LL_GetBoneVisible(static_cast<u16>(E.R.element)),*E.R.O->cNameVisual(),V->LL_BoneName_dbg(static_cast<u16>(E.R.element)));
+		Fmatrix& m_bone = (V->LL_GetBoneInstance(static_cast<u16>(E.R.element))).mTransform;
 		Fmatrix  m_inv_bone;
 		m_inv_bone.invert(m_bone);
 		m_inv_bone.transform_tiny(position_in_bone_space, p_in_object_space);
@@ -316,7 +316,7 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 			CActor* pActor = smart_cast<CActor*>(E.R.O);
 			if (pActor)// && pActor->g_Alive())
 			{
-				Game().m_WeaponUsageStatistic->OnBullet_Hit(&E.bullet, E.R.O->ID(), (s16)E.R.element, E.point);
+				Game().m_WeaponUsageStatistic->OnBullet_Hit(&E.bullet, E.R.O->ID(), static_cast<s16>(E.R.element), E.point);
 				AddStatistic = true;
 			};
 		};
@@ -324,14 +324,14 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 		SHit	Hit = SHit(	hit_param.power,
 							original_dir,
 							NULL,
-							u16(E.R.element),
+							static_cast<u16>(E.R.element),
 							position_in_bone_space,
 							hit_param.impulse,
 							E.bullet.hit_type,
 							E.bullet.armor_piercing,
 							E.bullet.flags.aim_bullet);
 
-		Hit.GenHeader(u16((AddStatistic)? GE_HIT_STATISTIC : GE_HIT)&0xffff, E.R.O->ID());
+		Hit.GenHeader(static_cast<u16>((AddStatistic) ? GE_HIT_STATISTIC : GE_HIT)&0xffff, E.R.O->ID());
 		Hit.whoID			= E.bullet.parent_id;
 		Hit.weaponID		= E.bullet.weapon_id;
 		Hit.BulletID		= E.bullet.m_dwID;
@@ -362,7 +362,7 @@ bool CBulletManager::ObjectHit( SBullet_Hit* hit_res, SBullet* bullet, const Fve
 		{
 			Fvector			e_center;
 			hit_normal.set	(0,0,0);
-			if ( skeleton->_ElementCenter( (u16)R.element,e_center ) )
+			if ( skeleton->_ElementCenter( static_cast<u16>(R.element),e_center ) )
 				hit_normal.sub							(end_point, e_center);
 			float len		= hit_normal.square_magnitude();
 			if ( !fis_zero(len) )	hit_normal.div		(_sqrt(len));

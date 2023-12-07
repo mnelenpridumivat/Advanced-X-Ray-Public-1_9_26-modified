@@ -238,9 +238,9 @@ void CUITrackBar::UpdatePosRelativeToMouse()
 		fpos = window_width - btn_width/2;
 
 	float __fval;
-	float __fmax	= (m_b_is_float)?m_f_max:(float)m_i_max;
-	float __fmin	= (m_b_is_float)?m_f_min:(float)m_i_min;
-	float __fstep	= (m_b_is_float)?m_f_step:(float)m_i_step;
+	float __fmax	= (m_b_is_float)?m_f_max:static_cast<float>(m_i_max);
+	float __fmin	= (m_b_is_float)?m_f_min:static_cast<float>(m_i_min);
+	float __fstep	= (m_b_is_float)?m_f_step:static_cast<float>(m_i_step);
 
 	__fval						= (__fmax - __fmin)*(fpos - btn_width/2)/(window_width - btn_width)+ __fmin;
 	
@@ -295,9 +295,9 @@ void CUITrackBar::UpdatePos()
 	float free_space			= window_width - btn_width;
 	Fvector2 pos				= m_pSlider->GetWndPos();
     
-	float __fval	= (m_b_is_float)?m_f_val:(float)m_i_val;
-	float __fmax	= (m_b_is_float)?m_f_max:(float)m_i_max;
-	float __fmin	= (m_b_is_float)?m_f_min:(float)m_i_min;
+	float __fval	= (m_b_is_float)?m_f_val:static_cast<float>(m_i_val);
+	float __fmax	= (m_b_is_float)?m_f_max:static_cast<float>(m_i_max);
+	float __fmin	= (m_b_is_float)?m_f_min:static_cast<float>(m_i_min);
 
 
 	pos.x						= (__fval - __fmin)*free_space/(__fmax - __fmin);

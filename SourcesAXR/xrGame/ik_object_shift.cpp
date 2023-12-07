@@ -33,8 +33,8 @@ void object_shift::	dbg_draw			( const Fmatrix	&current_pos, const extrapolation
 	{
 		float fshift0 = current + delta_shift( time_passed + time_quant * i );
 		float fshift1 = current + delta_shift( time_passed + time_quant * ( i + 1 ) );
-		Fvector	v0 = Fvector().add( p0, Fvector().mul( vadd, float( i ) ) ).add( Fvector().set( 0, fshift0, 0 ) );
-		Fvector	v1 = Fvector().add( p0, Fvector().mul( vadd, float( i + 1 ) ) ).add( Fvector().set( 0, fshift1, 0 ) );
+		Fvector	v0 = Fvector().add( p0, Fvector().mul( vadd, static_cast<float>(i) ) ).add( Fvector().set( 0, fshift0, 0 ) );
+		Fvector	v1 = Fvector().add( p0, Fvector().mul( vadd, static_cast<float>(i + 1) ) ).add( Fvector().set( 0, fshift1, 0 ) );
 
 		DBG_DrawLine(
 			v0,

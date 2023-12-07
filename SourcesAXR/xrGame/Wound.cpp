@@ -12,7 +12,7 @@ CWound::CWound(u16 bone_num)
 
 	for(int i=0; i<ALife::eHitTypeMax; i++)
 	{
-		m_Wounds[(ALife::EHitType)i] = 0.f;
+		m_Wounds[static_cast<ALife::EHitType>(i)] = 0.f;
 	}
 
 	m_iBoneNum = bone_num;
@@ -32,16 +32,16 @@ CWound::~CWound(void)
 //serialization
 void  CWound::save	(NET_Packet &output_packet)
 {
-	output_packet.w_u8((u8)m_iBoneNum);
+	output_packet.w_u8(static_cast<u8>(m_iBoneNum));
 	for(int i=0; i<ALife::eHitTypeMax; i++)
-		output_packet.w_float_q8 (m_Wounds[(ALife::EHitType)i],0.f, WOUND_MAX);
+		output_packet.w_float_q8 (m_Wounds[static_cast<ALife::EHitType>(i)],0.f, WOUND_MAX);
 }
 void  CWound::load	(IReader &input_packet)
 {
 	m_iBoneNum = (u8)input_packet.r_u8();
 	for(int i=0; i<ALife::eHitTypeMax; i++){
-		m_Wounds[(ALife::EHitType)i] = input_packet.r_float_q8 (0.f, WOUND_MAX);
-		VERIFY(m_Wounds[(ALife::EHitType)i]>=0.0f && m_Wounds[(ALife::EHitType)i]<=WOUND_MAX);
+		m_Wounds[static_cast<ALife::EHitType>(i)] = input_packet.r_float_q8 (0.f, WOUND_MAX);
+		VERIFY(m_Wounds[static_cast<ALife::EHitType>(i)]>=0.0f && m_Wounds[static_cast<ALife::EHitType>(i)]<=WOUND_MAX);
 	}
 }
 
@@ -51,8 +51,8 @@ float CWound::TotalSize()
 	float total_size = 0.f;
 	for(int i=0; i<ALife::eHitTypeMax; i++)
 	{
-		VERIFY(_valid(m_Wounds[(ALife::EHitType)i]));
-		total_size += m_Wounds[(ALife::EHitType)i];
+		VERIFY(_valid(m_Wounds[static_cast<ALife::EHitType>(i)]));
+		total_size += m_Wounds[static_cast<ALife::EHitType>(i)];
 	}
 	VERIFY(_valid(total_size));
 	return total_size;
@@ -83,15 +83,15 @@ void CWound::Incarnation	(float percent, float min_wound_size)
 	if(fis_zero(total_size))
 	{
 		for(int i=0; i<ALife::eHitTypeMax; i++)
-			m_Wounds[(ALife::EHitType)i] = 0.f;
+			m_Wounds[static_cast<ALife::EHitType>(i)] = 0.f;
 		return;
 	}
 
 	//заживить все раны пропорционально их размеру
 	for(int i=0; i<ALife::eHitTypeMax; i++)
 	{
-		m_Wounds[(ALife::EHitType)i] -= percent/* *m_Wounds[i]*/;
-		if(m_Wounds[(ALife::EHitType)i]<min_wound_size)
-			m_Wounds[(ALife::EHitType)i] = 0;
+		m_Wounds[static_cast<ALife::EHitType>(i)] -= percent/* *m_Wounds[i]*/;
+		if(m_Wounds[static_cast<ALife::EHitType>(i)]<min_wound_size)
+			m_Wounds[static_cast<ALife::EHitType>(i)] = 0;
 	}
 }

@@ -26,15 +26,15 @@ private:
 
 	enum
 	{
-		server_flag_password	= u8(1 << 0),
-		server_flag_protected	= u8(1 << 1),
-		server_flag_2	= u8(1 << 2),
-		server_flag_3	= u8(1 << 3),
-		server_flag_4	= u8(1 << 4),
-		server_flag_5	= u8(1 << 5),
-		server_flag_6	= u8(1 << 6),
-		server_flag_128	= u8(1 << 7),
-		server_flag_all	= u8(-1)
+		server_flag_password	= static_cast<u8>(1 << 0),
+		server_flag_protected	= static_cast<u8>(1 << 1),
+		server_flag_2	= static_cast<u8>(1 << 2),
+		server_flag_3	= static_cast<u8>(1 << 3),
+		server_flag_4	= static_cast<u8>(1 << 4),
+		server_flag_5	= static_cast<u8>(1 << 5),
+		server_flag_6	= static_cast<u8>(1 << 6),
+		server_flag_128	= static_cast<u8>(1 << 7),
+		server_flag_all	= static_cast<u8>(-1)
 	};
 
 private:

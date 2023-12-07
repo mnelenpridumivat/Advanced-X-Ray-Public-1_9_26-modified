@@ -24,9 +24,9 @@ private:
 
 public:
 	enum possible_actions {
-		possible_action_1_can_wait_2					= u32(1) << 0,
-		possible_action_2_can_wait_1					= u32(1) << 1,
-		possible_action_invalid							= u32(-1),
+		possible_action_1_can_wait_2					= static_cast<u32>(1) << 0,
+		possible_action_2_can_wait_1					= static_cast<u32>(1) << 1,
+		possible_action_invalid							= static_cast<u32>(-1),
 	};
 	
 public:

@@ -38,7 +38,7 @@ void   SCurrentAnimationInfo::set_motion (EMotionAnim new_motion)
 CControlAnimationBase::CControlAnimationBase()
 {
 	m_override_animation		=	eAnimUndefined;
-	m_override_animation_index	=	(u32)-1;
+	m_override_animation_index	=	static_cast<u32>(-1);
 
 	init_anim_storage		();
 }
@@ -90,7 +90,7 @@ void CControlAnimationBase::reinit()
 
 	m_state_attack				= false;
 	m_override_animation		= eAnimUndefined;
-	m_override_animation_index	= (u32)-1;
+	m_override_animation_index	= static_cast<u32>(-1);
 }
 
 void CControlAnimationBase::on_start_control(ControlCom::EControlType type)
@@ -120,7 +120,7 @@ void CControlAnimationBase::on_event(ControlCom::EEventType type, ControlCom::IE
 	case ControlCom::eventAnimationEnd:		select_animation(true);	m_state_attack = false; break;
 	case ControlCom::eventAnimationSignal:	
 		{
-			SAnimationSignalEventData *event_data = (SAnimationSignalEventData *)data;
+			SAnimationSignalEventData *event_data = static_cast<SAnimationSignalEventData*>(data);
 			if (event_data->event_id == CControlAnimation::eAnimationHit) check_hit(event_data->motion,event_data->time_perc);	break;
 		}
 	}
@@ -195,7 +195,7 @@ u32 CControlAnimationBase::get_animation_variants_count (EMotionAnim anim) const
 void CControlAnimationBase::select_animation(bool anim_end)
 {
 	// start new animation
-	SControlAnimationData		*ctrl_data = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+	SControlAnimationData		*ctrl_data = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 	if (!ctrl_data) return;
 
 	if (m_state_attack && !anim_end) return;
@@ -216,7 +216,7 @@ void CControlAnimationBase::select_animation(bool anim_end)
 
 	if ( m_override_animation == cur_anim_info().get_motion()
 							&&
-		 m_override_animation_index != (u32)-1 )
+		 m_override_animation_index != static_cast<u32>(-1) )
 	{
 		VERIFY							(anim_it->count != 0);
 		VERIFY							(m_override_animation_index < anim_it->count);
@@ -226,11 +226,14 @@ void CControlAnimationBase::select_animation(bool anim_end)
 	{
 		index						=	anim_it->spec_id;
 	}
-	else 
+	else// if (anim_it->count)
 	{
 		VERIFY							(anim_it->count != 0);
 		index						=	::Random.randI(anim_it->count);
 	}
+	//else {
+	//	return;
+	//}
 
 	// установить анимацию	
 	string128	s1,s2;
@@ -248,7 +251,7 @@ void CControlAnimationBase::select_animation(bool anim_end)
 	strconcat	(sizeof(st),st,*anim_it->target_name,itoa(index,tmp,10));
 	//	xr_sprintf		(st, "%s%d", *anim_it->second.target_name, index);
 	m_cur_anim.name				= st; 
-	m_cur_anim.index			= u8(index);
+	m_cur_anim.index			= static_cast<u8>(index);
 	m_cur_anim.time_started		= Device.dwTimeGlobal;
 	m_cur_anim.speed._set_current	(1.f);
 	m_cur_anim.speed._set_target	(-1.f);
@@ -427,11 +430,11 @@ EAction CControlAnimationBase::GetActionFromPath()
 	u32 cur_point_velocity_index = m_object->movement().detail().path()[m_object->movement().detail().curr_travel_point_index()].velocity;
 	action = VelocityIndex2Action(cur_point_velocity_index);
 
-	u32 next_point_velocity_index = u32(-1);
+	u32 next_point_velocity_index = static_cast<u32>(-1);
 	if (m_object->movement().detail().path().size() > m_object->movement().detail().curr_travel_point_index() + 1) 
 		next_point_velocity_index = m_object->movement().detail().path()[m_object->movement().detail().curr_travel_point_index() + 1].velocity;
 
-	if ((cur_point_velocity_index == MonsterMovement::eVelocityParameterStand) && (next_point_velocity_index != u32(-1))) {
+	if ((cur_point_velocity_index == MonsterMovement::eVelocityParameterStand) && (next_point_velocity_index != static_cast<u32>(-1))) {
 		if (!m_object->control().direction().is_turning(deg(1))) 
 			action = VelocityIndex2Action(next_point_velocity_index);
 	}
@@ -558,7 +561,7 @@ MotionID CControlAnimationBase::get_motion_id(EMotionAnim a, u32 index)
 	VERIFY(anim_it);
 
 	// определить необходимый индекс
-	if (index == u32(-1)) {
+	if (index == static_cast<u32>(-1)) {
 		if (-1 != anim_it->spec_id) index = anim_it->spec_id;
 		else {
 			VERIFY(anim_it->count != 0);
@@ -579,7 +582,7 @@ void CControlAnimationBase::stop_now()
 void CControlAnimationBase::set_animation_speed()
 {
 	// Setup Com
-	SControlAnimationData		*ctrl_data = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+	SControlAnimationData		*ctrl_data = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 	if (!ctrl_data) return;
 	ctrl_data->set_speed		(m_cur_anim.speed._get_target() );
 }
@@ -629,17 +632,17 @@ void parse_anim_params(LPCSTR val, SAAParam &anim)
 {
 	string16			cur_elem;
 
-	_GetItem	(val,0,cur_elem);		anim.time			= float(atof(cur_elem));
-	_GetItem	(val,1,cur_elem);		anim.hit_power		= float(atof(cur_elem));
-	_GetItem	(val,2,cur_elem);		anim.impulse		= float(atof(cur_elem));
-	_GetItem	(val,3,cur_elem);		anim.impulse_dir.x	= float(atof(cur_elem));
-	_GetItem	(val,4,cur_elem);		anim.impulse_dir.y	= float(atof(cur_elem));
-	_GetItem	(val,5,cur_elem);		anim.impulse_dir.z	= float(atof(cur_elem));
-	_GetItem	(val,6,cur_elem);		anim.foh.from_yaw	= float(atof(cur_elem));
-	_GetItem	(val,7,cur_elem);		anim.foh.to_yaw		= float(atof(cur_elem));
-	_GetItem	(val,8,cur_elem);		anim.foh.from_pitch	= float(atof(cur_elem));
-	_GetItem	(val,9,cur_elem);		anim.foh.to_pitch	= float(atof(cur_elem));
-	_GetItem	(val,10,cur_elem);		anim.dist			= float(atof(cur_elem));
+	_GetItem	(val,0,cur_elem);		anim.time			= static_cast<float>(atof(cur_elem));
+	_GetItem	(val,1,cur_elem);		anim.hit_power		= static_cast<float>(atof(cur_elem));
+	_GetItem	(val,2,cur_elem);		anim.impulse		= static_cast<float>(atof(cur_elem));
+	_GetItem	(val,3,cur_elem);		anim.impulse_dir.x	= static_cast<float>(atof(cur_elem));
+	_GetItem	(val,4,cur_elem);		anim.impulse_dir.y	= static_cast<float>(atof(cur_elem));
+	_GetItem	(val,5,cur_elem);		anim.impulse_dir.z	= static_cast<float>(atof(cur_elem));
+	_GetItem	(val,6,cur_elem);		anim.foh.from_yaw	= static_cast<float>(atof(cur_elem));
+	_GetItem	(val,7,cur_elem);		anim.foh.to_yaw		= static_cast<float>(atof(cur_elem));
+	_GetItem	(val,8,cur_elem);		anim.foh.from_pitch	= static_cast<float>(atof(cur_elem));
+	_GetItem	(val,9,cur_elem);		anim.foh.to_pitch	= static_cast<float>(atof(cur_elem));
+	_GetItem	(val,10,cur_elem);		anim.dist			= static_cast<float>(atof(cur_elem));
 
 	anim.impulse_dir.normalize();
 

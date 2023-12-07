@@ -25,11 +25,11 @@ void	CCar::OnMouseMove(int dx, int dy)
 	CCameraBase* C	= active_camera;
 	float scale		= (C->f_fov/g_fov)*psMouseSens * psMouseSensScale/50.f;
 	if (dx){
-		float d		= float(dx)*scale;
+		float d		= static_cast<float>(dx)*scale;
 		C->Move		((d<0)?kLEFT:kRIGHT, _abs(d));
 	}
 	if (dy){
-		float d		= ((psMouseInvert.test(1))?-1:1)*float(dy)*scale*3.f/4.f;
+		float d		= ((psMouseInvert.test(1))?-1:1)*static_cast<float>(dy)*scale*3.f/4.f;
 		C->Move		((d>0)?kUP:kDOWN, _abs(d));
 	}
 }

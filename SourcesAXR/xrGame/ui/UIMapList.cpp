@@ -129,7 +129,7 @@ void CUIMapList::OnListItemClicked()
 	xr_string map_name = "intro\\intro_map_pic_";
 	
 	CUIListBoxItem* itm				= m_pList1->GetSelectedItem();
-	u32 _idx						= (u32)(__int64)(itm->GetData());
+	u32 _idx						= static_cast<u32>((__int64)(itm->GetData()));
 	const SGameTypeMaps::SMapItm& M	= GetMapNameInt(GetCurGameType(), _idx);
 
 	map_name						+=	M.map_name.c_str();
@@ -192,7 +192,7 @@ EGameIDs CUIMapList::GetCurGameType()
 
 
 #ifdef DEBUG
-	return EGameIDs(u32(-1));
+	return static_cast<EGameIDs>(u32(-1));
 #endif
 }
 
@@ -202,7 +202,7 @@ const char* CUIMapList::GetCommandLine(LPCSTR player_name){
 	if (!itm)	
 		return						NULL;
 
-	u32 _idx						= (u32)(__int64)(itm->GetData());
+	u32 _idx						= static_cast<u32>((__int64)(itm->GetData()));
 	const SGameTypeMaps::SMapItm& M	= GetMapNameInt	(GetCurGameType(), _idx);
 
 	m_command.clear();
@@ -280,7 +280,7 @@ void	CUIMapList::SaveMapList()
 	for(u32 idx=0; idx<m_pList2->GetSize(); ++idx)
 	{
 		CUIListBoxItem* itm				= m_pList2->GetItemByIDX(idx);
-		u32 _idx						= (u32)(__int64)(itm->GetData());
+		u32 _idx						= static_cast<u32>((__int64)(itm->GetData()));
 		const SGameTypeMaps::SMapItm& M	= GetMapNameInt(GetCurGameType(), _idx);
 
 		xr_sprintf						(map_name, "sv_addmap %s/ver=%s", M.map_name.c_str(), M.map_ver.c_str() );
@@ -345,7 +345,7 @@ void CUIMapList::UpdateMapList(EGameIDs GameType)
 	for (u32 i=0; i<cnt; ++i)
 	{
 		CUIListBoxItem* itm		= m_pList1->AddTextItem( CStringTable().translate(M.m_map_names[i].map_name).c_str() );
-		itm->SetData			( (void*)(__int64)i );
+		itm->SetData			( (void*)static_cast<__int64>(i) );
 		itm->Enable				(true);
 	}
 	

@@ -176,7 +176,7 @@ void CAI_Rat::activate_state_eat()
 		sound().play				(eRatSoundEat);
 	}
 	else {
-		sound().remove_active_sounds(u32(-1));
+		sound().remove_active_sounds(static_cast<u32>(-1));
 		if (!a)
 			m_fSpeed					= m_fMaxSpeed;
 		else

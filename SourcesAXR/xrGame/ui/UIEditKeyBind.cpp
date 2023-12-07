@@ -217,7 +217,7 @@ void CUIEditKeyBind::BindAction2Key()
 void CUIEditKeyBind::OnMessage(LPCSTR message)
 {
 	// message = "command=key"
-	int eq	= (int)strcspn(message,"=");
+	int eq	= static_cast<int>(strcspn(message, "="));
 	
 	if(!m_keyboard)
 		return;

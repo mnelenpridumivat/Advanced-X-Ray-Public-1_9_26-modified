@@ -152,7 +152,7 @@ void			xrGameSpyServer::OnCL_Disconnected	(IClient* _CL)
 	if (m_bCDKey_Initialized)
 	{
 		Msg("Server : Disconnecting Client");
-		m_GCDServer.DisconnectUser(int(_CL->ID.value()));
+		m_GCDServer.DisconnectUser(static_cast<int>(_CL->ID.value()));
 	};
 }
 
@@ -161,7 +161,7 @@ u32				xrGameSpyServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero 
 	u16			type;
 	P.r_begin	(type);
 
-	xrGameSpyClientData* CL		= (xrGameSpyClientData*)ID_to_client(sender);
+	xrGameSpyClientData* CL		= static_cast<xrGameSpyClientData*>(ID_to_client(sender));
 
 	switch (type)
 	{
@@ -175,13 +175,13 @@ u32				xrGameSpyServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero 
 #ifndef MASTER_GOLD
 				Msg("Server : Respond accepted, Authenticate client.");
 #endif // #ifndef MASTER_GOLD
-				m_GCDServer.AuthUser(int(CL->ID.value()), CL->m_cAddress.m_data.data, CL->m_pChallengeString, ResponseStr, this);
+				m_GCDServer.AuthUser(static_cast<int>(CL->ID.value()), CL->m_cAddress.m_data.data, CL->m_pChallengeString, ResponseStr, this);
 				xr_strcpy(CL->m_guid,128,this->GCD_Server()->GetKeyHash(CL->ID.value()));
 			}
 			else
 			{
 				Msg("Server : Respond accepted, ReAuthenticate client.");
-				m_GCDServer.ReAuthUser(int(CL->ID.value()), CL->m_iCDKeyReauthHint, ResponseStr);
+				m_GCDServer.ReAuthUser(static_cast<int>(CL->ID.value()), CL->m_iCDKeyReauthHint, ResponseStr);
 			}
 
 			return (0);

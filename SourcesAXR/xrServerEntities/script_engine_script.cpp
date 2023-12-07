@@ -183,7 +183,7 @@ struct profile_timer_script {
 
 	IC		float					time					() const
 	{
-		float					result = (float(double(m_accumulator)/double(CPU::clk_per_second))*1000000.f);
+		float					result = (static_cast<float>(double(m_accumulator) / double(CPU::clk_per_second))*1000000.f);
 		return					(result);
 	}
 };

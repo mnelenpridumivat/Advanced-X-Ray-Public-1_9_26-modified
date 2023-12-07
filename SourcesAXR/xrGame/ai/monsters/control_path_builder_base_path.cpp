@@ -78,11 +78,11 @@ void CControlPathBuilderBase::find_target_point_set()
 			pos_random.mad			(m_object->Position(), dir, pmt_find_point_dist);
 			set_target_accessible	(m_target_found, pos_random);
 
-			if (m_target_found.node() != u32(-1)) return;
+			if (m_target_found.node() != static_cast<u32>(-1)) return;
 		}
 	}
 
-	m_target_found.set_node (u32(-1));
+	m_target_found.set_node (static_cast<u32>(-1));
 	
 	//---------------------------------------------------
 	// I. Выбрать позицию
@@ -115,7 +115,7 @@ void CControlPathBuilderBase::find_target_point_set()
 		} else break;
 	}
 
-	if (m_target_found.node() != u32(-1)) return;
+	if (m_target_found.node() != static_cast<u32>(-1)) return;
 
 	if (!ai().level_graph().valid_vertex_position(m_target_found.position()))
 	{
@@ -144,7 +144,7 @@ void CControlPathBuilderBase::find_target_point_failed()
 		if (!m_target_found.position().similar(m_object->Position(), 0.5f)) break;
 	}
 
-	if (m_target_found.node() != u32(-1)) return;
+	if (m_target_found.node() != static_cast<u32>(-1)) return;
 
 	//---------------------------------------------------
 	// II. Выбрана позиция, ищем ноду

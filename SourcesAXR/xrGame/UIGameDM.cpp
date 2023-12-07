@@ -230,7 +230,7 @@ void CUIGameDM::ChangeTotalMoneyIndicator(LPCSTR newMoneyString)
 
 void	CUIGameDM::SetRank(s16 team, u8 rank)
 {
-	m_pRankIndicator->SetRank(u8(m_game->ModifyTeam(team)), rank);
+	m_pRankIndicator->SetRank(static_cast<u8>(m_game->ModifyTeam(team)), rank);
 };
 
 void CUIGameDM::SetFraglimit(int local_frags, int fraglimit)

@@ -297,9 +297,9 @@ void game_sv_GameState::net_Export_State						(NET_Packet& P, ClientID to)
 	P.w_u16			(m_phase);
 	P.w_s32			(m_round);
 	P.w_u32			(m_start_time);
-	P.w_u8			(u8(g_sv_base_iVotingEnabled&0xff));
-	P.w_u8			(u8(net_sv_control_hit));
-	P.w_u8			(u8(g_bCollectStatisticData));
+	P.w_u8			(static_cast<u8>(g_sv_base_iVotingEnabled & 0xff));
+	P.w_u8			(static_cast<u8>(net_sv_control_hit));
+	P.w_u8			(static_cast<u8>(g_bCollectStatisticData));
 
 	// Players
 //	u32	p_count			= get_players_count() - ((g_dedicated_server)? 1 : 0);
@@ -392,7 +392,7 @@ void game_sv_GameState::Create					(shared_str &options)
 				if(type==rptItemSpawn)
 					O->r_stringZ		(rp_profile);
 
-				if (GameType != EGameIDs(u16(-1)))
+				if (GameType != static_cast<EGameIDs>(u16(-1)))
 				{
 					if ((Type() == eGameIDCaptureTheArtefact) && (GameType & eGameIDCaptureTheArtefact))
 					{
@@ -415,7 +415,7 @@ void game_sv_GameState::Create					(shared_str &options)
 				case rptActorSpawn:
 					{
 						rpoints[team].push_back	(R);
-						for (int i=0; i<int(rpoints[team].size())-1; i++)
+						for (int i=0; i<static_cast<int>(rpoints[team].size())-1; i++)
 						{
 							RPoint rp = rpoints[team][i];
 							float dist = R.P.distance_to_xz(rp.P)/2;
@@ -511,7 +511,7 @@ void	game_sv_GameState::assign_RP				(CSE_Abstract* E, game_PlayerState* ps_who)
 {
 	VERIFY				(E);
 
-	u8					l_uc_team = u8(-1);
+	u8					l_uc_team = static_cast<u8>(-1);
 	CSE_Spectator		*tpSpectator = smart_cast<CSE_Spectator*>(E);
 	if (tpSpectator)
 	{
@@ -550,7 +550,7 @@ void	game_sv_GameState::assign_RP				(CSE_Abstract* E, game_PlayerState* ps_who)
 	u32 rpoint = 0;
 	if (xrp.size() && !tpSpectator)
 	{
-		rpoint = xrp[::Random.randI((int)xrp.size())];
+		rpoint = xrp[::Random.randI(static_cast<int>(xrp.size()))];
 	}
 	else
 	{
@@ -561,7 +561,7 @@ void	game_sv_GameState::assign_RP				(CSE_Abstract* E, game_PlayerState* ps_who)
 				rp[i].TimeToUnfreeze = 0;
 			};
 		};
-		rpoint = ::Random.randI((int)rp.size());
+		rpoint = ::Random.randI(static_cast<int>(rp.size()));
 	}
 	//-----------------------------------------------------------
 #ifdef DEBUG
@@ -639,7 +639,7 @@ void game_sv_GameState::Update		()
 			xrClientData*	C			= static_cast<xrClientData*>(client);
 			if (!C->ps)
 				return;
-			C->ps->ping					= u16(C->stats.getPing());
+			C->ps->ping					= static_cast<u16>(C->stats.getPing());
 		}
 	};
 	ping_filler tmp_functor;
@@ -903,7 +903,7 @@ private:
 public:
 	EventDeleterPredicate()
 	{
-		id_entity_victim = u16(-1);
+		id_entity_victim = static_cast<u16>(-1);
 	}
 
 	EventDeleterPredicate(u16 id_entity)
@@ -1139,7 +1139,7 @@ void game_sv_GameState::on_death	(CSE_Abstract *e_dest, CSE_Abstract *e_src)
 	if (!creature)
 		return;
 
-	VERIFY						(creature->get_killer_id() == ALife::_OBJECT_ID(-1));
+	VERIFY						(creature->get_killer_id() == static_cast<ALife::_OBJECT_ID>(-1));
 	creature->set_killer_id		( e_src->ID );
 }
 

@@ -376,15 +376,15 @@ void TryToDefuseGrenadeLauncher(CWeaponMagazinedWGrenade const * weapon,
 	{
 		tmp_ammo_types	= &weapon->m_ammoTypes;
 		tmp_ammo_type	= &weapon->m_ammoType;
-		ammo_elapsed	= (u16)weapon->GetAmmoElapsed();
+		ammo_elapsed	= static_cast<u16>(weapon->GetAmmoElapsed());
 	} else
 	{
 		tmp_ammo_types	= &weapon->m_ammoTypes2;
 		tmp_ammo_type	= &weapon->m_ammoType2;
-		ammo_elapsed	= (u16)weapon->m_magazine2.size();
+		ammo_elapsed	= static_cast<u16>(weapon->m_magazine2.size());
 	}
 	
-	if (tmp_ammo_types->size() <= u32(*tmp_ammo_type))
+	if (tmp_ammo_types->size() <= static_cast<u32>(*tmp_ammo_type))
 		return;
 
 	shared_str ammo_section = (*tmp_ammo_types)[*tmp_ammo_type];
@@ -444,15 +444,15 @@ void TryToDefuseWeapon(CWeapon const * weapon,
 	{
 		tmp_ammo_types	= &tmp_gl_weapon->m_ammoTypes2;
 		tmp_ammo_type	= &tmp_gl_weapon->m_ammoType2;
-		ammo_elapsed	= (u16)tmp_gl_weapon->m_magazine2.size();
+		ammo_elapsed	= static_cast<u16>(tmp_gl_weapon->m_magazine2.size());
 	} else
 	{
 		tmp_ammo_types	= &weapon->m_ammoTypes;
 		tmp_ammo_type	= &weapon->m_ammoType;
-		ammo_elapsed	= (u16)weapon->GetAmmoElapsed();
+		ammo_elapsed	= static_cast<u16>(weapon->GetAmmoElapsed());
 	}
 	
-	if (tmp_ammo_types->size() <= u32(*tmp_ammo_type))
+	if (tmp_ammo_types->size() <= static_cast<u32>(*tmp_ammo_type))
 		return;
 
 	shared_str ammo_section = (*tmp_ammo_types)[*tmp_ammo_type];
@@ -926,7 +926,7 @@ bool CUIGameCTA::IR_UIOnKeyboardRelease(int dik)
 
 s16	CUIGameCTA::GetBuyMenuItemIndex		(u8 Addons, u8 ItemID)
 {
-	s16	ID = (s16(Addons) << 0x08) | s16(ItemID);
+	s16	ID = (static_cast<s16>(Addons) << 0x08) | static_cast<s16>(ItemID);
 	return ID;
 };
 

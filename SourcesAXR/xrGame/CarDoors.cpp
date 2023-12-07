@@ -350,7 +350,7 @@ void CCar::SDoor::ClosedToOpening()
 	Fmatrix door_form,root_form;
 	IKinematics* pKinematics=smart_cast<IKinematics*>(pcar->Visual());
 //	CBoneData& bone_data= pKinematics->LL_GetData(u16(bone_id));
-	CBoneInstance& bone_instance=pKinematics->LL_GetBoneInstance(u16(bone_id));
+	CBoneInstance& bone_instance=pKinematics->LL_GetBoneInstance(static_cast<u16>(bone_id));
 	bone_instance.set_callback(bctPhysics,pcar->PPhysicsShell()->GetBonesCallback(),joint->PSecond_element());
 	
 	door_form.set(bone_instance.mTransform);
@@ -372,7 +372,7 @@ void CCar::SDoor::ClosingToClosed()
 //	Fmatrix door_form;
 	IKinematics* pKinematics=smart_cast<IKinematics*>(pcar->Visual());
 //	CBoneData& bone_data= pKinematics->LL_GetData(u16(bone_id));
-	CBoneInstance& bone_instance=pKinematics->LL_GetBoneInstance(u16(bone_id));
+	CBoneInstance& bone_instance=pKinematics->LL_GetBoneInstance(static_cast<u16>(bone_id));
 	bone_instance.set_callback(bctPhysics,0,joint->PFirst_element(),FALSE);
 	//bone_instance.set_callback( bone_instance.callback_type(),bone_instance.callback(),bone_instance.callback_param(),FALSE);
 	//bone_instance.Callback_overwrite=FALSE;
@@ -619,13 +619,13 @@ void CCar::SDoor::SaveNetState(NET_Packet& P)
 {
 	CSE_ALifeCar::SDoorState ds;
 	ds.health=Health();
-	ds.open_state=u8(state);
+	ds.open_state=static_cast<u8>(state);
 	ds.write(P);
 }
 
 void CCar::SDoor::RestoreNetState(const CSE_ALifeCar::SDoorState& a_state)
 {
-	eState lstate=eState(a_state.open_state);
+	eState lstate=static_cast<eState>(a_state.open_state);
 	if(lstate==closed)	ClosingToClosed();
 	state=lstate;
 	SetHealth(a_state.health);

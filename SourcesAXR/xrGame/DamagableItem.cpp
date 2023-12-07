@@ -4,8 +4,8 @@
 CDamagableItem::CDamagableItem()
 {
 	m_max_health=0.f;
-	m_levels_num=u16(-1);
-	m_level_applied=u16(-1);
+	m_levels_num=static_cast<u16>(-1);
+	m_level_applied=static_cast<u16>(-1);
 }
 
 
@@ -13,14 +13,14 @@ CDamagableItem::CDamagableItem()
 u16 CDamagableItem::DamageLevel()
 {
 float health=Health();if(health<0.f)health=0.f;
-u16 dl=u16((1.f-Health()/m_max_health)*m_levels_num);
+u16 dl=static_cast<u16>((1.f - Health() / m_max_health) * m_levels_num);
 
 if(dl<m_levels_num)return dl;
 else return m_levels_num;
 }
 float	CDamagableItem::DamageLevelToHealth	(u16 dl)
 {
-	return m_max_health*(float(m_levels_num-dl)/m_levels_num);
+	return m_max_health*(static_cast<float>(m_levels_num - dl)/m_levels_num);
 }
 void CDamagableItem::Init(float max_health,u16 level_num)
 {

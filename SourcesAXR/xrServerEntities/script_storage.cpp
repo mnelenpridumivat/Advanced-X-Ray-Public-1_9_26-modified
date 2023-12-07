@@ -112,13 +112,13 @@ static void *lua_alloc		(void *ud, void *ptr, size_t osize, size_t nsize) {
 	}
 
 	if ( !ptr ) {
-		void* const result			= s_allocator.malloc_impl((u32)nsize);
+		void* const result			= s_allocator.malloc_impl(static_cast<u32>(nsize));
 		memory_monitor::monitor_alloc (result,nsize,"LUA");
 		return						result;
 	}
 
 	memory_monitor::monitor_free	(ptr);
-	void* const result				= s_allocator.realloc_impl(ptr, (u32)nsize);
+	void* const result				= s_allocator.realloc_impl(ptr, static_cast<u32>(nsize));
 	memory_monitor::monitor_alloc	(result,nsize,"LUA");
 	return							result;
 #endif // #ifndef USE_MEMORY_MONITOR
@@ -502,10 +502,10 @@ bool CScriptStorage::load_buffer	(lua_State *L, LPCSTR caBuffer, size_t tSize, L
 
 		__try {
 			if (total_size < 768*1024)
-				script					= (LPSTR)_alloca(total_size);
+				script					= static_cast<LPSTR>(_alloca(total_size));
 			else {
 #ifdef DEBUG
-				script					= (LPSTR)Memory.mem_alloc(total_size, "lua script file");
+				script					= static_cast<LPSTR>(Memory.mem_alloc(total_size, "lua script file"));
 #else //#ifdef DEBUG
 				script					= (LPSTR)Memory.mem_alloc(total_size);
 #endif //#ifdef DEBUG
@@ -517,7 +517,7 @@ bool CScriptStorage::load_buffer	(lua_State *L, LPCSTR caBuffer, size_t tSize, L
 			int							errcode = _resetstkoflw();
 			R_ASSERT2					(errcode, "Could not reset the stack after \"Stack overflow\" exception!");
 #ifdef DEBUG
-			script					= (LPSTR)Memory.mem_alloc(total_size, "lua script file (after exception)");
+			script					= static_cast<LPSTR>(Memory.mem_alloc(total_size, "lua script file (after exception)"));
 #else //#ifdef DEBUG
 			script					= (LPSTR)Memory.mem_alloc(total_size);
 #endif //#ifdef DEBUG			
@@ -525,7 +525,7 @@ bool CScriptStorage::load_buffer	(lua_State *L, LPCSTR caBuffer, size_t tSize, L
 		};
 
 		xr_strcpy		(script, total_size, insert);
-		CopyMemory		(script + str_len,caBuffer,u32(tSize));
+		CopyMemory		(script + str_len,caBuffer,static_cast<u32>(tSize));
 
 		l_iErrorCode	= luaL_loadbuffer(L,script,tSize + str_len,caScriptName);
 
@@ -563,7 +563,7 @@ bool CScriptStorage::do_file	(LPCSTR caScriptName, LPCSTR caNameSpaceName)
 	}
 	strconcat		(sizeof(l_caLuaFileName),l_caLuaFileName,"@",caScriptName);
 	
-	if (!load_buffer(lua(),static_cast<LPCSTR>(l_tpFileReader->pointer()),(size_t)l_tpFileReader->length(),l_caLuaFileName,caNameSpaceName)) {
+	if (!load_buffer(lua(),static_cast<LPCSTR>(l_tpFileReader->pointer()),static_cast<size_t>(l_tpFileReader->length()),l_caLuaFileName,caNameSpaceName)) {
 //		VERIFY		(lua_gettop(lua()) >= 4);
 //		lua_pop		(lua(),4);
 //		VERIFY		(lua_gettop(lua()) == start - 3);

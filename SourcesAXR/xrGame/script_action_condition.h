@@ -14,14 +14,14 @@
 class CScriptActionCondition {
 public:
 	enum EActionFlags {
-		MOVEMENT_FLAG	= u32(1 << 0),
-		WATCH_FLAG		= u32(1 << 1),
-		ANIMATION_FLAG	= u32(1 << 2),
-		SOUND_FLAG		= u32(1 << 3),
-		PARTICLE_FLAG	= u32(1 << 4),
-		OBJECT_FLAG		= u32(1 << 5),
-		TIME_FLAG		= u32(1 << 6),
-		ACT_FLAG		= u32(1 << 7)
+		MOVEMENT_FLAG	= static_cast<u32>(1 << 0),
+		WATCH_FLAG		= static_cast<u32>(1 << 1),
+		ANIMATION_FLAG	= static_cast<u32>(1 << 2),
+		SOUND_FLAG		= static_cast<u32>(1 << 3),
+		PARTICLE_FLAG	= static_cast<u32>(1 << 4),
+		OBJECT_FLAG		= static_cast<u32>(1 << 5),
+		TIME_FLAG		= static_cast<u32>(1 << 6),
+		ACT_FLAG		= static_cast<u32>(1 << 7)
 	};
 
 public:

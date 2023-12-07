@@ -249,8 +249,8 @@ void CBreakableObject::SendDestroy()
 
 void CBreakableObject::CollisionHit( u16 source_id, u16 bone_id, float c_damage, const Fvector &dir, Fvector &pos )
 {
-	VERIFY(source_id == u16(-1) );
-	VERIFY(bone_id == u16(-1) );
+	VERIFY(source_id == static_cast<u16>(-1) );
+	VERIFY(bone_id == static_cast<u16>(-1) );
 	VERIFY( m_pUnbrokenObject );
 
 	if(m_damage_threshold<c_damage&&

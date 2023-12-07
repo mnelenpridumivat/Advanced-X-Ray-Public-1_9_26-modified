@@ -71,7 +71,7 @@ BOOL CActor::feel_touch_on_contact	(CObject *O)
 
 ICF static BOOL info_trace_callback(collide::rq_result& result, LPVOID params)
 {
-	BOOL& bOverlaped	= *(BOOL*)params;
+	BOOL& bOverlaped	= *static_cast<BOOL*>(params);
 	if(result.O)
 	{
 		if (Level().CurrentEntity()==result.O)

@@ -42,7 +42,7 @@ extern int hud_adj_mode;
 
 void CActor::IR_OnKeyboardPress(int cmd)
 {
-	if (m_blocked_actions.find((EGameActions)cmd) != m_blocked_actions.end()) return; // Real Wolf. 14.10.2014
+	if (m_blocked_actions.find(static_cast<EGameActions>(cmd)) != m_blocked_actions.end()) return; // Real Wolf. 14.10.2014
 
 	if(hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT))	return;
 
@@ -86,10 +86,10 @@ void CActor::IR_OnKeyboardPress(int cmd)
 	if(m_holder && kUSE != cmd)
 	{
 		m_holder->OnKeyboardPress			(cmd);
-		if(m_holder->allowWeapon() && inventory().Action((u16)cmd, CMD_START))		return;
+		if(m_holder->allowWeapon() && inventory().Action(static_cast<u16>(cmd), CMD_START))		return;
 		return;
 	}else
-		if(inventory().Action((u16)cmd, CMD_START))					return;
+		if(inventory().Action(static_cast<u16>(cmd), CMD_START))					return;
 
 #ifdef DEBUG
 	if(psActorFlags.test(AF_NO_CLIP))
@@ -225,7 +225,7 @@ void CActor::IR_OnMouseWheel(int direction)
 		return;
 	}
 
-	if(inventory().Action( (direction>0)? (u16)kWPN_ZOOM_DEC:(u16)kWPN_ZOOM_INC , CMD_START)) return;
+	if(inventory().Action( (direction>0)? static_cast<u16>(kWPN_ZOOM_DEC):static_cast<u16>(kWPN_ZOOM_INC) , CMD_START)) return;
 
 
 	if (direction>0)
@@ -236,7 +236,7 @@ void CActor::IR_OnMouseWheel(int direction)
 
 void CActor::IR_OnKeyboardRelease(int cmd)
 {
-	if (m_blocked_actions.find((EGameActions)cmd) != m_blocked_actions.end()) return; // Real Wolf. 14.10.2014
+	if (m_blocked_actions.find(static_cast<EGameActions>(cmd)) != m_blocked_actions.end()) return; // Real Wolf. 14.10.2014
 
 	if(hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT))	return;
 
@@ -253,10 +253,10 @@ void CActor::IR_OnKeyboardRelease(int cmd)
 		{
 			m_holder->OnKeyboardRelease(cmd);
 			
-			if(m_holder->allowWeapon() && inventory().Action((u16)cmd, CMD_STOP))		return;
+			if(m_holder->allowWeapon() && inventory().Action(static_cast<u16>(cmd), CMD_STOP))		return;
 			return;
 		}else
-			if(inventory().Action((u16)cmd, CMD_STOP))		return;
+			if(inventory().Action(static_cast<u16>(cmd), CMD_STOP))		return;
 
 
 
@@ -270,7 +270,7 @@ void CActor::IR_OnKeyboardRelease(int cmd)
 
 void CActor::IR_OnKeyboardHold(int cmd)
 {
-	if (m_blocked_actions.find((EGameActions)cmd) != m_blocked_actions.end()) return; // Real Wolf. 14.10.2014
+	if (m_blocked_actions.find(static_cast<EGameActions>(cmd)) != m_blocked_actions.end()) return; // Real Wolf. 14.10.2014
 
 	if(hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT))	return;
 
@@ -357,11 +357,11 @@ void CActor::IR_OnMouseMove(int dx, int dy)
 	CCameraBase* C	= cameras	[cam_active];
 	float scale		= (C->f_fov/g_fov)*psMouseSens * psMouseSensScale/50.f  / LookFactor;
 	if (dx){
-		float d = float(dx)*scale;
+		float d = static_cast<float>(dx)*scale;
 		cam_Active()->Move((d<0)?kLEFT:kRIGHT, _abs(d));
 	}
 	if (dy){
-		float d = ((psMouseInvert.test(1))?-1:1)*float(dy)*scale*3.f/4.f;
+		float d = ((psMouseInvert.test(1))?-1:1)*static_cast<float>(dy)*scale*3.f/4.f;
 		cam_Active()->Move((d>0)?kUP:kDOWN, _abs(d));
 	}
 }
@@ -487,7 +487,7 @@ void CActor::ActorUse()
 		CPhysicsShellHolder* object = smart_cast<CPhysicsShellHolder*>(RQ.O);
 		u16 element = BI_NONE;
 		if(object) 
-			element = (u16)RQ.element;
+			element = static_cast<u16>(RQ.element);
 
 		if(object && Level().IR_GetKeyState(DIK_LSHIFT))
 		{
@@ -589,7 +589,7 @@ void	CActor::OnPrevWeaponSlot()
 	if (CurSlot >= NumSlotsToCheck) 
 		CurSlot	= NumSlotsToCheck-1; //last in row
 
-	for (s32 i=s32(CurSlot-1); i>=0; i--)
+	for (s32 i=static_cast<s32>(CurSlot - 1); i>=0; i--)
 	{
 		if (inventory().ItemFromSlot(SlotsToCheck[i]))
 		{

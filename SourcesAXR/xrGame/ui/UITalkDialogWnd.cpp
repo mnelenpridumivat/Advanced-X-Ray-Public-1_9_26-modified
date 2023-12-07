@@ -125,7 +125,7 @@ void CUITalkDialogWnd::Hide()
 
 void CUITalkDialogWnd::OnQuestionClicked(CUIWindow* w, void*)
 {
-	m_ClickedQuestionID = ((CUIQuestionItem*)w)->m_s_value;
+	m_ClickedQuestionID = static_cast<CUIQuestionItem*>(w)->m_s_value;
 	GetMessageTarget()->SendMessage(this, TALK_DIALOG_QUESTION_CLICKED);
 }
 

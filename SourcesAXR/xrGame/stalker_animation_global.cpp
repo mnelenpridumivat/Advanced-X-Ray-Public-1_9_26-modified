@@ -23,7 +23,7 @@ using namespace StalkerSpace;
 
 void CStalkerAnimationManager::global_play_callback			(CBlend *blend)
 {
-	CAI_Stalker					*object = (CAI_Stalker*)blend->CallbackParam;
+	CAI_Stalker					*object = static_cast<CAI_Stalker*>(blend->CallbackParam);
 	VERIFY						(object);
 
 	CStalkerAnimationManager	&manager = object->animation();

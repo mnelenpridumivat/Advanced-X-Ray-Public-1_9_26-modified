@@ -22,7 +22,7 @@ void CControlThreaten::activate()
 
 	//////////////////////////////////////////////////////////////////////////
 	// set direction
-	SControlDirectionData			*ctrl_dir = (SControlDirectionData*)m_man->data(this, ControlCom::eControlDir); 
+	SControlDirectionData			*ctrl_dir = static_cast<SControlDirectionData*>(m_man->data(this, ControlCom::eControlDir)); 
 	VERIFY							(ctrl_dir);
 	ctrl_dir->heading.target_speed	= 1.f;
 	ctrl_dir->heading.target_angle	= m_man->direction().angle_to_target(m_object->EnemyMan.get_enemy()->Position());
@@ -30,7 +30,7 @@ void CControlThreaten::activate()
 	//////////////////////////////////////////////////////////////////////////
 	IKinematicsAnimated	*skel	= smart_cast<IKinematicsAnimated*>(m_object->Visual());
 	
-	SControlAnimationData		*ctrl_anim = (SControlAnimationData*)m_man->data(this, ControlCom::eControlAnimation); 
+	SControlAnimationData		*ctrl_anim = static_cast<SControlAnimationData*>(m_man->data(this, ControlCom::eControlAnimation)); 
 	VERIFY						(ctrl_anim);
 	ctrl_anim->global.set_motion (skel->ID_Cycle_Safe(m_data.animation));
 	ctrl_anim->global.actual	= false;
@@ -43,7 +43,7 @@ void CControlThreaten::update_schedule()
 {
 	// update direction (face to enemy here)
 	if (m_object->EnemyMan.get_enemy()) {
-		SControlDirectionData			*ctrl_dir = (SControlDirectionData*)m_man->data(this, ControlCom::eControlDir); 
+		SControlDirectionData			*ctrl_dir = static_cast<SControlDirectionData*>(m_man->data(this, ControlCom::eControlDir)); 
 		VERIFY							(ctrl_dir);
 		ctrl_dir->heading.target_angle	= m_man->direction().angle_to_target(m_object->EnemyMan.get_enemy()->Position());
 	}
@@ -77,7 +77,7 @@ void CControlThreaten::on_event(ControlCom::EEventType type, ControlCom::IEventD
 		break;
 	case ControlCom::eventAnimationSignal:	
 		{
-			SAnimationSignalEventData *event_data = (SAnimationSignalEventData *)dat;
+			SAnimationSignalEventData *event_data = static_cast<SAnimationSignalEventData*>(dat);
 			if (event_data->event_id == CControlAnimation::eAnimationCustom) 
 				m_object->on_threaten_execute();
 			break;

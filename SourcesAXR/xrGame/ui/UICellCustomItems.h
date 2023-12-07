@@ -15,7 +15,7 @@ public:
 	virtual		void			SetIsHelper					(bool is_helper);
 				bool			IsHelperOrHasHelperChild	();
 				void			Update						();
-				CInventoryItem* object						() {return (CInventoryItem*)m_pData;}
+				CInventoryItem* object						() {return static_cast<CInventoryItem*>(m_pData);}
 };
 
 class CUIAmmoCellItem :public CUIInventoryCellItem
@@ -29,7 +29,7 @@ public:
 				u32				 CalculateAmmoCount			();
 	virtual		bool			 EqualTo						(CUICellItem* itm);
 	virtual		CUIDragItem*	 CreateDragItem				();
-				CWeaponAmmo*	 object						() {return (CWeaponAmmo*)m_pData;}
+				CWeaponAmmo*	 object						() {return static_cast<CWeaponAmmo*>(m_pData);}
 };
 
 class CUIWeaponCellItem :public CUIInventoryCellItem
@@ -55,7 +55,7 @@ public:
 	virtual		void			Draw						();
 	virtual		void			SetTextureColor				(u32 color);
 
-				CWeapon*		object						() {return (CWeapon*)m_pData;}
+				CWeapon*		object						() {return static_cast<CWeapon*>(m_pData);}
 	virtual		void			OnAfterChild				(CUIDragDropListEx* parent_list);
 	virtual		CUIDragItem*	CreateDragItem				();
 	virtual		bool			EqualTo						(CUICellItem* itm);
