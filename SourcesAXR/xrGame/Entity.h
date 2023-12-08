@@ -26,10 +26,11 @@ private:
 protected:
 	//время через которое мертвое тело убирется с уровня
 	ALife::_TIME_ID					m_dwBodyRemoveTime;	
-protected:
+
 	virtual	CEntityConditionSimple	*create_entity_condition	(CEntityConditionSimple* ec);
 
 public:
+
 	IC float					GetfHealth			() const			{ return m_entity_condition->GetHealth(); }
 	IC float					SetfHealth			(float value)		{ m_entity_condition->SetHealth( value ) ; return value;}
 	float						m_fMorale;

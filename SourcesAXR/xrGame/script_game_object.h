@@ -136,7 +136,7 @@ namespace luabind {
 
 class CScriptGameObject {
 	mutable CGameObject		*m_game_object;
-							CScriptGameObject		(CScriptGameObject const& game_object);
+	CScriptGameObject		(CScriptGameObject const& game_object);
 
 public:
 
@@ -428,6 +428,10 @@ public:
 			void ChangeCharacterRank		(int);
 			void ChangeCharacterReputation	(int);
 			void SetCharacterCommunity		(LPCSTR,int,int);
+
+			void set_pda_active				(bool Active);
+			bool get_pda_active				();
+
 			void SetCharacterName			(LPCSTR name);
 			void SetCharacterIcon			(LPCSTR icon);
 			void SetCharacterDefaultVisual	(LPCSTR name);

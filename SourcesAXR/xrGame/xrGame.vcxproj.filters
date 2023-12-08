@@ -2509,6 +2509,12 @@
     <Filter Include="AI\AMonsters\monsters\AnomalPseudoGigant\Combat">
       <UniqueIdentifier>{a361c0d0-0ef2-4701-bfb4-f00ba251832c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Client\Objects\zones\MagnetZone">
+      <UniqueIdentifier>{17de7d36-0b9e-4919-a871-0ae1490f0fc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Client\Objects\zones\EmiZone">
+      <UniqueIdentifier>{8d24b6ec-a974-4b82-b219-0e3a3a4598bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">
@@ -7479,6 +7485,12 @@
     <ClInclude Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_burer_state_attack_shield.h">
       <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Combat</Filter>
     </ClInclude>
+    <ClInclude Include="MagnetZone.h">
+      <Filter>Core\Client\Objects\zones\MagnetZone</Filter>
+    </ClInclude>
+    <ClInclude Include="EmiZone.h">
+      <Filter>Core\Client\Objects\zones\EmiZone</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -11205,6 +11217,18 @@
     </ClCompile>
     <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_ability.cpp">
       <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="MagnetZone.cpp">
+      <Filter>Core\Client\Objects\zones\MagnetZone</Filter>
+    </ClCompile>
+    <ClCompile Include="magnet_zone_script.cpp">
+      <Filter>Core\Client\Objects\zones\MagnetZone</Filter>
+    </ClCompile>
+    <ClCompile Include="EmiZone.cpp">
+      <Filter>Core\Client\Objects\zones\EmiZone</Filter>
+    </ClCompile>
+    <ClCompile Include="emi_zone_script.cpp">
+      <Filter>Core\Client\Objects\zones\EmiZone</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

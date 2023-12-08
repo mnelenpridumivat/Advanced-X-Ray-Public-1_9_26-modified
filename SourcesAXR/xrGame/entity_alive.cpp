@@ -188,6 +188,8 @@ void CEntityAlive::reinit()
 
 	m_fAccuracy				= 25.f;
 	m_fIntelligence			= 25.f;
+
+	AffectedEmiZones.clear();
 }
 
 void CEntityAlive::reload		(LPCSTR section)
@@ -590,12 +592,14 @@ void CEntityAlive::save	(NET_Packet &output_packet)
 {
 	inherited::save(output_packet);
 	conditions().save(output_packet);
+	save_data(IgnoreOnPDA, output_packet);
 }
 
 void CEntityAlive::load	(IReader &input_packet)
 {
 	inherited::load(input_packet);
 	conditions().load(input_packet);
+	load_data(IgnoreOnPDA, input_packet);
 }
 
 BOOL	CEntityAlive::net_SaveRelevant		()

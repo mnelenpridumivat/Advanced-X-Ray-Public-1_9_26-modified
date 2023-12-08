@@ -719,6 +719,23 @@ void CScriptGameObject::SetCharacterDefaultVisual(LPCSTR name)
 	}
 }
 
+void CScriptGameObject::set_pda_active(bool Active)
+{
+	auto Entity = smart_cast<CEntityAlive*>(&object());
+	VERIFY(Entity);
+	Entity->SetIgnoreOnPDA(!Active);
+}
+
+
+
+bool CScriptGameObject::get_pda_active()
+{
+
+	auto Entity = smart_cast<CEntityAlive*>(&object());
+	VERIFY(Entity);
+	return !Entity->IsIgnoreOnPDA();
+}
+
 LPCSTR CScriptGameObject::sound_voice_prefix () const
 {
 	CInventoryOwner* pInventoryOwner = smart_cast<CInventoryOwner*>(&object());

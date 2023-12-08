@@ -707,11 +707,19 @@ void CPda::OnHiddenItem()
 void CPda::UpdateActiveContacts()
 {
 	m_active_contacts.clear_not_free();
+	auto Owner = smart_cast<CEntityAlive*>(GetOwnerObject());
+	VERIFY(Owner);
+	if(Owner->IsInEmi())
+	{
+		return;
+	}
 	xr_vector<CObject*>::iterator it = feel_touch.begin();
 	for (; it != feel_touch.end(); ++it)
 	{
 		CEntityAlive* pEA = smart_cast<CEntityAlive*>(*it);
-		if (!!pEA->g_Alive() && !pEA->cast_base_monster())
+		if (!!pEA->g_Alive() 
+			&& !pEA->cast_base_monster() 
+			&& !pEA->IsInEmi())
 		{
 			m_active_contacts.push_back(*it);
 		}

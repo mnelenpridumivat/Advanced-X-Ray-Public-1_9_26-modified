@@ -1433,6 +1433,7 @@
     <ClInclude Include="embedded_editor\embedded_editor_pos_informer.h" />
     <ClInclude Include="embedded_editor\embedded_editor_main.h" />
     <ClInclude Include="embedded_editor\embedded_editor_weather.h" />
+    <ClInclude Include="EmiZone.h" />
     <ClInclude Include="encyclopedia_article.h" />
     <ClInclude Include="encyclopedia_article_defs.h" />
     <ClInclude Include="enemy_manager.h" />
@@ -1646,6 +1647,7 @@
     <ClInclude Include="magic_minimize_1d_inline.h" />
     <ClInclude Include="magic_minimize_nd.h" />
     <ClInclude Include="magic_minimize_nd_inline.h" />
+    <ClInclude Include="MagnetZone.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="manager_builder_allocator_constructor.h" />
     <ClInclude Include="manager_builder_allocator_constructor_inline.h" />
@@ -4794,6 +4796,8 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
+    <ClCompile Include="EmiZone.cpp" />
+    <ClCompile Include="emi_zone_script.cpp" />
     <ClCompile Include="encyclopedia_article.cpp" />
     <ClCompile Include="enemy_manager.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch_script.h</PrecompiledHeaderFile>
@@ -5756,6 +5760,8 @@
     <ClCompile Include="login_manager_script.cpp" />
     <ClCompile Include="magic_box3.cpp" />
     <ClCompile Include="magic_minimize_1d.cpp" />
+    <ClCompile Include="MagnetZone.cpp" />
+    <ClCompile Include="magnet_zone_script.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="map_location.cpp" />
     <ClCompile Include="map_manager.cpp">

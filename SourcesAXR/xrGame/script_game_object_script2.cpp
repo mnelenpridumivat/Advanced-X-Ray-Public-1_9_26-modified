@@ -415,6 +415,10 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("is_door_locked_for_npc",			&CScriptGameObject::is_door_locked_for_npc)
 		.def("is_door_blocked_by_npc",			&CScriptGameObject::is_door_blocked_by_npc)
 		.def("is_weapon_going_to_be_strapped",	&CScriptGameObject::is_weapon_going_to_be_strapped)
+
+		// switch PDA activity on map
+		.def("set_pda_active",						&CScriptGameObject::set_pda_active)
+		.def("get_pda_active",						&CScriptGameObject::get_pda_active)
 		
 		.def("SetCharacterName",				&CScriptGameObject::SetCharacterName)
 		.def("SetCharacterIcon",				&CScriptGameObject::SetCharacterIcon)
