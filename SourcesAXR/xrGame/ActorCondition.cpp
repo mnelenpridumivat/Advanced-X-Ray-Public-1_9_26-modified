@@ -447,9 +447,16 @@ void CActorCondition::AffectDamage_InjuriousMaterialAndMonstersInfluence()
 
 	clamp( m_f_time_affected, tg - (one * 3), tg );
 
+	float material_influence = GetInjuriousMaterialDamage(); // Get Radiation from Material
+
+	if(material_influence>0.0f)
+	{
+		m_object->callback(GameObject::eDangerousMaterialTouch)(material_influence);
+	}
+
 	float psy_influence					=	0;
 	float fire_influence				=	0;
-	float radiation_influence			=	GetInjuriousMaterialDamage(); // Get Radiation from Material
+	float radiation_influence			=	0;
 
 	// Add Radiation and Psy Level from Monsters
 	CPda* const pda						=	m_object->GetPDA();

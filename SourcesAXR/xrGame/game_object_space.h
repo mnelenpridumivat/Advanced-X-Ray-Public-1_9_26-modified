@@ -61,6 +61,8 @@ namespace GameObject {
 		eDetachVehicle,
 		eUseVehicle,
 
+		eDangerousMaterialTouch,
+
 		eDummy = static_cast<u32>(-1),
 	};
 };

@@ -101,6 +101,9 @@ void CScriptGameObject::script_register(lua_State *L)
 				value("shield_on", static_cast<int>(GameObject::eShieldOn)),
 				value("shield_off", static_cast<int>(GameObject::eShieldOff)),
 				value("jump", static_cast<int>(GameObject::eJump)),
+
+				// dangerous material touch
+				value("dangerous_material_touch", static_cast<int>(GameObject::eDangerousMaterialTouch)),
 				
 				value("map_location_added",			static_cast<int>(GameObject::eMapLocationAdded))
 			],
