@@ -708,8 +708,8 @@ void CPda::UpdateActiveContacts()
 {
 	m_active_contacts.clear_not_free();
 	auto Owner = smart_cast<CEntityAlive*>(GetOwnerObject());
-	VERIFY(Owner);
-	if(Owner->IsInEmi())
+	//VERIFY(Owner);
+	if(Owner && Owner->IsInEmi())
 	{
 		return;
 	}
