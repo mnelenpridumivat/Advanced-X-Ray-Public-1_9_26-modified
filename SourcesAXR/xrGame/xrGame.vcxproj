@@ -1744,6 +1744,7 @@
     <ClInclude Include="path_manager_solver_inline.h" />
     <ClInclude Include="patrol_path.h" />
     <ClInclude Include="patrol_path_inline.h" />
+    <ClInclude Include="patrol_path_labirint.h" />
     <ClInclude Include="patrol_path_manager.h" />
     <ClInclude Include="patrol_path_manager_inline.h" />
     <ClInclude Include="patrol_path_manager_space.h" />
@@ -5961,6 +5962,7 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <ClCompile Include="patrol_path.cpp" />
+    <ClCompile Include="patrol_path_labirint.cpp" />
     <ClCompile Include="patrol_path_manager.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch_script.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch_script.h</PrecompiledHeaderFile>

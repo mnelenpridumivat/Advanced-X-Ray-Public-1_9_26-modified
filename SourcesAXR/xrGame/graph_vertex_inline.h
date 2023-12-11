@@ -142,5 +142,11 @@ IC	bool CSGraphVertex::operator==	(const CVertex &obj) const
 	return			(equal(data(),obj.data()));
 }
 
+TEMPLATE_SPECIALIZATION
+IC	const xr_vector<CVertex<_data_type, _vertex_id_type, _graph_type>*>& CSGraphVertex::GetVertices() const
+{
+	return m_vertices;
+}
+
 #undef TEMPLATE_SPECIALIZATION
 #undef CSGraphVertex

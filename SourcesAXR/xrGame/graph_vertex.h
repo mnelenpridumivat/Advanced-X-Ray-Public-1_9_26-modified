@@ -21,7 +21,7 @@ public:
 	typedef typename _graph_type::CEdge						_edge_type;
 	typedef typename _edge_type::_edge_weight_type			_edge_weight_type;
 	typedef xr_vector<_edge_type>							EDGES;
-	typedef xr_vector<CVertex*>								VERTICES;
+	using VERTICES = xr_vector<CVertex*>;
 
 private:
 	_vertex_id_type						m_vertex_id;
@@ -48,6 +48,7 @@ public:
 	IC		const EDGES					&edges				() const;
 	IC		const _edge_type			*edge				(const _vertex_id_type &vertex_id) const;
 	IC		_edge_type					*edge				(const _vertex_id_type &vertex_id);
+	IC		const VERTICES&				GetVertices			() const;
 };
 
 #include "graph_vertex_inline.h"

@@ -2515,6 +2515,9 @@
     <Filter Include="Core\Client\Objects\zones\EmiZone">
       <UniqueIdentifier>{8d24b6ec-a974-4b82-b219-0e3a3a4598bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_labirint">
+      <UniqueIdentifier>{e854a4fd-4e4d-4047-a336-286a768d75f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">
@@ -7491,6 +7494,9 @@
     <ClInclude Include="EmiZone.h">
       <Filter>Core\Client\Objects\zones\EmiZone</Filter>
     </ClInclude>
+    <ClInclude Include="patrol_path_labirint.h">
+      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_labirint</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -11229,6 +11235,9 @@
     </ClCompile>
     <ClCompile Include="emi_zone_script.cpp">
       <Filter>Core\Client\Objects\zones\EmiZone</Filter>
+    </ClCompile>
+    <ClCompile Include="patrol_path_labirint.cpp">
+      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_labirint</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
