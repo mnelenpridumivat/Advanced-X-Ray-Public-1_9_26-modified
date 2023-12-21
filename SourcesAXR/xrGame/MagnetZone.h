@@ -27,6 +27,8 @@ public:
 	virtual void	AffectPullDead(CPhysicsShellHolder* GO, const Fvector& throw_in_dir, float dist);
 	virtual void	ThrowInCenter(Fvector& C);
 
+	virtual bool	BlowoutState();
+
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 
 };

@@ -27,5 +27,5 @@ void CEmiZone::exit_Zone(SZoneObjectInfo& io)
 	{
 		return;
 	}
-	Object->SetInEmi(this);
+	Object->SetOutEmi(this);
 }

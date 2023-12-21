@@ -18,6 +18,7 @@ void CMagnetZone::Load(LPCSTR section)
 
 void CMagnetZone::Affect(SZoneObjectInfo* O)
 {
+	//Msg("CMagnetZone: Try affect [%s]", O->object->Name());
 	CPhysicsShellHolder* GO = smart_cast<CPhysicsShellHolder*>(O->object);
 	if (!GO) return;
 
@@ -77,4 +78,13 @@ void CMagnetZone::AffectPullDead(CPhysicsShellHolder* GO, const Fvector& throw_i
 void CMagnetZone::ThrowInCenter(Fvector& C)
 {
 	Center(C);
+}
+
+bool CMagnetZone::BlowoutState()
+{
+	bool state = CCustomZone::BlowoutState();
+
+	AffectObjects();
+
+	return state;
 }
