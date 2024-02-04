@@ -340,6 +340,7 @@ void CRenderTarget::End		()
 	RCache.Vertex.Unlock									(4,g_postprocess.stride());
 
 	static	shared_str	s_colormap		= "c_colormap";
+	static  shared_str  s_noise_data	= "c_noise_data";
 	if (bCMap)
 	{
 		RCache.set_RT		(RT_color_map->pRT);
@@ -348,6 +349,7 @@ void CRenderTarget::End		()
 		RCache.set_Element	(bDistort ? s_postprocess_D[1]->E[4] : s_postprocess[1]->E[4]);
 		RCache.set_Geometry	(g_postprocess);
 		RCache.set_c		(s_colormap, param_color_map_influence,param_color_map_interpolate,0,0);
+		RCache.set_c		(s_noise_data, 0.5, 0.5, 4, 4);
 		RCache.Render		(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
 
 		RCache.set_RT		(HW.pBaseRT);
@@ -367,6 +369,7 @@ void CRenderTarget::End		()
 	// Actual rendering
 	static	shared_str	s_brightness	= "c_brightness";
 	RCache.set_c		(s_brightness,p_brightness.x,p_brightness.y,p_brightness.z,0);
+	RCache.set_c		(s_noise_data, 0.5, 0.5, 4, 4);
 	RCache.set_c		(s_colormap, param_color_map_influence,param_color_map_interpolate,0,0);
 	RCache.set_Geometry	(g_postprocess);
 	RCache.Render		(D3DPT_TRIANGLELIST,Offset,0,4,0,2);

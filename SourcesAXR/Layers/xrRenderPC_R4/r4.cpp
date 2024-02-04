@@ -1561,7 +1561,11 @@ HRESULT	CRender::shader_compile			(
 	HRESULT		_result = E_FAIL;
 
 	string_path	folder_name, folder;
-	xr_strcpy		( folder, "r3\\objects\\r4\\" );
+#ifdef ALLOW_PREDCOMPILED_SHADERS
+	xr_strcpy(folder, "r3\\objects\\r4\\");
+#else
+	xr_strcpy(folder, "r3\\objects_invalid_path\\r4\\");
+#endif
 	xr_strcat		( folder, name );
 	xr_strcat		( folder, "." );
 
