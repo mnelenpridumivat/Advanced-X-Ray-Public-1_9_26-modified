@@ -31,7 +31,7 @@ public:
 	virtual bool IR_OnMouseMove					(int dx, int dy);
 	virtual bool IR_OnMouseWheel				(int direction);
 	virtual bool IR_OnKeyboardHold				(int dik);
-	virtual bool OnKeyboard						(int dik, EUIMessages keyboard_action);
+	virtual bool OnKeyboardAction						(int dik, EUIMessages keyboard_action);
 	virtual bool OnKeyboardHold					(int dik);
 
 	CDialogHolder* GetHolder					()					{return m_pHolder;};
@@ -42,7 +42,9 @@ public:
 	virtual bool WorkInPause					()const {return m_bWorkInPause;}
 	virtual bool Dispatch						(int cmd, int param)				{return true;}
 			void ShowDialog						(bool bDoHideIndicators);
+			void ShowDialog1					(bool bDoHideIndicators);
 			void HideDialog						();
+			void HideDialog1					();
 };
 
 #endif // _UI_DIALOG_WND_H_

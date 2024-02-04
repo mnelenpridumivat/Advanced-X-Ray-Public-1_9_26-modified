@@ -96,7 +96,7 @@ void CWeaponAutomaticShotgun::Reload()
 
 void CWeaponAutomaticShotgun::TriStateReload()
 {
-	if (m_magazine.size() == static_cast<u32>(iMagazineSize))
+	if ((m_magazine.size() == static_cast<u32>(iMagazineSize)) && !IsMisfire())
 		return;
 
 	if (HaveCartridgeInInventory(1) || IsMisfire())
@@ -115,7 +115,7 @@ void CWeaponAutomaticShotgun::OnStateSwitch	(u32 S)
 
 	CWeapon::OnStateSwitch(S);
 
-	if( m_magazine.size() == static_cast<u32>(iMagazineSize) || !HaveCartridgeInInventory(1) && !IsMisfire())
+	if ((m_magazine.size() == static_cast<u32>(iMagazineSize)) && !IsMisfire() || !HaveCartridgeInInventory(1) && !IsMisfire())
 	{
 			switch2_EndReload		();
 			m_sub_state = eSubstateReloadEnd;
@@ -186,6 +186,8 @@ void CWeaponAutomaticShotgun::PlayAnimOpenWeapon()
 
 	if (IsMisfire())
 		PlayHUDMotionIfExists({ "anm_reload_misfire", "anm_close" }, true, GetState());
+	else if (iAmmoElapsed == 0)
+		PlayHUDMotionIfExists({ "anm_open_empty", "anm_open_weapon", "anm_open" }, false, GetState());
 	else
 		PlayHUDMotion("anm_open",FALSE,this,GetState());
 }

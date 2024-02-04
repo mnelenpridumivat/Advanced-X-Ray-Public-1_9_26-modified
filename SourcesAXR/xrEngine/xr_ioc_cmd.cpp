@@ -524,16 +524,37 @@ ENGINE_API BOOL r2_advanced_pp = FALSE;	//	advanced post process and effects
 
 // Ascii1457's Screen Space Shaders
 ENGINE_API Fvector3 ps_ssfx_shadow_cascades = { 20.f, 40.f, 160.f };
-ENGINE_API Fvector4 ps_ssfx_grass_shadows = { .0f, .35f, 30.0f, .0f };
+ENGINE_API Fvector4 ps_ssfx_grass_shadows = { 3.0f, .25f, 30.0f, .0f };
 ENGINE_API Fvector4 ps_ssfx_grass_interactive = { 1.0f, 8.f, 2000.0f, 1.0f };
 ENGINE_API Fvector4 ps_ssfx_int_grass_params_1 = { 1.0f, 1.0f, 1.0f, 25.0f };
 ENGINE_API Fvector4 ps_ssfx_int_grass_params_2 = { 1.0f, 5.0f, 1.0f, 1.0f };
 ENGINE_API Fvector4 ps_ssfx_hud_drops_1 = { 1.0f, 1.0f, 30.f, .05f }; // Anim Speed, Int, Reflection, Refraction
 ENGINE_API Fvector4 ps_ssfx_hud_drops_2 = { .0225f, 1.f, 0.0f, 2.0f }; // Density, Size, Extra Gloss, Gloss
+ENGINE_API Fvector4 ps_ssfx_hud_drops_1_cfg = { 3.0f, 1.f, 1.f, 50.f }; // Quantity of drops, Refrelction intensity, Refraction intensity, Speed of the drops animation
+ENGINE_API Fvector4 ps_ssfx_hud_drops_2_cfg = { 50.f, 50.f, 0.75f, 2.f }; // Drops build up speed, Drying speed, Size of the drops, Raindrops gloss intensity
 ENGINE_API Fvector4 ps_ssfx_blood_decals = { 0.6f, 0.6f, 0.f, 0.f };
 ENGINE_API Fvector4 ps_ssfx_rain_1 = { 6.0f, 0.1f, 0.6f, 2.f }; // Len, Width, Speed, Quality
 ENGINE_API Fvector4 ps_ssfx_rain_2 = { 0.7f, 0.1f, 1.0f, 0.5f }; // Alpha, Brigthness, Refraction, Reflection
 ENGINE_API Fvector4 ps_ssfx_rain_3 = { 0.01f, 1.0f, 0.0f, 0.0f }; // Alpha, Refraction ( Splashes ) - Yohji: Alpha was edited (0.5->0.01f) due to a bug with transparency and other particles.
+ENGINE_API Fvector4 ps_ssfx_florafixes_1 = { 0.15f, 0.0f, 0.15f, 0.0f }; // Specular value when the grass is dry, Specular value when the grass is wet, Specular when trees and bushes are dry, Specular when trees and bushes are wet
+ENGINE_API Fvector4 ps_ssfx_florafixes_2 = { 0.15f, 0.0f, 0.0f, 0.0f }; // Intensity of the flora SubSurface Scattering, How much sun color is added to the flora SubSurface Scattering (1.0 is 100% sun color)
+ENGINE_API Fvector4 ps_ssfx_wetsurfaces_1 = { 1.0f, 1.0f, 1.0f, 1.0f }; //ripples_size, ripples_speed, ripples_min_speed, ripples_intensity
+ENGINE_API Fvector4 ps_ssfx_wetsurfaces_2 = { 1.0f, 1.0f, 1.0f, 1.0f }; // waterfall_size, waterfall_speed, waterfall_min_speed, waterfall_intensity
+ENGINE_API int ps_ssfx_is_underground = 0;
+ENGINE_API int ps_ssfx_gloss_method = 0;
+ENGINE_API float ps_ssfx_gloss_factor = 0.5f;
+ENGINE_API Fvector3 ps_ssfx_gloss_minmax = { 0.0f,0.92f,0.0f }; // Minimum value of gloss, Maximum value of gloss, Extra gloss to the weapons HUD elements when raining
+ENGINE_API Fvector4 ps_ssfx_lightsetup_1 = { 0.35f, 0.5f, 0.0f, 0.0f };  // intensity of specular lighting, Porcentage of the specular color. ( 0 = 0% | 1 = 100% ), Automatic adjustment of gloss based on wetness (0 or 1), Value to control the maximum value of gloss when full wetness is reached. ( 0 = 0% | 1 = 100% )
+ENGINE_API Fvector3 ps_ssfx_shadows = { 256, 1536, 0.0f };
+ENGINE_API Fvector3 ps_ssfx_volumetric = { 0, 0.15f, 1.5f };
+ENGINE_API Fvector3 ps_ssfx_shadow_bias = { 0.4f, 0.03f, 0.0f };
+ENGINE_API Fvector4 ps_ssfx_lut = { 0.0f, 0.0f, 0.0f, 0.0f };
+ENGINE_API Fvector4 ps_ssfx_wind_grass = { 5.0f, 1.4f, 1.5f, 0.4f }; // Branches Speed, Trunk Speed, Bending, Min Wind Speed
+ENGINE_API Fvector4 ps_ssfx_wind_trees = { 7.0f, 0.15f, 0.5f, 0.025f }; // Anim Speed, Turbulence, Push, Wave
+
+ENGINE_API float ps_r3_dyn_wet_surf_near = 10.f; // 10.0f
+ENGINE_API float ps_r3_dyn_wet_surf_far = 100.f; // 30.0f
+ENGINE_API int ps_r3_dyn_wet_surf_sm_res = 256; // 256
 
 u32	renderer_value	= 3;
 //void fill_render_mode_list();
@@ -679,12 +700,15 @@ public		:
 };
 
 
-ENGINE_API float psHUD_FOV_def = 0.45f;
-ENGINE_API float psHUD_FOV = psHUD_FOV_def;
+ENGINE_API float	psHUD_FOV_def = 0.55f;
+ENGINE_API float	psHUD_FOV = psHUD_FOV_def;
 
-ENGINE_API float psSVPImageSizeK = 0.7f;
-ENGINE_API int psSVPFrameDelay = 1;
-ENGINE_API float fps_limit = 120.0f;
+ENGINE_API float	hud_adj_delta_pos = 0.0005f;
+ENGINE_API float	hud_adj_delta_rot = 0.05f;
+
+ENGINE_API float	psSVPImageSizeK = 0.7f;
+ENGINE_API int		psSVPFrameDelay = 1;
+ENGINE_API float	fps_limit = 120.0f;
 
 //extern int			psSkeletonUpdate;
 extern int			rsDVB_Size;
@@ -708,14 +732,9 @@ ENGINE_API int			ps_r__WallmarksOnSkeleton	= 0;
 
 ENGINE_API int			ps_r__ShaderNVG				= 0;
 
-ENGINE_API float		ps_detail_collision_dist	= 1.f;
-ENGINE_API float		ps_detail_collision_time	= 0.25f;
-ENGINE_API Fvector		ps_detail_collision_angle	= { 0, 50, 0 };
 ENGINE_API int			ps_detail_enable_collision	= 0;
 
-ENGINE_API float		ps_detail_collision_radius	= 40.f;
-ENGINE_API xr_vector<DetailCollisionPoint> level_detailcoll_points;
-ENGINE_API Fvector		actor_position{};
+ENGINE_API bool			ps_enchanted_shaders		= 0; // For xrGame
 
 void CCC_Register()
 {
@@ -772,10 +791,6 @@ void CCC_Register()
 	CMD4(CCC_Integer,	"rs_loadingstages",		&ps_rs_loading_stages,		0, 1	);
 
 	CMD4(CCC_Integer,	"r__detail_collision_enabled",			&ps_detail_enable_collision,	0, 1);
-	CMD4(CCC_Float,		"r__detail_collision_radius",			&ps_detail_collision_dist,		0.1f, 3.5f);
-	CMD4(CCC_Float,		"r__detail_collision_visible_radius",	&ps_detail_collision_radius,	5.f, 70.f);
-	CMD4(CCC_Float,		"r__detail_collision_time",				&ps_detail_collision_time,		0.1f, 3.f);
-	CMD4(CCC_Vector3,	"r__detail_collision_angles",			&ps_detail_collision_angle,		Fvector({ -90.f, -90.f, -90.f }), Fvector({ 90.f, 90.f, 90.f }));
 
 	CMD4(CCC_Float,		"svp_image_size_k",		&psSVPImageSizeK,	0.1f,	2.f				);
 	CMD4(CCC_Integer,	"svp_frame_delay",		&psSVPFrameDelay,	1,		3				);
@@ -845,6 +860,8 @@ void CCC_Register()
 	CMD3(CCC_Mask,		"mouse_invert",			&psMouseInvert,1);
 	psMouseSens			= 0.12f;
 	CMD4(CCC_Float,		"mouse_sens",			&psMouseSens,		0.001f, 0.6f);
+	psSVP_MouseSens		= psMouseSens;
+	CMD4(CCC_Float,		"svp_mouse_sens",		&psSVP_MouseSens,	0.001f, 0.6f);
 
 	// Camera
 	CMD4(CCC_Float,		"cam_inert",			&psCamInert,		0.0f, 0.9f);
@@ -866,6 +883,12 @@ void CCC_Register()
 #ifdef DEBUG	
 	CMD1(CCC_DumpOpenFiles,		"dump_open_files");
 #endif
+
+	if (bDeveloperMode)
+	{
+		CMD4(CCC_Float, "hud_adjust_delta_pos", &hud_adj_delta_pos, -10.f, 10.f);
+		CMD4(CCC_Float, "hud_adjust_delta_rot", &hud_adj_delta_rot, -10.f, 10.f);
+	}
 
 	CMD1(CCC_ExclusiveMode,		"input_exclusive_mode");
 

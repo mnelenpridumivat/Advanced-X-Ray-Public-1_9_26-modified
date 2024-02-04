@@ -16,11 +16,13 @@
 #include "ui_arrow.h"
 #include "UIInventoryUtilities.h"
 #include "../HUDManager.h"
+#include "CustomDetector.h"
+#include "WeaponMagazinedWGrenade.h"
 #include "../UIGameCustom.h"
 #include "../UIGameSP.h"
 #include "AdvancedXrayGameConstants.h"
 
-CUIHudStatesWnd::CUIHudStatesWnd()
+CUIHudStatesWnd::CUIHudStatesWnd() : m_b_force_update(true)
 {
 	m_last_time = Device.dwTimeGlobal;
 	m_lanim_name         = NULL;
@@ -65,15 +67,16 @@ void CUIHudStatesWnd::InitFromXml( CUIXml& xml, LPCSTR path )
 
 	m_lanim_name._set( xml.ReadAttrib( "indik_rad", 0, "light_anim", "" ) );
 
-	m_ui_weapon_sign_ammo = UIHelper::CreateStatic( xml, "static_ammo", this );
-	//m_ui_weapon_sign_ammo->SetEllipsis( CUIStatic::eepEnd, 2 );
-	
-	m_ui_weapon_icon = UIHelper::CreateStatic( xml, "static_wpn_icon", this );
-	m_ui_weapon_icon->SetShader( InventoryUtilities::GetEquipmentIconsShader() );
-	m_ui_weapon_icon->Enable( false );
-	m_ui_weapon_icon_rect = m_ui_weapon_icon->GetWndRect();
+	m_ui_weapon_cur_ammo		= UIHelper::CreateStatic( xml, "static_cur_ammo", this );
+	m_ui_weapon_fmj_ammo		= UIHelper::CreateStatic( xml, "static_fmj_ammo", this );
+	m_ui_weapon_ap_ammo			= UIHelper::CreateStatic( xml, "static_ap_ammo", this );
+	m_fire_mode					= UIHelper::CreateStatic( xml, "static_fire_mode", this );
+	m_ui_grenade				= UIHelper::CreateStatic( xml, "static_grenade", this );
 
-	m_fire_mode = UIHelper::CreateStatic( xml, "static_fire_mode", this );
+	m_ui_weapon_icon			= UIHelper::CreateStatic( xml, "static_wpn_icon", this );
+	m_ui_weapon_icon->SetShader	(InventoryUtilities::GetEquipmentIconsShader());
+	m_ui_weapon_icon_rect		= m_ui_weapon_icon->GetWndRect();
+	m_ui_weapon_icon_scale		= xml.ReadAttribFlt("static_wpn_icon", 0,"scale", 1.f);
 	
 	m_ui_health_bar   = UIHelper::CreateProgressBar( xml, "progress_bar_health", this );
 	m_ui_armor_bar    = UIHelper::CreateProgressBar( xml, "progress_bar_armor", this );
@@ -202,112 +205,106 @@ void CUIHudStatesWnd::UpdateHealth( CActor* actor )
 void CUIHudStatesWnd::UpdateActiveItemInfo( CActor* actor )
 {
 	PIItem item = actor->inventory().ActiveItem();
-	if ( item ) 
+	if ( item )
 	{
-		xr_string	str_name;
-		xr_string	icon_sect_name;
-		xr_string	str_count;
-		string16	str_fire_mode;
-		strcpy_s					( str_fire_mode, sizeof(str_fire_mode), "" );
-		item->GetBriefInfo			( str_name, icon_sect_name, str_count, str_fire_mode );
-
-		m_ui_weapon_sign_ammo->Show	( true );
-//		UIWeaponBack.SetText		( str_name.c_str() );
-		m_fire_mode->Show			( true );
-		m_fire_mode->SetText		( str_fire_mode );
-		SetAmmoIcon					( icon_sect_name.c_str() );
-		m_ui_weapon_sign_ammo->SetText( str_count.c_str() );
-		
-		// hack ^ begin
-
-		CGameFont* pFont32 = UI()->Font()->pFontGraffiti32Russian;
-		CGameFont* pFont22 = UI()->Font()->pFontGraffiti22Russian;
-		CGameFont* pFont   = pFont32;
-
-		if ( UI()->is_16_9_mode() )
+		if(m_b_force_update)
 		{
-			pFont = pFont22;
+			if(item->cast_weapon())
+				item->cast_weapon()->ForceUpdateAmmo();
+			m_b_force_update		= false;
+		}
+
+		item->GetBriefInfo			( m_item_info );
+
+//		UIWeaponBack.SetText		( str_name.c_str() );
+		m_fire_mode->SetText		( m_item_info.fire_mode.c_str() );
+		SetAmmoIcon					( m_item_info.icon.c_str() );
+		
+		m_ui_weapon_cur_ammo->Show	( true );
+		m_ui_weapon_fmj_ammo->Show	( true );
+		m_ui_weapon_ap_ammo->Show	( true );
+		m_fire_mode->Show			( true );
+		m_ui_grenade->Show			( true );
+
+		m_ui_weapon_cur_ammo->SetText	( m_item_info.cur_ammo.c_str() );
+		m_ui_weapon_fmj_ammo->SetText	( m_item_info.fmj_ammo.c_str() );
+		m_ui_weapon_ap_ammo->SetText	( m_item_info.ap_ammo.c_str() );
+		
+		m_ui_grenade->SetText	( m_item_info.grenade.c_str() );
+
+		CWeaponMagazinedWGrenade* wpn = smart_cast<CWeaponMagazinedWGrenade*>(item);
+		if(wpn && wpn->m_bGrenadeMode)
+		{
+			m_ui_weapon_fmj_ammo->SetTextColor(color_rgba(238,155,23,150));
+			m_ui_grenade->SetTextColor(color_rgba(238,155,23,255));
 		}
 		else
 		{
-			if ( str_count.size() > 5 )
-			{
-				pFont = pFont22;
-			}
+			m_ui_weapon_fmj_ammo->SetTextColor(color_rgba(238,155,23,255));
+			m_ui_grenade->SetTextColor(color_rgba(238,155,23,150));
 		}
-		m_ui_weapon_sign_ammo->SetFont( pFont );
 	}
 	else
 	{
 		m_ui_weapon_icon->Show		( false );
-		m_ui_weapon_sign_ammo->Show	( false );
+
+		m_ui_weapon_cur_ammo->Show	( false );
+		m_ui_weapon_fmj_ammo->Show	( false );
+		m_ui_weapon_ap_ammo->Show	( false );
 		m_fire_mode->Show			( false );
+		m_ui_grenade->Show			( false );
 	}
 }
 
-void CUIHudStatesWnd::SetAmmoIcon( const shared_str& sect_name )
+void CUIHudStatesWnd::SetAmmoIcon(const shared_str& sect_name)
 {
-	if ( !sect_name.size() )
+	if (!sect_name.size())
 	{
-		m_ui_weapon_icon->Show( false );
+		m_ui_weapon_icon->Show(false);
 		return;
 	}
+	m_ui_weapon_icon->Show(true);
 
-	m_ui_weapon_icon->Show( true );
+	//properties used by inventory menu
+	float xPos						= pSettings->r_float(sect_name, "inv_grid_x")		* INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons());
+	float yPos						= pSettings->r_float(sect_name, "inv_grid_y")		* INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons());
+	float gridWidth					= pSettings->r_float(sect_name, "inv_grid_width")	* INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons());
+	float gridHeight				= pSettings->r_float(sect_name, "inv_grid_height")	* INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons());
+	m_ui_weapon_icon->GetUIStaticItem().SetOriginalRect(xPos, yPos, gridWidth, gridHeight);
+	m_ui_weapon_icon->SetStretchTexture(true);
 
-	
-	if ( pSettings->line_exist( sect_name, "inv_icon" ) ) //temp
+	// all others ammo (1x1, 1x2) will be not scaled (original picture)
+	float h = gridHeight * 0.65f;
+	float w = gridWidth  * 0.65f;
+	// now perform only width scale for ammo, which (W)size >2
+	if (gridWidth > 2.01f * INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()))
 	{
-		LPCSTR icon_name = pSettings->r_string( sect_name, "inv_icon" );
-		m_ui_weapon_icon->InitTexture( icon_name );
+		w = INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()) * 1.3f;
+		h /= 0.8f;
+	}
+	if (GameConstants::GetUseHQ_Icons())
+	{
+		h /= 2;
+		w /= 2;
+	}
+
+	bool is_16x10 = UI().is_widescreen();
+	if (gridWidth < 1.01f * INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()))
+	{
+		m_ui_weapon_icon->SetTextureOffset( (is_16x10)? 8.33f : 10.0f, 0.0f );
 	}
 	else
 	{
-		//properties used by inventory menu
-		float gridWidth  = pSettings->r_float( sect_name, "inv_grid_width"  );
-		float gridHeight = pSettings->r_float( sect_name, "inv_grid_height" );
-
-		float xPos = pSettings->r_float(sect_name, "inv_grid_x");
-		float yPos = pSettings->r_float(sect_name, "inv_grid_y");
-
-		m_ui_weapon_icon->GetUIStaticItem().SetOriginalRect(
-			( xPos      * INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons())), ( yPos       * INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons())),
-			( gridWidth * INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons())), ( gridHeight * INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons())) );
-		m_ui_weapon_icon->SetStretchTexture( true );
-
-		// now perform only width scale for ammo, which (W)size >2
-		// all others ammo (1x1, 1x2) will be not scaled (original picture)
-		float h = gridHeight * INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons()) * 0.65f;
-		float w = gridWidth  * INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()) * 0.65f;
-		if (GameConstants::GetUseHQ_Icons())
-		{
-			h = gridHeight * INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons()) / 2 * 0.65f;
-			w = gridWidth * INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()) / 2 * 0.65f;
-		}
-
-		if ( gridWidth > 2.01f )
-		{
-			if (GameConstants::GetUseHQ_Icons())
-				w = INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()) / 2 * 1.5f;
-			else
-				w = INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()) * 1.5f;
-		}
-
-		bool is_16x10 = UI()->is_16_9_mode();
-		if ( gridWidth < 1.01f )
-		{
-			m_ui_weapon_icon->SetTextureOffset( (is_16x10)? 8.33f : 10.0f, 0.0f );
-		}
+		if (gridWidth > 2.01f * INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()))
+			m_ui_weapon_icon->SetTextureOffset(3.0f, -2.0f);
 		else
-		{
-			m_ui_weapon_icon->SetTextureOffset( 0.0f, 0.0f );
-		}
-
-
-		m_ui_weapon_icon->SetWidth( (is_16x10)? w*0.833f : w );
-		m_ui_weapon_icon->SetHeight( h );
+			m_ui_weapon_icon->SetTextureOffset(0.0f, 0.0f);
 	}
 
+
+	m_ui_weapon_icon->SetWidth(w * UI().get_current_kx() * m_ui_weapon_icon_scale);
+	m_ui_weapon_icon->SetHeight(h * m_ui_weapon_icon_scale);
+	
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -345,6 +342,28 @@ void CUIHudStatesWnd::UpdateIndicatorType( CActor* actor, ALife::EInfluenceType 
 
 	float max_power = actor->conditions().GetZoneMaxPower( hit_type );
 	protect = protect / max_power; // = 0..1
+
+	CEntityCondition::BOOSTER_MAP cur_booster_influences = actor->conditions().GetCurBoosterInfluences();
+	CEntityCondition::BOOSTER_MAP::const_iterator it;
+
+	if (hit_type == ALife::eHitTypeChemicalBurn)
+	{
+		it = cur_booster_influences.find(eBoostChemicalBurnProtection);
+		if (it != cur_booster_influences.end())
+			protect += it->second.fBoostValue;
+	}
+	else if (hit_type == ALife::eHitTypeRadiation)
+	{
+		it = cur_booster_influences.find(eBoostRadiationProtection);
+		if (it != cur_booster_influences.end())
+			protect += it->second.fBoostValue;
+	}
+	else if (hit_type == ALife::eHitTypeTelepatic)
+	{
+		it = cur_booster_influences.find(eBoostTelepaticProtection);
+		if (it != cur_booster_influences.end())
+			protect += it->second.fBoostValue;
+	}
 
 	if ( hit_power < EPS )
 	{

@@ -15,10 +15,13 @@
 #include "string_table.h"
 #include "object_broker.h"
 #include "player_hud.h"
+#include "Actor.h"
+#include "../xrPhysics/ElevatorState.h"
 
 using namespace luabind;
-bool g_block_all_except_movement;
-extern bool g_actor_allow_ladder;
+bool g_block_all_except_movement = false;
+extern bool g_block_actor_movement;
+bool g_saves_locked = false;
 
 CUISequencer* g_tutorial = NULL;
 CUISequencer* g_tutorial2 = NULL;
@@ -47,9 +50,9 @@ bool has_active_tutotial()
 	return (g_tutorial!=NULL);
 }
 
-u32 PlayHudMotion(u8 hand, LPCSTR itm_name, LPCSTR anm_name, bool bMixIn = true, float speed = 1.f)
+u32 PlayHudMotion(u8 hand, LPCSTR itm_name, LPCSTR anm_name, bool bMixIn = true, float speed = 1.f, LPCSTR attach_visual = nullptr)
 {
-	return g_player_hud->script_anim_play(hand, itm_name, anm_name, bMixIn, speed);
+	return g_player_hud->script_anim_play(hand, itm_name, anm_name, bMixIn, speed, attach_visual);
 }
 
 void StopHudMotion()
@@ -97,6 +100,16 @@ bool only_movement_allowed()
 	return g_block_all_except_movement;
 }
 
+void block_actor_movement(bool b)
+{
+	g_block_actor_movement = b;
+}
+
+bool is_actor_movement_blocked()
+{
+	return g_block_actor_movement;
+}
+
 void set_actor_allow_ladder(bool b)
 {
 	g_actor_allow_ladder = b;
@@ -105,6 +118,38 @@ void set_actor_allow_ladder(bool b)
 bool actor_allow_ladder()
 {
 	return g_actor_allow_ladder;
+}
+
+float get_devices_psy_factor()
+{
+	if (Actor())
+		return Actor()->GetDevicesPsyFactor();
+
+	Msg("![get_devices_psy_factor]: Actor not found!");
+	return 0;
+}
+
+void set_devices_psy_factor(float psy_factor)
+{
+	clamp(psy_factor, 0.0f, 1.0f);
+
+	if (Actor())
+	{
+		Actor()->SetDevicesPsyFactor(psy_factor);
+		return;
+	}
+
+	Msg("![set_devices_psy_factor]: Actor not found!");
+}
+
+void set_game_saves_lock(bool b)
+{
+	g_saves_locked = b;
+}
+
+bool get_saves_lock_status()
+{
+	return g_saves_locked;
 }
 
 #pragma optimize("s",on)
@@ -155,39 +200,45 @@ void game_sv_GameState::script_register(lua_State *L)
 
 	class_< game_sv_GameState, game_GameState >("game_sv_GameState")
 
-	.def("get_eid",				&game_sv_GameState::get_eid)
-	.def("get_id",				&game_sv_GameState::get_id)
-	.def("get_name_id",			&game_sv_GameState::get_name_id)
-	.def("get_player_name_id",	&game_sv_GameState::get_player_name_id)
+		.def("get_eid",				&game_sv_GameState::get_eid)
+		.def("get_id",				&game_sv_GameState::get_id)
+		.def("get_name_id",			&game_sv_GameState::get_name_id)
+		.def("get_player_name_id",	&game_sv_GameState::get_player_name_id)
 	
-	.def("get_players_count",	&game_sv_GameState::get_players_count)
-	.def("get_id_2_eid",		&game_sv_GameState::get_id_2_eid)
+		.def("get_players_count",	&game_sv_GameState::get_players_count)
+		.def("get_id_2_eid",		&game_sv_GameState::get_id_2_eid)
 
-	.def("get_option_i",		&game_sv_GameState::get_option_i)
-	.def("get_option_s",		&game_sv_GameState::get_option_s)
-	.def("u_EventSend",			&game_sv_GameState::u_EventSend)
+		.def("get_option_i",		&game_sv_GameState::get_option_i)
+		.def("get_option_s",		&game_sv_GameState::get_option_s)
+		.def("u_EventSend",			&game_sv_GameState::u_EventSend)
 
-	.def("GenerateGameMessage",	&game_sv_GameState::GenerateGameMessage)
-	.def("getRP",				&game_sv_GameState::getRP)
-	.def("getRPcount",			&game_sv_GameState::getRPcount),
+		.def("GenerateGameMessage",	&game_sv_GameState::GenerateGameMessage)
+		.def("getRP",				&game_sv_GameState::getRP)
+		.def("getRPcount",			&game_sv_GameState::getRPcount),
 
-	def("start_tutorial",		&start_tutorial),
-	def("has_active_tutorial",	&has_active_tutotial),
-	def("translate_string",		&translate_string),
-	def("play_hud_motion",		PlayHudMotion),
-	def("stop_hud_motion",		StopHudMotion),
-	def("get_motion_length",	MotionLength),
-	def("hud_motion_allowed",	AllowHudMotion),
-	def("play_hud_anm",			PlayBlendAnm),
-	def("stop_hud_anm",			StopBlendAnm),
-	def("stop_all_hud_anms",	StopAllBlendAnms),
-	def("set_hud_anm_time",		SetBlendAnmTime),
-	def("only_allow_movekeys",	block_all_except_movement),
-	def("only_movekeys_allowed",only_movement_allowed),
-	def("set_actor_allow_ladder",set_actor_allow_ladder),
-	def("actor_ladder_allowed", actor_allow_ladder),
-	def("active_tutorial_name", +[]() { return g_tutorial->GetTutorName(); }),
-	def("log_stack_trace",		&xrDebug::LogStackTrace)
+		def("start_tutorial",		&start_tutorial),
+		def("has_active_tutorial",	&has_active_tutotial),
+		def("translate_string",		&translate_string),
+		def("play_hud_motion",		PlayHudMotion),
+		def("stop_hud_motion",		StopHudMotion),
+		def("get_motion_length",	MotionLength),
+		def("hud_motion_allowed",	AllowHudMotion),
+		def("play_hud_anm",			PlayBlendAnm),
+		def("stop_hud_anm",			StopBlendAnm),
+		def("stop_all_hud_anms",	StopAllBlendAnms),
+		def("set_hud_anm_time",		SetBlendAnmTime),
+		def("only_allow_movekeys",	block_all_except_movement),
+		def("only_movekeys_allowed",only_movement_allowed),
+		def("block_actor_movement", block_actor_movement),
+		def("is_actor_movement_blocked", is_actor_movement_blocked),
+		def("set_actor_allow_ladder",set_actor_allow_ladder),
+		def("actor_ladder_allowed", actor_allow_ladder),
+		def("active_tutorial_name", +[]() { return g_tutorial->GetTutorName(); }),
+		def("log_stack_trace",		&xrDebug::LogStackTrace),
+		def("get_devices_psy_factor", &get_devices_psy_factor),
+		def("set_devices_psy_factor", &set_devices_psy_factor),
+		def("set_lock_saves",		set_game_saves_lock),
+		def("get_saves_lock_status", get_saves_lock_status)
 
 	];
 

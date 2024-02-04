@@ -127,6 +127,8 @@ public:
 	virtual CUICellItem*	RemoveItem			(CUICellItem* itm, bool force_root);
 			void			CreateDragItem		(CUICellItem* itm);
 
+			CUICellItem*	GetCellItemUnderCursor();
+
 			void			DestroyDragItem		();
 			void			ClearAll			(bool bDestroy);	
 			void			Compact				();
@@ -139,7 +141,7 @@ public:
 	//UIWindow overriding
 	virtual		void		Draw				();
 	virtual		void		Update				();
-	virtual		bool		OnMouse				(float x, float y, EUIMessages mouse_action);
+	virtual		bool		OnMouseAction				(float x, float y, EUIMessages mouse_action);
 	virtual		void		SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
 
 				void		OnDragEvent			(CUIDragItem* drag_item, bool b_receive);
@@ -180,6 +182,7 @@ protected:
 				void			SetCellsSpacing		(const Ivector2& new_sz);
 				Ivector2		TopVisibleCell		();
 				CUICell&		GetCellAt			(const Ivector2& pos);
+				CUICell*		GetCellAtP			(const Ivector2& pos);
 				Ivector2		PickCell			(const Fvector2& abs_pos);
 				Ivector2		GetItemPos			(CUICellItem* itm);
 				Ivector2		FindFreeCell		(const Ivector2& size);

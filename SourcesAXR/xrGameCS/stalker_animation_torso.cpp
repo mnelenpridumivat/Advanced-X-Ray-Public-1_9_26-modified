@@ -175,15 +175,41 @@ MotionID CStalkerAnimationManager::weapon_animation	(u32 slot, const EBodyState 
 {
 	const xr_vector<CAniVector>		&animation = m_data_storage->m_part_animations.A[body_state].m_torso.A[slot].A;
 
+	//Alun: Fix stalker sprint
+	if (eMentalStatePanic == object().movement().mental_state() && eMovementTypeRun == object().movement().movement_type() && body_state == eBodyStateStand && !fis_zero(object().movement().speed(object().character_physics_support()->movement())))
+	{
+		return (animation[15].A[0]);
+	}
+
 	switch (m_weapon->GetState()) {
 		case CWeapon::eReload : {
 			switch (m_weapon->GetReloadState()){
 				case CWeapon::eSubstateReloadBegin:
 					return			(animation[4].A[0]);
 				case CWeapon::eSubstateReloadInProcess:
+				{
+					if (animation[4].A.size() == 1)
+					{
+#ifdef DEBUG
+						Msg("! [CStalkerAnimationManager::weapon_animation]: Error in stalker with visual: [%s], weapon: [%s]! Index is out of range: index requested [1] > size of container [%d]. Force return [0] index.", m_visual->getDebugName().c_str(), m_weapon->cNameSect().c_str(), animation[4].A.size());
+#endif
+						return animation[4].A[0];
+					}
+
 					return			(animation[4].A[1]);
+				}
 				case CWeapon::eSubstateReloadEnd:
+				{
+					if (animation[4].A.size() < 3)
+					{
+#ifdef DEBUG
+						Msg("! [CStalkerAnimationManager::weapon_animation]: Error in stalker with visual: [%s], weapon: [%s]! Index is out of range: index requested [2] > size of container [%d]. Force return [0] index.", m_visual->getDebugName().c_str(), m_weapon->cNameSect().c_str(), animation[4].A.size());
+#endif			
+						return animation[4].A[0];
+					}
+
 					return			(animation[4].A[2]);
+				}
 
 				default:			NODEFAULT;
 			}

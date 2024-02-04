@@ -11,9 +11,6 @@ class game_cl_Deathmatch;
 class CUIMoneyIndicator;
 class CUIRankIndicator;
 class UIVoteStatusWnd;
-
-//-class CUIActorMenu;
-//-class CUIPdaWnd;
 class CUIMapDesc;
 
 class UITeamPanels;
@@ -72,13 +69,13 @@ public:
 	virtual void					SetClGame				(game_cl_GameState* g);
 	virtual	void					Init					();
 	virtual void					Render					();
-	virtual void					OnFrame					();
+	virtual void	_BCL			OnFrame					();
 
 	void							SetRank							(s16 team, u8 rank);
 
 	virtual void					ChangeTotalMoneyIndicator		(LPCSTR newMoneyString);
 	virtual void					DisplayMoneyChange				(LPCSTR deltaMoney);
-	virtual void					DisplayMoneyBonus				(KillMessageStruct bonus);
+	virtual void					DisplayMoneyBonus				(KillMessageStruct* bonus);
 	virtual void					SetFraglimit					(int local_frags, int fraglimit);
 
 			void					SetTimeMsgCaption				(LPCSTR str);
@@ -96,10 +93,6 @@ public:
 			void					SetVoteTimeResultMsg			(LPCSTR str);
 
 			void					UpdateTeamPanels				();
-
-	virtual bool		IR_OnKeyboardPress		(int dik);
-	virtual bool		IR_OnKeyboardRelease	(int dik);
-
 
 			void					ShowFragList			(bool bShow);
 			void					ShowPlayersList			(bool bShow);

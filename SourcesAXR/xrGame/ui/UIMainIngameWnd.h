@@ -15,6 +15,7 @@ class	CInventoryItem;
 class	CUIHudStatesWnd;
 class	CUIMotionIcon;
 class	CUICellItem;
+class	CUIArtefactPanel;
 
 class CUIMainIngameWnd: public CUIWindow  
 {
@@ -32,6 +33,7 @@ public:
 	CUIZoneMap*			UIZoneMap;
 
 	CUIHudStatesWnd*	m_ui_hud_states;
+	CUIArtefactPanel*	UIArtefactsPanel;
 
 	CUIStatic*			m_ind_bleeding;
 	CUIStatic*			m_ind_radiation;
@@ -56,6 +58,16 @@ public:
 	CUIStatic*			m_ind_boost_health;
 	CUIStatic*			m_ind_boost_power;
 	CUIStatic*			m_ind_boost_rad;
+	CUIStatic*			m_ind_boost_satiety;
+	CUIStatic*			m_ind_boost_thirst;
+	CUIStatic*			m_ind_boost_psy_health;
+	CUIStatic*			m_ind_boost_intoxication;
+	CUIStatic*			m_ind_boost_sleepeness;
+	CUIStatic*			m_ind_boost_alcoholism;
+	CUIStatic*			m_ind_boost_hangover;
+	CUIStatic*			m_ind_boost_narcotism;
+	CUIStatic*			m_ind_boost_withdrawal;
+
 	CUIStatic*			m_ind_battery;
 
 public:
@@ -76,6 +88,9 @@ public:
 
 	float				hud_info_x;
 	float				hud_info_y;
+
+	CGameFont*			m_HudInfoFont;
+
 	float				hud_info_item_x;
 	float				hud_info_item_y1;
 	float				hud_info_item_y2;
@@ -148,6 +163,8 @@ public:
 	enum EFlashingIcons
 	{
 		efiPdaTask	= 0,
+		efiEncyclopedia = 1,
+		efiJournal = 2,
 		efiMail
 	};
 	

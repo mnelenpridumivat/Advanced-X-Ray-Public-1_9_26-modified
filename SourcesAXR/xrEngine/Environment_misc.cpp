@@ -5,8 +5,10 @@
 #include "xr_efflensflare.h"
 #include "thunderbolt.h"
 #include "rain.h"
+#include "x_ray.h"
 
 #include "IGame_Level.h"
+#include "IGame_Persistent.h"
 #include "../xrServerEntities/object_broker.h"
 #include "../xrServerEntities/LevelGameDef.h"
 
@@ -44,6 +46,31 @@ void CEnvDescriptor::EnvSwingValue::lerp(const EnvSwingValue& A, const EnvSwingV
 	rot1 = fi * A.rot1 + f * B.rot1;
 	rot2 = fi * A.rot2 + f * B.rot2;
 	speed = fi * A.speed + f * B.speed;
+}
+
+void CEnvDescriptor::EnvSwingValue::lerp_with_wind(const EnvSwingValue& v1, const EnvSwingValue& v2, CEnvDescriptor& A, CEnvDescriptor& B, float f)
+{
+	float fi = 1.f - f;
+
+	auto getWindInfluencedAmplitudeIntensity = [](float amplitude, float windVelocity, float koef)
+	{
+		return amplitude * (windVelocity / koef);//(koef / windVelocity) * 0.5;//amplitude * (windVelocity / koef);
+	};
+
+	amp1 = (fi * getWindInfluencedAmplitudeIntensity(v1.amp1, A.wind_velocity, bWeatherWindInfluenceKoef / 6.66f)) +
+		(f * getWindInfluencedAmplitudeIntensity(v2.amp1, B.wind_velocity, bWeatherWindInfluenceKoef / 6.66f));
+	amp2 = (fi * getWindInfluencedAmplitudeIntensity(v1.amp2, A.wind_velocity, bWeatherWindInfluenceKoef / 6.66f)) +
+		(f * getWindInfluencedAmplitudeIntensity(v2.amp2, B.wind_velocity, bWeatherWindInfluenceKoef / 6.66f));
+
+	rot1 = fi * v1.rot1 + f * v2.rot1;
+	rot2 = fi * v1.rot2 + f * v2.rot2;
+
+	speed = (fi * getWindInfluencedAmplitudeIntensity(v1.speed, A.wind_velocity, bWeatherWindInfluenceKoef * 3.33f)) +
+		(f * getWindInfluencedAmplitudeIntensity(v2.speed, B.wind_velocity, bWeatherWindInfluenceKoef * 3.33f));
+
+	clamp(amp1, 0.01f, 0.5f);
+	clamp(amp2, 0.006f, 0.5f);
+	clamp(speed, 2.0f, 4.0f);
 }
 
 float	CEnvModifier::sum	(CEnvModifier& M, Fvector3& view)
@@ -244,6 +271,9 @@ CEnvDescriptor::CEnvDescriptor	(shared_str const& identifier) :
 
     wind_velocity		= 0.0f;
     wind_direction		= 0.0f;
+
+	clouds_velocity_0	= 0.0f;
+	clouds_velocity_1	= 0.0f;
     
 	ambient.set			(0,0,0);
 	hemi_color.set		(1,1,1,1);
@@ -316,6 +346,7 @@ void CEnvDescriptor::load	(CEnvironment& environment, CInifile& config)
 	VERIFY2					(sun_dir.y < 0, "Invalid sun direction settings while loading");
 
 	lens_flare_id			= environment.eff_LensFlare->AppendDef(environment, environment.m_suns_config, config.r_string(m_identifier.c_str(),"sun"));
+	lens_flare_id_phased	= lens_flare_id;
 	tb_id					= environment.eff_Thunderbolt->AppendDef(environment, environment.m_thunderbolt_collections_config, environment.m_thunderbolts_config, config.r_string(m_identifier.c_str(),"thunderbolt_collection"));
 	bolt_period				= (tb_id.size())?config.r_float	(m_identifier.c_str(),"thunderbolt_period"):0.f;
 	bolt_duration			= (tb_id.size())?config.r_float	(m_identifier.c_str(),"thunderbolt_duration"):0.f;
@@ -344,6 +375,9 @@ void CEnvDescriptor::load	(CEnvironment& environment, CInifile& config)
 
 	if (config.line_exist(m_identifier.c_str(), "color_grading"))
 		color_grading = config.r_fvector4(m_identifier.c_str(), "color_grading");
+
+	clouds_velocity_0 = pSettings->line_exist(m_identifier.c_str(), "clouds_velocity_0") ? pSettings->r_float(m_identifier.c_str(), "clouds_velocity_0") : 0.001f;
+	clouds_velocity_1 = pSettings->line_exist(m_identifier.c_str(), "clouds_velocity_1") ? pSettings->r_float(m_identifier.c_str(), "clouds_velocity_1") : 0.0005f;
 
 	// swing desc
 	// normal
@@ -477,6 +511,9 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 		far_plane				=	(fi*A.far_plane + f*B.far_plane + Mdf.far_plane)*psVisDistance*modif_power;
 	else
 		far_plane				=	(fi*A.far_plane + f*B.far_plane)*psVisDistance;
+
+	if (bWeatherFogDistanceClamping)
+		clamp(far_plane, 0.0f, bWeatherFogDistanceClampingMax);
 	
 //.	fog_color.lerp			(A.fog_color,B.fog_color,f).add(Mdf.fog_color).mul(modif_power);
 	fog_color.lerp			(A.fog_color,B.fog_color,f);
@@ -492,6 +529,10 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 	}
 
 	fog_distance			=	(fi*A.fog_distance + f*B.fog_distance);
+
+	if (bWeatherFogDistanceClamping)
+		clamp(fog_distance, 0.0f, bWeatherFogDistanceClampingMax - 25.f);
+
 	fog_near				=	(1.0f - fog_density)*0.85f * fog_distance;
 	fog_far					=	0.99f * fog_distance;
 	
@@ -503,11 +544,46 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 	wind_velocity			=	fi*A.wind_velocity + f*B.wind_velocity;
 	wind_direction			=	fi*A.wind_direction + f*B.wind_direction;
 
+	if (!bWeatherWindInfluenceKoef)
+	{
+		clouds_velocity_0 = fi * A.clouds_velocity_0 + f * B.clouds_velocity_0;
+		clouds_velocity_1 = fi * A.clouds_velocity_1 + f * B.clouds_velocity_1;
+	}
+	else
+	{
+		auto getWindInfluencedCloudsVelocity = [](float amplitude, float windVelocity, float koef)
+		{
+			return amplitude * (windVelocity / (koef * 2.0f));
+		};
+
+		clouds_velocity_0 = (fi * getWindInfluencedCloudsVelocity(A.clouds_velocity_0, A.wind_velocity, bWeatherWindInfluenceKoef / 2.3f)) +
+			(f * getWindInfluencedCloudsVelocity(B.clouds_velocity_0, B.wind_velocity, bWeatherWindInfluenceKoef / 2.3f));
+
+		clouds_velocity_1 = (fi * getWindInfluencedCloudsVelocity(A.clouds_velocity_1, A.wind_velocity, bWeatherWindInfluenceKoef / 2.3f)) +
+			(f * getWindInfluencedCloudsVelocity(B.clouds_velocity_1, B.wind_velocity, bWeatherWindInfluenceKoef / 2.3f));
+
+		clamp(clouds_velocity_0, 0.001f, 0.1f);
+		clamp(clouds_velocity_1, 0.0005f, 0.05f);
+	}
+
 	m_fSunShaftsIntensity	= fi * A.m_fSunShaftsIntensity + f * B.m_fSunShaftsIntensity;
 	m_fWaterIntensity		=	fi*A.m_fWaterIntensity + f*B.m_fWaterIntensity;
 
 #ifdef TREE_WIND_EFFECT
-	m_fTreeAmplitudeIntensity = fi * A.m_fTreeAmplitudeIntensity + f * B.m_fTreeAmplitudeIntensity;
+	if (!bWeatherWindInfluenceKoef)
+		m_fTreeAmplitudeIntensity = (fi * A.m_fTreeAmplitudeIntensity) + (f * B.m_fTreeAmplitudeIntensity);
+	else
+	{
+		auto getWindInfluencedAmplitudeIntensity = [](float amplitude, float windVelocity, float koef)
+		{
+			return amplitude * (windVelocity / (koef * 2.25f));
+		};
+
+		m_fTreeAmplitudeIntensity = (fi * getWindInfluencedAmplitudeIntensity(A.m_fTreeAmplitudeIntensity, A.wind_velocity, bWeatherWindInfluenceKoef)) +
+			(f * getWindInfluencedAmplitudeIntensity(B.m_fTreeAmplitudeIntensity, B.wind_velocity, bWeatherWindInfluenceKoef));
+
+		clamp(m_fTreeAmplitudeIntensity, 0.01f, 0.075f);
+	}
 #endif
 
 	lowland_fog_height	= fi*A.lowland_fog_height + f * B.lowland_fog_height;
@@ -528,8 +604,16 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 
 	hemi_color.lerp			(A.hemi_color,B.hemi_color,f);
 
-	m_cSwingDesc[0].lerp(A.m_cSwingDesc[0], B.m_cSwingDesc[0], f);
-	m_cSwingDesc[1].lerp(A.m_cSwingDesc[1], B.m_cSwingDesc[1], f);
+	if (bWeatherWindInfluenceKoef)
+	{
+		m_cSwingDesc[0].lerp_with_wind(A.m_cSwingDesc[0], B.m_cSwingDesc[0], A, B, f);
+		m_cSwingDesc[1].lerp_with_wind(A.m_cSwingDesc[1], B.m_cSwingDesc[1], A, B, f);
+	}
+	else
+	{
+		m_cSwingDesc[0].lerp(A.m_cSwingDesc[0], B.m_cSwingDesc[0], f);
+		m_cSwingDesc[1].lerp(A.m_cSwingDesc[1], B.m_cSwingDesc[1], f);
+	}
 
 	dof_value.lerp(A.dof_value, B.dof_value, f);
 	dof_kernel = fi * A.dof_kernel + f * B.dof_kernel;
@@ -552,7 +636,51 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 	sun_dir.lerp			(A.sun_dir,B.sun_dir,f).normalize();
 	R_ASSERT				( _valid(sun_dir) );
 
-	VERIFY2					(sun_dir.y<0,"Invalid sun direction settings while lerp");}
+	VERIFY2					(sun_dir.y<0,"Invalid sun direction settings while lerp");
+
+	SetMoonPhase(A, B);
+}
+
+void CEnvDescriptorMixer::SetMoonPhase(CEnvDescriptor& A, CEnvDescriptor& B)
+{
+	if (!(g_pGamePersistent->GetTimeHours() >= 22) && !(g_pGamePersistent->GetTimeHours() <= 4))
+		return;
+
+	if ((std::string(A.lens_flare_id.c_str(), 0, 4) != "moon") || (std::string(B.lens_flare_id.c_str(), 0, 4) != "moon"))
+		return;
+
+	if (B.lens_flare_id.size() && B.lens_flare_id_phased.size() && g_pGamePersistent->GetMoonPhase() != "-1")
+	{
+		CEnvironment& env = g_pGamePersistent->Environment();
+
+		const auto append_definition = [&env](const char* prefix, const auto& config)
+		{
+			string128 phase_name{};
+			strconcat(sizeof(phase_name), phase_name, prefix, "_", g_pGamePersistent->GetMoonPhase().size() ? g_pGamePersistent->GetMoonPhase().c_str() : "");
+			return env.eff_LensFlare->AppendDef(env, config, phase_name);
+		};
+
+		const auto configure_setting = [](const char* prefix, auto& value)
+		{
+			string128 sun_color_value{}, sunshafts_intensity_value{};
+			std::string phase = (g_pGamePersistent->GetMoonPhase().size() ? g_pGamePersistent->GetMoonPhase().c_str() : "");
+			strconcat(sizeof(sun_color_value), sun_color_value, prefix, "_", phase.c_str(), "_sun_color");
+			strconcat(sizeof(sunshafts_intensity_value), sunshafts_intensity_value, prefix, "_", phase.c_str(), "_sun_shafts_intensity");
+
+			if (pAdvancedSettings->line_exist("moon_phases_clr_settings", sun_color_value))
+				value.sun_color = pAdvancedSettings->r_fvector3("moon_phases_clr_settings", sun_color_value);
+
+			if (pAdvancedSettings->line_exist("moon_phases_clr_settings", sunshafts_intensity_value))
+				value.m_fSunShaftsIntensity = pAdvancedSettings->r_float("moon_phases_clr_settings", sunshafts_intensity_value);
+		};
+
+		A.lens_flare_id = append_definition(A.lens_flare_id_phased.c_str(), env.m_suns_config);
+		B.lens_flare_id = append_definition(B.lens_flare_id_phased.c_str(), env.m_suns_config);
+
+		configure_setting(A.lens_flare_id_phased.c_str(), A);
+		configure_setting(B.lens_flare_id_phased.c_str(), B);
+	}
+}
 
 //-----------------------------------------------------------------------------
 // Environment IO
@@ -690,10 +818,10 @@ void CEnvironment::load_weathers		()
 
 		env.reserve					(sections.size());
 
-		sections_type::const_iterator	i = sections.begin();
-		sections_type::const_iterator	e = sections.end();
-		for ( ; i != e; ++i) {
-			CEnvDescriptor*			object = create_descriptor((*i)->Name, config);
+		sections_type::const_iterator	i1 = sections.begin();
+		sections_type::const_iterator	e1 = sections.end();
+		for ( ; i1 != e1; ++i1) {
+			CEnvDescriptor*			object = create_descriptor((*i1)->Name, config);
 			env.push_back			(object);
 		}
 
@@ -748,10 +876,10 @@ void CEnvironment::load_weather_effects	()
 		env.reserve					(sections.size() + 2);
 		env.push_back				(create_descriptor("00:00:00", false));
 
-		sections_type::const_iterator	i = sections.begin();
-		sections_type::const_iterator	e = sections.end();
-		for ( ; i != e; ++i) {
-			CEnvDescriptor*			object = create_descriptor((*i)->Name, config);
+		sections_type::const_iterator	i1 = sections.begin();
+		sections_type::const_iterator	e1 = sections.end();
+		for ( ; i1 != e1; ++i1) {
+			CEnvDescriptor*			object = create_descriptor((*i1)->Name, config);
 			env.push_back			(object);
 		}
 

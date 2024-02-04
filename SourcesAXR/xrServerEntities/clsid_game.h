@@ -107,6 +107,8 @@
 #define CLSID_OBJECT_W_SCOPE		MK_CLSID('W','_','S','C','O','P','E',' ')
 #define CLSID_OBJECT_W_SILENCER		MK_CLSID('W','_','S','I','L','E','N','C')
 #define CLSID_OBJECT_W_GLAUNCHER	MK_CLSID('W','_','G','L','A','U','N','C')
+#define CLSID_OBJECT_W_LASER		MK_CLSID('W','_','L','A','S','E','R',' ')
+#define CLSID_OBJECT_W_TTORCH		MK_CLSID('W','_','T','T','O','R','C','H')
 
 // Modifiers
 #define CLSID_OBJECT_M_QDAMAGE		MK_CLSID('O','_','Q','D','M','G',' ',' ')
@@ -185,8 +187,10 @@
 #define CLSID_IITEM_EXPLOSIVE		MK_CLSID('I','I','_','E','X','P','L','O')
 #define CLSID_IITEM_EATABLE			MK_CLSID('I','I','_','E','A','T',' ',' ')
 #define CLSID_IITEM_BATTERY			MK_CLSID('I','I','_','B','A','T','T','E')
-#define CLSID_IITEM_AFILTER			MK_CLSID('I','I','_','F','I','L','T','E')
-#define CLSID_IITEM_DREPKIT			MK_CLSID('I','I','_','R','E','P','K','I')
+#define CLSID_IITEM_AFILTER			MK_CLSID('D','_','F','I','L','T','E','R')
+#define CLSID_IITEM_DREPKIT			MK_CLSID('D','_','R','E','P','K','I','T')
+#define CLSID_IITEM_DAFCONT			MK_CLSID('D','_','A','F','C','O','N','T')
+#define CLSID_IITEM_DSLEBAG			MK_CLSID('D','_','S','L','E','B','A','G')
 
 // Info Document
 #define CLSID_IITEM_DOCUMENT		MK_CLSID('I','I','_','D','O','C',' ',' ')

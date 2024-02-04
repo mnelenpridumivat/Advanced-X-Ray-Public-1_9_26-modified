@@ -4,12 +4,14 @@
 #include "AdvancedXrayGameConstants.h"
 
 float psHUDSoundVolume			= 1.0f;
+float psHUDStepSoundVolume		= 1.0f;
 float HUD_SOUND_ITEM::g_fHudSndFrequency = 1.0f; //--#SM+#--
 float HUD_SOUND_ITEM::g_fHudSndVolumeFactor = 1.0f; //--#SM+#--
 
 void InitHudSoundSettings()
 {
-	psHUDSoundVolume = pSettings->r_float("hud_sound", "hud_sound_vol_k");
+	psHUDSoundVolume		= pSettings->r_float("hud_sound", "hud_sound_vol_k");
+	psHUDStepSoundVolume	= pSettings->r_float("hud_sound", "hud_step_sound_vol_k");
 }
 
 void HUD_SOUND_ITEM::LoadSound(	LPCSTR section, LPCSTR line, 
@@ -19,14 +21,14 @@ void HUD_SOUND_ITEM::LoadSound(	LPCSTR section, LPCSTR line,
 	hud_snd.sounds.clear	();
 
 	string256	sound_line;
-	strcpy_s		(sound_line,line);
+	xr_strcpy		(sound_line,line);
 	int k=0;
 	while( pSettings->line_exist(section, sound_line) ){
 		hud_snd.sounds.push_back( SSnd() );
 		SSnd& s = hud_snd.sounds.back();
 
-		LoadSound	(section, sound_line, s.snd, type, &s.volume, &s.delay);
-		sprintf_s		(sound_line,"%s%d",line,++k);
+		LoadSound	(section, sound_line, s.snd, type, &s.volume, &s.delay, &s.freq);
+		xr_sprintf		(sound_line,"%s%d",line,++k);
 	}//while
 }
 
@@ -35,7 +37,8 @@ void  HUD_SOUND_ITEM::LoadSound(LPCSTR section,
 								ref_sound& snd, 
 								int type,
 								float* volume, 
-								float* delay)
+								float* delay, 
+								float* freq)
 {
 	LPCSTR str = pSettings->r_string(section, line);
 	string256 buf_str;
@@ -66,6 +69,17 @@ void  HUD_SOUND_ITEM::LoadSound(LPCSTR section,
 			_GetItem (str, 2, buf_str);
 			if(xr_strlen(buf_str)>0)
 				*delay = (float)atof(buf_str);
+		}
+	}
+
+	if (freq != NULL)
+	{
+		*freq = 1.f;
+		if (count > 3)
+		{
+			_GetItem(str, 3, buf_str);
+			if (xr_strlen(buf_str) > 0)
+				*freq = (float)atof(buf_str);
 		}
 	}
 }
@@ -108,13 +122,16 @@ void HUD_SOUND_ITEM::PlaySound(	HUD_SOUND_ITEM&		hud_snd,
 											hud_snd.m_activeSnd->delay);
 
 	//--#SM+ Begin#--
+	// <!> psHUDSoundVolume также вли€ет на слышимость дл€ AI
 	float fVolume = hud_snd.m_activeSnd->volume * (b_hud_mode ? psHUDSoundVolume : 1.0f);
 	fVolume *= g_fHudSndVolumeFactor;
 	hud_snd.m_activeSnd->snd.set_volume(fVolume);
-	hud_snd.m_activeSnd->snd.set_frequency(g_fHudSndFrequency);
+	hud_snd.m_activeSnd->snd.set_frequency(hud_snd.m_activeSnd->freq);
+	//hud_snd.m_activeSnd->snd.set_frequency(g_fHudSndFrequency);
 	//--#SM+ Begin#--
 }
 
+// ѕроиграть новый звук, без остановки старого (накладывающийс€ поверх старого) --#SM+#--
 // [Play overlapped sound]
 void HUD_SOUND_ITEM::PlaySoundAdd(
 	HUD_SOUND_ITEM& hud_snd, const Fvector& position, const CObject* parent, bool b_hud_mode, bool looped, u8 index)
@@ -133,6 +150,7 @@ void HUD_SOUND_ITEM::PlaySoundAdd(
 	float vol = hud_snd.m_activeSnd->volume * (b_hud_mode ? psHUDSoundVolume : 1.0f);
 
 	vol *= g_fHudSndVolumeFactor;
+	// <!> psHUDSoundVolume также вли€ет на слышимость дл€ AI
 	hud_snd.m_activeSnd->snd.play_no_feedback(
 		const_cast<CObject*>(parent), flags, hud_snd.m_activeSnd->delay, &pos, &vol, &g_fHudSndFrequency);
 }
@@ -178,6 +196,15 @@ void HUD_SOUND_COLLECTION::PlaySound(	LPCSTR alias,
 										bool looped,
 										u8 index)
 {
+	xr_vector<HUD_SOUND_ITEM>::iterator it		= m_sound_items.begin();
+	xr_vector<HUD_SOUND_ITEM>::iterator it_e	= m_sound_items.end();
+	for(;it!=it_e;++it)
+	{
+		if(it->m_b_exclusive)
+			HUD_SOUND_ITEM::StopSound	(*it);
+	}
+
+
 	HUD_SOUND_ITEM* snd_item		= FindSoundItem(alias, true);
 	HUD_SOUND_ITEM::PlaySound		(*snd_item, position, parent, hud_mode, looped, index);
 }
@@ -208,7 +235,8 @@ void HUD_SOUND_COLLECTION::StopAllSounds()
 
 void HUD_SOUND_COLLECTION::LoadSound(	LPCSTR section, 
 										LPCSTR line,
-										LPCSTR alias,													
+										LPCSTR alias,
+										bool exclusive,
 										int type)
 {
 	R_ASSERT					(NULL==FindSoundItem(alias, false));
@@ -216,6 +244,7 @@ void HUD_SOUND_COLLECTION::LoadSound(	LPCSTR section,
 	HUD_SOUND_ITEM& snd_item	= m_sound_items.back();
 	HUD_SOUND_ITEM::LoadSound	(section, line, snd_item, type);
 	snd_item.m_alias			= alias;
+	snd_item.m_b_exclusive		= exclusive;
 }
 
 //Alundaio:
@@ -333,7 +362,7 @@ void HUD_SOUND_COLLECTION_LAYERED::LoadSound(LPCSTR section, LPCSTR line, LPCSTR
 		{
 			m_sound_items.resize(m_sound_items.size() + 1);
 			HUD_SOUND_COLLECTION& snd_item = m_sound_items.back();
-			snd_item.LoadSound(buf_str, sound_line, alias, type);
+			snd_item.LoadSound(buf_str, sound_line, alias, exclusive, type);
 			snd_item.m_alias = alias;
 			snd_item.IsDistantSound = false;
 			xr_sprintf(sound_line, "snd_%d_layer", ++k);
@@ -343,7 +372,7 @@ void HUD_SOUND_COLLECTION_LAYERED::LoadSound(LPCSTR section, LPCSTR line, LPCSTR
 		{
 			m_sound_items.resize(m_sound_items.size() + 1);
 			HUD_SOUND_COLLECTION& snd_item = m_sound_items.back();
-			snd_item.LoadSound(buf_str, sound_distant_line, alias, type);
+			snd_item.LoadSound(buf_str, sound_distant_line, alias, exclusive, type);
 			snd_item.m_alias = alias;
 			snd_item.IsDistantSound = true;
 			xr_sprintf(sound_distant_line, "snd_%d_layer_dist", ++k2);
@@ -353,7 +382,7 @@ void HUD_SOUND_COLLECTION_LAYERED::LoadSound(LPCSTR section, LPCSTR line, LPCSTR
 	{
 		m_sound_items.resize(m_sound_items.size() + 1);
 		HUD_SOUND_COLLECTION& snd_item = m_sound_items.back();
-		snd_item.LoadSound(section, line, alias, type);
+		snd_item.LoadSound(section, line, alias, exclusive, type);
 		snd_item.m_alias = alias;
 	}
 }
@@ -384,7 +413,7 @@ void HUD_SOUND_COLLECTION_LAYERED::LoadSound(CInifile const* ini, LPCSTR section
 		{
 			m_sound_items.resize(m_sound_items.size() + 1);
 			HUD_SOUND_COLLECTION& snd_item = m_sound_items.back();
-			snd_item.LoadSound(buf_str, sound_line, alias, type);
+			snd_item.LoadSound(buf_str, sound_line, alias, exclusive, type);
 			snd_item.m_alias = alias;
 			snd_item.IsDistantSound = false;
 			xr_sprintf(sound_line, "snd_%d_layer", ++k);
@@ -394,7 +423,7 @@ void HUD_SOUND_COLLECTION_LAYERED::LoadSound(CInifile const* ini, LPCSTR section
 		{
 			m_sound_items.resize(m_sound_items.size() + 1);
 			HUD_SOUND_COLLECTION& snd_item = m_sound_items.back();
-			snd_item.LoadSound(buf_str, sound_distant_line, alias, type);
+			snd_item.LoadSound(buf_str, sound_distant_line, alias, exclusive, type);
 			snd_item.m_alias = alias;
 			snd_item.IsDistantSound = true;
 			xr_sprintf(sound_distant_line, "snd_%d_layer_dist", ++k2);
@@ -404,7 +433,7 @@ void HUD_SOUND_COLLECTION_LAYERED::LoadSound(CInifile const* ini, LPCSTR section
 	{
 		m_sound_items.resize(m_sound_items.size() + 1);
 		HUD_SOUND_COLLECTION& snd_item = m_sound_items.back();
-		snd_item.LoadSound(section, line, alias, type);
+		snd_item.LoadSound(section, line, alias, exclusive, type);
 		snd_item.m_alias = alias;
 	}
 }

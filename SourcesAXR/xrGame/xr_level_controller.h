@@ -27,6 +27,7 @@ enum	EGameActions
 						
 	kTORCH,
 	kNIGHT_VISION,
+	kCLEAN_MASK,
 	kDETECTOR,
 	kTURN_ENGINE,
 	kSWITCH_HORN,
@@ -49,6 +50,9 @@ enum	EGameActions
 	kWPN_FUNC,
 	kWPN_FIREMODE_PREV,
 	kWPN_FIREMODE_NEXT,
+	kWPN_ALT_AIM,
+	kQUICK_KICK,
+	kQUICK_GRENADE,
 						
 	kPAUSE,
 	kDROP,

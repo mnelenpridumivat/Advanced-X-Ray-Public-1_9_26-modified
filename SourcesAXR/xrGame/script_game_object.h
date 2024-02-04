@@ -411,10 +411,14 @@ public:
 			bool				Weapon_IsGrenadeLauncherAttached();
 			bool				Weapon_IsScopeAttached			();
 			bool				Weapon_IsSilencerAttached		();
+			bool				Weapon_IsLaserDesignatorAttached();
+			bool				Weapon_IsTacticalTorchAttached	();
 
 			int					Weapon_GrenadeLauncher_Status	();
 			int					Weapon_Scope_Status				();
 			int					Weapon_Silencer_Status			();
+			int					Weapon_LaserDesignator_Status	();
+			int					Weapon_TacticalTorch_Status		();
 
 			LPCSTR				ProfileName			();
 			LPCSTR				CharacterName		();
@@ -662,6 +666,7 @@ public:
 			u16					get_bone_id				(LPCSTR bone_name) const;					
 			bool				weapon_strapped			() const;
 			bool				weapon_unstrapped		() const;
+			bool				weapon_shooting			() const;
 			void				eat						(CScriptGameObject *item);
 			bool				inside					(const Fvector &position, float epsilon) const;
 			bool				inside					(const Fvector &position) const;
@@ -835,6 +840,36 @@ public:
 
 			void				SetHealthEx(float hp); //AVO
 
+			_DECLARE_FUNCTION10(IsEntityAlive, bool);
+			_DECLARE_FUNCTION10(IsInventoryItem, bool);
+			_DECLARE_FUNCTION10(IsInventoryOwner, bool);
+			_DECLARE_FUNCTION10(IsActor, bool);
+			_DECLARE_FUNCTION10(IsCustomMonster, bool);
+			_DECLARE_FUNCTION10(IsWeapon, bool);
+			_DECLARE_FUNCTION10(IsCustomOutfit, bool);
+			_DECLARE_FUNCTION10(IsHelmet, bool);
+			_DECLARE_FUNCTION10(IsScope, bool);
+			_DECLARE_FUNCTION10(IsSilencer, bool);
+			_DECLARE_FUNCTION10(IsGrenadeLauncher, bool);
+			_DECLARE_FUNCTION10(IsLaserDesignator, bool);
+			_DECLARE_FUNCTION10(IsTacticalTorch, bool);
+			_DECLARE_FUNCTION10(IsWeaponMagazined, bool);
+			_DECLARE_FUNCTION10(IsSpaceRestrictor, bool);
+			_DECLARE_FUNCTION10(IsStalker, bool);
+			_DECLARE_FUNCTION10(IsAnomaly, bool);
+			_DECLARE_FUNCTION10(IsMonster, bool);
+			_DECLARE_FUNCTION10(IsTrader, bool);
+			_DECLARE_FUNCTION10(IsHudItem, bool);
+			_DECLARE_FUNCTION10(IsArtefact, bool);
+			_DECLARE_FUNCTION10(IsAmmo, bool);
+			_DECLARE_FUNCTION10(IsWeaponGL, bool);
+			_DECLARE_FUNCTION10(IsInventoryBox, bool);
+			_DECLARE_FUNCTION10(IsEatableItem, bool);
+			_DECLARE_FUNCTION10(IsDetector, bool);
+			_DECLARE_FUNCTION10(IsDetectorAnomaly, bool);
+			_DECLARE_FUNCTION10(IsTorch, bool);
+			_DECLARE_FUNCTION10(IsAntigasFilter, bool);
+
 			float				GetLuminocityHemi();
 			float				GetLuminocity();
 			bool				Use(CScriptGameObject* obj);
@@ -925,6 +960,14 @@ public:
 			u8 					GetRemainingUses();
 			u8 					GetMaxUses();
 			//-Alundaio
+
+			void				SetArtefactChargeLevel(float charge_level);
+			float				GetArtefactChargeLevel() const;
+			void				SetArtefactRank(int rank);
+			int					GetArtefactRank() const;
+
+			void				SetFilterChargeLevel(float charge_level);
+			float				GetFilterChargeLevel() const;
 
 			/*added by Ray Twitty (aka Shadows) START*/
 			float				GetActorMaxWeight						() const;

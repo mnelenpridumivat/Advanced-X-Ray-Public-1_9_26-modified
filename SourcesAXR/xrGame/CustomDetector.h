@@ -103,7 +103,8 @@ public:
 	}
 };
 
-class CAfList  :public CDetectList<CArtefact>
+template <typename T>
+class CAfList  :public CDetectList<T>
 {
 protected:
 	virtual BOOL 	feel_touch_contact	(CObject* O);
@@ -165,10 +166,6 @@ public:
 			void	Recharge			(float val);
 			bool	IsNecessaryItem		(const shared_str& item_sect, xr_vector<shared_str> item);
 
-			float	m_fMaxChargeLevel;
-			float	m_fCurrentChargeLevel;
-			float	m_fUnchargeSpeed;
-
 			//Light
 			bool		m_bLightsEnabled;
 			bool		m_bLightsAlways;
@@ -215,7 +212,7 @@ protected:
 	float			m_fAfVisRadius;
 	float			m_fAfDetectRadius;
 
-	CAfList			m_artefacts;
+	CAfList<CObject>m_artefacts;
 
 	virtual bool			install_upgrade_impl(LPCSTR section, bool test);
 };

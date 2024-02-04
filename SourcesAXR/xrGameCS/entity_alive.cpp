@@ -2,7 +2,7 @@
 #include "entity_alive.h"
 #include "inventoryowner.h"
 #include "inventory.h"
-#include "physicsshell.h"
+#include "../xrphysics/physicsshell.h"
 #include "../xrEngine/gamemtllib.h"
 #include "phmovementcontrol.h"
 #include "wound.h"
@@ -24,26 +24,26 @@
 #define SMALL_ENTITY_RADIUS		0.6f
 #define BLOOD_MARKS_SECT		"bloody_marks"
 
-//отметки крови на стенах 
+//РѕС‚РјРµС‚РєРё РєСЂРѕРІРё РЅР° СЃС‚РµРЅР°С… 
 FactoryPtr<IWallMarkArray>* CEntityAlive::m_pBloodMarksVector = NULL;
 float CEntityAlive::m_fBloodMarkSizeMin = 0.f;
 float CEntityAlive::m_fBloodMarkSizeMax = 0.f;
 float CEntityAlive::m_fBloodMarkDistance = 0.f;
 float CEntityAlive::m_fNominalHit = 0.f;
 
-//капание крови
+//РєР°РїР°РЅРёРµ РєСЂРѕРІРё
 FactoryPtr<IWallMarkArray>* CEntityAlive::m_pBloodDropsVector = NULL;
 float CEntityAlive::m_fStartBloodWoundSize = 0.3f;
 float CEntityAlive::m_fStopBloodWoundSize = 0.1f;
 float CEntityAlive::m_fBloodDropSize = 0.03f;
 
 
-//минимальный размер ожега, после которого горят партиклы
-//минимальное время горения
+//РјРёРЅРёРјР°Р»СЊРЅС‹Р№ СЂР°Р·РјРµСЂ РѕР¶РµРіР°, РїРѕСЃР»Рµ РєРѕС‚РѕСЂРѕРіРѕ РіРѕСЂСЏС‚ РїР°СЂС‚РёРєР»С‹
+//РјРёРЅРёРјР°Р»СЊРЅРѕРµ РІСЂРµРјСЏ РіРѕСЂРµРЅРёСЏ
 u32	  CEntityAlive::m_dwMinBurnTime = 10000;
-//размер раны, чтоб запустить партиклы
+//СЂР°Р·РјРµСЂ СЂР°РЅС‹, С‡С‚РѕР± Р·Р°РїСѓСЃС‚РёС‚СЊ РїР°СЂС‚РёРєР»С‹
 float CEntityAlive::m_fStartBurnWoundSize = 0.3f;
-//размер раны, чтоб остановить партиклы
+//СЂР°Р·РјРµСЂ СЂР°РЅС‹, С‡С‚РѕР± РѕСЃС‚Р°РЅРѕРІРёС‚СЊ РїР°СЂС‚РёРєР»С‹
 float CEntityAlive::m_fStopBurnWoundSize = 0.1f;
 
 STR_VECTOR* CEntityAlive::m_pFireParticlesVector = NULL;
@@ -51,7 +51,8 @@ STR_VECTOR* CEntityAlive::m_pFireParticlesVector = NULL;
 /////////////////////////////////////////////
 // CEntityAlive
 /////////////////////////////////////////////
-CEntityAlive::CEntityAlive()
+CEntityAlive::CEntityAlive() :
+	m_hit_bone_surface_areas_actual	( false )
 {
 	
 	monster_community		= xr_new<MONSTER_COMMUNITY>	();
@@ -90,7 +91,7 @@ void CEntityAlive::Load		(LPCSTR section)
 	if(0==m_pFireParticlesVector)
 		LoadFireParticles	("entity_fire_particles");
 
-	//биолог. вид к торому принадлежит монстр или персонаж
+	//Р±РёРѕР»РѕРі. РІРёРґ Рє С‚РѕСЂРѕРјСѓ РїСЂРёРЅР°РґР»РµР¶РёС‚ РјРѕРЅСЃС‚СЂ РёР»Рё РїРµСЂСЃРѕРЅР°Р¶
 	monster_community->set	(pSettings->r_string(section, "species"));
 }
 
@@ -101,21 +102,12 @@ void CEntityAlive::LoadBloodyWallmarks (LPCSTR section)
 	m_pBloodMarksVector		= xr_new<FactoryPtr<IWallMarkArray> >();
 	m_pBloodDropsVector		= xr_new<FactoryPtr<IWallMarkArray> >();
 	
-	//кровавые отметки на стенах
+	//РєСЂРѕРІР°РІС‹Рµ РѕС‚РјРµС‚РєРё РЅР° СЃС‚РµРЅР°С…
 	string256	tmp;
 	LPCSTR wallmarks_name = pSettings->r_string(section, "wallmarks"); 
 	
 	int cnt		=_GetItemCount(wallmarks_name);
 	
-	/*
-	ref_shader	s;
-	for (int k=0; k<cnt; ++k)
-	{
-		s.create ("effects\\wallmark",_GetItem(wallmarks_name,k,tmp));
-		m_pBloodMarksVector->push_back	(s);
-	}
-	*/
-
 	for (int k=0; k<cnt; ++k)	
 		(*m_pBloodMarksVector)->AppendMark(_GetItem(wallmarks_name,k,tmp));
 
@@ -127,7 +119,7 @@ void CEntityAlive::LoadBloodyWallmarks (LPCSTR section)
 
 
 
-	//капли крови с открытых ран
+	//РєР°РїР»Рё РєСЂРѕРІРё СЃ РѕС‚РєСЂС‹С‚С‹С… СЂР°РЅ
 	wallmarks_name = pSettings->r_string(section, "blood_drops");
 	cnt		=_GetItemCount(wallmarks_name);
 
@@ -217,14 +209,14 @@ void CEntityAlive::shedule_Update(u32 dt)
 	//condition update with the game time pass
 	conditions().UpdateConditionTime	();
 	conditions().UpdateCondition		();
-	//Обновление партиклов огня
+	//РћР±РЅРѕРІР»РµРЅРёРµ РїР°СЂС‚РёРєР»РѕРІ РѕРіРЅСЏ
 	UpdateFireParticles	();
-	//капли крови
+	//РєР°РїР»Рё РєСЂРѕРІРё
 	UpdateBloodDrops	();
-	//обновить раны
+	//РѕР±РЅРѕРІРёС‚СЊ СЂР°РЅС‹
 	conditions().UpdateWounds		();
 
-	//убить сущность
+	//СѓР±РёС‚СЊ СЃСѓС‰РЅРѕСЃС‚СЊ
 	if(Local() && !g_Alive() && !AlreadyDie())
 	{
 		if(conditions().GetWhoHitLastTime()) {
@@ -240,7 +232,7 @@ void CEntityAlive::shedule_Update(u32 dt)
 
 BOOL CEntityAlive::net_Spawn	(CSE_Abstract* DC)
 {
-	//установить команду в соответствии с community
+	//СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РєРѕРјР°РЅРґСѓ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ community
 /*	if(monster_community->team() != 255)
 		id_Team = monster_community->team();*/
 
@@ -250,7 +242,7 @@ BOOL CEntityAlive::net_Spawn	(CSE_Abstract* DC)
 	m_BloodWounds.clear			();
 	m_ParticleWounds.clear		();
 
-	//добавить кровь и огонь на партиклы, если нужно
+	//РґРѕР±Р°РІРёС‚СЊ РєСЂРѕРІСЊ Рё РѕРіРѕРЅСЊ РЅР° РїР°СЂС‚РёРєР»С‹, РµСЃР»Рё РЅСѓР¶РЅРѕ
 	for(WOUND_VECTOR::const_iterator it = conditions().wounds().begin(); conditions().wounds().end() != it; ++it)
 	{
 		CWound					*pWound = *it;
@@ -272,8 +264,7 @@ void CEntityAlive::HitImpulse	(float /**amount/**/, Fvector& /**vWorldDir/**/, F
 	//	m_PhysicMovementControl->vExternalImpulse.mad	(vWorldDir,Q);
 }
 
-//void CEntityAlive::Hit(float P, Fvector &dir,CObject* who, s16 element,Fvector position_in_object_space, float impulse, ALife::EHitType hit_type, float AP)
-void	CEntityAlive::Hit							(SHit* pHDS)
+void	CEntityAlive::Hit(SHit* pHDS)
 {
 	SHit HDS = *pHDS;
 	//-------------------------------------------------------------------
@@ -282,18 +273,18 @@ void	CEntityAlive::Hit							(SHit* pHDS)
 	//-------------------------------------------------------------------
 	CDamageManager::HitScale(HDS.boneID, conditions().hit_bone_scale(), conditions().wound_bone_scale(),pHDS->aim_bullet);
 
-	//изменить состояние, перед тем как родительский класс обработает хит
+	//РёР·РјРµРЅРёС‚СЊ СЃРѕСЃС‚РѕСЏРЅРёРµ, РїРµСЂРµРґ С‚РµРј РєР°Рє СЂРѕРґРёС‚РµР»СЊСЃРєРёР№ РєР»Р°СЃСЃ РѕР±СЂР°Р±РѕС‚Р°РµС‚ С…РёС‚
 	CWound* pWound = conditions().ConditionHit(&HDS);
 
 	if(pWound){
-		if(ALife::eHitTypeBurn == HDS.hit_type)
+		if(ALife::eHitTypeBurn == HDS.hit_type/* || ALife::eHitTypeLightBurn == HDS.hit_type*/)
 			StartFireParticles(pWound);
 		else if(ALife::eHitTypeWound == HDS.hit_type || ALife::eHitTypeFireWound == HDS.hit_type)
 			StartBloodDrops(pWound);
 	}
 
 	if (HDS.hit_type != ALife::eHitTypeTelepatic){
-		//добавить кровь на стены
+		//РґРѕР±Р°РІРёС‚СЊ РєСЂРѕРІСЊ РЅР° СЃС‚РµРЅС‹
 		if (!use_simplified_visual())
 			BloodyWallmarks (HDS.damage(), HDS.dir, HDS.bone(), HDS.p_in_bone_space);
 	}
@@ -337,7 +328,7 @@ void CEntityAlive::Die	(CObject* who)
 		character_physics_support()->in_Die();
 }
 
-//вывзывает при подсчете хита
+//РІС‹РІР·С‹РІР°РµС‚ РїСЂРё РїРѕРґСЃС‡РµС‚Рµ С…РёС‚Р°
 float CEntityAlive::CalcCondition(float /**hit/**/)
 {	
 	conditions().UpdateCondition();
@@ -369,14 +360,14 @@ void CEntityAlive::PHFreeze()
 }
 //////////////////////////////////////////////////////////////////////
 
-//добавление кровавых отметок на стенах, после получения хита
+//РґРѕР±Р°РІР»РµРЅРёРµ РєСЂРѕРІР°РІС‹С… РѕС‚РјРµС‚РѕРє РЅР° СЃС‚РµРЅР°С…, РїРѕСЃР»Рµ РїРѕР»СѓС‡РµРЅРёСЏ С…РёС‚Р°
 void CEntityAlive::BloodyWallmarks (float P, const Fvector &dir, s16 element, 
 									const Fvector& position_in_object_space)
 {
 	if(BI_NONE == (u16)element)
 		return;
 
-	//вычислить координаты попадания
+	//РІС‹С‡РёСЃР»РёС‚СЊ РєРѕРѕСЂРґРёРЅР°С‚С‹ РїРѕРїР°РґР°РЅРёСЏ
 	IKinematics* V = smart_cast<IKinematics*>(Visual());
 		
 	Fvector start_pos = position_in_object_space;
@@ -419,7 +410,7 @@ void CEntityAlive::PlaceBloodWallmark(const Fvector& dir, const Fvector& start_p
 		&&
 		!result.O;
 
-	//если кровь долетела до статического объекта
+	//РµСЃР»Рё РєСЂРѕРІСЊ РґРѕР»РµС‚РµР»Р° РґРѕ СЃС‚Р°С‚РёС‡РµСЃРєРѕРіРѕ РѕР±СЉРµРєС‚Р°
 	if(reach_wall)
 	{
 		CDB::TRI*	pTri	= Level().ObjectSpace.GetStaticTris()+result.element;
@@ -427,10 +418,10 @@ void CEntityAlive::PlaceBloodWallmark(const Fvector& dir, const Fvector& start_p
 
 		if(pMaterial->Flags.is(SGameMtl::flBloodmark))
 		{
-			//вычислить нормаль к пораженной поверхности
+			//РІС‹С‡РёСЃР»РёС‚СЊ РЅРѕСЂРјР°Р»СЊ Рє РїРѕСЂР°Р¶РµРЅРЅРѕР№ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё
 			Fvector*	pVerts	= Level().ObjectSpace.GetStaticVerts();
 
-			//вычислить точку попадания
+			//РІС‹С‡РёСЃР»РёС‚СЊ С‚РѕС‡РєСѓ РїРѕРїР°РґР°РЅРёСЏ
 			Fvector end_point;
 			end_point.set(0,0,0);
 			end_point.mad(start_pos, dir, result.range);
@@ -439,7 +430,7 @@ void CEntityAlive::PlaceBloodWallmark(const Fvector& dir, const Fvector& start_p
 			//ref_shader wallmarkShader = wallmarks_vector[::Random.randI(wallmarks_vector.size())];
 			VERIFY(!pwallmarks_vector->empty());
 			{
-				//добавить отметку на материале
+				//РґРѕР±Р°РІРёС‚СЊ РѕС‚РјРµС‚РєСѓ РЅР° РјР°С‚РµСЂРёР°Р»Рµ
 				//::Render->add_StaticWallmark(wallmarkShader, end_point, wallmark_size, pTri, pVerts);
 				::Render->add_StaticWallmark(pwallmarks_vector, end_point, wallmark_size, pTri, pVerts);
 			}
@@ -733,18 +724,19 @@ CPHSoundPlayer* CEntityAlive::ph_sound_player()
 	}
 }
 
-SCollisionHitCallback*	CEntityAlive::	get_collision_hit_callback		()
+ICollisionHitCallback*	CEntityAlive::	get_collision_hit_callback		()
 {
   CCharacterPhysicsSupport *cs=character_physics_support();
   if(cs)return cs->get_collision_hit_callback();
   else return false;
 }
 
-bool					CEntityAlive::	set_collision_hit_callback		(SCollisionHitCallback *cc)
+void					CEntityAlive::	set_collision_hit_callback		(ICollisionHitCallback *cc)
 {
 	CCharacterPhysicsSupport* cs=character_physics_support();
-	if(cs)return cs->set_collision_hit_callback(cc);
-	else return false;
+	if(cs)
+		cs->set_collision_hit_callback(cc);
+
 }
 
 void CEntityAlive::net_Relcase	(CObject *object)
@@ -778,4 +770,204 @@ void	CEntityAlive::	destroy_anim_mov_ctrl( )
 	 CCharacterPhysicsSupport *cs =character_physics_support( );
 	 if( cs )
 		cs->on_destroy_anim_mov_ctrl( );
+}
+
+#include "../xrEngine/xr_collide_form.h"
+
+struct element_predicate {
+	inline bool	operator( )							(CCF_Skeleton::SElement const& element, u16 element_id ) const
+	{
+		return							element.elem_id < element_id;
+	}
+}; // struct element_predicate
+
+struct sort_surface_area_predicate {
+	inline bool operator( )							( std::pair<u16,float> const& left, std::pair<u16,float> const& right ) const
+	{
+		return							left.second > right.second;
+	}
+}; // struct sort_surface_area_predicate
+
+void CEntityAlive::OnChangeVisual					( )
+{
+	inherited::OnChangeVisual			( );
+
+	m_hit_bone_surface_areas_actual		= false;
+}
+
+void CEntityAlive::fill_hit_bone_surface_areas		( ) const
+{
+	VERIFY								( !m_hit_bone_surface_areas_actual );
+	m_hit_bone_surface_areas_actual		= true;
+
+	IKinematics* const kinematics		= smart_cast<IKinematics*>( Visual() );
+	VERIFY								( kinematics );
+	VERIFY								( kinematics->LL_BoneCount() );
+
+	m_hit_bone_surface_areas.clear_not_free	( );
+
+	for (u16 i=0, n=kinematics->LL_BoneCount(); i < n; ++i ) {
+		SBoneShape const& shape			= kinematics->LL_GetData(i).shape;
+		if ( SBoneShape::stNone == shape.type )
+			continue;
+
+		if ( shape.flags.is(SBoneShape::sfNoPickable) )
+			continue;
+
+		float surface_area				= flt_max;
+		switch ( shape.type ) {
+			case SBoneShape::stBox : {
+				Fvector const& half_size= shape.box.m_halfsize;
+				surface_area			= 2.f * ( half_size.x*(half_size.y + half_size.z) + half_size.y*half_size.z );
+				break;
+			}
+			case SBoneShape::stSphere : {
+				surface_area			= 4.f * PI * _sqr(shape.sphere.R);
+				break;
+			}
+			case SBoneShape::stCylinder : {
+				surface_area			= 2.f * PI * shape.cylinder.m_radius*( shape.cylinder.m_radius + shape.cylinder.m_height );
+				break;
+			}
+			default :					NODEFAULT;
+		}
+
+		m_hit_bone_surface_areas.push_back	( std::make_pair(i, surface_area) );
+	}
+
+	std::sort							( m_hit_bone_surface_areas.begin(), m_hit_bone_surface_areas.end(), sort_surface_area_predicate() );
+}
+
+BOOL g_ai_use_old_vision				= 0;
+
+Fvector	CEntityAlive::get_new_local_point_on_mesh	( u16& bone_id ) const
+{
+	if ( g_ai_use_old_vision )
+		return							inherited::get_new_local_point_on_mesh( bone_id );
+
+	IKinematics* const kinematics		= smart_cast<IKinematics*>( Visual() );
+	if ( !kinematics )
+		return							inherited::get_new_local_point_on_mesh( bone_id );
+
+	if ( !kinematics->LL_BoneCount() )
+		return							inherited::get_new_local_point_on_mesh( bone_id );
+
+	if ( !m_hit_bone_surface_areas_actual )
+		fill_hit_bone_surface_areas		( );
+
+	if ( m_hit_bone_surface_areas.empty() )
+		return							inherited::get_new_local_point_on_mesh( bone_id );
+
+	float hit_bones_surface_area		= 0.f;
+	hit_bone_surface_areas_type::const_iterator i		= m_hit_bone_surface_areas.begin( );
+	hit_bone_surface_areas_type::const_iterator const e	= m_hit_bone_surface_areas.end( );
+	for ( ; i != e; ++i ) {
+		if ( !kinematics->LL_GetBoneVisible((*i).first) )
+			continue;
+
+		SBoneShape const& shape			= kinematics->LL_GetData((*i).first).shape;
+		VERIFY							( shape.type != SBoneShape::stNone );
+		VERIFY							( !shape.flags.is(SBoneShape::sfNoPickable) );
+
+		hit_bones_surface_area			+= (*i).second;
+	}
+
+	VERIFY2								( hit_bones_surface_area > 0.f, make_string("m_hit_bone_surface_areas[%d]", m_hit_bone_surface_areas.size()) );
+	float const selected_area			= m_hit_bones_random.randF( hit_bones_surface_area );
+
+	i									= m_hit_bone_surface_areas.begin( );
+	for (float accumulator = 0.f; i != e; ++i ) {
+		if ( !kinematics->LL_GetBoneVisible((*i).first) )
+			continue;
+
+		SBoneShape const& shape			= kinematics->LL_GetData((*i).first).shape;
+		VERIFY							( shape.type != SBoneShape::stNone );
+		VERIFY							( !shape.flags.is(SBoneShape::sfNoPickable) );
+
+		accumulator						+= (*i).second;
+		if ( accumulator >= selected_area )
+			break;
+	}
+
+	VERIFY2								( i != e, make_string("m_hit_bone_surface_areas[%d]", m_hit_bone_surface_areas.size()) );
+	SBoneShape const& shape				= kinematics->LL_GetData((*i).first).shape;
+	bone_id								= (*i).first;
+	Fvector result						= Fvector().set( flt_max, flt_max, flt_max );
+	switch ( shape.type ) {
+		case SBoneShape::stBox : {
+			Fmatrix	transform;
+			shape.box.xform_full		( transform );
+
+			Fvector	direction;
+			u32 random_value			= ::Random.randI(6);
+			Fvector random				= { (random_value & 1) ? -1.f : 1.f, ::Random.randF(2.f) - 1.f, ::Random.randF(2.f) - 1.f };
+			random.normalize			( );
+			if ( random_value < 2 )
+				direction				= Fvector().set( random.x, random.y, random.z );
+			else if ( random_value < 4 )
+				direction				= Fvector().set( random.z, random.x, random.y );
+			else
+				direction				= Fvector().set( random.y, random.z, random.x );
+
+			transform.transform_tiny	( result, direction );
+			break;
+		}
+		case SBoneShape::stSphere : {
+			result.random_dir().mul(shape.sphere.R).add(shape.sphere.P);
+			break;
+		}
+		case SBoneShape::stCylinder : {
+			float const total_square	= (shape.cylinder.m_height + shape.cylinder.m_radius); // *2*PI*c_cylinder.m_radius
+			float const random_value	= ::Random.randF(total_square);
+			float const angle			= ::Random.randF(2.f*PI);
+
+			float const x				= shape.cylinder.m_direction.x;
+			float const y				= shape.cylinder.m_direction.y;
+			float const z				= shape.cylinder.m_direction.z;
+			Fvector normal				= Fvector().set( y-z, z-x, x-y );
+
+			Fmatrix rotation			= Fmatrix().rotation( shape.cylinder.m_direction, normal );
+			Fmatrix rotation_y			= Fmatrix().rotateY( angle );
+			Fmatrix const transform		= Fmatrix().mul_43( rotation, rotation_y );
+			transform.transform_dir		( normal, Fvector().set(0.f, 0.f, 1.f) );
+
+			float height, radius;
+			if ( random_value < shape.cylinder.m_height ) {
+				height					= random_value - shape.cylinder.m_height/2.f;
+				radius					= shape.cylinder.m_radius;
+			}
+			else {
+				float const normalized_value = random_value - shape.cylinder.m_height;
+				height					= shape.cylinder.m_height/2.f*((normalized_value < shape.cylinder.m_radius/2.f) ? -1.f : 1.f);
+				radius					= height > 0.f ? normalized_value - shape.cylinder.m_radius/2.f : normalized_value;
+			}
+
+			normal.mul					( radius );
+			result.mul					( shape.cylinder.m_direction, height );
+			result.add					( normal );
+			result.add					( shape.cylinder.m_center );
+			break;
+		}
+		default :						NODEFAULT;
+	}
+
+	return								result;
+}
+
+Fvector CEntityAlive::get_last_local_point_on_mesh	( Fvector const& last_point, u16 bone_id ) const
+{
+	if ( bone_id == u16(-1) )
+		return							inherited::get_last_local_point_on_mesh( last_point, bone_id );
+
+	IKinematics* const kinematics		= smart_cast<IKinematics*>( Visual() );
+	VERIFY								( kinematics );
+
+	Fmatrix transform;
+	kinematics->Bone_GetAnimPos			( transform, bone_id, u8(-1), false );
+
+	Fvector result;
+	transform.transform_tiny			( result, last_point );
+
+	XFORM().transform_tiny				( result, Fvector(result) );
+	return								result;
 }

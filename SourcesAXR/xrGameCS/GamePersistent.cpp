@@ -10,7 +10,6 @@
 #include "game_base_space.h"
 #include "level.h"
 #include "ParticlesObject.h"
-#include "actor.h"
 #include "game_base_space.h"
 #include "stalker_animation_data_storage.h"
 #include "stalker_velocity_holder.h"
@@ -20,16 +19,21 @@
 #include "spectator.h"
 
 #include "../xrEngine/xrSASH.h"
-#include "CustomOutfit.h"
-#include "UI/UIGameTutorial.h"
-#include "../xrEngine/x_ray.h"
 #include "ai_space.h"
 #include "../xrServerEntitiesCS/script_engine.h"
+
+#include "holder_custom.h"
+#include "game_cl_base.h"
+#include "xrserver_objects_alife_monsters.h"
+#include "../xrServerEntitiesCS/xrServer_Object_Base.h"
+#include "UI/UIGameTutorial.h"
 #include "ActorCondition.h"
 #include "AdvancedXrayGameConstants.h"
 #include "DynamicHudGlass.h"
 #include "CustomOutfit.h"
+#include "Inventory.h"
 #include "string_table.h"
+#include "../xrEngine/x_ray.h"
 #include "ui/UILoadingScreen.h"
 #include "embedded_editor/embedded_editor_main.h"
 
@@ -41,15 +45,15 @@
 #	include "ai_debug.h"
 #endif // _EDITOR
 
-#ifdef DEBUG_MEMORY_MANAGER
-	static	void *	ode_alloc	(size_t size)								{ return Memory.mem_alloc(size,"ODE");			}
-	static	void *	ode_realloc	(void *ptr, size_t oldsize, size_t newsize)	{ return Memory.mem_realloc(ptr,newsize,"ODE");	}
-	static	void	ode_free	(void *ptr, size_t size)					{ return xr_free(ptr);							}
-#else // DEBUG_MEMORY_MANAGER
-	static	void *	ode_alloc	(size_t size)								{ return xr_malloc(size);			}
-	static	void *	ode_realloc	(void *ptr, size_t oldsize, size_t newsize)	{ return xr_realloc(ptr,newsize);	}
-	static	void	ode_free	(void *ptr, size_t size)					{ return xr_free(ptr);				}
-#endif // DEBUG_MEMORY_MANAGER
+//#ifdef DEBUG_MEMORY_MANAGER
+//	static	void *	ode_alloc	(size_t size)								{ return Memory.mem_alloc(size,"ODE");			}
+//	static	void *	ode_realloc	(void *ptr, size_t oldsize, size_t newsize)	{ return Memory.mem_realloc(ptr,newsize,"ODE");	}
+//	static	void	ode_free	(void *ptr, size_t size)					{ return xr_free(ptr);							}
+//#else // DEBUG_MEMORY_MANAGER
+//	static	void *	ode_alloc	(size_t size)								{ return xr_malloc(size);			}
+//	static	void *	ode_realloc	(void *ptr, size_t oldsize, size_t newsize)	{ return xr_realloc(ptr,newsize);	}
+//	static	void	ode_free	(void *ptr, size_t size)					{ return xr_free(ptr);				}
+//#endif // DEBUG_MEMORY_MANAGER
 
 CGamePersistent::CGamePersistent(void)
 {
@@ -73,15 +77,15 @@ CGamePersistent::CGamePersistent(void)
 	m_pUI_core					= NULL;
 	m_pMainMenu					= NULL;
 	m_intro						= NULL;
-	m_intro_event.bind			(this,&CGamePersistent::start_logo_intro);
+	m_intro_event.bind			(this, &CGamePersistent::start_logo_intro);
 #ifdef DEBUG
 	m_frame_counter				= 0;
 	m_last_stats_frame			= u32(-2);
 #endif
 	// 
-	dSetAllocHandler			(ode_alloc		);
-	dSetReallocHandler			(ode_realloc	);
-	dSetFreeHandler				(ode_free		);
+	//dSetAllocHandler			(ode_alloc		);
+	//dSetReallocHandler			(ode_realloc	);
+	//dSetFreeHandler				(ode_free		);
 
 	// 
 	BOOL	bDemoMode	= (0!=strstr(Core.Params,"-demomode "));
@@ -194,7 +198,6 @@ void CGamePersistent::Disconnect()
 void CGamePersistent::OnGameStart()
 {
 	__super::OnGameStart		();
-	
 	UpdateGameType				();
 	GameConstants::LoadConstants();
 }
@@ -225,7 +228,6 @@ LPCSTR GameTypeToString(EGameIDs gt, bool bShort)
 		return (bShort)?"tdz":"teamdominationzone";
 		break;
 	default :
-//		R_ASSERT	(0);
 		return		"---";
 	}
 }
@@ -295,19 +297,23 @@ void CGamePersistent::WeathersUpdate()
 		VERIFY						(_env);
 
 		CEnvAmbient* env_amb		= _env->env_ambient;
-		if (env_amb) {
+		if (env_amb)
+		{
 			CEnvAmbient::SSndChannelVec& vec	= current_env->env_ambient->get_snd_channels();
 			CEnvAmbient::SSndChannelVecIt I		= vec.begin();
 			CEnvAmbient::SSndChannelVecIt E		= vec.end();
 			
-			for (u32 idx=0; I!=E; ++I,++idx) {
+			for (u32 idx=0; I!=E; ++I,++idx)
+			{
 				CEnvAmbient::SSndChannel& ch	= **I;
-				R_ASSERT						(idx<20);
+
+				VERIFY							(idx < 40);
+
 				if(ambient_sound_next_time[idx]==0)//first
 				{
 					ambient_sound_next_time[idx] = Device.dwTimeGlobal + ch.get_rnd_sound_first_time();
-				}else
-				if(Device.dwTimeGlobal > ambient_sound_next_time[idx])
+				}
+				else if(Device.dwTimeGlobal > ambient_sound_next_time[idx])
 				{
 					ref_sound& snd					= ch.get_rnd_sound();
 
@@ -444,11 +450,24 @@ void CGamePersistent::WeathersUpdate()
 	}
 }
 
-void CGamePersistent::start_logo_intro		()
+bool allow_intro ()
+{
+#ifdef MASTER_GOLD
+	if (g_SASH.IsRunning())
+#else	// #ifdef MASTER_GOLD
+	if ((0!=strstr(Core.Params, "-nointro")) || g_SASH.IsRunning())
+#endif	// #ifdef MASTER_GOLD
+	{
+		return false;
+	}else
+		return true;
+}
+
+void CGamePersistent::start_logo_intro()
 {
 	if (Device.dwPrecacheFrame==0)
 	{
-		m_intro_event.bind		(this,&CGamePersistent::update_logo_intro);
+		m_intro_event.bind		(this, &CGamePersistent::update_logo_intro);
 		if (!g_dedicated_server && 0==xr_strlen(m_game_params.m_game_or_spawn) && NULL==g_pGameLevel)
 		{
 			VERIFY				(NULL==m_intro);
@@ -459,11 +478,14 @@ void CGamePersistent::start_logo_intro		()
 		}
 	}
 }
-void CGamePersistent::update_logo_intro			()
+
+void CGamePersistent::update_logo_intro()
 {
-	if(m_intro && (false==m_intro->IsActive())){
+	if(m_intro && (false==m_intro->IsActive()))
+	{
 		m_intro_event			= 0;
 		xr_delete				(m_intro);
+		Msg("intro_delete ::update_logo_intro");
 		Console->Execute		("main_menu on");
 	}
 	else if (!m_intro)
@@ -472,30 +494,24 @@ void CGamePersistent::update_logo_intro			()
 	}
 }
 
-bool allow_intro()
-{
-	return 0 == strstr(Core.Params, "-nointro");
-}
-
 extern int g_keypress_on_start;
 void CGamePersistent::game_loaded()
 {
 	if (Device.dwPrecacheFrame <= 2)
 	{
-		if (g_pGameLevel &&
-			g_pGameLevel->bReady &&
-			(allow_intro() && g_keypress_on_start) &&
-			load_screen_renderer.b_need_user_input &&
+		if (g_pGameLevel							&&
+			g_pGameLevel->bReady					&&
+			(allow_intro() && g_keypress_on_start)	&&
+			load_screen_renderer.b_need_user_input	&& 
 			m_game_params.m_e_game_type == eGameIDSingle)
 		{
-			g_pGamePersistent->SetLoadStageTitle("st_press_any_key"); //Автопауза
-			VERIFY(NULL == m_intro);
-			m_intro = xr_new<CUISequencer>();
-			m_intro->Start("game_loaded");
-			Msg("intro_start game_loaded");
+			VERIFY				(NULL==m_intro);
+			m_intro				= xr_new<CUISequencer>();
+			m_intro->Start		("game_loaded");
+			Msg					("intro_start game_loaded");
 			m_intro->m_on_destroy_event.bind(this, &CGamePersistent::update_game_loaded);
 		}
-		m_intro_event = 0;
+		m_intro_event			= 0;
 
 		for (u32 i = 0; i < GameLoadedCallback.size(); i++)
 			GameLoadedCallback[i]();
@@ -506,23 +522,24 @@ void CGamePersistent::game_loaded()
 
 void CGamePersistent::update_game_loaded()
 {
-	xr_delete(m_intro);
+	xr_delete				(m_intro);
 	Msg("intro_delete ::update_game_loaded");
-	load_screen_renderer.stop();
-	start_game_intro();
+	start_game_intro		();
 }
 
 void CGamePersistent::start_game_intro		()
 {
 	if (!allow_intro())
 	{
-		m_intro_event = 0;
+		m_intro_event			= 0;
 		return;
 	}
 
-	if (g_pGameLevel && g_pGameLevel->bReady && Device.dwPrecacheFrame<=2){
-		m_intro_event.bind		(this,&CGamePersistent::update_game_intro);
-		if (0==stricmp(m_game_params.m_new_or_load,"new")){
+	if (g_pGameLevel && g_pGameLevel->bReady && Device.dwPrecacheFrame<=2)
+	{
+		m_intro_event.bind		(this, &CGamePersistent::update_game_intro);
+		if (0==stricmp(m_game_params.m_new_or_load, "new"))
+		{
 			VERIFY				(NULL==m_intro);
 			m_intro				= xr_new<CUISequencer>();
 			m_intro->Start		("intro_game");
@@ -532,17 +549,18 @@ void CGamePersistent::start_game_intro		()
 }
 void CGamePersistent::update_game_intro()
 {
-	if (m_intro && (false == m_intro->IsActive())) {
-		xr_delete(m_intro);
+	if(m_intro && (false==m_intro->IsActive()))
+	{
+		xr_delete				(m_intro);
 		Msg("intro_delete ::update_game_intro");
-		m_intro_event = 0;
+		m_intro_event			= 0;
 	}
 	else if (!m_intro)
 	{
-		m_intro_event = 0;
+		m_intro_event			= 0;
 	}
 }
-#include "holder_custom.h"
+
 extern CUISequencer * g_tutorial;
 extern CUISequencer * g_tutorial2;
 
@@ -551,15 +569,17 @@ void CGamePersistent::OnFrame	()
 	if (Device.dwPrecacheFrame==5 && m_intro_event.empty())
 	{
 		SetLoadStageTitle();
-		m_intro_event.bind(this, &CGamePersistent::game_loaded);
+		m_intro_event.bind			(this,&CGamePersistent::game_loaded);
 	}
 
-	if(g_tutorial2){ 
+	if(g_tutorial2)
+	{ 
 		g_tutorial2->Destroy	();
 		xr_delete				(g_tutorial2);
 	}
 
-	if(g_tutorial && !g_tutorial->IsActive()){
+	if(g_tutorial && !g_tutorial->IsActive())
+	{
 		xr_delete(g_tutorial);
 	}
 
@@ -605,8 +625,40 @@ void CGamePersistent::OnFrame	()
 					else
 						C = Actor()->Holder()->Camera();
 
-				Actor()->Cameras().UpdateFromCamera		(C);
-				Actor()->Cameras().ApplyDevice			(VIEWPORT_NEAR);
+					Actor()->Cameras().UpdateFromCamera		(C);
+					Actor()->Cameras().ApplyDevice			(VIEWPORT_NEAR);
+#ifdef DEBUG
+					if(psActorFlags.test(AF_NO_CLIP))
+					{
+						Actor()->dbg_update_cl			= 0;
+						Actor()->dbg_update_shedule		= 0;
+						Device.dwTimeDelta				= 0;
+						Device.fTimeDelta				= 0.01f;			
+						Actor()->UpdateCL				();
+						Actor()->shedule_Update			(0);
+						Actor()->dbg_update_cl			= 0;
+						Actor()->dbg_update_shedule		= 0;
+
+						CSE_Abstract* e					= Level().Server->ID_to_entity(Actor()->ID());
+						VERIFY							(e);
+						CSE_ALifeCreatureActor*	s_actor = smart_cast<CSE_ALifeCreatureActor*>(e);
+						VERIFY							(s_actor);
+						xr_vector<u16>::iterator it = s_actor->children.begin();
+						for(;it!=s_actor->children.end();it++)
+						{
+							CObject* obj = Level().Objects.net_Find(*it);
+							if(obj && Engine.Sheduler.Registered(obj))
+							{
+								obj->dbg_update_shedule = 0;
+								obj->dbg_update_cl = 0;
+								obj->shedule_Update	(0);
+								obj->UpdateCL();
+								obj->dbg_update_shedule = 0;
+								obj->dbg_update_cl = 0;
+							}
+						}
+					}
+#endif // DEBUG
 				}
 			}
 		}
@@ -621,6 +673,7 @@ void CGamePersistent::OnFrame	()
 
 			Actor()->Cameras().UpdateFromCamera			(C);
 			Actor()->Cameras().ApplyDevice				(VIEWPORT_NEAR);
+
 		}
 #endif // MASTER_GOLD
 	}
@@ -664,6 +717,8 @@ void CGamePersistent::OnFrame	()
 #include "xrServer.h"
 #include "hudmanager.h"
 #include "UIGameCustom.h"
+#include "ui/UIMainIngameWnd.h"
+#include "ui/UIPdaWnd.h"
 
 void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 {
@@ -673,7 +728,17 @@ void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 			GAME_PAUSE		(FALSE, TRUE, TRUE, "eQuickLoad");
 		
 		if(HUD().GetUI())
+		{
 			HUD().GetUI()->UIGame()->HideShownDialogs();
+			HUD().GetUI()->UIMainIngameWnd->reset_ui();
+			HUD().GetUI()->UIGame()->PdaMenu().Reset();
+		}
+
+		if(g_tutorial)
+			g_tutorial->Stop();
+
+		if(g_tutorial2)
+			g_tutorial2->Stop();
 
 		LPSTR		saved_name	= (LPSTR)(P1);
 
@@ -688,7 +753,7 @@ void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 	{
 		string256			cmd;
 		LPCSTR				demo	= LPCSTR(P1);
-		sprintf_s				(cmd,"demo_play %s",demo);
+		xr_sprintf				(cmd,"demo_play %s",demo);
 		Console->Execute	(cmd);
 		xr_free				(demo);
 		uTime2Change		= Device.TimerAsync() + u32(P2)*1000;
@@ -787,27 +852,27 @@ void CGamePersistent::LoadTitle(bool change_tip, shared_str map_name)
 		string512				buff;
 		u8						tip_num;
 		luabind::functor<u8>	m_functor;
-		bool is_single = !xr_strcmp(m_game_params.m_game_type, "single");
-		if (is_single)
+		bool is_single = !xr_strcmp(m_game_params.m_game_type,"single");
+		if(is_single)
 		{
-			R_ASSERT(ai().script_engine().functor("loadscreen.get_tip_number", m_functor));
+			R_ASSERT( ai().script_engine().functor( "loadscreen.get_tip_number", m_functor ) );
 			tip_num = m_functor(map_name.c_str());
 		}
 		else
 		{
-			R_ASSERT(ai().script_engine().functor("loadscreen.get_mp_tip_number", m_functor));
+			R_ASSERT( ai().script_engine().functor( "loadscreen.get_mp_tip_number", m_functor ) );
 			tip_num = m_functor(map_name.c_str());
 		}
-		//		tip_num = 83;
-		xr_sprintf(buff, "%s%d:", CStringTable().translate("ls_tip_number").c_str(), tip_num);
+//		tip_num = 83;
+		xr_sprintf				(buff, "%s%d:", CStringTable().translate("ls_tip_number").c_str(), tip_num);
 		shared_str				tmp = buff;
 
-		if (is_single)
-			xr_sprintf(buff, "ls_tip_%d", tip_num);
+		if(is_single)
+			xr_sprintf			(buff, "ls_tip_%d", tip_num);
 		else
-			xr_sprintf(buff, "ls_mp_tip_%d", tip_num);
+			xr_sprintf			(buff, "ls_mp_tip_%d", tip_num);
 
-		pApp->LoadTitleInt(CStringTable().translate("ls_header").c_str(), tmp.c_str(), CStringTable().translate(buff).c_str());
+		pApp->LoadTitleInt		(CStringTable().translate("ls_header").c_str(), tmp.c_str(), CStringTable().translate(buff).c_str());
 	}
 }
 
@@ -875,9 +940,19 @@ float CGamePersistent::GetActorIntoxication()
 	return 0.0f;
 }
 
+bool CGamePersistent::GetClearMaskProcess()
+{
+	return (Actor() && Actor()->MaskClearInProcess());
+}
+
 bool CGamePersistent::GetActorNightvision()
 {
-	return	(Actor()->GetNightVisionStatus());
+	CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
+
+	if (pOutfit)
+		return (Actor()->GetNightVisionStatus() && pOutfit->m_NightVisionSect.size());
+
+	return false;
 }
 
 int CGamePersistent::GetNightvisionType()
@@ -892,12 +967,30 @@ bool CGamePersistent::GetActorAliveStatus()
 
 bool CGamePersistent::IsCamFirstEye()
 {
-	return	(Actor()->active_cam() == eacFirstEye);
+	return	(Actor() && Actor()->active_cam() == eacFirstEye);
+}
+
+bool CGamePersistent::GetActorHelmetStatus()
+{
+	if (!Actor())
+		return false;
+
+	CCustomOutfit* outfit = Actor()->GetOutfit();
+
+	if (outfit)
+		return outfit->m_b_HasGlass;
+
+	return false;
 }
 
 bool CGamePersistent::GetActor()
 {
 	return	(Actor());
+}
+
+bool CGamePersistent::GetFogInfluenceVolumetricLight()
+{
+	return GameConstants::GetFogInfluenceVolumetricLight();
 }
 
 void CGamePersistent::EditorOnFrame()
@@ -967,4 +1060,14 @@ void CGamePersistent::OnAssetsChanged()
 {
 	IGame_Persistent::OnAssetsChanged	();
 	CStringTable().rescan				();
+}
+
+std::string CGamePersistent::GetMoonPhase()
+{
+	return Level().GetMoonPhase();
+}
+
+u32 CGamePersistent::GetTimeHours()
+{
+	return Level().GetTimeHours();
 }

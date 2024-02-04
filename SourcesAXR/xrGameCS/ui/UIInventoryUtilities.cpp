@@ -129,9 +129,9 @@ bool InventoryUtilities::FreeRoom_inBelt	(TIItemContainer& item_list, PIItem _it
 	for(xr_vector<PIItem>::iterator it = item_list.begin(); (item_list.end() != it) && found_place; ++it) 
 	{
 		PIItem pItem = *it;
-		Ivector2 iWH = pItem->GetInvGridRect().rb; 
-		//��������� ����� �� ���������� �������,
-		//��������� ��������������� ������ ��������
+		Ivector2 iWH = pItem->GetInvGridRect().rb;
+		//проверить можно ли разместить элемент,
+		//проверяем последовательно каждую клеточку
 		found_place = false;
 	
 		for(i=0; (i<height - iWH.y +1) && !found_place; ++i)
@@ -159,7 +159,7 @@ bool InventoryUtilities::FreeRoom_inBelt	(TIItemContainer& item_list, PIItem _it
 			}
 		}
 
-		//���������� ������� �� ��������� �����
+		//разместить элемент на найденном месте
 		if(found_place)
 		{
 			for(k=0; k<iWH.y; ++k)
@@ -366,10 +366,31 @@ void InventoryUtilities::UpdateWeightStr(CUIStatic &wnd, CUIStatic &wnd_max, CIn
 	float max		= pInvOwner->MaxCarryWeight();
 
 	LPCSTR kg_str	= CStringTable().translate( "st_kg" ).c_str();
-	sprintf_s		(buf, "%.1f %s", total, kg_str);
+	xr_sprintf		(buf, "%.1f", total);
 	wnd.SetText		(buf);
 
-	sprintf_s		(buf, "(max %.1f %s)", max, kg_str);
+	xr_sprintf		(buf, "%s %.1f %s", "/", max, kg_str);
+	wnd_max.SetText	(buf);
+}
+
+void InventoryUtilities::UpdateCapacityStr(CUIStatic& wnd, CUIStatic& wnd_max, CInventoryOwner* pInvOwner)
+{
+ 	R_ASSERT		(pInvOwner);
+	string128		buf;
+
+	CActor* Actor = smart_cast<CActor*>(pInvOwner);
+
+	if (!Actor)
+		return;
+
+	float total		= Actor->GetInventoryFullness();
+	float max		= Actor->MaxCarryInvCapacity();
+
+	LPCSTR lit_str = CStringTable().translate( "st_liters" ).c_str();
+	xr_sprintf		(buf, "%.1f", total);
+	wnd.SetText		(buf);
+
+	xr_sprintf		(buf, "%s %.1f %s", "/", max, lit_str);
 	wnd_max.SetText	(buf);
 }
 
@@ -484,8 +505,8 @@ LPCSTR InventoryUtilities::GetGoodwillAsText(CHARACTER_GOODWILL goodwill)
 
 
 //////////////////////////////////////////////////////////////////////////
-// ����������� ������� ��� �������� info_portions ��� ������� ������ UI 
-// (��� tutorial)
+// специальная функция для передачи info_portions при нажатии кнопок UI 
+// (для tutorial)
 void InventoryUtilities::SendInfoToActor(LPCSTR info_id)
 {
 	if (GameID() != eGameIDSingle) return;

@@ -226,9 +226,11 @@ void CUIAmmoCellItem::UpdateItemText()
 CUIWeaponCellItem::CUIWeaponCellItem(CWeapon* itm)
 :inherited(itm)
 {
-	m_addons[eSilencer]		= NULL;
-	m_addons[eScope]		= NULL;
-	m_addons[eLauncher]		= NULL;
+	m_addons[eSilencer]		= nullptr;
+	m_addons[eScope]		= nullptr;
+	m_addons[eLauncher]		= nullptr;
+	m_addons[eLaser]		= nullptr;
+	m_addons[eTorch]		= nullptr;
 
 	if(itm->SilencerAttachable())
 		m_addon_offset[eSilencer].set(object()->GetSilencerX(), object()->GetSilencerY());
@@ -238,9 +240,15 @@ CUIWeaponCellItem::CUIWeaponCellItem(CWeapon* itm)
 
 	if(itm->GrenadeLauncherAttachable())
 		m_addon_offset[eLauncher].set(object()->GetGrenadeLauncherX(), object()->GetGrenadeLauncherY());
+
+	if (itm->LaserAttachable())
+		m_addon_offset[eLaser].set(object()->GetLaserDesignatorX(), object()->GetLaserDesignatorY());
+
+	if (itm->TacticalTorchAttachable())
+		m_addon_offset[eTorch].set(object()->GetTacticalTorchX(), object()->GetTacticalTorchY());
 }
 
-#include "../XrServerEntitiesCS/object_broker.h"
+#include "../xrServerEntitiesCS/object_broker.h"
 CUIWeaponCellItem::~CUIWeaponCellItem()
 {
 }
@@ -258,6 +266,16 @@ bool CUIWeaponCellItem::is_silencer()
 bool CUIWeaponCellItem::is_launcher()
 {
 	return object()->GrenadeLauncherAttachable()&&object()->IsGrenadeLauncherAttached();
+}
+
+bool CUIWeaponCellItem::is_laser()
+{
+	return object()->LaserAttachable() && object()->IsLaserAttached();
+}
+
+bool CUIWeaponCellItem::is_torch()
+{
+	return object()->TacticalTorchAttachable() && object()->IsTacticalTorchAttached();
 }
 
 void CUIWeaponCellItem::CreateIcon(eAddonType t)
@@ -292,6 +310,12 @@ void CUIWeaponCellItem::RefreshOffset()
 
 	if(object()->GrenadeLauncherAttachable())
 		m_addon_offset[eLauncher].set(object()->GetGrenadeLauncherX(), object()->GetGrenadeLauncherY());
+
+	if (object()->LaserAttachable())
+		m_addon_offset[eLaser].set(object()->GetLaserDesignatorX(), object()->GetLaserDesignatorY());
+
+	if (object()->TacticalTorchAttachable())
+		m_addon_offset[eTorch].set(object()->GetTacticalTorchX(), object()->GetTacticalTorchY());
 }
 
 void CUIWeaponCellItem::Draw()
@@ -360,6 +384,42 @@ void CUIWeaponCellItem::Update()
 				DestroyIcon(eLauncher);
 		}
 	}
+
+	if (object()->LaserAttachable())
+	{
+		if (object()->IsLaserAttached())
+		{
+			if (!GetIcon(eLaser) || bForceReInitAddons)
+			{
+				CreateIcon(eLaser);
+				RefreshOffset();
+				InitAddon(GetIcon(eLaser), *object()->GetLaserName(), m_addon_offset[eLaser], Heading());
+			}
+		}
+		else
+		{
+			if (m_addons[eLaser])
+				DestroyIcon(eLaser);
+		}
+	}
+
+	if (object()->TacticalTorchAttachable())
+	{
+		if (object()->IsTacticalTorchAttached())
+		{
+			if (!GetIcon(eTorch) || bForceReInitAddons)
+			{
+				CreateIcon(eTorch);
+				RefreshOffset();
+				InitAddon(GetIcon(eTorch), *object()->GetTacticalTorchName(), m_addon_offset[eTorch], Heading());
+			}
+		}
+		else
+		{
+			if (m_addons[eTorch])
+				DestroyIcon(eTorch);
+		}
+	}
 }
 
 void CUIWeaponCellItem::SetColor( u32 color )
@@ -377,6 +437,14 @@ void CUIWeaponCellItem::SetColor( u32 color )
 	{
 		m_addons[eLauncher]->SetColor( color );
 	}
+	if (m_addons[eLaser])
+	{
+		m_addons[eLaser]->SetColor(color);
+	}
+	if (m_addons[eTorch])
+	{
+		m_addons[eTorch]->SetTextureColor(color);
+	}
 }
 
 void CUIWeaponCellItem::OnAfterChild(CUIDragDropListEx* parent_list)
@@ -389,6 +457,12 @@ void CUIWeaponCellItem::OnAfterChild(CUIDragDropListEx* parent_list)
 
 	if(is_launcher() && GetIcon(eLauncher))
 		InitAddon	(GetIcon(eLauncher), *object()->GetGrenadeLauncherName(),m_addon_offset[eLauncher], parent_list->GetVerticalPlacement());
+
+	if (is_laser() && GetIcon(eLaser))
+		InitAddon	(GetIcon(eLaser), *object()->GetLaserName(), m_addon_offset[eLaser], parent_list->GetVerticalPlacement());
+
+	if (is_torch() && GetIcon(eTorch))
+		InitAddon	(GetIcon(eTorch), *object()->GetTacticalTorchName(), m_addon_offset[eTorch], parent_list->GetVerticalPlacement());
 }
 
 void CUIWeaponCellItem::InitAddon(CUIStatic* s, LPCSTR section, Fvector2 addon_offset, bool b_rotate, bool is_dragging, bool is_scope, bool is_silencer, bool is_gl)
@@ -418,25 +492,25 @@ void CUIWeaponCellItem::InitAddon(CUIStatic* s, LPCSTR section, Fvector2 addon_o
 
 		cell_size.mul			(base_scale);
 
-		if (is_dragging && Heading() && UI()->is_16_9_mode())
+		if (is_dragging && Heading() && UI().is_widescreen())
 		{
 			if (is_scope)
 			{
-				addon_offset.y *= UI()->get_current_kx();
+				addon_offset.y *= UI().get_current_kx();
 			}
 
 			if (is_silencer)
 			{
-				addon_offset.y *= UI()->get_current_kx() * 1.8f;
+				addon_offset.y *= UI().get_current_kx() * 1.8f;
 			}
 
 			if (is_gl)
 			{
-				addon_offset.y *= UI()->get_current_kx() * 1.5f;
+				addon_offset.y *= UI().get_current_kx() * 1.5f;
 			}
-			addon_offset.x *= UI()->get_current_kx() / 0.9f;
-			cell_size.x /= UI()->get_current_kx() * 1.6f;
-			cell_size.y *= UI()->get_current_kx() * 1.6f;
+			addon_offset.x *= UI().get_current_kx() / 0.9f;
+			cell_size.x /= UI().get_current_kx() * 1.6f;
+			cell_size.y *= UI().get_current_kx() * 1.6f;
 		}
 		if (!is_dragging)
 		{
@@ -447,7 +521,7 @@ void CUIWeaponCellItem::InitAddon(CUIStatic* s, LPCSTR section, Fvector2 addon_o
 				new_offset.x = addon_offset.y * base_scale.x;
 				new_offset.y = GetHeight() - addon_offset.x * base_scale.x - cell_size.x;
 				addon_offset = new_offset;
-				addon_offset.x *= UI()->get_current_kx();
+				addon_offset.x *= UI().get_current_kx();
 			}
 			else
 			{
@@ -464,7 +538,7 @@ void CUIWeaponCellItem::InitAddon(CUIStatic* s, LPCSTR section, Fvector2 addon_o
 				new_offset.x = addon_offset.y * base_scale.x;
 				new_offset.y = GetHeight() - addon_offset.x * base_scale.x - cell_size.x;
 				addon_offset = new_offset;
-				addon_offset.x *= UI()->get_current_kx();
+				addon_offset.x *= UI().get_current_kx();
 			}
 			else
 			{
@@ -519,6 +593,25 @@ CUIDragItem* CUIWeaponCellItem::CreateDragItem()
 		s->SetColor		(i->wnd()->GetColor());
 		i->wnd			()->AttachChild	(s);
 	}
+
+	if (GetIcon(eLaser))
+	{
+		s				= xr_new<CUIStatic>(); s->SetAutoDelete(true);
+		s->SetShader	(InventoryUtilities::GetEquipmentIconsShader());
+		InitAddon		(s, *object()->GetLaserName(), m_addon_offset[eLaser], false, true, is_scope(), is_silencer(), is_launcher());
+		s->SetColor		(i->wnd()->GetTextureColor());
+		i->wnd			()->AttachChild(s);
+	}
+
+	if (GetIcon(eTorch))
+	{
+		s				= xr_new<CUIStatic>(); s->SetAutoDelete(true);
+		s->SetShader	(InventoryUtilities::GetEquipmentIconsShader());
+		InitAddon		(s, *object()->GetTacticalTorchName(), m_addon_offset[eTorch], false, true, is_scope(), is_silencer(), is_launcher());
+		s->SetColor		(i->wnd()->GetTextureColor());
+		i->wnd			()->AttachChild(s);
+	}
+
 	return				i;
 }
 
@@ -557,7 +650,7 @@ void CBuyItemCustomDrawCell::OnDraw(CUICellItem* cell)
 {
 	Fvector2							pos;
 	cell->GetAbsolutePos				(pos);
-	UI()->ClientToScreenScaled			(pos, pos.x, pos.y);
+	UI().ClientToScreenScaled			(pos, pos.x, pos.y);
 	m_pFont->Out						(pos.x, pos.y, m_string);
 	m_pFont->OnRender					();
 }

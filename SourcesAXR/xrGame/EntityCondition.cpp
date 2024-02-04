@@ -11,6 +11,7 @@
 #include "../Include/xrRender/Kinematics.h"
 #include "object_broker.h"
 #include "ActorHelmet.h"
+#include "eatable_item.h"
 
 #define MAX_HEALTH 1.0f
 #define MIN_HEALTH -0.01f
@@ -649,17 +650,17 @@ void CEntityCondition::remove_links	(const CObject *object)
 	m_iWhoID				= m_object->ID();
 }
 
-bool CEntityCondition::ApplyInfluence(const SMedicineInfluenceValues& V, const shared_str& sect)
+bool CEntityCondition::ApplyInfluence(const SMedicineInfluenceValues& V, const shared_str& sect, CEatableItem* cur_eatable)
 {
 	ChangeHealth	(V.fHealth);
 	ChangePower		(V.fPower);
 	ChangeSatiety	(V.fSatiety);
-	ChangeRadiation	(V.fRadiation);
+	ChangeRadiation	(V.fRadiation + cur_eatable->m_fRadioactivity);
 	ChangeBleeding	(V.fWoundsHeal);
 	SetMaxPower		(GetMaxPower()+V.fMaxPowerUp);
 	ChangeAlcohol	(V.fAlcohol);
 	ChangeThirst	(V.fThirst);
-	ChangeIntoxication(V.fIntoxication);
+	ChangeIntoxication(V.fIntoxication + cur_eatable->m_fSpoliage);
 	ChangeSleepeness(V.fSleepeness);
 	ChangeAlcoholism(V.fAlcoholism);
 	ChangeHangover	(V.fHangover);
@@ -720,6 +721,17 @@ void SBooster::Load(const shared_str& sect, EBoostParams type)
 		case eBoostRadiationProtection: fBoostValue = pSettings->r_float(sect.c_str(), "boost_radiation_protection"); break;
 		case eBoostTelepaticProtection: fBoostValue = pSettings->r_float(sect.c_str(), "boost_telepat_protection"); break;
 		case eBoostChemicalBurnProtection: fBoostValue = pSettings->r_float(sect.c_str(), "boost_chemburn_protection"); break;
+		case eBoostSatietyRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_satiety_restore"); break;
+		case eBoostThirstRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_thirst_restore"); break;
+		case eBoostPsyHealthRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_psy_health_restore"); break;
+		case eBoostIntoxicationRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_intoxication_restore"); break;
+		case eBoostSleepenessRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_sleepeness_restore"); break;
+		case eBoostAlcoholRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_alcohol_restore"); break;
+		case eBoostAlcoholismRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_alcoholism_restore"); break;
+		case eBoostHangoverRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_hangover_restore"); break;
+		case eBoostDrugsRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_drugs_restore"); break;
+		case eBoostNarcotismRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_narcotism_restore"); break;
+		case eBoostWithdrawalRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_withdrawal_restore"); break;
 		case eBoostTimeFactor: fBoostValue = pSettings->r_float(sect.c_str(), "boost_time_factor"); break;
 		default: NODEFAULT;	
 	}

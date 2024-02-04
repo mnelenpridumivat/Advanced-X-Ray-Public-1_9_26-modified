@@ -72,22 +72,30 @@ public:
 	float					m_fMaxFilterCondition;
 	float					m_fFilterCondition;
 
+	float					m_fInventoryCapacity;
+
 	shared_str				m_BonesProtectionSect;
 	shared_str				m_NightVisionSect;
 	shared_str				m_PlayerHudSection;
 
 	xr_vector<shared_str>	m_SuitableFilters;
 	xr_vector<shared_str>	m_SuitableRepairKits;
+	xr_vector<std::pair<shared_str, int>> m_ItemsForRepair;
 
 	bool					bIsHelmetAvaliable;
 	bool					m_b_HasGlass;
 	bool					m_bUseFilter;
+	bool					m_bHasLSS;
+
+	shared_str				m_sShaderNightVisionSect;
 	u32						m_NightVisionType;
+	float					m_fNightVisionLumFactor;
 
 	virtual u32				ef_equipment_type		() const;
 	virtual	BOOL			BonePassBullet			(int boneID);
 	const shared_str&		GetFullIconName			() const	{ return m_full_icon_name; }
 	u32						get_artefact_count		() const	{ return m_artefact_count; }
+	float					GetInventoryCapacity	() const	{ return m_fInventoryCapacity; }
 
 	virtual BOOL			net_Spawn				(CSE_Abstract* DC);
 	virtual void			net_Export				(NET_Packet& P);
@@ -97,6 +105,8 @@ public:
 			void			AddBonesProtection		(LPCSTR bones_section);
 
 			IC int			GetOutfitNV_Type		() const { return m_NightVisionType; }
+
+			bool			IsHelmetAvaliable		() const { return bIsHelmetAvaliable; }
 
 	HitImmunity::HitTypeSVec m_ConstHitTypeProtection;
 	HitImmunity::HitTypeSVec m_HitTypeProtection;

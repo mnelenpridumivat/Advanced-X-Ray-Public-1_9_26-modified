@@ -13,9 +13,11 @@
 #include "../xrRenderDX10/3DFluid/dx103DFluidManager.h"
 #include "../xrRender/ShaderResourceTraits.h"
 #include "../../xrEngine/x_ray.h"
+#include "../../xrEngine/xr_ioconsole.h"
 #include "D3DX10Core.h"
 
-CRender										RImplementation;
+CRender RImplementation;
+extern ENGINE_API bool ps_enchanted_shaders;
 
 //////////////////////////////////////////////////////////////////////////
 class CGlow				: public IRender_Glow
@@ -343,6 +345,20 @@ void					CRender::create					()
 	o.dx10_minmax_sm_screenarea_threshold = 1600*1200;
 	o.dx10_winter_mode = !bWinterMode;
 	o.dx10_lowland_fog_mode = bLowlandFogWeather;
+	o.dx11_sss_addon_enabled = ps_r4_shaders_flags.test(R4FLAG_SSS_ADDON);
+	o.dx11_es_addon_enabled = ps_r4_shaders_flags.test(R4FLAG_ES_ADDON);
+
+	o.dx11_es_addon_enabled ? Console->Execute("shaders_preset es_shaders_preset") : Console->Execute("shaders_preset original_shaders_preset");
+
+	o.dx11_ss_sky_debanding		= ps_r4_shaders_flags.test(R4FLAG_SS_DEBANDING);
+	o.dx11_ss_flora_fix			= ps_r4_shaders_flags.test(R4FLAG_SS_FLORAFIX);
+	o.dx11_ss_fog				= ps_r4_shaders_flags.test(R4FLAG_SS_FOG);
+	o.dx11_ss_indirect_light	= ps_r4_shaders_flags.test(R4FLAG_SS_INDIRECT_LIGHT);
+	o.dx11_ss_new_gloss			= ps_r4_shaders_flags.test(R4FLAG_SS_NEW_GLOSS);
+	o.dx11_ss_sss				= ps_r4_shaders_flags.test(R4FLAG_SS_SSS);
+	o.dx11_ss_shadows			= ps_r4_shaders_flags.test(R4FLAG_SS_SHADOWS);
+	o.dx11_ss_lut				= ps_r4_shaders_flags.test(R4FLAG_SS_LUT);
+	o.dx11_ss_wind				= ps_r4_shaders_flags.test(R4FLAG_SS_WIND);
 
 	o.dx11_enable_tessellation = HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 && ps_r2_ls_flags_ext.test(R2FLAGEXT_ENABLE_TESSELLATION);
 
@@ -405,7 +421,6 @@ void					CRender::create					()
 
 	Models						= xr_new<CModelPool>		();
 	PSLibrary.OnCreate			();
-	HWOCC.occq_create			(occq_size);
 
 	rmNormal					();
 	marker						= 0;
@@ -449,6 +464,8 @@ void					CRender::destroy				()
 	r_dsgraph_destroy			();
 }
 
+extern u32 reset_frame;
+
 void CRender::reset_begin()
 {
 	// Update incremental shadowmap-visibility solver
@@ -466,6 +483,8 @@ void CRender::reset_begin()
 		}
 		Lights_LastFrame.clear	();
 	}
+
+	reset_frame = Device.dwFrame;
 
 	//AVO: let's reload details while changed details options on vid_restart
 	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)))
@@ -497,7 +516,6 @@ void CRender::reset_end()
 	//q_sync_point[1]->End();
 	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[0]));
 	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[1]));
-	HWOCC.occq_create			(occq_size);
 
 	Target						=	xr_new<CRenderTarget>	();
 
@@ -528,14 +546,14 @@ void CRender::OnFrame()
 void CRender::OnFrame()
 {
 	Models->DeleteQueue			();
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))	{
+	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))
+	{
 		// MT-details (@front)
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(Details,&CDetailManager::MT_CALC));
+		if (Details)
+			Details->StartAsync();
 
 		// MT-HOM (@front)
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(&HOM,&CHOM::MT_RENDER));
+		Device.seqParallel.insert(Device.seqParallel.begin(), fastdelegate::FastDelegate0<>(&HOM, &CHOM::MT_RENDER));
 	}
 
 	if (Details)
@@ -1385,7 +1403,39 @@ HRESULT	CRender::shader_compile			(
 	}
 	sh_name[len] = '0' + char(o.dx10_lowland_fog_mode); ++len;
 
+	if (o.dx11_es_addon_enabled)
+	{
+		defines[def_it].Name = "ENCHANTED_SHADERS_ENABLED";
+		defines[def_it].Definition = "1";
+		def_it++;
+
+		ps_enchanted_shaders = true;
+	}
+	sh_name[len] = '0' + char(o.dx11_es_addon_enabled); ++len;
+
+	if (o.dx11_es_addon_enabled && ps_r4_pseudo_pbr)
+	{
+		defines[def_it].Name = "ES_PSEUDO_PBR";
+		defines[def_it].Definition = "1";
+		def_it++;
+		sh_name[len] = '0' + char(ps_r4_pseudo_pbr); ++len;
+	}
+	else
+	{
+		sh_name[len] = '0';
+		++len;
+	}
+
+	if (o.dx11_sss_addon_enabled)
+	{
+		defines[def_it].Name = "SSS_ADDON_ENABLED";
+		defines[def_it].Definition = "1";
+		def_it++;
+	}
+	sh_name[len] = '0' + char(o.dx11_sss_addon_enabled); ++len;
+
 	// Тип низинного тумана
+	if (o.dx11_sss_addon_enabled && o.dx11_ss_fog)
 	{
 		sprintf_s(c_low_fog_type, "%d", ps_lowland_fog_type);
 		defines[def_it].Name = "LOWLAND_FOG_TYPE";
@@ -1393,24 +1443,26 @@ HRESULT	CRender::shader_compile			(
 		def_it++;
 		sh_name[len] = '0' + char(ps_lowland_fog_type); ++len;
 	}
+	else
+	{
+		sh_name[len] = '0';
+		++len;
+	}
 
-	if (ps_r4_ss_grass_collision)
+	if (o.dx11_sss_addon_enabled && ps_r4_ss_grass_collision)
 	{
 		defines[def_it].Name = "SSFX_INTER_GRASS";
 		defines[def_it].Definition = "1";
 		def_it++;
+		sh_name[len] = '0' + char(ps_r4_ss_grass_collision); ++len;
 	}
-	sh_name[len] = '0' + char(ps_r4_ss_grass_collision); ++len;
-
-	if (ps_r4_pseudo_pbr)
+	else
 	{
-		defines[def_it].Name = "ES_PSEUDO_PBR";
-		defines[def_it].Definition = "1";
-		def_it++;
+		sh_name[len] = '0';
+		++len;
 	}
-	sh_name[len] = '0' + char(ps_r4_pseudo_pbr); ++len;
 
-	if (ps_ssfx_rain_1.w > 0)
+	if (o.dx11_sss_addon_enabled && ps_ssfx_rain_1.w > 0)
 	{
 		xr_sprintf(c_rain_quality, "%d", u8(ps_ssfx_rain_1.w));
 		defines[def_it].Name = "SSFX_RAIN_QUALITY";
@@ -1425,7 +1477,7 @@ HRESULT	CRender::shader_compile			(
 		++len;
 	}
 
-	if (ps_ssfx_grass_interactive.y > 0)
+	if (o.dx11_sss_addon_enabled && ps_ssfx_grass_interactive.y > 0)
 	{
 		xr_sprintf(c_inter_grass, "%d", u8(ps_ssfx_grass_interactive.y));
 		defines[def_it].Name = "SSFX_INT_GRASS";
@@ -1433,6 +1485,123 @@ HRESULT	CRender::shader_compile			(
 		def_it++;
 		xr_strcat(sh_name, c_inter_grass);
 		len += xr_strlen(c_inter_grass);
+	}
+	else
+	{
+		sh_name[len] = '0';
+		++len;
+	}
+
+	if (o.dx11_sss_addon_enabled && o.dx11_ss_sky_debanding)
+	{
+		defines[def_it].Name = "SSFX_DEBAND";
+		defines[def_it].Definition = "1";
+		def_it++;
+		sh_name[len] = '0' + char(o.dx11_ss_sky_debanding); ++len;
+	}
+	else
+	{
+		sh_name[len] = '0';
+		++len;
+	}
+
+	if (o.dx11_sss_addon_enabled && o.dx11_ss_flora_fix)
+	{
+		defines[def_it].Name = "SSFX_FLORAFIX";
+		defines[def_it].Definition = "1";
+		def_it++;
+		sh_name[len] = '0' + char(o.dx11_ss_flora_fix); ++len;
+	}
+	else
+	{
+		sh_name[len] = '0';
+		++len;
+	}
+
+	if (o.dx11_sss_addon_enabled && o.dx11_ss_fog)
+	{
+		defines[def_it].Name = "SSFX_FOG";
+		defines[def_it].Definition = "1";
+		def_it++;
+		sh_name[len] = '0' + char(o.dx11_ss_fog); ++len;
+	}
+	else
+	{
+		sh_name[len] = '0';
+		++len;
+	}
+
+	if (o.dx11_sss_addon_enabled && o.dx11_ss_indirect_light)
+	{
+		defines[def_it].Name = "SSFX_INDIRECT_LIGHT";
+		defines[def_it].Definition = "1";
+		def_it++;
+		sh_name[len] = '0' + char(o.dx11_ss_indirect_light); ++len;
+	}
+	else
+	{
+		sh_name[len] = '0';
+		++len;
+	}
+
+	if (o.dx11_sss_addon_enabled && o.dx11_ss_new_gloss)
+	{
+		defines[def_it].Name = "SSFX_NEWGLOSS";
+		defines[def_it].Definition = "1";
+		def_it++;
+		sh_name[len] = '0' + char(o.dx11_ss_new_gloss); ++len;
+	}
+	else
+	{
+		sh_name[len] = '0';
+		++len;
+	}
+
+	if (o.dx11_sss_addon_enabled && o.dx11_ss_sss)
+	{
+		defines[def_it].Name = "SSFX_SSS";
+		defines[def_it].Definition = "1";
+		def_it++;
+		sh_name[len] = '0' + char(o.dx11_ss_sss); ++len;
+	}
+	else
+	{
+		sh_name[len] = '0';
+		++len;
+	}
+
+	if (o.dx11_sss_addon_enabled && o.dx11_ss_shadows)
+	{
+		defines[def_it].Name = "SSFX_SHADOWS";
+		defines[def_it].Definition = "1";
+		def_it++;
+		sh_name[len] = '0' + char(o.dx11_ss_shadows); ++len;
+	}
+	else
+	{
+		sh_name[len] = '0';
+		++len;
+	}
+
+	if (o.dx11_sss_addon_enabled && o.dx11_ss_lut)
+	{
+		defines[def_it].Name = "SSFX_LUT";
+		defines[def_it].Definition = "1";
+		def_it++;
+		sh_name[len] = '0' + char(o.dx11_ss_lut); ++len;
+	}
+	else
+	{
+		sh_name[len] = '0';
+		++len;
+	}
+
+	if (o.dx11_sss_addon_enabled && o.dx11_ss_wind)
+	{
+		defines[def_it].Name = "SSFX_WIND";
+		defines[def_it].Definition = "1";
+		def_it++;
+		sh_name[len] = '0' + char(o.dx11_ss_wind); ++len;
 	}
 	else
 	{

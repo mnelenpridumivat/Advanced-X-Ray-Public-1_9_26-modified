@@ -17,6 +17,8 @@
 #include "../Silencer.h"
 #include "../Scope.h"
 #include "../GrenadeLauncher.h"
+#include "../LaserDesignator.h"
+#include "../TacticalTorch.h"
 #include "../trade_parameters.h"
 #include "../ActorHelmet.h"
 #include "../CustomOutfit.h"
@@ -38,13 +40,13 @@
 #include "UIMainIngameWnd.h"
 #include "../Trade.h"
 #include "AdvancedXrayGameConstants.h"
-#include "WeaponKnife.h"
-#include "WeaponBinoculars.h"
-#include "WeaponPistol.h"
-#include "Torch.h"
-#include "Backpack.h"
-#include "AnomalyDetector.h"
-#include "PDA.h"
+#include "../WeaponKnife.h"
+#include "../WeaponBinoculars.h"
+#include "../WeaponPistol.h"
+#include "../Torch.h"
+#include "../CustomBackpack.h"
+#include "../AnomalyDetector.h"
+#include "../PDA.h"
 #include "../xrEngine/x_ray.h"
 
 extern BOOL UIRedraw;
@@ -64,7 +66,7 @@ void CUIActorMenu::SetActor(CInventoryOwner* io)
 	if ( IsGameTypeSingle() )
 	{
 		if ( io )
-			m_ActorCharacterInfo->InitCharacter	(m_pActorInvOwner);
+			m_ActorCharacterInfo->InitCharacter(m_pActorInvOwner);
 		else
 			m_ActorCharacterInfo->ClearInfo();
 	}
@@ -210,7 +212,6 @@ void CUIActorMenu::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 
 void CUIActorMenu::Show(bool status)
 {
-	CActor* pActor = smart_cast<CActor*>(Level().CurrentEntity());
 	CCustomDetector* pDet = smart_cast<CCustomDetector*>(Actor()->inventory().ItemFromSlot(DETECTOR_SLOT));
 	inherited::Show							(status);
 
@@ -219,27 +220,25 @@ void CUIActorMenu::Show(bool status)
 		SetMenuMode							(m_currMenuMode);
 		PlaySnd								(eSndOpen);
 		m_ActorStateInfo->UpdateActorInfo	(m_pActorInvOwner);
-
-		if (pActor && GameConstants::GetHideWeaponInInventory())
-		{
-			Actor()->SetWeaponHideState(INV_STATE_BLOCK_ALL, true);
-
-			if (pDet)
-				pDet->HideDetector(true);
-
-			Actor()->block_action(kDETECTOR);
-		}
 	}
 	else
 	{
 		PlaySnd								(eSndClose);
 		SetMenuMode							(mmUndefined);
+		clear_highlight_lists				();
+	}
+	if (Actor() && GameConstants::GetHideWeaponInInventory())
+	{
+		Actor()->SetWeaponHideState(INV_STATE_BLOCK_ALL, status);
 
-		if (pActor && GameConstants::GetHideWeaponInInventory())
+		if(status)
 		{
-			Actor()->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
-			Actor()->unblock_action(kDETECTOR);
+			if (pDet)
+				pDet->HideDetector(true);
+			Actor()->block_action(kDETECTOR);
 		}
+		else
+			Actor()->unblock_action(kDETECTOR);
 	}
 	m_ActorStateInfo->Show					(status);
 }
@@ -297,7 +296,7 @@ void CUIActorMenu::Update()
 	m_hint_wnd->Update();
 }
 
-bool CUIActorMenu::StopAnyMove()  // true = ????? ?? ???? ??? ???????? ????
+bool CUIActorMenu::StopAnyMove()  // true = актёр не идёт при открытом меню
 {
 	switch ( m_currMenuMode )
 	{
@@ -365,12 +364,14 @@ EDDListType CUIActorMenu::GetListType(CUIDragDropListEx* l)
 
 	if (GameConstants::GetKnifeSlotEnabled())
 	{
-		if(l == m_pInventoryKnifeList) return iActorSlot;
+		if (l == m_pInventoryKnifeList)
+			return iActorSlot;
 	}
 
 	if (GameConstants::GetBinocularSlotEnabled())
 	{
-		if (l == m_pInventoryBinocularList) return iActorSlot;
+		if (l == m_pInventoryBinocularList)
+			return iActorSlot;
 	}
 
 	if (GameConstants::GetTorchSlotEnabled())
@@ -532,7 +533,6 @@ void CUIActorMenu::InfoCurItem( CUICellItem* cell_item )
 	else
 		m_ItemInfo->InitItem	( cell_item, compare_item, static_cast<u32>(-1));
 
-//	m_ItemInfo->InitItem	( current_item, compare_item );
 	float dx_pos = GetWndRect().left;
 	fit_in_rect(m_ItemInfo, Frect().set( 0.0f, 0.0f, UI_BASE_WIDTH - dx_pos, UI_BASE_HEIGHT ), 10.0f, dx_pos );
 }
@@ -673,7 +673,7 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 	CWeaponKnife* knife = smart_cast<CWeaponKnife*>(item);
 	CWeaponBinoculars* binoculars = smart_cast<CWeaponBinoculars*>(item);
 	CTorch* torch = smart_cast<CTorch*>(item);
-	CBackpack* backpack = smart_cast<CBackpack*>(item);
+	CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(item);
 	CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly*>(item);
 	CPda* pda = smart_cast<CPda*>(item);
 	CWeaponPistol* pistol = smart_cast<CWeaponPistol*>(item);
@@ -1008,6 +1008,21 @@ bool CUIActorMenu::highlight_addons_for_weapon( PIItem weapon_item, CUICellItem*
 		ci->m_select_armament = true;
 		return true;
 	}
+
+	CLaserDesignator* pLaser = smart_cast<CLaserDesignator*>(item);
+	if (pLaser && weapon_item->CanAttach(pLaser))
+	{
+		ci->m_select_armament = true;
+		return true;
+	}
+
+	CTacticalTorch* pTacticalTorch = smart_cast<CTacticalTorch*>(item);
+	if (pTacticalTorch && weapon_item->CanAttach(pTacticalTorch))
+	{
+		ci->m_select_armament = true;
+		return true;
+	}
+
 	return false;
 }
 
@@ -1019,8 +1034,10 @@ void CUIActorMenu::highlight_weapons_for_addon( PIItem addon_item, CUIDragDropLi
 	CScope*				pScope				= smart_cast<CScope*>			(addon_item);
 	CSilencer*			pSilencer			= smart_cast<CSilencer*>		(addon_item);
 	CGrenadeLauncher*	pGrenadeLauncher	= smart_cast<CGrenadeLauncher*>	(addon_item);
+	CLaserDesignator*	pLaser				= smart_cast<CLaserDesignator*>	(addon_item);
+	CTacticalTorch*		pTacticalTorch		= smart_cast<CTacticalTorch*>	(addon_item);
 
-	if ( !pScope && !pSilencer && !pGrenadeLauncher )
+	if (!pScope && !pSilencer && !pGrenadeLauncher && !pLaser && !pTacticalTorch)
 	{
 		return;
 	}
@@ -1051,6 +1068,16 @@ void CUIActorMenu::highlight_weapons_for_addon( PIItem addon_item, CUIDragDropLi
 			continue;
 		}
 		if ( pGrenadeLauncher && weapon->CanAttach(pGrenadeLauncher) )
+		{
+			ci->m_select_armament = true;
+			continue;
+		}
+		if (pLaser && weapon->CanAttach(pLaser))
+		{
+			ci->m_select_armament = true;
+			continue;
+		}
+		if (pTacticalTorch && weapon->CanAttach(pTacticalTorch))
 		{
 			ci->m_select_armament = true;
 			continue;

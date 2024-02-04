@@ -1,4 +1,4 @@
-﻿// CustomMonster.cpp: implementation of the CCustomMonster class.
+// CustomMonster.cpp: implementation of the CCustomMonster class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -376,7 +376,7 @@ void CCustomMonster::shedule_Update	( u32 DT )
 			//////////////////////////////////////
 			//Fvector C; float R;
 			//////////////////////////////////////
-			// ? ????? - ????!!!! (???? :-))))
+			// С Олеся - ПИВО!!!! (Диме :-))))
 			// m_PhysicMovementControl->GetBoundingSphere	(C,R);
 			//////////////////////////////////////
 			//Center(C);
@@ -606,23 +606,7 @@ void CCustomMonster::update_range_fov	(float &new_range, float &new_fov, float s
 	// 300=standart, 50=super-fog
 
 	new_fov									= start_fov;
-	new_range								= 
-		start_range
-		*
-		(
-			_min(m_far_plane_factor*current_far_plane,standard_far_plane)
-			/
-			standard_far_plane
-		)
-		*
-		(
-			1.f
-			/
-			(
-				1.f + m_fog_density_factor*current_fog_density
-			)
-		)
-	;
+	new_range								= start_range * (_min(m_far_plane_factor * current_far_plane, standard_far_plane) / standard_far_plane) * (1.f / ( 1.f + m_fog_density_factor*current_fog_density));
 	clamp(new_range, 0.f, current_far_plane);
 }
 
@@ -846,12 +830,12 @@ void CCustomMonster::PitchCorrection()
 	Fvector position_on_plane;
 	P.project(position_on_plane,Position());
 
-	// ??????? ???????? ?????, ??????? ?? ??????? ???????? ???????????
+	// находим проекцию точки, лежащей на векторе текущего направления
 	Fvector dir_point, proj_point;
 	dir_point.mad(position_on_plane, Direction(), 1.f);
 	P.project(proj_point,dir_point);
 	
-	// ???????? ??????? ?????? ???????????
+	// получаем искомый вектор направления
 	Fvector target_dir;
 	target_dir.sub(proj_point,position_on_plane);
 
@@ -1115,16 +1099,16 @@ void CCustomMonster::OnRender()
 		xr_vector<u32>::const_iterator i		= path.begin();
 		xr_vector<u32>::const_iterator const e	= path.end();
 		for ( ; i != e; ++i )
-			Level().debug_renderer().draw_aabb	( ai().level_graph().vertex_position(*i), radius, radius, radius, D3DCOLOR_XRGB(255,22,255) );
+			Level().debug_renderer().draw_aabb	( ai().level_graph().vertex_position(*i), radius, radius, radius, color_xrgb(255,22,255) );
 	}
 
 	for (int i=0; i<1; ++i) {
 		const xr_vector<CDetailPathManager::STravelPoint>		&keys	= !i ? movement().detail().m_key_points					: movement().detail().m_key_points;
 		const xr_vector<DetailPathManager::STravelPathPoint>	&path	= !i ? movement().detail().path()	: movement().detail().path();
-		u32									color0	= !i ? D3DCOLOR_XRGB(0,255,0)		: D3DCOLOR_XRGB(0,0,255);
-		u32									color1	= !i ? D3DCOLOR_XRGB(255,0,0)		: D3DCOLOR_XRGB(255,255,0);
-		u32									color2	= !i ? D3DCOLOR_XRGB(0,0,255)		: D3DCOLOR_XRGB(0,255,255);
-		u32									color3	= !i ? D3DCOLOR_XRGB(255,255,255)	: D3DCOLOR_XRGB(255,0,255);
+		u32									color0	= !i ? color_xrgb(0,255,0)		: color_xrgb(0,0,255);
+		u32									color1	= !i ? color_xrgb(255,0,0)		: color_xrgb(255,255,0);
+		u32									color2	= !i ? color_xrgb(0,0,255)		: color_xrgb(0,255,255);
+		u32									color3	= !i ? color_xrgb(255,255,255)	: color_xrgb(255,0,255);
 		float								radius0 = !i ? .1f : .15f;
 		float								radius1 = !i ? .2f : .3f;
 		{
@@ -1133,7 +1117,7 @@ void CCustomMonster::OnRender()
 				const DetailPathManager::STravelPathPoint&	N2 = path[I];	Fvector	P2; P2.set(N2.position); P2.y+=0.1f;
 				if (!fis_zero(P1.distance_to_sqr(P2),EPS_L))
 					Level().debug_renderer().draw_line			(Fidentity,P1,P2,color0);
-				if ((path.size() - 1) == I) // ????????? box?
+				if ((path.size() - 1) == I) // песледний box?
 					Level().debug_renderer().draw_aabb			(P1,radius0,radius0,radius0,color1);
 				else 
 					Level().debug_renderer().draw_aabb			(P1,radius0,radius0,radius0,color2);
@@ -1163,19 +1147,19 @@ void CCustomMonster::OnRender()
 
 		Fvector				P1 = ai().level_graph().vertex_position(node);
 		P1.y				+= 1.f;
-		Level().debug_renderer().draw_aabb	(P1,.5f,1.f,.5f,D3DCOLOR_XRGB(255,0,0));
+		Level().debug_renderer().draw_aabb	(P1,.5f,1.f,.5f,color_xrgb(255,0,0));
 	}
 	if (g_Alive()) {
 		if (memory().enemy().selected()) {
 			Fvector				P1 = memory().memory(memory().enemy().selected()).m_object_params.m_position;
 			P1.y				+= 1.f;
-			Level().debug_renderer().draw_aabb	(P1,1.f,1.f,1.f,D3DCOLOR_XRGB(0,0,0));
+			Level().debug_renderer().draw_aabb	(P1,1.f,1.f,1.f,color_xrgb(0,0,0));
 		}
 
 		if (memory().danger().selected()) {
 			Fvector				P1 = memory().danger().selected()->position();
 			P1.y				+= 1.f;
-			Level().debug_renderer().draw_aabb	(P1,1.f,1.f,1.f,D3DCOLOR_XRGB(0,0,0));
+			Level().debug_renderer().draw_aabb	(P1,1.f,1.f,1.f,color_xrgb(0,0,0));
 		}
 	}
 
@@ -1264,11 +1248,11 @@ void CCustomMonster::OnRender()
 										  (- pick.x_axis * pick.sizes.x * 0.5f) - (pick.y_axis * pick.sizes.y * 0.5f), };
 
 		Fvector const z_normal		=	- pick.z_axis * 0.1 * inv_nz;
-		Level().debug_renderer().draw_line	(Fidentity,traj_start,traj_start + z_normal,D3DCOLOR_XRGB(128,255,128));
-		Level().debug_renderer().draw_line	(Fidentity,traj_end,traj_end - z_normal,D3DCOLOR_XRGB(128,255,128));
+		Level().debug_renderer().draw_line	(Fidentity,traj_start,traj_start + z_normal,color_xrgb(128,255,128));
+		Level().debug_renderer().draw_line	(Fidentity,traj_end,traj_end - z_normal,color_xrgb(128,255,128));
 
 		for ( u32 i=0; i<sizeof(z_offs)/sizeof(z_offs[0]); ++i )
-			Level().debug_renderer().draw_line	(Fidentity,traj_start + z_offs[i],traj_end+ z_offs[i],D3DCOLOR_XRGB(255,255,128));
+			Level().debug_renderer().draw_line	(Fidentity,traj_start + z_offs[i],traj_end+ z_offs[i],color_xrgb(255,255,128));
 
 		Fvector const hor_start		=	pick.center	- pick.x_axis * pick.sizes.x * 0.5f * inv_x;
 		Fvector const hor_end		=	pick.center	+ pick.x_axis * pick.sizes.x * 0.5f * inv_x;
@@ -1279,11 +1263,11 @@ void CCustomMonster::OnRender()
 										  (- pick.y_axis * pick.sizes.y * 0.5f) - (pick.z_axis * pick.sizes.z * 0.5f), };
 
 		Fvector const x_normal		=	- pick.x_axis * 0.1 * inv_nx;
-		Level().debug_renderer().draw_line	(Fidentity,hor_start,hor_start + x_normal,D3DCOLOR_XRGB(128,255,128));
-		Level().debug_renderer().draw_line	(Fidentity,hor_end,hor_end - x_normal,D3DCOLOR_XRGB(128,255,128));
+		Level().debug_renderer().draw_line	(Fidentity,hor_start,hor_start + x_normal,color_xrgb(128,255,128));
+		Level().debug_renderer().draw_line	(Fidentity,hor_end,hor_end - x_normal,color_xrgb(128,255,128));
 
 		for ( u32 i=0; i<sizeof(x_offs)/sizeof(x_offs[0]); ++i )
-			Level().debug_renderer().draw_line	(Fidentity,hor_start + x_offs[i],hor_end+ x_offs[i],D3DCOLOR_XRGB(255,255,128));
+			Level().debug_renderer().draw_line	(Fidentity,hor_start + x_offs[i],hor_end+ x_offs[i],color_xrgb(255,255,128));
 
 		Fvector const ver_start		=	pick.center	- pick.y_axis * pick.sizes.y * 0.5f * inv_y;
 		Fvector const ver_end		=	pick.center	+ pick.y_axis * pick.sizes.y * 0.5f * inv_y;
@@ -1294,13 +1278,13 @@ void CCustomMonster::OnRender()
 										  (- pick.x_axis * pick.sizes.x * 0.5f) - (pick.z_axis * pick.sizes.z * 0.5f), };
 
 		Fvector const y_normal		=	- pick.y_axis * 0.1 * inv_ny;
-		Level().debug_renderer().draw_line	(Fidentity,ver_start,ver_start + y_normal,D3DCOLOR_XRGB(128,255,128));
-		Level().debug_renderer().draw_line	(Fidentity,ver_end,ver_end - y_normal,D3DCOLOR_XRGB(128,255,128));
+		Level().debug_renderer().draw_line	(Fidentity,ver_start,ver_start + y_normal,color_xrgb(128,255,128));
+		Level().debug_renderer().draw_line	(Fidentity,ver_end,ver_end - y_normal,color_xrgb(128,255,128));
 
 		for ( u32 i=0; i<sizeof(y_offs)/sizeof(y_offs[0]); ++i )
-			Level().debug_renderer().draw_line	(Fidentity,ver_start + y_offs[i],ver_end+ y_offs[i],D3DCOLOR_XRGB(255,255,128));
+			Level().debug_renderer().draw_line	(Fidentity,ver_start + y_offs[i],ver_end+ y_offs[i],color_xrgb(255,255,128));
 
-		Level().debug_renderer().draw_line	(Fidentity,traj_start,traj_end,D3DCOLOR_XRGB(255,0,0));
+		Level().debug_renderer().draw_line	(Fidentity,traj_start,traj_end,color_xrgb(255,0,0));
 	}
 
 	for ( u32 i=0; i<m_jump_collide_tris.size(); i+=3 )
@@ -1312,9 +1296,9 @@ void CCustomMonster::OnRender()
 		Fmatrix unit;
 		unit.identity			();
 
-		Level().debug_renderer().draw_line(unit, v1, v2, D3DCOLOR_XRGB(255,255,255));
-		Level().debug_renderer().draw_line(unit, v1, v3, D3DCOLOR_XRGB(255,255,255));
-		Level().debug_renderer().draw_line(unit, v2, v3, D3DCOLOR_XRGB(255,255,255));
+		Level().debug_renderer().draw_line(unit, v1, v2, color_xrgb(255,255,255));
+		Level().debug_renderer().draw_line(unit, v1, v3, color_xrgb(255,255,255));
+		Level().debug_renderer().draw_line(unit, v2, v3, color_xrgb(255,255,255));
 	}
 }
 #endif // DEBUG

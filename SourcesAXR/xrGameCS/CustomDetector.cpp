@@ -28,7 +28,7 @@ ITEM_INFO::~ITEM_INFO()
 
 bool CCustomDetector::CheckCompatibilityInt(CHudItem* itm, u16* slot_to_activate)
 {
-	if (itm == NULL)
+	if(itm==NULL)
 		return true;
 
 	CInventoryItem& iitm = itm->item();
@@ -99,8 +99,8 @@ void CCustomDetector::ShowDetector(bool bFastMode)
 
 void CCustomDetector::ToggleDetector(bool bFastMode)
 {
-	m_bNeedActivation = false;
-	m_bFastAnimMode = bFastMode;
+	m_bNeedActivation		= false;
+	m_bFastAnimMode			= bFastMode;
 
 	if (GetState() == eHidden)
 	{
@@ -117,14 +117,13 @@ void CCustomDetector::ToggleDetector(bool bFastMode)
 			}
 			else
 			{
-				SwitchState(eShowing);
-				TurnDetectorInternal(true);
+				SwitchState				(eShowing);
+				TurnDetectorInternal	(true);
 			}
 		}
 	}
-	else
-		if (GetState() == eIdle)
-			SwitchState(eHiding);
+	else if (GetState() == eIdle)
+		SwitchState(eHiding);
 }
 
 void CCustomDetector::OnStateSwitch(u32 S)
@@ -137,13 +136,13 @@ void CCustomDetector::OnStateSwitch(u32 S)
 		{
 			g_player_hud->attach_item	(this);
 			m_sounds.PlaySound			("sndShow", Fvector().set(0,0,0), this, true, false);
-			PlayHUDMotion				(m_bFastAnimMode?"anm_show_fast":"anm_show", TRUE, this, GetState());
+			PlayHUDMotion				(m_bFastAnimMode ? "anm_show_fast" : "anm_show", FALSE/*TRUE*/, this, GetState());
 			SetPending					(TRUE);
 		}break;
 	case eHiding:
 		{
 			m_sounds.PlaySound			("sndHide", Fvector().set(0,0,0), this, true, false);
-			PlayHUDMotion				(m_bFastAnimMode?"anm_hide_fast":"anm_hide", TRUE, this, GetState());
+			PlayHUDMotion				(m_bFastAnimMode ? "anm_hide_fast" : "anm_hide", FALSE/*TRUE*/, this, GetState());
 			SetPending					(TRUE);
 		}break;
 	case eIdle:
@@ -191,10 +190,6 @@ CCustomDetector::CCustomDetector()
 	m_ui				= NULL;
 	m_bFastAnimMode		= false;
 	m_bNeedActivation	= false;
-
-	m_fMaxChargeLevel	= 0.0f;
-	m_fCurrentChargeLevel = 1.0f;
-	m_fUnchargeSpeed	= 0.0f;
 
 	flash_light_bone	= "light_bone_1";
 	m_flash_bone_id		= BI_NONE;
@@ -328,7 +323,8 @@ bool CCustomDetector::IsWorking()
 void CCustomDetector::UpfateWork()
 {
 	if (m_fCurrentChargeLevel > 0)
-	UpdateAf				();
+		UpdateAf();
+
 	m_ui->update			();
 }
 
@@ -462,8 +458,8 @@ void CCustomDetector::UpdateVisibility()
 		bool bClimb = ((Actor()->MovingState() & mcClimb) != 0);
 		if (bClimb)
 		{
-			HideDetector(true);
-			m_bNeedActivation = true;
+			HideDetector		(true);
+			m_bNeedActivation	= true;
 		}
 		else
 		{
@@ -473,23 +469,23 @@ void CCustomDetector::UpdateVisibility()
 				u32 state = wpn->GetState();
 				if (wpn->IsZoomed() || state == CWeapon::eReload || state == CWeapon::eSwitch)
 				{
-					HideDetector(true);
-					m_bNeedActivation = true;
+					HideDetector		(true);
+					m_bNeedActivation	= true;
 				}
 			}
 		}
 	}
 	else if (m_bNeedActivation)
 	{
-		attachable_hud_item* i0 = g_player_hud->attached_item(0);
-		bool bClimb = ((Actor()->MovingState() & mcClimb) != 0);
+		attachable_hud_item* i0		= g_player_hud->attached_item(0);
+		bool bClimb					= ((Actor()->MovingState()&mcClimb) != 0);
 		if (!bClimb)
 		{
-			CHudItem* huditem = (i0) ? i0->m_parent_hud_item : NULL;
-			bool bChecked = !huditem || CheckCompatibilityInt(huditem, 0);
-
+			CHudItem* huditem		= (i0) ? i0->m_parent_hud_item : NULL;
+			bool bChecked			= !huditem || CheckCompatibilityInt(huditem, 0);
+			
 			if (bChecked)
-				ShowDetector(true);
+				ShowDetector		(true);
 		}
 	}
 }
@@ -502,8 +498,9 @@ void CCustomDetector::UpdateCL()
 	if (GameConstants::GetArtDetectorUseBattery())
 		UpdateChargeLevel();
 
-	UpdateVisibility		();
+	if(H_Parent()!=Level().CurrentEntity() )			return;
 
+	UpdateVisibility		();
 	if( !IsWorking() )		return;
 	UpfateWork				();
 }
@@ -524,12 +521,13 @@ void CCustomDetector::OnH_B_Independent(bool just_before_destroy)
 void CCustomDetector::OnMoveToRuck(EItemPlace prev)
 {
 	inherited::OnMoveToRuck	(prev);
-	if(GetState()==eIdle)
+	if(prev == EItemPlaceSlot)
 	{
 		SwitchState					(eHidden);
 		g_player_hud->detach_item	(this);
 	}
-	TurnDetectorInternal	(false);
+	TurnDetectorInternal			(false);
+	StopCurrentAnimWithoutCallback	();
 }
 
 void CCustomDetector::OnMoveToSlot()
@@ -561,14 +559,11 @@ void CCustomDetector::UpdateNightVisionMode(bool b_on)
 void CCustomDetector::save(NET_Packet &output_packet)
 {
 	inherited::save(output_packet);
-	save_data(m_fCurrentChargeLevel, output_packet);
-
 }
 
 void CCustomDetector::load(IReader &input_packet)
 {
 	inherited::load(input_packet);
-	load_data(m_fCurrentChargeLevel, input_packet);
 }
 
 void CCustomDetector::UpdateChargeLevel(void)
@@ -576,19 +571,8 @@ void CCustomDetector::UpdateChargeLevel(void)
 	if (IsWorking())
 	{
 		float uncharge_coef = (m_fUnchargeSpeed / 16) * Device.fTimeDelta;
-
-		m_fCurrentChargeLevel -= uncharge_coef;
-
-		float condition = 1.f * m_fCurrentChargeLevel;
-		SetCondition(condition);
-
-		//Msg("Заряд детектора: %f", m_fCurrentChargeLevel); //Для тестов
-
-		clamp(m_fCurrentChargeLevel, 0.f, m_fMaxChargeLevel);
-		SetCondition(m_fCurrentChargeLevel);
+		ChangeChargeLevel(-uncharge_coef);
 	}
-	/*else
-		SetCondition(m_fCurrentChargeLevel);*/
 }
 
 float CCustomDetector::GetUnchargeSpeed() const
@@ -607,7 +591,7 @@ void CCustomDetector::SetCurrentChargeLevel(float val)
 	clamp(m_fCurrentChargeLevel, 0.f, m_fMaxChargeLevel);
 
 	float condition = 1.f * m_fCurrentChargeLevel / m_fUnchargeSpeed;
-	SetCondition(condition);
+	SetChargeLevel(condition);
 }
 
 void CCustomDetector::Recharge(float val)
@@ -615,22 +599,21 @@ void CCustomDetector::Recharge(float val)
 	m_fCurrentChargeLevel += val;
 	clamp(m_fCurrentChargeLevel, 0.f, m_fMaxChargeLevel);
 
-	SetCondition(m_fCurrentChargeLevel);
+	SetChargeLevel(m_fCurrentChargeLevel);
 
 	//Msg("Переданый в детектор заряд: %f", val); //Для Тестов
 }
 
-BOOL CAfList::feel_touch_contact	(CObject* O)
+BOOL CAfList<CObject>::feel_touch_contact	(CObject* O)
 {
-	CLASS_ID	clsid			= O->CLS_ID;
-	TypesMapIt it				= m_TypesMap.find(clsid);
+	TypesMapIt it				= m_TypesMap.find(O->cNameSect());
 
 	bool res					 = (it!=m_TypesMap.end());
 	if(res)
 	{
 		CArtefact*	pAf				= smart_cast<CArtefact*>(O);
 		
-		if(pAf->GetAfRank()>m_af_rank)
+		if (pAf && pAf->GetAfRank()>m_af_rank)
 			res = false;
 	}
 	return						res;
@@ -641,10 +624,11 @@ bool CCustomDetector::install_upgrade_impl(LPCSTR section, bool test)
 	//Msg("Detector Upgrade");
 	bool result = inherited::install_upgrade_impl(section, test);
 
-	result |= process_if_exists(section, "af_radius", &CInifile::r_float, m_fAfDetectRadius, test);
-	result |= process_if_exists(section, "af_vis_radius", &CInifile::r_float, m_fAfVisRadius, test);
-	result |= process_if_exists(section, "max_charge_level", &CInifile::r_float, m_fMaxChargeLevel, test);
-	result |= process_if_exists(section, "uncharge_speed", &CInifile::r_float, m_fUnchargeSpeed, test);
+	result |= process_if_exists(section, "af_radius",			&CInifile::r_float, m_fAfDetectRadius,	test);
+	result |= process_if_exists(section, "af_vis_radius",		&CInifile::r_float, m_fAfVisRadius,		test);
+	result |= process_if_exists(section, "max_charge_level",	&CInifile::r_float, m_fMaxChargeLevel,	test);
+	result |= process_if_exists(section, "uncharge_speed",		&CInifile::r_float, m_fUnchargeSpeed,	test);
+	result |= process_if_exists(section, "light_range",			&CInifile::r_float, m_fConstLightRange,	test);
 
 	LPCSTR str;
 

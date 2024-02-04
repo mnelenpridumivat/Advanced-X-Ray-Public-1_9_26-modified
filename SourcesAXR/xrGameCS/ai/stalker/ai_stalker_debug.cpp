@@ -55,6 +55,7 @@
 #include "../../aimers_weapon.h"
 #include "../../aimers_bone.h"
 #include "../../smart_cover_planner_target_selector.h"
+#include "../../doors_actor.h"
 
 CActor *g_debug_actor = 0;
 
@@ -963,11 +964,11 @@ void CAI_Stalker::dbg_draw_vision	()
 
 	CNotYetVisibleObject		*object = memory().visual().not_yet_visible_object(smart_cast<CGameObject*>(Level().CurrentEntity()));
 	string64					out_text;
-	sprintf_s						(out_text,"%.2f",object ? object->m_value : 0.f);
+	xr_sprintf						(out_text,"%.2f",object ? object->m_value : 0.f);
 
-	HUD().Font().pFontMedium->SetColor	(color_rgba(255,0,0,95));
-	HUD().Font().pFontMedium->OutSet	(x,y);
-	HUD().Font().pFontMedium->OutNext	(out_text);
+	UI().Font().pFontMedium->SetColor	(color_rgba(255,0,0,95));
+	UI().Font().pFontMedium->OutSet	(x,y);
+	UI().Font().pFontMedium->OutNext	(out_text);
 }
 
 typedef xr_vector<Fvector>	COLLIDE_POINTS;
@@ -1821,13 +1822,9 @@ void CAI_Stalker::OnRender				()
 		}
 	}
 
-	if (m_throw_picks.size() < 2)
-		return;
+	if ( g_Alive() )
+		movement().get_doors_actor().render();
 
-	xr_vector<Fvector>::const_iterator	I = m_throw_picks.begin(), J = I + 1;
-	xr_vector<Fvector>::const_iterator	E = m_throw_picks.end();
-	for ( ; J != E; ++I, ++J)
-		Level().debug_renderer().draw_line	(Fidentity,*I,*J,color_xrgb(255,0,0));
 #endif // #if 0
 }
 

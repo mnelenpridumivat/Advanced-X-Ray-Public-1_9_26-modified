@@ -28,7 +28,7 @@
 #include "../../../../XrServerEntitiesCS/xrServer_objects_ALife.h"
 #include "../../../phMovementControl.h"
 #include "../ai_monster_squad.h"
-#include "PHWorld.h"
+#include "../../xrPhysics/PHWorld.h"
 
 namespace detail
 {
@@ -47,6 +47,10 @@ void CBaseMonster::Load(LPCSTR section)
 	m_section						= section;
 	// load parameters from ".ltx" file
 	inherited::Load					(section);
+
+	m_head_bone_name				= READ_IF_EXISTS(pSettings,r_string,section, "bone_head", "bip01_head");
+	m_left_eye_bone_name			= READ_IF_EXISTS(pSettings,r_string,section, "bone_eye_left", 0);
+	m_right_eye_bone_name			= READ_IF_EXISTS(pSettings,r_string,section, "bone_eye_right", 0);
 
 	m_corpse_cover_evaluator		= xr_new<CMonsterCorpseCoverEvaluator>	(&movement().restrictions());
 	m_enemy_cover_evaluator			= xr_new<CCoverEvaluatorFarFromEnemy>	(&movement().restrictions());
@@ -111,6 +115,19 @@ void CBaseMonster::Load(LPCSTR section)
 		get_steer_manager()->add( xr_new<steering_behaviour::grouping>(m_grouping_behaviour) );
 	}
 
+	//------------------------------------
+	// Protections
+	//------------------------------------
+	m_fSkinArmor = 0.f;
+	m_fHitFracMonster = 0.1f;
+	m_bSkinArmorEnabled = false;
+	if(pSettings->line_exist(section, "protections_sect"))
+	{
+		LPCSTR protections_sect = pSettings->r_string(section, "protections_sect");
+		m_fSkinArmor = READ_IF_EXISTS(pSettings,r_float,protections_sect,"skin_armor", 0.f);
+		m_fHitFracMonster = READ_IF_EXISTS(pSettings,r_float,protections_sect,"hit_fraction_monster", 0.1f);
+		m_bSkinArmorEnabled = true;
+	}
 	m_bVolumetricLights = READ_IF_EXISTS(pSettings, r_bool, section, "volumetric_lights", false);
 	m_fVolumetricQuality = READ_IF_EXISTS(pSettings, r_float, section, "volumetric_quality", 1.0f);
 	m_fVolumetricDistance = READ_IF_EXISTS(pSettings, r_float, section, "volumetric_distance", 0.3f);
@@ -467,7 +484,7 @@ void CBaseMonster::fill_bones_body_parts	(LPCSTR body_part, CriticalWoundType wo
 
 void CBaseMonster::StartLights()
 {
-	VERIFY(!ph_world->Processing());
+	VERIFY(!physics_world()->Processing());
 	if (!m_bLightsEnabled)		return;
 
 	VERIFY(m_pTrailLight == NULL);
@@ -494,7 +511,7 @@ void CBaseMonster::StartLights()
 
 void CBaseMonster::StopLights()
 {
-	VERIFY(!ph_world->Processing());
+	VERIFY(!physics_world()->Processing());
 	if (!m_bLightsEnabled || !m_pTrailLight)
 		return;
 
@@ -504,7 +521,7 @@ void CBaseMonster::StopLights()
 
 void CBaseMonster::UpdateLights()
 {
-	VERIFY(!ph_world->Processing());
+	VERIFY(!physics_world()->Processing());
 	if (!m_bLightsEnabled || !m_pTrailLight || !m_pTrailLight->get_active()) return;
 
 	IKinematics*          model = Visual()->dcast_PKinematics();
@@ -518,7 +535,7 @@ void CBaseMonster::UpdateLights()
 
 void CBaseMonster::SwitchMonsterParticles(bool bOn)
 {
-	VERIFY(!ph_world->Processing());
+	VERIFY(!physics_world()->Processing());
 	if (!m_bParticlesEnabled) return;
 
 	IKinematics*          model = Visual()->dcast_PKinematics();

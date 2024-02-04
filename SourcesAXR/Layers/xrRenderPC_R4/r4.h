@@ -106,6 +106,18 @@ public:
 	  u32		dx10_winter_mode	: 1;
 	  u32		dx10_lowland_fog_mode : 1;
 
+	  u32		dx11_sss_addon_enabled	: 1;
+	  u32		dx11_ss_sky_debanding	: 1;
+	  u32		dx11_ss_flora_fix		: 1;
+	  u32		dx11_ss_fog				: 1;
+	  u32		dx11_ss_indirect_light	: 1;
+	  u32		dx11_ss_new_gloss		: 1;
+	  u32		dx11_es_addon_enabled	: 1;
+	  u32		dx11_ss_sss				: 1;
+	  u32		dx11_ss_shadows			: 1;
+	  u32		dx11_ss_lut				: 1;
+	  u32		dx11_ss_wind			: 1;
+
 	  u32		dx11_enable_tessellation : 1;
 
 		u32		forcegloss			: 1;
@@ -158,7 +170,6 @@ public:
 	xr_vector<light*>											Lights_LastFrame;
 	SMAP_Allocator												LP_smap_pool;
 	light_Package												LP_normal;
-	light_Package												LP_pending;
 
 	xr_vector<Fbox3>											main_coarse_structure;
 
@@ -226,6 +237,7 @@ public:
 	IC u32							occq_begin					(u32&	ID		)	{ return HWOCC.occq_begin	(ID);	}
 	IC void							occq_end					(u32&	ID		)	{ HWOCC.occq_end	(ID);			}
 	IC R_occlusion::occq_result		occq_get					(u32&	ID		)	{ return HWOCC.occq_get		(ID);	}
+	IC void							occq_free					(u32	ID		)	{ HWOCC.occq_free( ID );			}
 
 	ICF void						apply_object				(IRenderable*	O)
 	{

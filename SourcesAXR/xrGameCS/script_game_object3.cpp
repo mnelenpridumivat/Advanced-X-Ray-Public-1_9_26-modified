@@ -50,6 +50,7 @@
 #include "Actor.h"
 #include "WeaponAmmo.h"
 #include "WeaponMagazinedWGrenade.h"
+#include "AntigasFilter.h"
 
 namespace MemorySpace {
 	struct CVisibleObject;
@@ -175,17 +176,6 @@ CScriptGameObject *CScriptGameObject::GetCurrentWeapon() const
 	return			(current_weapon ? current_weapon->lua_game_object() : 0);
 }
 
-CScriptGameObject *CScriptGameObject::GetCurrentOutfit() const
-{
-	CInventoryOwner		*inventoryOwner = smart_cast<CInventoryOwner*>(&object());
-	if (!inventoryOwner) {
-		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CInventoryOwner : cannot access class member GetCurrentOutfit!");
-		return		(0);
-	}
-	CGameObject		*current_equipment = inventoryOwner->GetCurrentOutfit() ? &inventoryOwner->GetCurrentOutfit()->object() : 0;
-	return			(current_equipment ? current_equipment->lua_game_object() : 0);
-}
-
 void CScriptGameObject::deadbody_closed(bool status)
 {
 	CInventoryOwner		*inventoryOwner = smart_cast<CInventoryOwner*>(&object());
@@ -250,6 +240,17 @@ bool CScriptGameObject::deadbody_can_take_status()
 
 #include "CustomOutfit.h"
 
+
+CScriptGameObject *CScriptGameObject::GetCurrentOutfit() const
+{
+	CInventoryOwner		*inventoryOwner = smart_cast<CInventoryOwner*>(&object());
+	if (!inventoryOwner) {
+		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CInventoryOwner : cannot access class member GetCurrentOutfit!");
+		return		(0);
+	}
+	CGameObject		*current_equipment = inventoryOwner->GetOutfit();
+	return			(current_equipment ? current_equipment->lua_game_object() : 0);
+}
 float CScriptGameObject::GetCurrentOutfitProtection(int hit_type)
 {
 	CInventoryOwner		*inventoryOwner = smart_cast<CInventoryOwner*>(&object());
@@ -257,7 +258,7 @@ float CScriptGameObject::GetCurrentOutfitProtection(int hit_type)
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CInventoryOwner : cannot access class member GetCurrentOutfitProtection!");
 		return		(0);
 	}
-	CGameObject		*current_equipment = &inventoryOwner->GetCurrentOutfit()->object();
+	CGameObject		*current_equipment = inventoryOwner->GetOutfit();
 	CCustomOutfit* o = smart_cast<CCustomOutfit*>(current_equipment);
 	if(!o)				return 0.0f;
 
@@ -427,24 +428,6 @@ u32 CScriptGameObject::get_dest_game_vertex_id()
 	return u32(-1);
 }
 
-void CScriptGameObject::set_dest_game_vertex_id(GameGraph::_GRAPH_ID game_vertex_id)
-{
-	CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(&object());
-	if (!stalker)
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CAI_Stalker : cannot access class member set_dest_game_vertex_id!");
-	else {
-
-		if (!ai().game_graph().valid_vertex_id(game_vertex_id)) {
-#ifdef DEBUG
-			ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CAI_Stalker : invalid vertex id being setup by action %s!", stalker->brain().CStalkerPlanner::current_action().m_action_name);
-#endif
-			return;
-		}
-		stalker->movement().set_game_dest_vertex(game_vertex_id);
-
-	}
-}
-
 u32 CScriptGameObject::get_dest_level_vertex_id()
 {
 	CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(&object());
@@ -483,6 +466,23 @@ void CScriptGameObject::set_dest_level_vertex_id(u32 level_vertex_id)
 	}
 }
 
+void CScriptGameObject::set_dest_game_vertex_id( GameGraph::_GRAPH_ID game_vertex_id)
+{
+	CAI_Stalker					*stalker = smart_cast<CAI_Stalker*>(&object());
+	if (!stalker)
+		ai().script_engine().script_log					(ScriptStorage::eLuaMessageTypeError,"CAI_Stalker : cannot access class member set_dest_game_vertex_id!");
+	else {
+
+		if (!ai().game_graph().valid_vertex_id(game_vertex_id)) {
+#ifdef DEBUG
+			ai().script_engine().script_log				(ScriptStorage::eLuaMessageTypeError,"CAI_Stalker : invalid vertex id being setup by action %s!",stalker->brain().CStalkerPlanner::current_action().m_action_name);
+#endif
+			return;
+		}
+		stalker->movement().set_game_dest_vertex(game_vertex_id);
+
+	}
+}
 CHARACTER_RANK_VALUE CScriptGameObject::GetRank		()
 {
 	CAI_Stalker					*stalker = smart_cast<CAI_Stalker*>(&object());
@@ -991,6 +991,21 @@ bool CScriptGameObject::weapon_unstrapped	() const
 	return			(stalker->weapon_unstrapped());
 }
 
+bool CScriptGameObject::weapon_shooting() const
+{
+	CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(&object());
+
+	if (!stalker)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CScriptGameObject : cannot access class member weapon_strapped!");
+		return false;
+	}
+
+	bool const result = stalker->weapon_shooting();
+
+	return result;
+}
+
 bool CScriptGameObject::path_completed	() const
 {
 	CCustomMonster	*monster = smart_cast<CCustomMonster*>(&object());
@@ -1402,7 +1417,7 @@ void CScriptGameObject::ForceSetPosition(Fvector pos, bool bActivate)
 		if (bActivate)
 			sh->activate_physic_shell();
 		if (sh->PPhysicsShell())
-			sh->PPhysicsShell()->SetTransform(M);
+			sh->PPhysicsShell()->SetTransform(M, mh_unspecified);
 	}
 }
 
@@ -1497,6 +1512,84 @@ u8 CScriptGameObject::GetMaxUses()
 		return 0;
 
 	return eItm->GetMaxUses();
+}
+
+void CScriptGameObject::SetArtefactChargeLevel(float charge_level)
+{
+	CInventoryItem* IItm = object().cast_inventory_item();
+	if (!IItm)
+		return;
+
+	CArtefact* eArtefact = IItm->cast_artefact();
+	if (!eArtefact)
+		return;
+
+	eArtefact->SetChargeLevel(charge_level);
+}
+
+float CScriptGameObject::GetArtefactChargeLevel() const
+{
+	CInventoryItem* IItm = object().cast_inventory_item();
+	if (!IItm)
+		return 0;
+
+	CArtefact* eItm = IItm->cast_artefact();
+	if (!eItm)
+		return 0;
+
+	return eItm->GetCurrentChargeLevel();
+}
+
+void CScriptGameObject::SetArtefactRank(int rank)
+{
+	CInventoryItem* IItm = object().cast_inventory_item();
+	if (!IItm)
+		return;
+
+	CArtefact* eArtefact = IItm->cast_artefact();
+	if (!eArtefact)
+		return;
+
+	eArtefact->SetRank(rank);
+}
+
+int CScriptGameObject::GetArtefactRank() const
+{
+	CInventoryItem* IItm = object().cast_inventory_item();
+	if (!IItm)
+		return 0;
+
+	CArtefact* eItm = IItm->cast_artefact();
+	if (!eItm)
+		return 0;
+
+	return eItm->GetCurrentAfRank();
+}
+
+void CScriptGameObject::SetFilterChargeLevel(float charge_level)
+{
+	CInventoryItem* IItm = object().cast_inventory_item();
+	if (!IItm)
+		return;
+
+	CAntigasFilter *eFilter = IItm->cast_filter();
+	if (!eFilter)
+		return;
+
+	eFilter->SetFilterCondition(charge_level);
+}
+
+float CScriptGameObject::GetFilterChargeLevel() const
+{
+	CInventoryItem* IItm = object().cast_inventory_item();
+	if (!IItm)
+		return 0;
+
+	CAntigasFilter* eItm = IItm->cast_filter();
+	if (!eItm)
+		return 0;
+
+	return eItm->GetFilterCondition();
 }
 
 void CScriptGameObject::DestroyObject()

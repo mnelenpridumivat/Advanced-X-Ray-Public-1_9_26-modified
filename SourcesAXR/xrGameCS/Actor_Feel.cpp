@@ -3,24 +3,26 @@
 #include "weapon.h"
 #include "mercuryball.h"
 #include "inventory.h"
-#include "hudmanager.h"
 #include "character_info.h"
 #include "xr_level_controller.h"
 #include "UsableScriptObject.h"
 #include "customzone.h"
 #include "../xrEngine/gamemtllib.h"
 #include "ui/UIMainIngameWnd.h"
+#include "UIGameCustom.h"
 #include "Grenade.h"
 #include "WeaponRPG7.h"
 #include "ExplosiveRocket.h"
 #include "game_cl_base.h"
 #include "Level.h"
 #include "clsid_game.h"
-#include "UIGameCustom.h"
+#include "hudmanager.h"
 #include "ui\UIPdaWnd.h"
+#include "ui\UIStatic.h"
+#include "string_table.h"
+#include "AdvancedXrayGameConstants.h"
 
 #define PICKUP_INFO_COLOR 0xFFDDDDDD
-//AAAAAA
 
 void CActor::feel_touch_new				(CObject* O)
 {
@@ -89,7 +91,7 @@ ICF static BOOL info_trace_callback(collide::rq_result& result, LPVOID params)
 			return			TRUE;
 		}
 	}else{
-		//ïîëó÷èòü òðåóãîëüíèê è óçíàòü åãî ìàòåðèàë
+		//Ð¿Ð¾Ð»ÑƒÑ‡Ð¸Ñ‚ÑŒ Ñ‚Ñ€ÐµÑƒÐ³Ð¾Ð»ÑŒÐ½Ð¸Ðº Ð¸ ÑƒÐ·Ð½Ð°Ñ‚ÑŒ ÐµÐ³Ð¾ Ð¼Ð°Ñ‚ÐµÑ€Ð¸Ð°Ð»
 		CDB::TRI* T		= Level().ObjectSpace.GetStaticTris()+result.element;
 		if (GMLib.GetMaterialByIdx(T->material)->Flags.is(SGameMtl::flPassable)) 
 			return TRUE;
@@ -129,13 +131,23 @@ void CActor::PickupModeUpdate()
 	if (GameID() != eGameIDSingle) return;
 	if (pda->IsShown()) return;
 
-	//ïîäáèðàíèå îáúåêòà
+	//Ð¿Ð¾Ð´Ð±Ð¸Ñ€Ð°Ð½Ð¸Ðµ Ð¾Ð±ÑŠÐµÐºÑ‚Ð°
 	if(	m_pObjectWeLookingAt									&& 
 		m_pObjectWeLookingAt->cast_inventory_item()				&& 
 		m_pObjectWeLookingAt->cast_inventory_item()->Useful()	&&
-		m_pUsableObject && m_pUsableObject->nonscript_usable()	&&
-		!Level().m_feel_deny.is_object_denied(m_pObjectWeLookingAt) )
+		m_pUsableObject											&& 
+		m_pUsableObject->nonscript_usable()						&& 
+		!Level().m_feel_deny.is_object_denied(m_pObjectWeLookingAt))
 	{
+		CInventoryItem* inv_item = smart_cast<CInventoryItem*>(m_pUsableObject);
+		if (GameConstants::GetLimitedInventory() && !inv_item->IsQuestItem() && MaxCarryInvCapacity() < (GetInventoryFullness() + inv_item->GetOccupiedInvSpace()))
+		{
+			SDrawStaticStruct* _s = HUD().GetUI()->UIGame()->AddCustomStatic("backpack_full", true);
+			_s->wnd()->SetText(CStringTable().translate("st_backpack_full").c_str());
+
+			return;
+		}
+
 		NET_Packet		P;
 		u_EventGen		(P,GE_OWNERSHIP_TAKE, ID());
 		P.w_u16			(m_pObjectWeLookingAt->ID());
@@ -168,47 +180,39 @@ void	CActor::PickupModeUpdate_COD	()
 		return;
 	};
 	
-	CFrustum frustum;
-	frustum.CreateFromMatrix(Device.mFullTransform,FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
+	CFrustum						frustum;
+	frustum.CreateFromMatrix		(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
-	//---------------------------------------------------------------------------
 	ISpatialResult.clear_not_free	();
-	g_SpatialSpace->q_frustum(ISpatialResult, 0, STYPE_COLLIDEABLE, frustum);
-	//---------------------------------------------------------------------------
+	g_SpatialSpace->q_frustum		(ISpatialResult, 0, STYPE_COLLIDEABLE, frustum);
 
-	float maxlen = 1000.0f;
-	CInventoryItem* pNearestItem = NULL;
+	float maxlen					= 1000.0f;
+	CInventoryItem* pNearestItem	= NULL;
+
 	for (u32 o_it=0; o_it<ISpatialResult.size(); o_it++)
 	{
 		ISpatial*		spatial	= ISpatialResult[o_it];
 		CInventoryItem*	pIItem	= smart_cast<CInventoryItem*> (spatial->dcast_CObject        ());
-		if (0 == pIItem) continue;
-		if (pIItem->object().H_Parent() != NULL) continue;
-		if (!pIItem->CanTake()) continue;
-		//. if (pIItem->object().CLS_ID == CLSID_OBJECT_G_RPG7 || pIItem->object().CLS_ID == CLSID_OBJECT_G_FAKE)
-		if ( smart_cast<CExplosiveRocket*>( &pIItem->object() ) )
-		{
-			continue;
-		}
-		/*if ( smart_cast<CWeaponRPG7*>( &pIItem->object() ) || smart_cast<CExplosiveRocket*>( &pIItem->object() ) )
-		{
-			continue;
-		}*/
+
+		if (0 == pIItem)											continue;
+		if (pIItem->object().H_Parent() != NULL)					continue;
+		if (!pIItem->CanTake())										continue;
+		if ( smart_cast<CExplosiveRocket*>( &pIItem->object() ) )	continue;
 
 		CGrenade*	pGrenade	= smart_cast<CGrenade*> (spatial->dcast_CObject        ());
-		if (pGrenade && !pGrenade->Useful()) continue;
+		if (pGrenade && !pGrenade->Useful())						continue;
 
 		CMissile*	pMissile	= smart_cast<CMissile*> (spatial->dcast_CObject        ());
-		if (pMissile && !pMissile->Useful()) continue;
+		if (pMissile && !pMissile->Useful())						continue;
 		
 		Fvector A, B, tmp; 
 		pIItem->object().Center			(A);
-		if (A.distance_to_sqr(Position())>4) continue;
+		if (A.distance_to_sqr(Position())>4)						continue;
 
 		tmp.sub(A, cam_Active()->vPosition);
 		B.mad(cam_Active()->vPosition, cam_Active()->vDirection, tmp.dotproduct(cam_Active()->vDirection));
 		float len = B.distance_to_sqr(A);
-		if (len > 1) continue;
+		if (len > 1)												continue;
 
 		if (maxlen>len && !pIItem->object().getDestroy())
 		{
@@ -221,7 +225,7 @@ void	CActor::PickupModeUpdate_COD	()
 	{
 		CFrustum					frustum;
 		frustum.CreateFromMatrix	(Device.mFullTransform,FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
-		if (!CanPickItem(frustum,Device.vCameraPosition,&pNearestItem->object()))
+		if (!CanPickItem(frustum, Device.vCameraPosition, &pNearestItem->object()))
 			pNearestItem = NULL;
 	}
 	if (pNearestItem && pNearestItem->cast_game_object())
@@ -239,7 +243,19 @@ void	CActor::PickupModeUpdate_COD	()
 
 	if (pNearestItem && m_bPickupMode)
 	{
-		//ïîäáèðàíèå îáúåêòà
+		if (GameConstants::GetLimitedInventory() && !pNearestItem->IsQuestItem() && MaxCarryInvCapacity() < (GetInventoryFullness() + pNearestItem->GetOccupiedInvSpace()))
+		{
+			SDrawStaticStruct* _s = HUD().GetUI()->UIGame()->AddCustomStatic("backpack_full", true);
+			_s->wnd()->SetText(CStringTable().translate("st_backpack_full").c_str());
+
+			return;
+		}
+		
+		CUsableScriptObject*	pUsableObject = smart_cast<CUsableScriptObject*>(pNearestItem);
+		if(pUsableObject && (!m_pUsableObject))
+			pUsableObject->use(this);
+
+		//Ð¿Ð¾Ð´Ð±Ð¸Ñ€Ð°Ð½Ð¸Ðµ Ð¾Ð±ÑŠÐµÐºÑ‚Ð°
 		Game().SendPickUpEvent(ID(), pNearestItem->object().ID());
 		
 		PickupModeOff();
@@ -251,8 +267,6 @@ void CActor::PickupInfoDraw(CObject* object)
 	LPCSTR draw_str = NULL;
 	
 	CInventoryItem* item = smart_cast<CInventoryItem*>(object);
-//.	CInventoryOwner* inventory_owner = smart_cast<CInventoryOwner*>(object);
-//.	VERIFY(item || inventory_owner);
 	if(!item)		return;
 
 	Fmatrix			res;
@@ -271,15 +285,15 @@ void CActor::PickupInfoDraw(CObject* object)
 	float x = (1.f + v_res.x)/2.f * (Device.dwWidth);
 	float y = (1.f - v_res.y)/2.f * (Device.dwHeight);
 
-	HUD().Font().pFontLetterica16Russian->SetAligment	(CGameFont::alCenter);
-	HUD().Font().pFontLetterica16Russian->SetColor		(PICKUP_INFO_COLOR);
-	HUD().Font().pFontLetterica16Russian->Out			(x,y,draw_str);
+	UI().Font().pFontLetterica16Russian->SetAligment	(CGameFont::alCenter);
+	UI().Font().pFontLetterica16Russian->SetColor		(PICKUP_INFO_COLOR);
+	UI().Font().pFontLetterica16Russian->Out			(x,y,draw_str);
 }
 
 void CActor::feel_sound_new(CObject* who, int type, CSound_UserDataPtr user_data, const Fvector& Position, float power)
 {
 	if(who == this)
-		m_snd_noise = _max(m_snd_noise,power);
+		m_snd_noise = _max(m_snd_noise, power);
 }
 
 void CActor::Feel_Grenade_Update( float rad )

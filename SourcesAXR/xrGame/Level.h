@@ -1,3 +1,7 @@
+// Level.h: interface for the CLevel class.
+//
+//////////////////////////////////////////////////////////////////////
+
 #if !defined(AFX_LEVEL_H__38F63863_DB0C_494B_AFAB_C495876EC671__INCLUDED_)
 #define AFX_LEVEL_H__38F63863_DB0C_494B_AFAB_C495876EC671__INCLUDED_
 #pragma once
@@ -39,7 +43,7 @@ class	demoplay_control;
 class	demo_info;
 
 #ifdef DEBUG
-	class	CDebugRenderer;
+class	CDebugRenderer;
 #endif
 
 extern float g_fov;
@@ -152,6 +156,9 @@ public:
 
 	CObject*					CurrentControlEntity	( void ) const		{ return pCurrentControlEntity; }
 	void						SetControlEntity		( CObject* O  )		{ pCurrentControlEntity=O; }
+
+	std::string					GetMoonPhase			();
+	u32							GetTimeHours			();
 private:
 	
 	void						make_NetCorrectionPrediction	();
@@ -311,6 +318,7 @@ public:
 #ifdef DEBUG
 	IC CDebugRenderer				&debug_renderer				();
 #endif
+
 	void	__stdcall				script_gc					();			// GC-cycle
 
 	IC CPHCommander					&ph_commander				();

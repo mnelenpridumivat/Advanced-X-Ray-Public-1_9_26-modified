@@ -6,6 +6,7 @@
 #include "weapon.h"
 
 #include "ui/UIInventoryUtilities.h"
+#include "ui/UIActorMenu.h"
 
 #include "eatable_item.h"
 #include "script_engine.h"
@@ -21,11 +22,18 @@
 #include "clsid_game.h"
 #include "static_cast_checked.hpp"
 #include "player_hud.h"
-
 #include "ai/stalker/ai_stalker.h"
 #include "weaponmagazined.h"
+#include "../xrPhysics/ElevatorState.h"
+#include "CustomDetector.h"
+#include "CustomBackpack.h"
 
 using namespace InventoryUtilities;
+
+extern bool g_block_all_except_movement;
+
+std::atomic<bool> isHidingInProgressInv(false);
+std::atomic<bool> TakeItemAnimNeeded(false);
 
 // what to block
 u32	INV_STATE_BLOCK_ALL		= 0xffffffff;
@@ -60,22 +68,20 @@ bool CInventorySlot::IsBlocked() const
 CInventory::CInventory() 
 {
 	m_fMaxWeight								= pSettings->r_float	("inventory","max_weight");
-//m_iMaxBelt									= pSettings->r_s32		("inventory","max_belt");
 	
 	ReloadInv();
 	
 	m_iActiveSlot								= NO_ACTIVE_SLOT;
 	m_iNextActiveSlot							= NO_ACTIVE_SLOT;
 	m_iPrevActiveSlot							= NO_ACTIVE_SLOT;
-	//m_iLoadActiveSlot							= NO_ACTIVE_SLOT;
 
 	/*string256 temp;
 	for(u32 i=0; i<m_slots.size(); ++i ) 
 	{
-		sprintf_s(temp, "slot_persistent_%d", i+1);
+		xr_sprintf(temp, "slot_persistent_%d", i);
 		m_slots[i].m_bPersistent = !!pSettings->r_bool("inventory",temp);
 
-		sprintf_s			(temp, "slot_active_%d", i+1);
+		xr_sprintf			(temp, "slot_active_%d", i);
 		m_slots[i].m_bAct	= !!pSettings->r_bool("inventory",temp);
 	};*/
 
@@ -85,6 +91,13 @@ CInventory::CInventory()
 	m_fTotalWeight								= -1.f;
 	m_dwModifyFrame								= 0;
 	m_drop_last_frame							= false;
+
+	m_bTakeItemActivated						= false;
+	m_bItemTaked								= false;
+	m_iTakeAnimLength							= 0;
+	m_iActionTiming								= 0;
+	Object										= nullptr;
+
 	//m_iLoadActiveSlotFrame						= u32(-1);
 }
 
@@ -130,6 +143,148 @@ void CInventory::Clear()
 	InvalidateState						();
 }
 
+void CInventory::TakeItemAnimCheck(CGameObject* GameObj, CObject* Obj, bool use_pickup_anim)
+{
+	if (Actor()->m_bActionAnimInProcess)
+		return;
+
+	GameObject = GameObj;
+	Object = Obj;
+	m_bUsePickupAnim = use_pickup_anim;
+
+	if (isHidingInProgressInv.load())
+		return;
+
+	CCustomDetector* pDet = smart_cast<CCustomDetector*>(Actor()->inventory().ItemFromSlot(DETECTOR_SLOT));
+
+	if (!pDet || pDet->IsHidden())
+	{
+		TakeItemAnim(GameObj, Obj, use_pickup_anim);
+		return;
+	}
+	else
+	{
+		if (!use_pickup_anim)
+		{
+			TakeItemAnim(GameObj, Obj, use_pickup_anim);
+			return;
+		}
+	}
+
+	isHidingInProgressInv.store(true);
+
+	std::thread hidingThread([&, pDet]
+		{
+			while (pDet && !pDet->IsHidden())
+				pDet->HideDetector(true);
+
+			isHidingInProgressInv.store(false);
+			TakeItemAnimNeeded.store(true);
+		});
+
+	hidingThread.detach();
+}
+
+void CInventory::TakeItemAnim(CGameObject* GameObj, CObject* Obj, bool use_pickup_anim)
+{
+	LPCSTR anim_sect = READ_IF_EXISTS(pAdvancedSettings, r_string, "actions_animations", "take_item_section", nullptr);
+
+	if (!anim_sect || !use_pickup_anim)
+	{
+		Obj->H_SetParent(smart_cast<CObject*>(Actor()));
+		Take(GameObj, false, true);
+		return;
+	}
+
+	Object = GameObj;
+
+	CWeapon* Wpn = smart_cast<CWeapon*>(ActiveItem());
+
+	if (Wpn && !(Wpn->GetState() == CWeapon::eIdle))
+		return;
+
+	m_bTakeItemActivated = true;
+
+	int anim_timer = READ_IF_EXISTS(pSettings, r_u32, anim_sect, "anim_timing", 0);
+
+	g_block_all_except_movement = true;
+	g_actor_allow_ladder = false;
+
+	LPCSTR use_cam_effector = READ_IF_EXISTS(pSettings, r_string, anim_sect, !Wpn ? "anim_camera_effector" : "anim_camera_effector_weapon", nullptr);
+	float effector_intensity = READ_IF_EXISTS(pSettings, r_float, anim_sect, "cam_effector_intensity", 1.0f);
+	float anim_speed = READ_IF_EXISTS(pSettings, r_float, anim_sect, "anim_speed", 1.0f);
+
+	if (pSettings->line_exist(anim_sect, "anm_use"))
+	{
+		g_player_hud->script_anim_play(!GetActiveSlot() ? 2 : 1, anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", true, anim_speed, GameObj->cNameVisual().c_str());
+
+		if (use_cam_effector)
+			g_player_hud->PlayBlendAnm(use_cam_effector, 0, anim_speed, effector_intensity, false);
+
+		m_iTakeAnimLength = Device.dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", anim_speed);
+	}
+
+	if (pSettings->line_exist(anim_sect, "snd_using"))
+	{
+		if (m_action_anim_sound._feedback())
+			m_action_anim_sound.stop();
+
+		shared_str snd_name = pSettings->r_string(anim_sect, "snd_using");
+		m_action_anim_sound.create(snd_name.c_str(), st_Effect, sg_SourceType);
+		m_action_anim_sound.play(NULL, sm_2D);
+	}
+
+	m_iActionTiming = Device.dwTimeGlobal + anim_timer;
+
+	m_bItemTaked = false;
+	Actor()->m_bActionAnimInProcess = true;
+}
+
+void CInventory::UpdateUseAnim(CActor* actor)
+{
+	if (TakeItemAnimNeeded.load())
+	{
+		TakeItemAnim(GameObject, Object, m_bUsePickupAnim);
+		TakeItemAnimNeeded.store(false);
+	}
+
+	if (!m_bTakeItemActivated)
+		return;
+
+	if (!Actor()->m_bActionAnimInProcess)
+		return;
+
+	bool IsActorAlive = g_pGamePersistent->GetActorAliveStatus();
+
+	if ((m_iActionTiming <= Device.dwTimeGlobal && !m_bItemTaked) && IsActorAlive)
+	{
+		m_iActionTiming = Device.dwTimeGlobal;
+
+		bool vis_status = READ_IF_EXISTS(pSettings, r_bool, Object->cNameSect(), "visible_with_take_anim", true);
+
+		g_player_hud->SetScriptItemVisible(vis_status);
+
+		Object->H_SetParent(smart_cast<CObject*>(actor));
+		Take(GameObject, false, true);
+
+		m_bItemTaked = true;
+	}
+
+	if (m_bTakeItemActivated)
+	{
+		if ((m_iTakeAnimLength <= Device.dwTimeGlobal) || !IsActorAlive)
+		{
+			m_iTakeAnimLength = Device.dwTimeGlobal;
+			m_iActionTiming = Device.dwTimeGlobal;
+			m_action_anim_sound.stop();
+			g_block_all_except_movement = false;
+			g_actor_allow_ladder = true;
+			actor->m_bActionAnimInProcess = false;
+			m_bTakeItemActivated = false;
+		}
+	}
+}
+
 void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placement)
 {
 	CInventoryItem *pIItem				= smart_cast<CInventoryItem*>(pObj);
@@ -145,15 +300,16 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 	//for unknown reason net_Import arrived for object that has a parent, so correction prediction schema will crash
 	Level().RemoveObject_From_4CrPr		(pObj);
 
-	u16 actor_id = Level().CurrentEntity()->ID();
-
-	if (GetOwner()->object_id() == actor_id && this->m_pOwner->object_id() == actor_id)		//actors inventory
-	{
-		CWeaponMagazined* pWeapon = smart_cast<CWeaponMagazined*>(pIItem);
-		if (pWeapon && pWeapon->strapped_mode())
+	if (Level().CurrentEntity()) {
+		std::uint16_t actor_id = Level().CurrentEntity()->ID();
+		if (GetOwner()->object_id() == actor_id &&
+			this->m_pOwner->object_id() == actor_id) // actors inventory
 		{
-			pWeapon->strapped_mode(false);
-			Ruck(pWeapon);
+			CWeaponMagazined* pWeapon = smart_cast<CWeaponMagazined*>(pIItem);
+			if (pWeapon && pWeapon->strapped_mode()) {
+				pWeapon->strapped_mode(false);
+				Ruck(pWeapon);
+			}
 		}
 	}
 
@@ -232,7 +388,17 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 		CObject* pActor_owner = smart_cast<CObject*>(m_pOwner);
 
 		if (Level().CurrentViewEntity() == pActor_owner)
+		{
 			ui->UIGame()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
+			
+			if (pIItem->m_eItemCurrPlace == EItemPlaceRuck)
+				Actor()->ChangeInventoryFullness(pIItem->GetOccupiedInvSpace());
+		}
+		else if(ui->UIGame()->ActorMenu().GetMenuMode()==mmDeadBodySearch)
+		{
+			if(m_pOwner==ui->UIGame()->ActorMenu().GetPartner())
+				ui->UIGame()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
+		}
 	};
 }
 
@@ -320,7 +486,12 @@ bool CInventory::DropItem(CGameObject *pObj, bool just_before_destroy)
 		CObject* pActor_owner = smart_cast<CObject*>(m_pOwner);
 
 		if (Level().CurrentViewEntity() == pActor_owner)
+		{
 			ui->UIGame()->OnInventoryAction(pIItem, GE_OWNERSHIP_REJECT);
+
+			if (pIItem->m_eItemCurrPlace == EItemPlaceRuck)
+				Actor()->ChangeInventoryFullness(-pIItem->GetOccupiedInvSpace());
+		}
 	};
 	pObj->H_SetParent(0, just_before_destroy);
 	return							true;
@@ -417,8 +588,12 @@ bool CInventory::Slot(PIItem pIItem, bool bNotActivate, bool strict_placement)
 	}
 	
 	m_pOwner->OnItemSlot		(pIItem, pIItem->m_eItemCurrPlace);
+	EItemPlace prev_place		= pIItem->m_eItemCurrPlace;
 	pIItem->m_eItemCurrPlace	= EItemPlaceSlot;
 	pIItem->OnMoveToSlot		();
+
+	if (prev_place == EItemPlaceRuck)
+		Actor()->ChangeInventoryFullness(-pIItem->GetOccupiedInvSpace());
 	
 	pIItem->object().processing_activate();
 
@@ -442,16 +617,20 @@ bool CInventory::Belt(PIItem pIItem, bool strict_placement)
 	if(!in_slot)
 	{
 		TIItemContainer::iterator it = std::find(m_ruck.begin(), m_ruck.end(), pIItem); 
-		if(m_ruck.end() != it) m_ruck.erase(it);
+		if(m_ruck.end() != it) 
+			m_ruck.erase(it);
 	}
 
-	CalcTotalWeight();
-	InvalidateState();
+	CalcTotalWeight					();
+	InvalidateState					();
 
-	EItemPlace p = pIItem->m_eItemCurrPlace;
+	EItemPlace prev_place = pIItem->m_eItemCurrPlace;
 	pIItem->m_eItemCurrPlace = EItemPlaceBelt;
-	m_pOwner->OnItemBelt(pIItem, p);
+	m_pOwner->OnItemBelt(pIItem, prev_place);
 	pIItem->OnMoveToBelt();
+
+	if (prev_place == EItemPlaceRuck)
+		Actor()->ChangeInventoryFullness(-pIItem->GetOccupiedInvSpace());
 
 	if(in_slot)
 		pIItem->object().processing_deactivate();
@@ -487,7 +666,8 @@ bool CInventory::Ruck(PIItem pIItem, bool strict_placement)
 	{
 		//вещь была на поясе или вообще только поднята с земли
 		TIItemContainer::iterator it = std::find(m_belt.begin(), m_belt.end(), pIItem); 
-		if(m_belt.end() != it) m_belt.erase(it);
+		if(m_belt.end() != it) 
+			m_belt.erase(it);
 
 		if (!IsGameTypeSingle())
 		{
@@ -512,6 +692,9 @@ bool CInventory::Ruck(PIItem pIItem, bool strict_placement)
 	EItemPlace prev_place							= pIItem->m_eItemCurrPlace;
 	pIItem->m_eItemCurrPlace						= EItemPlaceRuck;
 	pIItem->OnMoveToRuck							(prev_place);
+
+	if (prev_place == EItemPlaceSlot || prev_place == EItemPlaceBelt)
+		Actor()->ChangeInventoryFullness(pIItem->GetOccupiedInvSpace());
 
 	if(in_slot)
 		pIItem->object().processing_deactivate();
@@ -851,6 +1034,23 @@ bool CInventory::Action(s32 cmd, u32 flags)
 				}
 			}
 		}break;
+	case kINVENTORY:
+		{
+			b_send_event = true;
+			if (flags & CMD_START)
+			{
+				if (!GameConstants::GetBackpackAnimsEnabled() || !smart_cast<CCustomBackpack*>(Actor()->inventory().ItemFromSlot(BACKPACK_SLOT))) return false;
+
+				if (GetActiveSlot() == BACKPACK_SLOT && ActiveItem())
+				{
+					Activate(NO_ACTIVE_SLOT);
+				}
+				else
+				{
+					Activate(BACKPACK_SLOT);
+				}
+			}
+		}break;
 	}
 
 	if(b_send_event && g_pGameLevel && OnClient() && pActor)
@@ -900,37 +1100,6 @@ void CInventory::ActiveWeapon( u32 slot )
 
 void CInventory::Update() 
 {
-/*
-	CObject*	curControl	= Level().CurrentControlEntity();
-	CObject*	parentObj	= m_pOwner ? m_pOwner->cast_game_object() : NULL;
-*/
-/*	if ((m_iNextActiveSlot == NO_ACTIVE_SLOT) || 
-		(m_iNextActiveSlot == m_iActiveSlot))
-*/
-/*
-	if (m_iNextActiveSlot==m_iActiveSlot)
-	{
-		UpdateDropTasks();
-		return;
-	} 
-*/
-/*	
-	if (curControl && parentObj)
-	{
-		CHudItem* activeItem = NULL;
-		if ((m_iActiveSlot != NO_ACTIVE_SLOT) &&
-			(m_slots[m_iActiveSlot].m_pIItem))
-		{
-			activeItem = m_slots[m_iActiveSlot].m_pIItem->cast_hud_item();
-		}
-		
-		if ((curControl->ID() == parentObj->ID()) && activeItem && 	!activeItem->IsHidden())
-		{
-			UpdateDropTasks();
-			return;
-		}
-	}
-*/
 	if( OnServer() )
 	{
 		if(m_iActiveSlot!=m_iNextActiveSlot)

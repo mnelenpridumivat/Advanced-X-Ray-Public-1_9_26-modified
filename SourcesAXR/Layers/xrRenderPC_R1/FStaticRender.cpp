@@ -9,6 +9,7 @@
 #include "../../xrEngine/CustomHUD.h"
 #include "../../xrEngine/xr_object.h"
 #include "../../xrEngine/fmesh.h"
+#include "../../xrEngine/xr_ioconsole.h"
 #include "../xrRender/SkeletonCustom.h"
 #include "../xrRender/lighttrack.h"
 #include "../xrRender/dxRenderDeviceRender.h"
@@ -16,11 +17,6 @@
 #include "../xrRender/dxUIShader.h"
 #include "../xrAPI/xrGameManager.h"
 //#include "../../xrServerEntities/smart_cast.h"
-
-#ifndef _EDITOR
-#include "../../xrCPU_Pipe/ttapi.h"
-#endif
-
  
 using	namespace		R_dsgraph;
 
@@ -110,10 +106,11 @@ void					CRender::create					()
 	Models						= xr_new<CModelPool>		();
 	L_Dynamic					= xr_new<CLightR_Manager>	();
 	PSLibrary.OnCreate			();
-//.	HWOCC.occq_create			(occq_size);
 
 	xrRender_apply_tf			();
 	::PortalTraverser.initialize();
+
+	Console->Execute("shaders_preset original_shaders_preset");
 }
 
 void					CRender::destroy				()
@@ -133,8 +130,12 @@ void					CRender::destroy				()
 	r_dsgraph_destroy			();
 }
 
+extern u32 reset_frame;
+
 void					CRender::reset_begin			()
 {
+	reset_frame = Device.dwFrame;
+
 	//AVO: let's reload details while changed details options on vid_restart
 	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)))
 	{
@@ -149,7 +150,6 @@ void					CRender::reset_begin			()
 void					CRender::reset_end				()
 {
 	xrRender_apply_tf			();
-//.	HWOCC.occq_create			(occq_size);
 	Target						=	xr_new<CRenderTarget>	();
 	if (L_Projector)			L_Projector->invalidate		();
 
@@ -161,6 +161,13 @@ void					CRender::reset_end				()
 void					CRender::OnFrame				()
 {
 	Models->DeleteQueue	();
+
+	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))
+	{
+		// MT-details (@front)
+		if (Details)
+			Details->StartAsync();
+	}
 }
 
 // Implementation

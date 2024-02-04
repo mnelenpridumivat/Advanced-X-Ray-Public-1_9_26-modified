@@ -28,6 +28,12 @@ class	adopt_dx10options
 {
 public:
 	bool	_dx10_msaa_alphatest_atoc()			{	return (RImplementation.o.dx10_msaa_alphatest==CRender::MSAA_ATEST_DX10_0_ATOC); }
+	
+	LPCSTR _get_level()
+	{
+		const shared_str level_name = g_pGameLevel->name();
+		return level_name.c_str();
+	}
 };
 
 // wrapper
@@ -182,6 +188,7 @@ void	CResourceManager::LS_Load			()
 	[
 		class_<adopt_dx10options>("_dx10options")
 		.def("dx10_msaa_alphatest_atoc",	&adopt_dx10options::_dx10_msaa_alphatest_atoc		)
+		.def("getLevel",					&adopt_dx10options::_get_level)
 		//.def("",					&adopt_dx10options::_dx10Options		),	// returns options-object
 		,
 
@@ -307,6 +314,9 @@ void	CResourceManager::LS_Unload			()
 
 BOOL	CResourceManager::_lua_HasShader	(LPCSTR s_shader)
 {
+	if (!ps_r4_shaders_flags.test(R4FLAG_SSS_ADDON) && std::strcmp(s_shader, "details\\blend") == 0)
+		return 0;
+
 	string256	undercorated;
 	for (int i=0, l=xr_strlen(s_shader)+1; i<l; i++)
 		undercorated[i]=('\\'==s_shader[i])?'_':s_shader[i];

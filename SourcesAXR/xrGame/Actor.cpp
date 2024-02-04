@@ -1,4 +1,4 @@
-#include "pch_script.h"
+п»ї#include "pch_script.h"
 #include "Actor_Flags.h"
 #include "hudmanager.h"
 #ifdef DEBUG
@@ -21,11 +21,13 @@
 #include "CustomOutfit.h"
 #include "actorcondition.h"
 #include "UIGameCustom.h"
+#include "ui/UIArtefactPanel.h"
 #include "../xrphysics/matrix_utils.h"
 #include "clsid_game.h"
 #include "game_cl_base_weapon_usage_statistic.h"
 #include "Grenade.h"
 #include "Torch.h"
+#include "WeaponKnife.h"
 
 // breakpoints
 #include "../xrEngine/xr_input.h"
@@ -78,8 +80,10 @@
 #include "ActorNightVision.h"
 #include "AdvancedXrayGameConstants.h"
 #include "../xrphysics/actorcameracollision.h"
-#include "../../xrCore/_detail_collision_point.h"
 #include "../xrEngine/Rain.h"
+#include "../xrPhysics/ElevatorState.h"
+#include "CustomDetector.h"
+#include "CustomBackpack.h"
 
 const u32		patch_frames	= 50;
 const float		respawn_delay	= 1.f;
@@ -94,7 +98,7 @@ u32	death_camera_mode = READ_IF_EXISTS(pAdvancedSettings, r_u32, "gameplay", "de
 string32		ACTOR_DEFS::g_quick_use_slots[4]={NULL, NULL, NULL, NULL};
 //skeleton
 
-
+extern bool g_block_all_except_movement;
 
 static Fbox		bbStandBox;
 static Fbox		bbCrouchBox;
@@ -114,8 +118,13 @@ int				psActorSleepTime = 1;
 ENGINE_API extern int ps_r__ShaderNVG;
 extern ENGINE_API Fvector4 ps_ssfx_hud_drops_1;
 
+std::atomic<bool> isHidingInProgress(false);
+std::atomic<bool> CheckNVGAnimNeeded(false);
+std::atomic<bool> CleanMaskAnimNeeded(false);
+
 CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 {
+	encyclopedia_registry	= xr_new<CEncyclopediaRegistryWrapper	>();
 	game_news_registry		= xr_new<CGameNewsRegistryWrapper		>();
 	// Cameras
 	cameras[eacFirstEye]	= xr_new<CCameraFirstEye>				(this);
@@ -152,7 +161,7 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	fFPCamYawMagnitude		= 0.0f; //--#SM+#--
 	fFPCamPitchMagnitude	= 0.0f; //--#SM+#--
 
-	// эффекторы
+	// СЌС„С„РµРєС‚РѕСЂС‹
 	pCamBobbing				= 0;
 
 
@@ -188,7 +197,7 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	Device.seqRender.Add	(this,REG_PRIORITY_LOW);
 #endif
 
-	//разрешить использование пояса в inventory
+	//СЂР°Р·СЂРµС€РёС‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РїРѕСЏСЃР° РІ inventory
 	inventory().SetBeltUseful(true);
 
 	m_pPersonWeLookingAt	= NULL;
@@ -234,15 +243,36 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	m_inventory_disabled	= false;
 
 	// Alex ADD: for smooth crouch fix
-	CurrentHeight = -1.f;
+	CurrentHeight			= -1.f;
 
-	m_night_vision = NULL;
-	m_bNightVisionAllow = true;
-	m_bNightVisionOn = false;
+	m_night_vision			= NULL;
+	m_bNightVisionAllow		= true;
+	m_bNightVisionOn		= false;
 
-	m_bEatAnimActive = false;
+	m_bMaskAnimActivated	= false;
+	m_bNVGActivated			= false;
+	m_bEatAnimActive		= false;
+	m_bActionAnimInProcess	= false;
+	m_bNVGSwitched			= false;
+	m_bMaskClear			= false;
+	m_bQuickKickActivated	= false;
+	m_bQuickKick			= false;
+	m_iNVGAnimLength		= 0;
+	m_iActionTiming			= 0;
+	m_iMaskAnimLength		= 0;
+	m_iQuickKickAnimLength	= 0;
 
-	ActorSkills = nullptr;
+	ActorSkills				= nullptr;
+	TimerManager			= nullptr;
+
+	m_fDevicesPsyFactor		= 0.0f;
+
+	m_iTrySprintCounter		= 0;
+
+	m_fInventoryCapacity	= 50.0f;
+	m_fInventoryFullness	= 0.0f;
+	m_fInventoryFullnessCtrl = 0.0f;
+	m_last_active_slot		= 0;
 }
 
 
@@ -250,6 +280,7 @@ CActor::~CActor()
 {
 	xr_delete				(m_location_manager);
 	xr_delete				(m_memory);
+	xr_delete				(encyclopedia_registry);
 	xr_delete				(game_news_registry);
 #ifdef DEBUG
 	Device.seqRender.Remove(this);
@@ -270,6 +301,7 @@ CActor::~CActor()
 
 	xr_delete				(m_night_vision);
 	xr_delete				(ActorSkills);
+	xr_delete				(TimerManager);
 }
 
 void CActor::reinit	()
@@ -442,7 +474,8 @@ if(!g_dedicated_server)
 
 	if (this == Level().CurrentEntity()) //--#SM+#--      [reset some render flags]
 	{
-		g_pGamePersistent->m_pGShaderConstants->m_blender_mode.set(0.f, 0.f, 0.f, 0.f);
+		if (g_pGamePersistent && g_pGamePersistent->m_pGShaderConstants)
+			g_pGamePersistent->m_pGShaderConstants->m_blender_mode.set(0.f, 0.f, 0.f, 0.f);
 	}
 }
 //Alundaio -psp always
@@ -455,7 +488,7 @@ if(!g_dedicated_server)
 	// sheduler
 	shedule.t_min				= shedule.t_max = 1;
 
-	// настройки дисперсии стрельбы
+	// РЅР°СЃС‚СЂРѕР№РєРё РґРёСЃРїРµСЂСЃРёРё СЃС‚СЂРµР»СЊР±С‹
 	m_fDispBase					= pSettings->r_float		(section,"disp_base"		 );
 	m_fDispBase					= deg2rad(m_fDispBase);
 
@@ -490,7 +523,11 @@ if(!g_dedicated_server)
 	if (!ActorSkills && GameConstants::GetActorSkillsEnabled())
 		ActorSkills = xr_new<CActorSkills>();
 
+	if (!TimerManager)
+		TimerManager = xr_new<CTimerManager>();
+
 	m_iBaseArtefactCount = READ_IF_EXISTS(pSettings, r_u32, section, "base_artefacts_count", 0);
+	m_fInventoryCapacity = READ_IF_EXISTS(pSettings, r_float, section, "inventory_capacity", 50.0f);
 }
 
 void CActor::PHHit(SHit &H)
@@ -524,7 +561,7 @@ void	CActor::Hit(SHit* pHDS)
 	if(ph_dbg_draw_mask.test(phDbgCharacterControl)) {
 		DBG_OpenCashedDraw();
 		Fvector to;to.add(Position(),Fvector().mul(HDS.dir,HDS.phys_impulse()));
-		DBG_DrawLine(Position(),to,D3DCOLOR_XRGB(124,124,0));
+		DBG_DrawLine(Position(),to,color_xrgb(124,124,0));
 		DBG_ClosedCashedDraw(500);
 	}
 #endif // DEBUG
@@ -541,12 +578,12 @@ void	CActor::Hit(SHit* pHDS)
 			if (Device.dwFrame != last_hit_frame &&
 				HDS.bone() != BI_NONE)
 			{		
-				// вычислить позицию и направленность партикла
+				// РІС‹С‡РёСЃР»РёС‚СЊ РїРѕР·РёС†РёСЋ Рё РЅР°РїСЂР°РІР»РµРЅРЅРѕСЃС‚СЊ РїР°СЂС‚РёРєР»Р°
 				Fmatrix pos; 
 
 				CParticlesPlayer::MakeXFORM(this,HDS.bone(),HDS.dir,HDS.p_in_bone_space,pos);
 
-				// установить particles
+				// СѓСЃС‚Р°РЅРѕРІРёС‚СЊ particles
 				CParticlesObject* ps = NULL;
 
 				if (eacFirstEye == cam_active && this == Level().CurrentEntity())
@@ -820,7 +857,7 @@ void CActor::Die	(CObject* who)
 		};
 
 
-		///!!! чистка пояса
+		///!!! С‡РёСЃС‚РєР° РїРѕСЏСЃР°
 		TIItemContainer &l_blist = inventory().m_belt;
 		while (!l_blist.empty())	
 			inventory().Ruck(l_blist.front());
@@ -975,13 +1012,14 @@ float CActor::currentFOV()
 
 	CWeapon* pWeapon = smart_cast<CWeapon*>(inventory().ActiveItem());	
 
-	if (eacFirstEye == cam_active && pWeapon &&
-		pWeapon->IsZoomed() && 
-		( !pWeapon->ZoomTexture() || (!pWeapon->IsRotatingToZoom() && pWeapon->ZoomTexture()) )
-		 )
+	if (eacFirstEye == cam_active && pWeapon && pWeapon->IsZoomed() && (!pWeapon->ZoomTexture() || (!pWeapon->IsRotatingToZoom() && pWeapon->ZoomTexture())))
 	{
-		return pWeapon->GetZoomFactor() * (0.75f);
-	}else
+		if (GameConstants::GetOGSE_WpnZoomSystem())
+			return atanf(tanf(g_fov * (0.5f * PI / 180)) / pWeapon->GetZoomFactor()) / (0.5f * PI / 180);
+		else
+			return pWeapon->GetZoomFactor() * 0.75f;
+	}
+	else
 	{
 		return g_fov;
 	}
@@ -1093,16 +1131,16 @@ void CActor::UpdateCL	()
 			//      [Update SecondVP with weapon data]
 			pWeapon->UpdateSecondVP(); //--#SM+#-- +SecondVP+
 			bool bUseMark = !!pWeapon->bMarkCanShow();
-
-			//float fVPRotFactor = pWeapon->bNVsecondVPstatus ? pWeapon->GetZRotatingFactor() : 0.0f;
-
 			bool bNVEnbl = !!pWeapon->bNVsecondVPstatus;
 
-			//      
-			g_pGamePersistent->m_pGShaderConstants->hud_params.x = pWeapon->GetZRotatingFactor();  //--#SM+#--
-			g_pGamePersistent->m_pGShaderConstants->hud_params.y = pWeapon->GetSecondVPFov(); //--#SM+#--
-			g_pGamePersistent->m_pGShaderConstants->hud_params.z = bUseMark; //--#SM+#--
-			g_pGamePersistent->m_pGShaderConstants->m_blender_mode.x = bNVEnbl;  //--#SM+#--
+			//
+			if (g_pGamePersistent && g_pGamePersistent->m_pGShaderConstants)
+			{
+				g_pGamePersistent->m_pGShaderConstants->hud_params.x = pWeapon->GetZRotatingFactor();  //--#SM+#--
+				g_pGamePersistent->m_pGShaderConstants->hud_params.y = pWeapon->GetSecondVPFov(); //--#SM+#--
+				g_pGamePersistent->m_pGShaderConstants->hud_params.z = bUseMark; //--#SM+#--
+				g_pGamePersistent->m_pGShaderConstants->m_blender_mode.x = bNVEnbl;  //--#SM+#--
+			}
 		}
 
 	}
@@ -1113,9 +1151,12 @@ void CActor::UpdateCL	()
 			HUD().SetCrosshairDisp(0.f);
 			HUD().ShowCrosshair(false);
 
-			//      
-			g_pGamePersistent->m_pGShaderConstants->hud_params.set(0.f, 0.f, 0.f, 0.f); //--#SM+#--
-			g_pGamePersistent->m_pGShaderConstants->m_blender_mode.set(0.f, 0.f, 0.f, 0.f); //--#SM+#--
+			//
+			if (g_pGamePersistent && g_pGamePersistent->m_pGShaderConstants)
+			{
+				g_pGamePersistent->m_pGShaderConstants->hud_params.set(0.f, 0.f, 0.f, 0.f); //--#SM+#--
+				g_pGamePersistent->m_pGShaderConstants->m_blender_mode.set(0.f, 0.f, 0.f, 0.f); //--#SM+#--
+			}
 
 			//    [Turn off SecondVP]
 			//CWeapon::UpdateSecondVP();
@@ -1159,65 +1200,17 @@ void CActor::UpdateCL	()
 	if (GameConstants::GetMultiItemPickup())
 		m_bPickupMode = false;
 
-	// Ascii hud rain drops support
-	{
-		float animSpeed = 1.f;
-		float buildSpeed = 2.f;
-		float dryingSpeed = 1.f;
-		float rainFactor = g_pGamePersistent->Environment().CurrentEnv->rain_density;
-		float rainHemi{};
-		CEffect_Rain* rain = g_pGamePersistent->pEnvironment->eff_Rain;
+	g_pGamePersistent->devices_shader_data.device_global_psy_influence = m_fDevicesPsyFactor;
+	g_pGamePersistent->devices_shader_data.device_psy_zone_influence = CurrentGameUI()->get_zone_cur_power(ALife::eHitTypeTelepatic) * 10;
+	g_pGamePersistent->devices_shader_data.device_radiation_zone_influence = CurrentGameUI()->get_zone_cur_power(ALife::eHitTypeRadiation) * 60;
 
-		if (rainFactor > 0.f)
-		{
-			// get rain hemi
-			if (rain)
-			{
-				rainHemi = rain->GetRainHemi();
-			}
-			else
-			{
-				CObject* E = g_pGameLevel->CurrentViewEntity();
-				if (E && E->renderable_ROS())
-				{
-					float* hemi_cube = E->renderable_ROS()->get_luminocity_hemi_cube();
-					float hemi_val = _max(hemi_cube[0], hemi_cube[1]);
-					hemi_val = _max(hemi_val, hemi_cube[2]);
-					hemi_val = _max(hemi_val, hemi_cube[3]);
-					hemi_val = _max(hemi_val, hemi_cube[5]);
+	luabind::functor<bool> m_functor;
 
-					rainHemi = hemi_val;
-				}
-			}
-
-			if (rainHemi > 0.15f)
-			{
-				float rainSpeedFactor = (1.5f - rainFactor) * 10.f;
-				m_dropsAnimIncrementor += (animSpeed * Device.fTimeDelta) / rainSpeedFactor;
-				m_dropsIntensity += (buildSpeed * Device.fTimeDelta) / 100.f;
-			}
-			else
-			{
-				m_dropsIntensity -= (dryingSpeed * Device.fTimeDelta) / 100.f;
-			}
-		}
-		else
-		{
-			m_dropsIntensity -= (dryingSpeed * Device.fTimeDelta) / 100.f;
-		}
-
-		clamp(m_dropsIntensity, 0.f, 1.f);
-
-		if (fsimilar(m_dropsAnimIncrementor, FLT_MAX, 1.f))
-			m_dropsAnimIncrementor = 0.f;
-
-		ps_ssfx_hud_drops_1.x = m_dropsAnimIncrementor;
-		ps_ssfx_hud_drops_1.y = m_dropsIntensity;
-	}
+	if (ai().script_engine().functor("mfs_functions.devices_check_surge", m_functor))
+		m_functor();
 }
 
 float	NET_Jump = 0;
-ENGINE_API extern Fvector actor_position;
 
 #include "ai\monsters\ai_monster_utils.h"
 
@@ -1255,7 +1248,10 @@ void CActor::shedule_Update	(u32 DT)
 					}
 					else
 					{
-						g_player_hud->attach_item	(pHudItem);
+						bool attach = !m_bQuickKickActivated;
+
+						if (attach)
+							g_player_hud->attach_item	(pHudItem);
 					}
 				}
 			}else
@@ -1335,8 +1331,9 @@ void CActor::shedule_Update	(u32 DT)
 		mstate_wishful &=~mcRLookout;
 		mstate_wishful &=~mcFwd;
 		mstate_wishful &=~mcBack;
-		if( !psActorFlags.test(AF_CROUCH_TOGGLE) )
-			mstate_wishful &=~mcCrouch;
+
+		if (!psActorFlags.test(AF_CROUCH_TOGGLE))
+			mstate_wishful &= ~mcCrouch;
 		}
 	}
 	else 
@@ -1373,7 +1370,7 @@ void CActor::shedule_Update	(u32 DT)
 
 	inherited::shedule_Update	(DT);
 
-	//эффектор включаемый при ходьбе
+	//СЌС„С„РµРєС‚РѕСЂ РІРєР»СЋС‡Р°РµРјС‹Р№ РїСЂРё С…РѕРґСЊР±Рµ
 	if (!pCamBobbing)
 	{
 		pCamBobbing = xr_new<CEffectorBobbing>	();
@@ -1381,7 +1378,7 @@ void CActor::shedule_Update	(u32 DT)
 	}
 	pCamBobbing->SetState						(mstate_real, conditions().IsLimping(), IsZoomAimingMode());
 
-	//звук тяжелого дыхания при уталости и хромании
+	//Р·РІСѓРє С‚СЏР¶РµР»РѕРіРѕ РґС‹С…Р°РЅРёСЏ РїСЂРё СѓС‚Р°Р»РѕСЃС‚Рё Рё С…СЂРѕРјР°РЅРёРё
 	if(this==Level().CurrentControlEntity() && !g_dedicated_server )
 	{
 		if(conditions().IsLimping() && g_Alive() && !psActorFlags.test(AF_GODMODE_RT)){
@@ -1441,11 +1438,11 @@ void CActor::shedule_Update	(u32 DT)
 			m_DangerSnd.stop();
 	}
 
-	//если в режиме HUD, то сама модель актера не рисуется
+	//РµСЃР»Рё РІ СЂРµР¶РёРјРµ HUD, С‚Рѕ СЃР°РјР° РјРѕРґРµР»СЊ Р°РєС‚РµСЂР° РЅРµ СЂРёСЃСѓРµС‚СЃСЏ
 	if(!character_physics_support()->IsRemoved())
 		setVisible(!HUDview());
 
-	//что актер видит перед собой
+	//С‡С‚Рѕ Р°РєС‚РµСЂ РІРёРґРёС‚ РїРµСЂРµРґ СЃРѕР±РѕР№
 	collide::rq_result& RQ				= HUD().GetCurrentRayQuery();
 	
 
@@ -1473,7 +1470,7 @@ void CActor::shedule_Update	(u32 DT)
 		m_pVehicleWeLookingAt			= smart_cast<CHolderCustom*>(game_object);
 		CEntityAlive* pEntityAlive		= smart_cast<CEntityAlive*>(game_object);
 		
-		if ( GameID() == eGameIDSingle )
+		if (GameID() == eGameIDSingle )
 		{
 			if (m_pUsableObject && m_pUsableObject->tip_text())
 			{
@@ -1485,7 +1482,7 @@ void CActor::shedule_Update	(u32 DT)
 				{
 					m_sDefaultObjAction = m_sCharacterUseAction;
 				}
-				else if ( pEntityAlive && !pEntityAlive->g_Alive() )
+				else if (pEntityAlive && !pEntityAlive->g_Alive())
 				{
 					if ( m_pPersonWeLookingAt && m_pPersonWeLookingAt->deadbody_closed_status() )
 					{
@@ -1493,8 +1490,8 @@ void CActor::shedule_Update	(u32 DT)
 					}
 					else
 					{
-						bool b_allow_drag = !!pSettings->line_exist("ph_capture_visuals",pEntityAlive->cNameVisual());
-						if ( b_allow_drag )
+						bool b_allow_drag = !!pSettings->line_exist("ph_capture_visuals",pEntityAlive->cNameVisual());				
+					if (b_allow_drag)
 						{
 							m_sDefaultObjAction = m_sDeadCharacterUseOrDragAction;
 						}
@@ -1533,7 +1530,7 @@ void CActor::shedule_Update	(u32 DT)
 
 //	UpdateSleep									();
 
-	//для свойст артефактов, находящихся на поясе
+	//РґР»СЏ СЃРІРѕР№СЃС‚ Р°СЂС‚РµС„Р°РєС‚РѕРІ, РЅР°С…РѕРґСЏС‰РёС…СЃСЏ РЅР° РїРѕСЏСЃРµ
 	UpdateArtefactsOnBeltAndOutfit				();
 	m_pPhysics_support->in_shedule_Update		(DT);
 	Check_for_AutoPickUp						();
@@ -1546,7 +1543,40 @@ void CActor::shedule_Update	(u32 DT)
 	if (GameConstants::GetActorSkillsEnabled())
 		UpdateSkills();
 
-	actor_position.set(Position());
+	if (CheckNVGAnimNeeded.load())
+	{
+		StartNVGAnimation();
+		CheckNVGAnimNeeded.store(false);
+	}
+
+	if (CleanMaskAnimNeeded.load())
+	{
+		CleanMask();
+		CleanMaskAnimNeeded.store(false);
+	}
+
+	if (m_bActionAnimInProcess)
+	{
+		if (m_bNVGActivated)
+			UpdateNVGUseAnim();
+
+		if (m_bMaskAnimActivated)
+			UpdateMaskUseAnim();
+
+		if (m_bQuickKickActivated)
+			UpdateQuickKickAnim();
+	}
+
+	inventory().UpdateUseAnim(this);
+
+	if (TimerManager)
+	{
+		TimerManager->Update();
+
+		/*TimerManager->SetOnTimerStopCallback([](std::string name)	// Does not work after restarting the game
+		{
+		});*/
+	}
 };
 #include "debug_renderer.h"
 void CActor::renderable_Render	()
@@ -1830,6 +1860,10 @@ void CActor::OnItemDrop(CInventoryItem *inventory_item, bool just_before_destroy
 {
 	CInventoryOwner::OnItemDrop(inventory_item, just_before_destroy);
 
+	CArtefact* artefact = smart_cast<CArtefact*>(inventory_item);
+	if(artefact && artefact->m_ItemCurrPlace.type == eItemPlaceBelt)
+		MoveArtefactBelt(artefact, false);
+
 	CCustomOutfit* outfit		= smart_cast<CCustomOutfit*>(inventory_item);
 	if(outfit && inventory_item->m_ItemCurrPlace.type==eItemPlaceSlot)
 	{
@@ -1840,7 +1874,7 @@ void CActor::OnItemDrop(CInventoryItem *inventory_item, bool just_before_destroy
 	if(weapon && inventory_item->m_ItemCurrPlace.type==eItemPlaceSlot)
 	{
 		weapon->OnZoomOut();
-		if(weapon->GetRememberActorNVisnStatus())
+		if (weapon->GetRememberActorNVisnStatus())
 			weapon->EnableActorNVisnAfterZoom();
 	}
 
@@ -1872,11 +1906,41 @@ void CActor::OnItemDropUpdate ()
 void CActor::OnItemRuck		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place)
 {
 	CInventoryOwner::OnItemRuck(inventory_item, previous_place);
+
+	CArtefact* artefact = smart_cast<CArtefact*>(inventory_item);
+	if(artefact && previous_place.type == eItemPlaceBelt)
+		MoveArtefactBelt(artefact, false);
 }
 
 void CActor::OnItemBelt		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place)
 {
 	CInventoryOwner::OnItemBelt(inventory_item, previous_place);
+
+	CArtefact* artefact = smart_cast<CArtefact*>(inventory_item);
+	if(artefact)
+		MoveArtefactBelt(artefact, true);
+}
+
+
+void CActor::MoveArtefactBelt(const CArtefact* artefact, bool on_belt)
+{
+	VERIFY(artefact);
+
+	//РїРѕРІРµСЃРёС‚СЊ Р°СЂС‚РµС„Р°РєС‚ РЅР° РїРѕСЏСЃ
+	if(on_belt)
+	{
+		VERIFY(m_ArtefactsOnBelt.end() == std::find(m_ArtefactsOnBelt.begin(), m_ArtefactsOnBelt.end(), artefact));
+		m_ArtefactsOnBelt.push_back(artefact);
+	}
+	else
+	{
+		xr_vector<const CArtefact*>::iterator it = std::remove(m_ArtefactsOnBelt.begin(), m_ArtefactsOnBelt.end(), artefact);
+		VERIFY(it != m_ArtefactsOnBelt.end());
+		m_ArtefactsOnBelt.erase(it);
+	}
+
+	if (Level().CurrentViewEntity() && Level().CurrentViewEntity() == this && CurrentGameUI()->UIMainIngameWnd->UIArtefactsPanel)
+		CurrentGameUI()->UIMainIngameWnd->UIArtefactsPanel->InitIcons(m_ArtefactsOnBelt);
 }
 
 #define ARTEFACTS_UPDATE_TIME 0.100f
@@ -1929,6 +1993,22 @@ void CActor::UpdateArtefactsOnBeltAndOutfit()
 			}*/
 		}
 	}
+
+	CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+	if (backpack)
+	{
+		conditions().ChangeBleeding		(backpack->m_fBleedingRestoreSpeed		* f_update_time);
+		conditions().ChangeHealth		(backpack->m_fHealthRestoreSpeed		* f_update_time);
+		conditions().ChangePower		(backpack->m_fPowerRestoreSpeed			* f_update_time);
+		conditions().ChangeSatiety		(backpack->m_fSatietyRestoreSpeed		* f_update_time);
+		conditions().ChangeThirst		(backpack->m_fThirstRestoreSpeed		* f_update_time);
+		conditions().ChangeRadiation	(backpack->m_fRadiationRestoreSpeed		* f_update_time);
+		conditions().ChangeIntoxication	(backpack->m_fIntoxicationRestoreSpeed	* f_update_time);
+		conditions().ChangeSleepeness	(backpack->m_fSleepenessRestoreSpeed	* f_update_time);
+		conditions().ChangeAlcoholism	(backpack->m_fAlcoholismRestoreSpeed	* f_update_time);
+		conditions().ChangeNarcotism	(backpack->m_fNarcotismRestoreSpeed		* f_update_time);
+		conditions().ChangePsyHealth	(backpack->m_fPsyHealthRestoreSpeed		* f_update_time);
+	}
 }
 
 void CActor::UpdateArtefactsOnBelt()
@@ -1953,6 +2033,17 @@ void CActor::UpdateArtefactsOnBelt()
 	TIItemContainer::iterator itR = inventory().m_ruck.begin();
 	TIItemContainer::iterator iteR = inventory().m_ruck.end();
 
+	if (GameConstants::GetArtefactsDegradation() && xr_strcmp("from_ruck", GameConstants::GetArtefactDegradationMode()) == 0)
+	{
+		for (itR; iteR != itR; ++itR)
+		{
+			CArtefact* artefact = smart_cast<CArtefact*>(*itR);
+			
+			if (artefact)
+				artefact->UpdateDegradation();
+		}
+	}
+
 	if (xr_strcmp("from_ruck_only_rad", GameConstants::GetAfInfluenceMode()) == 0)
 	{
 		for (itR; iteR != itR; ++itR)
@@ -1968,6 +2059,9 @@ void CActor::UpdateArtefactsOnBelt()
 				}
 				else
 					conditions().ChangeRadiation(artefact->m_fRadiationRestoreSpeed * f_update_time);
+
+				if (GameConstants::GetArtefactsDegradation() && (xr_strcmp("from_ruck", GameConstants::GetArtefactDegradationMode()) == 0))
+					artefact->UpdateDegradation();
 			}
 		}
 	}
@@ -2065,6 +2159,27 @@ void CActor::UpdateInventoryItems()
 		if (current_eatable)
 		{
 			current_eatable->UpdateInRuck(this);
+		}
+
+		if (GameConstants::GetLimitedInventory())
+		{
+			CInventoryItem* item_to_drop = smart_cast<CInventoryItem*>(*it);
+
+			if (item_to_drop && item_to_drop->m_pInventory && !item_to_drop->IsQuestItem() && m_fInventoryFullness > MaxCarryInvCapacity())
+			{
+				if (m_fInventoryFullnessCtrl > MaxCarryInvCapacity())
+				{
+					NET_Packet P;
+					CGameObject::u_EventGen(P, GE_OWNERSHIP_REJECT, ID());
+					P.w_u16(item_to_drop->object().ID());
+					CGameObject::u_EventSend(P);
+
+					m_fInventoryFullnessCtrl -= item_to_drop->GetOccupiedInvSpace();
+				}
+
+				SDrawStaticStruct* _s = CurrentGameUI()->AddCustomStatic("backpack_full", true);
+				_s->wnd()->TextItemControl()->SetText(CStringTable().translate("st_backpack_full").c_str());
+			}
 		}
 	}
 }
@@ -2230,7 +2345,7 @@ CPHDestroyable*	CActor::ph_destroyable	()
 CEntityConditionSimple *CActor::create_entity_condition	(CEntityConditionSimple* ec)
 {
 	if(!ec)
-		m_entity_condition		= new CActorCondition(this);
+		m_entity_condition		= xr_new<CActorCondition>(this);
 	else
 		m_entity_condition		= smart_cast<CActorCondition*>(ec);
 	
@@ -2258,11 +2373,11 @@ bool CActor::can_attach			(const CInventoryItem *inventory_item) const
 	if (!item || /*!item->enabled() ||*/ !item->can_be_attached())
 		return			(false);
 
-	//можно ли присоединять объекты такого типа
+	//РјРѕР¶РЅРѕ Р»Рё РїСЂРёСЃРѕРµРґРёРЅСЏС‚СЊ РѕР±СЉРµРєС‚С‹ С‚Р°РєРѕРіРѕ С‚РёРїР°
 	if( m_attach_item_sections.end() == std::find(m_attach_item_sections.begin(),m_attach_item_sections.end(),inventory_item->object().cNameSect()) )
 		return false;
 
-	//если уже есть присоединненый объет такого типа 
+	//РµСЃР»Рё СѓР¶Рµ РµСЃС‚СЊ РїСЂРёСЃРѕРµРґРёРЅРЅРµРЅС‹Р№ РѕР±СЉРµС‚ С‚Р°РєРѕРіРѕ С‚РёРїР° 
 	if(attached(inventory_item->object().cNameSect()))
 		return false;
 
@@ -2331,6 +2446,12 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 		{
 			res += outfit->m_fHealthRestoreSpeed;
 		}
+
+		CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+		if (backpack)
+		{
+			res += backpack->m_fHealthRestoreSpeed;
+		}
 		break;
 	}
 	case ALife::eRadiationRestoreSpeed:
@@ -2349,6 +2470,12 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 		if ( outfit )
 		{
 			res += outfit->m_fRadiationRestoreSpeed;
+		}
+
+		CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+		if (backpack)
+		{
+			res += backpack->m_fRadiationRestoreSpeed;
 		}
 		break;
 	}
@@ -2370,6 +2497,12 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 		if ( outfit )
 		{
 			res += outfit->m_fSatietyRestoreSpeed;
+		}
+
+		CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+		if (backpack)
+		{
+			res += backpack->m_fSatietyRestoreSpeed;
 		}
 		break;
 	}
@@ -2396,6 +2529,15 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 		}
 		else
 			res /= 0.5f;
+
+		CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+		if (backpack)
+		{
+			res += backpack->m_fPowerRestoreSpeed;
+			VERIFY(backpack->m_fPowerLoss != 0.0f);
+			res /= backpack->m_fPowerLoss;
+		}
+
 		break;
 	}
 	case ALife::eBleedingRestoreSpeed:
@@ -2416,6 +2558,12 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 		if ( outfit )
 		{
 			res += outfit->m_fBleedingRestoreSpeed;
+		}
+
+		CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+		if (backpack)
+		{
+			res += backpack->m_fBleedingRestoreSpeed;
 		}
 		break;
 	}
@@ -2438,6 +2586,12 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 		{
 			res += outfit->m_fThirstRestoreSpeed;
 		}
+
+		CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+		if (backpack)
+		{
+			res += backpack->m_fThirstRestoreSpeed;
+		}
 		break;
 	}
 	case ALife::eIntoxicationRestoreSpeed:
@@ -2456,6 +2610,12 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 		if (outfit)
 		{
 			res += outfit->m_fIntoxicationRestoreSpeed;
+		}
+
+		CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+		if (backpack)
+		{
+			res += backpack->m_fIntoxicationRestoreSpeed;
 		}
 		break;
 	}
@@ -2476,6 +2636,12 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 		{
 			res += outfit->m_fSleepenessRestoreSpeed;
 		}
+
+		CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+		if (backpack)
+		{
+			res += backpack->m_fSleepenessRestoreSpeed;
+		}
 		break;
 	}
 	case ALife::eAlcoholismRestoreSpeed:
@@ -2494,6 +2660,12 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 		if (outfit)
 		{
 			res += outfit->m_fAlcoholismRestoreSpeed;
+		}
+
+		CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+		if (backpack)
+		{
+			res += backpack->m_fAlcoholismRestoreSpeed;
 		}
 		break;
 	}
@@ -2514,6 +2686,12 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 		{
 			res += outfit->m_fNarcotismRestoreSpeed;
 		}
+
+		CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+		if (backpack)
+		{
+			res += backpack->m_fNarcotismRestoreSpeed;
+		}
 		break;
 	}
 	case ALife::ePsyHealthRestoreSpeed:
@@ -2533,6 +2711,12 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 		{
 			res += outfit->m_fPsyHealthRestoreSpeed;
 		}
+
+		CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+		if (backpack)
+		{
+			res += backpack->m_fPsyHealthRestoreSpeed;
+		}
 		break;
 	}
 	}//switch
@@ -2544,7 +2728,7 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 void CActor::On_SetEntity()
 {
 	CCustomOutfit* pOutfit = GetOutfit();
-	if( !pOutfit )
+	if (!pOutfit)
 		g_player_hud->load_default();
 	else
 		pOutfit->ApplySkinModel(this, true, true);
@@ -2555,24 +2739,326 @@ bool CActor::unlimited_ammo()
 	return !!psActorFlags.test(AF_UNLIMITEDAMMO);
 }
 
+void CActor::NVGAnimCheckDetector()
+{
+	if (isHidingInProgress.load())
+		return;
+
+	CCustomDetector* pDet = smart_cast<CCustomDetector*>(inventory().ItemFromSlot(DETECTOR_SLOT));
+	bool AnimEnabled = pAdvancedSettings->line_exist("actions_animations", "switch_nightvision_section");
+
+	if (!pDet || pDet->IsHidden() || !AnimEnabled);
+	{
+		StartNVGAnimation();
+		return;
+	}
+
+	isHidingInProgress.store(true);
+
+	std::thread hidingThread([&, pDet]
+		{
+			while (pDet && !pDet->IsHidden())
+				pDet->HideDetector(true);
+
+			isHidingInProgress.store(false);
+			CheckNVGAnimNeeded.store(true);
+		});
+
+	hidingThread.detach();
+}
+
+void CActor::StartNVGAnimation()
+{
+	CWeapon* Wpn = smart_cast<CWeapon*>(inventory().ActiveItem());
+	CHelmet* pHelmet = smart_cast<CHelmet*>(inventory().ItemFromSlot(HELMET_SLOT));
+	CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>(inventory().ItemFromSlot(OUTFIT_SLOT));
+
+	if (Wpn && Wpn->IsZoomed())
+		return;
+
+	LPCSTR anim_sect = READ_IF_EXISTS(pAdvancedSettings, r_string, "actions_animations", "switch_nightvision_section", nullptr);
+
+	if (!anim_sect)
+	{
+		SwitchNightVision(!m_bNightVisionOn);
+		return;
+	}
+
+	if (!(pHelmet && pHelmet->m_NightVisionSect.size()) && !(pOutfit && pOutfit->m_NightVisionSect.size()))
+		return;
+
+	if (Wpn && !(Wpn->GetState() == CWeapon::eIdle))
+		return;
+
+	m_bNVGActivated = true;
+
+	int anim_timer = READ_IF_EXISTS(pSettings, r_u32, anim_sect, "anim_timing", 0);
+
+	g_block_all_except_movement = true;
+	g_actor_allow_ladder = false;
+
+	LPCSTR use_cam_effector = READ_IF_EXISTS(pSettings, r_string, anim_sect, !Wpn ? "anim_camera_effector" : "anim_camera_effector_weapon", nullptr);
+	float effector_intensity = READ_IF_EXISTS(pSettings, r_float, anim_sect, "cam_effector_intensity", 1.0f);
+	float anim_speed = READ_IF_EXISTS(pSettings, r_float, anim_sect, "anim_speed", 1.0f);
+
+	if (pSettings->line_exist(anim_sect, "anm_use"))
+	{
+		g_player_hud->script_anim_play(!inventory().GetActiveSlot() ? 2 : 1, anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", true, anim_speed);
+
+		if (use_cam_effector)
+			g_player_hud->PlayBlendAnm(use_cam_effector, 0, anim_speed, effector_intensity, false);
+
+		m_iNVGAnimLength = Device.dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", anim_speed);
+	}
+
+	if (pSettings->line_exist(anim_sect, "snd_using"))
+	{
+		if (m_action_anim_sound._feedback())
+			m_action_anim_sound.stop();
+
+		shared_str snd_name = pSettings->r_string(anim_sect, "snd_using");
+		m_action_anim_sound.create(snd_name.c_str(), st_Effect, sg_SourceType);
+		m_action_anim_sound.play(NULL, sm_2D);
+	}
+
+	m_iActionTiming = Device.dwTimeGlobal + anim_timer;
+
+	m_bNVGSwitched = false;
+	m_bActionAnimInProcess = true;
+}
+
+void CActor::UpdateNVGUseAnim()
+{
+	if ((m_iActionTiming <= Device.dwTimeGlobal && !m_bNVGSwitched) && g_Alive())
+	{
+		m_iActionTiming = Device.dwTimeGlobal;
+		SwitchNightVision(!m_bNightVisionOn);
+		m_bNVGSwitched = true;
+	}
+
+	if (m_bNVGActivated)
+	{
+		if ((m_iNVGAnimLength <= Device.dwTimeGlobal) || !g_Alive())
+		{
+			m_iNVGAnimLength = Device.dwTimeGlobal;
+			m_iActionTiming = Device.dwTimeGlobal;
+			m_action_anim_sound.stop();
+			g_block_all_except_movement = false;
+			g_actor_allow_ladder = true;
+			m_bActionAnimInProcess = false;
+			m_bNVGActivated = false;
+		}
+	}
+}
+
+void CActor::CleanMaskAnimCheckDetector()
+{
+	if (isHidingInProgress.load())
+		return;
+
+	CCustomDetector* pDet = smart_cast<CCustomDetector*>(inventory().ItemFromSlot(DETECTOR_SLOT));
+	
+	if (!pAdvancedSettings->line_exist("actions_animations", "clean_mask_section"))
+		return;
+
+	if (!pDet || pDet->IsHidden())
+	{
+		CleanMask();
+		return;
+	}
+
+	isHidingInProgress.store(true);
+
+	std::thread hidingThread([&, pDet]
+		{
+			while (pDet && !pDet->IsHidden())
+				pDet->HideDetector(true);
+
+			isHidingInProgress.store(false);
+			CleanMaskAnimNeeded.store(true);
+		});
+
+	hidingThread.detach();
+}
+
+void CActor::CleanMask()
+{
+	LPCSTR anim_sect = READ_IF_EXISTS(pAdvancedSettings, r_string, "actions_animations", "clean_mask_section", nullptr);
+
+	if (!anim_sect)
+		return;
+
+	CWeapon* Wpn = smart_cast<CWeapon*>(inventory().ActiveItem());
+	CHelmet* pHelmet = smart_cast<CHelmet*>(inventory().ItemFromSlot(HELMET_SLOT));
+	CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>(inventory().ItemFromSlot(OUTFIT_SLOT));
+
+	if (!(pHelmet && pHelmet->m_b_HasGlass) && !(pOutfit && pOutfit->m_b_HasGlass))
+		return;
+
+	if (Wpn && !(Wpn->GetState() == CWeapon::eIdle))
+		return;
+
+	m_bMaskAnimActivated = true;
+
+	int anim_timer = READ_IF_EXISTS(pSettings, r_u32, anim_sect, "anim_timing", 0);
+
+	g_block_all_except_movement = true;
+	g_actor_allow_ladder = false;
+
+	LPCSTR use_cam_effector = READ_IF_EXISTS(pSettings, r_string, anim_sect, !Wpn ? "anim_camera_effector" : "anim_camera_effector_weapon", nullptr);
+	float effector_intensity = READ_IF_EXISTS(pSettings, r_float, anim_sect, "cam_effector_intensity", 1.0f);
+	float anim_speed = READ_IF_EXISTS(pSettings, r_float, anim_sect, "anim_speed", 1.0f);
+
+	if (pSettings->line_exist(anim_sect, "anm_use"))
+	{
+		g_player_hud->script_anim_play(!inventory().GetActiveSlot() ? 2 : 1, anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", true, anim_speed);
+
+		if (use_cam_effector)
+			g_player_hud->PlayBlendAnm(use_cam_effector, 0, anim_speed, effector_intensity, false);
+
+		m_iMaskAnimLength = Device.dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", anim_speed);
+	}
+
+	if (pSettings->line_exist(anim_sect, "snd_using"))
+	{
+		if (m_action_anim_sound._feedback())
+			m_action_anim_sound.stop();
+
+		shared_str snd_name = pSettings->r_string(anim_sect, "snd_using");
+		m_action_anim_sound.create(snd_name.c_str(), st_Effect, sg_SourceType);
+		m_action_anim_sound.play(NULL, sm_2D);
+	}
+
+	m_iActionTiming = Device.dwTimeGlobal + anim_timer;
+
+	m_bMaskClear = false;
+	m_bActionAnimInProcess = true;
+}
+
+void CActor::UpdateMaskUseAnim()
+{
+	if ((m_iActionTiming <= Device.dwTimeGlobal && !m_bMaskClear) && g_Alive())
+	{
+		m_iActionTiming = Device.dwTimeGlobal;
+		m_bMaskClear = true;
+	}
+
+	if (m_bMaskAnimActivated)
+	{
+		if ((m_iMaskAnimLength <= Device.dwTimeGlobal) || !g_Alive())
+		{
+			m_iMaskAnimLength = Device.dwTimeGlobal;
+			m_iActionTiming = Device.dwTimeGlobal;
+			m_action_anim_sound.stop();
+			g_block_all_except_movement = false;
+			g_actor_allow_ladder = true;
+			m_bActionAnimInProcess = false;
+			m_bMaskAnimActivated = false;
+			m_bMaskClear = false;
+		}
+	}
+}
+
+void CActor::QuickKick()
+{
+	LPCSTR anim_sect = READ_IF_EXISTS(pAdvancedSettings, r_string, "actions_animations", "quick_kick_section", nullptr);
+
+	if (!anim_sect)
+		return;
+
+	CHudItem* active_item = smart_cast<CHudItem*>(inventory().ActiveItem());
+	CWeaponKnife* cur_knife = smart_cast<CWeaponKnife*>(inventory().ItemFromSlot(KNIFE_SLOT));
+
+	if (active_item && !(active_item->GetState() == CWeapon::eIdle))
+		return;
+
+	if (!cur_knife || active_item == cur_knife)
+		return;
+
+	m_bQuickKickActivated = true;
+
+	int anim_timer = READ_IF_EXISTS(pSettings, r_u32, anim_sect, "anim_timing", 0);
+
+	g_block_all_except_movement = true;
+	g_actor_allow_ladder = false;
+
+	LPCSTR use_cam_effector = READ_IF_EXISTS(pSettings, r_string, anim_sect, !active_item ? "anim_camera_effector" : "anim_camera_effector_weapon", nullptr);
+	float effector_intensity = READ_IF_EXISTS(pSettings, r_float, anim_sect, "cam_effector_intensity", 1.0f);
+	float anim_speed = READ_IF_EXISTS(pSettings, r_float, anim_sect, "anim_speed", 1.0f);
+
+	if (pSettings->line_exist(anim_sect, "anm_use"))
+	{
+		if (active_item)
+		{
+			g_player_hud->detach_item(active_item);
+			SetWeaponHideState(INV_STATE_BLOCK_ALL, true);
+		}
+
+		string128 attach_visual{};
+		strconcat(sizeof(attach_visual), attach_visual, cur_knife->cNameVisual().c_str(), "_hud");
+
+		g_player_hud->script_anim_play(2, anim_sect, !active_item ? "anm_use" : "anm_use_weapon", true, anim_speed, attach_visual);
+		CEffectorCam* effector = Cameras().GetCamEffector((ECamEffectorType)effUseItem);
+
+		if (!effector && use_cam_effector != nullptr)
+			AddEffector(this, effUseItem, use_cam_effector, effector_intensity);
+
+		m_iQuickKickAnimLength = Device.dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, !active_item ? "anm_use" : "anm_use_weapon", anim_speed);
+	}
+
+	if (pSettings->line_exist(anim_sect, "snd_using"))
+	{
+		if (m_action_anim_sound._feedback())
+			m_action_anim_sound.stop();
+
+		shared_str snd_name = pSettings->r_string(anim_sect, "snd_using");
+		m_action_anim_sound.create(snd_name.c_str(), st_Effect, sg_SourceType);
+		m_action_anim_sound.play(NULL, sm_2D);
+	}
+
+	m_iActionTiming = Device.dwTimeGlobal + anim_timer;
+
+	m_bQuickKick = false;
+	m_bActionAnimInProcess = true;
+}
+
+void CActor::UpdateQuickKickAnim()
+{
+	if ((m_iActionTiming <= Device.dwTimeGlobal && !m_bQuickKick) && g_Alive())
+	{
+		m_iActionTiming = Device.dwTimeGlobal;
+		m_bQuickKick = true;
+
+		CWeaponKnife* cur_knife = smart_cast<CWeaponKnife*>(inventory().ItemFromSlot(KNIFE_SLOT));
+
+		if (cur_knife)
+			cur_knife->FastStrike(0);
+	}
+
+	if (m_bQuickKickActivated)
+	{
+		if ((m_iQuickKickAnimLength <= Device.dwTimeGlobal) || !g_Alive())
+		{
+			CEffectorCam* effector = Cameras().GetCamEffector((ECamEffectorType)effUseItem);
+
+			if (effector)
+				RemoveEffector(this, effUseItem);
+
+			SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
+			m_iQuickKickAnimLength = Device.dwTimeGlobal;
+			m_iActionTiming = Device.dwTimeGlobal;
+			m_action_anim_sound.stop();
+			g_block_all_except_movement = false;
+			g_actor_allow_ladder = true;
+			m_bActionAnimInProcess = false;
+			m_bQuickKickActivated = false;
+			m_bQuickKick = false;
+		}
+	}
+}
+
 void CActor::SwitchNightVision(bool vision_on, bool use_sounds, bool send_event)
 {
-	CWeapon* wpn1{}, *wpn2{}, *wpn3{};
-
-	if (inventory().ItemFromSlot(PISTOL_SLOT))
-		wpn1 = smart_cast<CWeapon*>(inventory().ItemFromSlot(PISTOL_SLOT));
-	if (inventory().ItemFromSlot(INV_SLOT_2))
-		wpn2 = smart_cast<CWeapon*>(inventory().ItemFromSlot(INV_SLOT_2));
-	if (inventory().ItemFromSlot(INV_SLOT_3))
-		wpn3 = smart_cast<CWeapon*>(inventory().ItemFromSlot(INV_SLOT_3));
-
-	if (wpn1 && wpn1->IsZoomed())
-		return;
-	if (wpn2 && wpn2->IsZoomed())
-		return;
-	if (wpn3 && wpn3->IsZoomed())
-		return;
-
 	m_bNightVisionOn = vision_on;
 
 	if (!m_night_vision)
@@ -2588,12 +3074,16 @@ void CActor::SwitchNightVision(bool vision_on, bool use_sounds, bool send_event)
 			if (m_bNightVisionOn && !bIsActiveNow)
 			{
 				m_night_vision->Start(pHelmet->m_NightVisionSect, this, use_sounds);
+
+				if (ps_r__ShaderNVG)
+					g_pGamePersistent->devices_shader_data.nightvision_lum_factor = pHelmet->m_fNightVisionLumFactor;
 			}
 		}
 		else
 		{
 			m_night_vision->OnDisabled(this, use_sounds);
 			m_bNightVisionOn = false;
+			g_pGamePersistent->devices_shader_data.nightvision_lum_factor = 0.0f;
 		}
 	}
 	else
@@ -2606,12 +3096,16 @@ void CActor::SwitchNightVision(bool vision_on, bool use_sounds, bool send_event)
 				if (m_bNightVisionOn && !bIsActiveNow)
 				{
 					m_night_vision->Start(pOutfit->m_NightVisionSect, this, use_sounds);
+
+					if (ps_r__ShaderNVG)
+						g_pGamePersistent->devices_shader_data.nightvision_lum_factor = pOutfit->m_fNightVisionLumFactor;
 				}
 			}
 			else
 			{
 				m_night_vision->OnDisabled(this, use_sounds);
 				m_bNightVisionOn = false;
+				g_pGamePersistent->devices_shader_data.nightvision_lum_factor = 0.0f;
 			}
 		}
 	}
@@ -2769,4 +3263,115 @@ bool CActor::use_HolderEx(CHolderCustom* object, bool bForce)
 		}
 	}
 	return false;
+}
+
+bool CActor::HasItemsForRepair(xr_vector<std::pair<shared_str, int>> item)
+{
+	for (int i{}; i < item.size(); ++i)
+	{
+		CInventoryOwner* l_tpInventoryOwner = smart_cast<CInventoryOwner*>(this);
+
+		if (!l_tpInventoryOwner)
+			return false;
+
+		CInventoryItem* l_tpInventoryItem = l_tpInventoryOwner->inventory().GetItemFromInventory(item[i].first.c_str());
+
+		if (!l_tpInventoryItem)
+			return false;
+
+		int need_count = item[i].second;
+		int has_count = 0;
+
+		auto calc = [&](LPCSTR section)
+		{
+			if (section == item[i].first.c_str())
+				has_count++;
+		};
+
+		TIItemContainer::iterator I = l_tpInventoryOwner->inventory().m_all.begin();
+		TIItemContainer::iterator E = l_tpInventoryOwner->inventory().m_all.end();
+
+		for (; I != E; ++I)
+			calc((*I)->object().cNameSect().c_str());
+
+		if (has_count < need_count)
+			return false;
+	}
+
+	return true;
+}
+
+void CActor::RemoveItemsForRepair(xr_vector<std::pair<shared_str, int>> item)
+{
+	for (int i{}; i < item.size(); ++i)
+	{
+		CInventoryOwner* l_tpInventoryOwner = smart_cast<CInventoryOwner*>(this);
+
+		if (!l_tpInventoryOwner)
+			return;
+
+		CInventoryItem* l_tpInventoryItem = l_tpInventoryOwner->inventory().GetItemFromInventory(item[i].first.c_str());
+
+		if (!l_tpInventoryItem)
+			return;
+
+		int need_count = item[i].second;
+		int has_count = 0;
+
+		auto calc = [&](LPCSTR section)
+		{
+			if (section == item[i].first.c_str())
+			{
+				has_count++;
+
+				return true;
+			}
+			return false;
+		};
+
+		TIItemContainer::iterator I = l_tpInventoryOwner->inventory().m_all.begin();
+		TIItemContainer::iterator E = l_tpInventoryOwner->inventory().m_all.end();
+
+		for (; I != E; ++I)
+		{
+			bool is_item_to_remove = calc((*I)->object().cNameSect().c_str());
+
+			if (has_count && has_count <= need_count && is_item_to_remove)
+				(*I)->object().DestroyObject();
+		}
+	}
+}
+
+void CActor::ChangeInventoryFullness(float val)
+{
+	if (!this)
+		return;
+
+	m_fInventoryFullness += val;
+
+	if (m_fInventoryFullness < 0.0f)
+		m_fInventoryFullness = 0.0f;
+
+	if (val > 0)
+		m_fInventoryFullnessCtrl = m_fInventoryFullness;
+}
+
+//РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РІРјРµСЃС‚РёС‚РµР»СЊРЅРѕСЃС‚СЊ РёРЅРІРµРЅС‚Р°СЂСЏ
+float CActor::MaxCarryInvCapacity() const
+{
+	float res = m_fInventoryCapacity;
+	
+	CCustomOutfit* outfit = GetOutfit();
+	if (outfit)
+		res += outfit->GetInventoryCapacity();
+
+	CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+	if (backpack)
+		res += backpack->GetInventoryCapacity();
+
+	CCustomOutfit* pants = smart_cast<CCustomOutfit*>(inventory().ItemFromSlot(PANTS_SLOT));
+	if (pants)
+		res += pants->GetInventoryCapacity();
+
+	return res;
 }

@@ -31,7 +31,6 @@ CPda::CPda(void)
 	m_SpecificChracterOwner = nullptr;
 	TurnOff();
 	m_bZoomed = false;
-	m_eDeferredEnable = eDefault;
 	joystick = BI_NONE;
 	target_screen_switch = 0.f;
 	m_fLR_CameraFactor = 0.f;
@@ -146,19 +145,22 @@ void CPda::OnStateSwitch(u32 S)
 	case eShowing:
 	{
 		g_player_hud->attach_item(this);
-		g_pGamePersistent->pda_shader_data.pda_display_factor = 0.f;
+		g_pGamePersistent->devices_shader_data.pda_display_factor = 0.f;
 
-		m_sounds.PlaySound(hasEnoughBatteryPower() ? "sndShow" : "sndShowEmpty", Position(), H_Root(), !!GetHUDmode(), false);
-		PlayHUDMotion(!m_bNoticedEmptyBattery ? "anm_show" : "anm_show_empty", false, this, GetState());
-		
+		m_sounds.PlaySound((hasEnoughBatteryPower() && m_psy_factor < 1.0f) ? "sndShow" : "sndShowEmpty", Position(), H_Root(), !!GetHUDmode(), false);
+		PlayHUDMotion((!m_bNoticedEmptyBattery && m_psy_factor < 1.0f) ? "anm_show" : "anm_show_empty", false, this, GetState());
+
+		if (auto pda = HUD().GetUI() && &HUD().GetUI()->UIGame()->PdaMenu() ? &HUD().GetUI()->UIGame()->PdaMenu() : nullptr)
+			pda->ResetJoystick(true);
+
 		SetPending(true);
 		target_screen_switch = Device.fTimeGlobal + m_screen_on_delay;
 	}
 	break;
 	case eHiding:
 	{
-		m_sounds.PlaySound(hasEnoughBatteryPower() ? "sndHide" : "sndHideEmpty", Position(), H_Root(), !!GetHUDmode(), false);
-		PlayHUDMotion(!m_bNoticedEmptyBattery ? "anm_hide" : "anm_hide_empty", true, this, GetState());
+		m_sounds.PlaySound((hasEnoughBatteryPower() && m_psy_factor < 1.0f) ? "sndHide" : "sndHideEmpty", Position(), H_Root(), !!GetHUDmode(), false);
+		PlayHUDMotion((!m_bNoticedEmptyBattery && m_psy_factor < 1.0f) ? "anm_hide" : "anm_hide_empty", true, this, GetState());
 		SetPending(true);
 		m_bZoomed = false;
 		HUD().GetUI()->UIGame()->PdaMenu().Enable(false);
@@ -183,12 +185,11 @@ void CPda::OnStateSwitch(u32 S)
 			if (psActorFlags.test(AF_3D_PDA))
 				pda->Enable(true);
 			else
-				pda->HideDialog();
+				HUD().GetUI()->StartStopMenu(pda, false);
 		}
 
 		g_player_hud->reset_thumb(true);
-		pda->ResetJoystick(true);
-	SetPending(true);
+		SetPending(false);
 	}
 	break;
 	case eIdle:
@@ -340,7 +341,7 @@ void CPda::UpdateCL()
 		if (!enoughBatteryPower || state == eHidden)
 		{
 			HUD().GetUI()->SetMainInputReceiver(nullptr, false);
-			pda->HideDialog();
+			HUD().GetUI()->StartStopMenu(pda, false);
 			m_bZoomed = false;
 
 			if (state == eIdle)
@@ -378,7 +379,7 @@ void CPda::UpdateCL()
 		// Show PDA UI if possible
 		if (!b_main_menu_is_active && state != eHiding && state != eHidden && enoughBatteryPower)
 		{
-			pda->ShowDialog(false); // Don't hide indicators
+			HUD().GetUI()->StartStopMenu(pda, false);
 			HUD().GetUI()->SetMainInputReceiver(nullptr, false);
 			m_bNoticedEmptyBattery = false;
 
@@ -392,29 +393,29 @@ void CPda::UpdateCL()
 		// Adjust screen brightness (smooth)
 		if (m_bPowerSaving)
 		{
-			if (g_pGamePersistent->pda_shader_data.pda_displaybrightness > m_fDisplayBrightnessPowerSaving)
-				g_pGamePersistent->pda_shader_data.pda_displaybrightness -= Device.fTimeDelta / .25f;
+			if (g_pGamePersistent->devices_shader_data.pda_displaybrightness > m_fDisplayBrightnessPowerSaving)
+				g_pGamePersistent->devices_shader_data.pda_displaybrightness -= Device.fTimeDelta / .25f;
 		}
 		else
-			g_pGamePersistent->pda_shader_data.pda_displaybrightness = 1.f;
+			g_pGamePersistent->devices_shader_data.pda_displaybrightness = 1.f;
 
-		clamp(g_pGamePersistent->pda_shader_data.pda_displaybrightness, m_fDisplayBrightnessPowerSaving, 1.f);
+		clamp(g_pGamePersistent->devices_shader_data.pda_displaybrightness, m_fDisplayBrightnessPowerSaving, 1.f);
 
 		// Screen "Glitch" factor
-		g_pGamePersistent->pda_shader_data.pda_psy_influence = m_psy_factor;
+		g_pGamePersistent->devices_shader_data.pda_psy_influence = m_psy_factor;
 
 		// Update Display Visibility (turn on/off)
 		if (target_screen_switch < Device.fTimeGlobal)
 		{
 			if (!enoughBatteryPower || state == eHiding)
 				// Change screen transparency (towards 0 = not visible).
-				g_pGamePersistent->pda_shader_data.pda_display_factor -= Device.fTimeDelta / .25f;
+				g_pGamePersistent->devices_shader_data.pda_display_factor -= Device.fTimeDelta / .25f;
 			else
 				// Change screen transparency (towards 1 = fully visible).
-				g_pGamePersistent->pda_shader_data.pda_display_factor += Device.fTimeDelta / .75f;
+				g_pGamePersistent->devices_shader_data.pda_display_factor += Device.fTimeDelta / .75f;
 		}
 
-		clamp(g_pGamePersistent->pda_shader_data.pda_display_factor, 0.f, 1.f);
+		clamp(g_pGamePersistent->devices_shader_data.pda_display_factor, 0.f, 1.f);
 	}
 
 	if (m_bZoomed)
@@ -432,6 +433,11 @@ void CPda::UpdateCL()
 			SSFX_PDA_DoF_active = false;
 		}
 	}
+
+	luabind::functor<bool> m_functor;
+
+	if (ai().script_engine().functor("pda.check_surge", m_functor))
+		m_functor();
 }
 
 void CPda::shedule_Update(u32 dt)
@@ -516,7 +522,7 @@ void CPda::OnMoveToRuck(EItemPlace prev)
 		g_player_hud->detach_item(this);
 	}
 	CUIPdaWnd* pda = &HUD().GetUI()->UIGame()->PdaMenu();
-	if (pda->IsShown()) pda->HideDialog();
+	HUD().GetUI()->StartStopMenu(pda, false);
 	StopCurrentAnimWithoutCallback();
 	SetPending(false);
 }
@@ -529,28 +535,6 @@ void CPda::UpdateHudAdditional(Fmatrix& trans)
 
 	attachable_hud_item* hi = HudItemData();
 	R_ASSERT(hi);
-
-	//u8 idx = GetCurrentHudOffsetIdx();
-
-	/*if (g_player_hud->script_anim_part != u8(-1))
-	{
-		CUIPdaWnd* pda = &HUD().GetUI()->UIGame()->PdaMenu();
-
-		if (pda->IsEnabled())
-		{
-			if (m_bZoomed)
-			{
-				m_bZoomed = false;
-				m_eDeferredEnable = eEnableZoomed;
-			}
-			else
-			{
-				m_eDeferredEnable = eEnable;
-			}
-
-			pda->Enable(false);
-		}
-	}*/
 
 	Fvector curr_offs, curr_rot;
 
@@ -821,7 +805,10 @@ void CPda::OnH_B_Independent(bool just_before_destroy)
 	m_fZoomfactor = 0.f;
 
 	CUIPdaWnd* pda = &HUD().GetUI()->UIGame()->PdaMenu();
-	if (pda->IsShown()) pda->HideDialog();
+
+	if (pda->IsShown())
+		HUD().GetUI()->StartStopMenu(pda, false);
+
 	g_player_hud->reset_thumb(true);
 	pda->ResetJoystick(true);
 

@@ -1,4 +1,5 @@
 ﻿#include "stdafx.h"
+#include "pch_script.h"
 #include "ActorCondition.h"
 #include "Wound.h"
 
@@ -34,23 +35,36 @@ void CEntityCondition::script_register(lua_State* L)
             .def("BleedingSpeed",               &CEntityCondition::BleedingSpeed)
             .enum_("EBoostParams")
             [
-                value("eBoostHpRestore",                static_cast<int>(EBoostParams::eBoostHpRestore)),
-                value("eBoostPowerRestore",             static_cast<int>(EBoostParams::eBoostPowerRestore)),
-                value("eBoostRadiationRestore",         static_cast<int>(EBoostParams::eBoostRadiationRestore)),
-                value("eBoostBleedingRestore",          static_cast<int>(EBoostParams::eBoostBleedingRestore)),
-                value("eBoostMaxWeight",                static_cast<int>(EBoostParams::eBoostMaxWeight)),
-                value("eBoostRadiationProtection",      static_cast<int>(EBoostParams::eBoostRadiationProtection)),
-                value("eBoostTelepaticProtection",      static_cast<int>(EBoostParams::eBoostTelepaticProtection)),
-                value("eBoostChemicalBurnProtection",   static_cast<int>(EBoostParams::eBoostChemicalBurnProtection)),
-                value("eBoostBurnImmunity",             static_cast<int>(EBoostParams::eBoostBurnImmunity)),
-                value("eBoostShockImmunity",            static_cast<int>(EBoostParams::eBoostShockImmunity)),
-                value("eBoostRadiationImmunity",        static_cast<int>(EBoostParams::eBoostRadiationImmunity)),
-                value("eBoostTelepaticImmunity",        static_cast<int>(EBoostParams::eBoostTelepaticImmunity)),
-                value("eBoostChemicalBurnImmunity",     static_cast<int>(EBoostParams::eBoostChemicalBurnImmunity)),
-                value("eBoostExplImmunity",             static_cast<int>(EBoostParams::eBoostExplImmunity)),
-                value("eBoostStrikeImmunity",           static_cast<int>(EBoostParams::eBoostStrikeImmunity)),
-                value("eBoostFireWoundImmunity",        static_cast<int>(EBoostParams::eBoostFireWoundImmunity)),
-                value("eBoostWoundImmunity",            static_cast<int>(EBoostParams::eBoostWoundImmunity))
+                value("eBoostHpRestore",                int(EBoostParams::eBoostHpRestore)),
+                value("eBoostPowerRestore",             int(EBoostParams::eBoostPowerRestore)),
+                value("eBoostRadiationRestore",         int(EBoostParams::eBoostRadiationRestore)),
+                value("eBoostBleedingRestore",          int(EBoostParams::eBoostBleedingRestore)),
+                value("eBoostMaxWeight",                int(EBoostParams::eBoostMaxWeight)),
+                value("eBoostRadiationProtection",      int(EBoostParams::eBoostRadiationProtection)),
+                value("eBoostTelepaticProtection",      int(EBoostParams::eBoostTelepaticProtection)),
+                value("eBoostChemicalBurnProtection",   int(EBoostParams::eBoostChemicalBurnProtection)),
+                value("eBoostBurnImmunity",             int(EBoostParams::eBoostBurnImmunity)),
+                value("eBoostShockImmunity",            int(EBoostParams::eBoostShockImmunity)),
+                value("eBoostRadiationImmunity",        int(EBoostParams::eBoostRadiationImmunity)),
+                value("eBoostTelepaticImmunity",        int(EBoostParams::eBoostTelepaticImmunity)),
+                value("eBoostChemicalBurnImmunity",     int(EBoostParams::eBoostChemicalBurnImmunity)),
+                value("eBoostExplImmunity",             int(EBoostParams::eBoostExplImmunity)),
+                value("eBoostStrikeImmunity",           int(EBoostParams::eBoostStrikeImmunity)),
+                value("eBoostFireWoundImmunity",        int(EBoostParams::eBoostFireWoundImmunity)),
+                value("eBoostWoundImmunity",            int(EBoostParams::eBoostWoundImmunity)),
+
+                value("eBoostSatietyRestore",           int(EBoostParams::eBoostSatietyRestore)),
+                value("eBoostThirstRestore",            int(EBoostParams::eBoostThirstRestore)),
+                value("eBoostPsyHealthRestore",         int(EBoostParams::eBoostPsyHealthRestore)),
+                value("eBoostIntoxicationRestore",      int(EBoostParams::eBoostIntoxicationRestore)),
+                value("eBoostSleepenessRestore",        int(EBoostParams::eBoostSleepenessRestore)),
+                value("eBoostAlcoholRestore",           int(EBoostParams::eBoostAlcoholRestore)),
+                value("eBoostAlcoholismRestore",        int(EBoostParams::eBoostAlcoholismRestore)),
+                value("eBoostHangoverRestore",          int(EBoostParams::eBoostHangoverRestore)),
+                value("eBoostDrugsRestore",             int(EBoostParams::eBoostDrugsRestore)),
+                value("eBoostNarcotismRestore",         int(EBoostParams::eBoostNarcotismRestore)),
+                value("eBoostWithdrawalRestore",        int(EBoostParams::eBoostWithdrawalRestore)),
+                value("eBoostTimeFactor",               int(EBoostParams::eBoostTimeFactor))
             ]
     ];
 };
@@ -103,6 +117,17 @@ void CActorCondition::script_register(lua_State* L)
             .def("BoostRadiationProtection",    &CActorCondition::BoostRadiationProtection)
             .def("BoostTelepaticProtection",    &CActorCondition::BoostTelepaticProtection)
             .def("BoostChemicalBurnProtection", &CActorCondition::BoostChemicalBurnProtection)
+            .def("BoostSatietyRestore",         &CActorCondition::BoostSatietyRestore)
+            .def("BoostThirstRestore",          &CActorCondition::BoostThirstRestore)
+            .def("BoostPsyHealthRestore",       &CActorCondition::BoostPsyHealthRestore)
+            .def("BoostIntoxicationRestore",    &CActorCondition::BoostIntoxicationRestore)
+            .def("BoostSleepenessRestore",      &CActorCondition::BoostSleepenessRestore)
+            .def("BoostAlcoholRestore",         &CActorCondition::BoostAlcoholRestore)
+            .def("BoostAlcoholismRestore",      &CActorCondition::BoostAlcoholismRestore)
+            .def("BoostHangoverRestore",        &CActorCondition::BoostHangoverRestore)
+            .def("BoostDrugsRestore",           &CActorCondition::BoostDrugsRestore)
+            .def("BoostNarcotismRestore",       &CActorCondition::BoostNarcotismRestore)
+            .def("BoostWithdrawalRestore",      &CActorCondition::BoostWithdrawalRestore)
             .def("BoostTimeFactor",             &CActorCondition::BoostTimeFactor)
             .def("IsLimping",                   &CActorCondition::IsLimping)
             .def("IsCantWalk",                  &CActorCondition::IsCantWalk)

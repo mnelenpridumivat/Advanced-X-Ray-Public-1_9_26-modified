@@ -22,6 +22,7 @@ public:
 public:
 			void	PlayLegs					( CBlend *b );
 			void	Update						( );
+			float	Shift						( ){ return _object_shift.shift(); }
 private:
 			void	Calculate					( );
 			void	LimbCalculate				(  SCalculateData &cd );
@@ -34,7 +35,7 @@ private:
 			void	LimbSetup					( );
 
 private:
-	static	void  	IKVisualCallback	( IKinematics* K );
+	static	void __stdcall 	IKVisualCallback	( IKinematics* K );
 
 private:
 	CBlend					*m_legs_blend;

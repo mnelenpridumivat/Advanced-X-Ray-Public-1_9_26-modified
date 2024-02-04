@@ -70,6 +70,8 @@ void CSE_ALifeItemWeapon::script_register(lua_State *L)
             value("eWeaponAddonGrenadeLauncher", int(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonGrenadeLauncher)),
             value("eWeaponAddonScope", int(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonScope)),
             value("eWeaponAddonSilencer", int(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonSilencer)),
+			value("eWeaponAddonLaserDesignator", int(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonLaserDesignator)),
+			value("eWeaponAddonTacticalTorch", int(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonTacticalTorch)),
             value("eAddonAttachable", int(CSE_ALifeItemWeapon::EWeaponAddonStatus::eAddonAttachable)),
             value("eAddonDisabled", int(CSE_ALifeItemWeapon::EWeaponAddonStatus::eAddonDisabled)),
             value("eAddonPermanent", int(CSE_ALifeItemWeapon::EWeaponAddonStatus::eAddonPermanent))
@@ -83,6 +85,17 @@ void CSE_ALifeItemWeaponShotGun::script_register(lua_State *L)
 		luabind_class_item1(
 			CSE_ALifeItemWeaponShotGun,
 			"cse_alife_item_weapon_shotgun",
+			CSE_ALifeItemWeapon
+			)
+	];
+}
+
+void CSE_ALifeItemWeaponAutoShotGun::script_register(lua_State *L)
+{
+	module(L)[
+		luabind_class_item1(
+			CSE_ALifeItemWeaponAutoShotGun,
+			"cse_alife_item_weapon_auto_shotgun",
 			CSE_ALifeItemWeapon
 			)
 	];

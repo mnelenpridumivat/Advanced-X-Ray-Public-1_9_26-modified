@@ -15,7 +15,7 @@
 
 #include "UICellCustomItems.h"
 
-bool CUIMpTradeWnd::OnKeyboard(int dik, EUIMessages keyboard_action)
+bool CUIMpTradeWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 {
 #ifdef DEBUG
 	//for debug only
@@ -32,7 +32,7 @@ bool CUIMpTradeWnd::OnKeyboard(int dik, EUIMessages keyboard_action)
 
 	if(!m_store_hierarchy->CurrentIsRoot())
 	{
-		if (m_shop_wnd->OnKeyboard(dik, keyboard_action) )
+		if (m_shop_wnd->OnKeyboardAction(dik, keyboard_action) )
 			return true;
 
 		m_root_tab_control->SetAcceleratorsMode		(false);
@@ -59,16 +59,11 @@ bool CUIMpTradeWnd::OnKeyboard(int dik, EUIMessages keyboard_action)
 		return true;
 	}
 
-	bool res =  inherited::OnKeyboard(dik, keyboard_action);
+	bool res =  inherited::OnKeyboardAction(dik, keyboard_action);
 
 	m_root_tab_control->SetAcceleratorsMode		(true);
 
 	return			res;
-}
-
-bool CUIMpTradeWnd::OnMouse( float x, float y, EUIMessages mouse_action )
-{
-	return inherited::OnMouse( x, y, mouse_action );
 }
 
 void CUIMpTradeWnd::Update()
@@ -86,14 +81,14 @@ void CUIMpTradeWnd::UpdateMoneyIndicator()
 	{
 		u32 _cost						= 0;
 		string128						buff;
-		sprintf_s							(buff, "%d", m_money);
+		xr_sprintf							(buff, "%d", m_money);
 		m_static_player_money->SetText	(buff);
 		//update preset money
 		for(u32 i=_preset_idx_last; i<=_preset_idx_3; ++i)
 		{
 			CUIStatic* st				= m_static_preset_money[i];
 			_cost						= GetPresetCost((ETradePreset)i);
-			sprintf_s						(buff, "%d", _cost);
+			xr_sprintf						(buff, "%d", _cost);
 			st->SetText					(buff);
 			bool b_has_enought_money	= _cost<=GetMoneyAmount();
 			u32 clr						= (b_has_enought_money)?m_text_color_money_positive:m_text_color_money_negative;
@@ -109,20 +104,19 @@ void CUIMpTradeWnd::UpdateMoneyIndicator()
 		string128						buff;
 		StorePreset						(_preset_idx_temp, true, false, false);
 		_cost							= GetPresetCost(_preset_idx_temp);
-		sprintf_s							(buff, "%d", _cost);
-		m_static_curr_items_money->SetText(buff);
+		xr_sprintf							(buff, "%d", _cost);
+		m_static_curr_items_money->SetText	(buff);
 	}
 }
 
 void CUIMpTradeWnd::SetMoneyChangeString(int diff)
 {
 	string128								buff;
-	sprintf_s									(buff, "%+d RU", diff);
+	xr_sprintf								(buff, "%+d RU", diff);
 	m_static_money_change->SetText			(buff);
 	u32 clr									= (diff>0)?m_text_color_money_positive:m_text_color_money_negative;
 	m_static_money_change->SetTextColor		(clr);
 	m_static_money_change->ResetClrAnimation();
-//	Msg										("Money change:%s", buff);
 }
 
 void CUIMpTradeWnd::SetInfoString(LPCSTR str)
@@ -162,7 +156,7 @@ void CUIMpTradeWnd::SetCurrentItem(CUICellItem* itm)
 	{
 		const shared_str& current_sect_name = CurrentIItem()->object().cNameSect();
 		string256						str;
-		sprintf_s							(str, "%d", GetItemPrice(CurrentIItem()));
+		xr_sprintf							(str, "%d", GetItemPrice(CurrentIItem()));
 		m_item_info->UICost->SetText	(str);
 
 		m_item_info->UIName->SetText	(CurrentIItem()->NameShort());
@@ -172,12 +166,12 @@ void CUIMpTradeWnd::SetCurrentItem(CUICellItem* itm)
 
 		if (m_store_hierarchy->FindItem(current_sect_name) )
 		{// our team
-			strcpy_s						(team, _team_names[m_store_hierarchy->TeamIdx()]);
+			xr_strcpy						(team, _team_names[m_store_hierarchy->TeamIdx()]);
 		}else 
 		{
-			strcpy_s						(team, _team_names[m_store_hierarchy->TeamIdx()%1]);
+			xr_strcpy						(team, _team_names[m_store_hierarchy->TeamIdx()%1]);
 		}
-		sprintf_s							(tex_name, "ui_hud_status_%s_0%d", team, 1+get_rank(current_sect_name.c_str()) );
+		xr_sprintf							(tex_name, "ui_hud_status_%s_0%d", team, 1+get_rank(current_sect_name.c_str()) );
 				
 		m_static_item_rank->InitTexture		(tex_name);
 		m_static_item_rank->TextureOn		();
@@ -515,8 +509,8 @@ void CUIMpTradeWnd::SetRank(u32 rank)
 	string64			tex_name;
 	string64			team;
 
-	strcpy_s				(team, _team_names[m_store_hierarchy->TeamIdx()]);
-	sprintf_s				(tex_name, "ui_hud_status_%s_0%d", team, 1+rank );
+	xr_strcpy				(team, _team_names[m_store_hierarchy->TeamIdx()]);
+	xr_sprintf				(tex_name, "ui_hud_status_%s_0%d", team, 1+rank );
 			
 	m_static_player_rank->InitTexture(tex_name);
 	m_static_player_rank->TextureOn();

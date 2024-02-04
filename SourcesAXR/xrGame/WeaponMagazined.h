@@ -42,7 +42,6 @@ protected:
 
 	bool            m_bCustomShotSounds;
 protected:
-
 	virtual void	OnMagazineEmpty	();
 
 	virtual void	switch2_Idle	();
@@ -54,6 +53,8 @@ protected:
 	virtual void	switch2_Showing	();
 	virtual void    switch2_Unmis	();
 	virtual void	switch2_ChangeFireMode();
+	virtual void	switch2_LaserSwitch();
+	virtual void	switch2_FlashlightSwitch();
 	
 	virtual void	OnShot			();	
 	
@@ -148,7 +149,6 @@ protected:
 	//переменная блокирует использование
 	//только разных типов патронов
 	bool m_bLockType;
-
 	bool m_bAutoreloadEnabled;
 	bool m_opened;
 	bool m_bUseFiremodeChangeAnim;
@@ -182,6 +182,8 @@ protected:
 	virtual void	PlayAnimIdleSprint	();
 	virtual void	PlayAnimIdleMoving	();
 	virtual void	PlayAnimFireMode	();
+	virtual void	PlayAnimLaserSwitch	();
+	virtual void	PlayAnimFlashlightSwitch();
 
 protected:
 

@@ -13,6 +13,7 @@
 //#include "../../xrServerEntities/smart_cast.h"
 #include "../../xrEngine/Rain.h"
 #include "../../xrEngine/x_ray.h"
+#include "../../xrEngine/xr_ioconsole.h"
 
 CRender										RImplementation;
 
@@ -266,6 +267,8 @@ void					CRender::create					()
 		o.ssao_hbao = false;
 	}
 
+	Console->Execute("shaders_preset original_shaders_preset");
+
 	// constants
 	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup	("parallax",	&binder_parallax);
 	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup	("water_intensity",	&binder_water_intensity);
@@ -281,7 +284,6 @@ void					CRender::create					()
 
 	Models						= xr_new<CModelPool>		();
 	PSLibrary.OnCreate			();
-	HWOCC.occq_create			(occq_size);
 
 	//rmNormal					();
 	marker						= 0;
@@ -311,6 +313,8 @@ void					CRender::destroy				()
 	r_dsgraph_destroy			();
 }
 
+extern u32 reset_frame;
+
 void CRender::reset_begin()
 {
 	// Update incremental shadowmap-visibility solver
@@ -328,6 +332,8 @@ void CRender::reset_begin()
 		}
 		Lights_LastFrame.clear	();
 	}
+
+	reset_frame = Device.dwFrame;
 
 	//AVO: let's reload details while changed details options on vid_restart
 	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)))
@@ -351,7 +357,6 @@ void CRender::reset_end()
 	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[1]));
 	for (u32 i=0; i<HW.Caps.iGPUNum; ++i)
 		R_CHK					(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[i]));
-	HWOCC.occq_create			(occq_size);
 
 	Target						=	xr_new<CRenderTarget>	();
 
@@ -381,14 +386,14 @@ void CRender::OnFrame()
 void CRender::OnFrame()
 {
 	Models->DeleteQueue			();
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))	{
+	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))
+	{
 		// MT-details (@front)
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(Details,&CDetailManager::MT_CALC));
+		if (Details)
+			Details->StartAsync();
 
 		// MT-HOM (@front)
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(&HOM,&CHOM::MT_RENDER));
+		Device.seqParallel.insert(Device.seqParallel.begin(), fastdelegate::FastDelegate0<>(&HOM,&CHOM::MT_RENDER));
 	}
 }
 

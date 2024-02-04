@@ -2,6 +2,9 @@
 #include "AdvancedXrayGameConstants.h"
 #include "GamePersistent.h"
 #include "game_cl_single.h"
+#include "Actor.h"
+#include "Inventory.h"
+#include "CustomBackpack.h"
 
 bool	m_bKnifeSlotEnabled = false;
 bool	m_bBinocularSlotEnabled = false;
@@ -32,14 +35,28 @@ bool	m_bHideHudOnMaster = false;
 bool	m_bActorSkills = false;
 bool	m_bSleepInfluenceOnPsyHealth = false;
 bool	m_bUseHQ_Icons = false;
+bool	m_bAfPanelEnabled = false;
+bool	m_bHUD_UsedItemText = true;
+bool	m_bLimitedInventory = false;
+bool	m_bInventoryItemsAutoVolume = false;
+bool	m_bBackpackAnimsEnabled = false;
+bool	m_bFoodIrradiation = false;
+bool	m_bFoodRotting = false;
+bool	m_bOGSE_WpnZoomSystem = false;
+bool	m_bQuickThrowGrenadesEnabled = true;
+bool	m_bPDA_FlashingIconsEnabled = false;
+bool	m_bPDA_FlashingIconsQuestsEnabled = false;
+bool	m_bFogInfluenceVolumetricLight = false;
 int		m_iArtefactsCount = 5;
 int		m_i_CMD_Count = 1;
 int		m_B_CMD_Count = 1;
 float	m_fDistantSndDistance = 150.f;
 Fvector4 m_FV4RedColor = Fvector4().set(255, 0, 0, 255);
-Fvector4 m_FV4GreenColor = Fvector4().set(0, 255, 255, 255);
+Fvector4 m_FV4GreenColor = Fvector4().set(0, 255, 0, 255);
 Fvector4 m_FV4NeutralColor = Fvector4().set(170, 170, 170, 255);
 LPCSTR	m_sAfInfluenceMode = "from_belt";
+LPCSTR	m_sArtefactsDegradationMode = "from_belt";
+LPCSTR	m_sMoonPhasesMode = "off";
 //SSFX DoF
 Fvector4 m_FV4DefaultDoF = Fvector4().set(0.1f, 0.25f, 0.0f, 0.0f);
 Fvector4 m_FV4FocusDoF = Fvector4().set(0.1f, 0.25f, 0.0f, 0.0f);
@@ -76,6 +93,13 @@ namespace GameConstants
 		m_bHideHudOnMaster = READ_IF_EXISTS(pAdvancedSettings, r_bool, "gameplay", "hide_hud_on_master", false);
 		m_bActorSkills = READ_IF_EXISTS(pAdvancedSettings, r_bool, "gameplay", "actor_skills_enabled", false);
 		m_bSleepInfluenceOnPsyHealth = READ_IF_EXISTS(pAdvancedSettings, r_bool, "gameplay", "sleepeness_infl_on_psy_health", false);
+		m_bLimitedInventory = READ_IF_EXISTS(pAdvancedSettings, r_bool, "gameplay", "enable_limited_inventory", false);
+		m_bInventoryItemsAutoVolume = READ_IF_EXISTS(pAdvancedSettings, r_bool, "gameplay", "items_auto_volume", false);
+		m_bFoodIrradiation = READ_IF_EXISTS(pAdvancedSettings, r_bool, "gameplay", "enable_food_irradiation", false);
+		m_bFoodRotting = READ_IF_EXISTS(pAdvancedSettings, r_bool, "gameplay", "enable_food_rotting", false);
+		m_bOGSE_WpnZoomSystem = READ_IF_EXISTS(pAdvancedSettings, r_bool, "gameplay", "ogse_weapons_zoom_system", false);
+		m_bQuickThrowGrenadesEnabled = READ_IF_EXISTS(pAdvancedSettings, r_bool, "gameplay", "enable_quick_throw_grenades", true);
+		m_bBackpackAnimsEnabled = READ_IF_EXISTS(pAdvancedSettings, r_bool, "actions_animations", "enable_backpack_animations", false);
 		m_iArtefactsCount = READ_IF_EXISTS(pAdvancedSettings, r_u32, "inventory", "artefacts_count", 5);
 		m_i_CMD_Count = READ_IF_EXISTS(pAdvancedSettings, r_u32, "custom_commands", "integer_cmd_count", 1);
 		m_B_CMD_Count = READ_IF_EXISTS(pAdvancedSettings, r_u32, "custom_commands", "bool_cmd_count", 1);
@@ -85,10 +109,17 @@ namespace GameConstants
 		m_FV4GreenColor = READ_IF_EXISTS(pAdvancedSettings, r_fvector4, "ui_settings", "colorize_values_green", Fvector4().set(0, 255, 0, 255));
 		m_FV4NeutralColor = READ_IF_EXISTS(pAdvancedSettings, r_fvector4, "ui_settings", "colorize_values_neutral", Fvector4().set(170, 170, 170, 255));
 		m_bUseHQ_Icons = READ_IF_EXISTS(pAdvancedSettings, r_bool, "ui_settings", "hq_icons", false);
+		m_bAfPanelEnabled = READ_IF_EXISTS(pAdvancedSettings, r_bool, "ui_settings", "enable_artefact_panel", false);
+		m_bHUD_UsedItemText = READ_IF_EXISTS(pAdvancedSettings, r_bool, "ui_settings", "enable_hud_used_item_text", true);
+		m_bPDA_FlashingIconsEnabled = READ_IF_EXISTS(pAdvancedSettings, r_bool, "ui_settings", "enable_pda_info_icons", false);
+		m_bPDA_FlashingIconsQuestsEnabled = READ_IF_EXISTS(pAdvancedSettings, r_bool, "ui_settings", "enable_new_task_icon", false);
 		m_sAfInfluenceMode = READ_IF_EXISTS(pAdvancedSettings, r_string, "gameplay", "artefacts_infl_mode", "from_belt"); //from_belt|from_ruck|from_ruck_only_rad
+		m_sArtefactsDegradationMode = READ_IF_EXISTS(pAdvancedSettings, r_string, "gameplay", "artefacts_degradation_mode", "from_belt"); //from_belt|from_ruck
 		m_FV4DefaultDoF = READ_IF_EXISTS(pAdvancedSettings, r_fvector4, "ssfx_dof", "default_dof", Fvector4().set(0.1f, 0.25f, 0.0f, 0.0f));
 		m_FV4FocusDoF = READ_IF_EXISTS(pAdvancedSettings, r_fvector4, "ssfx_dof", "focus_dof", Fvector4().set(0.1f, 0.25f, 0.0f, 0.0f));
 		m_bEnableBoreDoF = READ_IF_EXISTS(pAdvancedSettings, r_bool, "ssfx_dof", "bore_dof_enabled", true);
+		m_sMoonPhasesMode = READ_IF_EXISTS(pAdvancedSettings, r_string, "environment", "moon_phases_mode", "off"); //off|8days|28days
+		m_bFogInfluenceVolumetricLight = READ_IF_EXISTS(pAdvancedSettings, r_bool, "environment", "fog_infl_volumetric_light", false);
 
 		Msg("# Advanced X-Ray GameConstants are loaded");
 	}
@@ -190,7 +221,9 @@ namespace GameConstants
 
 	bool GetHideWeaponInInventory()
 	{
-		return m_bHideWeaponInInventory;
+		CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(Actor()->inventory().ItemFromSlot(BACKPACK_SLOT));
+
+		return (backpack) ? ((Actor()->inventory().ActiveItem() != backpack) && m_bHideWeaponInInventory) : m_bHideWeaponInInventory;
 	}
 
 	bool GetStopActorIfShoot()
@@ -233,6 +266,36 @@ namespace GameConstants
 		return m_bSleepInfluenceOnPsyHealth;
 	}
 
+	bool GetArtefactPanelEnabled()
+	{
+		return m_bAfPanelEnabled;
+	}
+
+	bool GetHUD_UsedItemTextEnabled()
+	{
+		return m_bHUD_UsedItemText;
+	}
+
+	bool GetFoodIrradiation()
+	{
+		return m_bFoodIrradiation;
+	}
+
+	bool GetFoodRotting()
+	{
+		return m_bFoodRotting;
+	}
+
+	bool GetOGSE_WpnZoomSystem()
+	{
+		return m_bOGSE_WpnZoomSystem;
+	}
+
+	bool GetQuickThrowGrenadesEnabled()
+	{
+		return m_bQuickThrowGrenadesEnabled;
+	}
+
 	int GetArtefactsCount()
 	{
 		return m_iArtefactsCount;
@@ -256,6 +319,36 @@ namespace GameConstants
 	bool GetUseHQ_Icons()
 	{
 		return m_bUseHQ_Icons;
+	}
+
+	bool GetLimitedInventory()
+	{
+		return m_bLimitedInventory;
+	}
+
+	bool GetInventoryItemsAutoVolume()
+	{
+		return m_bInventoryItemsAutoVolume;
+	}
+
+	bool GetBackpackAnimsEnabled()
+	{
+		return m_bBackpackAnimsEnabled;
+	}
+
+	bool GetPDA_FlashingIconsEnabled()
+	{
+		return m_bPDA_FlashingIconsEnabled;
+	}
+
+	bool GetPDA_FlashingIconsQuestsEnabled()
+	{
+		return m_bPDA_FlashingIconsQuestsEnabled;
+	}
+
+	bool GetFogInfluenceVolumetricLight()
+	{
+		return m_bFogInfluenceVolumetricLight;
 	}
 
 	Fvector4 GetRedColor()
@@ -291,5 +384,15 @@ namespace GameConstants
 	LPCSTR GetAfInfluenceMode()
 	{
 		return m_sAfInfluenceMode;
+	}
+
+	LPCSTR GetArtefactDegradationMode()
+	{
+		return m_sArtefactsDegradationMode;
+	}
+
+	LPCSTR GetMoonPhasesMode()
+	{
+		return m_sMoonPhasesMode;
 	}
 }

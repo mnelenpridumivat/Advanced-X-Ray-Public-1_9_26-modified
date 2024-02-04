@@ -26,6 +26,7 @@
 #include "alife_object_registry.h"
 #include "CustomOutfit.h"
 #include "ActorHelmet.h"
+#include "CustomBackpack.h"
 #include "Bolt.h"
 #include "AdvancedXrayGameConstants.h"
 
@@ -374,8 +375,13 @@ float  CInventoryOwner::MaxCarryWeight () const
 	float ret =  inventory().GetMaxWeight();
 
 	const CCustomOutfit* outfit	= GetOutfit();
+	const CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+
 	if(outfit)
 		ret += outfit->m_additional_weight2;
+
+	if (backpack)
+		ret += backpack->m_additional_weight2;
 
 	return ret;
 }
@@ -418,7 +424,7 @@ LPCSTR	CInventoryOwner::Name () const
 	return m_game_name.c_str();
 }
 
-LPCSTR	CInventoryOwner::IconName () const
+LPCSTR CInventoryOwner::IconName () const
 {
 	return m_character_icon.c_str();
 }
@@ -540,14 +546,31 @@ void CInventoryOwner::OnItemDropUpdate ()
 
 void CInventoryOwner::OnItemBelt	(CInventoryItem *inventory_item, const SInvItemPlace& previous_place)
 {
+	/* avo: script callback */
+	CGameObject* object = smart_cast<CGameObject*>(this);
+	VERIFY(object);
+	object->callback(GameObject::eItemToBelt)(inventory_item->object().lua_game_object());
+	/* avo: end */
 }
 
 void CInventoryOwner::OnItemRuck	(CInventoryItem *inventory_item, const SInvItemPlace& previous_place)
 {
+	/* avo: script callback */
+	CGameObject* object = smart_cast<CGameObject*>(this);
+	VERIFY(object);
+	object->callback(GameObject::eItemToRuck)(inventory_item->object().lua_game_object());
+	/* avo: end */
+
 	detach		(inventory_item);
 }
 void CInventoryOwner::OnItemSlot	(CInventoryItem *inventory_item, const SInvItemPlace& previous_place)
 {
+	/* avo: script callback */
+	CGameObject* object = smart_cast<CGameObject*>(this);
+	VERIFY(object);
+	object->callback(GameObject::eItemToSlot)(inventory_item->object().lua_game_object());
+	/* avo: end */
+
 	attach		(inventory_item);
 }
 
@@ -738,7 +761,7 @@ void CInventoryOwner::AfterLoad()
 		Msg("inventory == null!");
 }
 
-CInventoryItem* CInventoryOwner::GetCurrentTorch() const 
+CInventoryItem* CInventoryOwner::GetCurrentTorch() const
 {
 	return inventory().ItemFromSlot(TORCH_SLOT);
 }

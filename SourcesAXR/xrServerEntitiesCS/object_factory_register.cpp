@@ -24,11 +24,13 @@
 #	include "hudmanager.h"
 #	include "actor.h"
 #	include "spectator.h"
-#	include "Backpack.h"
+#	include "CustomBackpack.h"
 #	include "AnomalyDetector.h"
 #	include "Battery.h"
 #	include "AntigasFilter.h"
 #	include "RepairKit.h"
+#	include "ArtefactContainer.h"
+#	include "SleepingBag.h"
 
 #	include "ai/monsters/flesh/flesh.h"
 #	include "ai/monsters/chimera/chimera.h"
@@ -89,6 +91,7 @@
 #	include "weaponFORT.h"
 #	include "weaponBINOCULARS.h"
 #	include "weaponShotgun.h"
+#	include "WeaponAutomaticShotgun.h"
 #	include "weaponsvd.h"
 #	include "weaponsvu.h"
 #	include "weaponrpg7.h"
@@ -105,6 +108,8 @@
 #	include "scope.h"
 #	include "silencer.h"
 #	include "grenadelauncher.h"
+#	include "LaserDesignator.h"
+#	include "TacticalTorch.h"
 
 #	include "bolt.h"
 #	include "medkit.h"
@@ -307,6 +312,7 @@ void CObjectFactory::register_classes	()
 	ADD(CWeaponFORT				,CSE_ALifeItemWeaponMagazined	,CLSID_OBJECT_W_FORT			,"wpn_fort");
 	ADD(CWeaponBinoculars		,CSE_ALifeItemWeaponMagazined	,CLSID_OBJECT_W_BINOCULAR		,"wpn_binocular");
 	ADD(CWeaponShotgun			,CSE_ALifeItemWeaponShotGun		,CLSID_OBJECT_W_SHOTGUN			,"wpn_shotgun");
+	ADD(CWeaponAutomaticShotgun ,CSE_ALifeItemWeaponAutoShotGun	,CLSID_OBJECT_W_ASHOTGUN		,"wpn_ashotgun");
 	ADD(CWeaponSVD				,CSE_ALifeItemWeaponMagazined	,CLSID_OBJECT_W_SVD				,"wpn_svd");
 	ADD(CWeaponSVU				,CSE_ALifeItemWeaponMagazined	,CLSID_OBJECT_W_SVU				,"wpn_svu");
 	ADD(CWeaponRPG7				,CSE_ALifeItemWeaponMagazined	,CLSID_OBJECT_W_RPG7			,"wpn_rpg7");
@@ -329,6 +335,8 @@ void CObjectFactory::register_classes	()
 	ADD(CScope					,CSE_ALifeItem					,CLSID_OBJECT_W_SCOPE			,"wpn_scope");
 	ADD(CSilencer				,CSE_ALifeItem					,CLSID_OBJECT_W_SILENCER		,"wpn_silencer");
 	ADD(CGrenadeLauncher		,CSE_ALifeItem					,CLSID_OBJECT_W_GLAUNCHER		,"wpn_grenade_launcher");
+	ADD(CLaserDesignator		,CSE_ALifeItem					,CLSID_OBJECT_W_LASER			,"wpn_laser_designator");
+	ADD(CTacticalTorch			,CSE_ALifeItem					,CLSID_OBJECT_W_TTORCH			,"wpn_tactical_torch");
 
 	// Inventory
 #ifndef NO_SINGLE
@@ -343,6 +351,8 @@ void CObjectFactory::register_classes	()
 	ADD(CBattery				,CSE_ALifeItem					,CLSID_IITEM_BATTERY			,"obj_battery");
 	ADD(CAntigasFilter			,CSE_ALifeItem					,CLSID_IITEM_AFILTER			,"obj_filter");
 	ADD(CRepairKit				,CSE_ALifeItem					,CLSID_IITEM_DREPKIT			,"obj_repair_kit");
+	ADD(CArtefactContainer		,CSE_ALifeItem					,CLSID_IITEM_DAFCONT			,"obj_af_container");
+	ADD(CSleepingBag			,CSE_ALifeItem					,CLSID_IITEM_DSLEBAG			,"obj_sleeping_bag");
 	
 	//Info Document
 	ADD(CInfoDocument			,CSE_ALifeItemDocument			,CLSID_IITEM_DOCUMENT			,"obj_document");
@@ -353,7 +363,7 @@ void CObjectFactory::register_classes	()
 	ADD(CStalkerOutfit			,CSE_ALifeItemCustomOutfit		,CLSID_EQUIPMENT_STALKER		,"equ_stalker");
 	ADD(CMilitaryOutfit			,CSE_ALifeItemCustomOutfit		,CLSID_EQUIPMENT_MILITARY		,"equ_military");
 	ADD(CExoOutfit				,CSE_ALifeItemCustomOutfit		,CLSID_EQUIPMENT_EXO			,"equ_exo");
-	ADD(CBackpack				,CSE_ALifeItem					,CLSID_EQUIPMENT_BACKPACK		,"equ_backpack");
+	ADD(CCustomBackpack			,CSE_ALifeItem					,CLSID_EQUIPMENT_BACKPACK		,"equ_backpack");
 
 	// Grenades
 	ADD(CF1						,CSE_ALifeItemGrenade			,CLSID_GRENADE_F1				,"wpn_grenade_f1");
@@ -441,6 +451,7 @@ void CObjectFactory::register_classes	()
 	ADD(CWeaponRG6				,CSE_ALifeItemWeaponShotGun		,TEXT2CLSID("WP_RG6")			,"wpn_rg6_s");
 	ADD(CWeaponRPG7				,CSE_ALifeItemWeaponMagazined	,TEXT2CLSID("WP_RPG7")			,"wpn_rpg7_s");
 	ADD(CWeaponShotgun			,CSE_ALifeItemWeaponShotGun		,TEXT2CLSID("WP_SHOTG")			,"wpn_shotgun_s");
+	ADD(CWeaponAutomaticShotgun	,CSE_ALifeItemWeaponAutoShotGun	,TEXT2CLSID("WP_ASHTGN")		,"wpn_ashotgun_s");
 	ADD(CWeaponSVU				,CSE_ALifeItemWeaponMagazined	,TEXT2CLSID("WP_SVU")			,"wpn_svu_s");
 	ADD(CWeaponUSP45			,CSE_ALifeItemWeaponMagazined	,TEXT2CLSID("WP_USP45")			,"wpn_usp45_s");
 	ADD(CWeaponVal				,CSE_ALifeItemWeaponMagazined	,TEXT2CLSID("WP_VAL")			,"wpn_val_s");

@@ -648,8 +648,8 @@ if(!psNET_direct_connect)
 					Msg("! IPureClient : port %d is BUSY!", c_port);
 
 //				const char* x = DXGetErrorString9(res);
-				string1024 tmp = "";
-				DXTRACE_ERR(tmp, res);
+				string1024 tmp1 = "";
+				DXTRACE_ERR(tmp1, res);
 #endif				
 				c_port++;
 			}
@@ -698,8 +698,8 @@ if(!psNET_direct_connect)
 		_RELEASE					(pHostAddress);
 #ifdef DEBUG	
 //		const char* x = DXGetErrorString9(res);
-		string1024 tmp = "";
-		DXTRACE_ERR(tmp, res);
+		string1024 tmp2 = "";
+		DXTRACE_ERR(tmp2, res);
 #endif
 		switch (res)
 		{
@@ -1121,17 +1121,18 @@ void	IPureClient::Sync_Average	()
 //	Msg("* CLIENT: d(%d), dc(%d), s(%d)",net_TimeDelta,net_TimeDelta_Calculated,size);
 }
 
-void 				sync_thread(void* P)
+void sync_thread(void* P)
 {
+	set_current_thread_name("network-time-sync");
 	SetThreadPriority	(GetCurrentThread(),THREAD_PRIORITY_TIME_CRITICAL);
 	IPureClient*	C	= (IPureClient*)P;
 	C->Sync_Thread		();
 }
-void	IPureClient::net_Syncronize	()
+void IPureClient::net_Syncronize()
 {
-	net_Syncronised		= FALSE;
-	net_DeltaArray.clear();
-	thread_spawn		(sync_thread,"network-time-sync",0,this);
+    net_Syncronised = FALSE;
+    net_DeltaArray.clear();
+    std::thread t(sync_thread, this);
 }
 
 void	IPureClient::ClearStatistic()

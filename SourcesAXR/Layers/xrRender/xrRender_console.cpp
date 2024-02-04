@@ -51,7 +51,7 @@ xr_token qsmapsize_token[] =
     { "2560",						2560										},
     { "3072",						3072										},
     { "4096",						4096										},
-    { "8192",						8192										},
+   // { "8192",						8192										},
     { 0,							0											}
 };
 
@@ -163,6 +163,14 @@ xr_token lowland_fog_type_token[] = {
 	{ 0, 0 }
 };
 
+//Пресет настроек для шейдеров
+u32 ps_ShaderPreset = 0;
+xr_token							qshader_preset_token[] = {
+	{"original_shaders_preset",		0												},
+	{"es_shaders_preset",			1												},
+	{ 0,							0												}
+};
+
 //	“Off”
 //	“DX10.0 style [Standard]”
 //	“DX10.1 style [Higher quality]”
@@ -238,12 +246,12 @@ Flags32		ps_r2_ls_flags				= { R2FLAG_SUN
 	|R2FLAG_SUN_TSM
 	|R2FLAG_TONEMAP
 	|R2FLAG_VOLUMETRIC_LIGHTS
+	|R2FLAG_EXP_MT_DETAILS
 	};	// r2-only
 
 Flags32		ps_r2_ls_flags_ext			= {
 		/*R2FLAGEXT_SSAO_OPT_DATA |*/ R2FLAGEXT_SSAO_HALF_DATA
 		|R2FLAGEXT_ENABLE_TESSELLATION
-		|R4FLAGEXT_NEW_SHADER_SUPPORT
 	};
 
 int			ps_no_scale_on_fade			= 0;
@@ -260,11 +268,6 @@ float		ps_r2_ls_bloom_kernel_b		= READ_IF_EXISTS(pAdvancedSettings, r_float, "st
 float		ps_r2_ls_bloom_speed		= READ_IF_EXISTS(pAdvancedSettings, r_float, "start_settings", "bloom_speed", 100.0f);
 float		ps_r2_ls_bloom_kernel_scale = READ_IF_EXISTS(pAdvancedSettings, r_float, "start_settings", "bloom_kernel_scale", 0.7f);
 float		ps_r2_ls_bloom_threshold	= READ_IF_EXISTS(pAdvancedSettings, r_float, "start_settings", "bloom_threshold", 0.00001f);
-
-float		r2_tonemap_middlegray_modifier	= READ_IF_EXISTS(pAdvancedSettings, r_float, "variables_modifiers", "mod_tonemap_middlegray",	0.0f);
-float		r2_tonemap_low_lum_modifier		= READ_IF_EXISTS(pAdvancedSettings, r_float, "variables_modifiers", "mod_tonemap_low_lum",		0.0f);
-float		r2_sun_lumscale_modifier		= READ_IF_EXISTS(pAdvancedSettings, r_float, "variables_modifiers", "mod_sun_lumscale",			0.0f);
-float		r2_sun_lumscale_amb_modifier	= READ_IF_EXISTS(pAdvancedSettings, r_float, "variables_modifiers", "mod_sun_lumscale_amb",		0.0f);
 
 float		ps_r2_ls_dsm_kernel			= .7f;				// r2-only
 float		ps_r2_ls_psm_kernel			= .7f;				// r2-only
@@ -311,9 +314,9 @@ Fvector3	ps_r2_dof					= Fvector3().set(-1.25f, 1.4f, 10000.f);
 float		ps_r2_dof_sky				= 30;				//	distance to sky
 float		ps_r2_dof_kernel_size		= 5.0f;						//	7.0f
 
-float		ps_r3_dyn_wet_surf_near		= 10.f;				// 10.0f
-float		ps_r3_dyn_wet_surf_far		= 30.f;				// 30.0f
-int			ps_r3_dyn_wet_surf_sm_res	= 256;				// 256
+extern		ENGINE_API float ps_r3_dyn_wet_surf_near;
+extern		ENGINE_API float ps_r3_dyn_wet_surf_far;
+extern		ENGINE_API int ps_r3_dyn_wet_surf_sm_res;
 
 int			ps_r__detail_radius = 49;
 u32			dm_size = 24;
@@ -387,6 +390,8 @@ Flags32 psDeviceFlags2 = { 0 };
 //Static on R2+
 Flags32	ps_r2_static_flags = { R2FLAG_USE_BUMP };
 
+Flags32	ps_r4_shaders_flags = { R4FLAG_SSS_ADDON | R4FLAG_ES_ADDON };
+
 //Screen Space Shaders Stuff
 
 // Anomaly
@@ -403,12 +408,29 @@ extern ENGINE_API Fvector4 ps_ssfx_int_grass_params_1;
 extern ENGINE_API Fvector4 ps_ssfx_int_grass_params_2;
 extern ENGINE_API Fvector4 ps_ssfx_hud_drops_1;
 extern ENGINE_API Fvector4 ps_ssfx_hud_drops_2;
+extern ENGINE_API Fvector4 ps_ssfx_hud_drops_1_cfg;
+extern ENGINE_API Fvector4 ps_ssfx_hud_drops_2_cfg;
 extern ENGINE_API Fvector4 ps_ssfx_blood_decals;
 extern ENGINE_API Fvector4 ps_ssfx_rain_1;
 extern ENGINE_API Fvector4 ps_ssfx_rain_2;
 extern ENGINE_API Fvector4 ps_ssfx_rain_3;
+extern ENGINE_API Fvector4 ps_ssfx_florafixes_1;
+extern ENGINE_API Fvector4 ps_ssfx_florafixes_2;
+extern ENGINE_API Fvector4 ps_ssfx_wetsurfaces_1;
+extern ENGINE_API Fvector4 ps_ssfx_wetsurfaces_2;
+extern ENGINE_API int	   ps_ssfx_is_underground;
+extern ENGINE_API int	   ps_ssfx_gloss_method;
+extern ENGINE_API float	   ps_ssfx_gloss_factor;
+extern ENGINE_API Fvector3 ps_ssfx_gloss_minmax;
+extern ENGINE_API Fvector4 ps_ssfx_lightsetup_1;
+extern ENGINE_API Fvector3 ps_ssfx_shadows;
+extern ENGINE_API Fvector3 ps_ssfx_volumetric;
+extern ENGINE_API Fvector3 ps_ssfx_shadow_bias;
+extern ENGINE_API Fvector4 ps_ssfx_lut;
+extern ENGINE_API Fvector4 ps_ssfx_wind_grass;
+extern ENGINE_API Fvector4 ps_ssfx_wind_trees;
 
-int ps_r4_ss_grass_collision = 1;
+int ps_r4_ss_grass_collision = ps_r4_shaders_flags.test(R4FLAG_SSS_ADDON) ? 1 : 0;
 int ps_r4_pseudo_pbr = 0;
 
 //extern ENGINE_API Fvector4 ps_ssfx_wpn_dof_1;
@@ -938,6 +960,28 @@ static void LoadTokensFromIni(xr_vector<xr_token>& tokens, LPCSTR section)
 	tokens.push_back({nullptr, 0});
 }
 
+class CCC_Shader_Preset : public CCC_Token
+{
+public:
+	CCC_Shader_Preset(LPCSTR N, u32* V, xr_token* T) : CCC_Token(N, V, T) {};
+
+	virtual void Execute(LPCSTR args)
+	{
+		CCC_Token::Execute(args);
+		string_path _cfg;
+		string_path cmd;
+
+		switch (*value)
+		{
+		case 0: xr_strcpy(_cfg, "mfs_team\\shaders_presets\\shaders_original_preset.ltx"); break;
+		case 1: xr_strcpy(_cfg, "mfs_team\\shaders_presets\\shaders_enchanted_preset.ltx"); break;
+		}
+		FS.update_path(_cfg, "$game_config$", _cfg);
+		strconcat(sizeof(cmd), cmd, "cfg_load", " ", _cfg);
+		Console->Execute(cmd);
+	}
+};
+
 //-----------------------------------------------------------------------
 void		xrRender_initconsole	()
 {
@@ -1041,7 +1085,7 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_ls_dsm_kernel",		&ps_r2_ls_dsm_kernel,		.1f,	3.f		);
 	CMD4(CCC_Float,		"r2_ls_psm_kernel",		&ps_r2_ls_psm_kernel,		.1f,	3.f		);
 	CMD4(CCC_Float,		"r2_ls_ssm_kernel",		&ps_r2_ls_ssm_kernel,		.1f,	3.f		);
-	CMD4(CCC_Float,		"r2_ls_squality",		&ps_r2_ls_squality,			.5f,	1.f		);
+	CMD4(CCC_Float,		"r2_ls_squality",		&ps_r2_ls_squality,			.5f,	3.f		);
 
 	CMD3(CCC_Mask,		"r2_zfill",				&ps_r2_ls_flags,			R2FLAG_ZFILL	);
 	CMD4(CCC_Float,		"r2_zfill_depth",		&ps_r2_zfill,				.001f,	.5f		);
@@ -1049,6 +1093,8 @@ void		xrRender_initconsole	()
 
 	CMD3(CCC_Mask,		"r__actor_shadow",		&ps_actor_shadow_flags,		RFLAG_ACTOR_SHADOW);  //Swartz
     CMD3(CCC_Token, 	"r2_smap_size", 		&ps_r2_smapsize, 			qsmapsize_token	);
+
+	CMD3(CCC_Mask,		"r2_mt_details",		&ps_r2_ls_flags,			R2FLAG_EXP_MT_DETAILS);
 	
 	CMD4(CCC_Float,		"r_color_r",			&ps_color_grading.x,		0.0f,	2.55f	);
 	CMD4(CCC_Float,		"r_color_g",			&ps_color_grading.y,		0.0f,	2.55f	);
@@ -1249,14 +1295,14 @@ void		xrRender_initconsole	()
 
 	CMD3(CCC_Mask,		"r3_dynamic_wet_surfaces",		&ps_r2_ls_flags,			R3FLAG_DYN_WET_SURF);
 	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_near",	&ps_r3_dyn_wet_surf_near,	10,	70		);
-	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_far",	&ps_r3_dyn_wet_surf_far,	30,	100		);
+	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_far",	&ps_r3_dyn_wet_surf_far,	30,	300		);
 	CMD4(CCC_Integer,	"r3_dynamic_wet_surfaces_sm_res",&ps_r3_dyn_wet_surf_sm_res,64,	2048	);
 
 	CMD3(CCC_Mask,			"r3_volumetric_smoke",			&ps_r2_ls_flags,			R3FLAG_VOLUMETRIC_SMOKE);
 	CMD1(CCC_memory_stats,	"render_memory_stats" );
 	
 	// Geometry optimization
-	CMD4(CCC_Integer,		"r__optimize_static_geom",		&opt_static,				0,	4		);
+	CMD4(CCC_Integer,		"r__optimize_static_geom",		&opt_static,				0,	2		);
 	CMD4(CCC_Integer,		"r__optimize_dynamic_geom",		&opt_dynamic,				0,	4		);
 	psDeviceFlags2.set(rsOptShadowGeom, TRUE);
 	CMD3(CCC_Mask,			"r__optimize_shadow_geom",		&psDeviceFlags2,			rsOptShadowGeom);
@@ -1264,9 +1310,6 @@ void		xrRender_initconsole	()
 	CMD3(CCC_Token,			"r2_use_flares",				&ps_r2_flares,				qflares_token);
 	CMD4(CCC_Integer,		"r2_lfx",						&ps_r2_lfx,					 0, 1		); //SFZ Lens Flares
 
-	// Screen Space Shaders
-	CMD4(CCC_Vector4,		"ssfx_wpn_dof_1",				&ps_ssfx_wpn_dof_1,			tw2_min, tw2_max);
-	CMD4(CCC_Float,			"ssfx_wpn_dof_2",				&ps_ssfx_wpn_dof_2,			0.0f, 1.0f);
 
 	CMD4(CCC_Integer,		"r__mt_textures_load",			&ps_mt_texture_load,		0, 1); //Многопоточная загрузка текстур
 	CMD3(CCC_Token,			"r3_lowland_fog_type",			&ps_lowland_fog_type,		lowland_fog_type_token); //Тип низинного тумана
@@ -1284,8 +1327,23 @@ void		xrRender_initconsole	()
 	//CMD4(CCC_Vector3,	"r_color_grading_es",	&ps_r2_img_cg,				tw_min, tw_max);
 
     // Screen Space Shaders
-    CMD3(CCC_Mask,			"r4_new_shader_support",		&ps_r2_ls_flags_ext,		R4FLAGEXT_NEW_SHADER_SUPPORT);
+	CMD3(CCC_Mask,			"r4_enchanted_shaders",			&ps_r4_shaders_flags,		R4FLAG_ES_ADDON); //Need restart
+	CMD3(CCC_Mask,			"r4_screen_space_shaders",		&ps_r4_shaders_flags,		R4FLAG_SSS_ADDON); //Need restart
+	CMD3(CCC_Mask,			"r4_ss_sky_debanding",			&ps_r4_shaders_flags,		R4FLAG_SS_DEBANDING); //Need restart
+	CMD3(CCC_Mask,			"r4_ss_flora_fix",				&ps_r4_shaders_flags,		R4FLAG_SS_FLORAFIX); //Need restart
+	CMD3(CCC_Mask,			"r4_ss_fog",					&ps_r4_shaders_flags,		R4FLAG_SS_FOG); //Need restart
+	CMD3(CCC_Mask,			"r4_ss_indirect_light",			&ps_r4_shaders_flags,		R4FLAG_SS_INDIRECT_LIGHT); //Need restart
+	CMD3(CCC_Mask,			"r4_ss_new_gloss",				&ps_r4_shaders_flags,		R4FLAG_SS_NEW_GLOSS); //Need restart
+	CMD3(CCC_Mask,			"r4_screen_space_shadows",		&ps_r4_shaders_flags,		R4FLAG_SS_SSS); //Need restart
+	CMD3(CCC_Mask,			"r4_ss_shadows",				&ps_r4_shaders_flags,		R4FLAG_SS_SHADOWS); //Need restart
+	CMD3(CCC_Mask,			"r4_ss_lut",					&ps_r4_shaders_flags,		R4FLAG_SS_LUT); //Need restart
+	CMD3(CCC_Mask,			"r4_ss_wind",					&ps_r4_shaders_flags,		R4FLAG_SS_WIND); //Need restart
+	CMD3(CCC_Shader_Preset, "shaders_preset",				&ps_ShaderPreset,			qshader_preset_token);
+
+	CMD4(CCC_Vector4,		"ssfx_wpn_dof_1",				&ps_ssfx_wpn_dof_1,			tw2_min, tw2_max);
+	CMD4(CCC_Float,			"ssfx_wpn_dof_2",				&ps_ssfx_wpn_dof_2,			0.0f, 1.0f);
     CMD4(CCC_Vector4,		"ssfx_grass_shadows",			&ps_ssfx_grass_shadows,		Fvector4().set(0, 0, 0, 0), Fvector4().set(3, 1, 100, 100));
+	CMD4(CCC_Float,			"r_grass_shadows_dintance",		&ps_ssfx_grass_shadows.y,	0.01f, 1.0f);
     CMD4(CCC_ssfx_cascades, "ssfx_shadow_cascades",			&ps_ssfx_shadow_cascades,	Fvector3().set(1.0f, 1.0f, 1.0f), Fvector3().set(300, 300, 300));
     CMD4(CCC_Vector4,		"ssfx_grass_interactive",		&ps_ssfx_grass_interactive, Fvector4().set(0, 0, 0, 0), Fvector4().set(1, 15, 5000, 1));
     CMD4(CCC_Vector4,		"ssfx_int_grass_params_1",		&ps_ssfx_int_grass_params_1, Fvector4().set(0, 0, 0, 0), Fvector4().set(5, 5, 5, 60));
@@ -1296,6 +1354,21 @@ void		xrRender_initconsole	()
     CMD4(CCC_Vector4,		"ssfx_rain_1",					&ps_ssfx_rain_1,			Fvector4().set(0, 0, 0, 0), Fvector4().set(10, 5, 5, 2));
     CMD4(CCC_Vector4,		"ssfx_rain_2",					&ps_ssfx_rain_2,			Fvector4().set(0, 0, 0, 0), Fvector4().set(1, 10, 10, 10));
     CMD4(CCC_Vector4,		"ssfx_rain_3",					&ps_ssfx_rain_3,			Fvector4().set(0, 0, 0, 0), Fvector4().set(1, 10, 10, 10));
+	CMD4(CCC_Vector4,		"ssfx_florafixes_1",			&ps_ssfx_florafixes_1,		Fvector4().set(0.0, 0.0, 0.0, 0.0), Fvector4().set(1.0, 1.0, 1.0, 1.0));
+	CMD4(CCC_Vector4,		"ssfx_florafixes_2",			&ps_ssfx_florafixes_2,		Fvector4().set(0.0, 0.0, 0.0, 0.0), Fvector4().set(10.0, 1.0, 1.0, 1.0));
+	CMD4(CCC_Vector4,		"ssfx_wetsurfaces_1",			&ps_ssfx_wetsurfaces_1,		Fvector4().set(0.01, 0.01, 0.01, 0.01), Fvector4().set(2.0, 2.0, 2.0, 2.0));
+	CMD4(CCC_Vector4,		"ssfx_wetsurfaces_2",			&ps_ssfx_wetsurfaces_2,		Fvector4().set(0.01, 0.01, 0.01, 0.01), Fvector4().set(2.0, 2.0, 2.0, 2.0));
+	CMD4(CCC_Integer,		"ssfx_is_underground",			&ps_ssfx_is_underground,	0, 1);
+	CMD4(CCC_Integer,		"ssfx_gloss_method",			&ps_ssfx_gloss_method,		0, 1);
+	CMD4(CCC_Vector3,		"ssfx_gloss_minmax",			&ps_ssfx_gloss_minmax,		Fvector3().set(0, 0, 0), Fvector3().set(1.0, 1.0, 1.0));
+	CMD4(CCC_Float,			"ssfx_gloss_factor",			&ps_ssfx_gloss_factor,		0.0f, 1.0f);
+	CMD4(CCC_Vector4,		"ssfx_lightsetup_1",			&ps_ssfx_lightsetup_1,		Fvector4().set(0, 0, 0, 0), Fvector4().set(1.0, 1.0, 1.0, 1.0));
+	CMD4(CCC_Vector3,		"ssfx_shadows",					&ps_ssfx_shadows,			Fvector3().set(128, 1536, 0), Fvector3().set(1536, 4096, 0));
+	CMD4(CCC_Vector3,		"ssfx_volumetric",				&ps_ssfx_volumetric,		Fvector3().set(0, 0, 1.0), Fvector3().set(1.0, 1.0, 5.0));
+	CMD4(CCC_Vector3,		"ssfx_shadow_bias",				&ps_ssfx_shadow_bias,		Fvector3().set(0, 0, 0), Fvector3().set(1.0, 1.0, 1.0));
+	CMD4(CCC_Vector4,		"ssfx_lut",						&ps_ssfx_lut,				Fvector4().set(0.0, 0.0, 0.0, 0.0), tw2_max);
+	CMD4(CCC_Vector4,		"ssfx_wind_grass",				&ps_ssfx_wind_grass,		Fvector4().set(0.0, 0.0, 0.0, 0.0), Fvector4().set(20.0, 5.0, 5.0, 5.0));
+	CMD4(CCC_Vector4,		"ssfx_wind_trees",				&ps_ssfx_wind_trees,		Fvector4().set(0.0, 0.0, 0.0, 0.0), Fvector4().set(20.0, 5.0, 5.0, 1.0));
 
 	CMD4(CCC_Integer,		"r4_ss_grass_collision",		&ps_r4_ss_grass_collision,	0, 1); //Screen Space Grass Shaders Collision
 	CMD4(CCC_Integer,		"r4_es_pseudo_pbr",				&ps_r4_pseudo_pbr,			0, 1); //Enchanted Shaders Pseudo PBR

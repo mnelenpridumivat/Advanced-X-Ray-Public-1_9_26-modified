@@ -144,9 +144,9 @@ extern ECORE_API Fvector3		ps_r2_dof;
 extern ECORE_API float			ps_r2_dof_sky;				//	distance to sky
 extern ECORE_API float			ps_r2_dof_kernel_size;		//	7.0f
 
-extern ECORE_API float			ps_r3_dyn_wet_surf_near;	// 10.0f
-extern ECORE_API float			ps_r3_dyn_wet_surf_far;		// 30.0f
-extern ECORE_API int			ps_r3_dyn_wet_surf_sm_res;	// 256
+extern ENGINE_API float			ps_r3_dyn_wet_surf_near;	// 10.0f
+extern ENGINE_API float			ps_r3_dyn_wet_surf_far;		// 30.0f
+extern ENGINE_API int			ps_r3_dyn_wet_surf_sm_res;	// 256
 
 //ogse sunshafts
 
@@ -181,12 +181,6 @@ extern ECORE_API float			ps_r2_img_exposure;
 extern ECORE_API float			ps_r2_img_gamma;
 extern ECORE_API float			ps_r2_img_saturation;
 extern ECORE_API Fvector		ps_r2_img_cg;
-
-//Commands modifiers for DX9
-extern ECORE_API float			r2_tonemap_middlegray_modifier;	// r2-only
-extern ECORE_API float			r2_tonemap_low_lum_modifier;	// r2-only
-extern ECORE_API float			r2_sun_lumscale_modifier;		// r2-only
-extern ECORE_API float			r2_sun_lumscale_amb_modifier;	// r2-only
 
 extern ECORE_API int			ps_r4_ss_grass_collision;
 extern ECORE_API int			ps_r4_pseudo_pbr;
@@ -234,7 +228,6 @@ enum
 	R3FLAG_MSAA_HYBRID			= (1<<28),
 	R3FLAG_MSAA_OPT				= (1<<29),
 	R3FLAG_GBUFFER_OPT			= (1<<30),
-	R4FLAGEXT_NEW_SHADER_SUPPORT = (1<<31),
 	//R3FLAG_MSAA_ALPHATEST		= (1<<31),
 };
 
@@ -251,6 +244,7 @@ enum
 	R2FLAGEXT_SUN_ZCULLING			= (1<<8),
 	R2FLAGEXT_SUN_OLD				= (1<<9),
 	R2FLAGEXT_SSAO_SSDO				= (1<<10),
+	R2FLAG_EXP_MT_DETAILS			= (1<<11),
 };
 
 //ogse sunshafts
@@ -294,6 +288,23 @@ enum
 {
 	R2FLAG_USE_BUMP		= (1 << 0),
 	R2FLAG_STATIC_SUN	= (1 << 1),
+};
+
+extern ECORE_API Flags32 ps_r4_shaders_flags;
+
+enum
+{
+	R4FLAG_SSS_ADDON			= (1 << 0),
+	R4FLAG_ES_ADDON				= (1 << 1),
+	R4FLAG_SS_DEBANDING			= (1 << 2),
+	R4FLAG_SS_FLORAFIX			= (1 << 3),
+	R4FLAG_SS_FOG				= (1 << 4),
+	R4FLAG_SS_INDIRECT_LIGHT	= (1 << 5),
+	R4FLAG_SS_NEW_GLOSS			= (1 << 6),
+	R4FLAG_SS_SSS				= (1 << 7),
+	R4FLAG_SS_SHADOWS			= (1 << 8),
+	R4FLAG_SS_LUT				= (1 << 9),
+	R4FLAG_SS_WIND				= (1 << 10),
 };
 
 //Rezy: cleanup flags

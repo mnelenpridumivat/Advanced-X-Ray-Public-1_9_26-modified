@@ -50,6 +50,7 @@
 #include "Actor.h"
 #include "WeaponAmmo.h"
 #include "WeaponMagazinedWGrenade.h"
+#include "AntigasFilter.h"
 
 namespace MemorySpace {
 	struct CVisibleObject;
@@ -1028,6 +1029,21 @@ bool CScriptGameObject::weapon_unstrapped	() const
 	return			(result);
 }
 
+bool CScriptGameObject::weapon_shooting() const
+{
+	CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(&object());
+
+	if (!stalker)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CScriptGameObject : cannot access class member weapon_strapped!");
+		return false;
+	}
+
+	bool const result = stalker->weapon_shooting();
+
+	return result;
+}
+
 bool CScriptGameObject::path_completed	() const
 {
 	CCustomMonster	*monster = smart_cast<CCustomMonster*>(&object());
@@ -1063,7 +1079,7 @@ Fvector	CScriptGameObject::head_orientation		() const
 void CScriptGameObject::info_add(LPCSTR text)
 {
 #ifdef DEBUG
-	DBG().object_info(&object(),this).add_item	(text, D3DCOLOR_XRGB(255,0,0), 0);
+	DBG().object_info(&object(),this).add_item	(text, color_xrgb(255,0,0), 0);
 #endif
 }
 
@@ -1550,6 +1566,84 @@ u8 CScriptGameObject::GetMaxUses()
 		return 0;
 
 	return eItm->GetMaxUses();
+}
+
+void CScriptGameObject::SetArtefactChargeLevel(float charge_level)
+{
+	CInventoryItem* IItm = object().cast_inventory_item();
+	if (!IItm)
+		return;
+
+	CArtefact* eArtefact = IItm->cast_artefact();
+	if (!eArtefact)
+		return;
+
+	eArtefact->SetChargeLevel(charge_level);
+}
+
+float CScriptGameObject::GetArtefactChargeLevel() const
+{
+	CInventoryItem* IItm = object().cast_inventory_item();
+	if (!IItm)
+		return 0;
+
+	CArtefact* eItm = IItm->cast_artefact();
+	if (!eItm)
+		return 0;
+
+	return eItm->GetCurrentChargeLevel();
+}
+
+void CScriptGameObject::SetArtefactRank(int rank)
+{
+	CInventoryItem* IItm = object().cast_inventory_item();
+	if (!IItm)
+		return;
+
+	CArtefact* eArtefact = IItm->cast_artefact();
+	if (!eArtefact)
+		return;
+
+	eArtefact->SetRank(rank);
+}
+
+int CScriptGameObject::GetArtefactRank() const
+{
+	CInventoryItem* IItm = object().cast_inventory_item();
+	if (!IItm)
+		return 0;
+
+	CArtefact* eItm = IItm->cast_artefact();
+	if (!eItm)
+		return 0;
+
+	return eItm->GetCurrentAfRank();
+}
+
+void CScriptGameObject::SetFilterChargeLevel(float charge_level)
+{
+	CInventoryItem* IItm = object().cast_inventory_item();
+	if (!IItm)
+		return;
+
+	CAntigasFilter* eFilter = IItm->cast_filter();
+	if (!eFilter)
+		return;
+
+	eFilter->SetFilterCondition(charge_level);
+}
+
+float CScriptGameObject::GetFilterChargeLevel() const
+{
+	CInventoryItem* IItm = object().cast_inventory_item();
+	if (!IItm)
+		return 0;
+
+	CAntigasFilter* eItm = IItm->cast_filter();
+	if (!eItm)
+		return 0;
+
+	return eItm->GetFilterCondition();
 }
 
 void CScriptGameObject::DestroyObject()

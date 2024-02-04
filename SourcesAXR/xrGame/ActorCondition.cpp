@@ -60,7 +60,7 @@ CActorCondition::CActorCondition(CActor *object) :
 	m_fHangover					= 0.0f;
 	m_fNarcotism				= 0.0f;
 	m_fWithdrawal				= 0.0f;
-	m_fDrugs					= 0.f;
+	m_fDrugs					= 0.0f;
 	m_fV_PsyHealth_Health		= 0.0f;
 
 	m_bPsyHealthKillActor		= false;
@@ -1080,6 +1080,17 @@ void CActorCondition::BoostParameters(const SBooster& B, bool need_change_tf)
 			case eBoostRadiationProtection: BoostRadiationProtection(B.fBoostValue); break;
 			case eBoostTelepaticProtection: BoostTelepaticProtection(B.fBoostValue); break;
 			case eBoostChemicalBurnProtection: BoostChemicalBurnProtection(B.fBoostValue); break;
+			case eBoostSatietyRestore: BoostSatietyRestore(B.fBoostValue); break;
+			case eBoostThirstRestore: BoostThirstRestore(B.fBoostValue); break;
+			case eBoostPsyHealthRestore: BoostPsyHealthRestore(B.fBoostValue); break;
+			case eBoostIntoxicationRestore: BoostIntoxicationRestore(B.fBoostValue); break;
+			case eBoostSleepenessRestore: BoostSleepenessRestore(B.fBoostValue); break;
+			case eBoostAlcoholRestore: BoostAlcoholRestore(B.fBoostValue); break;
+			case eBoostAlcoholismRestore: BoostAlcoholismRestore(B.fBoostValue); break;
+			case eBoostHangoverRestore: BoostHangoverRestore(B.fBoostValue); break;
+			case eBoostDrugsRestore: BoostDrugsRestore(B.fBoostValue); break;
+			case eBoostNarcotismRestore: BoostNarcotismRestore(B.fBoostValue); break;
+			case eBoostWithdrawalRestore: BoostWithdrawalRestore(B.fBoostValue); break;
 			case eBoostTimeFactor: need_change_tf ? BoostTimeFactor(B.fBoostValue) : BoostTimeFactor(0.0f); break;
 			default: NODEFAULT;	
 		}
@@ -1109,6 +1120,17 @@ void CActorCondition::DisableBoostParameters(const SBooster& B)
 		case eBoostRadiationProtection: BoostRadiationProtection(-B.fBoostValue); break;
 		case eBoostTelepaticProtection: BoostTelepaticProtection(-B.fBoostValue); break;
 		case eBoostChemicalBurnProtection: BoostChemicalBurnProtection(-B.fBoostValue); break;
+		case eBoostSatietyRestore: BoostSatietyRestore(-B.fBoostValue); break;
+		case eBoostThirstRestore: BoostThirstRestore(-B.fBoostValue); break;
+		case eBoostPsyHealthRestore: BoostPsyHealthRestore(-B.fBoostValue); break;
+		case eBoostIntoxicationRestore: BoostIntoxicationRestore(-B.fBoostValue); break;
+		case eBoostSleepenessRestore: BoostSleepenessRestore(-B.fBoostValue); break;
+		case eBoostAlcoholRestore: BoostAlcoholRestore(-B.fBoostValue); break;
+		case eBoostAlcoholismRestore: BoostAlcoholismRestore(-B.fBoostValue); break;
+		case eBoostHangoverRestore: BoostHangoverRestore(-B.fBoostValue); break;
+		case eBoostDrugsRestore: BoostDrugsRestore(-B.fBoostValue); break;
+		case eBoostNarcotismRestore: BoostNarcotismRestore(-B.fBoostValue); break;
+		case eBoostWithdrawalRestore: BoostWithdrawalRestore(-B.fBoostValue); break;
 		case eBoostTimeFactor: BoostTimeFactor(-B.fBoostValue); break;
 		default: NODEFAULT;	
 	}
@@ -1235,6 +1257,51 @@ void CActorCondition::BoostTimeFactor(const float value)
 	psSpeedOfSound = m_fBoostTimeFactor;
 }
 
+void CActorCondition::BoostSatietyRestore(const float value)
+{
+	m_fV_Satiety += value;
+}
+void CActorCondition::BoostThirstRestore(const float value)
+{
+	m_fV_Thirst += value;
+}
+void CActorCondition::BoostPsyHealthRestore(const float value)
+{
+	m_change_v.m_fV_PsyHealth += value;
+}
+void CActorCondition::BoostIntoxicationRestore(const float value)
+{
+	m_fV_Intoxication += value;
+}
+void CActorCondition::BoostSleepenessRestore(const float value)
+{
+	m_fV_Sleepeness += value;
+}
+void CActorCondition::BoostAlcoholRestore(const float value)
+{
+	m_fV_Alcohol += value;
+}
+void CActorCondition::BoostAlcoholismRestore(const float value)
+{
+	m_fV_Alcoholism += value;
+}
+void CActorCondition::BoostHangoverRestore(const float value)
+{
+	m_fV_Hangover += value;
+}
+void CActorCondition::BoostDrugsRestore(const float value)
+{
+	m_fV_Drugs += value;
+}
+void CActorCondition::BoostNarcotismRestore(const float value)
+{
+	m_fV_Narcotism += value;
+}
+void CActorCondition::BoostWithdrawalRestore(const float value)
+{
+	m_fV_Withdrawal += value;
+}
+
 void CActorCondition::UpdateTutorialThresholds()
 {
 	string256						cb_name;
@@ -1302,12 +1369,6 @@ void CActorCondition::UpdateTutorialThresholds()
 		xr_strcpy(cb_name, "_G.on_actor_alcoholism");
 	}
 
-	if (b && !m_condition_flags.test(eCriticalHangoverReached) && GetHangover() > _cHangover) {
-		m_condition_flags.set(eCriticalHangoverReached, TRUE);
-		b = false;
-		xr_strcpy(cb_name, "_G.on_actor_hangover");
-	}
-
 	if (b && !m_condition_flags.test(eCriticalNarcotismReached) && GetNarcotism() > _cNarcotism) {
 		m_condition_flags.set(eCriticalNarcotismReached, TRUE);
 		b = false;
@@ -1318,6 +1379,12 @@ void CActorCondition::UpdateTutorialThresholds()
 		m_condition_flags.set(eCriticalWithdrawalReached, TRUE);
 		b = false;
 		xr_strcpy(cb_name, "_G.on_actor_withdrawal");
+	}
+
+	if (b && !m_condition_flags.test(eCriticalHangoverReached) && GetHangover() > _cHangover) {
+		m_condition_flags.set(eCriticalHangoverReached, TRUE);
+		b = false;
+		xr_strcpy(cb_name, "_G.on_actor_hangover");
 	}
 
 	if(b && !m_condition_flags.test(eCriticalRadiationReached) && GetRadiation()>_cRadiation){
@@ -1404,7 +1471,7 @@ float CActorCondition::HitSlowmo(SHit* pHDS)
 	return ret;	
 }
 
-bool CActorCondition::ApplyInfluence(const SMedicineInfluenceValues& V, const shared_str& sect)
+bool CActorCondition::ApplyInfluence(const SMedicineInfluenceValues& V, const shared_str& sect, CEatableItem* cur_eatable)
 {
 	if(m_curr_medicine_influence.InProcess())
 		return false;
@@ -1429,7 +1496,7 @@ bool CActorCondition::ApplyInfluence(const SMedicineInfluenceValues& V, const sh
 	}
 
 	if(V.fTimeTotal<0.0f)
-		return inherited::ApplyInfluence	(V, sect);
+		return inherited::ApplyInfluence	(V, sect, cur_eatable);
 
 	m_curr_medicine_influence				= V;
 	m_curr_medicine_influence.fTimeCurrent  = m_curr_medicine_influence.fTimeTotal;

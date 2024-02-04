@@ -31,28 +31,33 @@ void CSimpleDetector::UpdateAf()
 {
 	if(m_artefacts.m_ItemInfos.size()==0)	return;
 
-	CAfList::ItemsMapIt it_b	= m_artefacts.m_ItemInfos.begin();
-	CAfList::ItemsMapIt it_e	= m_artefacts.m_ItemInfos.end();
-	CAfList::ItemsMapIt it		= it_b;
+	CAfList<CObject>::ItemsMapIt it_b	= m_artefacts.m_ItemInfos.begin();
+	CAfList<CObject>::ItemsMapIt it_e	= m_artefacts.m_ItemInfos.end();
+	CAfList<CObject>::ItemsMapIt it		= it_b;
+
 	float min_dist				= flt_max;
 
 	Fvector						detector_pos = Position();
 
 	for(;it_b!=it_e;++it_b)//only nearest
 	{
-		CArtefact *pAf			= it_b->first;
-		if(pAf->H_Parent())		
+		CArtefact*	pAf		= smart_cast<CArtefact*>(it_b->first);
+		CObject*	pObj	= it_b->first;
+
+		if ((pAf && pAf->H_Parent()) || (pObj && pObj->H_Parent()))
 			continue;
 
-		float d = detector_pos.distance_to(pAf->Position());
-		if( d < min_dist)
+		float d = detector_pos.distance_to(pAf ? pAf->Position() : pObj->Position());
+
+		if (d < min_dist)
 		{
 			min_dist	= d;
 			it			= it_b;
 		}
-		if(pAf->CanBeInvisible())
+
+		if (pAf && pAf->CanBeInvisible())
 		{
-			if(d<m_fAfVisRadius)
+			if (d < m_fAfVisRadius)
 				pAf->SwitchVisibility(true);
 		}
 	}
@@ -80,6 +85,7 @@ void CSimpleDetector::UpdateAf()
 		af_info.snd_time		= 0;
 		HUD_SOUND_ITEM::PlaySound	(item_type->detect_snds, Fvector().set(0,0,0), this, true, false);
 
+		ui().Flash(true, fRelPow);
 		Flash(true, fRelPow);
 
 		if(item_type->detect_snds.m_activeSnd)
@@ -175,13 +181,16 @@ void CUIArtefactDetectorSimple::update()
 		if (pCustomDetector)
 		{
 			if (pCustomDetector->m_turn_off_flash_time && pCustomDetector->m_turn_off_flash_time < Device.dwTimeGlobal)
+			{
+				Flash(false, 0.0f);
 				pCustomDetector->Flash(false, 0.0f);
+			}
 		}
 
 		firedeps		fd;
 		m_parent->HudItemData()->setup_firedeps(fd);
 
-		if(m_flash_light && m_flash_light->get_active())
+		if (m_flash_light && m_flash_light->get_active())
 			m_flash_light->set_position(fd.vLastFP);
 
 		m_on_off_light->set_position(fd.vLastFP2);

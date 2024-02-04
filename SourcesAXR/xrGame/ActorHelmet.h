@@ -21,6 +21,7 @@ public:
 
 	xr_vector<shared_str>	m_SuitableFilters;
 	xr_vector<shared_str>	m_SuitableRepairKits;
+	xr_vector<std::pair<shared_str, int>> m_ItemsForRepair;
 
 	virtual void			OnMoveToSlot			(const SInvItemPlace& previous_place);
 	virtual void			OnMoveToRuck			(const SInvItemPlace& previous_place);
@@ -60,7 +61,10 @@ public:
 	bool					m_bSecondHelmetEnabled;
 	bool					m_b_HasGlass;
 	bool					m_bUseFilter;
+
+	shared_str				m_sShaderNightVisionSect;
 	u32						m_NightVisionType;
+	float					m_fNightVisionLumFactor;
 
 	void					ReloadBonesProtection	();
 	void					AddBonesProtection		(LPCSTR bones_section);

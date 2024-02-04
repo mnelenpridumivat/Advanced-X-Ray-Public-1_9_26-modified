@@ -8,14 +8,14 @@ CWeaponBM16::~CWeaponBM16()
 void CWeaponBM16::Load	(LPCSTR section)
 {
 	inherited::Load		(section);
-	m_sounds.LoadSound	(section, "snd_reload_1", "sndReload1", m_eSoundShot);
+	m_sounds.LoadSound	(section, "snd_reload_1", "sndReload1", true, m_eSoundShot);
 }
 
 void CWeaponBM16::PlayReloadSound()
 {
 	bool b_both = HaveCartridgeInInventory(2);
 
-	if (m_magazine.size() == 1 || !b_both)	
+	if (m_magazine.size() == 1 || !b_both)
 		PlaySound	("sndReload1",get_LastFP());
 	else						
 		PlaySound	("sndReload",get_LastFP());
@@ -28,7 +28,7 @@ void CWeaponBM16::PlayAnimShoot()
 
 	string_path guns_shoot_anm{};
 	strconcat(sizeof(guns_shoot_anm), guns_shoot_anm, "anm_shoot", (this->IsZoomed() && !this->IsRotatingToZoom()) ? "_aim_" : "_", std::to_string(m_magazine.size()).c_str());
-	if (isHUDAnimationExist(guns_shoot_anm))
+	if (isHUDAnimationExist(guns_shoot_anm)) 
 	{
 		PlayHUDMotionNew(guns_shoot_anm, false, GetState());
 		return;
@@ -218,7 +218,7 @@ void CWeaponBM16::PlayAnimIdle()
 				char new_guns_aim_anm[100];
 				strncpy(new_guns_aim_anm, guns_aim_anm_full, jammed_position - guns_aim_anm_full);
 				strcpy(new_guns_aim_anm + (jammed_position - guns_aim_anm_full), guns_aim_anm_full + (jammed_position - guns_aim_anm_full) + jammed_length);
-			
+
 				if (isHUDAnimationExist(new_guns_aim_anm))
 				{
 					PlayHUDMotionNew(new_guns_aim_anm, true, GetState());
@@ -267,6 +267,7 @@ void CWeaponBM16::PlayAnimIdle()
 				return;
 			}
 		}
+
 		switch (m_magazine.size())
 		{
 		case 0:
@@ -282,5 +283,51 @@ void CWeaponBM16::PlayAnimIdle()
 			PlayHUDMotion("anm_idle_2", TRUE, NULL, GetState());
 		}break;
 		};
+	}
+}
+
+void CWeaponBM16::PlayAnimSprintStart()
+{
+	string_path guns_sprint_start_anm{};
+	strconcat(sizeof(guns_sprint_start_anm), guns_sprint_start_anm, "anm_idle_sprint_start", std::to_string(m_magazine.size()).c_str(), IsMisfire() ? "_jammed" : "");
+
+	if (isHUDAnimationExist(guns_sprint_start_anm))
+		PlayHUDMotionNew(guns_sprint_start_anm, true, GetState());
+	else if (strstr(guns_sprint_start_anm, "_jammed"))
+	{
+		char new_guns_aim_anm[256];
+		strcpy(new_guns_aim_anm, guns_sprint_start_anm);
+		new_guns_aim_anm[strlen(guns_sprint_start_anm) - strlen("_jammed")] = '\0';
+
+		if (isHUDAnimationExist(new_guns_aim_anm))
+			PlayHUDMotionNew(new_guns_aim_anm, true, GetState());
+	}
+	else
+	{
+		m_bSprintType = true;
+		SwitchState(eIdle);
+	}
+}
+
+void CWeaponBM16::PlayAnimSprintEnd()
+{
+	string_path guns_sprint_end_anm{};
+	strconcat(sizeof(guns_sprint_end_anm), guns_sprint_end_anm, "anm_idle_sprint_end", std::to_string(m_magazine.size()).c_str(), IsMisfire() ? "_jammed" : "");
+
+	if (isHUDAnimationExist(guns_sprint_end_anm))
+		PlayHUDMotionNew(guns_sprint_end_anm, true, GetState());
+	else if (strstr(guns_sprint_end_anm, "_jammed"))
+	{
+		char new_guns_aim_anm[256];
+		strcpy(new_guns_aim_anm, guns_sprint_end_anm);
+		new_guns_aim_anm[strlen(guns_sprint_end_anm) - strlen("_jammed")] = '\0';
+
+		if (isHUDAnimationExist(new_guns_aim_anm))
+			PlayHUDMotionNew(new_guns_aim_anm, true, GetState());
+	}
+	else
+	{
+		m_bSprintType = false;
+		SwitchState(eIdle);
 	}
 }

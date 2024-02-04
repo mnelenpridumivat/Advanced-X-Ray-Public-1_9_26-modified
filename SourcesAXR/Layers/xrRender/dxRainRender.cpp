@@ -4,19 +4,12 @@
 #include "../../xrEngine/Rain.h"
 #include "../../xrEngine/x_ray.h"
 
-//	Warning: duplicated in rain.cpp
-static const int	max_desired_items = rain_max_desired_items;
-static const float	source_radius = rain_source_radius;
-static const float	source_offset = rain_source_offset;
-static const float	max_distance = source_offset * rain_max_distance_koef;
-static const float	sink_offset = -(max_distance - source_offset);
-
-const int	max_particles = rain_max_particles;
-const int	particles_cache = rain_particles_cache;
-const float particles_time = rain_particles_time;
+int current_items;
 
 dxRainRender::dxRainRender()
 {
+	current_items = 0;
+
 	if (!bWinterMode)
 	{
 		IReader* F = FS.r_open("$game_meshes$", "dm\\rain.dm");
@@ -25,7 +18,13 @@ dxRainRender::dxRainRender()
 		DM_Drop = ::RImplementation.model_CreateDM(F);
 
 		//
-		SH_Rain.create("effects\\rain", "fx\\fx_rain");
+#if defined(USE_DX11)
+		if (ps_r4_shaders_flags.test(R4FLAG_SSS_ADDON))
+			SH_Rain.create("effects\\rain_screen_space", "fx\\fx_rain");
+		else
+#endif
+			SH_Rain.create("effects\\rain", "fx\\fx_rain");
+
 		hGeom_Rain.create(FVF::F_LIT, RCache.Vertex.Buffer(), RCache.QuadIB);
 		hGeom_Drops.create(D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1, RCache.Vertex.Buffer(), RCache.Index.Buffer());
 
@@ -78,7 +77,7 @@ void dxRainRender::Render(CEffect_Rain &owner)
 
 	// SSS Rain shader is available
 #if defined(USE_DX11)
-	if (RImplementation.o.ssfx_rain)
+	if (ps_r4_shaders_flags.test(R4FLAG_SSS_ADDON) && RImplementation.o.ssfx_rain)
 	{
 		_drop_len = ps_ssfx_rain_1.x;
 		_drop_width = ps_ssfx_rain_1.y;
@@ -87,17 +86,24 @@ void dxRainRender::Render(CEffect_Rain &owner)
 	}
 #endif
 
-  	u32 desired_items			= iFloor	(0.5f*(1.f+factor)*float(max_desired_items));
+	u32 desired_items = iFloor(0.01f * (1.f + factor * 99.0f) * max_desired_items);
+
+	// Get to the desired items
+	if (current_items < desired_items)
+		current_items += desired_items - current_items;
+
 	// visual
 	float		factor_visual	= factor/2.f+.5f;
 	Fvector3	f_rain_color	= g_pGamePersistent->Environment().CurrentEnv->rain_color;
 	u32			u_rain_color	= color_rgba_f(f_rain_color.x,f_rain_color.y,f_rain_color.z,factor_visual);
 
 	// born _new_ if needed
-	float	b_radius_wrap_sqr	= _sqr((source_radius+.5f));
-	if (owner.items.size()<desired_items)	{
+	float	b_radius_wrap_sqr	= _sqr((source_radius * 1.5f));
+	if (owner.items.size() < current_items)
+	{
 		// owner.items.reserve		(desired_items);
-		while (owner.items.size()<desired_items)	{
+		while (owner.items.size() < current_items)
+		{
 			CEffect_Rain::Item				one;
 			owner.Born					(one, source_radius, _drop_speed);
 			owner.items.push_back		(one);
@@ -115,12 +121,26 @@ void dxRainRender::Render(CEffect_Rain &owner)
 	FVF::LIT	*verts		= (FVF::LIT	*) RCache.Vertex.Lock(desired_items*4,hGeom_Rain->vb_stride,vOffset);
 	FVF::LIT	*start		= verts;
 	const Fvector&	vEye	= Device.vCameraPosition;
-	for (u32 I=0; I<owner.items.size(); I++){
+	for (u32 I = 0; I < current_items; I++)
+	{
 		// physics and time control
-		CEffect_Rain::Item&	one		=	owner.items[I];
+		CEffect_Rain::Item&	one		=	owner.items.at(I);
 
-		if (one.dwTime_Hit<Device.dwTimeGlobal)		owner.Hit (one.Phit);
-		if (one.dwTime_Life<Device.dwTimeGlobal)	owner.Born(one, source_radius, _drop_speed);
+		if (one.dwTime_Hit < Device.dwTimeGlobal)
+		{
+			owner.Hit(one.Phit);
+
+			if (current_items > desired_items)
+				current_items--; // Hit something
+		}
+
+		if (one.dwTime_Life < Device.dwTimeGlobal)
+		{
+			owner.Born(one, source_radius, _drop_speed);
+
+			if (current_items > desired_items)
+				current_items--; // Out of life ( invalidated, never hit something, etc. )
+		}
 
 		// последн€€ дельта ??
 		//.		float xdt		= float(one.dwTime_Hit-Device.dwTimeGlobal)/1000.f;
@@ -173,14 +193,14 @@ void dxRainRender::Render(CEffect_Rain &owner)
 
 		if (!bWinterMode)
 		{
-			if (ps_r2_ls_flags_ext.test(R4FLAGEXT_NEW_SHADER_SUPPORT))
+			if (ps_r4_shaders_flags.test(R4FLAG_SSS_ADDON))
 				pos_trail.mad(pos_head, one.D, -_drop_len * factor_visual);
 			else
 				pos_trail.mad(pos_head, one.D, -owner.drop_length * factor_visual);
 		}
 		else
 		{
-			if (ps_r2_ls_flags_ext.test(R4FLAGEXT_NEW_SHADER_SUPPORT))
+			if (ps_r4_shaders_flags.test(R4FLAG_SSS_ADDON))
 				pos_trail.mad(pos_head, one.D, -_drop_len * 5.5f);
 			else
 				pos_trail.mad(pos_head, one.D, -owner.drop_length * 5.5f);
@@ -195,7 +215,7 @@ void dxRainRender::Render(CEffect_Rain &owner)
 		sC.add			(pos_trail);
 		if (!::Render->ViewBase.testSphere_dirty(sC,sR))	continue;
 
-		static Fvector2 UV[2][4]={
+		constexpr Fvector2 UV[2][4]={
 			{{0,1},{0,0},{1,1},{1,0}},
 			{{1,0},{1,1},{0,0},{0,1}}
 		};
@@ -205,7 +225,7 @@ void dxRainRender::Render(CEffect_Rain &owner)
 		camDir.sub			(sC,vEye);
 		camDir.normalize	();
 		lineTop.crossproduct(camDir,lineD);
-		float w = ps_r2_ls_flags_ext.test(R4FLAGEXT_NEW_SHADER_SUPPORT) ? _drop_width : owner.drop_width;
+		float w = ps_r4_shaders_flags.test(R4FLAG_SSS_ADDON) ? _drop_width : owner.drop_width;
 		u32 s	= one.uv_set;
 		P.mad(pos_trail,lineTop,-w);	verts->set(P,u_rain_color,UV[s][0].x,UV[s][0].y);	verts++;
 		P.mad(pos_trail,lineTop,w);		verts->set(P,u_rain_color,UV[s][1].x,UV[s][1].y);	verts++;
@@ -236,7 +256,7 @@ void dxRainRender::Render(CEffect_Rain &owner)
 		float	dt				= Device.fTimeDelta;
 		_IndexStream& _IS		= RCache.Index;
 
-		if (ps_r2_ls_flags_ext.test(R4FLAGEXT_NEW_SHADER_SUPPORT))
+		if (ps_r4_shaders_flags.test(R4FLAG_SSS_ADDON))
 		{
 			RCache.set_Shader(_splash_SH);
 			RCache.set_c(s_shader_setup, ps_ssfx_rain_3); // Alpha, Refraction
@@ -247,7 +267,7 @@ void dxRainRender::Render(CEffect_Rain &owner)
 		}
 
 		Fmatrix					mXform,mScale;
-		int						pcount  = 0;
+		u32						pcount  = 0;
 		u32						v_offset,i_offset;
 		u32						vCount_Lock		= particles_cache*DM_Drop->number_vertices;
 		u32						iCount_Lock		= particles_cache*DM_Drop->number_indices;

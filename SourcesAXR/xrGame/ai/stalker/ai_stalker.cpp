@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 //	Module 		: ai_stalker.cpp
 //	Created 	: 25.02.2003
 //  Modified 	: 25.02.2003
@@ -111,7 +111,7 @@ void CAI_Stalker::reinit			()
 	animation().reinit				();
 //	movement().reinit				();
 
-	//???????? ????????????? ???????? ????? ??? ???????? ???????? m_SpecificCharacter
+	//загрузка спецевической звуковой схемы для сталкера согласно m_SpecificCharacter
 	sound().sound_prefix			(SpecificCharacter().sound_voice_prefix());
 
 #ifdef DEBUG_MEMORY_MANAGER
@@ -485,7 +485,7 @@ void CAI_Stalker::Die				(CObject* who)
 
 	inherited::Die					(who);
 	
-	//????????? ????????????? ?????? ? ?????????
+	//запретить использование слотов в инвенторе
 	inventory().SetSlotsUseful		(false);
 
 	if (inventory().GetActiveSlot() == NO_ACTIVE_SLOT)
@@ -590,7 +590,7 @@ BOOL CAI_Stalker::net_Spawn			(CSE_Abstract* DC)
 	if (!g_Alive())
 		sound().set_sound_mask(static_cast<u32>(eStalkerSoundMaskDie));
 
-	//????????? ?????????? ?? ???????? ????????
+	//загрузить иммунитеты из модельки сталкера
 	IKinematics* pKinematics = smart_cast<IKinematics*>(Visual()); VERIFY(pKinematics);
 	CInifile* ini = pKinematics->LL_UserData();
 	if(ini)
@@ -607,7 +607,7 @@ BOOL CAI_Stalker::net_Spawn			(CSE_Abstract* DC)
 		}
 	}
 
-	//????????? ???????? ? ??????????? ?? ?????
+	//вычислить иммунета в зависимости от ранга
 	static float novice_rank_immunity			= pSettings->r_float("ranks_properties", "immunities_novice_k");
 	static float expirienced_rank_immunity		= pSettings->r_float("ranks_properties", "immunities_experienced_k");
 
@@ -619,11 +619,11 @@ BOOL CAI_Stalker::net_Spawn			(CSE_Abstract* DC)
 
 	
 	CHARACTER_RANK_VALUE rank = Rank();
-	clamp(rank, 0, 100);
-	float rank_k = static_cast<float>(rank)/100.f;
+	clamp(rank, 0, 1000);
+	float rank_k = static_cast<float>(rank) / 1000.f;
 	m_fRankImmunity = novice_rank_immunity + (expirienced_rank_immunity - novice_rank_immunity) * rank_k;
 	m_fRankVisibility = novice_rank_visibility + (expirienced_rank_visibility - novice_rank_visibility) * rank_k;
-	m_fRankDisperison = expirienced_rank_dispersion + (novice_rank_dispersion - expirienced_rank_dispersion) * (1-rank_k);
+	m_fRankDisperison = novice_rank_dispersion + (expirienced_rank_dispersion - novice_rank_dispersion) * rank_k;
 
 	if (!fis_zero(SpecificCharacter().panic_threshold()))
 		m_panic_threshold						= SpecificCharacter().panic_threshold();

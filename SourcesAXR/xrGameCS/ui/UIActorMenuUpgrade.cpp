@@ -17,6 +17,7 @@
 #include "UI3tButton.h"
 
 #include "inventory_upgrade.h"
+#include "UITalkWnd.h"
 
 void CUIActorMenu::InitUpgradeMode()
 {
@@ -45,6 +46,17 @@ void CUIActorMenu::DeInitUpgradeMode()
 	if ( m_pPartnerInvOwner )
 	{
 		m_pPartnerInvOwner->StopTrading();
+	}
+
+	if (!HUD().GetUI())
+		return;
+	//только если находимся в режиме single
+	CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(HUD().GetUI()->UIGame());
+	if(!pGameSP) return;
+
+	if(pGameSP->TalkMenu->IsShown())
+	{
+		pGameSP->TalkMenu->NeedUpdateQuestions();
 	}
 }
 

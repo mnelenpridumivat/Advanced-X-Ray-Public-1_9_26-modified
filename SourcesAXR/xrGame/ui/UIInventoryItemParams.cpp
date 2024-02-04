@@ -19,19 +19,28 @@
 #include "../inventory_item.h"
 #include "clsid_game.h"
 #include "UIActorMenu.h"
+#include "UIInventoryUtilities.h"
 
 #include "../Torch.h"
 #include "../CustomDetector.h"
 #include "../AnomalyDetector.h"
+#include "../ArtefactContainer.h"
+#include "../CustomBackpack.h"
 #include "../AdvancedXrayGameConstants.h"
 
 CUIInventoryItem::CUIInventoryItem()
 {
-	m_af_radius = NULL;
-	m_af_vis_radius = NULL;
-	m_charge_level = NULL;
-	m_max_charge = NULL;
-	m_uncharge_speed = NULL;
+	m_af_radius			= nullptr;
+	m_af_vis_radius		= nullptr;
+	m_charge_level		= nullptr;
+	m_max_charge		= nullptr;
+	m_uncharge_speed	= nullptr;
+	m_artefacts_count	= nullptr;
+	m_additional_weight = nullptr;
+	m_inv_capacity		= nullptr;
+
+	m_iMaxAfCount		= 1;
+	m_stArtefactsScale	= 1.0f;
 }
 
 CUIInventoryItem::~CUIInventoryItem()
@@ -41,7 +50,13 @@ CUIInventoryItem::~CUIInventoryItem()
 	xr_delete(m_charge_level);
 	xr_delete(m_max_charge);
 	xr_delete(m_uncharge_speed);
+	xr_delete(m_artefacts_count);
+	xr_delete(m_additional_weight);
+	xr_delete(m_inv_capacity);
 	xr_delete(m_Prop_line);
+
+	m_textArtefacts.clear();
+	m_stArtefacts.clear();
 }
 
 LPCSTR item_influence_caption[] =
@@ -50,7 +65,10 @@ LPCSTR item_influence_caption[] =
 	"ui_inv_af_vis_radius",
 	"ui_inv_charge_level",
 	"ui_inv_max_charge",
-	"ui_inv_uncharge_speed"
+	"ui_inv_uncharge_speed",
+	"ui_inv_artefacts_count",
+	"ui_inv_weight",
+	"ui_inv_inventory_capacity"
 };
 
 void CUIInventoryItem::InitFromXml(CUIXml& xml)
@@ -69,10 +87,17 @@ void CUIInventoryItem::InitFromXml(CUIXml& xml)
 	m_Prop_line->SetAutoDelete(false);
 	CUIXmlInit::InitStatic(xml, "prop_line", 0, m_Prop_line);
 
+	m_charge_level = xr_new<CUIInventoryItemInfo>();
+	m_charge_level->Init(xml, "charge_level");
+	m_charge_level->SetAutoDelete(false);
+	LPCSTR name = CStringTable().translate("ui_inv_battery").c_str();
+	m_charge_level->SetCaption(name);
+	xml.SetLocalRoot(base_node);
+
 	m_af_radius = xr_new<CUIInventoryItemInfo>();
 	m_af_radius->Init(xml, "af_radius");
 	m_af_radius->SetAutoDelete(false);
-	LPCSTR name = CStringTable().translate("ui_inv_af_radius").c_str();
+	name = CStringTable().translate("ui_inv_af_radius").c_str();
 	m_af_radius->SetCaption(name);
 	xml.SetLocalRoot(base_node);
 
@@ -96,15 +121,72 @@ void CUIInventoryItem::InitFromXml(CUIXml& xml)
 	name = CStringTable().translate("ui_inv_uncharge_speed").c_str();
 	m_uncharge_speed->SetCaption(name);
 	xml.SetLocalRoot(base_node);
+
+	m_artefacts_count = xr_new<CUIInventoryItemInfo>();
+	m_artefacts_count->Init(xml, "container_size");
+	m_artefacts_count->SetAutoDelete(false);
+	name = CStringTable().translate("ui_inv_artefacts_count").c_str();
+	m_artefacts_count->SetCaption(name);
+	xml.SetLocalRoot(base_node);
+
+	m_additional_weight = xr_new<CUIInventoryItemInfo>();
+	m_additional_weight->Init(xml, "additional_weight");
+	m_additional_weight->SetAutoDelete(false);
+	name = CStringTable().translate("ui_inv_weight").c_str();
+	m_additional_weight->SetCaption(name);
+	xml.SetLocalRoot(base_node);
+
+	m_inv_capacity = xr_new<CUIInventoryItemInfo>();
+	m_inv_capacity->Init(xml, "inventory_capacity");
+	m_inv_capacity->SetAutoDelete(false);
+	name = CStringTable().translate("ui_inv_inventory_capacity").c_str();
+	m_inv_capacity->SetCaption(name);
+	xml.SetLocalRoot(base_node);
+
+	if (xml.NavigateToNode("artefacts_inside", 0))
+	{
+		m_iMaxAfCount = xml.ReadAttribInt("artefacts_inside", 0, "max_af_count", 1);
+		m_iIncWndHeight = xml.ReadAttribInt("artefacts_inside", 0, "inc_height", 2);
+		m_stArtefactsScale = xml.ReadAttribFlt("artefacts_inside", 0, "scale", 1.0f);
+	}
+
+	for (int i = 0; i < m_iMaxAfCount; ++i)
+	{
+		string256 capTextName{};
+		string256 staticTextName{};
+
+		strconcat(sizeof(capTextName), capTextName, "artefacts_inside:cap_artefacts_stats_", std::to_string(i).c_str());
+
+		m_textArtefacts.push_back(xr_new<CUITextWnd>());
+		AttachChild(m_textArtefacts[i]);
+		m_textArtefacts[i]->SetAutoDelete(false);
+		CUIXmlInit::InitTextWnd(xml, capTextName, 0, m_textArtefacts[i]);
+
+		strconcat(sizeof(staticTextName), staticTextName, "artefacts_inside:static_artefact_", std::to_string(i).c_str());
+
+		m_stArtefacts.push_back(xr_new<CUIStatic>());
+		AttachChild(m_stArtefacts[i]);
+		m_stArtefacts[i]->SetAutoDelete(false);
+		CUIXmlInit::InitStatic(xml, staticTextName, 0, m_stArtefacts[i]);
+
+		xml.SetLocalRoot(base_node);
+	}
+	xml.SetLocalRoot(stored_root);
 }
 
 void CUIInventoryItem::SetInfo(CInventoryItem& pInvItem)
 {
 	DetachAll();
 	AttachChild(m_Prop_line);
+
 	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
 	shared_str section = pInvItem.object().cNameSect();
 	CCustomDetector* pDet = smart_cast<CCustomDetector*>(&pInvItem);
+	CDetectorAnomaly* pAnomDet = smart_cast<CDetectorAnomaly*>(&pInvItem);
+	CTorch* pTorch = smart_cast<CTorch*>(&pInvItem);
+	CArtefactContainer* pAfContainer = smart_cast<CArtefactContainer*>(&pInvItem);
+	CCustomBackpack* pBackpack = smart_cast<CCustomBackpack*>(&pInvItem);
+
 	if (!actor)
 	{
 		return;
@@ -114,14 +196,30 @@ void CUIInventoryItem::SetInfo(CInventoryItem& pInvItem)
 	Fvector2 pos;
 	float h = m_Prop_line->GetWndPos().y + m_Prop_line->GetWndSize().y;
 
-	bool ShowCharge = GameConstants::GetTorchHasBattery() || GameConstants::GetArtDetectorUseBattery() || GameConstants::GetAnoDetectorUseBattery();
+	bool ShowChargeTorch = GameConstants::GetTorchHasBattery();
+	bool ShowChargeArtDet = GameConstants::GetArtDetectorUseBattery();
+	bool ShowChargeAnomDet = GameConstants::GetAnoDetectorUseBattery();
 
-	if (pSettings->line_exist(section.c_str(), "af_radius"))
+	if (ShowChargeTorch && pTorch || ShowChargeArtDet && pDet || ShowChargeAnomDet && pAnomDet)
+	{
+		val = pInvItem.GetChargeToShow() <= 0 ? 0 : pInvItem.GetChargeToShow() * 100.f;
+		// (!fis_zero(val))
+		{
+			m_charge_level->SetValue(val, 0, 0);
+			pos.set(m_charge_level->GetWndPos());
+			pos.y = h;
+			m_charge_level->SetWndPos(pos);
+
+			h += m_charge_level->GetWndSize().y;
+			AttachChild(m_charge_level);
+		}
+	}
+	if (pDet)
 	{
 		val = pDet->GetAfDetectRadius();
 		if (!fis_zero(val))
 		{
-			m_af_radius->SetValue(val);
+			m_af_radius->SetValue(val, 0, 2);
 			pos.set(m_af_radius->GetWndPos());
 			pos.y = h;
 			m_af_radius->SetWndPos(pos);
@@ -131,12 +229,12 @@ void CUIInventoryItem::SetInfo(CInventoryItem& pInvItem)
 		}
 	}
 
-	if (pSettings->line_exist(section.c_str(), "af_vis_radius"))
+	if (pDet)
 	{
 		val = pDet->GetAfVisRadius();
 		if (!fis_zero(val))
 		{
-			m_af_vis_radius->SetValue(val);
+			m_af_vis_radius->SetValue(val, 0, 2);
 			pos.set(m_af_vis_radius->GetWndPos());
 			pos.y = h;
 			m_af_vis_radius->SetWndPos(pos);
@@ -146,10 +244,10 @@ void CUIInventoryItem::SetInfo(CInventoryItem& pInvItem)
 		}
 	}
 
-	if (ShowCharge && pSettings->line_exist(section.c_str(), "max_charge_level"))
+	if (ShowChargeTorch && pTorch || ShowChargeArtDet && pDet || ShowChargeAnomDet && pAnomDet)
 	{
-		val = pSettings->r_float(section, "max_charge_level");
-		if (!fis_zero(val))
+		val = pInvItem.GetMaxChargeLevel();
+		//if (!fis_zero(val))
 		{
 			m_max_charge->SetValue(val);
 			pos.set(m_max_charge->GetWndPos());
@@ -161,9 +259,9 @@ void CUIInventoryItem::SetInfo(CInventoryItem& pInvItem)
 		}
 	}
 
-	if (ShowCharge && pSettings->line_exist(section.c_str(), "uncharge_speed"))
+	if (ShowChargeTorch && pTorch || ShowChargeArtDet && pDet || ShowChargeAnomDet && pAnomDet)
 	{
-		val = pSettings->r_float(section, "uncharge_speed");
+		val = pInvItem.GetUnChargeLevel();
 		if (!fis_zero(val))
 		{
 			m_uncharge_speed->SetValue(val);
@@ -173,6 +271,165 @@ void CUIInventoryItem::SetInfo(CInventoryItem& pInvItem)
 
 			h += m_uncharge_speed->GetWndSize().y;
 			AttachChild(m_uncharge_speed);
+		}
+	}
+
+	if (pBackpack)
+	{
+		val = pBackpack->m_additional_weight;
+		if (!fis_zero(val))
+		{
+			m_additional_weight->SetValue(val, 2, 2);
+
+			pos.set(m_additional_weight->GetWndPos());
+			pos.y = h;
+			m_additional_weight->SetWndPos(pos);
+
+			h += m_additional_weight->GetWndSize().y;
+			AttachChild(m_additional_weight);
+		}
+	}
+
+	if (GameConstants::GetLimitedInventory() && pBackpack)
+	{
+		val = pBackpack->GetInventoryCapacity();
+		if (!fis_zero(val))
+		{
+			m_inv_capacity->SetValue(val, 2, 2);
+
+			pos.set(m_inv_capacity->GetWndPos());
+			pos.y = h;
+			m_inv_capacity->SetWndPos(pos);
+
+			h += m_inv_capacity->GetWndSize().y;
+			AttachChild(m_inv_capacity);
+		}
+	}
+
+	if (pAfContainer)
+	{
+		val = pAfContainer->GetContainerSize();
+		if (!fis_zero(val))
+		{
+			m_artefacts_count->SetValue(val);
+			pos.set(m_artefacts_count->GetWndPos());
+			pos.y = h;
+			m_artefacts_count->SetWndPos(pos);
+
+			h += m_artefacts_count->GetWndSize().y;
+			AttachChild(m_artefacts_count);
+		}
+
+		static float h2{};
+		SetHeight(h + h2);
+
+		xr_vector<std::pair<shared_str, u16>> af_sections_inside;
+		xr_vector<CArtefact*> artefacts_inside = pAfContainer->GetArtefactsInside();
+
+		for (int i = 0; i < m_iMaxAfCount; ++i)
+		{
+			m_textArtefacts[i]->Show(false);
+			m_stArtefacts[i]->Show(false);
+			AttachChild(m_stArtefacts[i]);
+			AttachChild(m_textArtefacts[i]);
+		}
+
+		auto findIndexByValue = [&](const u16& targetValue, int iteration)
+		{
+			auto it = af_sections_inside.begin();
+
+			std::advance(it, iteration);
+
+			if (af_sections_inside[iteration].second != targetValue)
+			{
+				af_sections_inside.erase(it);
+
+				af_sections_inside.pop_back();
+
+				return false;
+			}
+
+			return true;
+		};
+
+		string128 str{}, str2{};
+
+		if (!artefacts_inside.empty())
+		{
+
+			for (auto artefact_ptr : artefacts_inside)
+				af_sections_inside.emplace_back(artefact_ptr->cNameSect(), artefact_ptr->ID());
+
+			for (int i = 0; i < artefacts_inside.size(); ++i)
+			{
+				m_textArtefacts[i]->Show((GameConstants::GetArtefactsDegradation() || GameConstants::GetAfRanks()) && artefacts_inside[i]->ID() == af_sections_inside[i].second);
+				m_stArtefacts[i]->Show(artefacts_inside[i]->ID() == af_sections_inside[i].second);
+
+				if (GameConstants::GetArtefactsDegradation())
+				{
+					strconcat(sizeof(str), str, std::to_string(static_cast<int>(artefacts_inside[i]->GetCurrentChargeLevel() * 100)).c_str(), "%");
+
+					if (GameConstants::GetAfRanks())
+						strconcat(sizeof(str2), str2, str, " | ", std::to_string(artefacts_inside[i]->GetCurrentAfRank()).c_str());
+					else
+						strconcat(sizeof(str2), str2, str, "");
+				}
+				else if (GameConstants::GetAfRanks())
+					strconcat(sizeof(str2), str2, CStringTable().translate("ui_inv_af_rank").c_str(), ": ", std::to_string(artefacts_inside[i]->GetCurrentAfRank()).c_str());
+
+				m_textArtefacts[i]->SetTextST(str2);
+
+				m_stArtefacts[i]->SetShader(InventoryUtilities::GetEquipmentIconsShader());
+
+				Frect				tex_rect;
+				tex_rect.x1 = float(pSettings->r_u32(af_sections_inside[i].first.c_str(), "inv_grid_x") * INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()));
+				tex_rect.y1 = float(pSettings->r_u32(af_sections_inside[i].first.c_str(), "inv_grid_y") * INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons()));
+				tex_rect.x2 = float(pSettings->r_u32(af_sections_inside[i].first.c_str(), "inv_grid_width") * INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()));
+				tex_rect.y2 = float(pSettings->r_u32(af_sections_inside[i].first.c_str(), "inv_grid_height") * INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons()));
+				tex_rect.rb.add(tex_rect.lt);
+				m_stArtefacts[i]->SetTextureRect(tex_rect);
+				m_stArtefacts[i]->TextureOn();
+				m_stArtefacts[i]->SetStretchTexture(true);
+
+				if (GameConstants::GetUseHQ_Icons())
+					m_stArtefacts[i]->SetWndSize(Fvector2().set((tex_rect.x2 - tex_rect.x1) * UI().get_current_kx() / 2 * m_stArtefactsScale, (tex_rect.y2 - tex_rect.y1) / 2 * m_stArtefactsScale));
+				else
+					m_stArtefacts[i]->SetWndSize(Fvector2().set((tex_rect.x2 - tex_rect.x1) * UI().get_current_kx() * m_stArtefactsScale, (tex_rect.y2 - tex_rect.y1) * m_stArtefactsScale));
+
+				if (af_sections_inside.size() == 1)
+				{
+					tex_rect.set(0, 0, 1, 1);
+				}
+				else
+				{
+					if (i + 1 < af_sections_inside.size())
+					{
+						tex_rect.x1 = float(pSettings->r_u32(af_sections_inside[i + 1].first.c_str(), "inv_grid_x") * INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()));
+						tex_rect.y1 = float(pSettings->r_u32(af_sections_inside[i + 1].first.c_str(), "inv_grid_y") * INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons()));
+						tex_rect.x2 = float(pSettings->r_u32(af_sections_inside[i + 1].first.c_str(), "inv_grid_width") * INV_GRID_WIDTH(GameConstants::GetUseHQ_Icons()));
+						tex_rect.y2 = float(pSettings->r_u32(af_sections_inside[i + 1].first.c_str(), "inv_grid_height") * INV_GRID_HEIGHT(GameConstants::GetUseHQ_Icons()));
+						tex_rect.rb.add(tex_rect.lt);
+					}
+				}
+			}
+
+			if (i == 1)
+			{
+				SetHeight(h + (m_stArtefacts[i]->GetWndPos().y * 1.1f));
+				h2 = m_stArtefacts[i]->GetWndPos().y * 1.1f;
+			}
+			else if (i % (m_iIncWndHeight - 1) == 0 && i < 5)
+			{
+				SetHeight(h + m_stArtefacts[i]->GetWndPos().y * 1.1f);
+				h2 = m_stArtefacts[i]->GetWndPos().y * 1.1f;
+			}
+			else if ((i % m_iIncWndHeight) == 0 && i > 5)
+			{
+				SetHeight(h + m_stArtefacts[i]->GetWndPos().y * 1.1f);
+				h2 = m_stArtefacts[i]->GetWndPos().y * 1.1f;
+			}
+
+			return;
 		}
 	}
 
@@ -243,14 +500,33 @@ void CUIInventoryItemInfo::SetCaption(LPCSTR name)
 	m_caption->TextItemControl()->SetText(name);
 }
 
-void CUIInventoryItemInfo::SetValue(float value, int vle)
+void CUIInventoryItemInfo::SetValue(float value, int vle, int accuracy)
 {
 	value *= m_magnitude;
 	string32 buf;
 	if (m_show_sign)
+	{
 		xr_sprintf(buf, "%+.0f", value);
+		if (accuracy == 0)
+			xr_sprintf(buf, "%+.0f", value);
+		else if (accuracy == 1)
+			xr_sprintf(buf, "%+.1f", value);
+		else if (accuracy == 2)
+			xr_sprintf(buf, "%+.2f", value);
+		else if (accuracy == 3)
+			xr_sprintf(buf, "%+.3f", value);
+	}
 	else
-		xr_sprintf(buf, "%.0f", value);
+	{
+		if (accuracy == 0)
+			xr_sprintf(buf, "%.0f", value);
+		else if (accuracy == 1)
+			xr_sprintf(buf, "%.1f", value);
+		else if (accuracy == 2)
+			xr_sprintf(buf, "%.2f", value);
+		else if (accuracy == 3)
+			xr_sprintf(buf, "%.3f", value);
+	}
 
 	LPSTR str;
 	if (m_unit_str.size())
@@ -319,37 +595,4 @@ void CUIInventoryItemInfo::SetValue(float value, int vle)
 		else
 			m_caption->SetTextureColor(m_neutral_color);
 	}
-}
-
-// -------------------------------------------------------------------------------------------------
-
-CUIItemConditionParams::CUIItemConditionParams()
-{
-	AttachChild(&m_ProgressCurCharge);
-	AttachChild(&m_icon_charge);
-	AttachChild(&m_textCharge);
-}
-
-CUIItemConditionParams::~CUIItemConditionParams()
-{
-}
-
-void CUIItemConditionParams::InitFromXml(CUIXml& xml_doc)
-{
-	if (!xml_doc.NavigateToNode("inventory_items_info", 0))	return;
-	CUIXmlInit::InitStatic(xml_doc, "static_current_charge_level", 0, &m_icon_charge);
-	CUIXmlInit::InitTextWnd(xml_doc, "cap_current_charge_level", 0, &m_textCharge);
-	m_ProgressCurCharge.InitFromXml(xml_doc, "progress_current_charge_level");
-}
-
-void CUIItemConditionParams::SetInfo(CInventoryItem const* slot_item, CInventoryItem const& cur_item)
-{
-	float cur_value = cur_item.GetConditionToShow() * 100.0f + 1.0f - EPS;
-	float slot_value = cur_value;
-
-	if (slot_item && (slot_item != &cur_item))
-	{
-		slot_value = slot_item->GetConditionToShow() * 100.0f + 1.0f - EPS;
-	}
-	m_ProgressCurCharge.SetTwoPos(cur_value, slot_value);
 }

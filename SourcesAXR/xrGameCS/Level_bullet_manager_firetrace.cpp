@@ -4,6 +4,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "pch_script.h"
 #include "Level_Bullet_Manager.h"
 #include "entity.h"
 #include "../xrEngine/gamemtllib.h"
@@ -16,11 +17,15 @@
 #include "AI/Stalker/ai_stalker.h"
 #include "character_info.h"
 #include "game_cl_base_weapon_usage_statistic.h"
-#include "../XrCDB/xr_collide_defs.h"
+#include "../xrcdb/xr_collide_defs.h"
+#include "../xrengine/xr_collide_form.h"
 #include "weapon.h"
 #include "ik/math3d.h"
 #include "actor.h"
-#include "../XrEngine/xr_collide_form.h"
+#include "ai/monsters/basemonster/base_monster.h"
+#include "ai_space.h"
+#include "../xrServerEntitiesCS/script_engine.h"
+
 
 extern ENGINE_API int ps_r__WallmarksOnSkeleton;
 
@@ -125,12 +130,19 @@ BOOL CBulletManager::test_callback(const collide::ray_defs& rd, CObject* object,
 							}
 						}
 						// play whine sound
-						if (play_whine){
+						if (play_whine)
+						{
 							Fvector					pt;
 							pt.mad					(bullet->bullet_pos, bullet->dir, dist);
 							Level().BulletManager().PlayWhineSound				(bullet,initiator,pt);
+
+							luabind::functor<void> m_functor;
+							if (ai().script_engine().functor("mfs_functions.on_play_whine_sound", m_functor))
+								m_functor();
 						}
-					}else{
+					}
+					else
+					{
 						// don't test this object again (return FALSE)
 						bRes		= FALSE;
 					}
@@ -267,6 +279,10 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 			NeedShootmark = false;
 		};
 	}
+	/*else if ( CBaseMonster * monster = smart_cast<CBaseMonster *>(E.R.O) )
+	{
+		NeedShootmark	=	monster->need_shotmark();
+	}*/
 	
 	//визуальное обозначение попадание на объекте
 //	Fvector			hit_normal;
@@ -317,7 +333,6 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 		};
 
 		SHit	Hit = SHit(	hit_param.power,
-							hit_param.power_critical,
 							original_dir,
 							NULL,
 							u16(E.R.element),
@@ -405,7 +420,6 @@ bool CBulletManager::ObjectHit( SBullet_Hit* hit_res, SBullet* bullet, const Fve
 	*hit_res = bullet->hit_param; //default param
 	
 	hit_res->power = bullet->hit_param.power*speed_factor;
-	hit_res->power_critical = bullet->hit_param.power_critical*speed_factor;
 	
 	//(Если = 0, то пуля либо рикошетит(если контакт идёт по касательной), либо застряёт в текущем 
 	//объекте, если больше 0, то пуля прошивает объект)
@@ -425,8 +439,8 @@ bool CBulletManager::ObjectHit( SBullet_Hit* hit_res, SBullet* bullet, const Fve
 	float speed_scale = 0.0f;
 
 #ifdef DEBUG
-	Fvector dbg_bullet_pos;
-	dbg_bullet_pos.mad(bullet->bullet_pos,bullet->dir,R.range);
+	//Fvector dbg_bullet_pos;
+	//dbg_bullet_pos.mad(bullet->bullet_pos,bullet->dir,R.range);
 	int bullet_state = 0;
 #endif
 
@@ -435,6 +449,16 @@ bool CBulletManager::ObjectHit( SBullet_Hit* hit_res, SBullet* bullet, const Fve
 #ifdef DEBUG
 		bullet_state = 2;
 #endif	
+		return true;
+	}
+
+	if (bullet->flags.magnetic_beam && (shoot_factor > EPS))
+	{
+#ifdef DEBUG
+		bullet_state = 2;
+#endif
+		//air resistance of magnetic_beam bullet is armor resistance too
+		bullet->armor_piercing	-= mtl_ap * bullet->air_resistance;
 		return true;
 	}
 
@@ -499,7 +523,7 @@ bool CBulletManager::ObjectHit( SBullet_Hit* hit_res, SBullet* bullet, const Fve
 	extern BOOL g_bDrawBulletHit;
 	if(g_bDrawBulletHit)
 	{
-		g_hit[bullet_state].push_back(dbg_bullet_pos);
+//		g_hit[bullet_state].push_back(dbg_bullet_pos);
 		g_hit[bullet_state].push_back(end_point);
 	}
 #endif 

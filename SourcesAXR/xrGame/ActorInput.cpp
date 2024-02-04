@@ -31,20 +31,30 @@
 #include "flare.h"
 #include "CustomDetector.h"
 #include "clsid_game.h"
-#include "hudmanager.h"
+#include "HudManager.h"
 #include "Weapon.h"
 #include "WeaponMagazined.h"
+#include "Grenade.h"
 #include "script_engine.h"
 
 #include "AdvancedXrayGameConstants.h"
 
 extern int hud_adj_mode;
+extern u32 hud_adj_item_idx;
+extern bool g_block_actor_movement;
 
 void CActor::IR_OnKeyboardPress(int cmd)
 {
 	if (m_blocked_actions.find(static_cast<EGameActions>(cmd)) != m_blocked_actions.end()) return; // Real Wolf. 14.10.2014
 
-	if(hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT))	return;
+	if (hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT))
+	{
+		if (pInput->iGetAsyncKeyState(DIK_RETURN) || pInput->iGetAsyncKeyState(DIK_BACKSPACE) ||
+			pInput->iGetAsyncKeyState(DIK_DELETE))
+			g_player_hud->tune(Ivector().set(0, 0, 0));
+
+		return;
+	}
 
 	if (Remote())		return;
 
@@ -81,7 +91,7 @@ void CActor::IR_OnKeyboardPress(int cmd)
 		}break;
 	}
 
-	if (!g_Alive()) return;
+	if (!g_Alive() || g_block_actor_movement) return;
 
 	if(m_holder && kUSE != cmd)
 	{
@@ -106,27 +116,91 @@ void CActor::IR_OnKeyboardPress(int cmd)
 		}break;
 	case kSPRINT_TOGGLE:	
 		{
-			mstate_wishful ^= mcSprint;
+			CWeapon* W = smart_cast<CWeapon*>(inventory().ActiveItem());
+
+			if (IsReloadingWeapon() && !GameConstants::GetReloadIfSprint())
+			{
+				if (m_iTrySprintCounter == 0) // don't interrupt reloading on first key press and skip sprint request
+				{
+					m_iTrySprintCounter++;
+
+					return;
+				}
+				else if (m_iTrySprintCounter >= 1) // break reloading, if player insist(presses two or more times) and do sprint
+				{
+					W->StopAllSounds();
+					W->SwitchState(CHUDState::EHudStates::eIdle);
+				}
+			}
+
+			if (mstate_wishful & mcSprint && !GameConstants::GetReloadIfSprint())
+				mstate_wishful &= ~mcSprint;
+			else
+				mstate_wishful ^= mcSprint;
+
 		}break;
-	case kCROUCH:	
+	case kCROUCH:
 		{
-		if( psActorFlags.test(AF_CROUCH_TOGGLE) )
-			mstate_wishful ^= mcCrouch;
+			if (psActorFlags.test(AF_CROUCH_TOGGLE))
+				mstate_wishful ^= mcCrouch;
 		}break;
 	case kCAM_1:	cam_Set			(eacFirstEye);				break;
 	case kCAM_2:	cam_Set			(eacLookAt);				break;
 	case kCAM_3:	cam_Set			(eacFreeLook);				break;
 	case kNIGHT_VISION:
 		{
+			if (hud_adj_mode)
+				return;
+
 			SwitchNightVision();
 			break;
 		}
 	case kTORCH:
 		{
+			if (hud_adj_mode)
+				return;
+
 			SwitchTorch();
 			break;
 		}
+	case kCLEAN_MASK:
+		{
+			if (hud_adj_mode)
+				return;
 
+			CleanMaskAnimCheckDetector();
+			break;
+		}
+	case kQUICK_KICK:
+		{
+			if (hud_adj_mode)
+				return;
+
+			QuickKick();
+			break;
+		}
+	case kQUICK_GRENADE:
+		{
+			if (!GameConstants::GetQuickThrowGrenadesEnabled() || hud_adj_mode)
+				return;
+
+			CGrenade* grenade = smart_cast<CGrenade*>(inventory().ItemFromSlot(GRENADE_SLOT));
+			
+			if (grenade)
+			{
+				if (inventory().GetActiveSlot() == GRENADE_SLOT)
+					return;
+
+				m_last_active_slot = inventory().GetActiveSlot();
+
+				inventory().Activate(GRENADE_SLOT, true);
+				grenade->SetQuickThrowActive(true);
+
+				if (grenade->isHUDAnimationExist("anm_throw_quick"))
+					grenade->SwitchState(CGrenade::eThrowQuick);
+			}
+			break;
+		}
 	case kDETECTOR:
 		{
 			PIItem det_active					= inventory().ItemFromSlot(DETECTOR_SLOT);
@@ -193,10 +267,13 @@ void CActor::IR_OnKeyboardPress(int cmd)
 						inventory().ClientEat		(itm);
 					}
 					
-					SDrawStaticStruct* _s		= CurrentGameUI()->AddCustomStatic("item_used", true);
-					string1024					str;
-					strconcat					(sizeof(str),str,*CStringTable().translate("st_item_used"),": ", itm->NameItem());
-					_s->wnd()->TextItemControl()->SetText(str);
+					if (GameConstants::GetHUD_UsedItemTextEnabled())
+					{
+						SDrawStaticStruct* _s = CurrentGameUI()->AddCustomStatic("item_used", true);
+						string1024					str;
+						strconcat(sizeof(str), str, *CStringTable().translate("st_item_used"), ": ", itm->NameItem());
+						_s->wnd()->TextItemControl()->SetText(str);
+					}
 					
 					CurrentGameUI()->ActorMenu().m_pQuickSlot->ReloadReferences(this);
 				}
@@ -210,9 +287,27 @@ void CActor::IR_OnKeyboardPress(int cmd)
 		}break;
 	case kFLASHLIGHT:
 		{
-		auto wpn = smart_cast<CWeapon*>(inventory().ActiveItem());
+			auto wpn = smart_cast<CWeapon*>(inventory().ActiveItem());
 			if (wpn)
 				wpn->SwitchFlashlight(!wpn->IsFlashlightOn());
+		}break;
+	case kWPN_ALT_AIM:
+		{
+			auto wpn = smart_cast<CWeapon*>(inventory().ActiveItem());
+
+			if (wpn && wpn->IsScopeAttached())
+			{
+				if (!wpn->IsAltAimEnabled())
+					return;
+
+				wpn->SwitchZoomMode();
+
+				string256 alt_aim_status;
+				strconcat(sizeof(alt_aim_status), alt_aim_status, "st_alt_aim_switched_", wpn->GetAltZoomStatus() ? "on" : "off");
+
+				SDrawStaticStruct* custom_static = CurrentGameUI()->AddCustomStatic("alt_aim_switched", true);
+				custom_static->wnd()->TextItemControl()->SetText(CStringTable().translate(alt_aim_status).c_str());
+			}
 		}break;
 	}
 }
@@ -272,9 +367,30 @@ void CActor::IR_OnKeyboardHold(int cmd)
 {
 	if (m_blocked_actions.find(static_cast<EGameActions>(cmd)) != m_blocked_actions.end()) return; // Real Wolf. 14.10.2014
 
-	if(hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT))	return;
+	if (hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT) && g_player_hud)
+	{
+		u8 idx = g_player_hud->attached_item(hud_adj_item_idx)->m_parent_hud_item->GetCurrentHudOffsetIdx();
 
-	if (Remote() || !g_Alive())					return;
+		bool bIsRot = (hud_adj_mode == 2) && (idx != 0);
+
+		if (pInput->iGetAsyncKeyState(bIsRot ? DIK_RIGHT : DIK_UP))
+			g_player_hud->tune(Ivector().set(0, 1, 0));
+		if (pInput->iGetAsyncKeyState(bIsRot ? DIK_LEFT : DIK_DOWN))
+			g_player_hud->tune(Ivector().set(0, -1, 0));
+		if (pInput->iGetAsyncKeyState(bIsRot ? DIK_DOWN : DIK_LEFT))
+			g_player_hud->tune(Ivector().set(1, 0, 0));
+		if (pInput->iGetAsyncKeyState(bIsRot ? DIK_UP : DIK_RIGHT))
+			g_player_hud->tune(Ivector().set(-1, 0, 0));
+		if (pInput->iGetAsyncKeyState(DIK_PRIOR))
+			g_player_hud->tune(Ivector().set(0, 0, 1));
+		if (pInput->iGetAsyncKeyState(DIK_NEXT))
+			g_player_hud->tune(Ivector().set(0, 0, -1));
+		if (pInput->iGetAsyncKeyState(DIK_RETURN))
+			g_player_hud->tune(Ivector().set(0, 0, 0));
+		return;
+	}
+
+	if (Remote() || !g_Alive() || g_block_actor_movement) return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 	if (IsTalking())							return;
 
@@ -324,16 +440,15 @@ void CActor::IR_OnKeyboardHold(int cmd)
 	case kBACK:		mstate_wishful |= mcBack;									break;
 	case kCROUCH:
 		{
-			if( !psActorFlags.test(AF_CROUCH_TOGGLE) )
-					mstate_wishful |= mcCrouch;
-
+			if (!psActorFlags.test(AF_CROUCH_TOGGLE))
+				mstate_wishful |= mcCrouch;
+	
 		}break;
 	}
 }
 
 void CActor::IR_OnMouseMove(int dx, int dy)
 {
-
 	if(hud_adj_mode)
 	{
 		g_player_hud->tune	(Ivector().set(dx,dy,0));
@@ -355,7 +470,10 @@ void CActor::IR_OnMouseMove(int dx, int dy)
 	float LookFactor = GetLookFactor();
 
 	CCameraBase* C	= cameras	[cam_active];
-	float scale		= (C->f_fov/g_fov)*psMouseSens * psMouseSensScale/50.f  / LookFactor;
+
+	auto wpn = smart_cast<CWeapon*>(inventory().ActiveItem());
+
+	float scale		= (C->f_fov/g_fov)* ((wpn && wpn->IsZoomed() && wpn->bIsSecondVPZoomPresent()) ? psSVP_MouseSens : psMouseSens) * psMouseSensScale/50.f  / LookFactor;
 	if (dx){
 		float d = static_cast<float>(dx)*scale;
 		cam_Active()->Move((d<0)?kLEFT:kRIGHT, _abs(d));
@@ -528,6 +646,7 @@ static	u16 SlotsToCheck [] = {
 		ARTEFACT_SLOT	,		// 10
 		PDA_SLOT		,
 		PISTOL_SLOT		,
+		BACKPACK_SLOT	,
 };
 
 void	CActor::OnNextWeaponSlot()
@@ -547,7 +666,7 @@ void	CActor::OnNextWeaponSlot()
 		if (SlotsToCheck[CurSlot] == ActiveSlot) break;
 	};
 
-	if (CurSlot >= NumSlotsToCheck) 
+	if (CurSlot >= NumSlotsToCheck)
 		return;
 
 	for (u32 i=CurSlot+1; i<NumSlotsToCheck; i++)
@@ -561,6 +680,10 @@ void	CActor::OnNextWeaponSlot()
 			else if (SlotsToCheck[i] == PDA_SLOT)
 			{
 				IR_OnKeyboardPress(kACTIVE_JOBS);
+			}
+			else if (SlotsToCheck[i] == BACKPACK_SLOT)
+			{
+				IR_OnKeyboardPress(kINVENTORY);
 			}
 			else
 				IR_OnKeyboardPress(kWPN_1 + i);
@@ -578,15 +701,15 @@ void	CActor::OnPrevWeaponSlot()
 	if (ActiveSlot == NO_ACTIVE_SLOT) 
 		ActiveSlot = KNIFE_SLOT;
 
-	u32 NumSlotsToCheck = sizeof(SlotsToCheck)/sizeof(SlotsToCheck[0]);	
-	u32 CurSlot		= 0;
+	u32 NumSlotsToCheck = sizeof(SlotsToCheck)/sizeof(SlotsToCheck[0]);
+	u32 CurSlot			= 0;
 
 	for (; CurSlot<NumSlotsToCheck; CurSlot++)
 	{
 		if (SlotsToCheck[CurSlot] == ActiveSlot) break;
 	};
 
-	if (CurSlot >= NumSlotsToCheck) 
+	if (CurSlot >= NumSlotsToCheck)
 		CurSlot	= NumSlotsToCheck-1; //last in row
 
 	for (s32 i=static_cast<s32>(CurSlot - 1); i>=0; i--)
@@ -638,13 +761,15 @@ void CActor::set_input_external_handler(CActorInputHandler *handler)
 
 void CActor::SwitchNightVision()
 {
-	SwitchNightVision(!m_bNightVisionOn);
+	if (!Actor()->m_bActionAnimInProcess)
+		NVGAnimCheckDetector();
 }
 
 void CActor::SwitchTorch()
 { 
 	CTorch* pTorch = smart_cast<CTorch*>(inventory().ItemFromSlot(TORCH_SLOT));
-	if (pTorch)
+
+	if (pTorch && !Actor()->m_bActionAnimInProcess)
 		pTorch->Switch();
 }
 

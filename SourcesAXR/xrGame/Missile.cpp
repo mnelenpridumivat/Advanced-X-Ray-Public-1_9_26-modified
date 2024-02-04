@@ -43,6 +43,8 @@ void create_force_progress()
 CMissile::CMissile(void) 
 {
 	m_dwStateTime		= 0;
+	m_bQuickThrowActive = false;
+	m_bIsContactGrenade = false;
 }
 
 CMissile::~CMissile(void) 
@@ -75,7 +77,9 @@ void CMissile::Load(LPCSTR section)
 	m_vThrowPoint		= pSettings->r_fvector3(section,"throw_point");
 	m_vThrowDir			= pSettings->r_fvector3(section,"throw_dir");
 
-	m_ef_weapon_type	= READ_IF_EXISTS(pSettings,r_u32,section,"ef_weapon_type",static_cast<u32>(-1));
+	m_ef_weapon_type	= READ_IF_EXISTS(pSettings,r_u32,section,"ef_weapon_type",u32(-1));
+
+	m_bIsContactGrenade = READ_IF_EXISTS(pSettings, r_bool, section, "is_contact_grenade", false);
 }
 
 BOOL CMissile::net_Spawn(CSE_Abstract* DC) 
@@ -246,12 +250,11 @@ void CMissile::shedule_Update(u32 dt)
 	inherited::shedule_Update(dt);
 	if(!H_Parent() && getVisible() && m_pPhysicsShell) 
 	{
-		if(m_dwDestroyTime <= Level().timeServer()) 
+		if(m_dwDestroyTime <= Level().timeServer())
 		{
 			m_dwDestroyTime = 0xffffffff;
 			VERIFY	(!m_pInventory);
 			Destroy	();
-			return;
 		}
 	} 
 }
@@ -297,6 +300,10 @@ void CMissile::State(u32 state)
 		{
 			SetPending			(TRUE);
 			m_fThrowForce		= m_fMinForce;
+
+			if (m_bQuickThrowActive)
+				m_throw = true;
+
 			PlayHUDMotion		("anm_throw_begin", TRUE, this, GetState());
 		} break;
 	case eReady:
@@ -311,8 +318,28 @@ void CMissile::State(u32 state)
 		} break;
 	case eThrowEnd:
 		{
+			if (m_bQuickThrowActive)
+			{
+				Actor()->inventory().Activate(Actor()->GetLastActiveSlot());
+				m_bQuickThrowActive = false;
+				return;
+			}
+
 			SwitchState			(eShowing); 
 		} break;
+	case eThrowQuick:
+		{	  
+			if (isHUDAnimationExist("anm_throw_quick"))
+			{
+				if (!m_fake_missile && !smart_cast<CMissile*>(H_Parent()))
+					spawn_fake_missile();
+
+				PlayHUDMotion("anm_throw_quick", TRUE, this, GetState());
+			}
+			else
+				SwitchState(eThrowStart);
+		}
+
 /*	case eBore:
 		{
 			PlaySound			(sndPlaying,Position());
@@ -342,7 +369,11 @@ void CMissile::OnAnimationEnd(u32 state)
 	case eShowing:
 		{
 			setVisible(TRUE);
-			SwitchState(eIdle);
+
+			if (!isHUDAnimationExist("anm_throw_quick") && m_bQuickThrowActive)
+				SwitchState(eThrowStart);
+			else
+				SwitchState(eIdle);
 		} break;
 	case eThrowStart:
 		{
@@ -362,6 +393,10 @@ void CMissile::OnAnimationEnd(u32 state)
 		{
 			SwitchState	(eShowing);
 		} break;
+	case eThrowQuick:
+		{
+			SwitchState(eThrowEnd);
+		}
 	default:
 		inherited::OnAnimationEnd(state);
 	}
@@ -457,7 +492,7 @@ void CMissile::setup_throw_params()
 void CMissile::OnMotionMark(u32 state, const motion_marks& M)
 {
 	inherited::OnMotionMark(state, M);
-	if(state==eThrow && !m_throw)
+	if((state==eThrow || state == eThrowQuick) && !m_throw)
 	{
 		if (H_Parent())
 			Throw	();
@@ -481,7 +516,7 @@ void CMissile::Throw()
 	CInventoryOwner						*inventory_owner = smart_cast<CInventoryOwner*>(H_Parent());
 	VERIFY								(inventory_owner);
 	if (inventory_owner->use_default_throw_force())
-		m_fake_missile->m_fThrowForce	= m_constpower ? m_fConstForce : m_fThrowForce; 
+		m_fake_missile->m_fThrowForce	= (m_constpower || m_bQuickThrowActive) ? m_fConstForce : m_fThrowForce;
 	else
 		m_fake_missile->m_fThrowForce	= inventory_owner->missile_throw_force(); 
 	
@@ -724,7 +759,7 @@ void CMissile::render_item_ui()
 	g_MissileForceShape->Draw	();
 }
 
-void	 CMissile::ExitContactCallback(bool& do_colide,bool bo1,dContact& c,SGameMtl * /*material_1*/,SGameMtl * /*material_2*/)
+void	 CMissile::ExitContactCallback(bool& do_colide, bool bo1, dContact& c, SGameMtl* material_1, SGameMtl* material_2)
 {
 	dxGeomUserData	*gd1=NULL,	*gd2=NULL;
 	if(bo1)
@@ -737,8 +772,34 @@ void	 CMissile::ExitContactCallback(bool& do_colide,bool bo1,dContact& c,SGameMt
 		gd2 =PHRetrieveGeomUserData(c.geom.g1);
 		gd1 =PHRetrieveGeomUserData(c.geom.g2);
 	}
-	if(gd1&&gd2&&static_cast<CPhysicsShellHolder*>(gd1->callback_data)==gd2->ph_ref_object)	
-																				do_colide=false;
+	if (gd1 && gd2 && static_cast<CPhysicsShellHolder*>(gd1->callback_data) == gd2->ph_ref_object)
+		do_colide=false;
+
+	SGameMtl* material = 0;
+	CMissile* l_this = gd1 ? smart_cast<CMissile*>(gd1->ph_ref_object) : NULL;
+	Fvector vUp;
+
+	if (!l_this)
+	{
+		l_this = gd2 ? smart_cast<CMissile*>(gd2->ph_ref_object) : NULL;
+		material = material_1;
+
+	}
+	else
+		material = material_2;
+
+	VERIFY(material);
+
+	if (material->Flags.is(SGameMtl::flPassable)) return;
+
+	if (!l_this || !l_this->m_bIsContactGrenade) return;
+
+	CGameObject* l_pOwner = gd1 ? smart_cast<CGameObject*>(gd1->ph_ref_object) : NULL;
+
+	if (!l_pOwner || l_pOwner == (CGameObject*)l_this) l_pOwner = gd2 ? smart_cast<CGameObject*>(gd2->ph_ref_object) : NULL;
+
+	if (!l_pOwner || l_pOwner != l_this->m_pOwner)
+		l_this->set_destroy_time(5);
 }
 
 bool CMissile::GetBriefInfo( II_BriefInfo& info )

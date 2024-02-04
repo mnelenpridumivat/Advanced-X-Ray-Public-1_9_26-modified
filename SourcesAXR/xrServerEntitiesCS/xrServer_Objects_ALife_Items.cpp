@@ -113,6 +113,9 @@ const	u32		CSE_ALifeInventoryItem::random_limit			= 120;
 //if TRUE, then object sends update packet
 BOOL CSE_ALifeInventoryItem::Net_Relevant()
 {
+	if (base()->ID_Parent != u16(-1))
+		return		FALSE;
+
 	if (!freezed)
 		return		TRUE;
 
@@ -499,6 +502,8 @@ CSE_ALifeItemWeapon::CSE_ALifeItemWeapon	(LPCSTR caSection) : CSE_ALifeItem(caSe
 	m_scope_status				=	(EWeaponAddonStatus)pSettings->r_s32(s_name,"scope_status");
 	m_silencer_status			=	(EWeaponAddonStatus)pSettings->r_s32(s_name,"silencer_status");
 	m_grenade_launcher_status	=	(EWeaponAddonStatus)pSettings->r_s32(s_name,"grenade_launcher_status");
+	m_laser_designator_status	=	(EWeaponAddonStatus)READ_IF_EXISTS(pSettings, r_s32, s_name, "laser_designator_status", 0);
+	m_tactical_torch_status		=	(EWeaponAddonStatus)READ_IF_EXISTS(pSettings, r_s32, s_name, "tactical_torch_status", 0);
 	m_ef_main_weapon_type		= READ_IF_EXISTS(pSettings,r_u32,caSection,"ef_main_weapon_type",u32(-1));
 	m_ef_weapon_type			= READ_IF_EXISTS(pSettings,r_u32,caSection,"ef_weapon_type",u32(-1));
 }
@@ -629,9 +634,10 @@ u16	 CSE_ALifeItemWeapon::get_ammo_magsize	()
 
 BOOL CSE_ALifeItemWeapon::Net_Relevant()
 {
-	if (!inherited::Net_Relevant())
-		return FALSE;
-	return (wpn_flags==1);
+	if (wpn_flags==1)
+		return TRUE;
+
+	return inherited::Net_Relevant();
 }
 
 #ifndef XRGAME_EXPORTS
@@ -650,6 +656,12 @@ void CSE_ALifeItemWeapon::FillProps			(LPCSTR pref, PropItemVec& items)
 
 	if (m_grenade_launcher_status == ALife::eAddonAttachable)
         PHelper().CreateFlag8	(items,PrepareKey(pref,*s_name,"Addons\\Podstvolnik"),&m_addon_flags,eWeaponAddonGrenadeLauncher);
+
+	if (m_laser_designator_status == ALife::eAddonAttachable)
+		PHelper().CreateFlag8	(items, PrepareKey(pref, *s_name, "Addons\\LaserDesignator"), &m_addon_flags, eWeaponAddonLaserDesignator);
+
+	if (m_tactical_torch_status == ALife::eAddonAttachable)
+		PHelper().CreateFlag8	(items, PrepareKey(pref, *s_name, "Addons\\TacticalTorch"), &m_addon_flags, eWeaponAddonTacticalTorch);
 }
 #endif // #ifndef XRGAME_EXPORTS
 
@@ -701,7 +713,39 @@ void CSE_ALifeItemWeaponShotGun::FillProps			(LPCSTR pref, PropItemVec& items)
 	inherited::FillProps			(pref, items);
 }
 #endif // #ifndef XRGAME_EXPORTS
+////////////////////////////////////////////////////////////////////////////
+// CSE_ALifeItemWeaponAutoShotGun
+////////////////////////////////////////////////////////////////////////////
+CSE_ALifeItemWeaponAutoShotGun::CSE_ALifeItemWeaponAutoShotGun	(LPCSTR caSection) : CSE_ALifeItemWeaponShotGun(caSection)
+{
+}
 
+CSE_ALifeItemWeaponAutoShotGun::~CSE_ALifeItemWeaponAutoShotGun	()
+{
+}
+
+void CSE_ALifeItemWeaponAutoShotGun::UPDATE_Read	(NET_Packet& P)
+{
+	inherited::UPDATE_Read(P);
+}
+void CSE_ALifeItemWeaponAutoShotGun::UPDATE_Write	(NET_Packet& P)
+{
+	inherited::UPDATE_Write(P);
+}
+void CSE_ALifeItemWeaponAutoShotGun::STATE_Read		(NET_Packet& P, u16 size)
+{
+	inherited::STATE_Read(P, size);
+}
+void CSE_ALifeItemWeaponAutoShotGun::STATE_Write	(NET_Packet& P)
+{
+	inherited::STATE_Write(P);
+}
+#ifndef XRGAME_EXPORTS
+void CSE_ALifeItemWeaponAutoShotGun::FillProps		(LPCSTR pref, PropItemVec& items)
+{
+	inherited::FillProps(pref, items);
+}
+#endif // #ifndef XRGAME_EXPORTS
 ////////////////////////////////////////////////////////////////////////////
 // CSE_ALifeItemWeaponMagazined
 ////////////////////////////////////////////////////////////////////////////
@@ -926,7 +970,10 @@ void CSE_ALifeItemArtefact::FillProps		(LPCSTR pref, PropItemVec& items)
 
 BOOL CSE_ALifeItemArtefact::Net_Relevant	()
 {
-	return							(inherited::Net_Relevant());
+	if (base()->ID_Parent == u16(-1))
+		return TRUE;
+
+	return FALSE;
 }
 
 ////////////////////////////////////////////////////////////////////////////

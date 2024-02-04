@@ -28,6 +28,8 @@
 #include "GameTaskManager.h"
 #include "GameTaskdefs.h"
 #include "infoportion.h"
+#include "inventory.h"
+#include "CustomDetector.h"
 #include "ai/monsters/basemonster/base_monster.h"
 #include "ai/trader/ai_trader.h"
 
@@ -65,7 +67,7 @@ void CActor::AddEncyclopediaArticle	 (const CInfoPortion* info_portion) const
 		g = *(article.data()->group);
 		n = *(article.data()->name);
 		callback(GameObject::eArticleInfo)(lua_game_object(), g, n, _atype);
-/*
+
 		if( HUD().GetUI() )
 		{
 			CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(HUD().GetUI()->UIGame());
@@ -78,9 +80,9 @@ void CActor::AddEncyclopediaArticle	 (const CInfoPortion* info_portion) const
 				case ARTICLE_DATA::eTaskArticle:			p = pda_section::quests;		break;
 				default: NODEFAULT;
 			};
-			pGameSP->PdaMenu->PdaContentsChanged			(p);
+			pGameSP->PdaMenu().PdaContentsChanged(p);
 		}
-*/
+
 		if ( HUD().GetUI() )
 		{
 			HUD().GetUI()->UpdatePda();
@@ -114,6 +116,8 @@ bool CActor::OnReceiveInfo(shared_str info_id) const
 
 	AddEncyclopediaArticle	(&info_portion);
 
+	info_portion.RunScriptActions(this);
+
 	callback(GameObject::eInventoryInfo)(lua_game_object(), *info_id);
 
 	if(!HUD().GetUI())
@@ -126,7 +130,6 @@ bool CActor::OnReceiveInfo(shared_str info_id) const
 	{
 		pGameSP->TalkMenu->NeedUpdateQuestions();
 	}
-
 
 	return true;
 }
@@ -214,6 +217,13 @@ void CActor::RunTalkDialog(CInventoryOwner* talk_partner, bool disable_break)
 
 void CActor::StartTalk (CInventoryOwner* talk_partner)
 {
+	PIItem det_active = inventory().ItemFromSlot(DETECTOR_SLOT);
+	if (det_active)
+	{
+		CCustomDetector* det = smart_cast<CCustomDetector*>(det_active);
+		det->HideDetector(true);
+	}
+
 	CGameObject* GO = smart_cast<CGameObject*>(talk_partner); VERIFY(GO);
 	CInventoryOwner::StartTalk(talk_partner);
 }

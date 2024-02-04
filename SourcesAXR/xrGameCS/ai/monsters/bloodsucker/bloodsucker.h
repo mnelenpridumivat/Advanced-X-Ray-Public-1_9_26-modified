@@ -38,7 +38,7 @@ public:
 	
 	virtual bool			use_center_to_aim		() const {return true;}
 	virtual bool			check_start_conditions	(ControlCom::EControlType);
-	virtual void			HitEntity				(const CEntity *pEntity, float fDamage, float impulse, Fvector &dir);
+	virtual void			HitEntity				(const CEntity *pEntity, float fDamage, float impulse, Fvector &dir, ALife::EHitType hit_type, bool draw_hit_marks);
 	
 	//--------------------------------------------------------------------
 	// Utils
@@ -173,6 +173,7 @@ public:
 
 			u32     get_invisibility_activate_delay () { return m_invisibility_activate_delay; }
 
+			virtual	char* get_monster_class_name () { return "bloodsucker"; }
 
 #ifdef DEBUG
 	virtual CBaseMonster::SDebugInfo show_debug_info();

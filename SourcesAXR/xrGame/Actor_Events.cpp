@@ -22,6 +22,9 @@
 #include "PHDebug.h"
 #endif
 
+#include "UIGameCustom.h"
+#include "ui\UIActorMenu.h"
+
 void CActor::OnEvent(NET_Packet& P, u16 type)
 {
 	inherited::OnEvent			(P,type);
@@ -53,9 +56,15 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 			
 			if( inventory().CanTakeItem(smart_cast<CInventoryItem*>(_GO)) )
 			{
-				Obj->H_SetParent		(smart_cast<CObject*>(this));
-				
-				inventory().Take(_GO, false, true);
+				auto CurMenuMode = CurrentGameUI()->ActorMenu().GetMenuMode();
+				const bool use_pickup_anim = (type == GE_OWNERSHIP_TAKE) 
+					&& (Position().distance_to(_GO->Position()) > 0.2f) 
+					&& CurMenuMode != mmDeadBodySearch 
+					&& CurMenuMode != mmCarTrunk 
+					&& !Actor()->m_bActionAnimInProcess
+					&& pAdvancedSettings->line_exist("actions_animations", "take_item_section");
+
+				inventory().TakeItemAnimCheck(_GO, Obj, use_pickup_anim);
 			}
 			else
 			{
@@ -223,7 +232,7 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 			case GEG_PLAYER_ITEM2SLOT:
 			{
 				u16 slot_id = P.r_u16();
-				inventory().Slot(slot_id, iitem ); 
+				inventory().Slot(slot_id, iitem );
 			}break;//2
 			case GEG_PLAYER_ITEM2BELT:	 
 				inventory().Belt( iitem ); 
@@ -237,7 +246,7 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 					if (pItemToEat->m_bHasAnimation)
 					{
 						if (!Actor()->m_bEatAnimActive)
-								inventory().ChooseItmAnimOrNot(iitem);
+							inventory().ChooseItmAnimOrNot(iitem);
 					}
 					else
 						inventory().Eat(iitem);

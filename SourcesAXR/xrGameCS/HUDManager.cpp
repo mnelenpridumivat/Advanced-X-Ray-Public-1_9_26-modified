@@ -10,6 +10,8 @@
 #include "spectator.h"
 #include "Car.h"
 #include "UIGameCustom.h"
+#include "ui\UIArtefactPanel.h"
+
 #ifdef	DEBUG
 #include "phdebug.h"
 #endif
@@ -255,7 +257,7 @@ void   CHUDManager::RenderActiveItemUI()
 }
 
 extern ENGINE_API BOOL bShowPauseString;
-//îòðèñîâêà ýëåìåíòîâ èíòåðôåéñà
+//Ð¾Ñ‚Ñ€Ð¸ÑÐ¾Ð²ÐºÐ° ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð² Ð¸Ð½Ñ‚ÐµÑ€Ñ„ÐµÐ¹ÑÐ°
 #include "string_table.h"
 void  CHUDManager::RenderUI()
 {
@@ -271,7 +273,7 @@ void  CHUDManager::RenderUI()
 	{
 		HitMarker.Render			();
 		bAlready					= ! (pUI && !pUI->Render());
-		Font().Render();
+		UI().RenderFont				();
 	}
 
 	if (/* psHUD_Flags.is(HUD_CROSSHAIR|HUD_CROSSHAIR_RT|HUD_CROSSHAIR_RT2) &&*/ !bAlready)	
@@ -279,13 +281,13 @@ void  CHUDManager::RenderUI()
 
 
 	if( Device.Paused() && bShowPauseString){
-		CGameFont* pFont	= Font().pFontGraffiti50Russian;
+		CGameFont* pFont	= UI().Font().pFontGraffiti50Russian;
 		pFont->SetColor		(0x80FF0000	);
 		LPCSTR _str			= CStringTable().translate("st_game_paused").c_str();
 		
 		Fvector2			_pos;
 		_pos.set			(UI_BASE_WIDTH/2.0f, UI_BASE_HEIGHT/2.0f);
-		UI()->ClientToScreenScaled(_pos);
+		UI().ClientToScreenScaled(_pos);
 		pFont->SetAligment	(CGameFont::alCenter);
 		pFont->Out			(_pos.x, _pos.y, _str);
 		pFont->OnRender		();
@@ -351,7 +353,7 @@ void CHUDManager::SetGrenadeMarkType( LPCSTR tex_name )
 #include "ui\UIMainInGameWnd.h"
 extern CUIXml*			pWpnScopeXml;
 
-void CHUDManager::OnScreenRatioChanged()
+void CHUDManager::OnScreenResolutionChanged()
 {
 	if(pUI->UIGame())
 		pUI->UIGame()->HideShownDialogs	();
@@ -364,7 +366,15 @@ void CHUDManager::OnScreenRatioChanged()
 	pUI->UnLoad							();
 	pUI->Load							(pUI->UIGame());
 	pUI->OnConnected					();
-	GetUICursor()->OnScreenRatioChanged	();
+	GetUICursor().OnScreenResolutionChanged	();
+
+	if (IsGameTypeSingle() && Level().CurrentViewEntity() && pUI->UIMainIngameWnd->UIArtefactsPanel)
+	{
+		CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
+
+		if (actor)
+			pUI->UIMainIngameWnd->UIArtefactsPanel->InitIcons(actor->ArtefactsOnBelt());
+	}
 }
 
 void CHUDManager::OnDisconnected()
@@ -392,18 +402,6 @@ void CHUDManager::net_Relcase( CObject* obj )
 #ifdef	DEBUG
 	DBG_PH_NetRelcase( obj );
 #endif
-}
-
-void CHUDManager::OnScreenResolutionChanged()
-{
-//	pUI->HideShownDialogs();
-
-	xr_delete(pWpnScopeXml);
-
-	pUI->UnLoad();
-	pUI->Load(pUI->UIGame());
-
-	pUI->OnConnected();
 }
 
 CDialogHolder* CurrentDialogHolder()

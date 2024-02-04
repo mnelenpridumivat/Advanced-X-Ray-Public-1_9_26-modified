@@ -68,24 +68,44 @@ bool CRepairKit::UseAllowed()
 	if (outfit || helmet || helmet2 || knife || wpn1 || wpn2 || wpn3)
 	{
 		if (outfit && outfit->GetCondition() < 0.9f && outfit->GetCondition() >= 0.4f && outfit->IsNecessaryItem(this->cNameSect().c_str(), outfit->m_SuitableRepairKits))
-			return true;
+		{
+			if (Actor()->HasItemsForRepair(outfit->m_ItemsForRepair))
+				return true;
+		}
 		else if (helmet && helmet->GetCondition() < 0.9f && helmet->GetCondition() >= 0.4f && helmet->IsNecessaryItem(this->cNameSect().c_str(), helmet->m_SuitableRepairKits))
-			return true;
+		{
+			if (Actor()->HasItemsForRepair(helmet->m_ItemsForRepair))
+				return true;
+		}
 		else if (helmet2 && helmet2->GetCondition() < 0.9f && helmet2->GetCondition() >= 0.4f && helmet2->IsNecessaryItem(this->cNameSect().c_str(), helmet2->m_SuitableRepairKits))
-			return true;
+		{
+			if (Actor()->HasItemsForRepair(helmet2->m_ItemsForRepair))
+				return true;
+		}
 		else if (knife && knife->GetCondition() < 0.9f && knife->GetCondition() >= 0.4f && knife->IsNecessaryItem(this->cNameSect().c_str(), knife->m_SuitableRepairKits))
-			return true;
+		{
+			if (Actor()->HasItemsForRepair(knife->m_ItemsForRepair))
+				return true;
+		}
 		else if (wpn1 && wpn1->GetCondition() < 0.9f && wpn1->GetCondition() >= 0.4f && wpn1->IsNecessaryItem(this->cNameSect().c_str(), wpn1->m_SuitableRepairKits))
-			return true;
+		{
+			if (Actor()->HasItemsForRepair(wpn1->m_ItemsForRepair))
+				return true;
+		}
 		else if (wpn2 && wpn2->GetCondition() < 0.9f && wpn2->GetCondition() >= 0.4f && wpn2->IsNecessaryItem(this->cNameSect().c_str(), wpn2->m_SuitableRepairKits))
-			return true;
+		{
+			if (Actor()->HasItemsForRepair(wpn2->m_ItemsForRepair))
+				return true;
+		}
 		else if (wpn3 && wpn3->GetCondition() < 0.9f && wpn3->GetCondition() >= 0.4f && wpn3->IsNecessaryItem(this->cNameSect().c_str(), wpn3->m_SuitableRepairKits))
-			return true;
+		{
+			if (Actor()->HasItemsForRepair(wpn3->m_ItemsForRepair))
+				return true;
+		}
 		else
 			return false;
 	}
-	else
-		return false;
+	return false;
 }
 
 bool CRepairKit::UseBy(CEntityAlive* entity_alive)
@@ -122,6 +142,7 @@ bool CRepairKit::UseBy(CEntityAlive* entity_alive)
 void CRepairKit::ChangeInOutfit()
 {
 	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
+
 	float rnd_cond = ::Random.randF(0.1f, m_fRestoreCondition);
 	int repair_skill_level_inverted = 5;
 
@@ -134,7 +155,10 @@ void CRepairKit::ChangeInOutfit()
 		rnd_cond /= repair_skill_level_inverted;
 
 	if (outfit)
+	{
+		Actor()->RemoveItemsForRepair(outfit->m_ItemsForRepair);
 		outfit->ChangeCondition(rnd_cond);
+	}
 }
 
 void CRepairKit::ChangeInHelmet()
@@ -152,7 +176,10 @@ void CRepairKit::ChangeInHelmet()
 		rnd_cond /= repair_skill_level_inverted;
 
 	if (helmet)
+	{
+		Actor()->RemoveItemsForRepair(helmet->m_ItemsForRepair);
 		helmet->ChangeCondition(rnd_cond);
+	}
 }
 
 void CRepairKit::ChangeInSecondHelmet()
@@ -170,7 +197,10 @@ void CRepairKit::ChangeInSecondHelmet()
 		rnd_cond /= repair_skill_level_inverted;
 
 	if (helmet)
+	{
+		Actor()->RemoveItemsForRepair(helmet->m_ItemsForRepair);
 		helmet->ChangeCondition(rnd_cond);
+	}
 }
 
 void CRepairKit::ChangeInKnife()
@@ -188,7 +218,10 @@ void CRepairKit::ChangeInKnife()
 		rnd_cond /= repair_skill_level_inverted;
 
 	if (knife)
+	{
+		Actor()->RemoveItemsForRepair(knife->m_ItemsForRepair);
 		knife->ChangeCondition(rnd_cond);
+	}
 }
 
 void CRepairKit::ChangeInWpn1()
@@ -206,7 +239,10 @@ void CRepairKit::ChangeInWpn1()
 		rnd_cond /= repair_skill_level_inverted;
 
 	if (wpn)
+	{
+		Actor()->RemoveItemsForRepair(wpn->m_ItemsForRepair);
 		wpn->ChangeCondition(rnd_cond);
+	}
 }
 
 void CRepairKit::ChangeInWpn2()
@@ -224,7 +260,10 @@ void CRepairKit::ChangeInWpn2()
 		rnd_cond /= repair_skill_level_inverted;
 
 	if (wpn)
+	{
+		Actor()->RemoveItemsForRepair(wpn->m_ItemsForRepair);
 		wpn->ChangeCondition(rnd_cond);
+	}
 }
 
 void CRepairKit::ChangeInWpn3()
@@ -242,7 +281,10 @@ void CRepairKit::ChangeInWpn3()
 		rnd_cond /= repair_skill_level_inverted;
 
 	if (wpn)
+	{
+		Actor()->RemoveItemsForRepair(wpn->m_ItemsForRepair);
 		wpn->ChangeCondition(rnd_cond);
+	}
 }
 
 void CRepairKit::ChangeRepairKitCondition(float val)

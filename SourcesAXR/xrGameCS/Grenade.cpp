@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "grenade.h"
-#include "PhysicsShell.h"
+#include "../xrphysics/PhysicsShell.h"
 //.#include "WeaponHUD.h"
 #include "entity.h"
 #include "ParticlesObject.h"
@@ -29,10 +29,11 @@ void CGrenade::Load(LPCSTR section)
 	inherited::Load(section);
 	CExplosive::Load(section);
 
-	m_sounds.LoadSound(section,"snd_checkout","sndCheckout",m_eSoundCheckout);
+	m_sounds.LoadSound(section,"snd_checkout", "sndCheckout", false, m_eSoundCheckout);
+	m_sounds.LoadSound(section, "snd_throw_quick", "sndThrowQuick", false, m_eSoundCheckout);
 
 	//////////////////////////////////////
-	//âðåìÿ óáèðàíèÿ îðóæèÿ ñ óðîâíÿ
+	//Ð²Ñ€ÐµÐ¼Ñ ÑƒÐ±Ð¸Ñ€Ð°Ð½Ð¸Ñ Ð¾Ñ€ÑƒÐ¶Ð¸Ñ Ñ ÑƒÑ€Ð¾Ð²Ð½Ñ
 	if(pSettings->line_exist(section,"grenade_remove_time"))
 		m_dwGrenadeRemoveTime = pSettings->r_u32(section,"grenade_remove_time");
 	else
@@ -116,6 +117,15 @@ void CGrenade::State(u32 state)
 				
 			};
 		}break;
+	case eThrowQuick:
+		{
+			if (!m_sounds.FindSoundItem("sndThrowQuick", false))
+				return;
+
+			Fvector C;
+			Center(C);
+			PlaySound("sndThrowQuick", C);
+		}
 	};
 	inherited::State( state );
 }
@@ -165,7 +175,7 @@ void CGrenade::Throw()
 	if (pGrenade) 
 	{
 		pGrenade->set_destroy_time(m_dwDestroyTimeMax);
-//óñòàíîâèòü ID òîãî êòî êèíóë ãðàíàòó
+//ÑƒÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ ID Ñ‚Ð¾Ð³Ð¾ ÐºÑ‚Ð¾ ÐºÐ¸Ð½ÑƒÐ» Ð³Ñ€Ð°Ð½Ð°Ñ‚Ñƒ
 		pGrenade->SetInitiator( H_Parent()->ID() );
 	}
 	inherited::Throw			();
@@ -205,7 +215,7 @@ void CGrenade::PutNextToSlot()
 	if (OnClient()) return;
 //	Msg ("* PutNextToSlot : %d", ID());	
 	VERIFY									(!getDestroy());
-	//âûêèíóòü ãðàíàòó èç èíâåíòàðÿ
+	//Ð²Ñ‹ÐºÐ¸Ð½ÑƒÑ‚ÑŒ Ð³Ñ€Ð°Ð½Ð°Ñ‚Ñƒ Ð¸Ð· Ð¸Ð½Ð²ÐµÐ½Ñ‚Ð°Ñ€Ñ
 	NET_Packet						P;
 	if (m_pInventory)
 	{
@@ -264,7 +274,7 @@ bool CGrenade::Action(s32 cmd, u32 flags)
 
 	switch(cmd) 
 	{
-	//ïåðåêëþ÷åíèå òèïà ãðàíàòû
+	//Ð¿ÐµÑ€ÐµÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ Ñ‚Ð¸Ð¿Ð° Ð³Ñ€Ð°Ð½Ð°Ñ‚Ñ‹
 	case kWPN_NEXT:
 		{
             if(flags&CMD_START) 
@@ -355,12 +365,18 @@ void CGrenade::DeactivateItem()
 	inherited::DeactivateItem();
 }
 
-void CGrenade::GetBriefInfo(xr_string& str_name, xr_string& icon_sect_name, xr_string& str_count, string16& fire_mode)
+bool CGrenade::GetBriefInfo(II_BriefInfo& info)
 {
-	str_name				= NameShort();
-	u32 ThisGrenadeCount	= m_pInventory->dwfGetSameItemCount( *cNameSect(), true );
-	string16				stmp;
-	sprintf_s				( stmp, "%d", ThisGrenadeCount );
-	str_count				= stmp;
-	icon_sect_name			= *cNameSect();
+	VERIFY(m_pInventory);
+	info.clear();
+
+	info.name._set(m_nameShort);
+	info.icon._set(cNameSect());
+
+	u32 ThisGrenadeCount = m_pInventory->dwfGetSameItemCount(cNameSect().c_str(), true);
+
+	string16 stmp;
+	xr_sprintf(stmp, "%d", ThisGrenadeCount);
+	info.cur_ammo._set(stmp);
+	return true;
 }

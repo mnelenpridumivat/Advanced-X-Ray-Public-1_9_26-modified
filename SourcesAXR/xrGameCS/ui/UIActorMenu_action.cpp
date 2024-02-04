@@ -9,31 +9,34 @@
 #include "UIActorMenu.h"
 #include "../actor.h"
 #include "../HUDManager.h"
+#include "UIDialogHolder.h"
+#include "../Inventory.h"
+#include "../inventory_item.h"
+#include "../Artefact.h"
+#include "../ArtefactContainer.h"
 #include "game_cl_base.h"
 
 #include "UIBtnHint.h"
 #include "UICellItem.h"
-#include "UIDragDropListEx.h"
 #include "UIItemInfo.h"
-#include "UIPropertiesBox.h"
-#include "UIMessageBoxEx.h"
+#include "UIDragDropListEx.h"
 #include "UIInventoryUpgradeWnd.h"
+#include "UIMessageBoxEx.h"
+#include "UIPropertiesBox.h"
 #include "UIDialogWnd.h"
+#include "Antigasfilter.h"
+#include "CustomBackpack.h"
+#include "WeaponMagazined.h"
+#include "../xrEngine/x_ray.h"
+#include <dinput.h>
 
 #include "AdvancedXrayGameConstants.h"
-#include "Antigasfilter.h"
-#include "UIDialogHolder.h"
-#include "../inventory_item.h"
-#include "../InventoryOwner.h"
-#include "../xrEngine/x_ray.h"
-
-#include <dinput.h>
 
 bool  CUIActorMenu::AllowItemDrops(EDDListType from, EDDListType to)
 {
 	xr_vector<EDDListType>& v = m_allowed_drops[to];
 	xr_vector<EDDListType>::iterator it = std::find(v.begin(), v.end(), from);
-	
+
 	return(it!=v.end());
 }
 class CUITrashIcon :public ICustomDrawDragItem
@@ -42,7 +45,7 @@ class CUITrashIcon :public ICustomDrawDragItem
 public:
 	CUITrashIcon		()
 	{
-		m_icon.SetWndSize		(Fvector2().set(29.0f*UI()->get_current_kx(), 36.0f));
+		m_icon.SetWndSize		(Fvector2().set(29.0f*UI().get_current_kx(), 36.0f));
 		m_icon.SetStretchTexture(true);
 //		m_icon.SetAlignment		(waCenter);
 		m_icon.InitTexture		("ui_inGame2_inv_trash");
@@ -77,12 +80,32 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
 	CUIDragDropListEx*	new_owner		= CUIDragDropListEx::m_drag_item->BackList();
 	if ( old_owner==new_owner || !old_owner || !new_owner )
 	{
+		CUICellItem* cell_item				= new_owner->GetCellItemUnderCursor();
+		PIItem item_in_cell					= cell_item ? (PIItem)cell_item->m_pData : NULL;
+		CArtefactContainer* pAfContainer	= smart_cast<CArtefactContainer*>(item_in_cell);
+		CArtefact*	pArtefact				= smart_cast<CArtefact*>	(CurrentIItem());
+
+		if (old_owner == new_owner && item_in_cell && item_in_cell->CanAttach(CurrentIItem()))
+		{
+			AttachAddon(item_in_cell);
+			UpdateItemsPlace();
+			return true;
+		}
+		if (old_owner == new_owner && pArtefact)
+		{
+			if (pAfContainer && !pAfContainer->IsFull())
+			{
+				pAfContainer->PutArtefactToContainer(*pArtefact);
+
+				pArtefact->DestroyObject();
+				return true;	
+			}
+		}
 		return false;
 	}
-
 	EDDListType t_new		= GetListType(new_owner);
 	EDDListType t_old		= GetListType(old_owner);
-	
+
 	if ( !AllowItemDrops(t_old, t_new) )
 	{
 		Msg("incorrect action [%d]->[%d]",t_old, t_new);
@@ -98,44 +121,44 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
 			SendEvent_Item_Drop		(CurrentIItem(), m_pActorInvOwner->object_id());
 			SetCurrentItem			(NULL);
 		}break;
-		case iActorSlot:
+	case iActorSlot:
 		{
 			if(GetSlotList(CurrentIItem()->GetSlot())==new_owner)
 				ToSlot	(itm, true);
 		}break;
-		case iActorBag:
+	case iActorBag:
 		{
 			ToBag	(itm, true);
 		}break;
-		case iActorBelt:
+	case iActorBelt:
 		{
 			ToBelt	(itm, true);
 		}break;
-		case iActorTrade:
+	case iActorTrade:
 		{
 			ToActorTrade(itm, true);
 		}break;
-		case iPartnerTrade:
+	case iPartnerTrade:
 		{
 			if(t_old!=iPartnerTradeBag)	
 				return false;
 			ToPartnerTrade(itm, true);
 		}break;
-		case iPartnerTradeBag:
+	case iPartnerTradeBag:
 		{
 			if(t_old!=iPartnerTrade)	
 				return false;
 			ToPartnerTradeBag(itm, true);
 		}break;
-		case iDeadBodyBag:
+	case iDeadBodyBag:
 		{
 			ToDeadBodyBag(itm, true);
 		}break;
 	};
 
-	OnItemDropped			(CurrentIItem(), new_owner, old_owner);
-	
-	UpdateItemsPlace();
+	OnItemDropped				(CurrentIItem(), new_owner, old_owner);
+
+	UpdateItemsPlace			();
 
 	return true;
 }
@@ -154,7 +177,7 @@ bool CUIActorMenu::OnItemDbClick(CUICellItem* itm)
 
 	switch ( t_old )
 	{
-		case iActorSlot:
+	case iActorSlot:
 		{
 			if ( m_currMenuMode == mmDeadBodySearch )
 				ToDeadBodyBag	( itm, false );
@@ -162,7 +185,7 @@ bool CUIActorMenu::OnItemDbClick(CUICellItem* itm)
 				ToBag			( itm, false );
 			break;
 		}
-		case iActorBag:
+	case iActorBag:
 		{
 			if ( m_currMenuMode == mmTrade )
 			{
@@ -191,27 +214,27 @@ bool CUIActorMenu::OnItemDbClick(CUICellItem* itm)
 			}
 			break;
 		}
-		case iActorBelt:
+	case iActorBelt:
 		{
 			ToBag( itm, false );
 			break;
 		}
-		case iActorTrade:
+	case iActorTrade:
 		{
 			ToBag( itm, false );
 			break;
 		}
-		case iPartnerTradeBag:
+	case iPartnerTradeBag:
 		{
 			ToPartnerTrade( itm, false );
 			break;
 		}
-		case iPartnerTrade:
+	case iPartnerTrade:
 		{
 			ToPartnerTradeBag( itm, false );
 			break;
 		}
-		case iDeadBodyBag:
+	case iDeadBodyBag:
 		{
 			ToBag( itm, false );
 			break;
@@ -220,6 +243,7 @@ bool CUIActorMenu::OnItemDbClick(CUICellItem* itm)
 	}; //switch 
 
 	UpdateItemsPlace();
+
 	return true;
 }
 
@@ -250,10 +274,10 @@ bool CUIActorMenu::OnItemMButtonClick(CUICellItem* itm)
 bool CUIActorMenu::OnItemFocusReceive(CUICellItem* itm)
 {
 	InfoCurItem( NULL );
-	set_highlight_item(itm);
 	m_item_info_view = true;
 
 	itm->m_selected = true;
+	set_highlight_item( itm );
 	return true;
 }
 
@@ -265,6 +289,7 @@ bool CUIActorMenu::OnItemFocusLost(CUICellItem* itm)
 	}
 	InfoCurItem( NULL );
 	clear_highlight_lists();
+
 	return true;
 }
 
@@ -287,29 +312,19 @@ bool CUIActorMenu::OnItemFocusedUpdate(CUICellItem* itm)
 	{
 		return true;
 	}	
-	
+
 	InfoCurItem( itm );
 	return true;
 }
 
-bool CUIActorMenu::OnMouse( float x, float y, EUIMessages mouse_action )
+bool CUIActorMenu::OnMouseAction( float x, float y, EUIMessages mouse_action )
 {
-	inherited::OnMouse( x, y, mouse_action );
+	inherited::OnMouseAction( x, y, mouse_action );
 	return true; // no click`s
 }
 
-void CUIActorMenu::OnMouseMove()
+bool CUIActorMenu::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 {
-	//SetInfoItem( NULL );
-	inherited::OnMouseMove		();
-}
-
-bool CUIActorMenu::OnKeyboard(int dik, EUIMessages keyboard_action)
-{
-/*
-	if (UIPropertiesBox.GetVisible())
-	{	UIPropertiesBox.OnKeyboard(dik, keyboard_action); }
-*/
 	InfoCurItem( NULL );
 	if ( is_binded(kDROP, dik) )
 	{
@@ -323,7 +338,7 @@ bool CUIActorMenu::OnKeyboard(int dik, EUIMessages keyboard_action)
 		}
 		return true;
 	}
-	
+
 	if ( is_binded(kSPRINT_TOGGLE, dik) )
 	{
 		if ( WINDOW_KEY_PRESSED == keyboard_action )
@@ -332,13 +347,28 @@ bool CUIActorMenu::OnKeyboard(int dik, EUIMessages keyboard_action)
 		}
 		return true;
 	}	
-	
+
 	if ( is_binded(kUSE, dik) || is_binded(kINVENTORY, dik) || is_binded(kQUIT, dik)  )
 	{
 		if ( WINDOW_KEY_PRESSED == keyboard_action )
 		{
-			g_btnHint->Discard();
-			GetHolder()->StartStopMenu( this, true );
+			CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(Actor()->inventory().ItemFromSlot(BACKPACK_SLOT));
+
+			if (GameConstants::GetBackpackAnimsEnabled() && backpack)
+			{
+				if (Actor()->inventory().GetActiveSlot() == BACKPACK_SLOT && Actor()->inventory().ActiveItem())
+				{
+					Actor()->inventory().Activate(NO_ACTIVE_SLOT);
+				}
+
+				g_btnHint->Discard();
+				GetHolder()->StartStopMenu(this, true);
+			}
+			else
+			{
+				g_btnHint->Discard();
+				GetHolder()->StartStopMenu(this, true);
+			}
 		}
 		return true;
 	}
@@ -369,7 +399,7 @@ bool CUIActorMenu::OnKeyboard(int dik, EUIMessages keyboard_action)
 			}
 		}
 	}
-	if( inherited::OnKeyboard(dik,keyboard_action) )return true;
+	if( inherited::OnKeyboardAction(dik,keyboard_action) )return true;
 
 	return false;
 }
@@ -397,6 +427,9 @@ void CUIActorMenu::OnPressUserKey()
 
 void CUIActorMenu::OnBtnExitClicked(CUIWindow* w, void* d)
 {
+	if (GameConstants::GetBackpackAnimsEnabled() && smart_cast<CCustomBackpack*>(Actor()->inventory().ItemFromSlot(BACKPACK_SLOT)) && Actor()->inventory().GetActiveSlot() == BACKPACK_SLOT && Actor()->inventory().ActiveItem())
+		Actor()->inventory().Activate(NO_ACTIVE_SLOT);
+
 	g_btnHint->Discard();
 	GetHolder()->StartStopMenu			(this,true);
 }
@@ -431,3 +464,24 @@ void CUIActorMenu::OnMesBoxYes( CUIWindow*, void* )
 	UpdateItemsPlace();
 }
 
+void CUIActorMenu::OnMesBoxNo(CUIWindow*, void*)
+{
+	switch(m_currMenuMode)
+	{
+	case mmUndefined:
+		break;
+	case mmInventory:
+		break;
+	case mmTrade:
+		break;
+	case mmUpgrade:
+		m_repair_mode = false;
+		break;
+	case mmDeadBodySearch:
+		break;
+	default:
+		R_ASSERT(0);
+		break;
+	}
+	UpdateItemsPlace();
+}

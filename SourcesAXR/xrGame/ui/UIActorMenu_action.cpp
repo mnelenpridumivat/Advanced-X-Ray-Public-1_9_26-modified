@@ -10,27 +10,26 @@
 #include "UIActorStateInfo.h"
 #include "../actor.h"
 #include "../uigamesp.h"
-#include "../inventory.h"
+#include "../Inventory.h"
 #include "../inventory_item.h"
-#include "../InventoryBox.h"
-#include "object_broker.h"
-#include "UIInventoryUtilities.h"
+#include "../Artefact.h"
+#include "../ArtefactContainer.h"
 #include "game_cl_base.h"
 
-#include "UICursor.h"
+#include "UIBtnHint.h"
 #include "UICellItem.h"
-#include "UICharacterInfo.h"
 #include "UIItemInfo.h"
 #include "UIDragDropListEx.h"
 #include "UIInventoryUpgradeWnd.h"
-#include "UI3tButton.h"
-#include "UIBtnHint.h"
 #include "UIMessageBoxEx.h"
 #include "UIPropertiesBox.h"
-#include "UIMainIngameWnd.h"
 #include "Antigasfilter.h"
+#include "CustomBackpack.h"
+#include "WeaponMagazined.h"
 #include "../xrEngine/x_ray.h"
 #include <dinput.h>
+
+#include "AdvancedXrayGameConstants.h"
 
 bool  CUIActorMenu::AllowItemDrops(EDDListType from, EDDListType to)
 {
@@ -80,6 +79,27 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
 	CUIDragDropListEx*	new_owner		= CUIDragDropListEx::m_drag_item->BackList();
 	if ( old_owner==new_owner || !old_owner || !new_owner )
 	{
+		CUICellItem* cell_item				= new_owner->GetCellItemUnderCursor();
+		PIItem item_in_cell					= cell_item ? (PIItem)cell_item->m_pData : NULL;
+		CArtefactContainer* pAfContainer	= smart_cast<CArtefactContainer*>(item_in_cell);
+		CArtefact*	pArtefact				= smart_cast<CArtefact*>	(CurrentIItem());
+
+		if (old_owner == new_owner && item_in_cell && item_in_cell->CanAttach(CurrentIItem()))
+		{
+			AttachAddon(item_in_cell);
+			UpdateItemsPlace();
+			return true;
+		}
+		if (old_owner == new_owner && pArtefact)
+		{
+			if (pAfContainer && !pAfContainer->IsFull())
+			{
+				pAfContainer->PutArtefactToContainer(*pArtefact);
+
+				pArtefact->DestroyObject();
+				return true;	
+			}
+		}
 		return false;
 	}
 	EDDListType t_new		= GetListType(new_owner);
@@ -349,8 +369,23 @@ bool CUIActorMenu::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 	{
 		if ( WINDOW_KEY_PRESSED == keyboard_action )
 		{
-			g_btnHint->Discard();
-			HideDialog();
+			CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(Actor()->inventory().ItemFromSlot(BACKPACK_SLOT));
+
+			if (GameConstants::GetBackpackAnimsEnabled() && backpack)
+			{
+				if (Actor()->inventory().GetActiveSlot() == BACKPACK_SLOT && Actor()->inventory().ActiveItem())
+				{
+					Actor()->inventory().Activate(NO_ACTIVE_SLOT);
+				}
+
+				g_btnHint->Discard();
+				HideDialog();
+			}
+			else
+			{
+				g_btnHint->Discard();
+				HideDialog();
+			}
 		}
 		return true;
 	}
@@ -413,6 +448,9 @@ void CUIActorMenu::OnPressUserKey()
 
 void CUIActorMenu::OnBtnExitClicked(CUIWindow* w, void* d)
 {
+	if (GameConstants::GetBackpackAnimsEnabled() && smart_cast<CCustomBackpack*>(Actor()->inventory().ItemFromSlot(BACKPACK_SLOT)) && Actor()->inventory().GetActiveSlot() == BACKPACK_SLOT && Actor()->inventory().ActiveItem())
+			Actor()->inventory().Activate(NO_ACTIVE_SLOT);
+
 	g_btnHint->Discard();
 	HideDialog();
 }

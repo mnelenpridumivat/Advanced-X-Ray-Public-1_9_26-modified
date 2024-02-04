@@ -34,7 +34,8 @@ _action  actions[]		= {
 	{ "cam_zoom_out",		kCAM_ZOOM_OUT			,_both},	
 															
 	{ "torch",				kTORCH					,_both},	
-	{ "night_vision",		kNIGHT_VISION			,_both},	
+	{ "night_vision",		kNIGHT_VISION			,_both},
+	{ "clean_mask",			kCLEAN_MASK				,_both},
 	{ "show_detector",		kDETECTOR				,_sp},	
 
 	{ "turn_engine",		kTURN_ENGINE			,_both},
@@ -47,8 +48,8 @@ _action  actions[]		= {
 	{ "wpn_5",				kWPN_5					,_both},	
 	{ "wpn_6",				kWPN_6					,_both},
 	{ "wpn_7",				kWPN_7					,_both},
-	{ "laser_on",			kLASER_ON				,_both}, //DEF_ACTION("laser_on",			kLASER_ON)
-	{ "flashlight",			kFLASHLIGHT				,_both}, //DEF_ACTION("flashlight",		kFLASHLIGHT)
+	{ "laser_on",			kLASER_ON				,_both},
+	{ "flashlight",			kFLASHLIGHT				,_both},
 	{ "artefact",			kARTEFACT				,_both/*_mp*/},		
 	{ "wpn_next",			kWPN_NEXT				,_both},	// means next ammo type
 	{ "wpn_fire",			kWPN_FIRE				,_both},	
@@ -58,7 +59,10 @@ _action  actions[]		= {
 	{ "wpn_reload",			kWPN_RELOAD				,_both},	
 	{ "wpn_func",			kWPN_FUNC				,_both},	
 	{ "wpn_firemode_prev",	kWPN_FIREMODE_PREV		,_both},	
-	{ "wpn_firemode_next",	kWPN_FIREMODE_NEXT		,_both},	
+	{ "wpn_firemode_next",	kWPN_FIREMODE_NEXT		,_both},
+	{ "wpn_alt_aim",		kWPN_ALT_AIM			,_both},
+	{ "quick_kick",			kQUICK_KICK				,_both},
+	{ "quick_grenade",		kQUICK_GRENADE			,_both},
 															
 	{ "pause",				kPAUSE					,_both},	
 	{ "drop",				kDROP					,_both},	

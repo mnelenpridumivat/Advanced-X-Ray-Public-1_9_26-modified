@@ -27,10 +27,10 @@ public:
 	virtual void	load				(IReader &input_packet);
 
 	// Mortan: Новые параметры здеся
-	virtual	bool    bMarkCanShow() { return IsZoomed() && !m_bGrenadeMode; }
-	virtual void	UpdateSecondVP(bool bInGrenade = false);
-	virtual	bool	bInZoomRightNow() const { return (m_zoom_params.m_fZoomRotationFactor > 0.05) && !m_bGrenadeMode; }
-	virtual void    CheckMagazine();
+	virtual	bool    bMarkCanShow		() { return IsZoomed() && !m_bGrenadeMode; }
+	virtual void	UpdateSecondVP		(bool bInGrenade = false);
+	virtual	bool	bInZoomRightNow		() const { return (m_zoom_params.m_fZoomRotationFactor > 0.05) && !m_bGrenadeMode; }
+	virtual void    CheckMagazine		();
 	//=========================================
 
 	virtual bool	Attach					(PIItem pIItem, bool b_send_event);
@@ -63,8 +63,11 @@ public:
 	void			PerformSwitchGL	();
 	void			OnAnimationEnd	(u32 state);
 	virtual void	OnMagazineEmpty	();
+	virtual bool	GetBriefInfo	(II_BriefInfo& info);
 
 	virtual bool	IsNecessaryItem	    (const shared_str& item_sect);
+
+	bool			IsGrenadeMode		() const override { return m_bGrenadeMode; }
 
 	//виртуальные функции для проигрывания анимации HUD
 	virtual void	PlayAnimShow		();
@@ -74,11 +77,16 @@ public:
 	virtual void	PlayAnimShoot		();
 	virtual void	PlayAnimModeSwitch	();
 	virtual void	PlayAnimBore		();
+	virtual void	PlayAnimFireMode	();
+	virtual void	PlayAnimLaserSwitch	();
+	virtual void	PlayAnimFlashlightSwitch();
 	
 private:
 	virtual	void	net_Spawn_install_upgrades	( Upgrades_type saved_upgrades );
 	virtual bool	install_upgrade_impl		( LPCSTR section, bool test );
 	virtual	bool	install_upgrade_ammo_class	( LPCSTR section, bool test );
+
+			int		GetAmmoCount2				( u8 ammo2_type ) const;
 	
 public:
 	//дополнительные параметры патронов 
@@ -94,6 +102,10 @@ public:
 
 	CCartridge				m_DefaultCartridge2;
 	int						iAmmoElapsed2;
+
+	int						iAmmoElapsedMain;
+
+	bool					IsMainMagazineEmpty() { return iAmmoElapsedMain <= 0; }
 
 	virtual void UpdateGrenadeVisibility(bool visibility);
 };

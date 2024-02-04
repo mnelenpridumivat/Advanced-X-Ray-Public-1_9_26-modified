@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "artefact.h"
-#include "PhysicsShell.h"
+#include "../xrphysics/PhysicsShell.h"
 #include "PhysicsShellHolder.h"
 #include "game_cl_base.h"
 
@@ -11,7 +11,7 @@
 #include "level.h"
 #include "ai_object_location.h"
 #include "xrServer_Objects_ALife_Monsters.h"
-#include "phworld.h"
+#include "../xrphysics/iphworld.h"
 #include "restriction_space.h"
 #include "../xrEngine/IGame_Persistent.h"
 
@@ -21,6 +21,7 @@
 #include "patrol_path.h"
 #include "patrol_path_storage.h"
 #include "Actor.h"
+#include "ArtefactContainer.h"
 #include "AdvancedXrayGameConstants.h"
 
 #define	FASTMODE_DISTANCE (50.f)	//distance to camera from sphere, when zone switches to fast update sequence
@@ -32,6 +33,10 @@
 	else\
 		if(y>z){inst_y;}\
 		else{inst_z;}
+
+extern float af_from_container_charge_level;
+extern int af_from_container_rank;
+extern CArtefactContainer* m_LastAfContainer;
 
 CArtefact::CArtefact() 
 {
@@ -53,7 +58,9 @@ CArtefact::CArtefact()
 	m_iAfRank					= 1;
 
 	//For Degradation
-	m_fConstAdditionalWeight = 0.0f;
+	m_fConstAdditionalWeight	= 0.0f;
+
+	m_bInContainer				= false;
 }
 
 
@@ -72,7 +79,7 @@ void CArtefact::Load(LPCSTR section)
 	if(m_bLightsEnabled){
 		sscanf(pSettings->r_string(section,"trail_light_color"), "%f,%f,%f", 
 			&m_TrailLightColor.r, &m_TrailLightColor.g, &m_TrailLightColor.b);
-		m_fConstTrailLightRange = pSettings->r_float(section, "trail_light_range");
+		m_fConstTrailLightRange = pSettings->r_float(section,"trail_light_range");
 	}
 
 	//Случайный начальный ранг артефакта
@@ -222,11 +229,19 @@ void CArtefact::OnH_A_Chield()
 		m_detectorObj->m_currPatrolPath = NULL;
 		m_detectorObj->m_currPatrolVertex = NULL;
 	}
+
+	if (m_LastAfContainer) //Костыль для контейнеров, потом надо нормально как-то сделать
+	{
+		SetChargeLevel(af_from_container_charge_level);
+		SetRank(af_from_container_rank);
+
+		m_LastAfContainer = nullptr;
+	}
 }
 
 void CArtefact::OnH_B_Independent(bool just_before_destroy) 
 {
-	VERIFY(!ph_world->Processing());
+	VERIFY(!physics_world()->Processing());
 	inherited::OnH_B_Independent(just_before_destroy);
 
 	StartLights();
@@ -316,7 +331,7 @@ void CArtefact::Interpolate()
 {
 	if (OnServer())
 		return;
-	
+
 	net_updateInvData* p = NetSync();
 	while (p->NET_IItem.size() > 1)	//in real no interpolation, just get latest state
 	{
@@ -330,85 +345,77 @@ void CArtefact::Interpolate()
 	}
 }
 
-void CArtefact::UpdateDegradation(void)
+void CArtefact::UpdateDegradation()
 {
-	for (TIItemContainer::iterator it = Actor()->inventory().m_belt.begin();
-		Actor()->inventory().m_belt.end() != it; ++it)
+	float uncharge_coef = (m_fDegradationSpeed / 16) * Device.fTimeDelta;
+
+	m_fChargeLevel -= uncharge_coef;
+	clamp(m_fChargeLevel, 0.f, 1.f);
+
+	float percent = m_fChargeLevel * 100;
+
+	if (m_fHealthRestoreSpeed > 0.0f && m_fConstHealthRestoreSpeed > 0.0f)
+		m_fHealthRestoreSpeed = (m_fConstHealthRestoreSpeed / 100) * percent;
+	if (m_fRadiationRestoreSpeed < 0.0f && m_fConstRadiationRestoreSpeed < 0.0f)
+		m_fRadiationRestoreSpeed = (m_fConstRadiationRestoreSpeed / 100) * percent;
+	if (m_fSatietyRestoreSpeed > 0.0f && m_fConstSatietyRestoreSpeed > 0.0f)
+		m_fSatietyRestoreSpeed = (m_fConstSatietyRestoreSpeed / 100) * percent;
+	if (m_fPowerRestoreSpeed > 0.0f && m_fConstPowerRestoreSpeed > 0.0f)
+		m_fPowerRestoreSpeed = (m_fConstPowerRestoreSpeed / 100) * percent;
+	if (m_fBleedingRestoreSpeed > 0.0f && m_fConstBleedingRestoreSpeed > 0.0f)
+		m_fBleedingRestoreSpeed = (m_fConstBleedingRestoreSpeed / 100) * percent;
+	if (m_fThirstRestoreSpeed > 0.0f && m_fConstThirstRestoreSpeed > 0.0f)
+		m_fThirstRestoreSpeed = (m_fConstThirstRestoreSpeed / 100) * percent;
+	if (m_fIntoxicationRestoreSpeed > 0.0f && m_fConstIntoxicationRestoreSpeed > 0.0f)
+		m_fIntoxicationRestoreSpeed = (m_fConstIntoxicationRestoreSpeed / 100) * percent;
+	if (m_fSleepenessRestoreSpeed > 0.0f && m_fConstSleepenessRestoreSpeed > 0.0f)
+		m_fSleepenessRestoreSpeed = (m_fConstSleepenessRestoreSpeed / 100) * percent;
+	if (m_fAlcoholismRestoreSpeed > 0.0f && m_fConstAlcoholismRestoreSpeed > 0.0f)
+		m_fAlcoholismRestoreSpeed = (m_fConstAlcoholismRestoreSpeed / 100) * percent;
+	if (m_fNarcotismRestoreSpeed > 0.0f && m_fConstNarcotismRestoreSpeed > 0.0f)
+		m_fNarcotismRestoreSpeed = (m_fConstNarcotismRestoreSpeed / 100) * percent;
+	if (m_fPsyHealthRestoreSpeed > 0.0f && m_fConstPsyHealthRestoreSpeed > 0.0f)
+		m_fPsyHealthRestoreSpeed = (m_fConstPsyHealthRestoreSpeed / 100) * percent;
+	if (m_additional_weight > 0.0f && m_fConstAdditionalWeight > 0.0f)
+		m_additional_weight = (m_fConstAdditionalWeight / 100) * percent;
+	if (m_fJumpSpeed > 1.f && m_fConstJumpSpeed > 1.f)
+		m_fJumpSpeed = (m_fConstJumpSpeed / 100) * percent;
+	if (m_fWalkAccel > 1.f && m_fConstWalkAccel > 1.f)
+		m_fWalkAccel = (m_fConstWalkAccel / 100) * percent;
+	if (m_fChargeLevel <= 0.0f)
+		m_iAfRank = 0;
+
+	for (size_t i = 0; i < ALife::infl_max_count; ++i)
 	{
-		CArtefact*	artefact = smart_cast<CArtefact*>(*it);
-		if (artefact)
-		{
-			float uncharge_coef = (m_fDegradationSpeed / 16) * Device.fTimeDelta;
+		if (!fis_zero(m_HitTypeProtection[(ALife::EInfluenceType)i]) && !fis_zero(m_ConstHitTypeProtection[(ALife::EInfluenceType)i]))
+			m_HitTypeProtection[(ALife::EInfluenceType)i] = (m_ConstHitTypeProtection[(ALife::EInfluenceType)i] / 100) * percent;
+	}
 
-			artefact->m_fChargeLevel -= uncharge_coef;
-			clamp(artefact->m_fChargeLevel, 0.f, 1.f);
+	//Lights
+	if (m_bLightsEnabled)
+	{
+		if (m_fTrailLightRange >= 0.0f)
+			m_fTrailLightRange = (m_fConstTrailLightRange / 100)*percent;
+		else
+			m_bLightsEnabled = false;
+	}
 
-			float percent = artefact->m_fChargeLevel * 100;
-
-			if (artefact->m_fHealthRestoreSpeed > 0.0f && m_fConstHealthRestoreSpeed > 0.0f)
-				artefact->m_fHealthRestoreSpeed = (m_fConstHealthRestoreSpeed / 100) * percent;
-			if (artefact->m_fRadiationRestoreSpeed < 0.0f && m_fConstRadiationRestoreSpeed < 0.0f)
-				artefact->m_fRadiationRestoreSpeed = (m_fConstRadiationRestoreSpeed / 100) * percent;
-			if (artefact->m_fSatietyRestoreSpeed > 0.0f && m_fConstSatietyRestoreSpeed > 0.0f)
-				artefact->m_fSatietyRestoreSpeed = (m_fConstSatietyRestoreSpeed / 100) * percent;
-			if (artefact->m_fPowerRestoreSpeed > 0.0f && m_fConstPowerRestoreSpeed > 0.0f)
-				artefact->m_fPowerRestoreSpeed = (m_fConstPowerRestoreSpeed / 100) * percent;
-			if (artefact->m_fBleedingRestoreSpeed > 0.0f && m_fConstBleedingRestoreSpeed > 0.0f)
-				artefact->m_fBleedingRestoreSpeed = (m_fConstBleedingRestoreSpeed / 100) * percent;
-			if (artefact->m_fThirstRestoreSpeed > 0.0f && m_fConstThirstRestoreSpeed > 0.0f)
-				artefact->m_fThirstRestoreSpeed = (m_fConstThirstRestoreSpeed / 100) * percent;
-			if (artefact->m_fIntoxicationRestoreSpeed > 0.0f && m_fConstIntoxicationRestoreSpeed > 0.0f)
-				artefact->m_fIntoxicationRestoreSpeed = (m_fConstIntoxicationRestoreSpeed / 100) * percent;
-			if (artefact->m_fSleepenessRestoreSpeed > 0.0f && m_fConstSleepenessRestoreSpeed > 0.0f)
-				artefact->m_fSleepenessRestoreSpeed = (m_fConstSleepenessRestoreSpeed / 100) * percent;
-			if (artefact->m_fAlcoholismRestoreSpeed > 0.0f && m_fConstAlcoholismRestoreSpeed > 0.0f)
-				artefact->m_fAlcoholismRestoreSpeed = (m_fConstAlcoholismRestoreSpeed / 100) * percent;
-			if (artefact->m_fNarcotismRestoreSpeed > 0.0f && m_fConstNarcotismRestoreSpeed > 0.0f)
-				artefact->m_fNarcotismRestoreSpeed = (m_fConstNarcotismRestoreSpeed / 100) * percent;
-			if (artefact->m_fPsyHealthRestoreSpeed > 0.0f && m_fConstPsyHealthRestoreSpeed > 0.0f)
-				artefact->m_fPsyHealthRestoreSpeed = (m_fConstPsyHealthRestoreSpeed / 100) * percent;
-			if (artefact->m_additional_weight > 0.0f && m_fConstAdditionalWeight > 0.0f)
-				artefact->m_additional_weight = (m_fConstAdditionalWeight / 100) * percent;
-			if (artefact->m_fJumpSpeed > 1.f && m_fConstJumpSpeed > 1.f)
-				artefact->m_fJumpSpeed = (m_fConstJumpSpeed / 100) * percent;
-			if (artefact->m_fWalkAccel > 1.f && m_fConstWalkAccel > 1.f)
-				artefact->m_fWalkAccel = (m_fConstWalkAccel / 100) * percent;
-			if (m_fChargeLevel <= 0.0f)
-				artefact->m_iAfRank = 0;
-
-			for (size_t i = 0; i < ALife::infl_max_count; ++i)
-			{
-				if (!fis_zero(artefact->m_HitTypeProtection[(ALife::EInfluenceType)i]) && !fis_zero(m_ConstHitTypeProtection[(ALife::EInfluenceType)i]))
-					artefact->m_HitTypeProtection[(ALife::EInfluenceType)i] = (m_ConstHitTypeProtection[(ALife::EInfluenceType)i] / 100) * percent;
-			}
-
-			//Lights
-			if (m_bLightsEnabled)
-			{
-				if (m_fTrailLightRange >= 0.0f)
-					m_fTrailLightRange = (m_fConstTrailLightRange / 100)*percent;
-				else
-					m_bLightsEnabled = false;
-			}
-
-			//Volumetric Lights
-			if (m_bVolumetricLights)
-			{
-				if (m_fVolumetricDistance >= 0.0f)
-					m_fVolumetricDistance = (m_fConstVolumetricDistance / 100)*percent;
-				else if (m_fVolumetricIntensity >= 0.0f)
-					m_fVolumetricIntensity = (m_fConstVolumetricIntensity / 100)*percent;
-				else
-					m_bVolumetricLights = false;
-			}
-		}
+	//Volumetric Lights
+	if (m_bVolumetricLights)
+	{
+		if (m_fVolumetricDistance >= 0.0f)
+			m_fVolumetricDistance = (m_fConstVolumetricDistance / 100)*percent;
+		else if (m_fVolumetricIntensity >= 0.0f)
+			m_fVolumetricIntensity = (m_fConstVolumetricIntensity / 100)*percent;
+		else
+			m_bVolumetricLights = false;
 	}
 }
 
 void CArtefact::UpdateWorkload		(u32 dt) 
 {
 
-	VERIFY(!ph_world->Processing());
+	VERIFY(!physics_world()->Processing());
 	// particles - velocity
 	Fvector vel = {0, 0, 0};
 	if (H_Parent()) 
@@ -427,7 +434,9 @@ void CArtefact::UpdateWorkload		(u32 dt)
 	}
 
 	// custom-logic
-	UpdateCLChild					();
+	if(!CAttachableItem::enabled())
+		UpdateCLChild					();
+
 }
 
 void CArtefact::shedule_Update		(u32 dt) 
@@ -461,14 +470,14 @@ void CArtefact::create_physic_shell	()
 
 void CArtefact::StartLights()
 {
-	VERIFY(!ph_world->Processing());
+	VERIFY(!physics_world()->Processing());
 	if(!m_bLightsEnabled)		return;
 
 	VERIFY							(m_pTrailLight == NULL);
 	m_pTrailLight					= ::Render->light_create();
 	bool const b_light_shadow = !!pSettings->r_bool(cNameSect(), "idle_light_shadow");
 
-	m_pTrailLight->set_shadow		(b_light_shadow);
+	m_pTrailLight->set_shadow	(m_bLightsEnabled);
 
 	m_pTrailLight->set_color	(m_TrailLightColor); 
 	m_pTrailLight->set_range	(m_fTrailLightRange);
@@ -483,7 +492,7 @@ void CArtefact::StartLights()
 
 void CArtefact::StopLights()
 {
-	VERIFY(!ph_world->Processing());
+	VERIFY(!physics_world()->Processing());
 	if(!m_bLightsEnabled || !m_pTrailLight) 
 		return;
 
@@ -493,7 +502,7 @@ void CArtefact::StopLights()
 
 void CArtefact::UpdateLights()
 {
-	VERIFY(!ph_world->Processing());
+	VERIFY(!physics_world()->Processing());
 	if(!m_bLightsEnabled || !m_pTrailLight ||!m_pTrailLight->get_active()) return;
 	m_pTrailLight->set_position(Position());
 }
@@ -509,7 +518,7 @@ void CArtefact::ActivateArtefact	()
 
 }
 
-void CArtefact::PhDataUpdate	(dReal step)
+void CArtefact::PhDataUpdate	(float step)
 {
 	if(m_activationObj && m_activationObj->IsInProgress())
 		m_activationObj->PhDataUpdate			(step);
@@ -570,6 +579,8 @@ void CArtefact::UpdateXForm()
 		VERIFY				(E);
 		IKinematics*		V		= smart_cast<IKinematics*>	(E->Visual());
 		VERIFY				(V);
+		if(CAttachableItem::enabled())
+			return;
 
 		// Get matrices
 		int					boneL = -1, boneR = -1, boneR2 = -1;
@@ -732,19 +743,28 @@ void SArtefactDetectorsSupport::SetVisible(bool b)
 	else
 		m_parent->StopLights	();
 
-	LPCSTR curr				= pSettings->r_string(m_parent->cNameSect().c_str(), (b)?"det_show_particles":"det_hide_particles");
+	if(b)
+	{
+		LPCSTR curr = nullptr;
 
-	IKinematics* K			= smart_cast<IKinematics*>(m_parent->Visual());
-	R_ASSERT2				(K, m_parent->cNameSect().c_str());
-	LPCSTR bone				= pSettings->r_string(m_parent->cNameSect().c_str(), "particles_bone");
-	u16 bone_id				= K->LL_BoneID(bone);
-	R_ASSERT2				(bone_id!=BI_NONE, bone);
+		if (pSettings->line_exist(m_parent->cNameSect().c_str(), (b) ? "det_show_particles" : "det_hide_particles"))
+			curr = pSettings->r_string(m_parent->cNameSect().c_str(), (b) ? "det_show_particles" : "det_hide_particles");
+		
+		if (curr)
+		{
+			IKinematics* K = smart_cast<IKinematics*>(m_parent->Visual());
+			R_ASSERT2(K, m_parent->cNameSect().c_str());
+			LPCSTR bone = pSettings->r_string(m_parent->cNameSect().c_str(), "particles_bone");
+			u16 bone_id = K->LL_BoneID(bone);
+			R_ASSERT2(bone_id != BI_NONE, bone);
 
-	m_parent->CParticlesPlayer::StartParticles(curr,bone_id,Fvector().set(0,1,0),m_parent->ID());
+			m_parent->CParticlesPlayer::StartParticles(curr, bone_id, Fvector().set(0, 1, 0), m_parent->ID());
 
-	curr					= pSettings->r_string(m_parent->cNameSect().c_str(), (b)?"det_show_snd":"det_hide_snd");
-	m_sound.create			(curr, st_Effect, sg_SourceType);
-	m_sound.play_at_pos		(0, m_parent->Position(), 0);
+			curr = pSettings->r_string(m_parent->cNameSect().c_str(), (b) ? "det_show_snd" : "det_hide_snd");
+			m_sound.create(curr, st_Effect, sg_SourceType);
+			m_sound.play_at_pos(0, m_parent->Position(), 0);
+		}
+	}
 	
 	m_parent->setVisible	(b);
 	m_parent->SwitchAfParticles(b);
@@ -752,7 +772,13 @@ void SArtefactDetectorsSupport::SetVisible(bool b)
 
 void SArtefactDetectorsSupport::Blink()
 {
-	LPCSTR curr				= pSettings->r_string(m_parent->cNameSect().c_str(), "det_show_particles");
+	LPCSTR curr = nullptr;
+
+	if (pSettings->line_exist(m_parent->cNameSect().c_str(), "det_show_particles"))
+		curr = pSettings->r_string(m_parent->cNameSect().c_str(), "det_show_particles");
+
+	if (!curr)
+		return;
 
 	IKinematics* K			= smart_cast<IKinematics*>(m_parent->Visual());
 	R_ASSERT2				(K, m_parent->cNameSect().c_str());
@@ -837,9 +863,19 @@ void CArtefact::OnHiddenItem ()
 	SetNextState				(eHidden);
 }
 
+void CArtefact::SetChargeLevel(float charge_level)
+{
+	m_fChargeLevel = charge_level;
+}
+
 float CArtefact::GetCurrentChargeLevel() const
 {
 	return m_fChargeLevel;
+}
+
+void CArtefact::SetRank(int rank)
+{
+	m_iAfRank = rank;
 }
 
 int CArtefact::GetCurrentAfRank() const
@@ -849,7 +885,7 @@ int CArtefact::GetCurrentAfRank() const
 
 u32 CArtefact::Cost() const
 {
-	float percent = m_fChargeLevel*100;
+	float percent = m_fChargeLevel * 100;
 	u32 res = CInventoryItem::Cost() * m_iAfRank;
 
 	if (GameConstants::GetArtefactsDegradation())
@@ -861,4 +897,9 @@ u32 CArtefact::Cost() const
 	}
 
 	return res;
+}
+
+bool CArtefact::IsInContainer()
+{
+	return m_bInContainer;
 }

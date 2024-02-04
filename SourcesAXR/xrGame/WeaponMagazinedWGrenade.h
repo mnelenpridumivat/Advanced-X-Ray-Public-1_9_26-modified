@@ -33,7 +33,6 @@ public:
 	virtual void    CheckMagazine		();
 	//=========================================
 
-
 	virtual bool	Attach					(PIItem pIItem, bool b_send_event);
 	virtual bool	Detach					(const char* item_section_name, bool b_spawn_item);
 	virtual bool	CanAttach				(PIItem pIItem);
@@ -68,6 +67,8 @@ public:
 
 	virtual bool	IsNecessaryItem	    (const shared_str& item_sect);
 
+	bool			IsGrenadeMode		() const override { return m_bGrenadeMode; }
+
 	//виртуальные функции для проигрывания анимации HUD
 	virtual void	PlayAnimShow		();
 	virtual void	PlayAnimHide		();
@@ -76,6 +77,9 @@ public:
 	virtual void	PlayAnimShoot		();
 	virtual void	PlayAnimModeSwitch	();
 	virtual void	PlayAnimBore		();
+	virtual void	PlayAnimFireMode	();
+	virtual void	PlayAnimLaserSwitch	();
+	virtual void	PlayAnimFlashlightSwitch();
 	
 private:
 	virtual	void	net_Spawn_install_upgrades	( Upgrades_type saved_upgrades );
@@ -98,6 +102,10 @@ public:
 
 	CCartridge				m_DefaultCartridge2;
 	u8						iAmmoElapsed2;
+
+	int						iAmmoElapsedMain;
+
+	bool					IsMainMagazineEmpty() { return iAmmoElapsedMain <= 0; }
 
 	virtual void UpdateGrenadeVisibility(bool visibility);
 };

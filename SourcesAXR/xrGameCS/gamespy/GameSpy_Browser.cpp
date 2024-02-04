@@ -168,6 +168,7 @@ struct RefreshData
 };
 void	RefreshInternetList	(void * inData)
 {
+	set_current_thread_name("GS Internet Refresh");
 	RefreshData* pRData = (RefreshData*) inData;
 	pRData->pGSBrowser->RefreshListInternet(pRData->FilterStr);
 	xr_delete(pRData);
@@ -212,7 +213,7 @@ void			CGameSpy_Browser::RefreshList_Full(bool Local, const char* FilterStr)
 			m_bTryingToConnectToMasterServer = true;
 			if (MainMenu()) MainMenu()->Show_CTMS_Dialog();
 
-			thread_spawn(RefreshInternetList, "GS Internet Refresh", 0, pRData);
+			std::thread t(RefreshInternetList, this);
 		}
 		if (error != sbe_noerror || !m_bAbleToConnectToMasterServer)
 		{			
@@ -438,7 +439,7 @@ void	CGameSpy_Browser::ReadServerInfo	(ServerInfo* pServerInfo, void* pServer)
 		ADD_BOOL_INFO(pServerInfo, pServer, *st.translate("mp_si_friendly_indicators"), G_FRIENDLY_INDICATORS_KEY);
 		ADD_BOOL_INFO(pServerInfo, pServer, *st.translate("mp_si_friendly_names"), G_FRIENDLY_NAMES_KEY);
 
-		ADD_INT_INFO_N (pServerInfo, pServer, 1/100.0f, *st.translate("mp_si_friendly_fire"), " %%", G_FRIENDLY_FIRE_KEY);
+		ADD_INT_INFO_N (pServerInfo, pServer, 1/100.0f, *st.translate("mp_si_friendly_fire"), " %d", G_FRIENDLY_FIRE_KEY);
 	};
 
 	if (pServerInfo->m_GameType == eGameIDArtefactHunt || pServerInfo->m_GameType == eGameIDCaptureTheArtefact)

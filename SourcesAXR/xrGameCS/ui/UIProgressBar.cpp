@@ -18,6 +18,7 @@ CUIProgressBar::CUIProgressBar(void)
 	m_inertion				= 0.0f;
 	m_last_render_frame		= u32(-1);
 	m_orient_mode			= om_horz;
+	m_bUseMiddleColor 		= false;
 }
 
 CUIProgressBar::~CUIProgressBar(void)
@@ -53,9 +54,13 @@ void CUIProgressBar::UpdateProgressBar()
 		m_CurrentLength = 0.0f;
 	}
 
-	if(m_bUseColor){
+	if(m_bUseColor)
+	{
 		Fcolor curr;
-		curr.lerp							(m_minColor,m_maxColor,fCurrentLength);
+		if (m_bUseMiddleColor)
+			curr.lerp							(m_minColor,m_middleColor,m_maxColor,fCurrentLength);
+		else
+			curr.lerp							(m_minColor,m_maxColor,fCurrentLength);
 		m_UIProgressItem.GetStaticItem		()->SetColor			(curr);
 	}
 }
@@ -64,10 +69,6 @@ void CUIProgressBar::SetProgressPos(float _Pos)
 { 
 	m_ProgressPos.y		= _Pos; 
 	clamp(m_ProgressPos.y,m_MinPos,m_MaxPos);
-
-/*	if(m_last_render_frame+1 != Device.dwFrame)
-		m_ProgressPos.x = m_ProgressPos.y;
-*/
 	UpdateProgressBar	();
 }
 
@@ -99,9 +100,9 @@ void CUIProgressBar::Draw()
 	GetAbsoluteRect			(rect);
 
 	if(m_bBackgroundPresent){
-		UI()->PushScissor	(rect);		
+		UI().PushScissor	(rect);		
 		m_UIBackgroundItem.Draw();
-		UI()->PopScissor	();
+		UI().PopScissor	();
 	}
 
 	Frect progress_rect;
@@ -129,9 +130,9 @@ void CUIProgressBar::Draw()
 		Fvector2 pos		= m_UIProgressItem.GetWndPos();	
 		progress_rect.add	(rect.left + pos.x,rect.top + pos.y);
 
-		UI()->PushScissor	(progress_rect);
+		UI().PushScissor	(progress_rect);
 		m_UIProgressItem.Draw();
-		UI()->PopScissor	();
+		UI().PopScissor	();
 	}
 	m_last_render_frame	= Device.dwFrame;
 }

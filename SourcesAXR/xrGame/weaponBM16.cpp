@@ -204,7 +204,7 @@ void CWeaponBM16::PlayAnimIdle()
 				return;
 			}
 		}
-		if (const char* guns_aim_anm = GetAnimAimName()) 
+		if (const char* guns_aim_anm = GetAnimAimName())
 		{
 			string64 guns_aim_anm_full;
 			strconcat(sizeof(guns_aim_anm_full), guns_aim_anm_full, guns_aim_anm, "_", std::to_string(m_magazine.size()).c_str());
@@ -245,6 +245,7 @@ void CWeaponBM16::PlayAnimIdle()
 				}
 			}
 		}
+
 		switch (m_magazine.size())
 		{
 		case 0:
@@ -260,11 +261,11 @@ void CWeaponBM16::PlayAnimIdle()
 	}
 	else
 	{
-		if (IsRotatingFromZoom()) 
+		if (IsRotatingFromZoom())
 		{
 			string32 guns_aim_anm;
 			strconcat(sizeof(guns_aim_anm), guns_aim_anm, "anm_idle_aim_end_", std::to_string(m_magazine.size()).c_str());
-			if (isHUDAnimationExist(guns_aim_anm)) 
+			if (isHUDAnimationExist(guns_aim_anm))
 			{
 				PlayHUDMotionNew(guns_aim_anm, true, GetState());
 				return;
@@ -286,5 +287,51 @@ void CWeaponBM16::PlayAnimIdle()
 			PlayHUDMotion("anm_idle_2", TRUE, NULL, GetState());
 		}break;
 		};
+	}
+}
+
+void CWeaponBM16::PlayAnimSprintStart()
+{
+	string_path guns_sprint_start_anm{};
+	strconcat(sizeof(guns_sprint_start_anm), guns_sprint_start_anm, "anm_idle_sprint_start", std::to_string(m_magazine.size()).c_str(), IsMisfire() ? "_jammed" : "");
+
+	if (isHUDAnimationExist(guns_sprint_start_anm))
+		PlayHUDMotionNew(guns_sprint_start_anm, true, GetState());
+	else if (strstr(guns_sprint_start_anm, "_jammed"))
+	{
+		char new_guns_aim_anm[256];
+		strcpy(new_guns_aim_anm, guns_sprint_start_anm);
+		new_guns_aim_anm[strlen(guns_sprint_start_anm) - strlen("_jammed")] = '\0';
+
+		if (isHUDAnimationExist(new_guns_aim_anm))
+			PlayHUDMotionNew(new_guns_aim_anm, true, GetState());
+	}
+	else
+	{
+		m_bSprintType = true;
+		SwitchState(eIdle);
+	}
+}
+
+void CWeaponBM16::PlayAnimSprintEnd()
+{
+	string_path guns_sprint_end_anm{};
+	strconcat(sizeof(guns_sprint_end_anm), guns_sprint_end_anm, "anm_idle_sprint_end", std::to_string(m_magazine.size()).c_str(), IsMisfire() ? "_jammed" : "");
+
+	if (isHUDAnimationExist(guns_sprint_end_anm))
+		PlayHUDMotionNew(guns_sprint_end_anm, true, GetState());
+	else if (strstr(guns_sprint_end_anm, "_jammed"))
+	{
+		char new_guns_aim_anm[256];
+		strcpy(new_guns_aim_anm, guns_sprint_end_anm);
+		new_guns_aim_anm[strlen(guns_sprint_end_anm) - strlen("_jammed")] = '\0';
+
+		if (isHUDAnimationExist(new_guns_aim_anm))
+			PlayHUDMotionNew(new_guns_aim_anm, true, GetState());
+	}
+	else
+	{
+		m_bSprintType = false;
+		SwitchState(eIdle);
 	}
 }

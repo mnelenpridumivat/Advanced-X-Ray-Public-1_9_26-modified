@@ -111,7 +111,7 @@ void CAI_Stalker::reinit			()
 	animation().reinit				();
 //	movement().reinit				();
 
-	//�������� ������������� �������� ����� ��� �������� �������� m_SpecificCharacter
+	//загрузка спецевической звуковой схемы для сталкера согласно m_SpecificCharacter
 	sound().sound_prefix			(SpecificCharacter().sound_voice_prefix());
 
 #ifdef DEBUG_MEMORY_MANAGER
@@ -166,7 +166,7 @@ void CAI_Stalker::reinit			()
 	m_computed_object_position		= Fvector().set(flt_max,flt_max,flt_max);
 	m_computed_object_direction		= Fvector().set(flt_max,flt_max,flt_max);
 
-	m_throw_target					= Fvector().set(flt_max,flt_max,flt_max);
+	m_throw_target_position			= Fvector().set(flt_max,flt_max,flt_max);
 	m_throw_ignore_object			= 0;
 
 	m_throw_position				= Fvector().set(flt_max,flt_max,flt_max);
@@ -299,8 +299,8 @@ void CAI_Stalker::Die				(CObject* who)
 	m_hammer_is_clutched			= m_clutched_hammer_enabled && !CObjectHandler::planner().m_storage.property(ObjectHandlerSpace::eWorldPropertyStrapped) && !::Random.randI(0,2);
 
 	inherited::Die					(who);
-	
-	//��������� ������������� ������ � ���������
+
+	//запретить использование слотов в инвенторе
 	inventory().SetSlotsUseful		(false);
 
 	if (inventory().GetActiveSlot() >= inventory().m_slots.size())
@@ -396,8 +396,8 @@ BOOL CAI_Stalker::net_Spawn			(CSE_Abstract* DC)
 
 	if (!g_Alive())
 		sound().set_sound_mask(u32(eStalkerSoundMaskDie));
-
-	//��������� ���������� �� �������� ��������
+	
+	//загрузить иммунитеты из модельки сталкера
 	IKinematics* pKinematics = smart_cast<IKinematics*>(Visual()); VERIFY(pKinematics);
 	CInifile* ini = pKinematics->LL_UserData();
 	if(ini)
@@ -414,7 +414,7 @@ BOOL CAI_Stalker::net_Spawn			(CSE_Abstract* DC)
 		}
 	}
 
-	//��������� �������� � ����������� �� �����
+	//вычислить иммунета в зависимости от ранга
 	static float novice_rank_immunity			= pSettings->r_float("ranks_properties", "immunities_novice_k");
 	static float expirienced_rank_immunity		= pSettings->r_float("ranks_properties", "immunities_experienced_k");
 
@@ -426,11 +426,11 @@ BOOL CAI_Stalker::net_Spawn			(CSE_Abstract* DC)
 
 	
 	CHARACTER_RANK_VALUE rank = Rank();
-	clamp(rank, 0, 100);
-	float rank_k = float(rank)/100.f;
+	clamp(rank, 0, 1000);
+	float rank_k = float(rank) / 1000.f;
 	m_fRankImmunity = novice_rank_immunity + (expirienced_rank_immunity - novice_rank_immunity) * rank_k;
 	m_fRankVisibility = novice_rank_visibility + (expirienced_rank_visibility - novice_rank_visibility) * rank_k;
-	m_fRankDisperison = expirienced_rank_dispersion + (expirienced_rank_dispersion - novice_rank_dispersion) * (1-rank_k);
+	m_fRankDisperison = novice_rank_dispersion + (expirienced_rank_dispersion - novice_rank_dispersion) * rank_k;
 
 	if (!fis_zero(SpecificCharacter().panic_threshold()))
 		m_panic_threshold						= SpecificCharacter().panic_threshold();
@@ -717,7 +717,7 @@ void CAI_Stalker::UpdateCL()
 		STOP_PROFILE
 
 		START_PROFILE("stalker/client_update/step_manager")
-		CStepManager::update		();
+		CStepManager::update		(false);
 		STOP_PROFILE
 
 		START_PROFILE("stalker/client_update/weapon_shot_effector")
@@ -1134,20 +1134,25 @@ shared_str const &CAI_Stalker::aim_bone_id		() const
 	return					(m_aim_bone_id);
 }
 
-void CAI_Stalker::aim_target					(Fvector &result, const CGameObject *object)
+void aim_target							(shared_str const& aim_bone_id, Fvector &result, const CGameObject *object)
 {
-	VERIFY					(m_aim_bone_id.size());
-
 	IKinematics				*kinematics = smart_cast<IKinematics*>(object->Visual());
 	VERIFY					(kinematics);
 
-	u16						bone_id = kinematics->LL_BoneID(m_aim_bone_id);
+	u16						bone_id = kinematics->LL_BoneID(aim_bone_id);
 	VERIFY2					(bone_id != BI_NONE, make_string("Cannot find bone %s",bone_id));
 
 	Fmatrix const			&bone_matrix = kinematics->LL_GetTransform(bone_id);
 	Fmatrix					final;
 	final.mul_43			(object->XFORM(), bone_matrix);
 	result					= final.c;
+}
+
+void CAI_Stalker::aim_target					(Fvector &result, const CGameObject *object)
+{
+	VERIFY					(m_aim_bone_id.size());
+
+	::aim_target			( m_aim_bone_id, result, object );
 }
 
 void CAI_Stalker::eye_pp_s0						()

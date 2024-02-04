@@ -21,8 +21,13 @@
 #include "../Include/xrRender/Kinematics.h"
 #include "ai_object_location.h"
 #include "object_broker.h"
+#include "ui_base.h"
+#include "UIFontDefines.h"
 #include "../xrEngine/igame_persistent.h"
+#include "../xrEngine/xr_collide_form.h"
 
+#include "AdvancedXrayGameConstants.h"
+#include "Artefact.h"
 
 #ifdef DEBUG
 #	include "debug_renderer.h"
@@ -52,6 +57,9 @@ CInventoryItem::CInventoryItem()
 	m_flags.set			(FCanTrade, m_can_trade);
 	m_flags.set			(FUsingCondition,FALSE);
 	m_fCondition		= 1.0f;
+	m_fCurrentChargeLevel = 1.0f;
+	m_fUnchargeSpeed	= 0.0f;
+	m_fMaxChargeLevel	= 0.0f;
 
 	m_name = m_nameShort = NULL;
 
@@ -64,6 +72,13 @@ CInventoryItem::CInventoryItem()
 	m_section_id					= 0;
 	m_bCanUse						= true;
 	m_flags.set						(FIsHelperItem,FALSE);
+
+	m_custom_text					= nullptr;
+	m_custom_text_font				= nullptr;
+	m_custom_text_clr_inv			= NULL;
+	m_custom_text_clr_hud			= NULL;
+
+	m_fOccupiedInvSpace				= 0.0f;
 }
 
 CInventoryItem::~CInventoryItem() 
@@ -117,7 +132,6 @@ void CInventoryItem::Load(LPCSTR section)
 
 	// Added by Axel, to enable optional condition use on any item
 	m_flags.set(FUsingCondition, READ_IF_EXISTS(pSettings, r_bool, section, "use_condition", false));
-	m_custom_text				= READ_IF_EXISTS(pSettings, r_string, section,"item_custom_text",	"");
 
 
 	if ( BaseSlot() != NO_ACTIVE_SLOT || Belt())
@@ -130,6 +144,84 @@ void CInventoryItem::Load(LPCSTR section)
 
 	m_fLowestBatteryCharge		= READ_IF_EXISTS(pSettings, r_float, section, "power_critical", .03f);
 	m_bCanUse					= READ_IF_EXISTS(pSettings, r_bool, section, "can_use", true);
+
+	m_custom_text				= READ_IF_EXISTS(pSettings, r_string, section,"item_custom_text", nullptr);
+
+	if (!GameConstants::GetInventoryItemsAutoVolume())
+		m_fOccupiedInvSpace			= READ_IF_EXISTS(pSettings, r_float, section, "occupied_inv_space", 0.0f);
+
+	if (pSettings->line_exist(section, "item_custom_text_font"))
+	{
+		shared_str font_str = pSettings->r_string(section, "item_custom_text_font");
+		
+		if(!xr_strcmp(font_str, GRAFFITI19_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontGraffiti19Russian;
+		}
+		else if(!xr_strcmp(font_str, GRAFFITI22_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontGraffiti22Russian;
+		}
+		else if(!xr_strcmp(font_str, GRAFFITI32_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontGraffiti32Russian;
+		}
+		else if(!xr_strcmp(font_str, GRAFFITI50_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontGraffiti50Russian;
+		}
+		else if(!xr_strcmp(font_str, ARIAL_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontArial14;
+		}
+		else if(!xr_strcmp(font_str, MEDIUM_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontMedium;
+		}
+		else if(!xr_strcmp(font_str, SMALL_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontStat;
+		}
+		else if(!xr_strcmp(font_str, LETTERICA16_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontLetterica16Russian;
+		}
+		else if(!xr_strcmp(font_str, LETTERICA18_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontLetterica18Russian;
+		}
+		else if(!xr_strcmp(font_str, LETTERICA25_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontLetterica25;
+		}
+		else if(!xr_strcmp(font_str, DI_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontDI;
+		}
+		else
+		{
+			m_custom_text_font = nullptr;
+		}
+	}
+	if (pSettings->line_exist(section, "item_custom_text_font"))
+	{
+		m_custom_text_clr_inv = pSettings->r_color(section, "item_custom_text_clr_inv");
+	}
+	else
+	{
+		m_custom_text_clr_inv = NULL;
+	}
+	if (pSettings->line_exist(section, "item_custom_text_clr_hud"))
+	{
+		m_custom_text_clr_hud = pSettings->r_color(section, "item_custom_text_clr_hud");
+	}
+	else
+	{
+		if (m_custom_text_clr_inv != NULL)
+			m_custom_text_clr_hud = m_custom_text_clr_inv;
+		else
+			m_custom_text_clr_hud = NULL;
+	}
 }
 
 void  CInventoryItem::ChangeCondition(float fDeltaCondition)
@@ -138,6 +230,11 @@ void  CInventoryItem::ChangeCondition(float fDeltaCondition)
 	clamp(m_fCondition, 0.f, 1.f);
 }
 
+void  CInventoryItem::ChangeChargeLevel(float val)
+{
+	m_fCurrentChargeLevel += val;
+	clamp(m_fCurrentChargeLevel, 0.f, m_fMaxChargeLevel);
+}
 
 void	CInventoryItem::Hit					(SHit* pHDS)
 {
@@ -377,6 +474,7 @@ void CInventoryItem::save(NET_Packet &packet)
 {
 	packet.w_u16			(m_ItemCurrPlace.value);
 	packet.w_float			(m_fCondition);
+	packet.w_float			(m_fCurrentChargeLevel);
 //--	save_data				(m_upgrades, packet);
 
 	if (object().H_Parent()) {
@@ -384,7 +482,15 @@ void CInventoryItem::save(NET_Packet &packet)
 		return;
 	}
 
-	u8 _num_items			= static_cast<u8>(object().PHGetSyncItemsNumber()); 
+	CArtefact* artefact = smart_cast<CArtefact*>(this);
+
+	if (artefact && artefact->IsInContainer())
+	{
+		packet.w_u8(0);
+		return;
+	}
+
+	u8 _num_items			= static_cast<u8>(object().PHGetSyncItemsNumber());
 	packet.w_u8				(_num_items);
 	object().PHSaveState	(packet);
 }
@@ -760,6 +866,7 @@ void CInventoryItem::load(IReader &packet)
 {
 	m_ItemCurrPlace.value	= packet.r_u16();
 	m_fCondition			= packet.r_float();
+	m_fCurrentChargeLevel	= packet.r_float();
 
 //--	load_data( m_upgrades, packet );
 //--	install_loaded_upgrades();
@@ -889,12 +996,12 @@ void CInventoryItem::PH_A_CrPr		()
 		Fvector c,r,p;
 		bb.get_CD(c,r );
 		XFORM().transform_tiny(p,c);
-		DBG_DrawAABB( p, r,D3DCOLOR_XRGB(255, 0, 0));
+		DBG_DrawAABB( p, r,color_xrgb(255, 0, 0));
 		//PPhysicsShell()->XFORM().transform_tiny(c);
 		Fmatrix mm;
 		PPhysicsShell()->GetGlobalTransformDynamic(&mm);
 		mm.transform_tiny(p,c);
-		DBG_DrawAABB( p, r,D3DCOLOR_XRGB(0, 255, 0));
+		DBG_DrawAABB( p, r,color_xrgb(0, 255, 0));
 		DBG_ClosedCashedDraw	(50000);
 #endif
 		object().spatial_move();
@@ -1509,4 +1616,23 @@ void CInventoryItem::SetDropManual(BOOL val)
 bool CInventoryItem::has_network_synchronization	() const
 {
 	return false;
+}
+
+float CInventoryItem::GetOccupiedInvSpace()
+{
+	if (GameConstants::GetInventoryItemsAutoVolume())
+	{
+		if (!cast_physics_shell_holder()->m_pPhysicsShell)
+		{
+			cast_physics_shell_holder()->create_physic_shell();
+
+			m_fOccupiedInvSpace = cast_physics_shell_holder()->CFORM()->getRadius() * 10.0f;
+
+			cast_physics_shell_holder()->deactivate_physics_shell();
+		}
+		else
+			m_fOccupiedInvSpace = cast_physics_shell_holder()->CFORM()->getRadius() * 10.0f;
+	}
+
+	return m_fOccupiedInvSpace;
 }

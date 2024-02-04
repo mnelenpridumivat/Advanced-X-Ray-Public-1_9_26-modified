@@ -4,7 +4,7 @@
 #include "../ai_monster_squad_manager.h"
 #include "../../../profiler.h"
 #include "../state_manager.h"
-#include "../../../PhysicsShell.h"
+#include "../../../../xrphysics/PhysicsShell.h"
 #include "../../../detail_path_manager.h"
 #include "../monster_velocity_space.h"
 #include "../../../level.h"
@@ -16,21 +16,21 @@ void CBaseMonster::Think()
 
 	if (!g_Alive() || getDestroy())			return;
 
-	// Èíèöèàëèçèðîâàòü
+	// Ð˜Ð½Ð¸Ñ†Ð¸Ð°Ð»Ð¸Ð·Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ
 	InitThink								();
 	anim().ScheduledInit					();
 
-	// Îáíîâèòü ïàìÿòü
+	// ÐžÐ±Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ Ð¿Ð°Ð¼ÑÑ‚ÑŒ
 	START_PROFILE("Base Monster/Think/Update Memory");
 	UpdateMemory							();
 	STOP_PROFILE;
 
-	// Îáíîâèòü ñêâàä
+	// ÐžÐ±Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ ÑÐºÐ²Ð°Ð´
 	START_PROFILE("Base Monster/Think/Update Squad");
 	monster_squad().update					(this);
 	STOP_PROFILE;
 
-	// Çàïóñòèòü FSM
+	// Ð—Ð°Ð¿ÑƒÑÑ‚Ð¸Ñ‚ÑŒ FSM
 	START_PROFILE("Base Monster/Think/FSM");
 	update_fsm								();
 	STOP_PROFILE;	
@@ -42,12 +42,12 @@ void CBaseMonster::update_fsm()
 {
 	StateMan->update				();
 	
-	// çàâåðøèòü îáðàáîòêó óñòàíîâëåííûõ â FSM ïàðàìåòðîâ
+	// Ð·Ð°Ð²ÐµÑ€ÑˆÐ¸Ñ‚ÑŒ Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚ÐºÑƒ ÑƒÑÑ‚Ð°Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ñ‹Ñ… Ð² FSM Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ð¾Ð²
 	post_fsm_update					();
 	
 	TranslateActionToPathParams		();
 
-	// èíôîðìèðîâàòü squad î ñâîèõ öåëÿõ
+	// Ð¸Ð½Ñ„Ð¾Ñ€Ð¼Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ squad Ð¾ ÑÐ²Ð¾Ð¸Ñ… Ñ†ÐµÐ»ÑÑ…
 	squad_notify					();
 
 #ifdef DEBUG
@@ -66,16 +66,23 @@ void CBaseMonster::post_fsm_update()
 	m_bRunTurnLeft = m_bRunTurnRight = false;
 	
 
-	if (is_state(state, eStateAttack) && control().path_builder().is_moving_on_path()) {
+	Fvector direction;
+	if ( is_state(state, eStateAttack) && 
+		 control().path_builder().is_moving_on_path() &&
+		 control().path_builder().detail().try_get_direction(direction) ) {
 
-		float	dir_yaw = control().path_builder().detail().direction().getH();
-		float	yaw_target = Fvector().sub(EnemyMan.get_enemy()->Position(), Position()).getH();
+		Fvector const self_to_enemy	=	Fvector().sub(EnemyMan.get_enemy()->Position(), Position());
+		if ( magnitude(self_to_enemy) > 3.f ) {
 
-		float angle_diff	= angle_difference(yaw_target, dir_yaw);
+			float	dir_yaw = direction.getH();
+			float	yaw_target = self_to_enemy.getH();
 
-		if ((angle_diff > PI_DIV_3) && (angle_diff < 5 * PI_DIV_6)) {
-			if (from_right(dir_yaw, yaw_target))	m_bRunTurnRight = true;
-			else									m_bRunTurnLeft	= true;
+			float angle_diff	= angle_difference(yaw_target, dir_yaw);
+
+			if ((angle_diff > PI_DIV_3) && (angle_diff < 5 * PI_DIV_6)) {
+				if (from_right(dir_yaw, yaw_target))	m_bRunTurnRight = true;
+				else									m_bRunTurnLeft	= true;
+			}
 		}
 	}
 }

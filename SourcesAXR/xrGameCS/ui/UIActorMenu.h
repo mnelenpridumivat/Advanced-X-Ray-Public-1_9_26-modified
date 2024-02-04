@@ -149,6 +149,10 @@ protected:
 	float						m_PartnerWeight_end_x;
 //*	CUIStatic*					m_PartnerWeightMax;
 
+	CUIStatic*					m_ActorInvCapacityInfo;
+	CUIStatic*					m_ActorInvFullness;
+	CUIStatic*					m_ActorInvCapacity;
+
 	// delimiter ------------------------------
 	CUIStatic*					m_LeftDelimiter;
 	CUIStatic*					m_PartnerTradeCaption;
@@ -170,8 +174,8 @@ protected:
 
 	u32							m_last_time;
 	bool						m_repair_mode;
-	bool						m_highlight_clear;
 	bool						m_item_info_view;
+	bool						m_highlight_clear;
 	u32							m_trade_partner_inventory_state;
 	bool						m_bNeedMoveAfsToBag;
 public:
@@ -179,7 +183,9 @@ public:
 	EMenuMode					GetMenuMode					() {return m_currMenuMode;};
 	void						SetActor					(CInventoryOwner* io);
 	void						SetPartner					(CInventoryOwner* io);
+	CInventoryOwner*			GetPartner					() {return m_pPartnerInvOwner;};
 	void						SetInvBox					(CInventoryBox* box);
+	CInventoryBox*				GetInvBox					() {return m_pInvBox;};
 	void						SetCarTrunk					(CCar* pCar);
 	void						SetSimpleHintText			(LPCSTR text);
 
@@ -202,7 +208,7 @@ private:
 	bool						highlight_addons_for_weapon	(PIItem weapon_item, CUICellItem* ci);
 	void						highlight_weapons_for_addon	(PIItem addon_item, CUIDragDropListEx* ddlist);
 
-protected:			
+public:
 	void						Construct					();
 	void						InitCallbacks				();
 
@@ -218,16 +224,16 @@ protected:
 	xr_vector<EDDListType>		m_allowed_drops				[iListTypeMax];
 	bool						AllowItemDrops				(EDDListType from, EDDListType to);
 
-	bool		__stdcall		OnItemDrop					(CUICellItem* itm);
-	bool		__stdcall		OnItemStartDrag				(CUICellItem* itm);
-	bool		__stdcall		OnItemDbClick				(CUICellItem* itm);
-	bool		__stdcall		OnItemSelected				(CUICellItem* itm);
-	bool		__stdcall		OnItemRButtonClick			(CUICellItem* itm);
-	bool		__stdcall		OnItemMButtonClick			(CUICellItem* itm);
-	bool		__stdcall		OnItemFocusReceive			(CUICellItem* itm);
-	bool		__stdcall		OnItemFocusLost				(CUICellItem* itm);
-	bool		__stdcall		OnItemFocusedUpdate			(CUICellItem* itm);
-	void		__stdcall		OnDragItemOnTrash			(CUIDragItem* item, bool b_receive);
+	bool		xr_stdcall		OnItemDrop					(CUICellItem* itm);
+	bool		xr_stdcall		OnItemStartDrag				(CUICellItem* itm);
+	bool		xr_stdcall		OnItemDbClick				(CUICellItem* itm);
+	bool		xr_stdcall		OnItemSelected				(CUICellItem* itm);
+	bool		xr_stdcall		OnItemRButtonClick			(CUICellItem* itm);
+	bool		xr_stdcall		OnItemMButtonClick			(CUICellItem* itm);
+	bool		xr_stdcall		OnItemFocusReceive			(CUICellItem* itm);
+	bool		xr_stdcall		OnItemFocusLost				(CUICellItem* itm);
+	bool		xr_stdcall		OnItemFocusedUpdate			(CUICellItem* itm);
+	void		xr_stdcall		OnDragItemOnTrash			(CUIDragItem* item, bool b_receive);
 	bool						OnItemDropped				(PIItem itm, CUIDragDropListEx* new_owner, CUIDragDropListEx* old_owner);
 
 	void						ResetMode					();
@@ -253,7 +259,7 @@ protected:
 
 	void						ActivatePropertiesBox		();
 	void						TryHidePropertiesBox		();
-	void		__stdcall		ProcessPropertiesBoxClicked	(CUIWindow* w, void* d);
+	void		xr_stdcall		ProcessPropertiesBoxClicked	(CUIWindow* w, void* d);
 	
 	void						CheckDistance				();
 	void						UpdateItemsPlace			();
@@ -273,7 +279,7 @@ protected:
 	void						UpdateOutfit				();
 	void						MoveArtefactsToBag			();
 	bool						TryActiveSlot				(CUICellItem* itm);
-	void		__stdcall		TryRepairItem				(CUIWindow* w, void* d);
+	void		xr_stdcall		TryRepairItem				(CUIWindow* w, void* d);
 	bool						CanUpgradeItem				(PIItem item);
 
 	bool						ToActorTrade				(CUICellItem* itm, bool b_use_cursor_pos);
@@ -282,7 +288,7 @@ protected:
 	bool						ToDeadBodyBag				(CUICellItem* itm, bool b_use_cursor_pos);
 
 	void						AttachAddon					(PIItem item_to_upgrade);
-	void						DetachAddon					(LPCSTR addon_name);
+	void						DetachAddon					(LPCSTR addon_name, PIItem itm = NULL);
 
 	void						SendEvent_Item2Slot			(PIItem	pItem, u16 parent);
 	void						SendEvent_Item2Belt			(PIItem	pItem, u16 parent);
@@ -313,13 +319,13 @@ public:
 	virtual void				Show						();
 	virtual void				Hide						();
 
-	virtual bool				OnKeyboard					(int dik, EUIMessages keyboard_action);
-	virtual bool				OnMouse						(float x, float y, EUIMessages mouse_action);
-	virtual void				OnMouseMove					();
+	virtual bool				OnKeyboardAction					(int dik, EUIMessages keyboard_action);
+	virtual bool				OnMouseAction						(float x, float y, EUIMessages mouse_action);
 
 	void						CallMessageBoxYesNo			(LPCSTR text);
 	void						CallMessageBoxOK			(LPCSTR text);
-	void		__stdcall		OnMesBoxYes					(CUIWindow*, void*);
+	void		xr_stdcall		OnMesBoxYes					(CUIWindow*, void*);
+	void		xr_stdcall		OnMesBoxNo					(CUIWindow*, void*);
 
 	void						OnInventoryAction			(PIItem pItem, u16 action_type);
 	void						ShowRepairButton			(bool status);
@@ -332,16 +338,16 @@ public:
 	void						UpdatePartnerBag			();
 	void						UpdateDeadBodyBag			();
 
+	void		xr_stdcall		OnBtnPerformTrade			(CUIWindow* w, void* d);
+	void		xr_stdcall		OnBtnExitClicked			(CUIWindow* w, void* d);
+	void		xr_stdcall		TakeAllFromPartner			(CUIWindow* w, void* d);
+	void						TakeAllFromInventoryBox		();
 	CUICellItem*				GetCurrentConsumable		() { return m_pCurrentConsumable; };
 	void						SetCurrentConsumable		(CUICellItem* ci) { m_pCurrentConsumable = ci; };
 	void						RefreshConsumableCells		();
 
-	void		__stdcall		OnBtnPerformTrade			(CUIWindow* w, void* d);
-	void		__stdcall		OnBtnExitClicked			(CUIWindow* w, void* d);
-	void		__stdcall		TakeAllFromPartner			(CUIWindow* w, void* d);
-	void						TakeAllFromInventoryBox		();
-
 	CScriptGameObject*			GetCurrentItemAsGameObject	();
+
 	void						RefreshCurrentItemCell		();
 
 	IC	UIHint*					get_hint_wnd				() { return m_hint_wnd; }

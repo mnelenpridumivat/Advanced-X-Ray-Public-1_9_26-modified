@@ -33,6 +33,8 @@ class CEatableItem;
 class CAntigasFilter;
 class CBattery;
 class CRepairKit;
+class CArtefact;
+
 struct SPHNetState;
 struct net_update_IItem;
 
@@ -100,7 +102,7 @@ public:
 	virtual void				OnEvent				(NET_Packet& P, u16 type);
 	
 	virtual bool				Useful				() const;									// !!! Переопределить. (см. в Inventory.cpp)
-	virtual bool				IsUsingCondition	() const { return (m_flags.test(FUsingCondition) > 0); };
+	virtual bool				IsUsingCondition	() const { return m_flags.test(FUsingCondition); };
 	virtual bool				Attach				(PIItem pIItem, bool b_send_event) {return false;}
 	virtual bool				Detach				(PIItem pIItem) {return false;}
 	//при детаче спаунится новая вещь при заданно названии секции
@@ -137,9 +139,8 @@ public:
 			BOOL				IsInvalid			() const;
 
 			BOOL				IsQuestItem			()	const	{return m_flags.test(FIsQuestItem);}			
-	virtual	u32					Cost				()	const	{ return m_cost; }
-//			u32					Cost				()	const	{ return m_cost; }
-	virtual float				Weight				() 	const	{ return m_weight;}	
+	virtual	u32					Cost				() const	{ return m_cost; }
+	virtual float				Weight				() const	{ return m_weight;}	
 			void				SetWeight			(float w)	{ m_weight = w; }
 
 public:
@@ -149,6 +150,9 @@ public:
 	shared_str					m_nameShort;
 	shared_str					m_nameComplex;
 	shared_str					m_custom_text;
+	CGameFont*					m_custom_text_font;
+	u32							m_custom_text_clr_inv;
+	u32							m_custom_text_clr_hud;
 
 	SInvItemPlace				m_ItemCurrPlace;
 
@@ -167,6 +171,13 @@ public:
 	IC		void				SetCondition		(float val)					{m_fCondition = val;}
 			void				ChangeCondition		(float fDeltaCondition);
 
+	IC		float				GetChargeLevel		() const					{return m_fCurrentChargeLevel;}
+	IC		float				GetMaxChargeLevel	() const					{return m_fMaxChargeLevel;}
+	IC		float				GetUnChargeLevel	() const					{return m_fUnchargeSpeed;}
+	virtual	float				GetChargeToShow		() const					{return GetChargeLevel();}
+	IC		void				SetChargeLevel		(float charge_level)		{ m_fCurrentChargeLevel = charge_level;}
+			void				ChangeChargeLevel	(float val);
+
 			u16					BaseSlot			()  const					{return m_ItemCurrPlace.base_slot_id;}
 			u16					CurrSlot			()  const					{return m_ItemCurrPlace.slot_id;}
 			u16					CurrPlace			()  const					{return m_ItemCurrPlace.type;}
@@ -181,6 +192,7 @@ public:
 			bool				CanTrade			() const;
 			void				AllowTrade			()							{ m_flags.set(FCanTrade, m_can_trade); };
 			void				DenyTrade			()							{ m_flags.set(FCanTrade, FALSE); };
+			float				GetOccupiedInvSpace	();
 
 	virtual bool 				IsNecessaryItem	    (CInventoryItem* item);
 	virtual bool				IsNecessaryItem	    (const shared_str& item_sect){return false;};
@@ -188,7 +200,12 @@ protected:
 	u32							m_cost;
 	float						m_weight;
 	float						m_fCondition;
+	float						m_fCurrentChargeLevel;
+	float						m_fMaxChargeLevel;
+	float						m_fUnchargeSpeed;
 	shared_str					m_Description;
+
+	float						m_fOccupiedInvSpace;
 protected:
 	ALife::_TIME_ID				m_dwItemIndependencyTime;
 
@@ -247,7 +264,7 @@ public:
 	u16							object_id					() const;
 	u16							parent_id					() const;
 	virtual void				on_activate_physic_shell	() { R_ASSERT2(0, "failed call of virtual function!"); }
-	
+
 protected:
 	float						m_holder_range_modifier;
 	float						m_holder_fov_modifier;
@@ -266,6 +283,7 @@ public:
 	virtual CPhysicsShellHolder	*cast_physics_shell_holder	()	{return 0;}
 	virtual CEatableItem		*cast_eatable_item			()	{return 0;}
 	virtual CAntigasFilter		*cast_filter				()	{return 0;}
+	virtual CArtefact			*cast_artefact				()	{return 0;}
 	virtual CRepairKit			*cast_repair_kit			()	{return 0;}
 	virtual CBattery			*cast_battery				()	{return 0;}
 	virtual CWeapon				*cast_weapon				()	{return 0;}

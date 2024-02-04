@@ -234,8 +234,8 @@ void CUIComboBox::OnFocusReceive()
         SetState(S_Highlighted);
 }
 
-bool CUIComboBox::OnMouse(float x, float y, EUIMessages mouse_action){
-	if(CUIWindow::OnMouse(x, y, mouse_action)) 
+bool CUIComboBox::OnMouseAction(float x, float y, EUIMessages mouse_action){
+	if(CUIWindow::OnMouseAction(x, y, mouse_action)) 
 		return true;
 
 	bool bCursorOverScb = false;
@@ -301,9 +301,9 @@ void CUIComboBox::OnRender()
 	{
 		if(m_list_frame.IsShown())
 		{
-			UI()->PushScissor			(UI()->ScreenRect(),true);
+			UI().PushScissor			(UI().ScreenRect(),true);
 			m_list_frame.Draw			();
-			UI()->PopScissor			();
+			UI().PopScissor			();
 			Device.seqRender.Remove		(this);
 		}
 	}

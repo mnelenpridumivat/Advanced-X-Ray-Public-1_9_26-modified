@@ -23,6 +23,7 @@ CHelmet::CHelmet()
 	m_b_HasGlass = false;
 	m_bUseFilter = false;
 	m_NightVisionType = 0;
+	m_fNightVisionLumFactor = 0.0f;
 	m_fFilterDegradation = 0.0f;
 	m_fFilterCondition = 1.0f;
 }
@@ -75,12 +76,18 @@ void CHelmet::Load(LPCSTR section)
 
 	m_b_HasGlass					= !!READ_IF_EXISTS(pSettings, r_bool, section, "has_glass", FALSE);
 	m_bUseFilter					= READ_IF_EXISTS(pSettings, r_bool, section, "use_filter", false);
-	m_NightVisionType				= READ_IF_EXISTS(pSettings, r_u32, section, "night_vision_type", 0);
+
+	m_sShaderNightVisionSect		= READ_IF_EXISTS(pSettings, r_string, section, "shader_nightvision_sect", "shader_nightvision_default");
+	m_NightVisionType				= READ_IF_EXISTS(pSettings, r_u32, m_sShaderNightVisionSect, "shader_nightvision_type", 0);
+	m_fNightVisionLumFactor			= READ_IF_EXISTS(pSettings, r_float, m_sShaderNightVisionSect, "shader_nightvision_lum_factor", 0.0f);
 
 	m_SuitableFilters.clear();
 	m_SuitableRepairKits.clear();
+	m_ItemsForRepair.clear();
+
 	LPCSTR filters = READ_IF_EXISTS(pSettings, r_string, section, "suitable_filters", "antigas_filter");
 	LPCSTR repair_kits = READ_IF_EXISTS(pSettings, r_string, section, "suitable_repair_kits", "repair_kit");
+	LPCSTR items_for_repair = READ_IF_EXISTS(pSettings, r_string, section, "items_for_repair", "");
 
 	// Added by Axel, to enable optional condition use on any item
 	m_flags.set(FUsingCondition, READ_IF_EXISTS(pSettings, r_bool, section, "use_condition", true));
@@ -104,6 +111,22 @@ void CHelmet::Load(LPCSTR section)
 		{
 			_GetItem(repair_kits, it, repair_kits_sect);
 			m_SuitableRepairKits.push_back(repair_kits_sect);
+		}
+	}
+
+	if (items_for_repair && items_for_repair[0])
+	{
+		string128 items_for_repair_sect;
+		int count = _GetItemCount(items_for_repair);
+
+		for (int it = 0; it < count; ++it)
+		{
+			_GetItem(items_for_repair, it, items_for_repair_sect);
+
+			if ((it % 2 != 0 && it != 0) || it == 1)
+				m_ItemsForRepair[it / 2].second = std::stoi(items_for_repair_sect);
+			else
+				m_ItemsForRepair.push_back(std::make_pair(items_for_repair_sect, 0));
 		}
 	}
 
@@ -331,6 +354,15 @@ bool CHelmet::install_upgrade_impl( LPCSTR section, bool test )
 	}
 	result |= result2;
 
+	result2 = process_if_exists_set(section, "shader_nightvision_sect", &CInifile::r_string, str, test);
+	if (result2 && !test)
+	{
+		m_sShaderNightVisionSect._set(str);
+		m_NightVisionType = READ_IF_EXISTS(pSettings, r_u32, m_sShaderNightVisionSect, "shader_nightvision_type", 0);
+		m_fNightVisionLumFactor = READ_IF_EXISTS(pSettings, r_float, m_sShaderNightVisionSect, "shader_nightvision_lum_factor", 0.0f);
+	}
+	result |= result2;
+
 	result |= process_if_exists( section, "health_restore_speed",    &CInifile::r_float, m_fHealthRestoreSpeed,    test );
 	result |= process_if_exists( section, "radiation_restore_speed", &CInifile::r_float, m_fRadiationRestoreSpeed, test );
 	result |= process_if_exists( section, "satiety_restore_speed",   &CInifile::r_float, m_fSatietyRestoreSpeed,   test );
@@ -351,8 +383,6 @@ bool CHelmet::install_upgrade_impl( LPCSTR section, bool test )
 	result2 = process_if_exists_set( section, "bones_koeff_protection_add", &CInifile::r_string, str, test );
 	if ( result2 && !test )
 		AddBonesProtection	(str);
-
-	result |= process_if_exists(section, "night_vision_type", &CInifile::r_u32, m_NightVisionType, test);
 
 	return result;
 }

@@ -10,6 +10,7 @@
 #include "UIPdaWnd.h"
 #include "../actor.h"
 #include "../inventory_item.h"
+#include "UICellItem.h"
 #include "../ai_space.h"
 #include "../../XrServerEntitiesCS/script_engine.h"
 
@@ -53,11 +54,11 @@ void CUIActorMenu::TryRepairItem(CUIWindow* w, void* d)
 		);
 	LPCSTR question = funct2( item_name, item->GetCondition(), can_repair, partner );
 
-	m_repair_mode = true;
-	if ( can_repair )
+	if(can_repair)
 	{
+		m_repair_mode = true;
 		CallMessageBoxYesNo( question );
-	} 
+	}
 	else
 	{
 		CallMessageBoxOK( question );
@@ -78,6 +79,11 @@ void CUIActorMenu::RepairEffect_CurItem()
 	funct( item_name, item->GetCondition() );
 
 	item->SetCondition( 1.0f );
+	SeparateUpgradeItem();
+	CUICellItem* itm = CurrentItem();
+	if(itm)
+		itm->UpdateCellItemProgressBars();
+
 }
 
 bool CUIActorMenu::CanUpgradeItem( PIItem item )
@@ -128,9 +134,9 @@ void CUIActorMenu::script_register(lua_State* L)
 				.def(constructor<>())
 				.def("get_drag_item",				&CUIActorMenu::GetCurrentItemAsGameObject)
 				.def("refresh_current_cell_item",	&CUIActorMenu::RefreshCurrentItemCell)
-				.def("IsShown",						&CUIActorMenu::IsShown)
-				.def("ShowDialog",					&CUIActorMenu::ShowDialog)
-				.def("HideDialog",					&CUIActorMenu::HideDialog),
+				.def("IsShown",						&CUIActorMenu::IsShown),
+				//.def("ShowDialog",					&CUIActorMenu::ShowDialog)
+				//.def("HideDialog",					&CUIActorMenu::HideDialog),
 
  			class_< CUIMainIngameWnd, CUIWindow>("CUIMainIngameWnd")
 				.def(constructor<>())
@@ -138,7 +144,24 @@ void CUIActorMenu::script_register(lua_State* L)
 				//.def_readonly("UIStaticQuickHelp",	&CUIMainIngameWnd::UIStaticQuickHelp)
 				//.def_readonly("UIMotionIcon",		&CUIMainIngameWnd::UIMotionIcon)
 				.def_readonly("UIZoneMap",			&CUIMainIngameWnd::UIZoneMap)
-				.def_readonly("m_ui_hud_states",	&CUIMainIngameWnd::m_ui_hud_states),
+				.def_readonly("m_ui_hud_states",	&CUIMainIngameWnd::m_ui_hud_states)
+				.def_readonly("m_ind_boost_psy",	&CUIMainIngameWnd::m_ind_boost_psy)
+				.def_readonly("m_ind_boost_radia",	&CUIMainIngameWnd::m_ind_boost_radia)
+				.def_readonly("m_ind_boost_chem",	&CUIMainIngameWnd::m_ind_boost_chem)
+				.def_readonly("m_ind_boost_wound",	&CUIMainIngameWnd::m_ind_boost_wound)
+				.def_readonly("m_ind_boost_weight", &CUIMainIngameWnd::m_ind_boost_weight)
+				.def_readonly("m_ind_boost_health", &CUIMainIngameWnd::m_ind_boost_health)
+				.def_readonly("m_ind_boost_power",	&CUIMainIngameWnd::m_ind_boost_power)
+				.def_readonly("m_ind_boost_rad",	&CUIMainIngameWnd::m_ind_boost_rad)
+				.def_readonly("m_ind_boost_satiety",	&CUIMainIngameWnd::m_ind_boost_satiety)
+				.def_readonly("m_ind_boost_thirst",		&CUIMainIngameWnd::m_ind_boost_thirst)
+				.def_readonly("m_ind_boost_psy_health", &CUIMainIngameWnd::m_ind_boost_psy_health)
+				.def_readonly("m_ind_boost_intoxication", &CUIMainIngameWnd::m_ind_boost_intoxication)
+				.def_readonly("m_ind_boost_sleepeness", &CUIMainIngameWnd::m_ind_boost_sleepeness)
+				.def_readonly("m_ind_boost_alcoholism", &CUIMainIngameWnd::m_ind_boost_alcoholism)
+				.def_readonly("m_ind_boost_hangover",	&CUIMainIngameWnd::m_ind_boost_hangover)
+				.def_readonly("m_ind_boost_narcotism",	&CUIMainIngameWnd::m_ind_boost_narcotism)
+				.def_readonly("m_ind_boost_withdrawal", &CUIMainIngameWnd::m_ind_boost_withdrawal),
  			class_< CUIZoneMap >("CUIZoneMap")
 				.def(constructor<>())
 				.def_readonly("visible",			&CUIZoneMap::visible)
@@ -147,12 +170,12 @@ void CUIActorMenu::script_register(lua_State* L)
 				.def(constructor<>()),
  			class_< CUIHudStatesWnd, CUIWindow>("CUIHudStatesWnd")
 				.def(constructor<>())
-				.def_readonly("m_back",				&CUIHudStatesWnd::m_back)
-				.def_readonly("m_fire_mode",		&CUIHudStatesWnd::m_fire_mode)
-				.def_readonly("m_ui_weapon_icon",	&CUIHudStatesWnd::m_ui_weapon_icon)
-				.def_readonly("m_ui_health_bar",	&CUIHudStatesWnd::m_ui_health_bar)
-				.def_readonly("m_ui_stamina_bar",	&CUIHudStatesWnd::m_ui_stamina_bar)
-				.def_readonly("m_radia_damage",		&CUIHudStatesWnd::m_radia_damage)
+				.def_readonly("m_back",								&CUIHudStatesWnd::m_back)
+				.def_readonly("m_fire_mode",						&CUIHudStatesWnd::m_fire_mode)
+				.def_readonly("m_ui_weapon_icon",					&CUIHudStatesWnd::m_ui_weapon_icon)
+				.def_readonly("m_ui_health_bar",					&CUIHudStatesWnd::m_ui_health_bar)
+				.def_readonly("m_ui_stamina_bar",					&CUIHudStatesWnd::m_ui_stamina_bar)
+				.def_readonly("m_radia_damage",						&CUIHudStatesWnd::m_radia_damage)
 		];
 
 		module(L, "ActorMenu")
@@ -171,7 +194,7 @@ void CUIPdaWnd::script_register(lua_State* L)
 			class_<CUIPdaWnd, CUIDialogWnd>("CUIPdaWnd")
 				.def(constructor<>())
 				.def("IsShown",						&CUIPdaWnd::IsShown)
-				.def("ShowDialog",					&CUIPdaWnd::ShowDialog)
-				.def("HideDialog",					&CUIPdaWnd::HideDialog)
+				//.def("ShowDialog",					&CUIPdaWnd::ShowDialog)
+				//.def("HideDialog",					&CUIPdaWnd::HideDialog)
 		];
 };

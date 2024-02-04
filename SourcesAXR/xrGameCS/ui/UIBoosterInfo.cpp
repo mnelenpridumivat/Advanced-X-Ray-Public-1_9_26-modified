@@ -20,84 +20,165 @@ CUIBoosterInfo::CUIBoosterInfo()
 	{
 		m_booster_items[i] = nullptr;
 	}
+
+	for (u32 i = 0; i < eQuickItemLast; ++i)
+	{
+		m_quick_items[i] = nullptr;
+	}
+
 	m_portions = nullptr;
-	m_filter = nullptr;
-	m_repair_kit_condition = nullptr;
 }
 
 CUIBoosterInfo::~CUIBoosterInfo()
 {
 	delete_data(m_booster_items);
+	delete_data(m_quick_items);
 	xr_delete(m_portions);
-	xr_delete(m_filter);
-	xr_delete(m_repair_kit_condition);
 	xr_delete(m_Prop_line);
 }
 
-LPCSTR ef_boosters_nodes_names[] =
+LPCSTR ef_quick_eat_values_names[] =
 {
-	"boost_satiety",
-	"boost_health_restore",
-	"boost_radiation_restore",
-	"boost_power_restore",
-	"boost_bleeding_restore",
-
-	//M.F.S Team additions
-	"boost_battery",
-	"boost_thirst",
-	"boost_psy_health",
-	"boost_intoxication",
-	"boost_sleepeness",
-
-	//HoP
-	"boost_alcoholism",
-	"boost_hangover",
-	"boost_narcotism",
-	"boost_withdrawal",
-};
-
-LPCSTR ef_boosters_section_names[] =
-{
-	"eat_satiety",
 	"eat_health",
-	"eat_radiation",
 	"eat_power",
 	"wounds_heal_perc",
-
-	//M.F.S team additions
-	"charge_level",
+	"eat_satiety",
 	"eat_thirst",
 	"eat_psy_health",
+
+	"charge_level",
+	"filter_condition",
+	"restore_condition",
+
 	"eat_intoxication",
+	"eat_radiation",
 	"eat_sleepeness",
 
 	//HoP
+	"eat_alcohol",
 	"eat_alcoholism",
 	"eat_hangover",
+	"eat_drugs",
 	"eat_narcotism",
-	"eat_withdrawal",
+	"eat_withdrawal"
+};
+
+LPCSTR quick_eat_influence_caption[] =
+{
+	"ui_inv_health",
+	"ui_inv_power",
+	"ui_inv_bleeding",
+	"ui_inv_satiety",
+	"ui_inv_thirst",
+	"ui_inv_psy_health",
+
+	//M.F.S Team additions
+	"ui_inv_battery",
+	"ui_inv_filter_condition",
+	"ui_inv_repair_kit_condition",
+
+	"ui_inv_intoxication",
+	"ui_inv_radiation",
+	"ui_inv_sleepeness",
+
+	//HoP
+	"ui_inv_alcohol",
+	"ui_inv_alcoholism",
+	"ui_inv_hangover",
+	"ui_inv_drugs",
+	"ui_inv_narcotism",
+	"ui_inv_withdrawal"
+};
+
+LPCSTR ef_quick_eat_nodes_names[] =
+{
+	"quick_eat_health",
+	"quick_eat_power",
+	"quick_eat_bleeding",
+	"quick_eat_satiety",
+	"quick_eat_thirst",
+	"quick_eat_psy_health",
+
+	//M.F.S Team additions
+	"quick_eat_battery",
+	"quick_eat_filter_condition",
+	"quick_eat_repair_kit_condition",
+
+	"quick_eat_intoxication",
+	"quick_eat_radiation",
+	"quick_eat_sleepeness",
+
+	//HoP
+	"quick_eat_alcohol",
+	"quick_eat_alcoholism",
+	"quick_eat_hangover",
+	"quick_eat_drugs",
+	"quick_eat_narcotism",
+	"quick_eat_withdrawal"
+};
+
+LPCSTR ef_boosters_values_names[] =
+{
+	"boost_health_restore",
+	"boost_power_restore",
+	"boost_radiation_restore",
+	"boost_bleeding_restore",
+	"boost_satiety_restore",
+	"boost_thirst_restore",
+	"boost_psy_health_restore",
+	"boost_intoxication_restore",
+	"boost_sleepeness_restore",
+	"boost_alcohol_restore",
+	"boost_alcoholism_restore",
+	"boost_hangover_restore",
+	"boost_drugs_restore",
+	"boost_narcotism_restore",
+	"boost_withdrawal_restore",
+	"boost_max_weight",
+	"boost_radiation_protection",
+	"boost_telepat_protection",
+	"boost_chemburn_protection",
+	"boost_burn_immunity",
+	"boost_shock_immunity",
+	"boost_radiation_immunity",
+	"boost_telepat_immunity",
+	"boost_chemburn_immunity",
+	"boost_explosion_immunity",
+	"boost_strike_immunity",
+	"boost_fire_wound_immunity",
+	"boost_wound_immunity"
 };
 
 LPCSTR boost_influence_caption[] =
 {
-	"ui_inv_satiety",
 	"ui_inv_health",
-	"ui_inv_radiation",
 	"ui_inv_power",
+	"ui_inv_radiation",
 	"ui_inv_bleeding",
-
-	//M.F.S Team additions
-	"ui_inv_battery",
+	"ui_inv_satiety",
 	"ui_inv_thirst",
 	"ui_inv_psy_health",
 	"ui_inv_intoxication",
 	"ui_inv_sleepeness",
-
-	//HoP
+	"ui_inv_alcohol",
 	"ui_inv_alcoholism",
 	"ui_inv_hangover",
+	"ui_inv_drugs",
 	"ui_inv_narcotism",
 	"ui_inv_withdrawal",
+	"ui_inv_outfit_additional_weight",
+	"ui_inv_outfit_radiation_protection",
+	"ui_inv_outfit_telepatic_protection",
+	"ui_inv_outfit_chemical_burn_protection",
+	"ui_inv_outfit_burn_immunity",
+	"ui_inv_outfit_shock_immunity",
+	"ui_inv_outfit_radiation_immunity",
+	"ui_inv_outfit_telepatic_immunity",
+	"ui_inv_outfit_chemical_burn_immunity",
+	"ui_inv_explosion_immunity",
+	"ui_inv_strike_immunity",
+	"ui_inv_fire_wound_immunity",
+	"ui_inv_wound_immunity"
 };
 
 void CUIBoosterInfo::InitFromXml(CUIXml& xml)
@@ -114,7 +195,7 @@ void CUIBoosterInfo::InitFromXml(CUIXml& xml)
 	for (u32 i = 0; i < eBoostExplImmunity; ++i)
 	{
 		m_booster_items[i] = xr_new<UIBoosterInfoItem>();
-		m_booster_items[i]->Init(xml, ef_boosters_nodes_names [i]);
+		m_booster_items[i]->Init(xml, ef_boosters_section_names[i]);
 		m_booster_items[i]->SetAutoDelete(false);
 
 		LPCSTR name = CStringTable().translate(boost_influence_caption[i]).c_str();
@@ -123,26 +204,27 @@ void CUIBoosterInfo::InitFromXml(CUIXml& xml)
 		xml.SetLocalRoot(base_node);
 	}
 
+	for (u32 i = 0; i < eQuickItemLast; ++i)
+	{
+		m_quick_items[i] = xr_new<UIBoosterInfoItem>();
+		m_quick_items[i]->Init(xml, ef_quick_eat_nodes_names[i]);
+		m_quick_items[i]->SetAutoDelete(false);
+		LPCSTR name = CStringTable().translate(quick_eat_influence_caption[i]).c_str();
+		m_quick_items[i]->SetCaption(name);
+		xml.SetLocalRoot(base_node);
+	}
+
+	m_booster_time = xr_new<UIBoosterInfoItem>();
+	m_booster_time->Init(xml, "boost_time");
+	m_booster_time->SetAutoDelete(false);
+	LPCSTR name = CStringTable().translate("ui_inv_effect_time").c_str();
+	m_booster_time->SetCaption(name);
+	xml.SetLocalRoot(base_node);
+
 	m_Prop_line = xr_new<CUIStatic>();
 	AttachChild(m_Prop_line);
 	m_Prop_line->SetAutoDelete(false);
 	CUIXmlInit::InitStatic(xml, "prop_line", 0, m_Prop_line);
-
-	//Filter
-	m_filter = xr_new<UIBoosterInfoItem>();
-	m_filter->Init(xml, "boost_filter_condition");
-	m_filter->SetAutoDelete(false);
-	LPCSTR name = CStringTable().translate("ui_inv_filter_condition").c_str();
-	m_filter->SetCaption(name);
-	xml.SetLocalRoot(base_node);
-
-	//Repair Kit
-	m_repair_kit_condition = xr_new<UIBoosterInfoItem>();
-	m_repair_kit_condition->Init(xml, "boost_repair_kit_condition");
-	m_repair_kit_condition->SetAutoDelete(false);
-	name = CStringTable().translate("ui_inv_repair_kit_condition").c_str();
-	m_repair_kit_condition->SetCaption(name);
-	xml.SetLocalRoot(base_node);
 
 	//Portions
 	m_portions = xr_new<UIBoosterInfoItem>();
@@ -165,64 +247,108 @@ void CUIBoosterInfo::SetInfo(CInventoryItem& pInvItem)
 		return;
 	}
 
-	float val = 0.0f, max_val = 1.0f, max_value = 0.0f;
-	Fvector2 pos;
-	float h = m_Prop_line->GetWndPos().y + m_Prop_line->GetWndSize().y;
-
 	const shared_str& section = pInvItem.object().cNameSect();
 	CEatableItem* eatable = pInvItem.cast_eatable_item();
 	CAntigasFilter* pFilter = pInvItem.cast_filter();
 	CRepairKit* pRepairKit = pInvItem.cast_repair_kit();
+	CEntityCondition::BOOSTER_MAP boosters = actor->conditions().GetCurBoosterInfluences();
+
+	float val = 0.0f, max_val = 1.0f, max_value = 0.0f;
+	Fvector2 pos;
+	float h = m_Prop_line->GetWndPos().y + m_Prop_line->GetWndSize().y;
 
 	for (u32 i = 0; i < eBoostExplImmunity; ++i)
 	{
-		if (pSettings->line_exist(section.c_str(), ef_boosters_section_names[i]))
+		if (pSettings->line_exist(section.c_str(), ef_boosters_values_names[i]))
 		{
-			val = pSettings->r_float(section, ef_boosters_section_names[i]);
-			int vle = 2;
-			//vle: 0 - color from node; 1 - negative value is green, positive value is red(radiaton for example); 2 - negative value is red, positive value is green(satiety, health for example)
+			val = pSettings->r_float(section, ef_boosters_values_names[i]);
 			if (fis_zero(val))
 				continue;
 
-			if (i == _item_radiation_restore_speed || i >= _item_intoxication)
+			EBoostParams type = (EBoostParams)i;
+			switch (type)
+			{
+			case eBoostHpRestore:
+			case eBoostPowerRestore:
+			case eBoostBleedingRestore:
+			case eBoostPsyHealthRestore:
+			case eBoostIntoxicationRestore:
+			case eBoostSleepenessRestore:
+			case eBoostAlcoholRestore:
+			case eBoostAlcoholismRestore:
+			case eBoostHangoverRestore:
+			case eBoostDrugsRestore:
+			case eBoostNarcotismRestore:
+			case eBoostWithdrawalRestore:
+			case eBoostMaxWeight:
+				max_val = 1.0f;
+				break;
+			case eBoostSatietyRestore:
+			case eBoostThirstRestore:
+			case eBoostRadiationRestore:
+				max_val = -1.0f;
+				break;
+			case eBoostBurnImmunity:
+				max_val = actor->conditions().GetZoneMaxPower(ALife::infl_fire);
+				break;
+			case eBoostShockImmunity:
+				max_val = actor->conditions().GetZoneMaxPower(ALife::infl_electra);
+				break;
+			case eBoostRadiationImmunity:
+			case eBoostRadiationProtection:
+				max_val = actor->conditions().GetZoneMaxPower(ALife::infl_rad);
+				break;
+			case eBoostTelepaticImmunity:
+			case eBoostTelepaticProtection:
+				max_val = actor->conditions().GetZoneMaxPower(ALife::infl_psi);
+				break;
+			case eBoostChemicalBurnImmunity:
+			case eBoostChemicalBurnProtection:
+				max_val = actor->conditions().GetZoneMaxPower(ALife::infl_acid);
+				break;
+			}
+			val /= max_val;
+			int vle = 2;
+			//vle: 0 - color from node; 1 - negative value is green, positive value is red(radiaton for example); 2 - negative value is red, positive value is green(satiety, health for example)
+			if (i == _item_boost_radiation_restore || (i >= _item_boost_intoxication_restore && i < _item_boost_max_weight))
 				vle = 1;
-			m_booster_items[i]->SetValue(val, vle);
 
+			m_booster_items[i]->SetValue(val, vle);
 			pos.set(m_booster_items[i]->GetWndPos());
 			pos.y = h;
 			m_booster_items[i]->SetWndPos(pos);
-
 			h += m_booster_items[i]->GetWndSize().y;
 			AttachChild(m_booster_items[i]);
 		}
 	}
 
-	//Filter
-	if (pFilter)
+	for (u32 i = 0; i < eQuickItemLast; ++i)
 	{
-		val = pFilter->m_fCondition;
+		if (pSettings->line_exist(section.c_str(), ef_quick_eat_values_names[i]))
+		{
+			val = pSettings->r_float(section, ef_quick_eat_values_names[i]);
 
-		m_filter->SetValue(val);
-		pos.set(m_filter->GetWndPos());
-		pos.y = h;
-		m_filter->SetWndPos(pos);
+			if (eatable && i == _item_quick_radiation)
+				val += eatable->m_fRadioactivity;
 
-		h += m_filter->GetWndSize().y;
-		AttachChild(m_filter);
-	}
+			if (eatable && i == _item_quick_intoxication)
+				val += eatable->m_fSpoliage;
 
-	//Repair Kit
-	if (pRepairKit)
-	{
-		val = pRepairKit->m_fRestoreCondition;
+			//vle: 0 - color from node; 1 - negative value is green, positive value is red(radiaton for example); 2 - negative value is red, positive value is green(satiety, health for example)
+			if (fis_zero(val))
+				continue;
 
-		m_repair_kit_condition->SetValue(val);
-		pos.set(m_repair_kit_condition->GetWndPos());
-		pos.y = h;
-		m_repair_kit_condition->SetWndPos(pos);
+			int vle = 2;
+			if (i >= _item_quick_intoxication)
+				vle = 1;
 
-		h += m_repair_kit_condition->GetWndSize().y;
-		AttachChild(m_repair_kit_condition);
+			m_quick_items[i]->SetValue(val, vle);
+			pos.set(m_quick_items[i]->GetWndPos());
+			pos.y = h;
+			m_quick_items[i]->SetWndPos(pos);
+			h += m_quick_items[i]->GetWndSize().y;
+			AttachChild(m_quick_items[i]);
+		}
 	}
 
 	//Portions
@@ -240,6 +366,21 @@ void CUIBoosterInfo::SetInfo(CInventoryItem& pInvItem)
 
 			h += m_portions->GetWndSize().y;
 			AttachChild(m_portions);
+		}
+	}
+
+	if (pSettings->line_exist(section.c_str(), "boost_time"))
+	{
+		val = pSettings->r_float(section, "boost_time");
+		if (!fis_zero(val))
+		{
+			m_booster_time->SetValue(val);
+			pos.set(m_booster_time->GetWndPos());
+			pos.y = h;
+			m_booster_time->SetWndPos(pos);
+
+			h += m_booster_time->GetWndSize().y;
+			AttachChild(m_booster_time);
 		}
 	}
 

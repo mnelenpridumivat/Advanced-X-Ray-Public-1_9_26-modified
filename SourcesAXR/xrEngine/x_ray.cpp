@@ -73,6 +73,9 @@ ENGINE_API bool bWinterMode = false;
 ENGINE_API bool bDofWeather = false;
 ENGINE_API bool bLowlandFogWeather = false;
 ENGINE_API bool bWeatherColorGrading = false;
+ENGINE_API bool bWeatherFogDistanceClamping = false;
+ENGINE_API float bWeatherFogDistanceClampingMax = 1000.f;
+ENGINE_API float bWeatherWindInfluenceKoef = 0.0f;
 ENGINE_API Fvector4 ps_ssfx_wpn_dof_1 = { .0f, .0f, .0f, .0f };
 ENGINE_API float ps_ssfx_wpn_dof_2 = 1.0f;
 ENGINE_API int ps_rs_loading_stages = 0;
@@ -290,15 +293,18 @@ PROTECT_API void InitSettings()
 	bDofWeather = READ_IF_EXISTS(pAdvancedSettings, r_bool, "environment", "weather_dof", false);
 	bLowlandFogWeather = READ_IF_EXISTS(pAdvancedSettings, r_bool, "environment", "lowland_fog_from_weather", false);
 	bWeatherColorGrading = READ_IF_EXISTS(pAdvancedSettings, r_bool, "environment", "weather_color_grading", false);
+	bWeatherFogDistanceClamping = READ_IF_EXISTS(pAdvancedSettings, r_bool, "environment", "weather_fog_clamping", false);
+	bWeatherFogDistanceClampingMax = READ_IF_EXISTS(pAdvancedSettings, r_float, "environment", "weather_fog_clamping_max", 1000.0f);
+	bWeatherWindInfluenceKoef = READ_IF_EXISTS(pAdvancedSettings, r_float, "environment", "wind_influence_koef", 0.0f);
 
-	psHUD_FOV_def = READ_IF_EXISTS(pAdvancedSettings, r_float, "start_settings", "HUD_FOV", 0.45f);
+	psHUD_FOV_def = READ_IF_EXISTS(pAdvancedSettings, r_float, "start_settings", "HUD_FOV", 0.55f);
 	psHUD_FOV = psHUD_FOV_def;
 
 	//Rain
 	rain_max_desired_items	= READ_IF_EXISTS(pAdvancedSettings, r_u32,		"precipitation_params", "max_desired_items",	2500);
-	rain_source_radius		= READ_IF_EXISTS(pAdvancedSettings, r_float,	"precipitation_params", "source_radius",		12.5f);
-	rain_source_offset		= READ_IF_EXISTS(pAdvancedSettings, r_float,	"precipitation_params", "source_offset",		40.0f);
-	rain_max_distance_koef	= READ_IF_EXISTS(pAdvancedSettings, r_float,	"precipitation_params", "max_distance_koef",	1.25f);
+	rain_source_radius		= READ_IF_EXISTS(pAdvancedSettings, r_float,	"precipitation_params", "source_radius",		15.0f);
+	rain_source_offset		= READ_IF_EXISTS(pAdvancedSettings, r_float,	"precipitation_params", "source_offset",		20.0f);
+	rain_max_distance_koef	= READ_IF_EXISTS(pAdvancedSettings, r_float,	"precipitation_params", "max_distance_koef",	1.5f);
 	rain_particles_time		= READ_IF_EXISTS(pAdvancedSettings, r_float,	"precipitation_params", "particles_time",		0.3f);
 	rain_max_particles		= READ_IF_EXISTS(pAdvancedSettings, r_u32,		"precipitation_params", "max_particles",		1000);
 	rain_particles_cache	= READ_IF_EXISTS(pAdvancedSettings, r_u32,		"precipitation_params", "particles_cache",		400);
@@ -396,31 +402,6 @@ void execUserScript				( )
 {
 	Console->Execute			("default_controls");
 	Console->ExecuteScript		(Console->ConfigFile);
-}
-
-void slowdownthread	( void* )
-{
-//	Sleep		(30*1000);
-	for (;;)	{
-		if (Device.Statistic->fFPS<30) Sleep(1);
-		if (Device.mt_bMustExit)	return;
-		if (0==pSettings)			return;
-		if (0==Console)				return;
-		if (0==pInput)				return;
-		if (0==pApp)				return;
-	}
-}
-void CheckPrivilegySlowdown		( )
-{
-#ifdef DEBUG
-	if	(strstr(Core.Params,"-slowdown"))	{
-		thread_spawn(slowdownthread,"slowdown",0,0);
-	}
-	if	(strstr(Core.Params,"-slowdown2x"))	{
-		thread_spawn(slowdownthread,"slowdown",0,0);
-		thread_spawn(slowdownthread,"slowdown",0,0);
-	}
-#endif // DEBUG
 }
 
 void Startup()
@@ -545,7 +526,6 @@ HWND CreateSplashWindow(HINSTANCE hInst)
 
 HWND WINAPI ShowSplash(HINSTANCE hInstance, int nCmdShow)
 {
-	MSG msg;
 	HWND hWnd;
 
 	//image
@@ -575,11 +555,11 @@ HWND WINAPI ShowSplash(HINSTANCE hInstance, int nCmdShow)
 
 	//float temp_x_size = 860.f;
 	//float temp_y_size = 461.f;
-	int scr_x = GetSystemMetrics(SM_CXSCREEN);
-	int scr_y = GetSystemMetrics(SM_CYSCREEN);
+//	int scr_x = GetSystemMetrics(SM_CXSCREEN);
+//	int scr_y = GetSystemMetrics(SM_CYSCREEN);
 
-	int pos_x = (scr_x / 2) - (splashWidth / 2);
-	int pos_y = (scr_y / 2) - (splashHeight / 2);
+//	int pos_x = (scr_x / 2) - (splashWidth / 2);
+//	int pos_y = (scr_y / 2) - (splashHeight / 2);
 
 	//if (!RegClass(SplashProc, szClass, COLOR_WINDOW)) return FALSE;
 	hWnd = CreateSplashWindow(hInstance);
@@ -589,8 +569,8 @@ HWND WINAPI ShowSplash(HINSTANCE hInstance, int nCmdShow)
 	HDC hdcScreen = GetDC(NULL);
 	HDC hDC = CreateCompatibleDC(hdcScreen);
 
-	HBITMAP hBmp = CreateCompatibleBitmap(hdcScreen, splashWidth, splashHeight);
-	HBITMAP hBmpOld = (HBITMAP)SelectObject(hDC, hBmp);
+//	HBITMAP hBmp = CreateCompatibleBitmap(hdcScreen, splashWidth, splashHeight);
+//	HBITMAP hBmpOld = (HBITMAP)SelectObject(hDC, hBmp);
 	//рисуем картиночку
 	for (int i = 0; i < img.GetWidth(); i++)
 	{
@@ -677,6 +657,7 @@ void SetSplashImage(HWND hwndSplash, HBITMAP hbmpSplash)
 	ReleaseDC(NULL, hdcScreen);
 }
 
+/*
 static BOOL CALLBACK logDlgProc( HWND hw, UINT msg, WPARAM wp, LPARAM lp )
 {
 	switch( msg ){
@@ -693,7 +674,7 @@ static BOOL CALLBACK logDlgProc( HWND hw, UINT msg, WPARAM wp, LPARAM lp )
 			return FALSE;
 	}
 	return TRUE;
-}
+}*/
 /*
 void	test_rtc	()
 {

@@ -1,6 +1,6 @@
 ﻿#include "pch_script.h"
 #include "pda.h"
-#include "../xrphysics/PhysicsShell.h"
+//#include "../xrphysics/PhysicsShell.h"
 #include "Entity.h"
 #include "actor.h"
 
@@ -78,7 +78,7 @@ void CPda::Load(LPCSTR section)
 	m_sounds.LoadSound(section, "snd_draw_empty", "sndShowEmpty", true);
 	m_sounds.LoadSound(section, "snd_holster_empty", "sndHideEmpty", true);
 	m_sounds.LoadSound(section, "snd_btn_press", "sndButtonPress");
-	m_sounds.LoadSound(section, "snd_btn_release", "sndButtonRelease");
+	m_sounds.LoadSound(section, "snd_btn_release", "sndButtonRelease"); 
 	m_sounds.LoadSound(section, "snd_empty", "sndEmptyBattery", true);
 	m_screen_on_delay = READ_IF_EXISTS(pSettings, r_float, section, "screen_on_delay", 0.f);
 	m_screen_off_delay = READ_IF_EXISTS(pSettings, r_float, section, "screen_off_delay", 0.f);
@@ -143,10 +143,10 @@ void CPda::OnStateSwitch(u32 S)
 	case eShowing:
 	{
 		g_player_hud->attach_item(this);
-		g_pGamePersistent->pda_shader_data.pda_display_factor = 0.f;
+		g_pGamePersistent->devices_shader_data.pda_display_factor = 0.f;
 
-		m_sounds.PlaySound(hasEnoughBatteryPower() ? "sndShow" : "sndShowEmpty", Position(), H_Root(), !!GetHUDmode(), false);
-		PlayHUDMotion(!m_bNoticedEmptyBattery ? "anm_show" : "anm_show_empty", false, this, GetState());
+		m_sounds.PlaySound((hasEnoughBatteryPower() && m_psy_factor < 1.0f) ? "sndShow" : "sndShowEmpty", Position(), H_Root(), !!GetHUDmode(), false);
+		PlayHUDMotion((!m_bNoticedEmptyBattery && m_psy_factor < 1.0f) ? "anm_show" : "anm_show_empty", false, this, GetState());
 
 		if (auto pda = CurrentGameUI() && &CurrentGameUI()->PdaMenu() ? &CurrentGameUI()->PdaMenu() : nullptr)
 			pda->ResetJoystick(true);
@@ -157,8 +157,8 @@ void CPda::OnStateSwitch(u32 S)
 	break;
 	case eHiding:
 	{
-		m_sounds.PlaySound(hasEnoughBatteryPower() ? "sndHide" : "sndHideEmpty", Position(), H_Root(), !!GetHUDmode(), false);
-		PlayHUDMotion(!m_bNoticedEmptyBattery ? "anm_hide" : "anm_hide_empty", true, this, GetState());
+		m_sounds.PlaySound((hasEnoughBatteryPower() && m_psy_factor < 1.0f) ? "sndHide" : "sndHideEmpty", Position(), H_Root(), !!GetHUDmode(), false);
+		PlayHUDMotion((!m_bNoticedEmptyBattery && m_psy_factor < 1.0f) ? "anm_hide" : "anm_hide_empty", true, this, GetState());
 		SetPending(true);
 		m_bZoomed = false;
 		CurrentGameUI()->PdaMenu().Enable(false);
@@ -389,29 +389,29 @@ void CPda::UpdateCL()
 		// Adjust screen brightness (smooth)
 		if (m_bPowerSaving)
 		{
-			if (g_pGamePersistent->pda_shader_data.pda_displaybrightness > m_fDisplayBrightnessPowerSaving)
-				g_pGamePersistent->pda_shader_data.pda_displaybrightness -= Device.fTimeDelta / .25f;
+			if (g_pGamePersistent->devices_shader_data.pda_displaybrightness > m_fDisplayBrightnessPowerSaving)
+				g_pGamePersistent->devices_shader_data.pda_displaybrightness -= Device.fTimeDelta / .25f;
 		}
 		else
-			g_pGamePersistent->pda_shader_data.pda_displaybrightness = 1.f;
+			g_pGamePersistent->devices_shader_data.pda_displaybrightness = 1.f;
 
-		clamp(g_pGamePersistent->pda_shader_data.pda_displaybrightness, m_fDisplayBrightnessPowerSaving, 1.f);
+		clamp(g_pGamePersistent->devices_shader_data.pda_displaybrightness, m_fDisplayBrightnessPowerSaving, 1.f);
 
 		// Screen "Glitch" factor
-		g_pGamePersistent->pda_shader_data.pda_psy_influence = m_psy_factor;
+		g_pGamePersistent->devices_shader_data.pda_psy_influence = m_psy_factor;
 
 		// Update Display Visibility (turn on/off)
 		if (target_screen_switch < Device.fTimeGlobal)
 		{
 			if (!enoughBatteryPower || state == eHiding)
 				// Change screen transparency (towards 0 = not visible).
-				g_pGamePersistent->pda_shader_data.pda_display_factor -= Device.fTimeDelta / .25f;
+				g_pGamePersistent->devices_shader_data.pda_display_factor -= Device.fTimeDelta / .25f;
 			else
 				// Change screen transparency (towards 1 = fully visible).
-				g_pGamePersistent->pda_shader_data.pda_display_factor += Device.fTimeDelta / .75f;
+				g_pGamePersistent->devices_shader_data.pda_display_factor += Device.fTimeDelta / .75f;
 		}
 
-		clamp(g_pGamePersistent->pda_shader_data.pda_display_factor, 0.f, 1.f);
+		clamp(g_pGamePersistent->devices_shader_data.pda_display_factor, 0.f, 1.f);
 	}
 
 	if (m_bZoomed)
@@ -429,6 +429,11 @@ void CPda::UpdateCL()
 			SSFX_PDA_DoF_active = false;
 		}
 	}
+
+	luabind::functor<bool> m_functor;
+
+	if (ai().script_engine().functor("pda.check_surge", m_functor))
+		m_functor();
 }
 
 void CPda::shedule_Update(u32 dt)

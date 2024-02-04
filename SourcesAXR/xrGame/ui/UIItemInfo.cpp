@@ -29,6 +29,8 @@
 #include "../Torch.h"
 #include "../CustomDetector.h"
 #include "../AnomalyDetector.h"
+#include "../ArtefactContainer.h"
+#include "../CustomBackpack.h"
 
 extern const LPCSTR g_inventory_upgrade_xml;
 
@@ -47,14 +49,13 @@ CUIItemInfo::CUIItemInfo()
 	//UIConditionWnd				= NULL;
 	UIWpnParams					= NULL;
 	UIProperties				= NULL;
-	UIOutfitInfo				= NULL;
+	UIOutfitItem				= NULL;
 	UIBoosterInfo				= NULL;
 	UIArtefactParams			= NULL;
 	UIInventoryItem				= NULL;
 	UIName						= NULL;
 	UIBackground				= NULL;
 	m_pInvItem					= NULL;
-	UIItemConditionParams		= NULL;
 	m_b_FitToHeight				= false;
 	m_complex_desc				= false;
 }
@@ -65,10 +66,9 @@ CUIItemInfo::~CUIItemInfo()
 	xr_delete	(UIWpnParams);
 	xr_delete	(UIArtefactParams);
 	xr_delete	(UIProperties);
-	xr_delete	(UIOutfitInfo);
+	xr_delete	(UIOutfitItem);
 	xr_delete	(UIBoosterInfo);
 	xr_delete	(UIInventoryItem);
-	xr_delete	(UIItemConditionParams);
 }
 
 void CUIItemInfo::InitItemInfo(LPCSTR xml_name)
@@ -136,9 +136,6 @@ void CUIItemInfo::InitItemInfo(LPCSTR xml_name)
 //		UIConditionWnd					= xr_new<CUIConditionParams>();
 //		UIConditionWnd->InitFromXml		(uiXml);
 
-		UIItemConditionParams = xr_new<CUIItemConditionParams>();
-		UIItemConditionParams->InitFromXml(uiXml);
-
 		UIWpnParams						= xr_new<CUIWpnParams>();
 		UIWpnParams->InitFromXml		(uiXml);
 
@@ -147,11 +144,6 @@ void CUIItemInfo::InitItemInfo(LPCSTR xml_name)
 
 		UIBoosterInfo					= xr_new<CUIBoosterInfo>();
 		UIBoosterInfo->InitFromXml		(uiXml);
-
-		//UIDesc_line						= xr_new<CUIStatic>();
-		//AttachChild						(UIDesc_line);	
-		//UIDesc_line->SetAutoDelete		(true);
-		//xml_init.InitStatic				(uiXml, "description_line", 0, UIDesc_line);
 
 		if ( ai().get_alife() ) // (-designer)
 		{
@@ -181,8 +173,8 @@ void CUIItemInfo::InitItemInfo(LPCSTR xml_name)
 	}
 	if ( uiXml.NavigateToNode( "outfit_info", 0 ) )
 	{
-		UIOutfitInfo				= xr_new<CUIOutfitInfo>();
-		UIOutfitInfo->InitFromXml	(uiXml);
+		UIOutfitItem				= xr_new<CUIOutfitItem>();
+		UIOutfitItem->InitFromXml	(uiXml);
 	}
 
 	if (uiXml.NavigateToNode("inventory_items_info", 0))
@@ -245,7 +237,7 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 			}
 		}
 
-		xr_sprintf				(str, "%3.2f %s", weight, kg_str );
+		xr_sprintf			(str, "%3.2f %s", weight, kg_str );
 		UIWeight->SetText	(str);
 		
 		pos.x = UIWeight->GetWndPos().x;
@@ -378,22 +370,11 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 
 void CUIItemInfo::TryAddConditionInfo( CInventoryItem& pInvItem, CInventoryItem* pCompareItem )
 {
-	CTorch* torch = smart_cast<CTorch*>(&pInvItem);
-	CCustomDetector* artefact_detector = smart_cast<CCustomDetector*>(&pInvItem);
-	CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly*>(&pInvItem);
-
-	bool ShowCharge = GameConstants::GetTorchHasBattery() || GameConstants::GetArtDetectorUseBattery() || GameConstants::GetAnoDetectorUseBattery();
 
 	if ( pInvItem.IsUsingCondition() )
 	{
 		//UIConditionWnd->SetInfo( pCompareItem, pInvItem );
 		//UIDesc->AddWindow( UIConditionWnd, false );
-	}
-
-	if ((torch || artefact_detector || anomaly_detector) && ShowCharge)
-	{
-		UIItemConditionParams->SetInfo( pCompareItem, pInvItem );
-		UIDesc->AddWindow(UIItemConditionParams, false );
 	}
 }
 
@@ -403,38 +384,6 @@ void CUIItemInfo::TryAddWpnInfo( CInventoryItem& pInvItem, CInventoryItem* pComp
 	{
 		UIWpnParams->SetInfo( pCompareItem, pInvItem );
 		UIDesc->AddWindow( UIWpnParams, false );
-
-		// Lex Addon (correct by Suhar_) 7.08.2018		(begin)
-		// Необходимо расширить окно для отображения дополнительных иконок патронов
-		// Получаем кол-во типов патронов, используемых оружием
-		/*CWeapon* weapon = smart_cast<CWeapon*>(&pInvItem);
-		xr_vector<shared_str> ammo_types;
-		ammo_types = weapon->m_ammoTypes;
-		int ammo_types_size = ammo_types.size();
-		// Проверяем переменную высоты окна свойств оружия
-		if (WpnWndSiseY == NULL)
-			// Если переменная пуста, то необходимо считать её из xml и запомнить
-			WpnWndSiseY = UIWpnParams->GetWndSize().y;
-		// Вектор-переменная размера окна
-		Fvector2 new_size;
-		// Параметр ширины вектор-переменной остаётся неизменным
-		new_size.x = UIWpnParams->GetWndSize().x;
-		// Параметр высоты вектор-переменной меняется в зависимости от ammo_types_size
-		new_size.y = WpnWndSiseY;
-		// Если ammo_types_size привысил 2, то необходим дополнительный ряд
-		if (ammo_types_size >= 3)
-			// Увеличиваем высоту окна на 50 пикселей
-			new_size.y += 50.0f;
-		// Если ammo_types_size привысил 4, то необходим дополнительный ряд
-		if (ammo_types_size >= 5)
-			// Увеличиваем высоту окна на 50 пикселей
-			new_size.y += 50.0f;
-		// Устанавливаем окну свойств оружия новые размеры
-		UIWpnParams->SetWndSize(new_size);
-		// Корректируем размер фонового изображения
-		if (UIBackground)
-			UIBackground->SetWndSize(new_size);*/
-		// Lex Addon (correct by Suhar_) 7.08.2018		(end)
 	}
 }
 
@@ -451,19 +400,19 @@ void CUIItemInfo::TryAddOutfitInfo( CInventoryItem& pInvItem, CInventoryItem* pC
 {
 	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(&pInvItem);
 	CHelmet* helmet = smart_cast<CHelmet*>(&pInvItem);
-	if ( outfit && UIOutfitInfo )
+
+	if (outfit && UIOutfitItem)
 	{
 		CCustomOutfit* comp_outfit = smart_cast<CCustomOutfit*>(pCompareItem);
-		UIOutfitInfo->UpdateInfo( outfit, comp_outfit );
-		UIDesc->AddWindow( UIOutfitInfo, false );
+		UIOutfitItem->SetInfo(outfit, comp_outfit);
+		UIDesc->AddWindow(UIOutfitItem, false);
 	}
-	if ( helmet && UIOutfitInfo )
+	if (helmet && UIOutfitItem)
 	{
 		CHelmet* comp_helmet = smart_cast<CHelmet*>(pCompareItem);
-		UIOutfitInfo->UpdateInfo( helmet, comp_helmet );
-		UIDesc->AddWindow( UIOutfitInfo, false );
+		UIOutfitItem->SetInfo(helmet, comp_helmet);
+		UIDesc->AddWindow(UIOutfitItem, false);
 	}
-
 }
 
 void CUIItemInfo::TryAddUpgradeInfo( CInventoryItem& pInvItem )
@@ -481,18 +430,27 @@ void CUIItemInfo::TryAddBoosterInfo(CInventoryItem& pInvItem)
 	if (food && UIBoosterInfo)
 	{
 		UIBoosterInfo->SetInfo(pInvItem);
-		UIDesc->AddWindow( UIBoosterInfo, false );
+		UIDesc->AddWindow(UIBoosterInfo, false);
 	}
+}
+
+void CUIItemInfo::ResetInventoryItem()
+{
+	if (UIInventoryItem)
+		UIInventoryItem->SetHeight(0);
 }
 
 void CUIItemInfo::TryAddItemInfo(CInventoryItem& pInvItem)
 {
-	CInventoryItemObject* item = smart_cast<CInventoryItemObject*>(&pInvItem);
 	CTorch* torch = smart_cast<CTorch*>(&pInvItem);
 	CCustomDetector* artefact_detector = smart_cast<CCustomDetector*>(&pInvItem);
 	CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly*>(&pInvItem);
+	CArtefactContainer* af_container = smart_cast<CArtefactContainer*>(&pInvItem);
+	CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(&pInvItem);
 
-	if ((torch || artefact_detector || anomaly_detector) && UIInventoryItem)
+	bool ShowChargeTorch = GameConstants::GetTorchHasBattery();
+
+	if ((torch && ShowChargeTorch || artefact_detector || anomaly_detector || af_container || backpack) && UIInventoryItem)
 	{
 		UIInventoryItem->SetInfo(pInvItem);
 		UIDesc->AddWindow(UIInventoryItem, false);

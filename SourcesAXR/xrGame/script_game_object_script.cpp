@@ -82,6 +82,7 @@ void CScriptGameObject::script_register(lua_State *L)
 				value("action_sound",				static_cast<int>(GameObject::eActionTypeSound)),
 				value("action_particle",			static_cast<int>(GameObject::eActionTypeParticle)),
 				value("action_object",				static_cast<int>(GameObject::eActionTypeObject)),
+				value("action_wpn_fire",			static_cast<int>(GameObject::eActionTypeWeaponFire)),
 				value("actor_sleep",				static_cast<int>(GameObject::eActorSleep)),
 				value("helicopter_on_point",		static_cast<int>(GameObject::eHelicopterOnPoint)),
 				value("helicopter_on_hit",			static_cast<int>(GameObject::eHelicopterOnHit)),
@@ -92,11 +93,43 @@ void CScriptGameObject::script_register(lua_State *L)
 				value("take_item_from_box",			static_cast<int>(GameObject::eInvBoxItemTake)),
 				value("weapon_no_ammo",				static_cast<int>(GameObject::eWeaponNoAmmoAvailable)),
 
-				// vehicle
-				value("on_attach_vehicle",			static_cast<int>(GameObject::eAttachVehicle)),
-				value("on_detach_vehicle",			static_cast<int>(GameObject::eDetachVehicle)),
-				value("on_use_vehicle",				static_cast<int>(GameObject::eUseVehicle)),
+				//Alundaio:
+				value("hud_animation_end",			int(GameObject::eActorHudAnimationEnd)),
+				//AVO: custom callbacks
+				
+				// input
+				value("key_press",					int(GameObject::eKeyPress)),
+				value("key_release",				int(GameObject::eKeyRelease)),
+				value("key_hold",					int(GameObject::eKeyHold)),
 
+				value("mouse_move",					int(GameObject::eMouseMove)),
+				value("mouse_wheel",				int(GameObject::eMouseWheel)),
+
+				//weapon
+				value("weapon_fired",				int(GameObject::eOnWeaponFired)),
+				value("weapon_jammed",				int(GameObject::eOnWeaponJammed)),
+				value("weapon_zoom_in",				int(GameObject::eOnWeaponZoomIn)),
+				value("weapon_zoom_out",			int(GameObject::eOnWeaponZoomOut)),
+				value("weapon_magazine_empty",		int(GameObject::eOnWeaponMagazineEmpty)),
+				//value("weapon_lowered",				int(GameObject::eOnWeaponLowered)),	 //For safemode
+				//value("weapon_raised",				int(GameObject::eOnWeaponRaised)),	 //For safemode
+
+				// inventory
+				value("item_to_belt",				int(GameObject::eItemToBelt)),
+				value("item_to_slot",				int(GameObject::eItemToSlot)),
+				value("item_to_ruck",				int(GameObject::eItemToRuck)),
+
+				// vehicle
+				value("on_attach_vehicle",			int(GameObject::eAttachVehicle)),
+				value("on_detach_vehicle",			int(GameObject::eDetachVehicle)),
+				value("on_use_vehicle",				int(GameObject::eUseVehicle)),
+
+				//-AVO
+				value("on_foot_step",				int(GameObject::eOnFootStep)),
+				//Dance Maniac
+				value("on_actor_jump",				int(GameObject::eOnActorJump)),
+				
+				
 				// anomal pseudogigant
 				value("shield_on", static_cast<int>(GameObject::eShieldOn)),
 				value("shield_off", static_cast<int>(GameObject::eShieldOff)),

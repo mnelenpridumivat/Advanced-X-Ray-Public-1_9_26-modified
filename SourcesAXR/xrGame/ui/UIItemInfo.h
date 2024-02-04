@@ -12,11 +12,11 @@ class CUIWpnParams;
 class CUIArtefactParams;
 class CUIFrameWindow;
 class UIInvUpgPropertiesWnd;
-class CUIOutfitInfo;
+class CUIOutfitItem;
+class CUIOutfitItemInfo;
 class CUIBoosterInfo;
 class CUICellItem;
 class CUIInventoryItem;
-class CUIItemConditionParams;
 
 extern const char * const 		fieldsCaptionColor;
 
@@ -48,6 +48,8 @@ public:
 	void				TryAddUpgradeInfo	(CInventoryItem& pInvItem);
 	void				TryAddBoosterInfo	(CInventoryItem& pInvItem);
 	void				TryAddItemInfo		(CInventoryItem& pInvItem);
+
+	void				ResetInventoryItem	();
 	
 	virtual void		Draw				();
 	bool				m_b_FitToHeight;
@@ -68,11 +70,10 @@ public:
 	// Lex Addon (correct by Suhar_) 7.08.2018		(end)
 
 	//CUIConditionParams*		UIConditionWnd;
-	CUIItemConditionParams* UIItemConditionParams;
 	CUIWpnParams*			UIWpnParams;
 	CUIArtefactParams*		UIArtefactParams;
 	UIInvUpgPropertiesWnd*	UIProperties;
-	CUIOutfitInfo*			UIOutfitInfo;
+	CUIOutfitItem*			UIOutfitItem;
 	CUIBoosterInfo*			UIBoosterInfo;
 	CUIInventoryItem*		UIInventoryItem;
 

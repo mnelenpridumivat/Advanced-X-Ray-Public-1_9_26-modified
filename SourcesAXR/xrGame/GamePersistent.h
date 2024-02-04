@@ -118,9 +118,14 @@ public:
 			float		GetActorPower			() override;
 			float		GetActorBleeding		() override;
 			float		GetActorIntoxication	() override;
+			bool		GetClearMaskProcess		() override;
 			bool		GetActorAliveStatus		();
 			bool		GetActor				();
 			bool		IsCamFirstEye			();
+			bool		GetActorHelmetStatus	();
+			bool		GetFogInfluenceVolumetricLight();
+			std::string	GetMoonPhase			() override;
+			u32			GetTimeHours			() override;
 
 	virtual void		EditorOnFrame			();
 

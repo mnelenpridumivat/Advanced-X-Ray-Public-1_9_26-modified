@@ -11,6 +11,7 @@
 #include "game_cl_base.h"
 #include "entity_alive.h"
 #include "ai_space.h"
+#include "level_changer.h"
 #include "ai_debug.h"
 //#include "PHdynamicdata.h"
 //#include "Physics.h"
@@ -74,15 +75,13 @@
 #include "embedded_editor/embedded_editor_main.h"
 #include "embedded_editor/editor_render.h"
 
-#include "../xrCore/_detail_collision_point.h"
+#include "alife_simulator.h"
+#include "alife_time_manager.h"
+
 #include "../xrEngine/CameraManager.h"
 #include "ActorEffector.h"
 
-ENGINE_API bool g_dedicated_server;
-ENGINE_API extern xr_vector<DetailCollisionPoint> level_detailcoll_points;
-ENGINE_API extern int ps_detail_enable_collision;
-ENGINE_API extern Fvector actor_position;
-ENGINE_API extern float ps_detail_collision_radius;
+#include "AdvancedXrayGameConstants.h"
 
 //extern BOOL	g_bDebugDumpPhysicsStep;
 extern CUISequencer * g_tutorial;
@@ -171,7 +170,7 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_ph_commander						= xr_new<CPHCommander>();
 	m_ph_commander_scripts				= xr_new<CPHCommander>();
 	//m_ph_commander_physics_worldstep	= xr_new<CPHCommander>();
-		
+
 #ifdef DEBUG
 	m_bSynchronization			= false;
 #endif	
@@ -343,7 +342,7 @@ CLevel::~CLevel()
 	if(g_tutorial2 && g_tutorial2->m_pStoredInputReceiver==this)
 		g_tutorial2->m_pStoredInputReceiver = NULL;
 
-	
+
 	if (IsDemoPlay())
 	{
 		StopPlayDemo();
@@ -675,14 +674,14 @@ void CLevel::OnFrame	()
 				const IServerStatistic* S = Server->GetStatistic();
 				F->SetHeightI	(0.015f);
 				F->OutSetI	(0.0f,0.5f);
-				F->SetColor	(D3DCOLOR_XRGB(0,255,0));
+				F->SetColor	(color_xrgb(0,255,0));
 				F->OutNext	("IN:  %4d/%4d (%2.1f%%)",	S->bytes_in_real,	S->bytes_in,	100.f*static_cast<float>(S->bytes_in_real)/static_cast<float>(S->bytes_in));
 				F->OutNext	("OUT: %4d/%4d (%2.1f%%)",	S->bytes_out_real,	S->bytes_out,	100.f*static_cast<float>(S->bytes_out_real)/static_cast<float>(S->bytes_out));
 				F->OutNext	("client_2_sever ping: %d",	net_Statistic.getPing());
 				F->OutNext	("SPS/Sended : %4d/%4d", S->dwBytesPerSec, S->dwBytesSended);
 				F->OutNext	("sv_urate/cl_urate : %4d/%4d", psNET_ServerUpdate, psNET_ClientUpdate);
 
-				F->SetColor	(D3DCOLOR_XRGB(255,255,255));
+				F->SetColor	(color_xrgb(255,255,255));
 
 				struct net_stats_functor
 				{
@@ -714,11 +713,11 @@ void CLevel::OnFrame	()
 
 				F->SetHeightI(0.015f);
 				F->OutSetI	(0.0f,0.5f);
-				F->SetColor	(D3DCOLOR_XRGB(0,255,0));
+				F->SetColor	(color_xrgb(0,255,0));
 				F->OutNext	("client_2_sever ping: %d",	net_Statistic.getPing());
 				F->OutNext	("sv_urate/cl_urate : %4d/%4d", psNET_ServerUpdate, psNET_ClientUpdate);
 
-				F->SetColor	(D3DCOLOR_XRGB(255,255,255));
+				F->SetColor	(color_xrgb(255,255,255));
 				F->OutNext("BReceivedPs(%2d), BSendedPs(%2d), Retried(%2d), Blocked(%2d)",
 					net_Statistic.getReceivedPerSec(),
 					net_Statistic.getSendedPerSec(),
@@ -761,7 +760,7 @@ void CLevel::OnFrame	()
 	m_ph_commander_scripts->update		();
 //	autosave_manager().update			();
 
-	//  
+	//просчитать полет пуль
 	Device.Statistic->TEST0.Begin		();
 	BulletManager().CommitRenderSet		();
 	Device.Statistic->TEST0.End			();
@@ -791,33 +790,6 @@ void CLevel::OnFrame	()
 	};
 
 	ShowEditor();
-
-	//-- Обновляем точки колизии
-	if (ps_detail_enable_collision)
-	{
-		//-- VlaGan: удаляем только позиции с is_explosion = false
-		xr_vector<DetailCollisionPoint> explosion_points;
-		for (const auto& point : level_detailcoll_points)
-		{
-			if (point.is_explosion)
-				explosion_points.push_back(point);
-		}
-
-		level_detailcoll_points.clear();
-
-		if (explosion_points.size())
-			level_detailcoll_points = explosion_points;
-
-		const xr_vector<CObject*>& active_objects = Objects.GetActiveObjects();
-
-		for (auto& obj : active_objects) //-- CEntityAlive будет лучше
-		{
-			auto gobj = smart_cast<CEntityAlive*>(obj);
-
-			if (gobj && actor_position.distance_to(gobj->Position()) <= ps_detail_collision_radius)
-				level_detailcoll_points.push_back(DetailCollisionPoint(gobj->Position(), gobj->ID()));
-		}
-	}
 }
 
 int		psLUA_GCSTEP					= 10			;
@@ -898,13 +870,14 @@ void CLevel::OnRender()
 		return;
 
 	Game().OnRender();
-	//  
+	//отрисовать трассы пуль
 	//Device.Statistic->TEST1.Begin();
 	BulletManager().Render();
 	//Device.Statistic->TEST1.End();
 
 	::Render->AfterWorldRender(); //--#SM+#-- +SecondVP+
 
+	//отрисовать интерфейc пользователя
 	HUD().RenderUI();
 
 #ifdef DEBUG
@@ -912,11 +885,11 @@ void CLevel::OnRender()
 	physics_world()->OnRender	();
 #endif // DEBUG
 
-	embedded_editor_render();
-
 #ifdef DEBUG
 	if (ai().get_level_graph())
 		ai().level_graph().render();
+
+	embedded_editor_render();
 
 #ifdef DEBUG_PRECISE_PATH
 	test_precise_path		();
@@ -945,6 +918,10 @@ void CLevel::OnRender()
 			CSpaceRestrictor	*space_restrictor = smart_cast<CSpaceRestrictor*>	(_O);
 			if (space_restrictor)
 				space_restrictor->OnRender();
+
+			CLevelChanger*		lchanger = smart_cast<CLevelChanger*>	(_O);
+			if (lchanger)
+				lchanger->OnRender();
 			CClimableObject		*climable		  = smart_cast<CClimableObject*>	(_O);
 			if(climable)
 				climable->OnRender();
@@ -1352,7 +1329,7 @@ void CLevel::OnAlifeSimulatorLoaded()
 }
 
 void CLevel::OnDestroyObject(std::uint16_t id)
-{ 
+{
 	m_just_destroyed.push_back(id);
 }
 
@@ -1454,4 +1431,47 @@ collide::rq_result CLevel::GetPickResult(Fvector pos, Fvector dir, float range, 
 	collide::ray_defs    RD(pos, dir, RQ.range, CDB::OPT_FULL_TEST, collide::rqtBoth);
 	Level().ObjectSpace.RayQuery(RQR, RD, GetPickDist_Callback, &RQ, NULL, ignore);
 	return RQ;
+}
+
+u32 CLevel::GetTimeHours()
+{
+	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
+	split_time((g_pGameLevel && Level().game) ? Level().GetGameTime() : ai().alife().time_manager().game_time(), year, month, day, hours, mins, secs, milisecs);
+	return hours;
+}
+
+std::string CLevel::GetMoonPhase()
+{
+	if (this && GameConstants::GetMoonPhasesMode() != "off")
+	{
+		std::vector<int> months = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+		auto g_time = get_time_struct();
+		u32 Y, M, D, h, m, s, ms;
+
+		g_time.get(Y, M, D, h, m, s, ms);
+
+		u32 start_year;
+		sscanf(pSettings->r_string("alife", "start_date"), "%*d.%*d.%d", &start_year);
+
+		int day = 365 * (Y - (start_year - 2)) + D;
+
+		for (int mm = 0; mm < M - 1; ++mm)
+			day += months[mm];
+
+		if (h >= 12)
+			day += 1;
+
+		int phase = -1;
+		std::string opt_moon_phase = GameConstants::GetMoonPhasesMode();
+
+		if (opt_moon_phase == "28days")
+			phase = static_cast<int>(std::fmod(day, 28) / 3.5);
+		else if (opt_moon_phase == "8days")
+			phase = day % 8;
+
+		return std::to_string(phase);
+	}
+
+	return std::to_string(-1);
 }

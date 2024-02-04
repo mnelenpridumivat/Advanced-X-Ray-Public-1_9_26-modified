@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "missile.h"
 //.#include "WeaponHUD.h"
-#include "PhysicsShell.h"
+#include "../xrphysics/PhysicsShell.h"
 #include "actor.h"
 #include "../xrEngine/CameraBase.h"
 #include "xrserver_objects_alife.h"
@@ -10,8 +10,8 @@
 #include "xr_level_controller.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "ai_object_location.h"
-#include "ExtendedGeom.h"
-#include "MathUtils.h"
+#include "../xrphysics/ExtendedGeom.h"
+#include "../xrphysics/MathUtils.h"
 #include "characterphysicssupport.h"
 #include "inventory.h"
 #include "../xrEngine/IGame_Persistent.h"
@@ -43,6 +43,8 @@ void create_force_progress()
 CMissile::CMissile(void) 
 {
 	m_dwStateTime		= 0;
+	m_bQuickThrowActive = false;
+	m_bIsContactGrenade = false;
 }
 
 CMissile::~CMissile(void) 
@@ -74,10 +76,10 @@ void CMissile::Load(LPCSTR section)
 	
 	m_vThrowPoint		= pSettings->r_fvector3(section,"throw_point");
 	m_vThrowDir			= pSettings->r_fvector3(section,"throw_dir");
-	m_vHudThrowPoint	= pSettings->r_fvector3(*hud_sect,"throw_point");
-	m_vHudThrowDir		= pSettings->r_fvector3(*hud_sect,"throw_dir");
 
 	m_ef_weapon_type	= READ_IF_EXISTS(pSettings,r_u32,section,"ef_weapon_type",u32(-1));
+
+	m_bIsContactGrenade = READ_IF_EXISTS(pSettings, r_bool, section, "is_contact_grenade", false);
 }
 
 BOOL CMissile::net_Spawn(CSE_Abstract* DC) 
@@ -253,7 +255,6 @@ void CMissile::shedule_Update(u32 dt)
 			m_dwDestroyTime = 0xffffffff;
 			VERIFY	(!m_pInventory);
 			Destroy	();
-			return;
 		}
 	} 
 }
@@ -274,8 +275,11 @@ void CMissile::State(u32 state)
 		} break;
 	case eHiding:
 		{
-			SetPending			(TRUE);
-			PlayHUDMotion("anm_hide", TRUE, this, GetState());
+			if(H_Parent())
+			{
+				SetPending			(TRUE);
+				PlayHUDMotion		("anm_hide", TRUE, this, GetState());
+			}
 		} break;
 	case eHidden:
 		{
@@ -296,6 +300,10 @@ void CMissile::State(u32 state)
 		{
 			SetPending			(TRUE);
 			m_fThrowForce		= m_fMinForce;
+
+			if (m_bQuickThrowActive)
+				m_throw = true;
+
 			PlayHUDMotion		("anm_throw_begin", TRUE, this, GetState());
 		} break;
 	case eReady:
@@ -310,8 +318,27 @@ void CMissile::State(u32 state)
 		} break;
 	case eThrowEnd:
 		{
+			if (m_bQuickThrowActive)
+			{
+				Actor()->inventory().Activate(Actor()->GetLastActiveSlot());
+				m_bQuickThrowActive = false;
+				return;
+			}
+
 			SwitchState			(eShowing); 
 		} break;
+	case eThrowQuick:
+		{	  
+			if (isHUDAnimationExist("anm_throw_quick"))
+			{
+				if (!m_fake_missile && !smart_cast<CMissile*>(H_Parent()))
+					spawn_fake_missile();
+
+				PlayHUDMotion("anm_throw_quick", TRUE, this, GetState());
+			}
+			else
+				SwitchState(eThrowStart);
+		}
 /*	case eBore:
 		{
 			PlaySound			(sndPlaying,Position());
@@ -341,7 +368,12 @@ void CMissile::OnAnimationEnd(u32 state)
 	case eShowing:
 		{
 			setVisible(TRUE);
-			SwitchState(eIdle);
+
+			if (!isHUDAnimationExist("anm_throw_quick") && m_bQuickThrowActive)
+				SwitchState(eThrowStart);
+			else
+				SwitchState(eIdle);
+
 		} break;
 	case eThrowStart:
 		{
@@ -361,6 +393,10 @@ void CMissile::OnAnimationEnd(u32 state)
 		{
 			SwitchState	(eShowing);
 		} break;
+	case eThrowQuick:
+		{
+			SwitchState(eThrowEnd);
+		}
 	default:
 		inherited::OnAnimationEnd(state);
 	}
@@ -456,7 +492,7 @@ void CMissile::setup_throw_params()
 void CMissile::OnMotionMark(u32 state, const motion_marks& M)
 {
 	inherited::OnMotionMark(state, M);
-	if(state==eThrow && !m_throw)
+	if((state == eThrow || state == eThrowQuick) && !m_throw)
 	{
 		if (H_Parent())
 			Throw	();
@@ -480,7 +516,7 @@ void CMissile::Throw()
 	CInventoryOwner						*inventory_owner = smart_cast<CInventoryOwner*>(H_Parent());
 	VERIFY								(inventory_owner);
 	if (inventory_owner->use_default_throw_force())
-		m_fake_missile->m_fThrowForce	= m_constpower ? m_fConstForce : m_fThrowForce; 
+		m_fake_missile->m_fThrowForce	= (m_constpower || m_bQuickThrowActive) ? m_fConstForce : m_fThrowForce;
 	else
 		m_fake_missile->m_fThrowForce	= inventory_owner->missile_throw_force(); 
 	
@@ -545,9 +581,11 @@ bool CMissile::Action(s32 cmd, u32 flags)
 			m_constpower = true;			
 			if(flags&CMD_START) 
 			{
-				m_throw = true;
 				if(GetState()==eIdle) 
+				{
+					m_throw = true;
 					SwitchState(eThrowStart);
+				}
 			} 
 			return true;
 		}break;
@@ -721,27 +759,53 @@ void CMissile::render_item_ui()
 	g_MissileForceShape->Draw	();
 }
 
-void	 CMissile::ExitContactCallback(bool& do_colide,bool bo1,dContact& c,SGameMtl * /*material_1*/,SGameMtl * /*material_2*/)
+void CMissile::ExitContactCallback(bool& do_colide, bool bo1, dContact& c, SGameMtl* material_1, SGameMtl* material_2)
 {
 	dxGeomUserData	*gd1=NULL,	*gd2=NULL;
 	if(bo1)
 	{
-		gd1 =retrieveGeomUserData(c.geom.g1);
-		gd2 =retrieveGeomUserData(c.geom.g2);
+		gd1 =PHRetrieveGeomUserData(c.geom.g1);
+		gd2 =PHRetrieveGeomUserData(c.geom.g2);
 	}
 	else
 	{
-		gd2 =retrieveGeomUserData(c.geom.g1);
-		gd1 =retrieveGeomUserData(c.geom.g2);
+		gd2 =PHRetrieveGeomUserData(c.geom.g1);
+		gd1 =PHRetrieveGeomUserData(c.geom.g2);
 	}
 	if(gd1&&gd2&&(CPhysicsShellHolder*)gd1->callback_data==gd2->ph_ref_object)	
-																				do_colide=false;
+		do_colide=false;
+
+	SGameMtl* material = 0;
+	CMissile* l_this = gd1 ? smart_cast<CMissile*>(gd1->ph_ref_object) : NULL;
+	Fvector vUp;
+
+	if (!l_this)
+	{
+		l_this = gd2 ? smart_cast<CMissile*>(gd2->ph_ref_object) : NULL;
+		material = material_1;
+
+	}
+	else
+		material = material_2;
+
+	VERIFY(material);
+
+	if (material->Flags.is(SGameMtl::flPassable)) return;
+
+	if (!l_this || !l_this->m_bIsContactGrenade) return;
+
+	CGameObject* l_pOwner = gd1 ? smart_cast<CGameObject*>(gd1->ph_ref_object) : NULL;
+
+	if (!l_pOwner || l_pOwner == (CGameObject*)l_this) l_pOwner = gd2 ? smart_cast<CGameObject*>(gd2->ph_ref_object) : NULL;
+
+	if (!l_pOwner || l_pOwner != l_this->m_pOwner)
+		l_this->set_destroy_time(5);
 }
 
-void CMissile::GetBriefInfo(xr_string& str_name, xr_string& icon_sect_name, xr_string& str_count, string16& fire_mode)
+bool CMissile::GetBriefInfo(II_BriefInfo& info)
 {
-	str_name		= NameShort();
-	str_count		= "";
-	icon_sect_name	= "";
+	info.clear();
+	info.name._set(m_nameShort);
+	return true;
 }
 

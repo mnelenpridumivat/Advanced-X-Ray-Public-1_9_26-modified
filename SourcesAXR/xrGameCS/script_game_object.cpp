@@ -35,6 +35,7 @@
 #include "actor.h"
 #include "actor_memory.h"
 #include "visual_memory_manager.h"
+#include "physics_shell_scripted.h"
 #include "PDA.h"
 #include "ai/phantom/phantom.h"
 #include "UIGameSP.h"
@@ -141,7 +142,7 @@ CGameObject &CScriptGameObject::object() const
 	}
 
 	ai().script_engine().script_log(eLuaMessageTypeError, "you are trying to use a destroyed object [%x]", m_game_object);
-	R_ASSERT(m_game_object && m_game_object->lua_game_object() == this, "Probably, you are trying to use a destroyed object!");
+	R_ASSERT2(m_game_object && m_game_object->lua_game_object() == this, "Probably, you are trying to use a destroyed object!");
 #endif // #ifdef DEBUG
 	return			(*m_game_object);
 }
@@ -190,11 +191,14 @@ const CScriptEntityAction *CScriptGameObject::GetActionByIndex(u32 action_index)
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-CPhysicsShell* CScriptGameObject::get_physics_shell() const
+cphysics_shell_scripted* CScriptGameObject::get_physics_shell() const
 {
 	CPhysicsShellHolder* ph_shell_holder =smart_cast<CPhysicsShellHolder*>(&object());
-	if(! ph_shell_holder) return NULL;
-	return ph_shell_holder->PPhysicsShell();
+	if(! ph_shell_holder) 
+		return NULL;
+	if(! ph_shell_holder->PPhysicsShell() ) 
+		return NULL;
+	return get_script_wrapper<cphysics_shell_scripted>(*ph_shell_holder->PPhysicsShell());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -605,6 +609,8 @@ void CScriptGameObject::SetPsyFactor(float val)
 		return;
 	}
 	pda->m_psy_factor = val;
+
+	clamp(pda->m_psy_factor, 0.0f, 1.0f);
 }
 
 void CScriptGameObject::eat				(CScriptGameObject *item)
@@ -807,7 +813,7 @@ bool CScriptGameObject::Use(CScriptGameObject* obj)
 		ActorMenu.SetInvBox(pBox);
 
 		ActorMenu.SetMenuMode(mmDeadBodySearch);
-		ActorMenu.ShowDialog(true);
+		HUD().GetUI()->StartStopMenu(&ActorMenu, true);
 
 		return true;
 	}
@@ -830,7 +836,7 @@ bool CScriptGameObject::Use(CScriptGameObject* obj)
 		ActorMenu.SetPartner(pOtherOwner);
 
 		ActorMenu.SetMenuMode(mmDeadBodySearch);
-		ActorMenu.ShowDialog(true);
+		HUD().GetUI()->StartStopMenu(&ActorMenu, true);
 
 		return true;
 	}
@@ -858,7 +864,7 @@ void CScriptGameObject::StartTrade(CScriptGameObject* obj)
 	ActorMenu.SetPartner(pOtherOwner);
 
 	ActorMenu.SetMenuMode(mmTrade);
-	ActorMenu.ShowDialog(true);
+	HUD().GetUI()->StartStopMenu(&ActorMenu, true);
 }
 
 void CScriptGameObject::StartUpgrade(CScriptGameObject* obj)
@@ -881,7 +887,7 @@ void CScriptGameObject::StartUpgrade(CScriptGameObject* obj)
 	ActorMenu.SetPartner(pOtherOwner);
 
 	ActorMenu.SetMenuMode(mmUpgrade);
-	ActorMenu.ShowDialog(true);
+	HUD().GetUI()->StartStopMenu(&ActorMenu, true);
 }
 
 #include "stalker_animation_manager.h"

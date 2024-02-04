@@ -27,11 +27,14 @@
 #include "map_manager.h"
 #include "map_spot.h"
 #include "map_location.h"
-#include "phworld.h"
+#include "physics_world_scripted.h"
 #include "alife_simulator.h"
 #include "alife_time_manager.h"
 #include "game_sv_single.h"
+#include "../xrPhysics/ElevatorState.h"
 #include "../xrEngine/Rain.h"
+
+#include "CustomTimer.h"
 
 using namespace luabind;
 
@@ -90,6 +93,47 @@ CScriptGameObject *get_object_by_id(u16 id)
 		return NULL;
 
 	return pGameObject->lua_game_object();
+}
+
+LPCSTR get_past_wdesc()
+{
+	return			(g_pGamePersistent->Environment().Current[0] ? g_pGamePersistent->Environment().Current[0]->m_identifier.c_str() : "null");
+}
+
+LPCSTR get_next_wdesc()
+{
+	return			(g_pGamePersistent->Environment().Current[1] ? g_pGamePersistent->Environment().Current[1]->m_identifier.c_str() : "null");
+}
+
+float get_past_wdesc_execution_time()
+{
+	return			(g_pGamePersistent->Environment().Current[0] ? g_pGamePersistent->Environment().Current[0]->exec_time : -1.f);
+}
+
+float get_next_wdesc_execution_time()
+{
+	return			(g_pGamePersistent->Environment().Current[1] ? g_pGamePersistent->Environment().Current[1]->exec_time : -1.f);
+}
+
+float get_weather_game_time()
+{
+	return			(&g_pGamePersistent->Environment() ? g_pGamePersistent->Environment().GetGameTime() : -1.f);
+}
+
+void set_past_wdesc(LPCSTR WeatherSection)
+{
+	if (&g_pGamePersistent->Environment())
+	{
+		g_pGamePersistent->Environment().SetEnvDesc(WeatherSection, g_pGamePersistent->Environment().Current[0]);
+	}
+}
+
+void set_next_wdesc(LPCSTR WeatherSection)
+{
+	if (&g_pGamePersistent->Environment())
+	{
+		g_pGamePersistent->Environment().SetEnvDesc(WeatherSection, g_pGamePersistent->Environment().Current[1]);
+	}
 }
 
 LPCSTR get_weather	()
@@ -495,9 +539,18 @@ void remove_calls_for_object(const luabind::object &lua_object)
 	Level().ph_commander_scripts().remove_calls(&c);
 }
 
-CPHWorld* physics_world()
+#include "patrol_path.h"
+void patrol_path_add( LPCSTR patrol_path, CPatrolPath* path ) {
+  ai().patrol_paths_raw().add_path( shared_str( patrol_path ), path );
+}
+
+void patrol_path_remove( LPCSTR patrol_path ) {
+  ai().patrol_paths_raw().remove_path( shared_str( patrol_path ) );
+}
+
+cphysics_world_scripted* physics_world_scripted()
 {
-	return	ph_world;
+	return	get_script_wrapper<cphysics_world_scripted>(*physics_world());
 }
 CEnvironment *environment()
 {
@@ -715,6 +768,21 @@ u32 vertex_id	(Fvector position)
 	return	(ai().level_graph().vertex_id(position));
 }
 
+u32 nearest_vertex_id(const Fvector& vec)
+{
+	return ai().level_graph().vertex_id(vec);
+}
+
+bool valid_vertex_id(u32 level_vertex_id)
+{
+	return ai().level_graph().valid_vertex_id(level_vertex_id);
+}
+
+u32 vertex_count()
+{
+	return ai().level_graph().header().vertex_count();
+}
+
 u32 render_get_dx_level()
 {
 	return ::Render->get_dx_level();
@@ -901,14 +969,6 @@ u8 get_active_cam()
 	return 255;
 }
 
-void patrol_path_add( LPCSTR patrol_path, CPatrolPath* path ) {
-  ai().patrol_paths_raw().add_path( shared_str( patrol_path ), path );
-}
-
-void patrol_path_remove( LPCSTR patrol_path ) {
-  ai().patrol_paths_raw().remove_path( shared_str( patrol_path ) );
-}
-
 void set_active_cam(u8 mode)
 {
 	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
@@ -920,6 +980,77 @@ void set_active_cam(u8 mode)
 void g_send(NET_Packet& P, bool bReliable = false, bool bSequential = true, bool bHighPriority = false, bool bSendImmediately = false)
 {
 	Level().Send(P);
+}
+
+void create_custom_timer(LPCSTR name, int start_value, int mode = 0)
+{
+	if (!Actor()->TimerManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
+		return;
+	}
+
+	Actor()->TimerManager->CreateTimer(name, start_value, mode);
+}
+
+void start_custom_timer(LPCSTR name)
+{
+	if (!Actor()->TimerManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
+		return;
+	}
+
+	Actor()->TimerManager->StartTimer(name);
+}
+
+void stop_custom_timer(LPCSTR name)
+{
+	if (!Actor()->TimerManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
+		return;
+	}
+
+	Actor()->TimerManager->StopTimer(name);
+}
+
+void reset_custom_timer(LPCSTR name)
+{
+	if (!Actor()->TimerManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
+		return;
+	}
+
+	Actor()->TimerManager->ResetTimer(name);
+}
+
+void delete_custom_timer(LPCSTR name)
+{
+	if (!Actor()->TimerManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
+		return;
+	}
+
+	Actor()->TimerManager->DeleteTimer(name);
+}
+
+int get_custom_timer(LPCSTR name)
+{
+	if (!Actor()->TimerManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
+		return 0;
+	}
+
+	return Actor()->TimerManager->GetTimerValue(name);
+}
+
+std::string get_moon_phase()
+{
+	return Level().GetMoonPhase().c_str();
 }
 
 #pragma optimize("s",on)
@@ -965,11 +1096,20 @@ void CLevel::script_register(lua_State *L)
 
 		def("get_weather",						get_weather),
 		def("set_weather",						set_weather),
+		def("set_past_weather",					set_past_wdesc),
+		def("set_next_weather",					set_next_wdesc),
+		def("set_weather_fx",					set_weather_fx),
+		def("get_weather_game_time",			get_weather_game_time),
+		def("get_past_wdesc_execution_time",	get_past_wdesc_execution_time),
+		def("get_next_wdesc_execution_time",	get_next_wdesc_execution_time),
+		def("get_past_weather",					get_past_wdesc),
+		def("get_next_weather",					get_next_wdesc),
 		def("set_weather_fx",					set_weather_fx),
 		def("start_weather_fx_from_time",		start_weather_fx_from_time),
 		def("is_wfx_playing",					is_wfx_playing),
 		def("get_wfx_time",						get_wfx_time),
 		def("stop_weather_fx",					stop_weather_fx),
+		def("get_moon_phase",					get_moon_phase),
 
 		def("environment",						environment),
 		
@@ -992,8 +1132,8 @@ void CLevel::script_register(lua_State *L)
 		def("vertex_position",					vertex_position),
 		def("name",								get_name),
 		def("prefetch_sound",					prefetch_sound),
-		def( "patrol_path_add", &patrol_path_add ),
-		def( "patrol_path_remove", &patrol_path_remove ),
+		def("patrol_path_add",					&patrol_path_add ),
+		def("patrol_path_remove",				&patrol_path_remove ),
 		def("client_spawn_manager",				get_client_spawn_manager),
 
 		def("rain_wetness",						rain_wetness),
@@ -1031,7 +1171,7 @@ void CLevel::script_register(lua_State *L)
 
 		def("iterate_sounds",					&iterate_sounds1),
 		def("iterate_sounds",					&iterate_sounds2),
-		def("physics_world",					&physics_world),
+		def("physics_world",					&physics_world_scripted),
 		def("get_snd_volume",					&get_snd_volume),
 		def("set_snd_volume",					&set_snd_volume),
 		def("add_cam_effector",					&add_cam_effector),
@@ -1046,8 +1186,18 @@ void CLevel::script_register(lua_State *L)
 		def("remove_complex_effector",			&remove_complex_effector),
 		
 		def("vertex_id",						&vertex_id),
+		def("nearest_vertex_id",				&nearest_vertex_id),
+		def("valid_vertex_id",					valid_vertex_id),
+		def("vertex_count",						vertex_count),
 
-		def("game_id",							&GameID)
+		def("game_id",							&GameID),
+
+		def("create_custom_timer",				&create_custom_timer),
+		def("start_custom_timer",				&start_custom_timer),
+		def("stop_custom_timer",				&stop_custom_timer),
+		def("reset_custom_timer",				&reset_custom_timer),
+		def("delete_custom_timer",				&delete_custom_timer),
+		def("get_custom_timer",					&get_custom_timer)
 	],
 	
 	module(L,"actor_stats")

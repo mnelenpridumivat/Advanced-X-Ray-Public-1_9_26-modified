@@ -24,11 +24,11 @@
 #include "../xrServerEntitiesCS/script_engine.h"
 #include "HUDManager.h"
 #include "PDA.h"
+#include "CustomBackpack.h"
 
 CUIGameSP::CUIGameSP()
+:m_game(NULL)
 {
-	m_game			= NULL;
-	
 	TalkMenu		= xr_new<CUITalkWnd>		();
 	UIChangeLevelWnd= xr_new<CChangeLevelWnd>	();
 }
@@ -56,9 +56,6 @@ void CUIGameSP::HideShownDialogs()
 	{
 		mir->GetHolder()->StartStopMenu( mir, true );
 	}
-
-	HideActorMenu();
-	HidePdaMenu();
 }
 
 void CUIGameSP::SetClGame (game_cl_GameState* g)
@@ -81,6 +78,11 @@ bool CUIGameSP::IR_OnKeyboardPress(int dik)
 	if (!EA || !EA->g_Alive() )	return false;
 
 	CActor *pActor = smart_cast<CActor*>(pInvOwner);
+	if( !pActor ) 
+		return false;
+
+	if( !pActor->g_Alive() )	
+		return false;
 
 	switch ( get_binded_action(dik) )
 	{
@@ -102,41 +104,47 @@ bool CUIGameSP::IR_OnKeyboardPress(int dik)
 		if (psActorFlags.test(AF_3D_PDA) && HUD().GetUI()->UIGame()->PdaMenu().IsShown())
 			pActor->inventory().Activate(NO_ACTIVE_SLOT);
 
-			ShowActorMenu();
+			CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(pActor->inventory().ItemFromSlot(BACKPACK_SLOT));
+
+			if (!GameConstants::GetBackpackAnimsEnabled() || !backpack)
+				ShowActorMenu();
+
 		break;
 		}
 
 	case kSCORES:
 		{
-			CActor *pActor = smart_cast<CActor*>(pInvOwner);
-			if( !pActor ) return false;
-			if( !pActor->g_Alive() )	return false;
+			CActor* pActor = smart_cast<CActor*>(pInvOwner);
+			if (!pActor) return false;
+			if (!pActor->g_Alive())	return false;
 
+			SDrawStaticStruct* sm = AddCustomStatic("main_task", true);
+			CGameTask* t1 = Level().GameTaskManager().ActiveTask(eTaskTypeStoryline);
+			CGameTask* t2 = Level().GameTaskManager().ActiveTask(eTaskTypeAdditional);
 
-			SDrawStaticStruct* sm	= AddCustomStatic("main_task", true);
-			CGameTask* t1			= Level().GameTaskManager().ActiveTask(eTaskTypeStoryline);
-			CGameTask* t2			= Level().GameTaskManager().ActiveTask(eTaskTypeAdditional);
-			if(t1 && t2)
+			sm->m_static->SetTextST((t1) ? t1->m_Title.c_str() : "st_no_active_task");
+
+			if (t1 && t2)
 			{
-				sm->m_static->SetTextST		(t1->m_Title.c_str());
-				SDrawStaticStruct* sm2		= AddCustomStatic("secondary_task", true);
-				sm2->m_static->SetTextST	(t2->m_Title.c_str());
+				SDrawStaticStruct* sm2 = AddCustomStatic("secondary_task", true);
+				sm2->m_static->SetTextST((t2) ? t2->m_Title.c_str() : "");
 
-				//if (t1->m_difficulty_icon_name.c_str())
-				//	sm->m_static->InitTexture(t1->m_difficulty_icon_name.c_str());
-			}
-			else if(t1 || t2)
+				if (t1 && t1->m_difficulty_icon_name.c_str())
+					sm->m_static->InitTexture(t1->m_difficulty_icon_name.c_str());
+			} 
+			else if (t1 || t2)
 			{
-				CGameTask* t				= (t1)?t1:t2;
-				sm->m_static->SetTextST		(t->m_Title.c_str());
+				CGameTask* t = (t1) ? t1 : t2;
+				sm->m_static->SetTextST((t) ? t->m_Title.c_str() : "st_no_active_task");
 
-				//if (t->m_difficulty_icon_name.c_str())
-				//	sm->m_static->InitTexture(t->m_difficulty_icon_name.c_str());
+				if (t && t->m_difficulty_icon_name.c_str())
+					sm->m_static->InitTexture(t->m_difficulty_icon_name.c_str());
 			}
 			else
-				sm->m_static->SetTextST	("st_no_active_task");
-
-		}break;
+				sm->m_static->SetTextST("st_no_active_task");
+			
+			break;
+		}
 	}
 	return false;
 }
@@ -191,7 +199,7 @@ void CUIGameSP::StartCarBody(CInventoryOwner* pActorInv, CInventoryOwner* pOther
 	m_ActorMenu->SetPartner		(pOtherOwner);
 
 	m_ActorMenu->SetMenuMode	(mmDeadBodySearch);
-	m_game->StartStopMenu		(m_ActorMenu,true);
+	m_game->StartStopMenu(m_ActorMenu, true);
 }
 
 void CUIGameSP::StartCarBody(CInventoryOwner* pActorInv, CInventoryBox* pBox) //Deadbody search
@@ -203,7 +211,7 @@ void CUIGameSP::StartCarBody(CInventoryOwner* pActorInv, CInventoryBox* pBox) //
 	VERIFY( pBox );
 
 	m_ActorMenu->SetMenuMode	(mmDeadBodySearch);
-	m_game->StartStopMenu		(m_ActorMenu,true);
+	m_game->StartStopMenu(m_ActorMenu, true);
 }
 
 void CUIGameSP::StartCarBody(CInventoryOwner* pActorInv, CCar* pCar) //Car trunk search
@@ -294,7 +302,7 @@ void CChangeLevelWnd::OnCancel()
 	}
 }
 
-bool CChangeLevelWnd::OnKeyboard(int dik, EUIMessages keyboard_action)
+bool CChangeLevelWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 {
 	if(keyboard_action==WINDOW_KEY_PRESSED)
 	{
@@ -302,7 +310,7 @@ bool CChangeLevelWnd::OnKeyboard(int dik, EUIMessages keyboard_action)
 			OnCancel		();
 		return true;
 	}
-	return inherited::OnKeyboard(dik, keyboard_action);
+	return inherited::OnKeyboardAction(dik, keyboard_action);
 }
 
 bool g_block_pause	= false;
@@ -317,13 +325,13 @@ void CChangeLevelWnd::Show()
 	
 
 	g_block_pause							= true;
-	GAME_PAUSE							(TRUE, TRUE, TRUE, "CChangeLevelWnd_show");
+	GAME_PAUSE								(TRUE, TRUE, TRUE, "CChangeLevelWnd_show");
 	bShowPauseString						= FALSE;
 }
 
 void CChangeLevelWnd::Hide()
 {
 	g_block_pause							= false;
-	GAME_PAUSE							(FALSE, TRUE, TRUE, "CChangeLevelWnd_hide");
+	GAME_PAUSE								(FALSE, TRUE, TRUE, "CChangeLevelWnd_hide");
 }
 

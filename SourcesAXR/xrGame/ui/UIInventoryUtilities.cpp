@@ -46,20 +46,21 @@ const LPCSTR st_months[12]= // StringTable for GetDateAsString()
 	"month_december"
 };
 
-ui_shader	*g_BuyMenuShader			= NULL;
-ui_shader	*g_EquipmentIconsShader		= NULL;
-ui_shader	*g_MPCharIconsShader		= NULL;
-ui_shader	*g_OutfitUpgradeIconsShader	= NULL;
-ui_shader	*g_WeaponUpgradeIconsShader	= NULL;
-ui_shader	*g_tmpWMShader				= NULL;
+ui_shader	*g_BuyMenuShader			= nullptr;
+ui_shader	*g_EquipmentIconsShader		= nullptr;
+ui_shader	*g_MPCharIconsShader		= nullptr;
+ui_shader	*g_OutfitUpgradeIconsShader	= nullptr;
+ui_shader	*g_WeaponUpgradeIconsShader	= nullptr;
+ui_shader	*g_DeviceUpgradeIconsShader = nullptr;
+ui_shader	*g_tmpWMShader				= nullptr;
 static CUIStatic*	GetUIStatic				();
 
 typedef				std::pair<CHARACTER_RANK_VALUE, shared_str>	CharInfoStringID;
 DEF_MAP				(CharInfoStrings, CHARACTER_RANK_VALUE, shared_str);
 
-CharInfoStrings		*charInfoReputationStrings	= NULL;
-CharInfoStrings		*charInfoRankStrings		= NULL;
-CharInfoStrings		*charInfoGoodwillStrings	= NULL;
+CharInfoStrings		*charInfoReputationStrings	= nullptr;
+CharInfoStrings		*charInfoRankStrings		= nullptr;
+CharInfoStrings		*charInfoGoodwillStrings	= nullptr;
 
 void InventoryUtilities::CreateShaders()
 {
@@ -84,6 +85,9 @@ void InventoryUtilities::DestroyShaders()
 
 	xr_delete(g_WeaponUpgradeIconsShader);
 	g_WeaponUpgradeIconsShader = 0;
+
+	xr_delete(g_DeviceUpgradeIconsShader);
+	g_DeviceUpgradeIconsShader = 0;
 
 	xr_delete(g_tmpWMShader);
 	g_tmpWMShader = 0;
@@ -230,6 +234,17 @@ const ui_shader& InventoryUtilities::GetOutfitUpgradeIconsShader()
 	}
 
 	return *g_OutfitUpgradeIconsShader;
+}
+
+const ui_shader& InventoryUtilities::GetDeviceUpgradeIconsShader()
+{
+	if (!g_DeviceUpgradeIconsShader)
+	{
+		g_DeviceUpgradeIconsShader = xr_new<ui_shader>();
+		(*g_DeviceUpgradeIconsShader)->create("hud\\default", "mfs_team\\ui\\ui_actor_devices");
+	}
+
+	return *g_DeviceUpgradeIconsShader;
 }
 
 const ui_shader& InventoryUtilities::GetWeaponUpgradeIconsShader()
@@ -394,10 +409,31 @@ void InventoryUtilities::UpdateWeightStr(CUITextWnd &wnd, CUITextWnd &wnd_max, C
 	float max		= pInvOwner->MaxCarryWeight();
 
 	LPCSTR kg_str	= CStringTable().translate( "st_kg" ).c_str();
-	xr_sprintf		(buf, "%.1f %s", total, kg_str);
-	wnd.SetText	(buf);
+	xr_sprintf		(buf, "%.1f", total);
+	wnd.SetText		(buf);
 
-	xr_sprintf		(buf, "(max %.1f %s)", max, kg_str);
+	xr_sprintf		(buf, "%s %.1f %s", "/", max, kg_str);
+	wnd_max.SetText	(buf);
+}
+
+void InventoryUtilities::UpdateCapacityStr(CUITextWnd& wnd, CUITextWnd& wnd_max, CInventoryOwner* pInvOwner)
+{
+ 	R_ASSERT		(pInvOwner);
+	string128		buf;
+
+	CActor* Actor = smart_cast<CActor*>(pInvOwner);
+
+	if (!Actor)
+		return;
+
+	float total		= Actor->GetInventoryFullness();
+	float max			= Actor->MaxCarryInvCapacity();
+
+	LPCSTR lit_str = CStringTable().translate( "st_liters" ).c_str();
+	xr_sprintf		(buf, "%.1f", total);
+	wnd.SetText		(buf);
+
+	xr_sprintf		(buf, "%s %.1f %s", "/", max, lit_str);
 	wnd_max.SetText	(buf);
 }
 

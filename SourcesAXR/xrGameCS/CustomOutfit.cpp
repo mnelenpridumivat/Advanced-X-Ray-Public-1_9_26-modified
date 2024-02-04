@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "customoutfit.h"
-#include "PhysicsShell.h"
+#include "../xrphysics/PhysicsShell.h"
 #include "inventory_space.h"
 #include "Inventory.h"
 #include "Actor.h"
@@ -28,11 +28,15 @@ CCustomOutfit::CCustomOutfit()
 	m_boneProtection = xr_new<SBoneProtections>();
 	m_artefact_count = 0;
 	m_BonesProtectionSect = nullptr;
-	m_bUseFilter = false;
+
 	m_b_HasGlass = false;
+	m_bUseFilter = false;
+	m_bHasLSS = false;
 	m_NightVisionType = 0;
+	m_fNightVisionLumFactor = 0.0f;
 	m_fFilterDegradation = 0.0f;
 	m_fFilterCondition = 1.0f;
+	m_fInventoryCapacity = 0.0f;
 }
 
 CCustomOutfit::~CCustomOutfit() 
@@ -73,6 +77,55 @@ void CCustomOutfit::load(IReader& input_packet)
 	load_data(m_fFilterCondition, input_packet);
 }
 
+void CCustomOutfit::OnH_A_Chield()
+{
+	inherited::OnH_A_Chield();
+}
+
+void CCustomOutfit::UpdateFilterCondition(void)
+{
+	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
+
+	if (outfit && m_bUseFilter)
+	{
+		float m_radia_hit = HUD().GetUI()->UIGame()->get_zone_cur_power(ALife::eHitTypeRadiation) * 4;
+		float m_chemical_hit = HUD().GetUI()->UIGame()->get_zone_cur_power(ALife::eHitTypeChemicalBurn);
+		float uncharge_coef = ((m_fFilterDegradation + m_radia_hit + m_chemical_hit) / 16) * Device.fTimeDelta;		
+
+		m_fFilterCondition -= uncharge_coef;
+		clamp(m_fFilterCondition, 0.0f, m_fMaxFilterCondition);
+
+		float condition = 1.f * m_fFilterCondition;
+		float percent = outfit->m_fFilterCondition * 100;
+
+		if (percent > 20.0f)
+		{
+			if (!fis_zero(outfit->m_HitTypeProtection[ALife::eHitTypeRadiation]) && !fis_zero(m_ConstHitTypeProtection[ALife::eHitTypeRadiation]))
+				outfit->m_HitTypeProtection[ALife::eHitTypeRadiation] = (m_ConstHitTypeProtection[ALife::eHitTypeRadiation] / 100) * percent;
+			if (!fis_zero(outfit->m_HitTypeProtection[ALife::eHitTypeChemicalBurn]) && !fis_zero(m_ConstHitTypeProtection[ALife::eHitTypeChemicalBurn]))
+				outfit->m_HitTypeProtection[ALife::eHitTypeChemicalBurn] = (m_ConstHitTypeProtection[ALife::eHitTypeChemicalBurn] / 100) * percent;
+		}
+		else
+		{
+			if (!fis_zero(outfit->m_HitTypeProtection[ALife::eHitTypeRadiation]) && !fis_zero(m_ConstHitTypeProtection[ALife::eHitTypeRadiation]))
+				outfit->m_HitTypeProtection[ALife::eHitTypeRadiation] = (m_ConstHitTypeProtection[ALife::eHitTypeRadiation] / 100) * 20.0f;
+			if (!fis_zero(outfit->m_HitTypeProtection[ALife::eHitTypeChemicalBurn]) && !fis_zero(m_ConstHitTypeProtection[ALife::eHitTypeChemicalBurn]))
+				outfit->m_HitTypeProtection[ALife::eHitTypeChemicalBurn] = (m_ConstHitTypeProtection[ALife::eHitTypeChemicalBurn] / 100) * 20.0f;
+		}
+	}
+}
+
+void CCustomOutfit::UpdateCL()
+{
+	inherited::UpdateCL();
+
+	if (Actor())
+		DynamicHudGlass::UpdateDynamicHudGlass();
+
+	if (GameConstants::GetOutfitUseFilters())
+		UpdateFilterCondition();
+}
+
 void CCustomOutfit::Load(LPCSTR section) 
 {
 	inherited::Load(section);
@@ -93,24 +146,24 @@ void CCustomOutfit::Load(LPCSTR section)
 
 	m_boneProtection->m_fHitFracActor = pSettings->r_float(section, "hit_fraction_actor");
 
+	if (pSettings->line_exist(section, "nightvision_sect"))
+		m_NightVisionSect = pSettings->r_string(section, "nightvision_sect");
+	else
+		m_NightVisionSect = "";
+
 	if (pSettings->line_exist(section, "actor_visual"))
 		m_ActorVisual = pSettings->r_string(section, "actor_visual");
 	else
 		m_ActorVisual = NULL;
 
 	m_ef_equipment_type		= pSettings->r_u32(section,"ef_equipment_type");
-	if ( pSettings->line_exist(section, "power_loss") )
-	{
-		m_fPowerLoss = pSettings->r_float(section, "power_loss");
-		clamp( m_fPowerLoss, 0.0f, 1.0f );
-	}
-	else
-	{
-		m_fPowerLoss = 1.0f;
-	}
+	m_fPowerLoss			= READ_IF_EXISTS(pSettings, r_float, section, "power_loss",    1.0f );
+	clamp					( m_fPowerLoss, 0.0f, 1.0f );
 
 	m_additional_weight				= pSettings->r_float(section,"additional_inventory_weight");
 	m_additional_weight2			= pSettings->r_float(section,"additional_inventory_weight2");
+	
+	m_fInventoryCapacity		= READ_IF_EXISTS(pSettings, r_float, section, "inventory_capacity", 0.0f);
 
 	m_fHealthRestoreSpeed		= READ_IF_EXISTS(pSettings, r_float, section, "health_restore_speed",    0.0f );
 	m_fRadiationRestoreSpeed	= READ_IF_EXISTS(pSettings, r_float, section, "radiation_restore_speed", 0.0f );
@@ -131,19 +184,27 @@ void CCustomOutfit::Load(LPCSTR section)
 	m_fFilterDegradation		= READ_IF_EXISTS(pSettings, r_float, section, "filter_degradation_speed", 0.0f);
 	m_fMaxFilterCondition		= READ_IF_EXISTS(pSettings, r_float, section, "max_filter_condition", 1.0f);
 
+	m_full_icon_name		= pSettings->r_string( section, "full_icon_name" );
+	m_artefact_count 		= READ_IF_EXISTS( pSettings, r_u32, section, "artefact_count", 0 );
+	clamp( m_artefact_count, (u32)0, (u32)GameConstants::GetArtefactsCount());
+
+	m_BonesProtectionSect	= READ_IF_EXISTS(pSettings, r_string, section, "bones_koeff_protection",  "" );
+
 	m_b_HasGlass				= !!READ_IF_EXISTS(pSettings, r_bool, section, "has_glass", FALSE);
 	m_bUseFilter				= READ_IF_EXISTS(pSettings, r_bool, section, "use_filter", false);
-	m_NightVisionType			= READ_IF_EXISTS(pSettings, r_u32, section, "night_vision_type", 0);
+	m_bHasLSS					= READ_IF_EXISTS(pSettings, r_bool, section, "has_ls_system", false);
 
-	if (pSettings->line_exist(section, "nightvision_sect"))
-		m_NightVisionSect = pSettings->r_string(section, "nightvision_sect");
-	else
-		m_NightVisionSect = NULL;
+	m_sShaderNightVisionSect	= READ_IF_EXISTS(pSettings, r_string, section, "shader_nightvision_sect", "shader_nightvision_default");
+	m_NightVisionType			= READ_IF_EXISTS(pSettings, r_u32, m_sShaderNightVisionSect, "shader_nightvision_type", 0);
+	m_fNightVisionLumFactor		= READ_IF_EXISTS(pSettings, r_float, m_sShaderNightVisionSect, "shader_nightvision_lum_factor", 0.0f);
 
 	m_SuitableFilters.clear();
 	m_SuitableRepairKits.clear();
+	m_ItemsForRepair.clear();
+
 	LPCSTR filters = READ_IF_EXISTS(pSettings, r_string, section, "suitable_filters", "antigas_filter");
 	LPCSTR repair_kits = READ_IF_EXISTS(pSettings, r_string, section, "suitable_repair_kits", "repair_kit");
+	LPCSTR items_for_repair = READ_IF_EXISTS(pSettings, r_string, section, "items_for_repair", "");
 
 	m_PlayerHudSection = READ_IF_EXISTS(pSettings, r_string, section, "player_hud_section", "actor_hud");
 
@@ -172,9 +233,27 @@ void CCustomOutfit::Load(LPCSTR section)
 		}
 	}
 
-	m_full_icon_name	= pSettings->r_string( section, "full_icon_name" );
-	m_artefact_count 	= READ_IF_EXISTS( pSettings, r_u32, section, "artefact_count", 0 );
-	clamp( m_artefact_count, (u32)0, (u32)GameConstants::GetArtefactsCount());
+	if (items_for_repair && items_for_repair[0])
+	{
+		string128 items_for_repair_sect;
+		int count = _GetItemCount(items_for_repair);
+
+		for (int it = 0; it < count; ++it)
+		{
+			_GetItem(items_for_repair, it, items_for_repair_sect);
+
+			if ((it % 2 != 0 && it != 0) || it == 1)
+				m_ItemsForRepair[it / 2].second = std::stoi(items_for_repair_sect);
+			else
+				m_ItemsForRepair.push_back(std::make_pair(items_for_repair_sect, 0));
+		}
+	}
+
+	if (GameConstants::GetOutfitUseFilters())
+	{
+		float rnd_cond = ::Random.randF(0.0f, m_fMaxFilterCondition);
+		m_fFilterCondition = rnd_cond;
+	}
 
 	if ( pSettings->line_exist( cNameSect(), "bones_koeff_protection") )
 	{
@@ -182,56 +261,6 @@ void CCustomOutfit::Load(LPCSTR section)
 	}
 	CActor* pActor = smart_cast<CActor*>( Level().CurrentViewEntity() );
 	ReloadBonesProtection( pActor );
-
-	if (GameConstants::GetOutfitUseFilters())
-	{
-		float rnd_cond = ::Random.randF(0.0f, m_fMaxFilterCondition);
-		m_fFilterCondition = rnd_cond;
-	}
-}
-
-void CCustomOutfit::UpdateCL()
-{
-	inherited::UpdateCL();
-
-	if (Actor())
-		DynamicHudGlass::UpdateDynamicHudGlass();
-
-	if (GameConstants::GetOutfitUseFilters())
-		UpdateFilterCondition();
-}
-
-void CCustomOutfit::UpdateFilterCondition(void)
-{
-	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
-
-	if (outfit && m_bUseFilter)
-	{
-		float m_radia_hit = HUD().GetUI()->UIGame()->get_zone_cur_power(ALife::eHitTypeRadiation) * 4;
-		float m_chemical_hit = HUD().GetUI()->UIGame()->get_zone_cur_power(ALife::eHitTypeChemicalBurn);
-		float uncharge_coef = ((m_fFilterDegradation + m_radia_hit + m_chemical_hit) / 16) * Device.fTimeDelta;
-
-		m_fFilterCondition -= uncharge_coef;
-		clamp(m_fFilterCondition, 0.0f, m_fMaxFilterCondition);
-
-		float condition = 1.f * m_fFilterCondition;
-		float percent = outfit->m_fFilterCondition * 100;
-
-		if (percent > 20.0f)
-		{
-			if (!fis_zero(outfit->m_HitTypeProtection[ALife::eHitTypeRadiation]) && !fis_zero(m_ConstHitTypeProtection[ALife::eHitTypeRadiation]))
-				outfit->m_HitTypeProtection[ALife::eHitTypeRadiation] = (m_ConstHitTypeProtection[ALife::eHitTypeRadiation] / 100) * percent;
-			if (!fis_zero(outfit->m_HitTypeProtection[ALife::eHitTypeChemicalBurn]) && !fis_zero(m_ConstHitTypeProtection[ALife::eHitTypeChemicalBurn]))
-				outfit->m_HitTypeProtection[ALife::eHitTypeChemicalBurn] = (m_ConstHitTypeProtection[ALife::eHitTypeChemicalBurn] / 100) * percent;
-		}
-		else
-		{
-			if (!fis_zero(outfit->m_HitTypeProtection[ALife::eHitTypeRadiation]) && !fis_zero(m_ConstHitTypeProtection[ALife::eHitTypeRadiation]))
-				outfit->m_HitTypeProtection[ALife::eHitTypeRadiation] = (m_ConstHitTypeProtection[ALife::eHitTypeRadiation] / 100) * 20.0f;
-			if (!fis_zero(outfit->m_HitTypeProtection[ALife::eHitTypeChemicalBurn]) && !fis_zero(m_ConstHitTypeProtection[ALife::eHitTypeChemicalBurn]))
-				outfit->m_HitTypeProtection[ALife::eHitTypeChemicalBurn] = (m_ConstHitTypeProtection[ALife::eHitTypeChemicalBurn] / 100) * 20.0f;
-		}
-	}
 }
 
 void CCustomOutfit::ReloadBonesProtection( CActor* pActor )
@@ -266,38 +295,56 @@ float CCustomOutfit::GetBoneArmor(s16 element)
 	return m_boneProtection->getBoneArmor(element);
 }
 
-float CCustomOutfit::HitThroughArmor( float hit_power, s16 element, float ap, bool& add_wound )
+float CCustomOutfit::HitThroughArmor(float hit_power, s16 element, float ap, bool& add_wound, ALife::EHitType hit_type)
 {
 	float NewHitPower = hit_power;
-	float BoneArmor = m_boneProtection->getBoneArmor(element)*GetCondition();
-
-	if( ap > EPS && ap > BoneArmor )
+	if(hit_type == ALife::eHitTypeFireWound)
 	{
-		//пуля пробила бронь
-		float d_ap = ap - BoneArmor;
-		NewHitPower *= ( d_ap / ap );
+		float ba = GetBoneArmor(element);
+		if(ba<0.0f)
+			return NewHitPower;
 
-		if ( NewHitPower < m_boneProtection->m_fHitFracActor )
+		float BoneArmor = ba*GetCondition();
+		if(/*!fis_zero(ba, EPS) && */(ap > BoneArmor))
 		{
-			NewHitPower = m_boneProtection->m_fHitFracActor;
-		}
-		if ( !IsGameTypeSingle() )
-		{
-			NewHitPower *= m_boneProtection->getBoneProtection(element);
-		}
-		
-		if ( NewHitPower < 0.0f ) { NewHitPower = 0.0f; }
+			//РїСѓР»СЏ РїСЂРѕР±РёР»Р° Р±СЂРѕРЅСЊ
+			if(!IsGameTypeSingle())
+			{
+				float hit_fraction = (ap - BoneArmor) / ap;
+				if(hit_fraction < m_boneProtection->m_fHitFracActor)
+					hit_fraction = m_boneProtection->m_fHitFracActor;
 
-		//увеличить изношенность костюма
-		Hit( NewHitPower, ALife::eHitTypeFireWound );
+				NewHitPower *= hit_fraction;
+				NewHitPower *= m_boneProtection->getBoneProtection(element);
+			}
+
+			VERIFY(NewHitPower>=0.0f);
+		}
+		else
+		{
+			//РїСѓР»СЏ РќР• РїСЂРѕР±РёР»Р° Р±СЂРѕРЅСЊ
+			NewHitPower *= m_boneProtection->m_fHitFracActor;
+			add_wound = false; 	//СЂР°РЅС‹ РЅРµС‚
+		}
 	}
 	else
 	{
-		//пуля НЕ пробила бронь
-		NewHitPower *= m_boneProtection->m_fHitFracActor;
-		add_wound = false; 	//раны нет
-		Hit( NewHitPower, ALife::eHitTypeFireWound );
-	}// if >=
+		float one = 0.1f;
+		if(hit_type == ALife::eHitTypeStrike || 
+		   hit_type == ALife::eHitTypeWound || 
+		   hit_type == ALife::eHitTypeWound_2 || 
+		   hit_type == ALife::eHitTypeExplosion)
+		{
+			one = 1.0f;
+		}
+		float protect = GetDefHitTypeProtection(hit_type);
+		NewHitPower -= protect * one;
+
+		if(NewHitPower < 0.f)
+			NewHitPower = 0.f;
+	}
+	//СѓРІРµР»РёС‡РёС‚СЊ РёР·РЅРѕС€РµРЅРЅРѕСЃС‚СЊ РєРѕСЃС‚СЋРјР°
+	Hit(hit_power, hit_type);
 
 	return NewHitPower;
 }
@@ -311,7 +358,7 @@ void	CCustomOutfit::OnMoveToSlot		()
 {
 	if ( m_pInventory )
 	{
-		CActor* pActor = smart_cast<CActor*>( m_pInventory->GetOwner() );
+		CActor* pActor = smart_cast<CActor*>( H_Parent() );
 		if ( pActor )
 		{
 			ReloadBonesProtection( pActor );
@@ -335,9 +382,9 @@ void CCustomOutfit::ApplySkinModel(CActor* pActor, bool bDress, bool bHUDOnly)
 					NewVisual = pSettings->r_string(TeamSection, *cNameSect());
 					string256 SkinName;
 
-					strcpy_s(SkinName, pSettings->r_string("mp_skins_path", "skin_path"));
-					strcat_s(SkinName, *NewVisual);
-					strcat_s(SkinName, ".ogf");
+					xr_strcpy(SkinName, pSettings->r_string("mp_skins_path", "skin_path"));
+					xr_strcat(SkinName, *NewVisual);
+					xr_strcat(SkinName, ".ogf");
 					NewVisual._set(SkinName);
 				}
 			}
@@ -396,7 +443,7 @@ float CCustomOutfit::GetPowerLoss()
 
 bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 {
-	bool result = CInventoryItemObject::install_upgrade_impl( section, test );
+	bool result = inherited::install_upgrade_impl( section, test );
 
 	result |= process_if_exists( section, "burn_protection",          &CInifile::r_float, m_HitTypeProtection[ALife::eHitTypeBurn]        , test );
 	result |= process_if_exists( section, "shock_protection",         &CInifile::r_float, m_HitTypeProtection[ALife::eHitTypeShock]       , test );
@@ -410,22 +457,30 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 	result |= process_if_exists( section, "physic_strike_protection", &CInifile::r_float, m_HitTypeProtection[ALife::eHitTypePhysicStrike], test );
 
 	LPCSTR str;
-	bool result2 = process_if_exists_set( section, "bones_koeff_protection", &CInifile::r_string, str, test );
-	if ( result2 && !test )
-	{
-		m_BonesProtectionSect._set( str );
-		CActor* pActor = smart_cast<CActor*>( Level().CurrentViewEntity() );
-		ReloadBonesProtection( pActor );
-	}
-	result |= result2;
-	result |= process_if_exists( section, "hit_fraction_actor", &CInifile::r_float, m_boneProtection->m_fHitFracActor, test );
-	
-	result2 = process_if_exists_set( section, "nightvision_sect", &CInifile::r_string, str, test );
+	bool result2 = process_if_exists_set( section, "nightvision_sect", &CInifile::r_string, str, test );
 	if ( result2 && !test )
 	{
 		m_NightVisionSect._set( str );
 	}
+	result |= result2;
 
+
+	result2 = process_if_exists_set(section, "shader_nightvision_sect", &CInifile::r_string, str, test);
+	if (result2 && !test)
+	{
+		m_sShaderNightVisionSect._set(str);
+		m_NightVisionType = READ_IF_EXISTS(pSettings, r_u32, m_sShaderNightVisionSect, "shader_nightvision_type", 0);
+		m_fNightVisionLumFactor = READ_IF_EXISTS(pSettings, r_float, m_sShaderNightVisionSect, "shader_nightvision_lum_factor", 0.0f);
+	}
+	result |= result2;
+
+	result2 = process_if_exists_set( section, "bones_koeff_protection", &CInifile::r_string, str, test );
+	if ( result2 && !test )
+	{
+		m_BonesProtectionSect	= str;
+		CActor* pActor = smart_cast<CActor*>( Level().CurrentViewEntity() );
+		ReloadBonesProtection( pActor );
+	}
 	result2 = process_if_exists_set(section, "player_hud_section", &CInifile::r_string, str, test);
 	if (result2 && !test)
 	{
@@ -436,6 +491,7 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 	}
 
 	result |= result2;
+	result |= process_if_exists( section, "hit_fraction_actor", &CInifile::r_float, m_boneProtection->m_fHitFracActor, test );
 	
 	result |= process_if_exists( section, "additional_inventory_weight",  &CInifile::r_float,  m_additional_weight,  test );
 	result |= process_if_exists( section, "additional_inventory_weight2", &CInifile::r_float,  m_additional_weight2, test );
@@ -448,7 +504,7 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 	result |= process_if_exists( section, "thirst_restore_speed",	 &CInifile::r_float, m_fThirstRestoreSpeed,	   test );
 	result |= process_if_exists( section, "intoxication_restore_speed", &CInifile::r_float, m_fIntoxicationRestoreSpeed, test);
 	result |= process_if_exists( section, "sleepeness_restore_speed",&CInifile::r_float, m_fSleepenessRestoreSpeed,test );
-	result |= process_if_exists( section, "alcoholism_restore_speed",&CInifile::r_float, m_fAlcoholismRestoreSpeed,test );
+	result |= process_if_exists( section, "alcoholism_restore_speed",&CInifile::r_float, m_fAlcoholismRestoreSpeed,test);
 	result |= process_if_exists( section, "narcotism_restore_speed", &CInifile::r_float, m_fNarcotismRestoreSpeed, test);
 
 	result |= process_if_exists( section, "power_loss", &CInifile::r_float, m_fPowerLoss, test );
@@ -460,8 +516,7 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 	result |= process_if_exists(section, "jump_speed", &CInifile::r_float, m_fJumpSpeed, test);
 	result |= process_if_exists(section, "walk_accel", &CInifile::r_float, m_fWalkAccel, test);
 	result |= process_if_exists(section, "overweight_walk_k", &CInifile::r_float, m_fOverweightWalkK, test);
-
-	result |= process_if_exists(section, "night_vision_type", &CInifile::r_u32, m_NightVisionType, test);
+	result |= process_if_exists(section, "inventory_capacity", &CInifile::r_float, m_fInventoryCapacity, test);
 
 	m_fJumpSpeed = READ_IF_EXISTS(pSettings, r_float, section, "jump_speed", 1.f);
 	m_fWalkAccel = READ_IF_EXISTS(pSettings, r_float, section, "walk_accel", 1.f);

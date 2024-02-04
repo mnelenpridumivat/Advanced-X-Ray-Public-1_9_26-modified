@@ -49,8 +49,15 @@ light::~light	()
 
 	// remove from Lights_LastFrame
 #if (RENDER==R_R2) || (RENDER==R_R4)
-	for (u32 it=0; it<RImplementation.Lights_LastFrame.size(); it++)
-		if (this==RImplementation.Lights_LastFrame[it])	RImplementation.Lights_LastFrame[it]=0;
+	for (u32 it = 0; it < RImplementation.Lights_LastFrame.size(); it++)
+	{
+		if (RImplementation.Lights_LastFrame[it] == this)
+			RImplementation.Lights_LastFrame[it]->svis.resetoccq();
+		RImplementation.Lights_LastFrame[it] = 0;
+	}
+
+	if (vis.pending)
+		RImplementation.occq_free(vis.query_id);
 #endif // (RENDER==R_R2) || (RENDER==R_R4)
 }
 
@@ -304,7 +311,7 @@ void	light::export_to	(light_Package& package)
 						L->set_shadow		(true);
 						L->set_position		(position);
 						L->set_rotation		(cmDir[f],	R);
-						L->set_cone			(PI_DIV_2);
+						L->set_cone			(PI_DIV_2 + 0.5f); // Add some extra angle to avoid problems with the shadow map frustum.
 						L->set_range		(range);
 						L->set_color		(color);
 						L->spatial.sector	= spatial.sector;	//. dangerous?
@@ -340,6 +347,7 @@ void	light::export_to	(light_Package& package)
 				}
 				break;
 			case IRender_Light::SPOT:
+				this->set_volumetric_intensity			(m_volumetric_intensity);
 				package.v_shadowed.push_back			(this);
 				break;
 		}

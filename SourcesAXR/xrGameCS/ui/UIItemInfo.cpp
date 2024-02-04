@@ -1,4 +1,3 @@
-//#include "stdafx.h"
 #include "pch_script.h"
 
 #include "uiiteminfo.h"
@@ -18,17 +17,19 @@
 #include "../PhysicsShellHolder.h"
 #include "UIWpnParams.h"
 #include "UIArtefactParams.h"
-#include "UICellItem.h"
 #include "UIInvUpgradeProperty.h"
 #include "UIOutfitInfo.h"
+#include "UIBoosterInfo.h"
+#include "UIInventoryItemParams.h"
 #include "../Weapon.h"
 #include "../CustomOutfit.h"
-#include "UIInventoryItemParams.h"
+#include "UICellItem.h"
 #include "../AdvancedXrayGameConstants.h"
 #include "../Torch.h"
 #include "../CustomDetector.h"
 #include "../AnomalyDetector.h"
-#include "UIBoosterInfo.h"
+#include "../ArtefactContainer.h"
+#include "../CustomBackpack.h"
 
 extern const LPCSTR g_inventory_upgrade_xml;
 
@@ -47,14 +48,13 @@ CUIItemInfo::CUIItemInfo()
 	UIConditionWnd				= NULL;
 	UIWpnParams					= NULL;
 	UIProperties				= NULL;
-	UIOutfitInfo				= NULL;
+	UIOutfitItem				= NULL;
+	UIBoosterInfo				= NULL;
 	UIArtefactParams			= NULL;
 	UIInventoryItem				= NULL;
-	UIBoosterInfo				= NULL;
 	UIName						= NULL;
 	UIBackground				= NULL;
 	m_pInvItem					= NULL;
-	UIChargeConditionParams		= NULL;
 	m_b_FitToHeight				= false;
 	m_complex_desc				= false;
 }
@@ -65,10 +65,9 @@ CUIItemInfo::~CUIItemInfo()
 	xr_delete	(UIWpnParams);
 	xr_delete	(UIArtefactParams);
 	xr_delete	(UIProperties);
-	xr_delete	(UIOutfitInfo);
-	xr_delete	(UIInventoryItem);
-	xr_delete	(UIChargeConditionParams);
+	xr_delete	(UIOutfitItem);
 	xr_delete	(UIBoosterInfo);
+	xr_delete	(UIInventoryItem);
 }
 
 void CUIItemInfo::InitItemInfo(LPCSTR xml_name)
@@ -135,8 +134,6 @@ void CUIItemInfo::InitItemInfo(LPCSTR xml_name)
 	{
 		UIConditionWnd					= xr_new<CUIConditionParams>();
 		UIConditionWnd->InitFromXml		(uiXml);
-		UIChargeConditionParams			= xr_new<CUIItemConditionParams>();
-		UIChargeConditionParams->InitFromXml(uiXml);
 		UIWpnParams						= xr_new<CUIWpnParams>();
 		UIWpnParams->InitFromXml		(uiXml);
 		UIArtefactParams				= xr_new<CUIArtefactParams>();
@@ -174,8 +171,8 @@ void CUIItemInfo::InitItemInfo(LPCSTR xml_name)
 	
 	if ( uiXml.NavigateToNode( "outfit_info", 0 ) )
 	{
-		UIOutfitInfo			= xr_new<CUIOutfitInfo>();
-		UIOutfitInfo->InitFromXml( uiXml );
+		UIOutfitItem				= xr_new<CUIOutfitItem>();
+		UIOutfitItem->InitFromXml	(uiXml);
 	}
 
 	if (uiXml.NavigateToNode("inventory_items_info", 0))
@@ -320,8 +317,8 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 		TryAddArtefactInfo					(*pInvItem);
 		TryAddOutfitInfo					(*pInvItem, pCompareItem);
 		TryAddUpgradeInfo					(*pInvItem);
-		TryAddItemInfo						(*pInvItem);
 		TryAddBoosterInfo					(*pInvItem);
+		TryAddItemInfo						(*pInvItem);
 
 		if(m_b_FitToHeight)
 		{
@@ -365,7 +362,7 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 				float(item_grid_rect.x2 * INV_GRID_WIDTH2(GameConstants::GetUseHQ_Icons())),
 				float(item_grid_rect.y2 * INV_GRID_HEIGHT2(GameConstants::GetUseHQ_Icons())) };
 		}
-		if(UI()->is_16_9_mode())
+		if(UI().is_widescreen())
 			v_r.x2 /= 1.2f;
 
 		UIItemImage->GetUIStaticItem().SetRect	(v_r);
@@ -472,7 +469,7 @@ void CUIItemInfo::InitItemUpgrade(CInventoryItem* pInvItem)
 				float(item_grid_rect.x2 * INV_GRID_WIDTH2(GameConstants::GetUseHQ_Icons())),
 				float(item_grid_rect.y2 * INV_GRID_HEIGHT2(GameConstants::GetUseHQ_Icons())) };
 		}
-		if(UI()->is_16_9_mode())
+		if(UI().is_widescreen())
 			v_r.x2 /= 1.2f;
 
 		UIItemImage->GetUIStaticItem().SetRect	(v_r);
@@ -485,28 +482,17 @@ void CUIItemInfo::InitItemUpgrade(CInventoryItem* pInvItem)
 
 void CUIItemInfo::TryAddConditionInfo( CInventoryItem& pInvItem, CInventoryItem* pCompareItem )
 {
-	CTorch*			torch = smart_cast<CTorch*>(&pInvItem);
-	CCustomDetector* artefact_detector = smart_cast<CCustomDetector*>(&pInvItem);
-	CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly*>(&pInvItem);
-
-	bool ShowCharge = GameConstants::GetTorchHasBattery() || GameConstants::GetArtDetectorUseBattery() || GameConstants::GetAnoDetectorUseBattery();
 
 	if ( pInvItem.IsUsingCondition() )
 	{
 		UIConditionWnd->SetInfo( pCompareItem, pInvItem );
 		UIDesc->AddWindow( UIConditionWnd, false );
 	}
-
-	if ((torch || artefact_detector || anomaly_detector) && ShowCharge)
-	{
-		UIChargeConditionParams->SetInfo(pCompareItem, pInvItem);
-		UIDesc->AddWindow(UIChargeConditionParams, false);
-	}
 }
 
 void CUIItemInfo::TryAddWpnInfo( CInventoryItem& pInvItem, CInventoryItem* pCompareItem )
 {
-	if (UIWpnParams->Check( pInvItem) && GameConstants::GetShowWpnInfo())
+	if (UIWpnParams->Check(pInvItem) && GameConstants::GetShowWpnInfo())
 	{
 		UIWpnParams->SetInfo( pCompareItem, pInvItem );
 		UIDesc->AddWindow( UIWpnParams, false );
@@ -525,11 +511,12 @@ void CUIItemInfo::TryAddArtefactInfo(CInventoryItem& pInvItem)
 void CUIItemInfo::TryAddOutfitInfo( CInventoryItem& pInvItem, CInventoryItem* pCompareItem )
 {
 	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(&pInvItem);
-	if ( outfit && UIOutfitInfo )
+
+	if (outfit && UIOutfitItem)
 	{
 		CCustomOutfit* comp_outfit = smart_cast<CCustomOutfit*>(pCompareItem);
-		UIOutfitInfo->UpdateInfo( outfit, comp_outfit );
-		UIDesc->AddWindow( UIOutfitInfo, false );
+		UIOutfitItem->SetInfo(outfit, comp_outfit);
+		UIDesc->AddWindow(UIOutfitItem, false);
 	}
 }
 
@@ -542,18 +529,6 @@ void CUIItemInfo::TryAddUpgradeInfo( CInventoryItem& pInvItem )
 	}
 }
 
-void CUIItemInfo::TryAddItemInfo(CInventoryItem& pInvItem)
-{
-	CInventoryItemObject* item = smart_cast<CInventoryItemObject*>(&pInvItem);
-	CHudItemObject* hud_item = smart_cast<CHudItemObject*>(&pInvItem);
-
-	if ((item || hud_item) && UIInventoryItem)
-	{
-		UIInventoryItem->SetInfo(pInvItem);
-		UIDesc->AddWindow(UIInventoryItem, false);
-	}
-}
-
 void CUIItemInfo::TryAddBoosterInfo(CInventoryItem& pInvItem)
 {
 	CEatableItem* food = smart_cast<CEatableItem*>(&pInvItem);
@@ -561,6 +536,29 @@ void CUIItemInfo::TryAddBoosterInfo(CInventoryItem& pInvItem)
 	{
 		UIBoosterInfo->SetInfo(pInvItem);
 		UIDesc->AddWindow(UIBoosterInfo, false);
+	}
+}
+
+void CUIItemInfo::ResetInventoryItem()
+{
+	if (UIInventoryItem)
+		UIInventoryItem->SetHeight(0);
+}
+
+void CUIItemInfo::TryAddItemInfo(CInventoryItem& pInvItem)
+{
+	CTorch* torch = smart_cast<CTorch*>(&pInvItem);
+	CCustomDetector* artefact_detector = smart_cast<CCustomDetector*>(&pInvItem);
+	CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly*>(&pInvItem);
+	CArtefactContainer* af_container = smart_cast<CArtefactContainer*>(&pInvItem);
+	CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(&pInvItem);
+
+	bool ShowChargeTorch = GameConstants::GetTorchHasBattery();
+
+	if ((torch && ShowChargeTorch || artefact_detector || anomaly_detector || af_container || backpack) && UIInventoryItem)
+	{
+		UIInventoryItem->SetInfo(pInvItem);
+		UIDesc->AddWindow(UIInventoryItem, false);
 	}
 }
 

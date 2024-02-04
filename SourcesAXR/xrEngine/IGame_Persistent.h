@@ -77,7 +77,7 @@ public:
 	void GrassBendersSet(u8 idx, u16 id, Fvector position, Fvector3 dir, float fade, float speed, float str, float radius, GrassBenders_Anim anim, bool resetTime);
 	float GrassBenderToValue(float& current, float go_to, float intensity, bool use_easing);
 
-	CPerlinNoise1D* PerlinNoise1D;
+	CPerlinNoise1D* PerlinNoise1D{};
 
 	struct grass_data
 	{
@@ -93,11 +93,14 @@ public:
 		float time[16];
 		float fade[16];
 		float speed[16];
-	} grass_shader_data;
+	} grass_shader_data{};
+
 
 	u32 m_last_ray_pick_time;
 	bool m_isInHideout;
-	bool IsActorInHideout();
+	bool IsActorInHideout	() const;
+	void UpdateHudRaindrops	() const;
+	void UpdateRainGloss	() const;
 
 			void					destroy_particles	(const bool &all_particles);
 
@@ -145,9 +148,18 @@ public:
 	virtual float					GetActorPower		() { return 0; };
 	virtual float					GetActorBleeding	() { return 0; };
 	virtual float					GetActorIntoxication() { return 0; };
+	virtual float					GetRainDropsFactor	() { return 0; };
+	virtual void					SetRainDropsFactor	(float factor) {};
+	virtual bool					GetClearMaskProcess	() { return 0; };
 	virtual bool					GetActorAliveStatus () { return 0; };
 	virtual bool					GetActor			() { return 0; };
 	virtual bool					GetActorNightvision	() { return 0; };
+	virtual bool					GetActorHelmetStatus() { return 0; };
+	virtual bool					GetFogInfluenceVolumetricLight() { return 0; };
+
+	virtual std::string				GetMoonPhase		() { return 0; };
+	virtual u32						GetTimeHours		() { return 0; }
+
 	virtual int						GetNightvisionType	() { return 0; };
 	virtual bool					IsCamFirstEye		() { return 0; };
 
@@ -181,12 +193,16 @@ public:
 			bool					render_scene;
 		 IC bool					SceneRenderingBlocked();
 
-	struct pda_data
+	struct devices_data
 	{
 		float pda_display_factor;
 		float pda_psy_influence;
 		float pda_displaybrightness;
-	} pda_shader_data;
+		float device_global_psy_influence;
+		float device_psy_zone_influence;
+		float device_radiation_zone_influence;
+		float nightvision_lum_factor;
+	} devices_shader_data;
 };
 
 class IMainMenu
@@ -207,10 +223,20 @@ extern ENGINE_API	Fvector4 ps_ssfx_int_grass_params_1;
 extern ENGINE_API	Fvector4 ps_ssfx_int_grass_params_2;
 extern ENGINE_API	Fvector4 ps_ssfx_hud_drops_1;
 extern ENGINE_API	Fvector4 ps_ssfx_hud_drops_2;
+extern ENGINE_API	Fvector4 ps_ssfx_hud_drops_1_cfg;
+extern ENGINE_API	Fvector4 ps_ssfx_hud_drops_2_cfg;
 extern ENGINE_API	Fvector4 ps_ssfx_blood_decals;
 extern ENGINE_API	Fvector4 ps_ssfx_rain_1;
 extern ENGINE_API	Fvector4 ps_ssfx_rain_2;
 extern ENGINE_API	Fvector4 ps_ssfx_rain_3;
+extern ENGINE_API	Fvector4 ps_ssfx_wetsurfaces_1;
+extern ENGINE_API	Fvector4 ps_ssfx_wetsurfaces_2;
+extern ENGINE_API	float ps_ssfx_gloss_factor;
+extern ENGINE_API	Fvector3 ps_ssfx_gloss_minmax;
+extern ENGINE_API	Fvector4 ps_ssfx_lightsetup_1;
+
+extern ENGINE_API	float ps_r3_dyn_wet_surf_far; // 30.0f
+extern ENGINE_API	int ps_r3_dyn_wet_surf_sm_res; // 256
 
 extern ENGINE_API	bool g_dedicated_server;
 extern ENGINE_API	IGame_Persistent*	g_pGamePersistent;

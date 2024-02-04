@@ -12,7 +12,6 @@ class CWeaponBinoculars: public CWeaponCustomPistol
 private:
 	typedef CWeaponCustomPistol inherited;
 protected:
-	float			m_fRTZoomFactor; //run-time zoom factor
 	bool			m_bVision;
 public:
 					CWeaponBinoculars	(); 
@@ -25,8 +24,7 @@ public:
 	virtual	void	ZoomInc				();
 	virtual	void	ZoomDec				();
 	virtual void	GetZoomData			(const float scope_factor, float& delta, float& min_zoom_factor);
-
-	virtual	float	CurrentZoomFactor	() {return m_fRTZoomFactor;}
+	virtual	float	CurrentZoomFactor	() { return m_fRTZoomFactor; }
 
 	virtual void	net_Destroy			();
 	virtual BOOL	net_Spawn			(CSE_Abstract* DC);
@@ -39,7 +37,7 @@ public:
 	virtual void	render_item_ui		();
 	virtual bool	render_item_ui_query();
 	virtual bool	use_crosshair		()	const {return false;}
-	virtual void	GetBriefInfo		(xr_string& str_name, xr_string& icon_sect_name, xr_string& str_count, string16& fire_mode);
+	virtual bool	GetBriefInfo		(II_BriefInfo& info);
 	virtual void	net_Relcase			(CObject *object);
 protected:
 	CBinocularsVision*					m_binoc_vision;

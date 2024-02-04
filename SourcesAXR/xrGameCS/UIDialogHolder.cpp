@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "UIDialogHolder.h"
 #include "ui/UIPdaWnd.h"
+#include "UIGameCustom.h"
 #include "UICursor.h"
 #include "level.h"
 #include "actor.h"
 #include "xr_level_controller.h"
 #include "pda.h"
 #include "inventory.h"
-#include "UIGameCustom.h"
 
 dlgItem::dlgItem(CUIWindow* pWnd)
 {
@@ -55,11 +55,11 @@ void CDialogHolder::StartMenu (CUIDialogWnd* pDialog, bool bDoHideIndicators)
 {
 	R_ASSERT						( !pDialog->IsShown() );
 
-	if (IsGameTypeSingle() && !smart_cast<CUIPdaWnd*>(pDialog) && Actor())
+	if (psActorFlags.test(AF_3D_PDA) && IsGameTypeSingle() && !smart_cast<CUIPdaWnd*>(pDialog) && Actor())
 	{
 		if (const auto pda = smart_cast<CPda*>(Actor()->inventory().ActiveItem()))
 		{
-			HUD().GetUI()->UIGame()->PdaMenu().HideDialog();
+			HUD().GetUI()->UIGame()->PdaMenu().HideDialog1();
 			Actor()->inventory().Action(kACTIVE_JOBS, CMD_START);
 		}
 	}
@@ -84,7 +84,7 @@ void CDialogHolder::StartMenu (CUIDialogWnd* pDialog, bool bDoHideIndicators)
 	pDialog->Show					();
 
 	if( pDialog->NeedCursor() )
-		GetUICursor()->Show();
+		GetUICursor().Show();
 
 	if(g_pGameLevel)
 	{
@@ -128,7 +128,7 @@ void CDialogHolder::StopMenu (CUIDialogWnd* pDialog)
 	}
 
 	if(!MainInputReceiver() || !MainInputReceiver()->NeedCursor() )
-		GetUICursor()->Hide();
+		GetUICursor().Hide();
 }
 
 void CDialogHolder::AddDialogToRender(CUIWindow* pDialog)
@@ -229,25 +229,11 @@ void CDialogHolder::StartStopMenu(CUIDialogWnd* pDialog, bool bDoHideIndicators)
 	{
 		if (pDialog && pDialog->NeedCenterCursor())
 		{
-			GetUICursor()->SetUICursorPosition	(Fvector2().set(512.0f,384.0f));
+			GetUICursor().SetUICursorPosition	(Fvector2().set(512.0f,384.0f));
 		}
 		StartMenu(pDialog, bDoHideIndicators);
 	}
 	
-}
-
-void CDialogHolder::StartDialog(CUIDialogWnd* pDialog, bool bDoHideIndicators)
-{
-	if (pDialog && pDialog->NeedCenterCursor())
-	{
-		GetUICursor()->SetUICursorPosition(Fvector2().set(512.0f, 384.0f));
-	}
-	StartMenu(pDialog, bDoHideIndicators);
-}
-
-void CDialogHolder::StopDialog(CUIDialogWnd* pDialog)
-{
-	StopMenu(pDialog);
 }
 
 void CDialogHolder::OnFrame	()
@@ -274,6 +260,15 @@ void CDialogHolder::OnFrame	()
 	}
 }
 
+void CDialogHolder::CleanInternals()
+{
+	while( !m_input_receivers.empty() )
+		m_input_receivers.pop_back();
+
+	m_dialogsToRender.clear	();
+	GetUICursor().Hide		();
+}
+
 void CDialogHolder::shedule_Update(u32 dt)
 {
 	ISheduled::shedule_Update(dt);
@@ -290,13 +285,4 @@ void CDialogHolder::shedule_Update(u32 dt)
 float CDialogHolder::shedule_Scale()
 {
 	return 0.5f;
-}
-
-void CDialogHolder::CleanInternals()
-{
-	while( !m_input_receivers.empty() )
-		m_input_receivers.pop_back();
-
-	m_dialogsToRender.clear	();
-	GetUICursor()->Hide		();
 }

@@ -18,11 +18,7 @@ private:
 	Fmatrix						m_offset;
 	u16							m_bone_id;
 	bool						m_enabled;
-//	bool						m_auto_attach;
-#ifdef DEBUG
 	bool						m_valid;
-#endif
-
 
 public:
 	IC							CAttachableItem			();
@@ -34,6 +30,7 @@ public:
 	virtual void				OnH_A_Independent		();
 	virtual void				renderable_Render		();
 	virtual bool				can_be_attached			() const;
+			bool				load_attach_position	(LPCSTR section);
 	virtual	void				afterAttach				();
 	virtual	void				afterDetach				();
 	IC		CInventoryItem		&item					() const;
@@ -44,9 +41,12 @@ public:
 	IC		const Fmatrix		&offset					() const;
 	IC		bool				enabled					() const;
 	virtual	void				enable					(bool value);
-
+protected:
+	virtual bool		use_parent_ai_locations	() const	=0
+	{
+		return !enabled();
+	}
 public:
-#ifdef DEBUG
 	static CAttachableItem		*m_dbgItem;
 	static Fvector				get_angle_offset		()	{VERIFY(m_dbgItem);Fvector v; m_dbgItem->m_offset.getHPB(v); return v;};
 	static Fvector				get_pos_offset			()	{VERIFY(m_dbgItem);return m_dbgItem->m_offset.c;};
@@ -61,7 +61,6 @@ public:
 	static	void				mov_dx					(float val){Fvector c = get_pos_offset(); c.x +=val; m_dbgItem->m_offset.c=c;}	
 	static	void				mov_dy					(float val){Fvector c = get_pos_offset(); c.y +=val; m_dbgItem->m_offset.c=c;}	
 	static	void				mov_dz					(float val){Fvector c = get_pos_offset(); c.z +=val; m_dbgItem->m_offset.c=c;}	
-#endif
 };
 
 #include "attachable_item_inline.h"

@@ -22,28 +22,25 @@ namespace PAPI{
 		virtual void 	Save		(IWriter& F)=0;
 	};
     DEFINE_VECTOR(ParticleAction*,PAVec,PAVecIt);
-	class ParticleActions{
-		PAVec			actions;
-		bool			m_bLocked;
+	class ParticleActions
+	{
+		PAVec			m_actions;
 	public:
-						ParticleActions()						{actions.reserve(4);m_bLocked=false;	}
-						~ParticleActions()						{clear();				}
+		std::mutex m_bLocked;
+						ParticleActions	()	{m_actions.reserve(4);}
+						~ParticleActions()	{clear();}
 		IC void			clear			()
         {
-			R_ASSERT(!m_bLocked);
-			for (PAVecIt it=actions.begin(); it!=actions.end(); it++) 
+			for (PAVecIt it = m_actions.begin(); it != m_actions.end(); it++)
 				xr_delete(*it);
-			actions.clear();
+			m_actions.clear();
 		}
-		IC void			append			(ParticleAction* pa)	{R_ASSERT(!m_bLocked);actions.push_back(pa);	}
-		IC bool			empty			()						{return	actions.empty();}
-		IC PAVecIt		begin			()						{return	actions.begin();}
-		IC PAVecIt		end				()						{return actions.end();	}
-        IC int			size			()						{return actions.size();	}
-        IC void			resize			(int cnt)        		{R_ASSERT(!m_bLocked);actions.resize(cnt);	}
+		IC void			append			(ParticleAction* pa)	{ m_actions.push_back(pa);	}
+		IC bool			empty			()						{return	m_actions.empty();}
+		IC PAVecIt		begin			()						{return	m_actions.begin();}
+		IC PAVecIt		end				()						{return m_actions.end();	}
+        IC int			size			()						{return m_actions.size();	}
         void			copy			(ParticleActions* src);
-		void			lock			()						{R_ASSERT(!m_bLocked);m_bLocked=true;}
-		void			unlock			()						{R_ASSERT(m_bLocked);m_bLocked=false;}
 	};
 };
 //---------------------------------------------------------------------------

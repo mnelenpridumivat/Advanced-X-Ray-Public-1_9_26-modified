@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "pch_script.h"
 #include "HudItem.h"
 #include "physic_item.h"
 #include "actor.h"
@@ -12,6 +13,10 @@
 #include "../xrEngine/SkeletonMotions.h"
 #include "ui_base.h"
 #include "HUDManager.h"
+#include "Weapon.h"
+
+#include "script_callback_ex.h"
+#include "script_game_object.h"
 
 ENGINE_API extern float psHUD_FOV_def;
 
@@ -20,8 +25,8 @@ CHudItem::CHudItem()
 	RenderHud					(TRUE);
 	EnableHudInertion			(TRUE);
 	AllowHudInertion			(TRUE);
-//	m_hud_item_shared_data		= NULL;
 	m_bStopAtEndAnimIsRunning	= false;
+	m_bSprintType				= false;
 	m_current_motion_def		= NULL;
 	m_started_rnd_anim_idx		= u8(-1);
 }
@@ -47,8 +52,7 @@ void CHudItem::Load(LPCSTR section)
 	item_sect				= section;
 	m_animation_slot		= pSettings->r_u32			(section,"animation_slot");
 
-//	if(pSettings->line_exist(section,"snd_bore"))
-	m_sounds.LoadSound(section,"snd_bore","sndBore");
+	m_sounds.LoadSound(section, "snd_bore", "sndBore", true);
 
 	// HUD FOV
 	m_nearwall_enabled			= READ_IF_EXISTS(pSettings, r_bool,	 section, "nearwall_on", true);
@@ -92,7 +96,8 @@ void CHudItem::renderable_Render()
 				if (owner->attached(self))
 					on_renderable_Render();
 			}
-			else on_renderable_Render();
+			else
+				on_renderable_Render();
 		}
 	}
 }
@@ -135,18 +140,30 @@ void CHudItem::OnStateSwitch(u32 S)
 	if(object().Remote()) 
 		SetNextState	(S);
 
+	if (S == eHidden)
+		m_bSprintType = false;
+	if (S != eIdle)
+		m_bSprintType = false;
+
 	switch (S)
 	{
 	case eBore:
-		SetPending		(FALSE);
-
-		PlayAnimBore	();
-		if(HudItemData())
 		{
-			Fvector P		= HudItemData()->m_item_transform.c;
-			m_sounds.PlaySound("sndBore", P, object().H_Root(), !!GetHUDmode(), false, m_started_rnd_anim_idx);
-		}
+			SetPending		(FALSE);
 
+			PlayAnimBore	();
+			if (HudItemData())
+			{
+				Fvector P		= HudItemData()->m_item_transform.c;
+				m_sounds.PlaySound("sndBore", P, object().H_Root(), !!GetHUDmode(), false, m_started_rnd_anim_idx);
+			}
+
+		} break;
+	case eSprintStart:
+		PlayAnimSprintStart();
+		break;
+	case eSprintEnd:
+		PlayAnimSprintEnd();
 		break;
 	}
 	g_player_hud->updateMovementLayerState();
@@ -154,18 +171,41 @@ void CHudItem::OnStateSwitch(u32 S)
 
 void CHudItem::OnAnimationEnd(u32 state)
 {
+	CActor* actor = smart_cast<CActor*>(object().H_Parent());
+	if (actor)
+	{
+		actor->callback(GameObject::eActorHudAnimationEnd)(smart_cast<CGameObject*>(this)->lua_game_object(),
+			this->hud_sect.c_str(), this->m_current_motion.c_str(), state,
+			this->animation_slot());
+	}
+
 	switch(state)
 	{
 	case eBore:
 		{
 			SwitchState	(eIdle);
 		} break;
+	case eSprintStart:
+		{
+			m_bSprintType = true;
+			SwitchState(eIdle);
+		} break;
+	case eSprintEnd:
+		{
+			m_bSprintType = false;
+			SwitchState(eIdle);
+		} break;
 	}
 }
 
 void CHudItem::PlayAnimBore()
 {
-	PlayHUDMotion	("anm_bore", TRUE, this, GetState());
+	if (IsMisfireNow())
+		PlayHUDMotionIfExists({ "anm_bore_jammed", "anm_bore" }, true, GetState());
+	else if (IsMagazineEmpty())
+		PlayHUDMotionIfExists({ "anm_bore_empty", "anm_bore" }, true, GetState());
+	else
+		PlayHUDMotion("anm_bore", TRUE, this, GetState());
 }
 
 bool CHudItem::ActivateItem() 
@@ -195,15 +235,6 @@ void CHudItem::SendHiddenItem()
 		object().u_EventGen		(P,GE_WPN_STATE_CHANGE,object().ID());
 		P.w_u8					(u8(eHiding));
 		object().u_EventSend	(P, net_flags(TRUE, TRUE, FALSE, TRUE));
-
-		/*NET_Packet		P;
-		CHudItem::object().u_EventGen		(P,GE_WPN_STATE_CHANGE,CHudItem::object().ID());
-		P.w_u8			(u8(eHidden));
-		P.w_u8			(u8(m_sub_state));
-		P.w_u8			(u8(m_ammoType& 0xff));
-		P.w_u8			(u8(iAmmoElapsed & 0xff));
-		P.w_u8			(u8(m_set_next_ammoType_on_reload & 0xff));
-		CHudItem::object().u_EventSend		(P, net_flags(TRUE, TRUE, FALSE, TRUE));*/
 	}
 }
 
@@ -308,11 +339,11 @@ void CHudItem::on_b_hud_detach()
 
 void CHudItem::on_a_hud_attach()
 {
-	if(m_current_motion_def)
+	if(m_current_motion_def && m_current_motion.size())
 	{
 		PlayHUDMotion_noCB(m_current_motion, false);
 #ifdef DEBUG
-		Msg("continue playing [%s][%d]",m_current_motion.c_str(), Device.dwFrame);
+//		Msg("continue playing [%s][%d]",m_current_motion.c_str(), Device.dwFrame);
 #endif // #ifdef DEBUG
 	}
 }
@@ -346,6 +377,8 @@ u32 CHudItem::PlayHUDMotionNew(const shared_str& M, const bool bMixIn, const u32
 		m_dwMotionEndTm				= m_dwMotionStartTm + anim_time;
 		m_startedMotionState		= state;
 	}
+	else
+		m_bStopAtEndAnimIsRunning	= false;
 
 	return anim_time;
 }
@@ -356,7 +389,7 @@ bool CHudItem::isHUDAnimationExist(LPCSTR anim_name)
 	if (HudItemData()) // First person
 	{
 		string256 anim_name_r;
-		bool is_16x9 = UI()->is_16_9_mode();
+		bool is_16x9 = UI().is_widescreen();
 		u16 attach_place_idx = pSettings->r_u16(HudItemData()->m_sect_name, "attach_place_idx");
 		xr_sprintf(anim_name_r, "%s%s", anim_name, (attach_place_idx == 1 && is_16x9) ? "_16x9" : "");
 		player_hud_motion* anm = HudItemData()->m_hand_motions.find_motion(anim_name_r);
@@ -367,7 +400,7 @@ bool CHudItem::isHUDAnimationExist(LPCSTR anim_name)
 		if (g_player_hud->motion_length(anim_name, HudSection(), m_current_motion_def) > 100)
 			return true;
 #ifdef DEBUG
-	Msg("~ [WARNING] ------ Animation [%s] does not exist in [%s]", anim_name, HudSection().c_str());
+	Msg("~ [WARNING] [%s]: Animation [%s] does not exist in [%s]", __FUNCTION__, anim_name, HudSection().c_str());
 #endif
 	return false;
 }
@@ -384,7 +417,10 @@ u32 CHudItem::PlayHUDMotionIfExists(std::initializer_list<const char*> Ms, const
 		dbg_anim_name += M;
 		dbg_anim_name += ", ";
 	}
-	Msg("~~[%s] Motions [%s] not found for [%s]", __FUNCTION__, dbg_anim_name.c_str(), HudSection().c_str());
+
+#ifdef DEBUG
+	Msg("~ [WARNING] [%s]: Motions [%s] not found for [%s]", __FUNCTION__, dbg_anim_name.c_str(), HudSection().c_str());
+#endif
 
 	return 0;
 }
@@ -439,6 +475,8 @@ void CHudItem::PlayAnimIdle()
 
 	if (IsMisfireNow())
 		PlayHUDMotionIfExists({ "anm_idle_jammed", "anm_idle" }, true, GetState());
+	else if (IsMagazineEmpty())
+		PlayHUDMotionIfExists({ "anm_idle_empty", "anm_idle" }, true, GetState());
 	else
 		PlayHUDMotion("anm_idle", TRUE, NULL, GetState());
 }
@@ -453,20 +491,34 @@ bool CHudItem::TryPlayAnimIdle()
 			const u32 State = pActor->get_state();
 			if (State & mcSprint)
 			{
+				if (!m_bSprintType)
+				{
+					SwitchState(eSprintStart);
+					return true;
+				}
+
 				PlayAnimIdleSprint();
+				return true;
+			}
+			else if (m_bSprintType)
+			{
+				if ((State & mcClimb))
+					return false;
+				
+				SwitchState(eSprintEnd);
 				return true;
 			}
 			else if (State & mcAnyMove)
 			{
 				if (!(State & mcCrouch))
 				{
-					if (State & mcAccel) //’Ó‰¸·‡ ÏÂ‰ÎÂÌÌ‡ˇ (SHIFT)
+					if (State & mcAccel) //–•–æ–¥—å–±–∞ –º–µ–¥–ª–µ–Ω–Ω–∞—è (SHIFT)
 						PlayAnimIdleMovingSlow();
 					else
 						PlayAnimIdleMoving();
 					return true;
 				}
-				else if (State & mcAccel) //’Ó‰¸·‡ ‚ ÔËÒˇ‰Â (CTRL+SHIFT)
+				else if (State & mcAccel) //–•–æ–¥—å–±–∞ –≤ –ø—Ä–∏—Å—è–¥–µ (CTRL+SHIFT)
 				{
 					PlayAnimIdleMovingCrouchSlow();
 					return true;
@@ -493,7 +545,7 @@ void CHudItem::PlayAnimIdleMoving()
 	if (IsMisfireNow())
 		PlayHUDMotionIfExists({ "anm_idle_moving_jammed", "anm_idle_moving", "anm_idle" }, true, GetState());
 	else
-		PlayHUDMotionIfExists({ "anm_idle_moving", "anm_idle" }, true, GetState());
+		PlayHUDMotionIfExists({ "anm_idle_moving", "anm_idle"}, true, GetState());
 }
 
 void CHudItem::PlayAnimIdleMovingSlow()
@@ -503,7 +555,7 @@ void CHudItem::PlayAnimIdleMovingSlow()
 	else if (IsMagazineEmpty())
 		PlayHUDMotionIfExists({ "anm_idle_moving_slow_empty", "anm_idle_moving_slow", "anm_idle_moving", "anm_idle" }, true, GetState());
 	else
-		PlayHUDMotionIfExists({ "anm_idle_moving_slow", "anm_idle_moving", "anm_idle" }, true, GetState());
+		PlayHUDMotionIfExists({ "anm_idle_moving_slow", "anm_idle_moving", "anm_idle"}, true, GetState());
 }
 
 void CHudItem::PlayAnimIdleMovingCrouch()
@@ -513,7 +565,7 @@ void CHudItem::PlayAnimIdleMovingCrouch()
 	else if (IsMagazineEmpty())
 		PlayHUDMotionIfExists({ "anm_idle_moving_crouch_empty", "anm_idle_moving_crouch", "anm_idle_moving", "anm_idle" }, true, GetState());
 	else
-		PlayHUDMotionIfExists({ "anm_idle_moving_crouch", "anm_idle_moving", "anm_idle" }, true, GetState());
+		PlayHUDMotionIfExists({ "anm_idle_moving_crouch", "anm_idle_moving", "anm_idle"}, true, GetState());
 }
 
 void CHudItem::PlayAnimIdleMovingCrouchSlow()
@@ -523,7 +575,7 @@ void CHudItem::PlayAnimIdleMovingCrouchSlow()
 	else if (IsMagazineEmpty())
 		PlayHUDMotionIfExists({ "anm_idle_moving_crouch_slow_empty", "anm_idle_moving_crouch_slow", "anm_idle_moving_crouch", "anm_idle_moving", "anm_idle" }, true, GetState());
 	else
-		PlayHUDMotionIfExists({ "anm_idle_moving_crouch_slow", "anm_idle_moving_crouch", "anm_idle_moving", "anm_idle" }, true, GetState());
+		PlayHUDMotionIfExists({ "anm_idle_moving_crouch_slow", "anm_idle_moving_crouch", "anm_idle_moving", "anm_idle"}, true, GetState());
 }
 
 void CHudItem::PlayAnimIdleSprint()
@@ -531,12 +583,112 @@ void CHudItem::PlayAnimIdleSprint()
 	if (IsMisfireNow())
 		PlayHUDMotionIfExists({ "anm_idle_sprint_jammed", "anm_idle_sprint", "anm_idle" }, true, GetState());
 	else
-		PlayHUDMotionIfExists({ "anm_idle_sprint", "anm_idle" }, true, GetState());
+		PlayHUDMotionIfExists({ "anm_idle_sprint", "anm_idle"}, true, GetState());
+}
+
+void CHudItem::PlayAnimSprintStart()
+{
+	CWeapon* wpn = smart_cast<CWeapon*>(this);
+
+	string_path guns_sprint_start_anm{};
+	strconcat(sizeof(guns_sprint_start_anm), guns_sprint_start_anm, "anm_idle_sprint_start", (wpn && wpn->IsGrenadeLauncherAttached()) ? (wpn && wpn->IsGrenadeMode() ? "_g" : "_w_gl") : "", (IsMisfireNow() ? "_jammed" : (IsMagazineEmpty()) ? "_empty" : ""));
+
+	if (isHUDAnimationExist(guns_sprint_start_anm))
+		PlayHUDMotionNew(guns_sprint_start_anm, true, GetState());
+	else if (strstr(guns_sprint_start_anm, "_jammed"))
+	{
+		char new_guns_aim_anm[256];
+		strcpy(new_guns_aim_anm, guns_sprint_start_anm);
+		new_guns_aim_anm[strlen(guns_sprint_start_anm) - strlen("_jammed")] = '\0';
+
+		if (isHUDAnimationExist(new_guns_aim_anm))
+		{
+			PlayHUDMotionNew(new_guns_aim_anm, true, GetState());
+			return;
+		}
+		else
+		{
+			m_bSprintType = true;
+			SwitchState(eIdle);
+		}
+	}
+	else if (strstr(guns_sprint_start_anm, "_empty"))
+	{
+		char new_guns_aim_anm[256];
+		strcpy(new_guns_aim_anm, guns_sprint_start_anm);
+		new_guns_aim_anm[strlen(guns_sprint_start_anm) - strlen("_empty")] = '\0';
+
+		if (isHUDAnimationExist(new_guns_aim_anm))
+		{
+			PlayHUDMotionNew(new_guns_aim_anm, true, GetState());
+			return;
+		}
+		else
+		{
+			m_bSprintType = true;
+			SwitchState(eIdle);
+		}
+	}
+	else
+	{
+		m_bSprintType = true;
+		SwitchState(eIdle);
+	}
+}
+
+void CHudItem::PlayAnimSprintEnd()
+{
+	CWeapon* wpn = smart_cast<CWeapon*>(this);
+
+	string_path guns_sprint_end_anm{};
+	strconcat(sizeof(guns_sprint_end_anm), guns_sprint_end_anm, "anm_idle_sprint_end", (wpn && wpn->IsGrenadeLauncherAttached()) ? (wpn && wpn->IsGrenadeMode() ? "_g" : "_w_gl") : "", (IsMisfireNow() ? "_jammed" : (IsMagazineEmpty()) ? "_empty" : ""));
+
+	if (isHUDAnimationExist(guns_sprint_end_anm))
+		PlayHUDMotionNew(guns_sprint_end_anm, true, GetState());
+	else if (strstr(guns_sprint_end_anm, "_jammed"))
+	{
+		char new_guns_aim_anm[256];
+		strcpy(new_guns_aim_anm, guns_sprint_end_anm);
+		new_guns_aim_anm[strlen(guns_sprint_end_anm) - strlen("_jammed")] = '\0';
+
+		if (isHUDAnimationExist(new_guns_aim_anm))
+		{
+			PlayHUDMotionNew(new_guns_aim_anm, true, GetState());
+			return;
+		}
+		else
+		{
+			m_bSprintType = false;
+			SwitchState(eIdle);
+		}
+	}
+	else if (strstr(guns_sprint_end_anm, "_empty"))
+	{
+		char new_guns_aim_anm[256];
+		strcpy(new_guns_aim_anm, guns_sprint_end_anm);
+		new_guns_aim_anm[strlen(guns_sprint_end_anm) - strlen("_empty")] = '\0';
+
+		if (isHUDAnimationExist(new_guns_aim_anm))
+		{
+			PlayHUDMotionNew(new_guns_aim_anm, true, GetState());
+			return;
+		}
+		else
+		{
+			m_bSprintType = false;
+			SwitchState(eIdle);
+		}
+	}
+	else
+	{
+		m_bSprintType = false;
+		SwitchState(eIdle);
+	}
 }
 
 void CHudItem::OnMovementChanged(ACTOR_DEFS::EMoveCommand cmd)
 {
-	if(GetState()==eIdle)
+	if(GetState()==eIdle && !m_bStopAtEndAnimIsRunning)
 	{
 		PlayAnimIdle();
 		ResetSubStateTime();
@@ -593,6 +745,8 @@ float CHudItem::GetHudFov()
 
 		if (pSettings->line_exist(item_sect, "hud_fov"))
 			fBaseFov = m_base_fov;
+
+		clamp(fBaseFov, 0.0f, FLT_MAX);
 
 		float src = m_nearwall_speed_mod * Device.fTimeDelta;
 		clamp(src, 0.f, 1.f);

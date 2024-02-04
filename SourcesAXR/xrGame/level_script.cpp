@@ -41,8 +41,12 @@
 #include "../xrPhysics/ElevatorState.h"
 #include "../xrEngine/Rain.h"
 
+#include "CustomTimer.h"
+
 using namespace luabind;
-bool g_block_all_except_movement;
+bool g_block_all_except_movement = false;
+bool g_block_actor_movement = false;
+bool g_saves_locked = false;
 
 LPCSTR command_line	()
 {
@@ -105,6 +109,47 @@ CScriptGameObject *get_object_by_id(u16 id)
 		return NULL;
 
 	return pGameObject->lua_game_object();
+}
+
+LPCSTR get_past_wdesc()
+{
+	return			(g_pGamePersistent->Environment().Current[0] ? g_pGamePersistent->Environment().Current[0]->m_identifier.c_str() : "null");
+}
+
+LPCSTR get_next_wdesc()
+{
+	return			(g_pGamePersistent->Environment().Current[1] ? g_pGamePersistent->Environment().Current[1]->m_identifier.c_str() : "null");
+}
+
+float get_past_wdesc_execution_time()
+{
+	return			(g_pGamePersistent->Environment().Current[0] ? g_pGamePersistent->Environment().Current[0]->exec_time : -1.f);
+}
+
+float get_next_wdesc_execution_time()
+{
+	return			(g_pGamePersistent->Environment().Current[1] ? g_pGamePersistent->Environment().Current[1]->exec_time : -1.f);
+}
+
+float get_weather_game_time()
+{
+	return			(&g_pGamePersistent->Environment() ? g_pGamePersistent->Environment().GetGameTime() : -1.f);
+}
+
+void set_past_wdesc(LPCSTR WeatherSection)
+{
+	if (&g_pGamePersistent->Environment())
+	{
+		g_pGamePersistent->Environment().SetEnvDesc(WeatherSection, g_pGamePersistent->Environment().Current[0]);
+	}
+}
+
+void set_next_wdesc(LPCSTR WeatherSection)
+{
+	if (&g_pGamePersistent->Environment())
+	{
+		g_pGamePersistent->Environment().SetEnvDesc(WeatherSection, g_pGamePersistent->Environment().Current[1]);
+	}
 }
 
 LPCSTR get_weather	()
@@ -740,6 +785,21 @@ u32 vertex_id	(Fvector position)
 	return	(ai().level_graph().vertex_id(position));
 }
 
+u32 nearest_vertex_id(const Fvector& vec)
+{
+	return ai().level_graph().vertex_id(vec);
+}
+
+bool valid_vertex_id(u32 level_vertex_id)
+{
+	return ai().level_graph().valid_vertex_id(level_vertex_id);
+}
+
+u32 vertex_count()
+{
+	return ai().level_graph().header().vertex_count();
+}
+
 u32 render_get_dx_level()
 {
 	return ::Render->get_dx_level();
@@ -772,9 +832,9 @@ void stop_tutorial()
 		g_tutorial->Stop();	
 }
 
-u32 PlayHudMotion(u8 hand, LPCSTR itm_name, LPCSTR anm_name, bool bMixIn = true, float speed = 1.f)
+u32 PlayHudMotion(u8 hand, LPCSTR itm_name, LPCSTR anm_name, bool bMixIn = true, float speed = 1.f, LPCSTR attach_visual = nullptr)
 {
-	return g_player_hud->script_anim_play(hand, itm_name, anm_name, bMixIn, speed);
+	return g_player_hud->script_anim_play(hand, itm_name, anm_name, bMixIn, speed, attach_visual);
 }
 
 void StopHudMotion()
@@ -883,6 +943,16 @@ void block_all_except_movement(bool b)
 bool only_movement_allowed()
 {
 	return g_block_all_except_movement;
+}
+
+void block_actor_movement(bool b)
+{
+	g_block_actor_movement = b;
+}
+
+bool is_actor_movement_blocked()
+{
+	return g_block_actor_movement;
 }
 
 void set_actor_allow_ladder(bool b)
@@ -1000,6 +1070,16 @@ void buy_skill(int num)
 	return Actor()->ActorSkills->BuySkill(num);
 }
 
+void set_game_saves_lock(bool b)
+{
+	g_saves_locked = b;
+}
+
+bool get_saves_lock_status()
+{
+	return g_saves_locked;
+}
+
 u32 g_get_target_element()
 {
 	collide::rq_result& RQ = HUD().GetCurrentRayQuery();
@@ -1007,6 +1087,28 @@ u32 g_get_target_element()
 		return RQ.element;
 
 	return 0;
+}
+
+float get_devices_psy_factor()
+{
+	if (Actor())
+		return Actor()->GetDevicesPsyFactor();
+
+	Msg("![get_devices_psy_factor]: Actor not found!");
+	return 0;
+}
+
+void set_devices_psy_factor(float psy_factor)
+{
+	clamp(psy_factor, 0.0f, 1.0f);
+
+	if (Actor())
+	{
+		Actor()->SetDevicesPsyFactor(psy_factor);
+		return;
+	}
+
+	Msg("![set_devices_psy_factor]: Actor not found!");
 }
 
 //can spawn entities like bolts, phantoms, ammo, etc. which normally crash when using alife():create()
@@ -1035,6 +1137,77 @@ void set_active_cam(u8 mode)
 void g_send(NET_Packet& P, bool bReliable = false, bool bSequential = true, bool bHighPriority = false, bool bSendImmediately = false)
 {
 	Level().Send(P);
+}
+
+void create_custom_timer(LPCSTR name, int start_value, int mode = 0)
+{
+	if (!Actor()->TimerManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
+		return;
+	}
+
+	Actor()->TimerManager->CreateTimer(name, start_value, mode);
+}
+
+void start_custom_timer(LPCSTR name)
+{
+	if (!Actor()->TimerManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
+		return;
+	}
+
+	Actor()->TimerManager->StartTimer(name);
+}
+
+void stop_custom_timer(LPCSTR name)
+{
+	if (!Actor()->TimerManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
+		return;
+	}
+
+	Actor()->TimerManager->StopTimer(name);
+}
+
+void reset_custom_timer(LPCSTR name)
+{
+	if (!Actor()->TimerManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
+		return;
+	}
+
+	Actor()->TimerManager->ResetTimer(name);
+}
+
+void delete_custom_timer(LPCSTR name)
+{
+	if (!Actor()->TimerManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
+		return;
+	}
+
+	Actor()->TimerManager->DeleteTimer(name);
+}
+
+int get_custom_timer(LPCSTR name)
+{
+	if (!Actor()->TimerManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
+		return 0;
+	}
+
+	return Actor()->TimerManager->GetTimerValue(name);
+}
+
+std::string get_moon_phase()
+{
+	return Level().GetMoonPhase().c_str();
 }
 
 #pragma optimize("s",on)
@@ -1080,11 +1253,19 @@ void CLevel::script_register(lua_State *L)
 		
 		def("get_weather",						get_weather),
 		def("set_weather",						set_weather),
+		def("set_past_weather",					set_past_wdesc),
+		def("set_next_weather",					set_next_wdesc),
+		def("get_weather_game_time",			get_weather_game_time),
+		def("get_past_wdesc_execution_time",	get_past_wdesc_execution_time),
+		def("get_next_wdesc_execution_time",	get_next_wdesc_execution_time),
+		def("get_past_weather",					get_past_wdesc),
+		def("get_next_weather",					get_next_wdesc),
 		def("set_weather_fx",					set_weather_fx),
 		def("start_weather_fx_from_time",		start_weather_fx_from_time),
 		def("is_wfx_playing",					is_wfx_playing),
 		def("get_wfx_time",						get_wfx_time),
 		def("stop_weather_fx",					stop_weather_fx),
+		def("get_moon_phase",					get_moon_phase),
 
 		def("environment",						environment),
 		
@@ -1109,8 +1290,8 @@ void CLevel::script_register(lua_State *L)
 		def("vertex_position",					vertex_position),
 		def("name",								get_name),
 		def("prefetch_sound",					prefetch_sound),
-		def( "patrol_path_add", &patrol_path_add ),
-		def( "patrol_path_remove", &patrol_path_remove ),
+		def("patrol_path_add",					&patrol_path_add),
+		def("patrol_path_remove",				&patrol_path_remove),
 		def("client_spawn_manager",				get_client_spawn_manager),
 
 		def("rain_wetness",						rain_wetness),
@@ -1162,8 +1343,18 @@ void CLevel::script_register(lua_State *L)
 		def("remove_complex_effector",			&remove_complex_effector),
 		
 		def("vertex_id",						&vertex_id),
+		def("nearest_vertex_id",				&nearest_vertex_id),
+		def("valid_vertex_id",					valid_vertex_id),
+		def("vertex_count",						vertex_count),
 
-		def("game_id",							&GameID)
+		def("game_id",							&GameID),
+
+		def("create_custom_timer",				&create_custom_timer),
+		def("start_custom_timer",				&start_custom_timer),
+		def("stop_custom_timer",				&stop_custom_timer),
+		def("reset_custom_timer",				&reset_custom_timer),
+		def("delete_custom_timer",				&delete_custom_timer),
+		def("get_custom_timer",					&get_custom_timer)
 	],
 	
 	module(L,"actor_stats")
@@ -1255,23 +1446,29 @@ void CLevel::script_register(lua_State *L)
 //		def("get_surge_time",	Game::get_surge_time),
 //		def("get_object_by_name",Game::get_object_by_name),
 	
-	def("start_tutorial",		&start_tutorial),
-	def("stop_tutorial",		&stop_tutorial),
-	def("has_active_tutorial",	&has_active_tutotial),
-	def("translate_string",		&translate_string),
-	def("play_hud_motion",		PlayHudMotion), 
-	def("stop_hud_motion",		StopHudMotion), 
-	def("get_motion_length",	MotionLength),
-	def("hud_motion_allowed",	AllowHudMotion),
-	def("play_hud_anm",			PlayBlendAnm), 
-	def("stop_hud_anm",			StopBlendAnm), 
-	def("stop_all_hud_anms",	StopAllBlendAnms),
-	def("set_hud_anm_time",		SetBlendAnmTime),
-	def("only_allow_movekeys",	block_all_except_movement),
-	def("only_movekeys_allowed",only_movement_allowed),
-	def("set_actor_allow_ladder", set_actor_allow_ladder),
-	def("actor_ladder_allowed", actor_allow_ladder),
-	def("active_tutorial_name", +[]() { return g_tutorial->GetTutorName(); }),
-	def("log_stack_trace",		&xrDebug::LogStackTrace)
+		def("start_tutorial",		&start_tutorial),
+		def("stop_tutorial",		&stop_tutorial),
+		def("has_active_tutorial",	&has_active_tutotial),
+		def("translate_string",		&translate_string),
+		def("play_hud_motion",		PlayHudMotion), 
+		def("stop_hud_motion",		StopHudMotion), 
+		def("get_motion_length",	MotionLength),
+		def("hud_motion_allowed",	AllowHudMotion),
+		def("play_hud_anm",			PlayBlendAnm), 
+		def("stop_hud_anm",			StopBlendAnm), 
+		def("stop_all_hud_anms",	StopAllBlendAnms),
+		def("set_hud_anm_time",		SetBlendAnmTime),
+		def("only_allow_movekeys",	block_all_except_movement),
+		def("only_movekeys_allowed",only_movement_allowed),
+		def("block_actor_movement", block_actor_movement),
+		def("is_actor_movement_blocked", is_actor_movement_blocked),
+		def("set_actor_allow_ladder", set_actor_allow_ladder),
+		def("actor_ladder_allowed", actor_allow_ladder),
+		def("active_tutorial_name", +[]() { return g_tutorial->GetTutorName(); }),
+		def("log_stack_trace",		&xrDebug::LogStackTrace),
+		def("get_devices_psy_factor", &get_devices_psy_factor),
+		def("set_devices_psy_factor", &set_devices_psy_factor),
+		def("set_lock_saves",		set_game_saves_lock),
+		def("get_saves_lock_status", get_saves_lock_status)
 	];
 }

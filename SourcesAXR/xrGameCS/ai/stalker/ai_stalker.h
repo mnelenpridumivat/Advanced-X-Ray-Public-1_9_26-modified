@@ -285,7 +285,6 @@ public:
 private:
 	bool				m_can_kill_member;
 	bool				m_can_kill_enemy;
-	bool				m_can_select_weapon;
 	float				m_pick_distance;
 	u32					m_pick_frame_id;
 	collide::rq_results	rq_storage;
@@ -298,8 +297,6 @@ private:
 public:
 			bool						can_kill_member			();
 			bool						can_kill_enemy			();
-	bool								can_select_weapon				() {return m_can_select_weapon;};
-	void								can_select_weapon				(bool can) {m_can_select_weapon = can;};
 			float						pick_distance			();
 	IC		float						start_pick_distance		() const;
 			bool						fire_make_sense			();
@@ -308,8 +305,8 @@ public:
 	virtual BOOL						feel_touch_contact		(CObject* O);
 	virtual BOOL						feel_touch_on_contact	(CObject* O);
 
-	//�����, ����� �������� �������� ����� �� ��������� � ��������
-	//(�����, �������� � �.�.)
+	//флаги, какие действия совершал актер по отношению к сталкеру
+	//(помог, атаковал и т.д.)
 	Flags32								m_actor_relation_flags;
 
 	// ALife
@@ -340,7 +337,11 @@ private:
 	xr_vector<CTradeItem>				m_temp_items;
 	u32									m_total_money;
 	bool								m_sell_info_actuality;
-
+	bool								m_can_select_weapon;
+public:
+	bool								can_select_weapon				() {return m_can_select_weapon;};
+	void								can_select_weapon				(bool can) {m_can_select_weapon = can;};
+			bool						can_take						(CInventoryItem const * item);
 protected:
 			u32							fill_items						(CInventory &inventory, CGameObject *old_owner, ALife::_OBJECT_ID new_owner_id);
 			
@@ -358,7 +359,6 @@ protected:
 			void						update_sell_info				();
 			bool						tradable_item					(CInventoryItem *inventory_item, const u16 &current_owner_id);
 			bool						can_sell						(CInventoryItem* item);
-			bool						can_take						(CInventoryItem const * item);
 
 			bool						non_conflicted					(const CInventoryItem *item, const CWeapon *new_weapon) const;
 			bool						enough_ammo						(const CWeapon *new_weapon) const;
@@ -505,7 +505,7 @@ private:
 	Fvector								m_computed_object_position;
 	Fvector								m_computed_object_direction;
 	// target parameters
-	Fvector								m_throw_target;
+	Fvector								m_throw_target_position;
 	CObject								*m_throw_ignore_object;
 	// computed
 	Fvector								m_throw_position;
@@ -518,7 +518,8 @@ private:
 	u32									m_throw_time_interval;
 
 #ifdef DEBUG
-	xr_vector<Fvector>					m_throw_picks;
+	xr_vector<trajectory_pick>			m_throw_picks;
+	xr_vector<Fvector>					m_throw_collide_tris;
 #endif // DEBUG
 
 public:
@@ -540,12 +541,15 @@ private:
 											const Fvector &gravity
 										);
 			void						check_throw_trajectory				(const float &throw_time);
+			void						throw_target_impl					(const Fvector &position, CObject *throw_ignore_object );
+			void						compute_throw_miss					( u32 const vertex_id );
 
 public:
 	virtual	bool						use_default_throw_force				();
 	virtual	float						missile_throw_force					(); 
 	virtual	bool						use_throw_randomness				();
-			void						throw_target						(const Fvector &position, CObject *throw_ignore_object); 
+			void						throw_target						(const Fvector &position, CObject *throw_ignore_object );
+			void						throw_target						(const Fvector &position, u32 const vertex_id, CObject *throw_ignore_object );
 	IC		const Fvector				&throw_target						() const;
 			void						update_throw_params					(); 
 			void						on_throw_completed					();

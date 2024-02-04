@@ -197,7 +197,6 @@ bool CWeapon::install_upgrade_hit( LPCSTR section, bool test )
 	return result;
 }
 
-
 bool CWeapon::install_upgrade_addon( LPCSTR section, bool test )
 {
 	bool result = false;
@@ -262,6 +261,7 @@ bool CWeapon::install_upgrade_addon( LPCSTR section, bool test )
 			}
 		}
 	}
+
 	result |= process_if_exists_set( section, "scope_dynamic_zoom", &CInifile::r_bool, m_zoom_params.m_bUseDynamicZoom, test );
 	result |= process_if_exists_set( section, "scope_nightvision", &CInifile::r_string_wb, m_zoom_params.m_sUseZoomPostprocess, test );
 	result |= process_if_exists_set( section, "scope_alive_detector", &CInifile::r_string_wb, m_zoom_params.m_sUseBinocularVision, test );
@@ -319,6 +319,59 @@ bool CWeapon::install_upgrade_addon( LPCSTR section, bool test )
 		}
 	}
 	result |= result2;
+
+	temp_int = (int)m_eLaserDesignatorStatus;
+	result2 = process_if_exists_set( section, "laser_designator_status", &CInifile::r_s32, temp_int, test );
+	if ( result2 && !test )
+	{
+		m_eLaserDesignatorStatus = (ALife::EWeaponAddonStatus)temp_int;
+		if ( m_eLaserDesignatorStatus == ALife::eAddonAttachable || m_eLaserDesignatorStatus == ALife::eAddonPermanent )
+		{
+			m_sLaserName	= pSettings->r_string( section, "laser_designator_name" );
+
+			if (GameConstants::GetUseHQ_Icons())
+			{
+				m_iLaserX = pSettings->r_s32(section, "laser_designator_x") * 2;
+				m_iLaserY = pSettings->r_s32(section, "laser_designator_y") * 2;
+			}
+			else
+			{
+				m_iLaserX = pSettings->r_s32(section, "laser_designator_x");
+				m_iLaserY = pSettings->r_s32(section, "laser_designator_y");
+			}
+
+			if(m_eLaserDesignatorStatus == ALife::eAddonPermanent)
+				InitAddons();
+		}
+	}
+	result |= result2;
+
+	temp_int = (int)m_eTacticalTorchStatus;
+	result2 = process_if_exists_set(section, "tactical_torch_status", &CInifile::r_s32, temp_int, test);
+	if (result2 && !test)
+	{
+		m_eTacticalTorchStatus = (ALife::EWeaponAddonStatus)temp_int;
+		if (m_eTacticalTorchStatus == ALife::eAddonAttachable || m_eTacticalTorchStatus == ALife::eAddonPermanent)
+		{
+			m_sTacticalTorchName = pSettings->r_string(section, "tactical_torch_name");
+
+			if (GameConstants::GetUseHQ_Icons())
+			{
+				m_iTacticalTorchX = pSettings->r_s32(section, "laser_designator_x") * 2;
+				m_iTacticalTorchY = pSettings->r_s32(section, "laser_designator_y") * 2;
+			}
+			else
+			{
+				m_iTacticalTorchX = pSettings->r_s32(section, "tactical_torch_x");
+				m_iTacticalTorchY = pSettings->r_s32(section, "tactical_torch_y");
+			}
+
+			if (m_eTacticalTorchStatus == ALife::eAddonPermanent)
+				InitAddons();
+		}
+	}
+	result |= result2;
+
 	return result;
 }
 

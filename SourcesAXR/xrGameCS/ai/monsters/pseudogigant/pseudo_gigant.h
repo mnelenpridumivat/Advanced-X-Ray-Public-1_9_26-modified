@@ -21,8 +21,8 @@ private:
 	} step_effector;
 
 	SAttackEffector m_threaten_effector;
-	ref_sound		m_sound_threaten_hit;		// ����, ������� �������� � ������ � ������
-	ref_sound		m_sound_start_threaten;		// ����, ������� �������� � ������ � ������
+	ref_sound		m_sound_threaten_hit;		// звук, который играется в голове у актера
+	ref_sound		m_sound_start_threaten;		// звук, который играется в голове у актера
 	
 	u32				m_time_next_threaten;
 	
@@ -58,7 +58,7 @@ public:
 
 	virtual void	HitEntityInJump		(const CEntity *pEntity);
 	virtual void	TranslateActionToPathParams	();
-
+	virtual	char*	get_monster_class_name () { return "pseudogigant"; }
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

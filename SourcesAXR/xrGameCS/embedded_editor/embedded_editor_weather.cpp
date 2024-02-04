@@ -83,6 +83,8 @@ void saveWeather(shared_str name, const xr_vector<CEnvDescriptor*>& env)
 		f.w_fvector3(el->m_identifier.c_str(), "ambient_color", el->ambient);
 		f.w_fvector4(el->m_identifier.c_str(), "clouds_color", el->clouds_color);
 		f.w_string(el->m_identifier.c_str(), "clouds_texture", el->clouds_texture_name.c_str());
+		f.w_float(el->m_identifier.c_str(), "clouds_velocity_0", el->clouds_velocity_0);
+		f.w_float(el->m_identifier.c_str(), "clouds_velocity_1", el->clouds_velocity_1);
 		f.w_float(el->m_identifier.c_str(), "far_plane", el->far_plane);
 		f.w_float(el->m_identifier.c_str(), "fog_distance", el->fog_distance);
 		f.w_float(el->m_identifier.c_str(), "fog_density", el->fog_density);
@@ -340,6 +342,15 @@ void ShowWeatherEditor(bool& show)
 		changed = true;
 	}
 
+	if (!bWeatherWindInfluenceKoef)
+	{
+		if (ImGui::SliderFloat("clouds_velocity_0", &cur->clouds_velocity_0, 0.0f, 0.1f))
+			changed = true;
+
+		if (ImGui::SliderFloat("clouds_velocity_1", &cur->clouds_velocity_1, 0.0f, 0.5f))
+			changed = true;
+	}
+
 	ImGui::Text(u8"Fog parameters");
 
 	if (ImGui::SliderFloat("far_plane", &cur->far_plane, 0.01f, 10000.0f))
@@ -442,33 +453,36 @@ void ShowWeatherEditor(bool& show)
 	if (ImGui::SliderFloat("wind_direction", &cur->wind_direction, 0.0f, 360.0f))
 		changed = true;
 
-	ImGui::Text(u8"Trees parameters");
+	if (!bWeatherWindInfluenceKoef)
+	{
+		ImGui::Text(u8"Trees parameters");
 
-	if (ImGui::SliderFloat("trees_amplitude_intensity", &cur->m_fTreeAmplitudeIntensity, 0.01f, 0.250f))
-		changed = true;
+		if (ImGui::SliderFloat("trees_amplitude_intensity", &cur->m_fTreeAmplitudeIntensity, 0.01f, 0.250f))
+			changed = true;
 
-	ImGui::Text(u8"Grass swing parameters");
+		ImGui::Text(u8"Grass swing parameters");
 
-	if (ImGui::SliderFloat("swing_normal_amp1", &cur->m_cSwingDesc[0].amp1, 0.0f, 10.0f))
-		changed = true;
-	if (ImGui::SliderFloat("swing_normal_amp2", &cur->m_cSwingDesc[0].amp2, 0.0f, 10.0f))
-		changed = true;
-	if (ImGui::SliderFloat("swing_normal_rot1", &cur->m_cSwingDesc[0].rot1, 0.0f, 300.0f))
-		changed = true;
-	if (ImGui::SliderFloat("swing_normal_rot2", &cur->m_cSwingDesc[0].rot2, 0.0f, 300.0f))
-		changed = true;
-	if (ImGui::SliderFloat("swing_normal_speed", &cur->m_cSwingDesc[0].speed, 0.0f, 10.0f))
-		changed = true;
-	if (ImGui::SliderFloat("swing_fast_amp1", &cur->m_cSwingDesc[1].amp1, 0.0f, 10.0f))
-		changed = true;
-	if (ImGui::SliderFloat("swing_fast_amp2", &cur->m_cSwingDesc[1].amp2, 0.0f, 10.0f))
-		changed = true;
-	if (ImGui::SliderFloat("swing_fast_rot1", &cur->m_cSwingDesc[1].rot1, 0.0f, 300.0f))
-		changed = true;
-	if (ImGui::SliderFloat("swing_fast_rot2", &cur->m_cSwingDesc[1].rot2, 0.0f, 300.0f))
-		changed = true;
-	if (ImGui::SliderFloat("swing_fast_speed", &cur->m_cSwingDesc[1].speed, 0.0f, 10.0f))
-		changed = true;
+		if (ImGui::SliderFloat("swing_normal_amp1", &cur->m_cSwingDesc[0].amp1, 0.0f, 10.0f))
+			changed = true;
+		if (ImGui::SliderFloat("swing_normal_amp2", &cur->m_cSwingDesc[0].amp2, 0.0f, 10.0f))
+			changed = true;
+		if (ImGui::SliderFloat("swing_normal_rot1", &cur->m_cSwingDesc[0].rot1, 0.0f, 300.0f))
+			changed = true;
+		if (ImGui::SliderFloat("swing_normal_rot2", &cur->m_cSwingDesc[0].rot2, 0.0f, 300.0f))
+			changed = true;
+		if (ImGui::SliderFloat("swing_normal_speed", &cur->m_cSwingDesc[0].speed, 0.0f, 10.0f))
+			changed = true;
+		if (ImGui::SliderFloat("swing_fast_amp1", &cur->m_cSwingDesc[1].amp1, 0.0f, 10.0f))
+			changed = true;
+		if (ImGui::SliderFloat("swing_fast_amp2", &cur->m_cSwingDesc[1].amp2, 0.0f, 10.0f))
+			changed = true;
+		if (ImGui::SliderFloat("swing_fast_rot1", &cur->m_cSwingDesc[1].rot1, 0.0f, 300.0f))
+			changed = true;
+		if (ImGui::SliderFloat("swing_fast_rot2", &cur->m_cSwingDesc[1].rot2, 0.0f, 300.0f))
+			changed = true;
+		if (ImGui::SliderFloat("swing_fast_speed", &cur->m_cSwingDesc[1].speed, 0.0f, 10.0f))
+			changed = true;
+	}
 
 	if (bWeatherColorGrading)
 	{

@@ -24,6 +24,10 @@
 #include "PHDebug.h"
 #endif
 
+#include "UIGameCustom.h"
+#include "HudManager.h"
+#include "ui\UIActorMenu.h"
+
 void CActor::OnEvent(NET_Packet& P, u16 type)
 {
 	inherited::OnEvent			(P,type);
@@ -55,9 +59,15 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 			
 			if( inventory().CanTakeItem(smart_cast<CInventoryItem*>(_GO)) )
 			{
-				Obj->H_SetParent		(smart_cast<CObject*>(this));
-				
-				inventory().Take(_GO, false, true);
+				auto CurMenuMode = HUD().GetUI()->UIGame()->ActorMenu().GetMenuMode();
+				const bool use_pickup_anim = (type == GE_OWNERSHIP_TAKE)
+					&& (Position().distance_to(_GO->Position()) > 0.2f)
+					&& CurMenuMode != mmDeadBodySearch
+					&& CurMenuMode != mmCarTrunk
+					&& !Actor()->m_bActionAnimInProcess
+					&& pAdvancedSettings->line_exist("actions_animations", "take_item_section");
+
+				inventory().TakeItemAnimCheck(_GO, Obj, use_pickup_anim);
 			}
 			else
 			{
@@ -95,7 +105,7 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 			
 #ifdef MP_LOGGING
 			string64 act;
-			strcpy_s( act, (type == GE_TRADE_SELL)? "sells" : "rejects" );
+			xr_strcpy( act, (type == GE_TRADE_SELL)? "sells" : "rejects" );
 			Msg("--- Actor [%d][%s]  %s  [%d][%s]", ID(), Name(), act, GO->ID(), GO->cNameSect().c_str());
 #endif // MP_LOGGING
 			
@@ -223,16 +233,17 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 
 			switch (type)
 			{
-			case GEG_PLAYER_ITEM2SLOT:	 
-				inventory().Slot( iitem ); 
-				break;//2
+			case GEG_PLAYER_ITEM2SLOT:
+			{
+				inventory().Slot( iitem );
+			}break;//2
 			case GEG_PLAYER_ITEM2BELT:	 
 				inventory().Belt( iitem ); 
 				break;//2
 			case GEG_PLAYER_ITEM2RUCK:	 
 				inventory().Ruck( iitem ); 
 				break;//2
-			case GEG_PLAYER_ITEM_EAT:	 
+			case GEG_PLAYER_ITEM_EAT:
 				if (pItemToEat)
 				{
 					if (pItemToEat->m_bHasAnimation)

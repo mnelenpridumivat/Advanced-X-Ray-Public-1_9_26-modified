@@ -35,18 +35,11 @@
 #include "profiler.h"
 
 #include "../Include/xrRender/Kinematics.h"
-#include "../../xrCore/_detail_collision_point.h"
 
 #define EFFECTOR_RADIUS 30.f
 const u16	TEST_RAYS_PER_OBJECT=5;
 const u16	BLASTED_OBJ_PROCESSED_PER_FRAME=3;
 const float	exp_dist_extinction_factor=3.f;//(>1.f, 1.f -means no dist change of exp effect)	on the dist of m_fBlastRadius exp. wave effect in exp_dist_extinction_factor times less than maximum
-
-ENGINE_API extern xr_vector<DetailCollisionPoint> level_detailcoll_points;
-ENGINE_API extern int ps_detail_enable_collision;
-ENGINE_API extern Fvector actor_position;
-ENGINE_API extern float ps_detail_collision_radius;
-extern ENGINE_API Fvector4 ps_ssfx_int_grass_params_2;
 
 CExplosive::CExplosive(void) 
 {
@@ -211,8 +204,8 @@ ICF static BOOL grenade_hit_callback(collide::rq_result& result, LPVOID params)
 	if(ph_dbg_draw_mask.test(phDbgDrawExplosions))
 	{
 		Fvector p;p.set(ep.l_dir);p.mul(result.range);p.add(ep.source_p);
-		u8 c	=static_cast<u8>(shoot_factor * 255.f);
-		DBG_DrawPoint(p,0.1f,D3DCOLOR_XRGB(255-c,0,c));
+		u8 c	= static_cast<u8>(shoot_factor*255.f);
+		DBG_DrawPoint(p,0.1f,color_xrgb(255-c,0,c));
 	}
 #endif
 	return				(ep.shoot_factor>0.01f);
@@ -244,7 +237,7 @@ float CExplosive::ExplosionEffect(collide::rq_results& storage, CExplosive*exp_o
 	{
 		Fmatrix dbg_box_m;dbg_box_m.set(obj_xform);
 		dbg_box_m.c.set(l_c);obj_xform.transform(dbg_box_m.c);
-		DBG_DrawOBB(dbg_box_m,l_d,D3DCOLOR_XRGB(255,255,0));
+		DBG_DrawOBB(dbg_box_m,l_d,color_xrgb(255,255,0));
 	}
 #endif
 
@@ -268,9 +261,9 @@ float CExplosive::ExplosionEffect(collide::rq_results& storage, CExplosive*exp_o
 #ifdef DEBUG
 			if(ph_dbg_draw_mask.test(phDbgDrawExplosions))
 			{
-			DBG_DrawPoint(l_source_p,0.1f,D3DCOLOR_XRGB(0,0,255));
-			DBG_DrawPoint(l_end_p,0.1f,D3DCOLOR_XRGB(0,0,255));
-			DBG_DrawLine(l_source_p,l_end_p,D3DCOLOR_XRGB(0,0,255));
+			DBG_DrawPoint(l_source_p,0.1f,color_xrgb(0,0,255));
+			DBG_DrawPoint(l_end_p,0.1f,color_xrgb(0,0,255));
+			DBG_DrawLine(l_source_p,l_end_p,color_xrgb(0,0,255));
 			}
 #endif
 		
@@ -334,13 +327,6 @@ void CExplosive::Explode()
 	Fvector& pos = m_vExplodePos;
 	Fvector& dir = m_vExplodeDir;
 
-	//-- VlaGan: мне лень прописывать для каждого отдельно, поэтому затычка для актора (u32)-2, ибо у него ид - 0 и для нпс, мобов -ид
-	if (ps_detail_enable_collision)
-	{
-		if (actor_position.distance_to(pos) <= ps_detail_collision_radius)
-			level_detailcoll_points.push_back(DetailCollisionPoint(pos, m_iCurrentParentID != g_actor->ID() ? -m_iCurrentParentID : static_cast<u16>(-2), m_fBlastRadius, 0.3f, 1.5f, true));
-	}
-
 	// Interactive Grass FX
 	g_pGamePersistent->GrassBendersAddExplosion(cast_game_object()->ID(), pos, Fvector().set(0, -99, 0), 1.33f, ps_ssfx_int_grass_params_2.y, ps_ssfx_int_grass_params_2.x, m_fBlastRadius * 2.0f);
 
@@ -348,7 +334,7 @@ void CExplosive::Explode()
 	if(ph_dbg_draw_mask.test(phDbgDrawExplosions))
 	{
 		DBG_OpenCashedDraw();
-		DBG_DrawPoint(pos,0.3f,D3DCOLOR_XRGB(255,0,0));
+		DBG_DrawPoint(pos,0.3f,color_xrgb(255,0,0));
 	}
 #endif
 //	Msg("---------CExplosive Explode [%d] frame[%d]",cast_game_object()->ID(), Device.dwFrame);

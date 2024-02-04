@@ -147,11 +147,15 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeapon,CSE_ALifeItem)
 		eWeaponAddonSilencer = 1 << 2,
 		eWeaponAddonLaserOn = 1 << 3,
 		eWeaponAddonFlashlightOn = 1 << 4,
+		eWeaponAddonLaserDesignator = 1 << 5,
+		eWeaponAddonTacticalTorch = 1 << 6,
 	};
 
 	EWeaponAddonStatus				m_scope_status;
 	EWeaponAddonStatus				m_silencer_status;				
 	EWeaponAddonStatus				m_grenade_launcher_status;
+	EWeaponAddonStatus				m_laser_designator_status;
+	EWeaponAddonStatus				m_tactical_torch_status;
 
 	u32								timestamp;
 	u8								wpn_flags;
@@ -186,13 +190,14 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeapon,CSE_ALifeItem)
 	u8								m_bZoom;
 	u32								m_ef_main_weapon_type;
 	u32								m_ef_weapon_type;
-	virtual	bool					keep_saved_data_anyway() const { return true; };
 
 									CSE_ALifeItemWeapon	(LPCSTR caSection);
 	virtual							~CSE_ALifeItemWeapon();
 	virtual void					OnEvent				(NET_Packet& P, u16 type, u32 time, ClientID sender );
 	virtual u32						ef_main_weapon_type	() const;
 	virtual u32						ef_weapon_type		() const;
+	virtual	bool					keep_saved_data_anyway() const { return true; };
+
 	u8								get_slot			();
 	u16								get_ammo_limit		();
 	u16								get_ammo_total		();
@@ -236,6 +241,14 @@ SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemWeaponShotGun)
 #define script_type_list save_type_list(CSE_ALifeItemWeaponShotGun)
 
+SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeaponAutoShotGun,CSE_ALifeItemWeaponShotGun)
+								CSE_ALifeItemWeaponAutoShotGun(LPCSTR caSection);
+virtual							~CSE_ALifeItemWeaponAutoShotGun();
+
+virtual CSE_ALifeItemWeapon		*cast_item_weapon	() {return this;}
+SERVER_ENTITY_DECLARE_END
+add_to_type_list(CSE_ALifeItemWeaponAutoShotGun)
+#define script_type_list save_type_list(CSE_ALifeItemWeaponAutoShotGun)
 
 SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemDetector,CSE_ALifeItem)
 	u32								m_ef_detector_type;

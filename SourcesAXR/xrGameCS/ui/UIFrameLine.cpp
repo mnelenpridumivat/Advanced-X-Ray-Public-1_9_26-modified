@@ -48,7 +48,7 @@ void CUIFrameLine::UpdateSize()
 	float s_width		= elements[flSecond].GetOriginalRect().width();
 	float s_height		= elements[flSecond].GetOriginalRect().height();
 	
-	if(bHorizontalOrientation && UI()->is_16_9_mode())
+	if(bHorizontalOrientation && UI().is_widescreen())
 		s_width			/= 1.2f;
 
 	if(bHorizontalOrientation)
@@ -78,9 +78,6 @@ void CUIFrameLine::UpdateSize()
 	{
 		back_width	= f_width;
 		back_height	= iSize - f_height - s_height;
-
-		// Size of frameline must be equal or greater than sum of size of two side textures
-		R_ASSERT(back_height > 0);
 	}
 
 	// Now resize back texture
@@ -126,7 +123,7 @@ void CUIFrameLine::SetElementsRect( CUIStaticItem& item, int idx )
 		}
 	}
 
-	if( bHorizontalOrientation && (idx==flSecond) && UI()->is_16_9_mode() )
+	if( bHorizontalOrientation && (idx==flSecond) && UI().is_widescreen() )
 		srtch_width			/= 1.2f;
 
 	item.SetRect( Frect().set( 0.0f, 0.0f, srtch_width, srtch_height ) );

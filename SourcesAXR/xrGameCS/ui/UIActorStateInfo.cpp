@@ -23,12 +23,13 @@
 #include "../location_manager.h"
 #include "../player_hud.h"
 #include "../hudmanager.h"
-#include "../UIGameCustom.h"
 #include "UIMainIngameWnd.h"
+#include "../UIGameCustom.h"
 
 #include "../Actor.h"
 #include "../ActorCondition.h"
 #include "../CustomOutfit.h"
+#include "../Inventory.h"
 #include "../string_table.h"
 
 ui_actor_state_wnd::ui_actor_state_wnd()
@@ -87,7 +88,7 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	value = actor->conditions().BleedingSpeed();					m_state[stt_health]->show_static( (value > 0.01f) );
 
 	CCustomOutfit* outfit = actor->GetOutfit();
-	CCustomOutfit* pants = actor->GetPants();
+	CCustomOutfit* pants =  smart_cast<CCustomOutfit*>(actor->inventory().ItemFromSlot(PANTS_SLOT));
 
 	if (outfit)
 	{
@@ -141,18 +142,16 @@ void ui_actor_state_wnd::update_round_states( CActor* actor, ALife::EHitType hit
 
 void ui_actor_state_wnd::UpdateHitZone()
 {
+	if (Device.dwFrame % 2 == 0)
+		HUD().GetUI()->UIGame()->UpdateZones(); //некрасиво слишком
+	m_state[stt_main]->set_arrow(  HUD().GetUI()->UIGame()->get_main_sensor_value() );
 /*	m_state[stt_fire]->set_arrow(  wnd->get_zone_cur_power( ALife::eHitTypeBurn ) );
 	m_state[stt_radia]->set_arrow( wnd->get_zone_cur_power( ALife::eHitTypeRadiation ) );
 	m_state[stt_acid]->set_arrow(  wnd->get_zone_cur_power( ALife::eHitTypeChemicalBurn ) );
 	m_state[stt_psi]->set_arrow(   wnd->get_zone_cur_power( ALife::eHitTypeTelepatic ) );
 	*/
 }
-/*
-void ui_actor_state_wnd::Update()
-{
-	inherited::Update();
-}
-*/
+
 void ui_actor_state_wnd::Draw()
 {
 	inherited::Draw();
@@ -204,16 +203,19 @@ void ui_actor_state_item::init_from_xml( CUIXml& xml, LPCSTR path )
 		m_sensor->SetAutoDelete( true );
 		CUIXmlInit::InitProgressShape( xml, "progress_shape", 0, m_sensor );
 	}
+
 	if ( xml.NavigateToNode( "arrow", 0 ) )	
 	{
 		m_arrow = xr_new<UI_Arrow>();
 		m_arrow->init_from_xml( xml, "arrow", this );
 	}
+
 	if ( xml.NavigateToNode( "arrow_shadow", 0 ) )	
 	{
 		m_arrow_shadow = xr_new<UI_Arrow>();
 		m_arrow_shadow->init_from_xml( xml, "arrow_shadow", this );
 	}
+
 	if ( xml.NavigateToNode( "icon", 0 ) )	
 	{
 		m_static = UIHelper::CreateStatic( xml, "icon", this );
@@ -225,9 +227,9 @@ void ui_actor_state_item::init_from_xml( CUIXml& xml, LPCSTR path )
 	xml.SetLocalRoot( stored_root );
 }
 
-bool ui_actor_state_item::OnMouse( float x, float y, EUIMessages mouse_action )
+bool ui_actor_state_item::OnMouseAction( float x, float y, EUIMessages mouse_action )
 {
-	if( CUIWindow::OnMouse( x, y, mouse_action ) )
+	if( CUIWindow::OnMouseAction( x, y, mouse_action ) )
 	{
 		return true;
 	}

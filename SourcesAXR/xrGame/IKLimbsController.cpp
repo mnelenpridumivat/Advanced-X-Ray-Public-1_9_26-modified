@@ -40,7 +40,7 @@ void CIKLimbsController::Create( CGameObject* O )
 	_bone_chains.reserve( sz );
 	for( u16 i = 0; sz > i; ++i )
 						LimbSetup();
-	
+
 	bool already_has_callbacks = !O->visual_callbacks().empty();
 	O->add_visual_callback(IKVisualCallback);
 	if( already_has_callbacks )
@@ -90,12 +90,20 @@ void	y_shift_bones( IKinematics* K, float shift )
 }
 float	CIKLimbsController::LegLengthShiftLimit			( float current_shift, const SCalculateData cd[max_size] )
 {
-	float shift_down = -phInfinity;
-	const u16 sz =static_cast<u16>(_bone_chains.size());
+#ifdef _M_X64
+	float shift_down = -std::numeric_limits<float>::max();
+#else
+	float shift_down = -std::numeric_limits<float>::infinity();
+#endif
+	const u16 sz = static_cast<u16>(_bone_chains.size());
 	for(u16 j = 0; sz > j; ++j )
 		if( cd[j].state.foot_step )
 		{
 			float s_down = cd[j].m_limb->ObjShiftDown( current_shift, cd[j] );
+
+			if (isnan(s_down))
+				continue;
+
 			if( shift_down < s_down )
 					shift_down = s_down;
 		}
@@ -299,7 +307,7 @@ void CIKLimbsController::Calculate( )
 		Fvector toe;
 		cd[j].m_limb->dbg_ik_foot().ToePosition( toe );
 		m.transform_tiny( toe );
-		DBG_DrawLine( toe, Fvector().add( toe, Fvector().set( 0, -_object_shift.shift(), 0 ) ), D3DCOLOR_XRGB( 255, 0, 0 )  );
+		DBG_DrawLine( toe, Fvector().add( toe, Fvector().set( 0, -_object_shift.shift(), 0 ) ), color_xrgb( 255, 0, 0 )  );
 	}
 #endif
 	}

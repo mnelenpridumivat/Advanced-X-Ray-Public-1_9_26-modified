@@ -36,9 +36,8 @@ public:
 	void				ChangeLevel				(GameGraph::_GRAPH_ID game_vert_id, u32 level_vert_id, Fvector pos, Fvector ang, Fvector pos2, Fvector ang2, bool b, const shared_str& message, bool b_allow_change_level);
 
 	virtual void		HideShownDialogs		();
-#ifdef DEBUG
 	virtual void		Render					();
-#endif
+
 	CUITalkWnd*			TalkMenu;
 	CChangeLevelWnd*	UIChangeLevelWnd;
 
@@ -67,7 +66,6 @@ public:
 	virtual				~CChangeLevelWnd			()									{};
 	virtual void		SendMessage					(CUIWindow *pWnd, s16 msg, void *pData);
 	virtual bool		WorkInPause					()const {return true;}
-	virtual void		Show						();
-	virtual void		Hide						();
+	virtual void		Show						(bool status);
 	virtual bool		OnKeyboardAction					(int dik, EUIMessages keyboard_action);
 };

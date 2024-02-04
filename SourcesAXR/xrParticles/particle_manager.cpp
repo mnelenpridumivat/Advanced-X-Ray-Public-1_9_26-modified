@@ -23,12 +23,14 @@ CParticleManager::~CParticleManager	()
 
 ParticleEffect*	CParticleManager::GetEffectPtr(int effect_id)
 {
-	R_ASSERT(effect_id>=0&&effect_id<(int)effect_vec.size());
-	return effect_vec[effect_id];
+	std::scoped_lock<std::mutex> m(pm_Locked);
+	R_ASSERT(effect_id >= 0 && effect_id < (int)m_effect_vec.size());
+	return m_effect_vec[effect_id];
 }
 
 ParticleActions* CParticleManager::GetActionListPtr(int a_list_num)
 {
+	std::scoped_lock<std::mutex> m(pm_Locked);
 	R_ASSERT(a_list_num>=0&&a_list_num<(int)m_alist_vec.size());
 	return m_alist_vec[a_list_num];
 }
@@ -36,28 +38,41 @@ ParticleActions* CParticleManager::GetActionListPtr(int a_list_num)
 // create
 int CParticleManager::CreateEffect(u32 max_particles)
 {
+	std::scoped_lock<std::mutex> m(pm_Locked);
 	int eff_id 		= -1;
-	for(int i=0; i<(int)effect_vec.size(); i++)
-		if(!effect_vec[i]){ eff_id=i; break;}
+
+	for (int i = 0; i < (int)m_effect_vec.size(); i++)
+	{
+		if (!m_effect_vec[i])
+		{
+			eff_id = i;
+			break;
+		}
+	}
 	
-    if (eff_id<0){
+    if (eff_id<0)
+	{
         // Couldn't find a big enough gap. Reallocate.
-        eff_id 		= effect_vec.size();
-        effect_vec.push_back	(0);
+		eff_id = m_effect_vec.size();
+		m_effect_vec.push_back(0);
     }
 
-    effect_vec[eff_id]	= xr_new<ParticleEffect>(max_particles);
+
+	m_effect_vec[eff_id] = xr_new<ParticleEffect>(max_particles);
 	
 	return eff_id;
 }
 void CParticleManager::DestroyEffect(int effect_id)
 {
-	R_ASSERT(effect_id>=0&&effect_id<(int)effect_vec.size());
-    xr_delete(effect_vec[effect_id]);
+	std::scoped_lock<std::mutex> m(pm_Locked);
+	R_ASSERT(effect_id >= 0 && effect_id < (int)m_effect_vec.size());
+	xr_delete(m_effect_vec[effect_id]);
 }
 int	CParticleManager::CreateActionList()
 {
+	std::scoped_lock<std::mutex> m(pm_Locked);
 	int list_id 		= -1;
+
 	for(u32 i=0; i<m_alist_vec.size(); ++i)
 		if(!m_alist_vec[i])
 		{ 
@@ -78,6 +93,7 @@ int	CParticleManager::CreateActionList()
 }
 void CParticleManager::DestroyActionList(int alist_id)
 {
+	std::scoped_lock<std::mutex> m(pm_Locked);
 	R_ASSERT(alist_id>=0&&alist_id<(int)m_alist_vec.size());
     xr_delete(m_alist_vec[alist_id]);
 }
@@ -91,7 +107,9 @@ void CParticleManager::PlayEffect(int effect_id, int alist_id)
 	ParticleActions* pa	= GetActionListPtr(alist_id);
 	VERIFY				(pa);
 	if(pa == NULL)		return; // ERROR
-	pa->lock();
+
+	std::scoped_lock<std::mutex> m(pa->m_bLocked);
+
 	// Step through all the actions in the action list.
 	for(PAVecIt it=pa->begin(); it!=pa->end(); ++it)
 	{
@@ -102,7 +120,6 @@ void CParticleManager::PlayEffect(int effect_id, int alist_id)
 		case PATurbulenceID:static_cast<PATurbulence*>(*it)->age = 0.f; break;
 		}
 	}
-	pa->unlock();
 }
 
 void CParticleManager::StopEffect(int effect_id, int alist_id, BOOL deffered)
@@ -111,12 +128,22 @@ void CParticleManager::StopEffect(int effect_id, int alist_id, BOOL deffered)
     ParticleActions* pa	= GetActionListPtr(alist_id);
 	VERIFY				(pa);
     if(pa == NULL)		return; // ERROR
-	pa->lock();
+
+	std::scoped_lock<std::mutex> m(pa->m_bLocked);
 
     // Step through all the actions in the action list.
-    for(PAVecIt it=pa->begin(); it!=pa->end(); it++){
-        switch((*it)->type){
-        case PASourceID: static_cast<PASource*>(*it)->m_Flags.set(PASource::flSilent,TRUE);		break;
+    for(PAVecIt it=pa->begin(); it!=pa->end(); it++)
+	{
+		if (*it == nullptr)
+			continue;
+
+        switch((*it)->type)
+		{
+		case PASourceID:
+			{
+				static_cast<PASource*>(*it)->m_Flags.set(PASource::flSilent, TRUE);
+				break;
+			}
         }
     }
 	if (!deffered){
@@ -124,7 +151,6 @@ void CParticleManager::StopEffect(int effect_id, int alist_id, BOOL deffered)
         ParticleEffect* pe		= GetEffectPtr(effect_id);
         pe->p_count				= 0;
     }
-	pa->unlock();
 }
 
 // update&render
@@ -136,7 +162,7 @@ void CParticleManager::Update(int effect_id, int alist_id, float dt)
 	VERIFY(pa);
 	VERIFY(pe);
 
-	pa->lock();
+	std::scoped_lock<std::mutex> m(pa->m_bLocked);
 
 	// Step through all the actions in the action list.
     float kill_old_time = 1.0f;
@@ -147,11 +173,9 @@ void CParticleManager::Update(int effect_id, int alist_id, float dt)
 		if (*it)
     		(*it)->Execute	(pe, dt, kill_old_time);
 	}
-	pa->unlock();
 }
-void CParticleManager::Render(int effect_id)
+void CParticleManager::Render(int)
 {
-//    ParticleEffect* pe	= GetEffectPtr(effect_id);
 }
 void CParticleManager::Transform(int alist_id, const Fmatrix& full, const Fvector& vel)
 {
@@ -160,7 +184,8 @@ void CParticleManager::Transform(int alist_id, const Fmatrix& full, const Fvecto
 	VERIFY(pa);
 
 	if(pa == NULL)		return; // ERROR
-	pa->lock();
+
+	std::scoped_lock<std::mutex> m(pa->m_bLocked);
 
 	Fmatrix mT;			mT.translate(full.c);
 
@@ -176,7 +201,6 @@ void CParticleManager::Transform(int alist_id, const Fmatrix& full, const Fvecto
 			break;
 		}
 	}
-	pa->unlock();
 }
 
 // effect
@@ -273,11 +297,13 @@ void CParticleManager::SaveActions(int alist_id, IWriter& W)
 	// Execute the specified action list.
 	ParticleActions* pa		= GetActionListPtr(alist_id);
 	VERIFY(pa);
-	pa->lock();
+
+	std::scoped_lock<std::mutex> m(pa->m_bLocked);
+
     W.w_u32					(pa->size());
+
     for (PAVecIt it=pa->begin(); it!=pa->end(); it++)
         (*it)->Save			(W);
-	pa->unlock();
 }
 
 

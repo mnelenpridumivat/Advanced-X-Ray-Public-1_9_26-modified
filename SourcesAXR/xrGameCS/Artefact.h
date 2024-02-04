@@ -2,11 +2,12 @@
 
 #include "hud_item_object.h"
 #include "hit_immunity.h"
-#include "PHObject.h"
+#include "../xrphysics/PHUpdateObject.h"
 #include "script_export_space.h"
 #include "patrol_path.h"
 
 class SArtefactActivation;
+class CInventoryItem;
 struct SArtefactDetectorsSupport;
 
 class CArtefact :	public CHudItemObject, 
@@ -48,12 +49,11 @@ public:
 			float					GetPowerPower					() const { return m_fPowerRestoreSpeed; }
 			float					GetBleedingPower				() const { return m_fBleedingRestoreSpeed; }
 
-			void					SetHealthPower					(const float value) { m_fHealthRestoreSpeed = value; }
-			void					SetRadiationPower				(const float value) { m_fRadiationRestoreSpeed = value; }
-			void					SetSatietyPower					(const float value) { m_fSatietyRestoreSpeed = value; }
-			void					SetPowerPower					(const float value) { m_fPowerRestoreSpeed = value; }
-			void					SetBleedingPower				(const float value) { m_fBleedingRestoreSpeed = value; }
-			
+			void					SetHealthPower					(float value) { m_fHealthRestoreSpeed = value; }
+			void					SetRadiationPower				(float value) { m_fRadiationRestoreSpeed = value; }
+			void					SetSatietyPower					(float value) { m_fSatietyRestoreSpeed = value; }
+			void					SetPowerPower					(float value) { m_fPowerRestoreSpeed = value; }
+			void					SetBleedingPower				(float value) { m_fBleedingRestoreSpeed = value; }
 	float GetImmunity(ALife::EHitType hit_type) { return m_ArtefactHitImmunities.GetHitImmunity(hit_type); }
 	void SetImmunity(ALife::EHitType hit_type, float val) { m_ArtefactHitImmunities.SetHitImmunity(hit_type, val); }
 
@@ -86,8 +86,8 @@ public:
 	virtual void					StartLights();
 	virtual void					StopLights();
 
-	virtual void					PhDataUpdate					(dReal step);
-	virtual void					PhTune							(dReal step)	{};
+	virtual void					PhDataUpdate					(float step);
+	virtual void					PhTune							(float step)	{};
 
 	float							m_additional_weight;
 	float							AdditionalInventoryWeight		() const {return m_additional_weight;}
@@ -130,7 +130,9 @@ public:
 	float							m_fChargeLevel;
 	float							m_fCurrentChargeLevel;
 	float							m_fDegradationSpeed;
+	void							SetChargeLevel(float charge_level);
 	float							GetCurrentChargeLevel(void) const;
+	void							SetRank(int rank);
 	int								GetCurrentAfRank(void) const;
 
 	bool							m_bVolumetricLights;
@@ -139,6 +141,8 @@ public:
 	float							m_fVolumetricIntensity;
 
 	int								m_iAfRank;
+
+	bool							m_bInContainer;
 public:
 	enum EAFHudStates {
 		eActivating = eLastBaseState+1,
@@ -159,7 +163,9 @@ public:
 	virtual void					OnAnimationEnd		(u32 state);
 	virtual bool					IsHidden			()	const	{return GetState()==eHidden;}
 
-	void							UpdateDegradation(void);
+			void					UpdateDegradation	(void);
+
+	bool							IsInContainer		();
 
 	// optimization FAST/SLOW mode
 	u32						o_render_frame				;

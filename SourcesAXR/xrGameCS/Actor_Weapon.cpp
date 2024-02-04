@@ -42,7 +42,7 @@ float CActor::GetWeaponAccuracy() const
 		dispersion *= ( 1.0f + (state.fVelocity/VEL_MAX) * m_fDispVelFactor * GetWeaponParam(W, Get_PDM_Vel_F(), 1.0f) );
 
 		bool bAccelerated = isActorAccelerated( mstate_real, IsZoomAimingMode() );
-		if( bAccelerated )
+		if ( bAccelerated || !state.bCrouch )
 		{
 			dispersion *= ( 1.0f + m_fDispAccelFactor * GetWeaponParam(W, Get_PDM_Accel_F(), 1.0f) );
 		}
@@ -69,7 +69,7 @@ void CActor::g_fireParams(CHudItem* pHudItem, Fvector &fire_pos, Fvector &fire_d
 	if (pMissile)
 	{
 		Fvector offset;
-		XFORM().transform_dir(offset, m_vMissileOffset);
+		XFORM().transform_dir(offset, pMissile->throw_point_offset());
 		//KRodin: TODO: В ЗП здесь код отличается. В ТЧ юзается m_vMissileOffset, в ЗП - pMissile->throw_point_offset().
 		//XFORM().transform_dir(offset, pMissile->throw_point_offset());
 		fire_pos.add(offset);
@@ -141,6 +141,10 @@ void CActor::SelectBestWeapon	(CObject* O)
 	CArtefact* pArtefact = smart_cast<CArtefact*>(O);
 	CInventoryItem*	pIItem	= smart_cast<CInventoryItem*> (O);
 	bool NeedToSelectBestWeapon = false;
+
+	if (pArtefact && pArtefact->H_Parent()) //just take an artefact
+		return;
+	
 	if ((pWeapon || pGrenade || pArtefact) && pIItem)
 	{
 		NeedToSelectBestWeapon = true;
@@ -158,7 +162,7 @@ void CActor::SelectBestWeapon	(CObject* O)
 	//-------------------------------------------------
 	for (int i=0; i<4; i++)
 	{
-		if (inventory().m_slots[BestWeaponSlots[i]].m_pIItem)
+		if (inventory().ItemFromSlot(BestWeaponSlots[i]) )
 		{
 			if (inventory().GetActiveSlot() != BestWeaponSlots[i])
 			{
@@ -203,9 +207,7 @@ void	CActor::HitSector(CObject* who, CObject* weapon)
 			if (pWeapon->IsSilencerAttached())
 			{
 				bShowHitSector = false;
-				if (pWeapon->IsGrenadeLauncherAttached())
-				{
-				}
+
 			}
 		}
 	}
@@ -340,3 +342,12 @@ void	CActor::RemoveAmmoForWeapon	(CInventoryItem *pIItem)
 	//	u_EventGen			(P,GE_DESTROY,pAmmo->ID());
 	//	u_EventSend			(P);
 };
+
+bool CActor::IsReloadingWeapon()
+{
+	if (!inventory().ActiveItem())
+		return false;
+
+	CWeapon* wpn = inventory().ActiveItem()->cast_weapon();
+	return wpn && wpn->GetState() == CWeapon::eReload;
+}

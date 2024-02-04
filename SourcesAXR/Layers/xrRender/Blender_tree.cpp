@@ -192,9 +192,11 @@ void	CBlender_Tree::Compile	(CBlender_Compile& C)
 	{
 	case SE_R2_NORMAL_HQ:	// deffer
 
+#if defined(USE_DX11)
 		// Is a branch/bush. Use a different VS
-		if (ps_r2_ls_flags_ext.test(R4FLAGEXT_NEW_SHADER_SUPPORT) && oBlend.value && RImplementation.o.ssfx_branches)
+		if (ps_r4_shaders_flags.test(R4FLAG_SSS_ADDON) && oBlend.value && RImplementation.o.ssfx_branches)
 			tvs = "tree_branch";
+#endif
 
 		if (bUseATOC)
 		{
@@ -202,6 +204,8 @@ void	CBlender_Tree::Compile	(CBlender_Compile& C)
 			C.r_Stencil		( TRUE,D3DCMP_ALWAYS,0xff,0x7f,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
 			C.r_ColorWriteEnable(false, false, false, false);
 			C.r_StencilRef	(0x01);
+			C.r_dx10Texture	("s_waves", "shaders\\wind_wave");
+			C.r_dx10Sampler	("smp_linear2");
 			//	Alpha to coverage.
 			C.RS.SetRS	(XRDX10RS_ALPHATOCOVERAGE,	TRUE);
 			C.r_End			();
@@ -210,6 +214,8 @@ void	CBlender_Tree::Compile	(CBlender_Compile& C)
 		uber_deffer		(C,true,tvs,"base",oBlend.value,0,true);
 		C.r_Stencil		( TRUE,D3DCMP_ALWAYS,0xff,0x7f,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
 		C.r_StencilRef	(0x01);
+		C.r_dx10Texture	("s_waves", "shaders\\wind_wave");
+		C.r_dx10Sampler	("smp_linear2");
 		//C.PassSET_ZB		(true,false);
 		//	Need only for ATOC to emulate stencil test
 		if (bUseATOC)
@@ -245,6 +251,8 @@ void	CBlender_Tree::Compile	(CBlender_Compile& C)
 		C.r_dx10Texture			("s_base",	C.L_textures[0]);
 		C.r_dx10Sampler			("smp_base");
 		C.r_dx10Sampler			("smp_linear");
+		C.r_dx10Texture			("s_waves", "shaders\\wind_wave");
+		C.r_dx10Sampler			("smp_linear2");
 		C.r_ColorWriteEnable	(false, false, false, false);
 		C.r_End				();
 		break;

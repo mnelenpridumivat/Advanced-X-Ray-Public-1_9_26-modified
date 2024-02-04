@@ -1,4 +1,4 @@
-﻿// Explosive.cpp: интерфейс для взврывающихся объектов
+// Explosive.cpp: интерфейс для взврывающихся объектов
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -6,7 +6,7 @@
 
 #include "explosive.h"
 
-#include "PhysicsShell.h"
+#include "../xrphysics/PhysicsShell.h"
 #include "entity.h"
 //#include "PSObject.h"
 #include "ParticlesObject.h"
@@ -26,26 +26,20 @@
 #	include "PHDebug.h"
 #endif
 
-#include "Physics.h"
-#include "MathUtils.h"
-#include "phvalidevalues.h"
-#include "PHActivationShape.h"
+//#include "Physics.h"
+#include "../xrphysics/MathUtils.h"
+//#include "../xrphysics/phvalidevalues.h"
+#include "../xrphysics/iActivationShape.h"
+#include "../xrphysics/iphworld.h"
 #include "game_base_space.h"
 #include "profiler.h"
 
 #include "../Include/xrRender/Kinematics.h"
-#include "../../xrCore/_detail_collision_point.h"
 
 #define EFFECTOR_RADIUS 30.f
 const u16	TEST_RAYS_PER_OBJECT=5;
 const u16	BLASTED_OBJ_PROCESSED_PER_FRAME=3;
 const float	exp_dist_extinction_factor=3.f;//(>1.f, 1.f -means no dist change of exp effect)	on the dist of m_fBlastRadius exp. wave effect in exp_dist_extinction_factor times less than maximum
-
-ENGINE_API extern xr_vector<DetailCollisionPoint> level_detailcoll_points;
-ENGINE_API extern int ps_detail_enable_collision;
-ENGINE_API extern Fvector actor_position;
-ENGINE_API extern float ps_detail_collision_radius;
-extern ENGINE_API Fvector4 ps_ssfx_int_grass_params_2;
 
 CExplosive::CExplosive(void) 
 {
@@ -54,7 +48,6 @@ CExplosive::CExplosive(void)
 	m_iFragsNum				= 20;
 	m_fFragsRadius			= 30.0f;
 	m_fFragHit				= 50.0f;
-	m_fFragHitCritical		= 0.0f;
 	m_fUpThrowFactor		= 0.f;
 
 
@@ -112,7 +105,6 @@ void CExplosive::Load(CInifile const *ini,LPCSTR section)
 	m_iFragsNum			*= 2;
 	m_fFragsRadius		= ini->r_float(section,"frags_r");
 	m_fFragHit			= ini->r_float(section,"frag_hit");
-	m_fFragHitCritical	= ini->r_float(section,"frag_hit_critical");
 	m_fFragHitImpulse	= ini->r_float(section,"frag_hit_impulse");
 
 	m_eHitTypeBlast		= ALife::g_tfString2HitType(ini->r_string(section, "hit_type_blast"));
@@ -133,6 +125,7 @@ void CExplosive::Load(CInifile const *ini,LPCSTR section)
 	//трассы для разлета осколков
 	m_fFragmentSpeed			= ini->r_float	(section,"fragment_speed"				);
 
+	m_layered_sounds.LoadSound(ini, section, "snd_explode", "sndExplode", false, m_eSoundExplode);
 	m_fExplodeDurationMax	= ini->r_float(section, "explode_duration");
 
 	effector.effect_sect_name= ini->r_string("explode_effector","effect_sect_name");
@@ -156,8 +149,6 @@ void CExplosive::Load(CInifile const *ini,LPCSTR section)
 	m_bDynamicParticles	 = FALSE;
 	if (ini->line_exist(section, "dynamic_explosion_particles"))
 		m_bDynamicParticles = ini->r_bool(section, "dynamic_explosion_particles");
-
-	m_layered_sounds.LoadSound(ini, section, "snd_explode", "sndExplode", false, m_eSoundExplode);
 }
 
 void CExplosive::net_Destroy	()
@@ -326,20 +317,13 @@ void CExplosive::Explode()
 {
 	VERIFY(0xffff != Initiator());
 	VERIFY(m_explosion_flags.test(flReadyToExplode));//m_bReadyToExplode
-	VERIFY(!ph_world->Processing());
+	VERIFY(!physics_world()->Processing());
 	//m_bExploding = true;
 	m_explosion_flags.set(flExploding,TRUE);
 	cast_game_object()->processing_activate();
 
 	Fvector& pos = m_vExplodePos;
 	Fvector& dir = m_vExplodeDir;
-
-	//-- VlaGan: мне лень прописывать для каждого отдельно, поэтому затычка для актора (u32)-2, ибо у него ид - 0 и для нпс, мобов -ид
-	if (ps_detail_enable_collision)
-	{
-		if (actor_position.distance_to(pos) <= ps_detail_collision_radius)
-			level_detailcoll_points.push_back(DetailCollisionPoint(pos, m_iCurrentParentID != g_actor->ID() ? -m_iCurrentParentID : (u16)-2, m_fBlastRadius, 0.3f, 1.5f, true));
-	}
 
 	// Interactive Grass FX
 	g_pGamePersistent->GrassBendersAddExplosion(cast_game_object()->ID(), pos, Fvector().set(0, -99, 0), 1.33f, ps_ssfx_int_grass_params_2.y, ps_ssfx_int_grass_params_2.x, m_fBlastRadius * 2.0f);
@@ -403,7 +387,7 @@ void CExplosive::Explode()
 		CCartridge cartridge;
 		cartridge.param_s.kDist				= 1.f;
 		cartridge.param_s.kHit				= 1.f;
-		cartridge.param_s.kCritical			= 1.f;
+//.		cartridge.param_s.kCritical			= 1.f;
 		cartridge.param_s.kImpulse			= 1.f;
 		cartridge.param_s.kAP				= 1.f;
 		cartridge.param_s.fWallmarkSize		= fWallmarkSize;
@@ -411,9 +395,9 @@ void CExplosive::Explode()
 		cartridge.m_flags.set				(CCartridge::cfTracer,FALSE);
 
 		Level().BulletManager().AddBullet(	pos, frag_dir, m_fFragmentSpeed,
-											m_fFragHit, m_fFragHitCritical, m_fFragHitImpulse, Initiator(),
+											m_fFragHit, m_fFragHitImpulse, Initiator(),
 											cast_game_object()->ID(), m_eHitTypeFrag, m_fFragsRadius, 
-											cartridge, SendHits );
+											cartridge, 1.f, SendHits );
 	}	
 
 	if (cast_game_object()->Remote()) return;
@@ -493,7 +477,7 @@ void CExplosive::GetExplVelocity(Fvector &v)
 void CExplosive::UpdateCL() 
 {
 	//VERIFY(!this->getDestroy());
-	VERIFY(!ph_world->Processing());
+	VERIFY(!physics_world()->Processing());
 	if(!m_explosion_flags.test(flExploding)) return;// !m_bExploding
 	if(m_explosion_flags.test(flExploded))
 	{
@@ -655,7 +639,7 @@ void CExplosive::FindNormal(Fvector& normal)
 void CExplosive::StartLight	()
 {
 
-	VERIFY(!ph_world->Processing());
+	VERIFY(!physics_world()->Processing());
 	if(m_fLightTime>0)
 	{
 		
@@ -671,7 +655,7 @@ void CExplosive::StartLight	()
 void CExplosive::StopLight		()
 {
 	if	(m_pLight){
-		VERIFY						(!ph_world->Processing());
+		VERIFY						(!physics_world()->Processing());
 		m_pLight->set_active		(false);
 		LightDestroy				();
 	}
@@ -774,13 +758,7 @@ void CExplosive::ActivateExplosionBox(const Fvector &size,Fvector &in_out_pos)
 	CPhysicsShellHolder		*self_obj=smart_cast<CPhysicsShellHolder*>(cast_game_object());
 	CPhysicsShell* self_shell=self_obj->PPhysicsShell();
 	if(self_shell&&self_shell->isActive())self_shell->DisableCollision();
-	CPHActivationShape activation_shape;//Fvector start_box;m_PhysicMovementControl.Box().getsize(start_box);
-	activation_shape.Create(in_out_pos,size,self_obj);
-	dBodySetGravityMode(activation_shape.ODEBody(),0);
-	activation_shape.Activate(size,1,1.f,M_PI/8.f);
-	in_out_pos.set(activation_shape.Position());
-	activation_shape.Size(m_vExplodeSize);
-	activation_shape.Destroy();
+	ActivateShapeExplosive( self_obj, size, m_vExplodeSize, in_out_pos );
 	if(self_shell&&self_shell->isActive())self_shell->EnableCollision();
 }
 void CExplosive::net_Relcase(CObject* O)

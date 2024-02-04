@@ -12,10 +12,11 @@
 #include "game_object_space.h"
 #include "script_callback_ex.h"
 #include "script_game_object.h"
-#include "PhysicsShell.h"
+#include "../xrphysics/PhysicsShell.h"
 #ifdef DEBUG
-#include "PHWorld.h"
-extern CPHWorld			*ph_world;
+#include "../xrphysics/IPHWorld.h"
+//#include "PHWorld.h"
+//extern CPHWorld			*ph_world;
 #endif
 CDestroyablePhysicsObject ::CDestroyablePhysicsObject()
 {
@@ -51,12 +52,9 @@ BOOL CDestroyablePhysicsObject::net_Spawn(CSE_Abstract* DC)
 {
 	CSE_Abstract* E = (CSE_Abstract*)DC;
 	const CSE_Visual* visual = smart_cast<const CSE_Visual*>(E);
-
-	if (visual)
-	{
+	if (visual) {
 		shared_str N = visual_name(E);
-		if (!(N.c_str() && N[0]))
-		{
+		if (!(N.c_str() && N[0])) {
 			Msg("! [%s]: prevent %s[%u] from spawn because it has no visual", __FUNCTION__,
 				E->name_replace()[0] ? E->name_replace() : E->s_name.c_str(), E->ID);
 			return false;
@@ -110,7 +108,7 @@ void	CDestroyablePhysicsObject::Hit					(SHit* pHDS)
 }
 void CDestroyablePhysicsObject::Destroy()
 {
-	VERIFY(!ph_world->Processing());
+	VERIFY(!physics_world()->Processing());
 	const CGameObject *who_object = smart_cast<const CGameObject*>(FatalHit().initiator());
 	callback(GameObject::eDeath)(lua_game_object(), who_object ? who_object->lua_game_object() : 0);
 	CPHDestroyable::Destroy(ID(),"physic_destroyable_object");

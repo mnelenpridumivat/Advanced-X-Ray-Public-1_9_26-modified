@@ -47,10 +47,12 @@ class CGamePersistent:
 
 	void xr_stdcall		start_logo_intro		();
 	void xr_stdcall		update_logo_intro		();
-	void xr_stdcall		start_game_intro		();
-	void xr_stdcall		update_game_intro		();
+
 	void xr_stdcall		game_loaded				();
 	void xr_stdcall		update_game_loaded		();
+
+	void xr_stdcall		start_game_intro		();
+	void xr_stdcall		update_game_intro		();
 
 #ifdef DEBUG
 	u32					m_frame_counter;
@@ -115,9 +117,14 @@ public:
 			float		GetActorPower			() override;
 			float		GetActorBleeding		() override;
 			float		GetActorIntoxication	() override;
+			bool		GetClearMaskProcess		() override;
 			bool		GetActorAliveStatus		();
 			bool		GetActor				();
 			bool		IsCamFirstEye			();
+			bool		GetActorHelmetStatus	();
+			bool		GetFogInfluenceVolumetricLight();
+			std::string	GetMoonPhase			() override;
+			u32			GetTimeHours			() override;
 
 	virtual void		EditorOnFrame			();
 

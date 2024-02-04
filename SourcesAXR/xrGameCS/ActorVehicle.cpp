@@ -14,7 +14,7 @@
 #include "PHDestroyable.h"
 #include "Car.h"
 #include "../Include/xrRender/Kinematics.h"
-#include "PHShellSplitter.h"
+//#include "PHShellSplitter.h"
 
 #include "actor_anim_defs.h"
 #include "game_object_space.h"
@@ -32,6 +32,7 @@ void CActor::attach_Vehicle(CHolderCustom* vehicle)
 	CCar* car = smart_cast<CCar*>(vehicle);
 	if (!car)
 		return;
+
 	if (!vehicle->attach_Actor(this))
 		return;
 
@@ -39,6 +40,7 @@ void CActor::attach_Vehicle(CHolderCustom* vehicle)
 	IKinematicsAnimated* V = smart_cast<IKinematicsAnimated*>(pVis); R_ASSERT(V);
 	IKinematics* pK = smart_cast<IKinematics*>(pVis);
 
+	// temp play animation
 	u16 anim_type = car->DriverAnimationType();
 	SVehicleAnimCollection& anims = m_vehicle_anims->m_vehicles_type_collections[anim_type];
 	V->PlayCycle(anims.idles[0], FALSE);
@@ -69,20 +71,14 @@ void CActor::detach_Vehicle()
 	u16	head_bone = pKinematics->LL_BoneID("bip01_head");
 	pKinematics->LL_SetBoneVisible(head_bone, true, true);
 
-	CPHShellSplitterHolder*sh= car->PPhysicsShell()->SplitterHolder();
-
-	if(sh)
-		sh->Deactivate();
+	car->PPhysicsShell()->SplitterHolderDeactivate();
 
 	if(!character_physics_support()->movement()->ActivateBoxDynamic(0))
 	{
-		if(sh)sh->Activate();
+		car->PPhysicsShell()->SplitterHolderActivate();
 		return;
 	}
-
-	if(sh)
-		sh->Activate();
-
+	car->PPhysicsShell()->SplitterHolderActivate();
 	m_holder->detach_Actor();
 
 	character_physics_support()->movement()->SetPosition(m_holder->ExitPosition());

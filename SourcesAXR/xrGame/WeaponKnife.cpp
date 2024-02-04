@@ -140,6 +140,48 @@ void CWeaponKnife::OnStateSwitch	(u32 S)
 	}
 }
 
+void CWeaponKnife::FastStrike(u32 state)
+{
+	if (state == 0)
+	{
+		m_hit_dist		=	m_Hit1Distance;
+		m_splash_dir	=	m_Hit1SpashDir;
+		m_splash_radius	=	m_Hit1SplashRadius;
+		m_hits_count	=	m_Splash1HitsCount;
+		m_perv_hits_count = m_Splash1PerVictimsHCount;
+		m_eHitType		= m_eHitType_1;
+
+		if (GameID() == eGameIDSingle)
+			fCurrentHit = fvHitPower_1[g_SingleGameDifficulty];
+		else
+			fCurrentHit = fvHitPower_1[egdMaster];
+
+		fHitImpulse_cur = fHitImpulse_1;
+	} 
+	else if (state == 1)
+	{
+		m_hit_dist		=	m_Hit2Distance;
+		m_splash_dir	=	m_Hit2SpashDir;
+		m_splash_radius	=	m_Hit2SplashRadius;
+		m_hits_count	=	m_Splash2HitsCount;
+		m_perv_hits_count = 0;
+		m_eHitType		= m_eHitType_2;
+
+		if (GameID() == eGameIDSingle)
+			fCurrentHit = fvHitPower_2[g_SingleGameDifficulty];
+		else
+			fCurrentHit = fvHitPower_2[egdMaster];
+
+		fHitImpulse_cur = fHitImpulse_2;
+	} 
+	else
+		return;
+
+	fireDistance	= m_hit_dist + m_splash_radius;
+
+	if(H_Parent())
+		KnifeStrike(Device.vCameraPosition, Device.vCameraDirection);
+}
 
 void CWeaponKnife::KnifeStrike(const Fvector& pos, const Fvector& dir)
 {
@@ -436,19 +478,19 @@ void CWeaponKnife::OnRender()
 			float	sc_r				= i->second;
 			Fmatrix	sphere				= Fmatrix().scale(sc_r, sc_r, sc_r);
 			sphere.c					= i->first;
-			renderer.draw_ellipse		(sphere, D3DCOLOR_XRGB(100, 255, 0));
+			renderer.draw_ellipse		(sphere, color_xrgb(100, 255, 0));
 		}
 		/*
 		Fmatrix	sphere				= Fmatrix().scale(.05f, .05f, .05f);
 		sphere.c					= m_dbg_data.m_pos;
-		renderer.draw_ellipse		(sphere, D3DCOLOR_XRGB(255, 0, 0));
-		renderer.draw_line			(Fidentity, m_dbg_data.m_pos, m_dbg_data.m_endpos, D3DCOLOR_XRGB(255, 255, 0));
+		renderer.draw_ellipse		(sphere, color_xrgb(255, 0, 0));
+		renderer.draw_line			(Fidentity, m_dbg_data.m_pos, m_dbg_data.m_endpos, color_xrgb(255, 255, 0));
 		
 		sphere.c					= m_dbg_data.m_endpos;
-		renderer.draw_ellipse		(sphere, D3DCOLOR_XRGB(100, 255, 0));*/
+		renderer.draw_ellipse		(sphere, color_xrgb(100, 255, 0));*/
 		//Fvector victim_end			(m_dbg_data.m_pos);
 		//victim_end.add				(m_dbg_data.m_pick_vector);
-		//renderer.draw_line			(Fidentity, m_dbg_data.m_pos, victim_end, D3DCOLOR_XRGB(0, 255, 255));
+		//renderer.draw_line			(Fidentity, m_dbg_data.m_pos, victim_end, color_xrgb(0, 255, 255));
 	}
 	float hit_power = 1.f;
 	for (dbg_draw_data::targets_t::const_iterator i = m_dbg_data.m_targets_vectors.begin(),
@@ -458,7 +500,7 @@ void CWeaponKnife::OnRender()
 		sphere.c		= *i;
 		u8				hit_color = static_cast<u8>(255 * hit_power);
 		hit_power		*= m_NextHitDivideFactor;
-		renderer.draw_ellipse(sphere, D3DCOLOR_XRGB(hit_color, 50, 0));
+		renderer.draw_ellipse(sphere, color_xrgb(hit_color, 50, 0));
 	}
 	
 	for (dbg_draw_data::obbes_t::const_iterator i = m_dbg_data.m_target_boxes.begin(),
@@ -466,7 +508,7 @@ void CWeaponKnife::OnRender()
 	{
 		Fmatrix	tmp_matrix;
 		tmp_matrix.set(i->m_rotate.i, i->m_rotate.j, i->m_rotate.k, i->m_translate);
-		renderer.draw_obb(tmp_matrix, i->m_halfsize, D3DCOLOR_XRGB(0, 255, 0));
+		renderer.draw_obb(tmp_matrix, i->m_halfsize, color_xrgb(0, 255, 0));
 	}
 }
 #endif

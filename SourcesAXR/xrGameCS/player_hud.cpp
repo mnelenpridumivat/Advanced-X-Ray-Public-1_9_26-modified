@@ -13,26 +13,26 @@ player_hud* g_player_hud = NULL;
 Fvector _ancor_pos;
 Fvector _wpn_root_pos;
 
-#define PITCH_OFFSET_R		   0.0f //17f   // Íàñêîëüêî ñèëüíî ñòâîë ñìåùàåòñÿ âáîê (âëåâî) ïðè âåðòèêàëüíûõ ïîâîðîòàõ êàìåðû	--#SM+#--
-#define PITCH_OFFSET_N		   0.0f //12f   // Íàñêîëüêî ñèëüíî ñòâîë ïîäíèìàåòñÿ\îïóñêàåòñÿ ïðè âåðòèêàëüíûõ ïîâîðîòàõ êàìåðû	--#SM+#--
-#define PITCH_OFFSET_D		   0.02f    // Íàñêîëüêî ñèëüíî ñòâîë ïðèáëèæàåòñÿ\îòäàëÿåòñÿ ïðè âåðòèêàëüíûõ ïîâîðîòàõ êàìåðû --#SM+#--
-#define PITCH_LOW_LIMIT		   -PI      // Ìèíèìàëüíîå çíà÷åíèå pitch ïðè èñïîëüçîâàíèè ñîâìåñòíî ñ PITCH_OFFSET_N			--#SM+#--
-#define TENDTO_SPEED           1.0f     // Ìîäèôèêàòîð ñèëû èíåðöèè (áîëüøå - ÷óâñòâèòåëüíåé)
-#define TENDTO_SPEED_AIM       1.0f     // (Äëÿ ïðèöåëèâàíèÿ)
-#define TENDTO_SPEED_RET       5.0f     // Ìîäèôèêàòîð ñèëû îòêàòà èíåðöèè (áîëüøå - áûñòðåå)
-#define TENDTO_SPEED_RET_AIM   5.0f     // (Äëÿ ïðèöåëèâàíèÿ)
-#define INERT_MIN_ANGLE        0.0f     // Ìèíèìàëüíàÿ ñèëà íàêëîíà, íåîáõîäèìàÿ äëÿ ñòàðòà èíåðöèè
-#define INERT_MIN_ANGLE_AIM    3.5f     // (Äëÿ ïðèöåëèâàíèÿ)
+#define PITCH_OFFSET_R		   0.0f //17f   // ÐÐ°ÑÐºÐ¾Ð»ÑŒÐºÐ¾ ÑÐ¸Ð»ÑŒÐ½Ð¾ ÑÑ‚Ð²Ð¾Ð» ÑÐ¼ÐµÑ‰Ð°ÐµÑ‚ÑÑ Ð²Ð±Ð¾Ðº (Ð²Ð»ÐµÐ²Ð¾) Ð¿Ñ€Ð¸ Ð²ÐµÑ€Ñ‚Ð¸ÐºÐ°Ð»ÑŒÐ½Ñ‹Ñ… Ð¿Ð¾Ð²Ð¾Ñ€Ð¾Ñ‚Ð°Ñ… ÐºÐ°Ð¼ÐµÑ€Ñ‹	--#SM+#--
+#define PITCH_OFFSET_N		   0.0f //12f   // ÐÐ°ÑÐºÐ¾Ð»ÑŒÐºÐ¾ ÑÐ¸Ð»ÑŒÐ½Ð¾ ÑÑ‚Ð²Ð¾Ð» Ð¿Ð¾Ð´Ð½Ð¸Ð¼Ð°ÐµÑ‚ÑÑ\Ð¾Ð¿ÑƒÑÐºÐ°ÐµÑ‚ÑÑ Ð¿Ñ€Ð¸ Ð²ÐµÑ€Ñ‚Ð¸ÐºÐ°Ð»ÑŒÐ½Ñ‹Ñ… Ð¿Ð¾Ð²Ð¾Ñ€Ð¾Ñ‚Ð°Ñ… ÐºÐ°Ð¼ÐµÑ€Ñ‹	--#SM+#--
+#define PITCH_OFFSET_D		   0.02f    // ÐÐ°ÑÐºÐ¾Ð»ÑŒÐºÐ¾ ÑÐ¸Ð»ÑŒÐ½Ð¾ ÑÑ‚Ð²Ð¾Ð» Ð¿Ñ€Ð¸Ð±Ð»Ð¸Ð¶Ð°ÐµÑ‚ÑÑ\Ð¾Ñ‚Ð´Ð°Ð»ÑÐµÑ‚ÑÑ Ð¿Ñ€Ð¸ Ð²ÐµÑ€Ñ‚Ð¸ÐºÐ°Ð»ÑŒÐ½Ñ‹Ñ… Ð¿Ð¾Ð²Ð¾Ñ€Ð¾Ñ‚Ð°Ñ… ÐºÐ°Ð¼ÐµÑ€Ñ‹ --#SM+#--
+#define PITCH_LOW_LIMIT		   -PI      // ÐœÐ¸Ð½Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ pitch Ð¿Ñ€Ð¸ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ð½Ð¸Ð¸ ÑÐ¾Ð²Ð¼ÐµÑÑ‚Ð½Ð¾ Ñ PITCH_OFFSET_N			--#SM+#--
+#define TENDTO_SPEED           1.0f     // ÐœÐ¾Ð´Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ ÑÐ¸Ð»Ñ‹ Ð¸Ð½ÐµÑ€Ñ†Ð¸Ð¸ (Ð±Ð¾Ð»ÑŒÑˆÐµ - Ñ‡ÑƒÐ²ÑÑ‚Ð²Ð¸Ñ‚ÐµÐ»ÑŒÐ½ÐµÐ¹)
+#define TENDTO_SPEED_AIM       1.0f     // (Ð”Ð»Ñ Ð¿Ñ€Ð¸Ñ†ÐµÐ»Ð¸Ð²Ð°Ð½Ð¸Ñ)
+#define TENDTO_SPEED_RET       5.0f     // ÐœÐ¾Ð´Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ ÑÐ¸Ð»Ñ‹ Ð¾Ñ‚ÐºÐ°Ñ‚Ð° Ð¸Ð½ÐµÑ€Ñ†Ð¸Ð¸ (Ð±Ð¾Ð»ÑŒÑˆÐµ - Ð±Ñ‹ÑÑ‚Ñ€ÐµÐµ)
+#define TENDTO_SPEED_RET_AIM   5.0f     // (Ð”Ð»Ñ Ð¿Ñ€Ð¸Ñ†ÐµÐ»Ð¸Ð²Ð°Ð½Ð¸Ñ)
+#define INERT_MIN_ANGLE        0.0f     // ÐœÐ¸Ð½Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð°Ñ ÑÐ¸Ð»Ð° Ð½Ð°ÐºÐ»Ð¾Ð½Ð°, Ð½ÐµÐ¾Ð±Ñ…Ð¾Ð´Ð¸Ð¼Ð°Ñ Ð´Ð»Ñ ÑÑ‚Ð°Ñ€Ñ‚Ð° Ð¸Ð½ÐµÑ€Ñ†Ð¸Ð¸
+#define INERT_MIN_ANGLE_AIM    3.5f     // (Ð”Ð»Ñ Ð¿Ñ€Ð¸Ñ†ÐµÐ»Ð¸Ð²Ð°Ð½Ð¸Ñ)
 
-// Ïðåäåëû ñìåùåíèÿ ïðè èíåðöèè (ëåâî / ïðàâî / âåðõ / íèç)
+// ÐŸÑ€ÐµÐ´ÐµÐ»Ñ‹ ÑÐ¼ÐµÑ‰ÐµÐ½Ð¸Ñ Ð¿Ñ€Ð¸ Ð¸Ð½ÐµÑ€Ñ†Ð¸Ð¸ (Ð»ÐµÐ²Ð¾ / Ð¿Ñ€Ð°Ð²Ð¾ / Ð²ÐµÑ€Ñ… / Ð½Ð¸Ð·)
 #define ORIGIN_OFFSET          0.04f,  0.04f,  0.04f, 0.02f 
 #define ORIGIN_OFFSET_AIM      0.015f, 0.015f, 0.01f, 0.005f   
 
 // Outdated - old inertion
-#define TENDTO_SPEED_OLD       5.f      // Ñêîðîñòü íîðìàëèçàöèè ïîëîæåíèÿ ñòâîëà
-#define TENDTO_SPEED_AIM_OLD   8.f      // (Äëÿ ïðèöåëèâàíèÿ)
-#define ORIGIN_OFFSET_OLD     -0.05f    // Ôàêòîð âëèÿíèÿ èíåðöèè íà ïîëîæåíèå ñòâîëà (÷åì ìåíüøå, òåì ìàøòàáíåé èíåðöèÿ)
-#define ORIGIN_OFFSET_AIM_OLD -0.03f    // (Äëÿ ïðèöåëèâàíèÿ)
+#define TENDTO_SPEED_OLD       5.f      // Ð¡ÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ Ð½Ð¾Ñ€Ð¼Ð°Ð»Ð¸Ð·Ð°Ñ†Ð¸Ð¸ Ð¿Ð¾Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ ÑÑ‚Ð²Ð¾Ð»Ð°
+#define TENDTO_SPEED_AIM_OLD   8.f      // (Ð”Ð»Ñ Ð¿Ñ€Ð¸Ñ†ÐµÐ»Ð¸Ð²Ð°Ð½Ð¸Ñ)
+#define ORIGIN_OFFSET_OLD     -0.05f    // Ð¤Ð°ÐºÑ‚Ð¾Ñ€ Ð²Ð»Ð¸ÑÐ½Ð¸Ñ Ð¸Ð½ÐµÑ€Ñ†Ð¸Ð¸ Ð½Ð° Ð¿Ð¾Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ ÑÑ‚Ð²Ð¾Ð»Ð° (Ñ‡ÐµÐ¼ Ð¼ÐµÐ½ÑŒÑˆÐµ, Ñ‚ÐµÐ¼ Ð¼Ð°ÑˆÑ‚Ð°Ð±Ð½ÐµÐ¹ Ð¸Ð½ÐµÑ€Ñ†Ð¸Ñ)
+#define ORIGIN_OFFSET_AIM_OLD -0.03f    // (Ð”Ð»Ñ Ð¿Ñ€Ð¸Ñ†ÐµÐ»Ð¸Ð²Ð°Ð½Ð¸Ñ)
 
 float CalcMotionSpeed(const shared_str& anim_name)
 {
@@ -160,7 +160,7 @@ void attachable_hud_item::set_bone_visible(const shared_str& bone_name, BOOL bVi
 void attachable_hud_item::update(bool bForce)
 {
 	if(!bForce && m_upd_firedeps_frame==Device.dwFrame)	return;
-	bool is_16x9 = UI()->is_16_9_mode();
+	bool is_16x9 = UI().is_widescreen();
 	
 	if(!!m_measures.m_prop_flags.test(hud_item_measures::e_16x9_mode_now)!=is_16x9)
 		m_measures.load(m_sect_name, m_model);
@@ -171,6 +171,7 @@ void attachable_hud_item::update(bool bForce)
 	m_attach_offset.translate_over	(m_measures.m_item_attach[0]);
 
 	m_parent->calc_transform		(m_attach_place_idx, m_attach_offset, m_item_transform);
+	m_parent_hud_item->UpdateAddonsTransform(true);
 	m_upd_firedeps_frame			= Device.dwFrame;
 
 	IKinematicsAnimated* ka			=	m_model->dcast_PKinematicsAnimated();
@@ -263,9 +264,9 @@ void attachable_hud_item::render_item_ui()
 
 void hud_item_measures::load(const shared_str& sect_name, IKinematics* K)
 {
-	bool is_16x9 = UI()->is_16_9_mode();
+	bool is_16x9 = UI().is_widescreen();
 	string64	_prefix;
-	sprintf_s	(_prefix,"%s",is_16x9?"_16x9":"");
+	xr_sprintf	(_prefix,"%s",is_16x9?"_16x9":"");
 	string128	val_name;
 
 	strconcat					(sizeof(val_name),val_name,"hands_position",_prefix);
@@ -316,6 +317,11 @@ void hud_item_measures::load(const shared_str& sect_name, IKinematics* K)
 	m_hands_offset[0][2]		= pSettings->r_fvector3(sect_name, val_name);
 	strconcat					(sizeof(val_name),val_name,"gl_hud_offset_rot",_prefix);
 	m_hands_offset[1][2]		= pSettings->r_fvector3(sect_name, val_name);
+
+	strconcat					(sizeof(val_name),val_name,"aim_alt_hud_offset_pos",_prefix);
+	m_hands_offset[0][3]		= READ_IF_EXISTS(pSettings, r_fvector3, sect_name, val_name, m_hands_offset[0][1]);
+	strconcat					(sizeof(val_name),val_name,"aim_alt_hud_offset_rot",_prefix);
+	m_hands_offset[1][3]		= READ_IF_EXISTS(pSettings, r_fvector3, sect_name, val_name, m_hands_offset[1][1]);
 
 	if (pSettings->line_exist(sect_name, "hud_collision_enabled"))
 	{
@@ -387,7 +393,7 @@ u32 attachable_hud_item::anim_play(const shared_str& anm_name_b, BOOL bMixIn, co
 {
 	R_ASSERT				(strstr(anm_name_b.c_str(),"anm_")==anm_name_b.c_str());
 	string256				anim_name_r;
-	bool is_16x9			= UI()->is_16_9_mode();
+	bool is_16x9			= UI().is_widescreen();
 	sprintf_s				(anim_name_r,"%s%s",anm_name_b.c_str(),((m_attach_place_idx==1)&&is_16x9)?"_16x9":"");
 
 	player_hud_motion* anm	= m_hand_motions.find_motion(anim_name_r);
@@ -444,25 +450,26 @@ u32 attachable_hud_item::anim_play(const shared_str& anm_name_b, BOOL bMixIn, co
 
 	if (IsGameTypeSingle() && parent_object.H_Parent() == Level().CurrentControlEntity())
 	{
-		CActor* current_actor	= static_cast_checked<CActor*>(Level().CurrentControlEntity());
-		VERIFY					(current_actor);
-		CEffectorCam* ec		= current_actor->Cameras().GetCamEffector(eCEWeaponAction);
+		CActor* current_actor = static_cast_checked<CActor*>(Level().CurrentControlEntity());
+		VERIFY(current_actor);
 
-	
-		if(NULL==ec)
+		string_path ce_path;
+		string_path anm_name;
+		strconcat(sizeof(anm_name), anm_name, "camera_effects" "\\" "weapon" "\\", M.name.c_str(), ".anm");
+
+		if (FS.exist(ce_path, "$game_anims$", anm_name))
 		{
-			string_path			ce_path;
-			string_path			anm_name;
-			strconcat			(sizeof(anm_name),anm_name,"camera_effects\\weapon\\", M.name.c_str(),".anm");
-			if (FS.exist( ce_path, "$game_anims$", anm_name))
-			{
-				CAnimatorCamEffector* e		= xr_new<CAnimatorCamEffector>();
-				e->SetType					(eCEWeaponAction);
-				e->SetHudAffect				(false);
-				e->SetCyclic				(false);
-				e->Start					(anm_name);
-				current_actor->Cameras().AddCamEffector(e);
-			}
+			CEffectorCam* ec = current_actor->Cameras().GetCamEffector(eCEWeaponAction);
+
+			if (ec)
+				current_actor->Cameras().RemoveCamEffector(eCEWeaponAction);
+
+			CAnimatorCamEffector* e = new CAnimatorCamEffector();
+			e->SetType(eCEWeaponAction);
+			e->SetHudAffect(false);
+			e->SetCyclic(false);
+			e->Start(anm_name);
+			current_actor->Cameras().AddCamEffector(e);
 		}
 	}
 	return ret;
@@ -1025,18 +1032,29 @@ void player_hud::update_script_item()
 
 	if (script_anim_item_model)
 	{
-		script_anim_item_model->UpdateTracks();
-		script_anim_item_model->dcast_PKinematics()->CalculateBones_Invalidate();
-		script_anim_item_model->dcast_PKinematics()->CalculateBones(TRUE);
+		if (script_anim_item_model->dcast_PKinematicsAnimated())
+			script_anim_item_model->dcast_PKinematicsAnimated()->UpdateTracks();
+
+		script_anim_item_model->CalculateBones_Invalidate();
+		script_anim_item_model->CalculateBones(TRUE);
 	}
 }
 
-u32 player_hud::script_anim_play(u8 hand, LPCSTR section, LPCSTR anm_name, bool bMixIn, float speed)
+void player_hud::SetScriptItemVisible(bool visible)
+{
+	if (script_anim_item_model)
+	{
+		u16 root_id = script_anim_item_model->LL_GetBoneRoot();
+		script_anim_item_model->LL_SetBoneVisible(root_id, visible, TRUE);
+	}
+}
+
+u32 player_hud::script_anim_play(u8 hand, LPCSTR section, LPCSTR anm_name, bool bMixIn, float speed, LPCSTR attach_visual)
 {
 	xr_string pos = "hands_position";
 	xr_string rot = "hands_orientation";
 
-	if (UI()->is_16_9_mode())
+	if (UI().is_widescreen())
 	{
 		pos.append("_16x9");
 		rot.append("_16x9");
@@ -1046,12 +1064,26 @@ u32 player_hud::script_anim_play(u8 hand, LPCSTR section, LPCSTR anm_name, bool 
 	Fvector offs = READ_IF_EXISTS(pSettings, r_fvector3, section, pos.c_str(), def);
 	Fvector rrot = READ_IF_EXISTS(pSettings, r_fvector3, section, rot.c_str(), def);
 
-	if (pSettings->line_exist(section, "item_visual"))
+	if (pSettings->line_exist(section, "item_visual") && !attach_visual)
+		attach_visual = pSettings->r_string(section, "item_visual");
+
+	if (attach_visual)
 	{
-		script_anim_item_model = ::Render->model_Create(pSettings->r_string(section, "item_visual"))->dcast_PKinematicsAnimated();
+		::Render->hud_loading = true;
+		script_anim_item_model = ::Render->model_Create(attach_visual)->dcast_PKinematics();
+		::Render->hud_loading = false;
+
 		item_pos[0] = READ_IF_EXISTS(pSettings, r_fvector3, section, "item_position", def);
 		item_pos[1] = READ_IF_EXISTS(pSettings, r_fvector3, section, "item_orientation", def);
 		script_anim_item_attached = READ_IF_EXISTS(pSettings, r_bool, section, "item_attached", true);
+		script_anim_item_visible = READ_IF_EXISTS(pSettings, r_bool, section, "item_visible", true);
+
+		if (script_anim_item_model)
+		{
+			u16 root_id = script_anim_item_model->LL_GetBoneRoot();
+			script_anim_item_model->LL_SetBoneVisible(root_id, script_anim_item_visible, TRUE);
+		}
+
 		m_attach_idx = READ_IF_EXISTS(pSettings, r_u8, section, "attach_place_idx", 0);
 
 		if (!script_anim_item_attached)
@@ -1090,7 +1122,7 @@ u32 player_hud::script_anim_play(u8 hand, LPCSTR section, LPCSTR anm_name, bool 
 
 	const motion_descr& M = phm->m_animations[Random.randI(phm->m_animations.size())];
 
-	if (script_anim_item_model)
+	if (script_anim_item_model && script_anim_item_model->dcast_PKinematicsAnimated())
 	{
 		shared_str item_anm_name;
 		if (phm->m_base_name != phm->m_additional_name)
@@ -1098,26 +1130,26 @@ u32 player_hud::script_anim_play(u8 hand, LPCSTR section, LPCSTR anm_name, bool 
 		else
 			item_anm_name = M.name;
 
-		MotionID M2 = script_anim_item_model->ID_Cycle_Safe(item_anm_name);
+		MotionID M2 = script_anim_item_model->dcast_PKinematicsAnimated()->ID_Cycle_Safe(item_anm_name);
 		if (!M2.valid())
-			M2 = script_anim_item_model->ID_Cycle_Safe("idle");
+			M2 = script_anim_item_model->dcast_PKinematicsAnimated()->ID_Cycle_Safe("idle");
 
 		R_ASSERT3(M2.valid(), "model %s has no motion [idle] ", pSettings->r_string(m_sect_name, "item_visual"));
 
-		u16 root_id = script_anim_item_model->dcast_PKinematics()->LL_GetBoneRoot();
-		CBoneInstance& root_binst = script_anim_item_model->dcast_PKinematics()->LL_GetBoneInstance(root_id);
+		u16 root_id = script_anim_item_model->LL_GetBoneRoot();
+		CBoneInstance& root_binst = script_anim_item_model->LL_GetBoneInstance(root_id);
 		root_binst.set_callback_overwrite(TRUE);
 		root_binst.mTransform.identity();
 
-		u16 pc = script_anim_item_model->partitions().count();
+		u16 pc = script_anim_item_model->dcast_PKinematicsAnimated()->partitions().count();
 		for (u16 pid = 0; pid < pc; ++pid)
 		{
-			CBlend* B = script_anim_item_model->PlayCycle(pid, M2, bMixIn);
+			CBlend* B = script_anim_item_model->dcast_PKinematicsAnimated()->PlayCycle(pid, M2, bMixIn);
 			R_ASSERT(B);
 			B->speed *= speed;
 		}
 
-		script_anim_item_model->dcast_PKinematics()->CalculateBones_Invalidate();
+		script_anim_item_model->CalculateBones_Invalidate();
 	}
 
 	if (hand == 0) // right hand

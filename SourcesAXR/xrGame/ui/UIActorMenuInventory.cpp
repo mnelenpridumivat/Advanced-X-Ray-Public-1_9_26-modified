@@ -20,6 +20,8 @@
 #include "../silencer.h"
 #include "../scope.h"
 #include "../grenadelauncher.h"
+#include "../LaserDesignator.h"
+#include "../TacticalTorch.h"
 #include "../Artefact.h"
 #include "../eatable_item.h"
 #include "../BottleItem.h"
@@ -36,6 +38,8 @@
 #include "../Battery.h"
 #include "../AntigasFilter.h"
 #include "../RepairKit.h"
+#include "../ArtefactContainer.h"
+#include "../SleepingBag.h"
 
 #include "../actor_defs.h"
 #include "../Actor.h"
@@ -113,7 +117,7 @@ void CUIActorMenu::InitInventoryMode()
 
 void CUIActorMenu::DeInitInventoryMode()
 {
-	m_pTrashList->Show				(false);
+	m_pTrashList->Show					(false);
 //	m_clock_value->Show					(false);
 }
 
@@ -317,24 +321,24 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 	{
 	case GE_TRADE_BUY:
 	case GE_OWNERSHIP_TAKE:
-	{
-		bool b_already = false;
-
-		CUIDragDropListEx* lst_to_add = nullptr;
-		SInvItemPlace pl = pItem->m_ItemCurrPlace;
-		if (pItem->BaseSlot() == GRENADE_SLOT)
 		{
-			pl.type = eItemPlaceRuck;
-			pl.slot_id = GRENADE_SLOT;
-		}
+			bool b_already = false;
+
+				CUIDragDropListEx* lst_to_add		= nullptr;
+				SInvItemPlace pl						= pItem->m_ItemCurrPlace;
+				if ( pItem->BaseSlot() == GRENADE_SLOT )
+				{
+					pl.type = eItemPlaceRuck;
+					pl.slot_id = GRENADE_SLOT;
+				}
 #ifndef MASTER_GOLD
 		Msg("item place [%d]", pl);
 #endif // #ifndef MASTER_GOLD
 
-		if (pl.type == eItemPlaceSlot)
-			lst_to_add = GetSlotList(pl.slot_id);
-		else if (pl.type == eItemPlaceBelt)
-			lst_to_add = GetListByType(iActorBelt);
+			if (pl.type == eItemPlaceSlot)
+				lst_to_add					= GetSlotList(pl.slot_id);
+			else if (pl.type == eItemPlaceBelt)
+				lst_to_add					= GetListByType(iActorBelt);
 		else /* if(pl.type==eItemPlaceRuck)*/
 		{
 			if (pItem->parent_id() == m_pActorInvOwner->object_id())
@@ -465,15 +469,9 @@ void CUIActorMenu::InitCellForSlot( u16 slot_idx )
 	CUICellItem* cell_item			= create_cell_item( item );
 	curr_list->SetItem( cell_item );
 	if ( m_currMenuMode == mmTrade && m_pPartnerInvOwner )
+	{
 		ColorizeItem( cell_item, !CanMoveToPartner( item ) );
-
-	//CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(item);
-	//if(outfit)
-	//	outfit->ReloadBonesProtection();
-
-	//CHelmet* helmet = smart_cast<CHelmet*>(item);
-	//if(helmet)
-	//	helmet->ReloadBonesProtection();
+	}
 }
 
 void CUIActorMenu::InitInventoryContents(CUIDragDropListEx* pBagList)
@@ -545,7 +543,9 @@ void CUIActorMenu::InitInventoryContents(CUIDragDropListEx* pBagList)
 		CUICellItem* itm		= create_cell_item(*itb);
 		curr_list->SetItem		(itm);
 		if ( m_currMenuMode == mmTrade && m_pPartnerInvOwner )
+		{
 			ColorizeItem( itm, !CanMoveToPartner( *itb ) );
+		}
 	}
 
 	TIItemContainer				ruck_list;
@@ -560,20 +560,15 @@ void CUIActorMenu::InitInventoryContents(CUIDragDropListEx* pBagList)
 	{
 		CMPPlayersBag* bag = smart_cast<CMPPlayersBag*>( &(*itb)->object() );
 		if ( bag )
+		{
 			continue;
-
+		}
 		CUICellItem* itm = create_cell_item( *itb );
 		curr_list->SetItem(itm);
 		if ( m_currMenuMode == mmTrade && m_pPartnerInvOwner )
+		{
 			ColorizeItem( itm, !CanMoveToPartner( *itb ) );
-
-		//CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(*itb);
-		//if(outfit)
-		//	outfit->ReloadBonesProtection();
-
-		//CHelmet* helmet = smart_cast<CHelmet*>(*itb);
-		//if(helmet)
-		//	helmet->ReloadBonesProtection();
+		}
 	}
 	m_pQuickSlot->ReloadReferences(m_pActorInvOwner);
 }
@@ -694,7 +689,7 @@ bool CUIActorMenu::ToSlot(CUICellItem* itm, bool force_place, u16 slot_id)
 	}
 	else
 	{ // in case slot is busy
-		if ( !force_place || slot_id == NO_ACTIVE_SLOT ) 
+		if ( !force_place || slot_id == NO_ACTIVE_SLOT )
 			return false;
 
 		if ( m_pActorInvOwner->inventory().SlotIsPersistent(slot_id) && slot_id != DETECTOR_SLOT  )
@@ -750,7 +745,7 @@ bool CUIActorMenu::ToBag(CUICellItem* itm, bool b_use_cursor_pos)
 		bool result							= b_already || (!b_own_item || m_pActorInvOwner->inventory().Ruck(iitem) );
 		VERIFY								(result);
 		CUICellItem* i						= old_owner->RemoveItem(itm, (old_owner==new_owner) );
-		if(!i)
+		if (!i)
 			return false;
 
 		if(b_use_cursor_pos)
@@ -944,12 +939,25 @@ bool CUIActorMenu::TryUseItem( CUICellItem* cell_itm )
 	CBattery*		pBattery		= smart_cast<CBattery*>		(item);
 	CAntigasFilter* pFilter			= smart_cast<CAntigasFilter*>(item);
 	CRepairKit*		pRepairKit		= smart_cast<CRepairKit*>	(item);
+	CSleepingBag*	pSleepingBag	= smart_cast<CSleepingBag*>	(item);
+
+	if (pSleepingBag)
+	{
+		pSleepingBag->StartSleep();
+
+		PlaySnd(eItemUse);
+		cell_itm->Update();
+		SetCurrentItem(NULL);
+
+		return true;
+	}
 
 	if ( !(pMedkit || pAntirad || pEatableItem || pBottleItem || pBattery || pFilter || pRepairKit) )
 	{
 		return false;
 	}
-	if ( !item->Useful() || (pFilter && !pFilter->UseAllowed()) || (pRepairKit && !pRepairKit->UseAllowed()) )
+
+	if ( !item->Useful() || (pFilter && !pFilter->UseAllowed()) || (pRepairKit && !pRepairKit->UseAllowed()))
 	{
 		return false;
 	}
@@ -1071,22 +1079,21 @@ void CUIActorMenu::PropertiesBoxForSlots( PIItem item, bool& b_show )
 	bool bAlreadyDressed	= false;
 	u16 cur_slot			= item->BaseSlot();
 
-	if (	!pOutfit && !pHelmet &&
+	if (!pOutfit && !pHelmet &&
 			cur_slot != NO_ACTIVE_SLOT &&
 			!inv.SlotIsPersistent(cur_slot) &&
-			inv.CanPutInSlot(item, cur_slot) )
+			inv.CanPutInSlot(item, cur_slot))
 	{
 		m_UIPropertiesBox->AddItem( "st_move_to_slot",  NULL, INVENTORY_TO_SLOT_ACTION );
 		b_show = true;
 	}
-	if (	item->Belt() &&
-			inv.CanPutInBelt( item ) )
+	if (item->Belt() && inv.CanPutInBelt( item ))
 	{
 		m_UIPropertiesBox->AddItem( "st_move_on_belt",  NULL, INVENTORY_TO_BELT_ACTION );
 		b_show = true;
 	}
 
-	if (	item->Ruck() &&
+	if (item->Ruck() &&
 			inv.CanPutInRuck(item) &&
 			( cur_slot == NO_ACTIVE_SLOT || !inv.SlotIsPersistent(cur_slot) ) )
 	{
@@ -1098,8 +1105,9 @@ void CUIActorMenu::PropertiesBoxForSlots( PIItem item, bool& b_show )
 				m_UIPropertiesBox->AddItem( "st_undress_helmet",  NULL, INVENTORY_TO_BAG_ACTION );
 		}
 		else
+		{
 			m_UIPropertiesBox->AddItem( "st_undress_outfit",  NULL, INVENTORY_TO_BAG_ACTION );
-
+		}
 		bAlreadyDressed = true;
 		b_show			= true;
 	}
@@ -1126,39 +1134,47 @@ void CUIActorMenu::PropertiesBoxForWeapon( CUICellItem* cell_item, PIItem item, 
 		return;
 	}
 
-	if ( pWeapon->GrenadeLauncherAttachable() )
+	if ( pWeapon->GrenadeLauncherAttachable())
 	{
 		if ( pWeapon->IsGrenadeLauncherAttached() )
 		{
 			m_UIPropertiesBox->AddItem( "st_detach_gl",  NULL, INVENTORY_DETACH_GRENADE_LAUNCHER_ADDON );
 			b_show			= true;
 		}
-		else
-		{
-		}
 	}
-	if ( pWeapon->ScopeAttachable() )
+	if ( pWeapon->ScopeAttachable())
 	{
 		if ( pWeapon->IsScopeAttached() )
 		{
 			m_UIPropertiesBox->AddItem( "st_detach_scope",  NULL, INVENTORY_DETACH_SCOPE_ADDON );
 			b_show			= true;
 		}
-		else
-		{
-		}
 	}
-	if ( pWeapon->SilencerAttachable() )
+	if ( pWeapon->SilencerAttachable())
 	{
 		if ( pWeapon->IsSilencerAttached() )
 		{
 			m_UIPropertiesBox->AddItem( "st_detach_silencer",  NULL, INVENTORY_DETACH_SILENCER_ADDON );
 			b_show			= true;
 		}
-		else
+	}
+	if (pWeapon->LaserAttachable())
+	{
+		if (pWeapon->IsLaserAttached())
 		{
+			m_UIPropertiesBox->AddItem("st_detach_laser", NULL, INVENTORY_DETACH_LASER_ADDON);
+			b_show = true;
 		}
 	}
+	if (pWeapon->TacticalTorchAttachable())
+	{
+		if (pWeapon->IsTacticalTorchAttached())
+		{
+			m_UIPropertiesBox->AddItem("st_detach_tactical_torch", NULL, INVENTORY_DETACH_TACTICAL_TORCH_ADDON);
+			b_show = true;
+		}
+	}
+
 	if ( smart_cast<CWeaponMagazined*>(pWeapon) && IsGameTypeSingle() )
 	{
 		bool b = ( pWeapon->GetAmmoElapsed() !=0 );
@@ -1189,6 +1205,8 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 	CScope*				pScope				= smart_cast<CScope*>			(item);
 	CSilencer*			pSilencer			= smart_cast<CSilencer*>		(item);
 	CGrenadeLauncher*	pGrenadeLauncher	= smart_cast<CGrenadeLauncher*>	(item);
+	CLaserDesignator*	pLaser				= smart_cast<CLaserDesignator*>	(item);
+	CTacticalTorch*		pTacticalTorch		= smart_cast<CTacticalTorch*>	(item);
 	CInventory*			inv					= &m_pActorInvOwner->inventory();
 
 	PIItem	item_in_slot_2 = inv->ItemFromSlot(INV_SLOT_2);
@@ -1282,6 +1300,58 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 			b_show = true;
 		}
 	}
+
+	if (pLaser)
+	{
+		if (item_in_slot_2 && item_in_slot_2->CanAttach(pLaser))
+		{
+			shared_str str = CStringTable().translate("st_attach_laser_to");
+			str.printf("%s %s", str.c_str(), item_in_slot_2->m_name.c_str());
+			m_UIPropertiesBox->AddItem(str.c_str(), (void*)item_in_slot_2, INVENTORY_ATTACH_ADDON);
+			b_show = true;
+		}
+		if (item_in_slot_3 && item_in_slot_3->CanAttach(pLaser))
+		{
+			shared_str str = CStringTable().translate("st_attach_laser_to");
+			str.printf("%s %s", str.c_str(), item_in_slot_3->m_name.c_str());
+			m_UIPropertiesBox->AddItem(str.c_str(), (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON);
+			b_show = true;
+		}
+		if (item_in_pistol_slot && item_in_pistol_slot->CanAttach(pLaser))
+		{
+			shared_str str = CStringTable().translate("st_attach_laser_to");
+			str.printf("%s %s", str.c_str(), item_in_pistol_slot->m_name.c_str());
+			m_UIPropertiesBox->AddItem(str.c_str(), (void*)item_in_pistol_slot, INVENTORY_ATTACH_ADDON);
+			b_show = true;
+		}
+		return;
+	}
+
+	if (pTacticalTorch)
+	{
+		if (item_in_slot_2 && item_in_slot_2->CanAttach(pTacticalTorch))
+		{
+			shared_str str = CStringTable().translate("st_attach_tactical_torch_to");
+			str.printf("%s %s", str.c_str(), item_in_slot_2->m_name.c_str());
+			m_UIPropertiesBox->AddItem(str.c_str(), (void*)item_in_slot_2, INVENTORY_ATTACH_ADDON);
+			b_show = true;
+		}
+		if (item_in_slot_3 && item_in_slot_3->CanAttach(pTacticalTorch))
+		{
+			shared_str str = CStringTable().translate("st_attach_tactical_torch_to");
+			str.printf("%s %s", str.c_str(), item_in_slot_3->m_name.c_str());
+			m_UIPropertiesBox->AddItem(str.c_str(), (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON);
+			b_show = true;
+		}
+		if (item_in_pistol_slot && item_in_pistol_slot->CanAttach(pTacticalTorch))
+		{
+			shared_str str = CStringTable().translate("st_attach_tactical_torch_to");
+			str.printf("%s %s", str.c_str(), item_in_pistol_slot->m_name.c_str());
+			m_UIPropertiesBox->AddItem(str.c_str(), (void*)item_in_pistol_slot, INVENTORY_ATTACH_ADDON);
+			b_show = true;
+		}
+		return;
+	}
 }
 
 void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
@@ -1293,8 +1363,11 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 	CBattery*		pBattery		= smart_cast<CBattery*>		(item);
 	CAntigasFilter* pFilter			= smart_cast<CAntigasFilter*>(item);
 	CRepairKit*		pRepairKit		= smart_cast<CRepairKit*>	(item);
+	CArtefactContainer* pAfContainer= smart_cast<CArtefactContainer*>(item);
+	CArtefact*		pArtefact		= smart_cast<CArtefact*>	(item);
+	CSleepingBag*	pSleepingBag	= smart_cast<CSleepingBag*>	(item);
 
-	CInventory*	inv	= &m_pActorInvOwner->inventory();
+	CInventory*	inv = &m_pActorInvOwner->inventory();
 	PIItem	item_in_torch_slot = inv->ItemFromSlot(TORCH_SLOT);
 	PIItem	item_in_art_detector_slot = inv->ItemFromSlot(DETECTOR_SLOT);
 	PIItem	item_in_anomaly_detector_slot = inv->ItemFromSlot(DOSIMETER_SLOT);
@@ -1474,6 +1547,44 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 		}
 		return;
 	}
+	else if (pArtefact)
+	{
+		TIItemContainer::iterator it = inv->m_ruck.begin();
+		TIItemContainer::iterator ite = inv->m_ruck.end();
+
+		for (it; ite != it; ++it)
+		{
+			CArtefactContainer* container = smart_cast<CArtefactContainer*>(*it);
+
+			if (container && !container->IsFull())
+			{
+				shared_str str = CStringTable().translate("st_put_to");
+				str.printf("%s %s", str.c_str(), container->m_name.c_str());
+				m_UIPropertiesBox->AddItem(str.c_str(), (void*)container, ARTEFACT_TO_CONTAINER);
+				b_show = true;
+			}
+		}
+	}
+	else if (pAfContainer && pAfContainer->GetArtefactsInside().size())
+	{
+		for (auto af_in_container : pAfContainer->GetArtefactsInside())
+		{
+			CArtefact* af_in_container_casted = smart_cast<CArtefact*>(af_in_container);
+
+			if (af_in_container_casted)
+			{
+				shared_str str = CStringTable().translate("st_take_from");
+				str.printf("%s %s", str.c_str(), af_in_container_casted->m_name.c_str());
+				m_UIPropertiesBox->AddItem(str.c_str(), (void*)af_in_container_casted, ARTEFACT_FROM_CONTAINER);
+				b_show = true;
+			}
+		}
+	}
+	else if (pSleepingBag)
+	{
+		m_UIPropertiesBox->AddItem("st_use", NULL, INVENTORY_SLEEP_ACTION);
+		b_show = true;
+	}
 	else if ( pEatableItem )
 	{
 		CObject*	pObj			= smart_cast<CObject*>		(item);
@@ -1624,6 +1735,38 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 				if ( child_iitm && wpn )
 				{
 					DetachAddon(wpn->GetGrenadeLauncherName().c_str(), child_iitm);
+				}
+			}
+		}
+		break;
+	case INVENTORY_DETACH_LASER_ADDON:
+		if (weapon)
+		{
+			DetachAddon(weapon->GetLaserName().c_str());
+			for (u32 i = 0; i < cell_item->ChildsCount(); ++i)
+			{
+				CUICellItem* child_itm = cell_item->Child(i);
+				PIItem			child_iitm = (PIItem)(child_itm->m_pData);
+				CWeapon* wpn = smart_cast<CWeapon*>(child_iitm);
+				if (child_iitm && wpn)
+				{
+					DetachAddon(wpn->GetLaserName().c_str(), child_iitm);
+				}
+			}
+		}
+		break;
+	case INVENTORY_DETACH_TACTICAL_TORCH_ADDON:
+		if (weapon)
+		{
+			DetachAddon(weapon->GetTacticalTorchName().c_str());
+			for (u32 i = 0; i < cell_item->ChildsCount(); ++i)
+			{
+				CUICellItem* child_itm = cell_item->Child(i);
+				PIItem			child_iitm = (PIItem)(child_itm->m_pData);
+				CWeapon* wpn = smart_cast<CWeapon*>(child_iitm);
+				if (child_iitm && wpn)
+				{
+					DetachAddon(wpn->GetTacticalTorchName().c_str(), child_iitm);
 				}
 			}
 		}
@@ -1782,6 +1925,45 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 				break;
 			repair_kit->m_iUseFor = 7;
 			TryUseItem(cell_item);
+			break;
+		}
+	case ARTEFACT_TO_CONTAINER:
+		{
+			CArtefact* artefact = smart_cast<CArtefact*>(item);
+			CArtefactContainer* af_container = smart_cast<CArtefactContainer*>((PIItem)m_UIPropertiesBox->GetClickedItem()->GetData());
+
+			if (!artefact || !af_container)
+				break;
+
+			af_container->PutArtefactToContainer(*artefact);
+
+			artefact->DestroyObject();
+
+			break;
+		}
+	case ARTEFACT_FROM_CONTAINER:
+		{
+			CArtefactContainer* af_container = smart_cast<CArtefactContainer*>(item);
+			CArtefact* artefact = smart_cast<CArtefact*>((PIItem)m_UIPropertiesBox->GetClickedItem()->GetData());
+
+			if (!af_container)
+				break;
+
+			af_container->TakeArtefactFromContainer(artefact);
+
+			m_ItemInfo->ResetInventoryItem();
+
+			break;
+		}
+	case INVENTORY_SLEEP_ACTION:
+		{
+			CSleepingBag* sleeping_bag = smart_cast<CSleepingBag*>(item);
+
+			if (!sleeping_bag)
+				break;
+
+			sleeping_bag->StartSleep();
+
 			break;
 		}
 	}//switch

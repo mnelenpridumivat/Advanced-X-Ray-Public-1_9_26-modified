@@ -26,7 +26,12 @@ CScriptSound::CScriptSound				(LPCSTR caSoundName, ESoundTypes sound_type)
 
 CScriptSound::~CScriptSound		()
 {
+#ifdef DEBUG
 	R_ASSERT3				(!m_sound._feedback(),"playing sound is not completed, but is destroying",m_sound._handle() ? m_sound._handle()->file_name() : "unknown");
+#else
+	if (m_sound._feedback())
+		m_sound.stop();
+#endif
 	m_sound.destroy			();
 }
 
@@ -44,20 +49,20 @@ Fvector CScriptSound::GetPosition() const
 
 void CScriptSound::Play			(CScriptGameObject *object, float delay, int flags)
 {
-	THROW3						(m_sound._handle(),"There is no sound",*m_caSoundToPlay);
+	THROW3						(m_sound._handle(), "There is no sound", *m_caSoundToPlay);
 //	Msg							("%6d : CScriptSound::Play (%s), delay %f, flags %d",Device.dwTimeGlobal,m_sound._handle()->file_name(),delay,flags);
-	m_sound.play				(&object->object(),flags,delay);
+	m_sound.play				((object) ? &object->object() : NULL, flags, delay);
 }
 
 void CScriptSound::PlayAtPos		(CScriptGameObject *object, const Fvector &position, float delay, int flags)
 {
 	THROW3						(m_sound._handle(),"There is no sound",*m_caSoundToPlay);
 //	Msg							("%6d : CScriptSound::Play (%s), delay %f, flags %d",m_sound._handle()->file_name(),delay,flags);
-	m_sound.play_at_pos			(&object->object(), position,flags,delay);
+	m_sound.play_at_pos			((object) ? &object->object() : NULL, position,flags,delay);
 }
 
 void CScriptSound::PlayNoFeedback	(CScriptGameObject *object,	u32 flags/*!< Looping */, float delay/*!< Delay */, Fvector pos, float vol)
 {
 	THROW3						(m_sound._handle(),"There is no sound",*m_caSoundToPlay);
-	m_sound.play_no_feedback	(&object->object(), flags,delay,&pos,&vol);
+	m_sound.play_no_feedback	((object) ? &object->object() : NULL, flags,delay,&pos,&vol);
 }

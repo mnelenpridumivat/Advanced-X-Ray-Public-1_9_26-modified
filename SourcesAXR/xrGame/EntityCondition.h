@@ -4,15 +4,28 @@ class CWound;
 class NET_Packet;
 class CEntityAlive;
 class CLevel;
+class CEatableItem;
 
 #include "hit_immunity.h"
 #include "Hit.h"
 #include "Level.h"
-enum EBoostParams{
+enum EBoostParams
+{
 	eBoostHpRestore = 0,
 	eBoostPowerRestore,
 	eBoostRadiationRestore,
 	eBoostBleedingRestore,
+	eBoostSatietyRestore,
+	eBoostThirstRestore,
+	eBoostPsyHealthRestore,
+	eBoostIntoxicationRestore,
+	eBoostSleepenessRestore,
+	eBoostAlcoholRestore,
+	eBoostAlcoholismRestore,
+	eBoostHangoverRestore,
+	eBoostDrugsRestore,
+	eBoostNarcotismRestore,
+	eBoostWithdrawalRestore,
 	eBoostMaxWeight,
 	eBoostRadiationProtection,
 	eBoostTelepaticProtection,
@@ -26,7 +39,6 @@ enum EBoostParams{
 	eBoostStrikeImmunity,
 	eBoostFireWoundImmunity,
 	eBoostWoundImmunity,
-	eBoostSatiety,
 	eBoostTimeFactor,
 	eBoostMaxCount,
 };
@@ -37,11 +49,22 @@ static const LPCSTR ef_boosters_section_names[] =
 	"boost_power_restore",
 	"boost_radiation_restore",
 	"boost_bleeding_restore",
+	"boost_satiety_restore",
+	"boost_thirst_restore",
+	"boost_psy_health_restore",
+	"boost_intoxication_restore",
+	"boost_sleepeness_restore",
+	"boost_alcohol_restore",
+	"boost_alcoholism_restore",
+	"boost_hangover_restore",
+	"boost_drugs_restore",
+	"boost_narcotism_restore",
+	"boost_withdrawal_restore",
 	"boost_max_weight",
 	"boost_radiation_protection",
 	"boost_telepat_protection",
 	"boost_chemburn_protection",
-	/*"boost_burn_immunity",
+	"boost_burn_immunity",
 	"boost_shock_immunity",
 	"boost_radiation_immunity",
 	"boost_telepat_immunity",
@@ -49,27 +72,12 @@ static const LPCSTR ef_boosters_section_names[] =
 	"boost_explosion_immunity",
 	"boost_strike_immunity",
 	"boost_fire_wound_immunity",
-	"boost_wound_immunity",*/
-	"boost_satiety",
-
-	//M.F.S team additions
-	"boost_battery",
-	"boost_thirst",
-	"boost_psy_health",
-	"boost_intoxication",
-	"boost_sleepeness",
-
-	//HoP
-	"boost_alcoholism",
-	"boost_hangover",
-	"boost_narcotism",
-	"boost_withdrawal",
-
-	"boost_filter_condition",
+	"boost_wound_immunity",
 	"boost_time_factor"
 };
 
-struct SBooster{
+struct SBooster
+{
 	float fBoostTime;
 	float fBoostValue;
 	EBoostParams m_type;
@@ -77,7 +85,8 @@ struct SBooster{
 	void Load(const shared_str& sect, EBoostParams type);
 };
 
-struct SMedicineInfluenceValues{
+struct SMedicineInfluenceValues
+{
 	float fHealth;
 	float fPower;
 	float fSatiety;
@@ -135,7 +144,7 @@ public:
 	virtual void			load					(IReader &input_packet);
 
 	IC float				GetPower				() const			{return m_fPower;}	
-	IC void					SetPower				(float value)		{ m_fPower = value; clamp(m_fPower, 0.f, m_fPowerMax); }
+	IC void					SetPower				(float value)		{m_fPower = value; clamp(m_fPower, 0.f, m_fPowerMax);}
 	IC float				GetRadiation			() const			{return m_fRadiation;}
 	IC float				GetPsyHealth			() const			{return m_fPsyHealth;}
 	IC float				GetSatiety				() const			{return m_fSatiety;}
@@ -196,9 +205,9 @@ public:
 
 	IC void 				SetCanBeHarmedState		(bool CanBeHarmed) 			{m_bCanBeHarmed = CanBeHarmed;}
 	IC bool					CanBeHarmed				() const					{return OnServer() && m_bCanBeHarmed;};
-	virtual bool			ApplyInfluence			(const SMedicineInfluenceValues& V, const shared_str& sect);
+	virtual bool			ApplyInfluence			(const SMedicineInfluenceValues& V, const shared_str& sect, CEatableItem* cur_eatable);
 	virtual bool			ApplyBooster			(const SBooster& B, const shared_str& sect);
-	void					ClearWounds();
+	void					ClearWounds				();
 
 	IC float				GetBoostRadiationImmunity() const {return m_fBoostRadiationImmunity;};
 

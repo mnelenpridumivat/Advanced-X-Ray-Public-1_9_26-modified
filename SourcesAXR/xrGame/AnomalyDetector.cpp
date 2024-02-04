@@ -28,9 +28,6 @@ ZONE_INFO::~ZONE_INFO	()
 CDetectorAnomaly::CDetectorAnomaly(void)
 {
 	m_bWorking					= false;
-	m_fMaxChargeLevel			= 0.0f;
-	m_fCurrentChargeLevel		= 1.0f;
-	m_fUnchargeSpeed			= 0.0f;
 }
 
 CDetectorAnomaly::~CDetectorAnomaly(void)
@@ -97,7 +94,6 @@ void CDetectorAnomaly::Load(LPCSTR section)
 
 	m_fMaxChargeLevel = READ_IF_EXISTS(pSettings, r_float, section, "max_charge_level", 1.0f);
 	m_fUnchargeSpeed = READ_IF_EXISTS(pSettings, r_float, section, "uncharge_speed", 0.0f);
-
 
 	m_SuitableBatteries.clear();
 	LPCSTR batteries = READ_IF_EXISTS(pSettings, r_string, section, "suitable_batteries", "torch_battery");
@@ -273,14 +269,11 @@ void CDetectorAnomaly::TurnOff()
 void CDetectorAnomaly::save(NET_Packet &output_packet)
 {
 	inherited::save(output_packet);
-	save_data(m_fCurrentChargeLevel, output_packet);
-
 }
 
 void CDetectorAnomaly::load(IReader &input_packet)
 {
 	inherited::load(input_packet);
-	load_data(m_fCurrentChargeLevel, input_packet);
 }
 
 void CDetectorAnomaly::UpdateChargeLevel(void)
@@ -288,19 +281,8 @@ void CDetectorAnomaly::UpdateChargeLevel(void)
 	if (IsWorking())
 	{
 		float uncharge_coef = (m_fUnchargeSpeed / 16) * Device.fTimeDelta;
-
-		m_fCurrentChargeLevel -= uncharge_coef;
-
-		float condition = 1.f * m_fCurrentChargeLevel;
-		SetCondition(condition);
-
-		//Msg("Update Charge Lvl Anomaly Detector: %f", m_fCurrentChargeLevel); //For test
-
-		clamp(m_fCurrentChargeLevel, 0.f, m_fMaxChargeLevel);
-		SetCondition(m_fCurrentChargeLevel);
+		ChangeChargeLevel(-uncharge_coef);
 	}
-	/*else
-		SetCondition(m_fCurrentChargeLevel);*/
 }
 
 float CDetectorAnomaly::GetUnchargeSpeed() const
@@ -319,7 +301,7 @@ void CDetectorAnomaly::SetCurrentChargeLevel(float val)
 	clamp(m_fCurrentChargeLevel, 0.f, m_fMaxChargeLevel);
 
 	float condition = 1.f * m_fCurrentChargeLevel / m_fUnchargeSpeed;
-	SetCondition(condition);
+	SetChargeLevel(condition);
 }
 
 void CDetectorAnomaly::Recharge(float val)
@@ -327,7 +309,7 @@ void CDetectorAnomaly::Recharge(float val)
 	m_fCurrentChargeLevel += val;
 	clamp(m_fCurrentChargeLevel, 0.f, m_fMaxChargeLevel);
 
-	SetCondition(m_fCurrentChargeLevel);
+	SetChargeLevel(m_fCurrentChargeLevel);
 }
 
 bool CDetectorAnomaly::IsNecessaryItem(const shared_str& item_sect, xr_vector<shared_str> item)

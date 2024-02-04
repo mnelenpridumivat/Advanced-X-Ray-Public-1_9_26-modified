@@ -11,7 +11,7 @@
 #include "UIScrollView.h"
 
 CFontManager& mngr(){
-	return *(UI()->Font());
+	return UI().Font();
 }
 
 // hud font
@@ -22,7 +22,7 @@ CGameFont* GetFontMedium()
 {return mngr().pFontMedium;}
 CGameFont* GetFontDI()
 {return mngr().pFontDI;}
-//øðèôòû äëÿ èíòåðôåéñà
+//ÑˆÑ€Ð¸Ñ„Ñ‚Ñ‹ Ð´Ð»Ñ Ð¸Ð½Ñ‚ÐµÑ€Ñ„ÐµÐ¹ÑÐ°
 CGameFont* GetFontGraffiti19Russian()
 {return mngr().pFontGraffiti19Russian;}
 CGameFont* GetFontGraffiti22Russian()
@@ -42,6 +42,10 @@ CGameFont* GetFontLetterica25()
 int GetARGB(u16 a, u16 r, u16 g, u16 b)
 {return color_argb(a,r,g,b);}
 
+const Fvector2* get_wnd_pos(CUIWindow* w)
+{
+	return &w->GetWndPos();
+}
 
 Frect	get_texture_rect(LPCSTR icon_name)
 {
@@ -95,6 +99,7 @@ void CUIWindow::script_register(lua_State *L)
 		.def("SetWndRect",				(void (CUIWindow::*)(Frect))	&CUIWindow::SetWndRect_script)
 		.def("SetWndPos",				(void (CUIWindow::*)(Fvector2)) &CUIWindow::SetWndPos_script)
 		.def("SetWndSize",				(void (CUIWindow::*)(Fvector2)) &CUIWindow::SetWndSize_script)
+		.def("GetWndPos",				&get_wnd_pos)
 		.def("GetWidth",				&CUIWindow::GetWidth)
 		.def("SetWidth",				&CUIWindow::SetWidth)
 		.def("GetHeight",				&CUIWindow::GetHeight)
@@ -122,6 +127,8 @@ void CUIWindow::script_register(lua_State *L)
 		.def("RemoveDialogToRender",	&CDialogHolder::RemoveDialogToRender),
 
 		class_<CUIDialogWnd, CUIWindow>("CUIDialogWnd")
+		.def("HideDialog",				&CUIDialogWnd::HideDialog1)
+		.def("ShowDialog",				&CUIDialogWnd::ShowDialog1)
 		.def("GetHolder",				&CUIDialogWnd::GetHolder)
 		.def("SetHolder",				&CUIDialogWnd::SetHolder),
 
@@ -144,7 +151,9 @@ void CUIWindow::script_register(lua_State *L)
 		.def("GetText",						&CUILabel::GetText),
 */
 		class_<CUIMMShniaga, CUIWindow>("CUIMMShniaga")
-		.def("SetVisibleMagnifier",			&CUIMMShniaga::SetVisibleMagnifier),
+		.def("SetVisibleMagnifier",			&CUIMMShniaga::SetVisibleMagnifier)
+		.def("SetPage",						&CUIMMShniaga::SetPage)
+		.def("ShowPage",					&CUIMMShniaga::ShowPage),
 
 		class_<CUIScrollView, CUIWindow>("CUIScrollView")
 		.def(							constructor<>())

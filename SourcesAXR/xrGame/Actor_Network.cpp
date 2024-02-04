@@ -1,6 +1,5 @@
-#include "pch_script.h"
+﻿#include "pch_script.h"
 #include "actor.h"
-#include "hudmanager.h"
 #include "Actor_Flags.h"
 #include "inventory.h"
 #include "xrserver_objects_alife_monsters.h"
@@ -36,7 +35,9 @@
 #include "ui/UITaskWnd.h"
 
 #include "map_manager.h"
+#include "HUDManager.h"
 #include "ui/UIMainIngameWnd.h"
+#include "ui/UIArtefactPanel.h"
 #include "gamepersistent.h"
 #include "game_object_space.h"
 #include "GameTaskManager.h"
@@ -46,6 +47,8 @@
 #include "actor_statistic_mgr.h"
 #include "characterphysicssupport.h"
 #include "game_cl_base_weapon_usage_statistic.h"
+#include "Artefact.h"
+
 #include "../xrengine/xr_collide_form.h"
 #ifdef DEBUG
 #	include "debug_renderer.h"
@@ -539,7 +542,8 @@ BOOL CActor::net_Spawn		(CSE_Abstract* DC)
 	m_current_torso.invalidate	();
 	m_current_head.invalidate	();
 	//-------------------------------------
-	//  ,  
+	// инициализация реестров, используемых актером
+	encyclopedia_registry->registry().init(ID());
 	game_news_registry->registry().init(ID());
 
 
@@ -548,6 +552,9 @@ BOOL CActor::net_Spawn		(CSE_Abstract* DC)
 
 	CSE_ALifeTraderAbstract	 *pTA	= smart_cast<CSE_ALifeTraderAbstract*>(e);
 	set_money				(pTA->m_dwMoney, false);
+
+	//убрать все артефакты с пояса
+	m_ArtefactsOnBelt.clear();
 
 //.	if(	TRUE == E->s_flags.test(M_SPAWN_OBJECT_LOCAL) && TRUE == E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
 //.		CurrentGameUI()->UIMainIngameWnd->m_artefactPanel->InitIcons(m_ArtefactsOnBelt);
@@ -667,7 +674,7 @@ BOOL CActor::net_Spawn		(CSE_Abstract* DC)
 		K->PlayCycle("death_init");
 
 		
-		//   
+		//остановить звук тяжелого дыхания
 		m_HeavyBreathSnd.stop();
 	}
 	
@@ -749,6 +756,12 @@ void CActor::net_Destroy	()
 	m_holder=NULL;
 	m_holderID=static_cast<u16>(-1);
 	
+	//убрать все артефакты с пояса
+	m_ArtefactsOnBelt.clear();
+
+	if (Level().CurrentViewEntity() == this && CurrentGameUI()->UIMainIngameWnd->UIArtefactsPanel)
+		CurrentGameUI()->UIMainIngameWnd->UIArtefactsPanel->InitIcons(m_ArtefactsOnBelt);
+
 	SetDefaultVisualOutfit(NULL);
 
 
@@ -1091,10 +1104,10 @@ void	CActor::CalculateInterpolationParams()
 		for (u32 k=0; k<3; k++)
 		{
 			SP0[k] = c*(c*(c*SCoeff[k][0]+SCoeff[k][1])+SCoeff[k][2])+SCoeff[k][3];
-			SP1[k] = (c*c*SCoeff[k][0]*3+c*SCoeff[k][1]*2+SCoeff[k][2])/3; //     3       !!!!
+			SP1[k] = (c*c*SCoeff[k][0]*3+c*SCoeff[k][1]*2+SCoeff[k][2])/3; // сокрость из формулы в 3 раза превышает скорость при расчете коэффициентов !!!!
 
 			HP0[k] = c*(c*(c*HCoeff[k][0]+HCoeff[k][1])+HCoeff[k][2])+HCoeff[k][3];
-			HP1[k] = (c*c*HCoeff[k][0]*3+c*HCoeff[k][1]*2+HCoeff[k][2])/3; //     3       !!!!
+			HP1[k] = (c*c*HCoeff[k][0]*3+c*HCoeff[k][1]*2+HCoeff[k][2]); // сокрость из формулы в 3 раза превышает скорость при расчете коэффициентов !!!!
 		};
 
 		SP1.add(SP0);
@@ -1266,7 +1279,7 @@ void CActor::make_Interpolation	()
 			case 1: 
 				{
 					for (int k=0; k<3; k++)
-						SpeedVector[k] = (factor*factor*SCoeff[k][0]*3+factor*SCoeff[k][1]*2+SCoeff[k][2])/3; //     3       !!!!
+						SpeedVector[k] = (factor*factor*SCoeff[k][0]*3+factor*SCoeff[k][1]*2+SCoeff[k][2])/3; // сокрость из формулы в 3 раза превышает скорость при расчете коэффициентов !!!!
 					
 					ResPosition.set(IPosS); 
 				}break;
@@ -1354,6 +1367,9 @@ void CActor::save(NET_Packet &output_packet)
 	if (ActorSkills)
 		ActorSkills->save(output_packet);
 
+	if (TimerManager)
+		TimerManager->save(output_packet);
+
 	cam_Active()->save(output_packet);
 
 	output_packet.w_u8(cam_active);
@@ -1378,6 +1394,9 @@ void CActor::load(IReader &input_packet)
 
 	if (ActorSkills)
 		ActorSkills->load(input_packet);
+
+	if (TimerManager)
+		TimerManager->load(input_packet);
 
 	cam_Active()->load(input_packet);
 
@@ -1585,7 +1604,7 @@ void	CActor::OnRender_Network()
 		};
 
 		//drawing speed vectors
-		for (i=0; i<2; i++)
+		for (int i=0; i<2; i++)
 		{
 			c = static_cast<float>(i);
 			for (u32 k=0; k<3; k++)
@@ -1593,7 +1612,7 @@ void	CActor::OnRender_Network()
 				point1S[k] = c*(c*(c*SCoeff[k][0]+SCoeff[k][1])+SCoeff[k][2])+SCoeff[k][3];
 				point1H[k] = c*(c*(c*HCoeff[k][0]+HCoeff[k][1])+HCoeff[k][2])+HCoeff[k][3];
 
-				tS[k] = (c*c*SCoeff[k][0]*3+c*SCoeff[k][1]*2+SCoeff[k][2])/3; //     3       !!!!
+				tS[k] = (c*c*SCoeff[k][0]*3+c*SCoeff[k][1]*2+SCoeff[k][2])/3; // сокрость из формулы в 3 раза превышает скорость при расчете коэффициентов !!!!
 				tH[k] = (c*c*HCoeff[k][0]*3+c*HCoeff[k][1]*2+HCoeff[k][2]); 
 			};
 
@@ -1922,7 +1941,7 @@ void				CActor::OnPlayHeadShotParticle (NET_Packet P)
 	if (!m_sHeadShotParticle.size()) return;
 	Fmatrix pos; 	
 	CParticlesPlayer::MakeXFORM(this,element,HitDir,HitPos,pos);
-	//  particles
+	// установить particles
 	CParticlesObject* ps = NULL;
 	
 	ps = CParticlesObject::Create(m_sHeadShotParticle.c_str(),TRUE);
@@ -1987,11 +2006,15 @@ bool CActor::InventoryAllowSprint()
 {
 	PIItem pActiveItem = inventory().ActiveItem();
 	if (pActiveItem && !pActiveItem->IsSprintAllowed())
+	{
 		return false;
+	};
 
 	CCustomOutfit* pOutfitItem = GetOutfit();
 	if (pOutfitItem && !pOutfitItem->IsSprintAllowed())
+	{
 		return false;
+	}
 
 	CPda* pPda = Actor()->GetPDA();
 

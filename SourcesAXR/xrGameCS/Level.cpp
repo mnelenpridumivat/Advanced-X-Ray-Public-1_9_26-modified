@@ -1,19 +1,20 @@
-﻿#include "pch_script.h"
+#include "pch_script.h"
 #include "../xrEngine/fdemorecord.h"
 #include "../xrEngine/fdemoplay.h"
 #include "../xrEngine/environment.h"
 #include "../xrEngine/igame_persistent.h"
 #include "ParticlesObject.h"
 #include "Level.h"
+#include "hudmanager.h"
 #include "xrServer.h"
 #include "net_queue.h"
 #include "game_cl_base.h"
 #include "entity_alive.h"
-#include "hudmanager.h"
 #include "ai_space.h"
+#include "level_changer.h"
 #include "ai_debug.h"
-#include "PHdynamicdata.h"
-#include "Physics.h"
+//#include "PHdynamicdata.h"
+//#include "Physics.h"
 #include "ShootingObject.h"
 #include "GameTaskManager.h"
 #include "Level_Bullet_Manager.h"
@@ -46,6 +47,7 @@
 #include "UI/UIGameTutorial.h"
 #include "file_transfer.h"
 #include "message_filter.h"
+#include "CustomDetector.h"
 
 #include "../xrEngine/GameMtlLib.h"
 #include "../xrEngine/IGame_Persistent.h"
@@ -55,6 +57,8 @@
 #include "UICursor.h"
 #include "PDA.h"
 
+#include "../xrphysics/iphworld.h"
+#include "../xrphysics/console_vars.h"
 #ifdef DEBUG
 #	include "level_debug.h"
 #	include "ai/stalker/ai_stalker.h"
@@ -69,22 +73,22 @@
 #include "embedded_editor/embedded_editor_main.h"
 #include "embedded_editor/editor_render.h"
 
-#include "../xrCore/_detail_collision_point.h"
+#include "alife_simulator.h"
+#include "alife_time_manager.h"
+
 #include "../xrEngine/CameraManager.h"
 #include "ActorEffector.h"
 
-ENGINE_API bool g_dedicated_server;
-ENGINE_API extern xr_vector<DetailCollisionPoint> level_detailcoll_points;
-ENGINE_API extern int ps_detail_enable_collision;
-ENGINE_API extern Fvector actor_position;
-ENGINE_API extern float ps_detail_collision_radius;
+#include "AdvancedXrayGameConstants.h"
 
-extern BOOL	g_bDebugDumpPhysicsStep;
+ENGINE_API bool g_dedicated_server;
+
+//extern BOOL	g_bDebugDumpPhysicsStep;
 extern CUISequencer * g_tutorial;
 extern CUISequencer * g_tutorial2;
 
-CPHWorld	*ph_world			= 0;
-float		g_cl_lvInterp		= 0;
+
+float		g_cl_lvInterp		= 0.1;
 u32			lvInterpSteps		= 0;
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -131,8 +135,9 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_dwNumSteps				= 0;
 	m_dwDeltaUpdate				= u32(fixed_step*1000);
 	m_dwLastNetUpdateTime		= 0;
-
-	physics_step_time_callback	= (PhysicsStepTimeCallback*) &PhisStepsCallback;
+	//VERIFY						( physics_world() );
+	//physics_world()->set_step_time_callback((PhysicsStepTimeCallback*) &PhisStepsCallback);
+	//physics_step_time_callback	= (PhysicsStepTimeCallback*) &PhisStepsCallback;
 	m_seniority_hierarchy_holder= xr_new<CSeniorityHierarchyHolder>();
 
 	if(!g_dedicated_server)
@@ -145,6 +150,7 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	#ifdef DEBUG
 		m_debug_renderer			= xr_new<CDebugRenderer>();
 		m_level_debug				= xr_new<CLevelDebug>();
+		m_bEnvPaused				= false;
 	#endif
 
 	}else
@@ -163,6 +169,7 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	
 	m_ph_commander				= xr_new<CPHCommander>();
 	m_ph_commander_scripts		= xr_new<CPHCommander>();
+	//m_ph_commander_physics_worldstep	= xr_new<CPHCommander>();
 
 #ifdef DEBUG
 	m_bSynchronization			= false;
@@ -229,7 +236,7 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	}
 	*/
 	//---------------------------------------------------------	
-	m_file_transfer = NULL;
+	m_file_transfer					= NULL;
 	m_is_removing_objects = false;
 }
 
@@ -250,10 +257,10 @@ CLevel::~CLevel()
 	Engine.Event.Handler_Detach	(eDemoPlay,		this);
 	Engine.Event.Handler_Detach	(eChangeRP,		this);
 
-	if (ph_world)
+	if (physics_world())
 	{
-		ph_world->Destroy		();
-		xr_delete				(ph_world);
+		destroy_physics_world();
+		xr_delete(m_ph_commander_physics_worldstep);
 	}
 
 	// destroy PSs
@@ -330,6 +337,7 @@ CLevel::~CLevel()
 	if(g_tutorial2 && g_tutorial2->m_pStoredInputReceiver==this)
 		g_tutorial2->m_pStoredInputReceiver = NULL;
 
+
 	if (IsDemoPlay())
 	{
 		StopPlayDemo();
@@ -359,7 +367,7 @@ void CLevel::PrefetchSound		(LPCSTR name)
 {
 	// preprocess sound name
 	string_path					tmp;
-	strcpy_s					(tmp,name);
+	xr_strcpy					(tmp,name);
 	xr_strlwr					(tmp);
 	if (strext(tmp))			*strext(tmp)=0;
 	shared_str	snd_name		= tmp;
@@ -645,7 +653,7 @@ void CLevel::OnFrame	()
 	// Draw client/server stats
 	if ( !g_dedicated_server && psDeviceFlags.test(rsStatistic))
 	{
-		CGameFont* F = HUD().Font().pFontDI;
+		CGameFont* F = UI().Font().pFontDI;
 		if (!psNET_direct_connect) 
 		{
 			if ( IsServer() )
@@ -669,7 +677,7 @@ void CLevel::OnFrame	()
 					void operator()(IClient* C)
 					{
 						m_server->UpdateClientStatistic(C);
-						F->OutNext("%10s: P(%d), BPS(%2.1fK), MRR(%2d), MSR(%2d), Retried(%2d), Blocked(%2d)",
+						F->OutNext("0x%08x: P(%d), BPS(%2.1fK), MRR(%2d), MSR(%2d), Retried(%2d), Blocked(%2d)",
 							//Server->game->get_option_s(*C->Name,"name",*C->Name),
 							C->name.c_str(),
 							C->stats.getPing(),
@@ -733,8 +741,9 @@ void CLevel::OnFrame	()
 			xr_delete(pStatGraphR);
 #endif
 	}
-	
-//	g_pGamePersistent->Environment().SetGameTime	(GetGameDayTimeSec(),GetGameTimeFactor());
+#ifdef DEBUG
+	g_pGamePersistent->Environment().m_paused		= m_bEnvPaused;
+#endif
 	g_pGamePersistent->Environment().SetGameTime	(GetEnvironmentGameDayTimeSec(),game->GetEnvironmentGameTimeFactor());
 
 	//Device.Statistic->cripting.Begin	();
@@ -775,33 +784,6 @@ void CLevel::OnFrame	()
 	};
 
 	ShowEditor();
-
-	//-- Обновляем точки колизии
-	if (ps_detail_enable_collision)
-	{
-		//-- VlaGan: удаляем только позиции с is_explosion = false
-		xr_vector<DetailCollisionPoint> explosion_points;
-		for (const auto& point : level_detailcoll_points)
-		{
-			if (point.is_explosion)
-				explosion_points.push_back(point);
-		}
-
-		level_detailcoll_points.clear();
-
-		if (explosion_points.size())
-			level_detailcoll_points = explosion_points;
-
-		const xr_vector<CObject*>& active_objects = Objects.GetActiveObjects();
-
-		for (auto& obj : active_objects) //-- CEntityAlive будет лучше
-		{
-			auto gobj = smart_cast<CEntityAlive*>(obj);
-
-			if (gobj && actor_position.distance_to(gobj->Position()) <= ps_detail_collision_radius)
-				level_detailcoll_points.push_back(DetailCollisionPoint(gobj->Position(), gobj->ID()));
-		}
-	}
 }
 
 int		psLUA_GCSTEP					= 10			;
@@ -828,12 +810,12 @@ void CLevel::OnRender()
 	{
 		const auto pda = &HUD().GetUI()->UIGame()->PdaMenu();
 		const auto pda_actor = Actor() ? Actor()->GetPDA() : nullptr;
-		if (psActorFlags.test(AF_3D_PDA) && pda->IsShown())
+		if (psActorFlags.test(AF_3D_PDA) && pda && pda->IsShown())
 		{
 			pda->Draw();
 			if (g_btnHint)
 				g_btnHint->OnRender();
-			CUICursor* cursor = UI()->GetUICursor();
+			CUICursor* cursor = &UI().GetUICursor();
 
 			if (cursor)
 			{
@@ -897,7 +879,7 @@ void CLevel::OnRender()
 
 #ifdef DEBUG
 	draw_wnds_rects();
-	ph_world->OnRender	();
+	physics_world()->OnRender	();
 #endif // DEBUG
 
 #ifdef DEBUG
@@ -922,6 +904,10 @@ void CLevel::OnRender()
 			if (stalker)
 				stalker->OnRender	();
 
+			CCustomMonster*		monster = smart_cast<CCustomMonster*>(_O);
+			if (monster)
+				monster->OnRender	();
+
 			CPhysicObject		*physic_object = smart_cast<CPhysicObject*>(_O);
 			if (physic_object)
 				physic_object->OnRender();
@@ -929,6 +915,10 @@ void CLevel::OnRender()
 			CSpaceRestrictor	*space_restrictor = smart_cast<CSpaceRestrictor*>	(_O);
 			if (space_restrictor)
 				space_restrictor->OnRender();
+
+			CLevelChanger*		lchanger = smart_cast<CLevelChanger*>	(_O);
+			if (lchanger)
+				lchanger->OnRender();
 			CClimableObject		*climable		  = smart_cast<CClimableObject*>	(_O);
 			if(climable)
 				climable->OnRender();
@@ -961,14 +951,14 @@ void CLevel::OnRender()
 		ObjectSpace.dbgRender	();
 
 		//---------------------------------------------------------------------
-		HUD().Font().pFontStat->OutSet		(170,630);
-		HUD().Font().pFontStat->SetHeight	(16.0f);
-		HUD().Font().pFontStat->SetColor	(0xffff0000);
+		UI().Font().pFontStat->OutSet		(170,630);
+		UI().Font().pFontStat->SetHeight	(16.0f);
+		UI().Font().pFontStat->SetColor	(0xffff0000);
 
-		if(Server)HUD().Font().pFontStat->OutNext	("Client Objects:      [%d]",Server->GetEntitiesNum());
-		HUD().Font().pFontStat->OutNext	("Server Objects:      [%d]",Objects.o_count());
-		HUD().Font().pFontStat->OutNext	("Interpolation Steps: [%d]", Level().GetInterpolationSteps());
-		HUD().Font().pFontStat->SetHeight	(8.0f);
+		if(Server)UI().Font().pFontStat->OutNext	("Client Objects:      [%d]",Server->GetEntitiesNum());
+		UI().Font().pFontStat->OutNext	("Server Objects:      [%d]",Objects.o_count());
+		UI().Font().pFontStat->OutNext	("Interpolation Steps: [%d]", Level().GetInterpolationSteps());
+		UI().Font().pFontStat->SetHeight	(8.0f);
 		//---------------------------------------------------------------------
 	}
 #endif
@@ -1019,8 +1009,8 @@ void CLevel::OnEvent(EVENT E, u64 P1, u64 /**P2/**/)
 	} else if (E==eDemoPlay && P1) {
 		char* name = (char*)P1;
 		string_path RealName;
-		strcpy_s		(RealName,name);
-		strcat			(RealName,".xrdemo");
+		xr_strcpy		(RealName,name);
+		xr_strcat			(RealName,".xrdemo");
 		Cameras().AddCamEffector(xr_new<CDemoPlay> (RealName,1.3f,0));
 	} else if (E==eChangeTrack && P1) {
 		// int id = atoi((char*)P1);
@@ -1074,15 +1064,15 @@ void CLevel::make_NetCorrectionPrediction	()
 {
 	m_bNeed_CrPr	= false;
 	m_bIn_CrPr		= true;
-	u64 NumPhSteps = ph_world->m_steps_num;
-	ph_world->m_steps_num -= m_dwNumSteps;
-	if(g_bDebugDumpPhysicsStep&&m_dwNumSteps>10)
+	u64 NumPhSteps = physics_world()->StepsNum();
+	physics_world()->StepsNum() -= m_dwNumSteps;
+	if(ph_console::g_bDebugDumpPhysicsStep&&m_dwNumSteps>10)
 	{
 		Msg("!!!TOO MANY PHYSICS STEPS FOR CORRECTION PREDICTION = %d !!!",m_dwNumSteps);
 		m_dwNumSteps = 10;
 	};
 //////////////////////////////////////////////////////////////////////////////////
-	ph_world->Freeze();
+	physics_world()->Freeze();
 
 	//setting UpdateData and determining number of PH steps from last received update
 	for	(OBJECTS_LIST_it OIt = pObjects4CrPr.begin(); OIt != pObjects4CrPr.end(); OIt++)
@@ -1097,7 +1087,7 @@ void CLevel::make_NetCorrectionPrediction	()
 	
 	for (u32 i =0; i<m_dwNumSteps; i++)	
 	{
-		ph_world->Step();
+		physics_world()->Step();
 
 		for	(OBJECTS_LIST_it AIt = pActors4CrPr.begin(); AIt != pActors4CrPr.end(); AIt++)
 		{
@@ -1118,7 +1108,7 @@ void CLevel::make_NetCorrectionPrediction	()
 	{
 		for (u32 i =0; i<lvInterpSteps; i++)	//second prediction "real current" to "future" position
 		{
-			ph_world->Step();
+			physics_world()->Step();
 #ifdef DEBUG
 /*
 			for	(OBJECTS_LIST_it OIt = pObjects4CrPr.begin(); OIt != pObjects4CrPr.end(); OIt++)
@@ -1138,9 +1128,9 @@ void CLevel::make_NetCorrectionPrediction	()
 			pObj->PH_A_CrPr();
 		};
 	};
-	ph_world->UnFreeze();
+	physics_world()->UnFreeze();
 
-	ph_world->m_steps_num = NumPhSteps;
+	physics_world()->StepsNum() = NumPhSteps;
 	m_dwNumSteps = 0;
 	m_bIn_CrPr = false;
 
@@ -1220,13 +1210,11 @@ ALife::_TIME_ID CLevel::GetStartGameTime()
 ALife::_TIME_ID CLevel::GetGameTime()
 {
 	return			(game->GetGameTime());
-//	return			(Server->game->GetGameTime());
 }
 
 ALife::_TIME_ID CLevel::GetEnvironmentGameTime()
 {
 	return			(game->GetEnvironmentGameTime());
-//	return			(Server->game->GetGameTime());
 }
 
 u8 CLevel::GetDayTime() 
@@ -1275,7 +1263,6 @@ void CLevel::SetEnvironmentTimeFactor(const float fTimeFactor)
 float CLevel::GetGameTimeFactor()
 {
 	return			(game->GetGameTimeFactor());
-//	return			(Server->game->GetGameTimeFactor());
 }
 
 u64 CLevel::GetEnvironmentGameTime() const
@@ -1288,13 +1275,11 @@ u64 CLevel::GetEnvironmentGameTime() const
 void CLevel::SetGameTimeFactor(const float fTimeFactor)
 {
 	game->SetGameTimeFactor(fTimeFactor);
-//	Server->game->SetGameTimeFactor(fTimeFactor);
 }
 
 void CLevel::SetGameTimeFactor(ALife::_TIME_ID GameTime, const float fTimeFactor)
 {
 	game->SetGameTimeFactor(GameTime, fTimeFactor);
-//	Server->game->SetGameTimeFactor(fTimeFactor);
 }
 
 void CLevel::SetEnvironmentGameTimeFactor(u64 const& GameTime, float const& fTimeFactor)
@@ -1303,17 +1288,10 @@ void CLevel::SetEnvironmentGameTimeFactor(u64 const& GameTime, float const& fTim
 		return;
 
 	game->SetEnvironmentGameTimeFactor(GameTime, fTimeFactor);
-//	Server->game->SetGameTimeFactor(fTimeFactor);
-}/*
-void CLevel::SetGameTime(ALife::_TIME_ID GameTime)
-{
-	game->SetGameTime(GameTime);
-//	Server->game->SetGameTime(GameTime);
 }
-*/
+
 bool CLevel::IsServer ()
 {
-//	return (!!Server);
 	if (!Server || IsDemoPlayStarted()) return false;
 	//return (Server->GetClientsCount() != 0);
 	return true;
@@ -1321,7 +1299,6 @@ bool CLevel::IsServer ()
 
 bool CLevel::IsClient ()
 {
-//	return (!Server);
 	if (IsDemoPlayStarted())
 		return true;
 	
@@ -1399,8 +1376,7 @@ CZoneList* CLevel::create_hud_zones_list()
 
 BOOL CZoneList::feel_touch_contact( CObject* O )
 {
-	CLASS_ID clsid	= O->CLS_ID;
-	TypesMapIt it	= m_TypesMap.find(clsid);
+	TypesMapIt it	= m_TypesMap.find(O->cNameSect());
 	bool res		= ( it != m_TypesMap.end() );
 
 	CCustomZone *pZone = smart_cast<CCustomZone*>(O);
@@ -1456,4 +1432,47 @@ collide::rq_result CLevel::GetPickResult(Fvector pos, Fvector dir, float range, 
 	collide::ray_defs    RD(pos, dir, RQ.range, CDB::OPT_FULL_TEST, collide::rqtBoth);
 	Level().ObjectSpace.RayQuery(RQR, RD, GetPickDist_Callback, &RQ, NULL, ignore);
 	return RQ;
+}
+
+u32 CLevel::GetTimeHours()
+{
+	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
+	split_time((g_pGameLevel && Level().game) ? Level().GetGameTime() : ai().alife().time_manager().game_time(), year, month, day, hours, mins, secs, milisecs);
+	return hours;
+}
+
+std::string CLevel::GetMoonPhase()
+{
+	if (this && GameConstants::GetMoonPhasesMode() != "off")
+	{
+		std::vector<int> months = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+		auto g_time = get_time_struct();
+		u32 Y, M, D, h, m, s, ms;
+
+		g_time.get(Y, M, D, h, m, s, ms);
+
+		u32 start_year;
+		sscanf(pSettings->r_string("alife", "start_date"), "%*d.%*d.%d", &start_year);
+
+		int day = 365 * (Y - (start_year - 2)) + D;
+
+		for (int mm = 0; mm < M - 1; ++mm)
+			day += months[mm];
+
+		if (h >= 12)
+			day += 1;
+
+		int phase = -1;
+		std::string opt_moon_phase = GameConstants::GetMoonPhasesMode();
+
+		if (opt_moon_phase == "28days")
+			phase = static_cast<int>(std::fmod(day, 28) / 3.5);
+		else if (opt_moon_phase == "8days")
+			phase = day % 8;
+
+		return std::to_string(phase);
+	}
+
+	return std::to_string(-1);
 }

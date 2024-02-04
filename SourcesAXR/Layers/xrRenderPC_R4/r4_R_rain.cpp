@@ -30,8 +30,13 @@ static int			facetable[6][4]		= {
 void CRender::render_rain()
 {
 	//return;
-	float	fRainFactor	= g_pGamePersistent->Environment().CurrentEnv->rain_density;
-	if ( fRainFactor < EPS_L )			return;
+	float fRainFactor = 0;
+	if (ps_ssfx_gloss_method == 0)
+		fRainFactor = g_pGamePersistent->Environment().CurrentEnv->rain_density;
+	else
+		fRainFactor = g_pGamePersistent->Environment().wetness_accum;
+
+	if ( fRainFactor < EPS_L ) return;
 
 	PIX_EVENT(render_rain);
 
@@ -52,7 +57,11 @@ void CRender::render_rain()
 	Fmatrix	ex_project, ex_full, ex_full_inverse;
 	{
 		//	
-		const float fRainFar = ps_r3_dyn_wet_surf_far;
+		float fRainFar = 250.f;
+
+		if (ps_ssfx_gloss_method == 0)
+			fRainFar = ps_r3_dyn_wet_surf_far;
+
 		ex_project.build_projection	(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,VIEWPORT_NEAR, fRainFar); 
 		ex_full.mul					(ex_project,Device.mView);
 		D3DXMatrixInverse			((D3DXMATRIX*)&ex_full_inverse,0,(D3DXMATRIX*)&ex_full);

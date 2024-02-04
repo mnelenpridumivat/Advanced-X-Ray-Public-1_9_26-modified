@@ -237,6 +237,18 @@ class cl_rain_params : public R_constant_setup
 };
 static cl_rain_params binder_rain_params;
 
+class cl_wind_params : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		Fvector4 result;
+		CEnvDescriptor& E = *g_pGamePersistent->Environment().CurrentEnv;
+		result.set(E.wind_direction, E.wind_velocity, E.m_fTreeAmplitudeIntensity, 0.0f);
+		RCache.set_c(C, result);
+	}
+};
+static cl_wind_params binder_wind_params;
+
 class pp_image_corrections : public R_constant_setup
 {
 	virtual void setup(R_constant* C) override
@@ -491,13 +503,28 @@ static class cl_pda_params : public R_constant_setup
 
 	virtual void setup(R_constant* C)
 	{
-		float pda_factor = g_pGamePersistent->pda_shader_data.pda_display_factor;
-		float pda_psy_factor = g_pGamePersistent->pda_shader_data.pda_psy_influence;
-		float pda_display_brightness = g_pGamePersistent->pda_shader_data.pda_displaybrightness;
+		float pda_factor = g_pGamePersistent->devices_shader_data.pda_display_factor;
+		float pda_psy_factor = g_pGamePersistent->devices_shader_data.pda_psy_influence;
+		float pda_display_brightness = g_pGamePersistent->devices_shader_data.pda_displaybrightness;
 		RCache.set_c(C, pda_factor, pda_psy_factor, pda_display_brightness, 0.0f);
 	}
 
 } binder_pda_params;
+
+static class cl_device_params : public R_constant_setup
+{
+	u32 marker;
+	Fvector4 result;
+
+	virtual void setup(R_constant* C)
+	{
+		float device_global_psy_factor = g_pGamePersistent->devices_shader_data.device_global_psy_influence;
+		float device_psy_zone_factor = g_pGamePersistent->devices_shader_data.device_psy_zone_influence;
+		float device_rad_zone_factor = g_pGamePersistent->devices_shader_data.device_radiation_zone_influence;
+		RCache.set_c(C, device_global_psy_factor, device_psy_zone_factor, device_rad_zone_factor, 0.0f);
+	}
+
+} binder_device_params;
 
 static class cl_inv_v : public R_constant_setup
 {
@@ -516,6 +543,20 @@ static class cl_inv_v : public R_constant_setup
 extern ENGINE_API Fvector4 ps_ssfx_hud_drops_1;
 extern ENGINE_API Fvector4 ps_ssfx_hud_drops_2;
 extern ENGINE_API Fvector4 ps_ssfx_blood_decals;
+
+extern ENGINE_API Fvector4 ps_ssfx_florafixes_1;
+extern ENGINE_API Fvector4 ps_ssfx_florafixes_2;
+extern ENGINE_API float ps_ssfx_gloss_factor;
+extern ENGINE_API Fvector3 ps_ssfx_gloss_minmax;
+extern ENGINE_API Fvector4 ps_ssfx_wetsurfaces_1;
+extern ENGINE_API Fvector4 ps_ssfx_wetsurfaces_2;
+extern ENGINE_API int ps_ssfx_is_underground;
+extern ENGINE_API Fvector4 ps_ssfx_lightsetup_1;
+
+extern ENGINE_API Fvector3 ps_ssfx_shadow_bias;
+extern ENGINE_API Fvector4 ps_ssfx_lut;
+extern ENGINE_API Fvector4 ps_ssfx_wind_grass;
+extern ENGINE_API Fvector4 ps_ssfx_wind_trees;
 
 static class ssfx_wpn_dof_1 : public R_constant_setup
 {
@@ -562,7 +603,7 @@ class ssfx_blood_decals : public R_constant_setup
 {
 	virtual void setup(R_constant* C)
 	{
-		RCache.set_c(C, ps_ssfx_blood_decals);
+		RCache.set_c(C, ps_r4_shaders_flags.test(R4FLAG_SSS_ADDON) ? ps_ssfx_blood_decals : Fvector4().set(0, 0, 0, 0));
 	}
 };
 static ssfx_blood_decals binder_ssfx_blood_decals;
@@ -571,7 +612,7 @@ class ssfx_hud_drops_1 : public R_constant_setup
 {
 	virtual void setup(R_constant* C)
 	{
-		RCache.set_c(C, ps_ssfx_hud_drops_1);
+		RCache.set_c(C, ps_r4_shaders_flags.test(R4FLAG_SSS_ADDON) ? ps_ssfx_hud_drops_1 : Fvector4().set(0, 0, 0, 0));
 	}
 };
 static ssfx_hud_drops_1 binder_ssfx_hud_drops_1;
@@ -580,10 +621,114 @@ class ssfx_hud_drops_2 : public R_constant_setup
 {
 	virtual void setup(R_constant* C)
 	{
-		RCache.set_c(C, ps_ssfx_hud_drops_2);
+		RCache.set_c(C, ps_r4_shaders_flags.test(R4FLAG_SSS_ADDON) ? ps_ssfx_hud_drops_2 : Fvector4().set(0, 0, 0, 0));
 	}
 };
 static ssfx_hud_drops_2 binder_ssfx_hud_drops_2;
+
+class ssfx_lightsetup_1 : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		RCache.set_c(C, ps_ssfx_lightsetup_1);
+	}
+};
+static ssfx_lightsetup_1 binder_ssfx_lightsetup_1;
+
+class ssfx_is_underground : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		RCache.set_c(C, (float)ps_ssfx_is_underground, 0.f, 0.f, 0.f);
+	}
+};
+static ssfx_is_underground binder_ssfx_is_underground;
+
+class ssfx_wetsurfaces_1 : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		RCache.set_c(C, ps_ssfx_wetsurfaces_1);
+	}
+};
+static ssfx_wetsurfaces_1 binder_ssfx_wetsurfaces_1;
+
+class ssfx_wetsurfaces_2 : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		RCache.set_c(C, ps_ssfx_wetsurfaces_2);
+	}
+};
+static ssfx_wetsurfaces_2 binder_ssfx_wetsurfaces_2;
+
+class ssfx_gloss : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		RCache.set_c(C, ps_ssfx_gloss_minmax.x, ps_ssfx_gloss_minmax.y, ps_ssfx_gloss_factor, 0.f);
+	}
+};
+static ssfx_gloss binder_ssfx_gloss;
+
+class ssfx_florafixes_1 : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		RCache.set_c(C, ps_ssfx_florafixes_1);
+	}
+};
+static ssfx_florafixes_1 binder_ssfx_florafixes_1;
+
+class ssfx_florafixes_2 : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		RCache.set_c(C, ps_ssfx_florafixes_2);
+	}
+};
+static ssfx_florafixes_2 binder_ssfx_florafixes_2;
+
+static class ssfx_wind_grass : public R_constant_setup
+{
+	virtual void setup(R_constant * C)
+	{
+		RCache.set_c(C, ps_ssfx_wind_grass);
+	}
+} ssfx_wind_grass;
+
+static class ssfx_wind_trees : public R_constant_setup
+{
+	virtual void setup(R_constant * C)
+	{
+		RCache.set_c(C, ps_ssfx_wind_trees);
+	}
+} ssfx_wind_trees;
+
+static class ssfx_wind_anim : public R_constant_setup
+{
+	virtual void setup(R_constant * C)
+	{
+		Fvector3 WindAni = g_pGamePersistent->Environment().wind_anim;
+		RCache.set_c(C, WindAni.x, WindAni.y, WindAni.z, 0);
+	}
+} ssfx_wind_anim;
+
+static class ssfx_lut : public R_constant_setup
+{
+	virtual void setup(R_constant * C)
+	{
+		RCache.set_c(C, ps_ssfx_lut);
+	}
+} ssfx_lut;
+
+static class ssfx_shadow_bias : public R_constant_setup
+{
+	virtual void setup(R_constant * C)
+	{
+		RCache.set_c(C, ps_ssfx_shadow_bias.x, ps_ssfx_shadow_bias.y, 0, 0);
+	}
+} ssfx_shadow_bias;
 
 // Standart constant-binding
 void	CBlender_Compile::SetMapping	()
@@ -598,6 +743,7 @@ void	CBlender_Compile::SetMapping	()
 	r_Constant("sky_color", &binder_sky_color);
 	r_Constant("screen_res_alt", &binder_screen_res);
     r_Constant("rain_params", &binder_rain_params);
+	r_Constant("wind_params", &binder_wind_params);
 
 	// misc
 	r_Constant("m_hud_params", &binder_hud_params);	//--#SM+#--
@@ -675,12 +821,26 @@ void	CBlender_Compile::SetMapping	()
 
 	// PDA
 	r_Constant				("pda_params",		&binder_pda_params);
+	// Nightvision
+	r_Constant				("device_influence",	&binder_device_params);
 	//Screen Space Shaders
 	r_Constant				("ssfx_wpn_dof_1",		&ssfx_wpn_dof_1);
 	r_Constant				("ssfx_wpn_dof_2",		&ssfx_wpn_dof_2);
 	r_Constant				("ssfx_blood_decals",	&binder_ssfx_blood_decals);
     r_Constant				("ssfx_hud_drops_1",	&binder_ssfx_hud_drops_1);
     r_Constant				("ssfx_hud_drops_2",	&binder_ssfx_hud_drops_2);
+	r_Constant				("ssfx_lightsetup_1",	&binder_ssfx_lightsetup_1);
+	r_Constant				("ssfx_is_underground", &binder_ssfx_is_underground);
+	r_Constant				("ssfx_wetsurfaces_1",	&binder_ssfx_wetsurfaces_1);
+	r_Constant				("ssfx_wetsurfaces_2",	&binder_ssfx_wetsurfaces_2);
+	r_Constant				("ssfx_gloss",			&binder_ssfx_gloss);
+	r_Constant				("ssfx_florafixes_1",	&binder_ssfx_florafixes_1);
+	r_Constant				("ssfx_florafixes_2",	&binder_ssfx_florafixes_2);
+	r_Constant				("ssfx_shadow_bias",	&ssfx_shadow_bias);
+	r_Constant				("ssfx_wind_anim",		&ssfx_wind_anim);
+	r_Constant				("ssfx_wsetup_grass",	&ssfx_wind_grass);
+	r_Constant				("ssfx_wsetup_trees",	&ssfx_wind_trees);
+	r_Constant				("ssfx_lut",			&ssfx_lut);
 	//Reflections distance
 	r_Constant				("reflections_distance", &cl_refl_dist);
 	//AO Debug

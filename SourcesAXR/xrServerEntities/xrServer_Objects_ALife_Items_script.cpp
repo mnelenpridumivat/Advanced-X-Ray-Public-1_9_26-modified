@@ -70,6 +70,8 @@ void CSE_ALifeItemWeapon::script_register(lua_State *L)
             value("eWeaponAddonGrenadeLauncher", static_cast<int>(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonGrenadeLauncher)),
             value("eWeaponAddonScope", static_cast<int>(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonScope)),
             value("eWeaponAddonSilencer", static_cast<int>(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonSilencer)),
+			value("eWeaponAddonLaserDesignator", static_cast<int>(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonLaserDesignator)),
+			value("eWeaponAddonTacticalTorch", static_cast<int>(CSE_ALifeItemWeapon::EWeaponAddonState::eWeaponAddonTacticalTorch)),
             value("eAddonAttachable", static_cast<int>(CSE_ALifeItemWeapon::EWeaponAddonStatus::eAddonAttachable)),
             value("eAddonDisabled", static_cast<int>(CSE_ALifeItemWeapon::EWeaponAddonStatus::eAddonDisabled)),
             value("eAddonPermanent", static_cast<int>(CSE_ALifeItemWeapon::EWeaponAddonStatus::eAddonPermanent))

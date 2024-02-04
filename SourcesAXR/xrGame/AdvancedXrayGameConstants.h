@@ -36,6 +36,18 @@ namespace GameConstants
 	bool GetActorSkillsEnabled();
 	bool GetSleepInfluenceOnPsyHealth();
 	bool GetUseHQ_Icons();
+	bool GetArtefactPanelEnabled();
+	bool GetHUD_UsedItemTextEnabled();
+	bool GetLimitedInventory();
+	bool GetInventoryItemsAutoVolume();
+	bool GetBackpackAnimsEnabled();
+	bool GetFoodIrradiation();
+	bool GetFoodRotting();
+	bool GetOGSE_WpnZoomSystem();
+	bool GetQuickThrowGrenadesEnabled();
+	bool GetPDA_FlashingIconsEnabled();
+	bool GetPDA_FlashingIconsQuestsEnabled();
+	bool GetFogInfluenceVolumetricLight();
 	int  GetArtefactsCount();
 	int  GetIntScriptCMDCount();
 	int  GetBOOLScriptCMDCount();
@@ -47,4 +59,6 @@ namespace GameConstants
 	Fvector4 GetSSFX_FocusDoF();
 	bool GetSSFX_EnableBoreDoF();
 	LPCSTR GetAfInfluenceMode();
+	LPCSTR GetArtefactDegradationMode();
+	LPCSTR GetMoonPhasesMode();
 };

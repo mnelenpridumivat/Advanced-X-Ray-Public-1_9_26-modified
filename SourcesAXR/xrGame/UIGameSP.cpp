@@ -24,6 +24,7 @@
 #include "AdvancedXrayGameConstants.h"
 #include "Inventory.h"
 #include "PDA.h"
+#include "CustomBackpack.h"
 
 CUIGameSP::CUIGameSP()
 :m_game(NULL),m_game_objective(NULL)
@@ -55,12 +56,11 @@ void CUIGameSP::SetClGame (game_cl_GameState* g)
 	m_game = smart_cast<game_cl_Single*>(g);
 	R_ASSERT							(m_game);
 }
-#ifdef DEBUG
-	void attach_adjust_mode_keyb(int dik);
-	void attach_draw_adjust_mode();
-	void hud_adjust_mode_keyb(int dik);
-	void hud_draw_adjust_mode();
-#endif
+
+void attach_adjust_mode_keyb(int dik);
+void attach_draw_adjust_mode();
+void hud_adjust_mode_keyb(int dik);
+void hud_draw_adjust_mode();
 
 void CUIGameSP::OnFrame()
 {
@@ -93,10 +93,11 @@ bool CUIGameSP::IR_UIOnKeyboardPress(int dik)
 	if(inherited::IR_UIOnKeyboardPress(dik)) return true;
 	if( Device.Paused()		) return false;
 
-#ifdef DEBUG
-	hud_adjust_mode_keyb	(dik);
-	attach_adjust_mode_keyb	(dik);
-#endif
+	if (Actor()->active_cam() == eacFirstEye)
+	{
+		hud_adjust_mode_keyb(dik);
+		attach_adjust_mode_keyb(dik);
+	}
 
 	CInventoryOwner* pInvOwner  = smart_cast<CInventoryOwner*>( Level().CurrentEntity() );
 	if ( !pInvOwner )			return false;
@@ -132,7 +133,10 @@ bool CUIGameSP::IR_UIOnKeyboardPress(int dik)
 				if (psActorFlags.test(AF_3D_PDA) && CurrentGameUI()->PdaMenu().IsShown())
 					pActor->inventory().Activate(NO_ACTIVE_SLOT);
 
-				ShowActorMenu();
+				CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(pActor->inventory().ItemFromSlot(BACKPACK_SLOT));
+
+				if (!GameConstants::GetBackpackAnimsEnabled() || !backpack)
+					ShowActorMenu();
 			}
 			break;
 		}
@@ -149,7 +153,7 @@ bool CUIGameSP::IR_UIOnKeyboardPress(int dik)
 				SDrawStaticStruct* sm2		= AddCustomStatic("secondary_task", true);
 				sm2->m_static->TextItemControl()->SetTextST	(t1->m_Description.c_str());
 
-				if (t1->m_difficulty_icon_name.c_str())
+				if (t1 && t1->m_difficulty_icon_name.c_str())
 					m_game_objective->m_static->InitTexture(t1->m_difficulty_icon_name.c_str());
 			}
 		}break;
@@ -157,15 +161,13 @@ bool CUIGameSP::IR_UIOnKeyboardPress(int dik)
 
 	return false;
 }
-#ifdef DEBUG
+
 void CUIGameSP::Render()
 {
 	inherited::Render();
 	hud_draw_adjust_mode();
 	attach_draw_adjust_mode();
 }
-#endif
-
 
 void  CUIGameSP::StartTrade(CInventoryOwner* pActorInv, CInventoryOwner* pOtherOwner)
 {
@@ -314,24 +316,25 @@ bool CChangeLevelWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 }
 
 bool g_block_pause	= false;
-void CChangeLevelWnd::Show()
+void CChangeLevelWnd::Show(bool status)
 {
-	m_messageBox->InitMessageBox(m_b_allow_change_level?"message_box_change_level":"message_box_change_level_disabled");
-	SetWndPos				(m_messageBox->GetWndPos());
-	m_messageBox->SetWndPos	(Fvector2().set(0.0f,0.0f));
-	SetWndSize				(m_messageBox->GetWndSize());
+	inherited::Show(status);
+	if (status)
+	{
+		m_messageBox->InitMessageBox(m_b_allow_change_level?"message_box_change_level":"message_box_change_level_disabled");
+		SetWndPos				(m_messageBox->GetWndPos());
+		m_messageBox->SetWndPos	(Fvector2().set(0.0f,0.0f));
+		SetWndSize				(m_messageBox->GetWndSize());
 
-	m_messageBox->SetText	(m_message_str.c_str());
-	
-
-	g_block_pause							= true;
-	GAME_PAUSE							(TRUE, TRUE, TRUE, "CChangeLevelWnd_show");
-	bShowPauseString						= FALSE;
-}
-
-void CChangeLevelWnd::Hide()
-{
-	g_block_pause							= false;
-	GAME_PAUSE							(FALSE, TRUE, TRUE, "CChangeLevelWnd_hide");
+		m_messageBox->SetText	(m_message_str.c_str());
+		g_block_pause = true;
+		GAME_PAUSE(TRUE, TRUE, TRUE, "CChangeLevelWnd_show");
+		bShowPauseString = FALSE;
+	}
+	else
+	{
+		g_block_pause = false;
+		GAME_PAUSE(FALSE, TRUE, TRUE, "CChangeLevelWnd_hide");
+	}
 }
 

@@ -3,6 +3,7 @@
 #include "interactive_motion.h"
 #include "../Include/xrRender/Kinematics.h"
 class imotion_position;
+enum motion_history_state;
 class imotion_position:
 	public interactive_motion
 {
@@ -14,13 +15,12 @@ struct tracks_update: public IUpdateTracksCallback
 		imotion_position *motion;
 		bool update;
 	} update_callback;
-	float			time_to_end;
-	UpdateCallback	saved_visual_callback;
-	CBlend			*blend;
-
+	float					time_to_end;
+	UpdateCallback			saved_visual_callback;
+	CBlend					*blend;
+	bool					shell_motion_has_history;
 public:
-	imotion_position(): interactive_motion(), time_to_end(0.f), saved_visual_callback( 0 ), blend(0)
-	{};
+	imotion_position();
 private:
 	typedef			interactive_motion inherited;
 	virtual	void	move_update	(  );
@@ -35,11 +35,12 @@ private:
 	virtual	void	state_end	(  );
 	virtual	void	state_start (  );
 
-static	void _BCL	rootbone_callback	( CBoneInstance *BI );
-		void		init_bones			();
-		void		deinit_bones		();
-		void		set_root_callback	();
-		void		remove_root_callback();
+static	void	_BCL	rootbone_callback	( CBoneInstance *BI );
+
+		void	init_bones			();
+		void	deinit_bones		();
+		void	set_root_callback	();
+		void	remove_root_callback();
 
 			void	interactive_motion_diagnostic( LPCSTR message );
 };

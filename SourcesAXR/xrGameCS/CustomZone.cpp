@@ -11,14 +11,15 @@
 #include "level.h"
 #include "game_cl_base.h"
 #include "../xrEngine/igame_persistent.h"
+#include "../xrengine/xr_collide_form.h"
 #include "artefact.h"
 #include "ai_object_location.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "zone_effector.h"
 #include "breakableobject.h"
 #include "GamePersistent.h"
-#include "..\XrEngine\xr_collide_form.h"
-#define WIND_RADIUS (4*Radius())	//расстояние до актера, когда появляется ветер 
+
+#define WIND_RADIUS (4*Radius())	//СЂР°СЃСЃС‚РѕСЏРЅРёРµ РґРѕ Р°РєС‚РµСЂР°, РєРѕРіРґР° РїРѕСЏРІР»СЏРµС‚СЃСЏ РІРµС‚РµСЂ 
 #define FASTMODE_DISTANCE (50.f)	//distance to camera from sphere, when zone switches to fast update sequence
 
 extern ENGINE_API Fvector4 ps_ssfx_int_grass_params_1;
@@ -56,10 +57,27 @@ CCustomZone::CCustomZone(void)
 	m_zone_flags.set			(eBlowoutWindActive, FALSE);
 	m_zone_flags.set			(eFastMode, TRUE);
 
-	m_bVolumetricBlowout = true;
-	m_fVolumetricQuality = 1.0f;
-	m_fVolumetricDistance = 0.3f;
-	m_fVolumetricIntensity = 0.5f;
+	m_bVolumetricBlowout		= true;
+	m_fVolumetricQuality		= 1.0f;
+	m_fVolumetricDistance		= 0.3f;
+	m_fVolumetricIntensity		= 0.5f;
+
+	// -- Interactive Grass - IDLE
+	m_BendGrass_idle_anim		= -1;
+	m_BendGrass_idle_str		= 1.0f;
+	m_BendGrass_idle_radius		= 1.0f;
+	m_BendGrass_idle_speed		= 1.0f;
+
+	// -- Interactive Grass - ACTIVE
+	m_BendGrass_whenactive_anim = -1;
+	m_BendGrass_whenactive_speed = 0.0f;
+	m_BendGrass_whenactive_str	= 0.0f;
+
+	// -- Interactive Grass - BLOWOUT
+	m_BendGrass_Blowout_time	= -1;
+	m_BendGrass_Blowout			= false;
+	m_BendGrass_Blowout_speed	= 0.0f;
+	m_BendGrass_Blowout_radius	= 0.0f;
 }
 
 CCustomZone::~CCustomZone(void) 
@@ -88,7 +106,7 @@ void CCustomZone::Load(LPCSTR section)
 	m_zone_flags.set(eIgnoreSmall,		pSettings->r_bool(section,	"ignore_small"));
 	m_zone_flags.set(eIgnoreArtefact,	pSettings->r_bool(section,	"ignore_artefacts"));
 
-	//загрузить времена для зоны
+	//Р·Р°РіСЂСѓР·РёС‚СЊ РІСЂРµРјРµРЅР° РґР»СЏ Р·РѕРЅС‹
 	m_StateTime[eZoneStateIdle]			= -1;
 	m_StateTime[eZoneStateAwaking]		= pSettings->r_s32(section, "awaking_time");
 	m_StateTime[eZoneStateBlowout]		= pSettings->r_s32(section, "blowout_time");
@@ -102,56 +120,21 @@ void CCustomZone::Load(LPCSTR section)
 	LPCSTR sound_str = NULL;
 	
 	// -- Interactive Grass - IDLE
-	if (pSettings->line_exist(section, "bend_grass_idle_anim"))
-		m_BendGrass_idle_anim = pSettings->r_s8(section, "bend_grass_idle_anim");
-	else
-		m_BendGrass_idle_anim = -1;
-
-	if (pSettings->line_exist(section, "bend_grass_idle_str"))
-		m_BendGrass_idle_str = pSettings->r_float(section, "bend_grass_idle_str");
-	else
-		m_BendGrass_idle_str = 1.0f;
-
-	if (pSettings->line_exist(section, "bend_grass_idle_radius"))
-		m_BendGrass_idle_radius = pSettings->r_float(section, "bend_grass_idle_radius");
-	else
-		m_BendGrass_idle_radius = 1.0f;
-
-	if (pSettings->line_exist(section, "bend_grass_idle_speed"))
-		m_BendGrass_idle_speed = pSettings->r_float(section, "bend_grass_idle_speed");
-	else
-		m_BendGrass_idle_speed = 1.0f;
+	m_BendGrass_idle_anim		= READ_IF_EXISTS(pSettings, r_s8, section, "bend_grass_idle_anim", -1);
+	m_BendGrass_idle_str		= READ_IF_EXISTS(pSettings, r_float, section, "bend_grass_idle_str", 1.0f);
+	m_BendGrass_idle_radius		= READ_IF_EXISTS(pSettings, r_float, section, "bend_grass_idle_radius", 1.0f);
+	m_BendGrass_idle_speed		= READ_IF_EXISTS(pSettings, r_float, section, "bend_grass_idle_speed", 1.0f);
 
 	// -- Interactive Grass - ACTIVE
-	if (pSettings->line_exist(section, "bend_grass_whenactive_anim"))
-		m_BendGrass_whenactive_anim = pSettings->r_s8(section, "bend_grass_whenactive_anim");
-	else
-		m_BendGrass_whenactive_anim = -1;
-
-	if (pSettings->line_exist(section, "bend_grass_whenactive_speed"))
-		m_BendGrass_whenactive_speed = pSettings->r_float(section, "bend_grass_whenactive_speed");
-	else
-		m_BendGrass_whenactive_speed = -1;
-
-	if (pSettings->line_exist(section, "bend_grass_whenactive_str"))
-		m_BendGrass_whenactive_str = pSettings->r_float(section, "bend_grass_whenactive_str");
-	else
-		m_BendGrass_whenactive_str = -1;
+	m_BendGrass_whenactive_anim = READ_IF_EXISTS(pSettings, r_s8, section, "bend_grass_whenactive_anim", -1);
+	m_BendGrass_whenactive_speed = READ_IF_EXISTS(pSettings, r_float, section, "bend_grass_whenactive_speed", 0.0f);
+	m_BendGrass_whenactive_str	= READ_IF_EXISTS(pSettings, r_float, section, "bend_grass_whenactive_str", 0.0f);
 
 	// -- Interactive Grass - BLOWOUT
-	if (pSettings->line_exist(section, "bend_grass_blowout_duration"))
-		m_BendGrass_Blowout_time = pSettings->r_u32(section, "bend_grass_blowout_duration");
-	else
-		m_BendGrass_Blowout_time = -1;
-
-	if (pSettings->line_exist(section, "bend_grass_blowout"))
-		m_BendGrass_Blowout = pSettings->r_bool(section, "bend_grass_blowout");
-
-	if (pSettings->line_exist(section, "bend_grass_blowout_speed"))
-		m_BendGrass_Blowout_speed = pSettings->r_float(section, "bend_grass_blowout_speed");
-
-	if (pSettings->line_exist(section, "bend_grass_blowout_radius"))
-		m_BendGrass_Blowout_radius = pSettings->r_float(section, "bend_grass_blowout_radius");
+	m_BendGrass_Blowout_time	= READ_IF_EXISTS(pSettings, r_u32, section, "bend_grass_blowout_duration", -1);
+	m_BendGrass_Blowout			= READ_IF_EXISTS(pSettings, r_bool, section, "bend_grass_blowout", false);
+	m_BendGrass_Blowout_speed	= READ_IF_EXISTS(pSettings, r_float, section, "bend_grass_blowout_speed", 0.0f);
+	m_BendGrass_Blowout_radius	= READ_IF_EXISTS(pSettings, r_float, section, "bend_grass_blowout_radius", 0.0f);
 
 	if(pSettings->line_exist(section,"idle_sound")) 
 	{
@@ -304,7 +287,7 @@ void CCustomZone::Load(LPCSTR section)
 		m_fBlowoutWindPowerMax = pSettings->r_float(section,"blowout_wind_power");
 	}
 
-	//загрузить параметры световой вспышки от взрыва
+	//Р·Р°РіСЂСѓР·РёС‚СЊ РїР°СЂР°РјРµС‚СЂС‹ СЃРІРµС‚РѕРІРѕР№ РІСЃРїС‹С€РєРё РѕС‚ РІР·СЂС‹РІР°
 	m_zone_flags.set(eBlowoutLight, pSettings->r_bool (section, "blowout_light"));
 	if(m_zone_flags.test(eBlowoutLight) ){
 		sscanf(pSettings->r_string(section,"light_color"), "%f,%f,%f", &m_LightColor.r, &m_LightColor.g, &m_LightColor.b);
@@ -320,7 +303,7 @@ void CCustomZone::Load(LPCSTR section)
 	m_fVolumetricDistance = READ_IF_EXISTS(pSettings, r_float, section, "volumetric_distance", 0.3f);
 	m_fVolumetricIntensity = READ_IF_EXISTS(pSettings, r_float, section, "volumetric_intensity", 0.5f);
 
-	//загрузить параметры idle подсветки
+	//Р·Р°РіСЂСѓР·РёС‚СЊ РїР°СЂР°РјРµС‚СЂС‹ idle РїРѕРґСЃРІРµС‚РєРё
 	m_zone_flags.set(eIdleLight,	pSettings->r_bool (section, "idle_light"));
 	if( m_zone_flags.test(eIdleLight) )
 	{
@@ -362,7 +345,7 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 	m_StartTime					= Device.dwTimeGlobal;
 	m_zone_flags.set			(eUseOnOffTime,	(m_TimeToDisable!=0)&&(m_TimeToEnable!=0) );
 
-	//добавить источники света
+	//РґРѕР±Р°РІРёС‚СЊ РёСЃС‚РѕС‡РЅРёРєРё СЃРІРµС‚Р°
 	bool br1 = (0==psDeviceFlags.test(rsR2|rsR4));
 	
 	
@@ -559,8 +542,8 @@ void CCustomZone::shedule_Update(u32 dt)
 		// update
 		feel_touch_update		(P,s.R);
 
-		//пройтись по всем объектам в зоне
-		//и проверить их состояние
+		//РїСЂРѕР№С‚РёСЃСЊ РїРѕ РІСЃРµРј РѕР±СЉРµРєС‚Р°Рј РІ Р·РѕРЅРµ
+		//Рё РїСЂРѕРІРµСЂРёС‚СЊ РёС… СЃРѕСЃС‚РѕСЏРЅРёРµ
 		for(OBJECT_INFO_VEC_IT it = m_ObjectInfoMap.begin(); 
 			m_ObjectInfoMap.end() != it; ++it) 
 		{
@@ -583,8 +566,8 @@ void CCustomZone::shedule_Update(u32 dt)
 					StopObjectIdleParticles( pObject );
 			}
 
-			//если есть хотя бы один не дисабленый объект, то
-			//зона считается активной
+			//РµСЃР»Рё РµСЃС‚СЊ С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ РЅРµ РґРёСЃР°Р±Р»РµРЅС‹Р№ РѕР±СЉРµРєС‚, С‚Рѕ
+			//Р·РѕРЅР° СЃС‡РёС‚Р°РµС‚СЃСЏ Р°РєС‚РёРІРЅРѕР№
 			if(info.zone_ignore == false) 
 				m_zone_flags.set(eZoneIsActive,TRUE);
 		}
@@ -797,7 +780,7 @@ void CCustomZone::UpdateIdleLight	()
 	VERIFY(m_pIdleLAnim);
 
 	int frame = 0;
-	u32 clr					= m_pIdleLAnim->CalculateBGR(Device.fTimeGlobal,frame); // возвращает в формате BGR
+	u32 clr					= m_pIdleLAnim->CalculateBGR(Device.fTimeGlobal,frame); // РІРѕР·РІСЂР°С‰Р°РµС‚ РІ С„РѕСЂРјР°С‚Рµ BGR
 	Fcolor					fclr;
 	fclr.set				((float)color_get_B(clr)/255.f,(float)color_get_G(clr)/255.f,(float)color_get_R(clr)/255.f,1.f);
 	
@@ -879,7 +862,7 @@ void CCustomZone::PlayEntranceParticles(CGameObject* pObject)
 	else 
 		vel.set						(0,0,0);
 	
-	//выбрать случайную косточку на объекте
+	//РІС‹Р±СЂР°С‚СЊ СЃР»СѓС‡Р°Р№РЅСѓСЋ РєРѕСЃС‚РѕС‡РєСѓ РЅР° РѕР±СЉРµРєС‚Рµ
 	CParticlesPlayer* PP			= smart_cast<CParticlesPlayer*>(pObject);
 	if (PP)
 	{
@@ -991,7 +974,7 @@ void CCustomZone::PlayObjectIdleParticles(CGameObject* pObject)
 
 	shared_str particle_str = NULL;
 
-	//разные партиклы для объектов разного размера
+	//СЂР°Р·РЅС‹Рµ РїР°СЂС‚РёРєР»С‹ РґР»СЏ РѕР±СЉРµРєС‚РѕРІ СЂР°Р·РЅРѕРіРѕ СЂР°Р·РјРµСЂР°
 	if(pObject->Radius()<SMALL_OBJECT_RADIUS)
 	{
 		if(!m_sIdleObjectParticlesSmall) return;
@@ -1004,7 +987,7 @@ void CCustomZone::PlayObjectIdleParticles(CGameObject* pObject)
 	}
 
 	
-	//запустить партиклы на объекте
+	//Р·Р°РїСѓСЃС‚РёС‚СЊ РїР°СЂС‚РёРєР»С‹ РЅР° РѕР±СЉРµРєС‚Рµ
 	//. new
 	PP->StopParticles (particle_str, BI_NONE, true);
 
@@ -1027,7 +1010,7 @@ void CCustomZone::StopObjectIdleParticles(CGameObject* pObject)
 	
 	
 	shared_str particle_str = NULL;
-	//разные партиклы для объектов разного размера
+	//СЂР°Р·РЅС‹Рµ РїР°СЂС‚РёРєР»С‹ РґР»СЏ РѕР±СЉРµРєС‚РѕРІ СЂР°Р·РЅРѕРіРѕ СЂР°Р·РјРµСЂР°
 	if(pObject->Radius()<SMALL_OBJECT_RADIUS)
 	{
 		if(!m_sIdleObjectParticlesSmall) return;
@@ -1332,7 +1315,6 @@ void CCustomZone::CreateHit	(	u16 id_to,
 								u16 id_from, 
 								const Fvector& hit_dir, 
 								float hit_power, 
-								float hit_power_critical, 
 								s16 bone_id, 
 								const Fvector& pos_in_bone, 
 								float hit_impulse, 
@@ -1345,7 +1327,7 @@ void CCustomZone::CreateHit	(	u16 id_to,
 
 		NET_Packet			l_P;
 		Fvector hdir		= hit_dir;
-		SHit Hit			= SHit(hit_power, hit_power_critical, hdir, this, bone_id, pos_in_bone, hit_impulse, hit_type);		
+		SHit Hit			= SHit(hit_power, hdir, this, bone_id, pos_in_bone, hit_impulse, hit_type, 0.0f, false);		
 		Hit.GenHeader		(GE_HIT, id_to);
 		Hit.whoID			= id_from;
 		Hit.weaponID		= this->ID();
@@ -1584,6 +1566,24 @@ void CCustomZone::o_switch_2_slow				()
 		StopIdleLight();
 	}
 	processing_deactivate		();
+}
+
+void CCustomZone::save							(NET_Packet &output_packet)
+{
+	inherited::save			(output_packet);
+	output_packet.w_u8		(static_cast<u8>(m_eZoneState));
+}
+
+void CCustomZone::load							(IReader &input_packet)
+{
+	inherited::load			(input_packet);	
+
+	CCustomZone::EZoneState temp = static_cast<CCustomZone::EZoneState>(input_packet.r_u8());
+
+	if (temp == eZoneStateDisabled)
+		m_eZoneState = eZoneStateDisabled;
+	else
+		m_eZoneState = eZoneStateIdle;
 }
 
 void CCustomZone::ChangeIdleParticles(LPCSTR name, bool bIdleLight)

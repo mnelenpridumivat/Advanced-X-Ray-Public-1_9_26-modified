@@ -2,12 +2,12 @@
 #include "GameObject.h"
 //#include "../Include/xrRender/RenderVisual.h"
 #include "../Include/xrRender/RenderVisual.h"
-#include "PhysicsShell.h"
+#include "../xrphysics/PhysicsShell.h"
 #include "ai_space.h"
 #include "CustomMonster.h" 
 #include "physicobject.h"
 #include "HangingLamp.h"
-#include "PhysicsShell.h"
+#include "../xrphysics/PhysicsShell.h"
 #include "game_sv_single.h"
 #include "level_graph.h"
 #include "ph_shell_interface.h"
@@ -23,13 +23,13 @@
 #include "../xrEngine/igame_level.h"
 #include "level.h"
 #include "script_callback_ex.h"
-#include "MathUtils.h"
+#include "../xrphysics/MathUtils.h"
 #include "game_cl_base_weapon_usage_statistic.h"
 #include "game_level_cross_table.h"
 #include "ai_obstacle.h"
 #include "magic_box3.h"
 #include "animation_movement_controller.h"
-#include "..\XrEngine\xr_collide_form.h"
+#include "../xrengine/xr_collide_form.h"
 #include "alife_simulator.h"
 #include "alife_object_registry.h"
 
@@ -204,6 +204,10 @@ void CGameObject::OnEvent		(NET_Packet& P, u16 type)
 			CObject*	Hitter = Level().Objects.net_Find(HDS.whoID);
 			CObject*	Weapon = Level().Objects.net_Find(HDS.weaponID);
 			HDS.who		= Hitter;
+			if (!HDS.who)
+			{
+				Msg("! ERROR: hitter object [%d] is NULL on client.", HDS.whoID);
+			}
 			//-------------------------------------------------------
 			switch (HDS.PACKET_TYPE)
 			{
@@ -220,7 +224,12 @@ void CGameObject::OnEvent		(NET_Packet& P, u16 type)
 			Hit				(&HDS);
 			//---------------------------------------------------------------------------
 			if (GameID() != eGameIDSingle)
+			{
 				Game().m_WeaponUsageStatistic->OnBullet_Check_Result(false);
+				/*game_cl_mp*	mp_game = smart_cast<game_cl_mp*>(&Game());
+				if (mp_game->get_reward_generator())
+					mp_game->get_reward_generator()->OnBullet_Hit(Hitter, this, Weapon, HDS.boneID);*/
+			}
 			//---------------------------------------------------------------------------
 		}
 		break;
@@ -385,6 +394,21 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 			if (l_tpALifeObject && ai().game_graph().valid_vertex_id(l_tpALifeObject->m_tGraphID))
 				ai_location().game_vertex		(l_tpALifeObject->m_tGraphID);
 
+			if (!_valid(Position()))
+			{
+				Fvector vertex_pos = ai().level_graph().vertex_position(ai_location().level_vertex_id());
+
+				Msg("! [%s]: %s has invalid Position[%f,%f,%f] level_vertex_id[%u][%f,%f,%f]",
+					__FUNCTION__, cName().c_str(), Position().x, Position().y, Position().z,
+					ai_location().level_vertex_id(), vertex_pos.x, vertex_pos.y, vertex_pos.z);
+				Position().set(vertex_pos);
+
+				auto se_obj = alife_object();
+
+				if (se_obj)
+					se_obj->o_Position.set(Position());
+			}
+
 			validate_ai_locations				(false);
 
 			// validating position
@@ -513,6 +537,8 @@ void CGameObject::spawn_supplies()
 	bool bScope				=	false;
 	bool bSilencer			=	false;
 	bool bLauncher			=	false;
+	bool bLaser				=	false;
+	bool bTorch				=	false;
 
 	for (u32 k = 0, j; spawn_ini()->r_line("spawn",k,&N,&V); k++) {
 		VERIFY				(xr_strlen(N));
@@ -535,6 +561,8 @@ void CGameObject::spawn_supplies()
 			bScope			=	(NULL!=strstr(V,"scope"));
 			bSilencer		=	(NULL!=strstr(V,"silencer"));
 			bLauncher		=	(NULL!=strstr(V,"launcher"));
+			bLaser			=	(NULL!=strstr(V, "laser"));
+			bTorch			=	(NULL!=strstr(V, "torch"));
 
 		}
 		for (u32 i=0; i<j; ++i)
@@ -553,6 +581,10 @@ void CGameObject::spawn_supplies()
 						W->m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonSilencer, bSilencer);
 					if (W->m_grenade_launcher_status == ALife::eAddonAttachable)
 						W->m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher, bLauncher);
+					if (W->m_laser_designator_status == ALife::eAddonAttachable)
+						W->m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonLaserDesignator, bLaser);
+					if (W->m_tactical_torch_status == ALife::eAddonAttachable)
+						W->m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonTacticalTorch, bTorch);
 				}
 
 				NET_Packet					P;
@@ -571,8 +603,15 @@ void CGameObject::setup_parent_ai_locations(bool assign_position)
 	VERIFY					(l_tpGameObject);
 
 	// get parent's position
-	if (assign_position && use_parent_ai_locations())
+	if ( assign_position && use_parent_ai_locations() )
 		Position().set		(l_tpGameObject->Position());
+
+	//if ( assign_position && 
+	//		( use_parent_ai_locations() &&
+	//		!( cast_attachable_item() && cast_attachable_item()->enabled() )
+	//		 ) 
+	//	)
+	//	Position().set		(l_tpGameObject->Position());
 
 	// setup its ai locations
 	if (!UsedAI_Locations())
@@ -686,6 +725,7 @@ void CGameObject::renderable_Render	()
 	inherited::renderable_Render();
 	::Render->set_Transform		(&XFORM());
 	::Render->add_Visual		(Visual());
+	Visual()->getVisData().hom_frame = Device.dwFrame;
 }
 
 /*
@@ -819,7 +859,7 @@ void CGameObject::DestroyObject()
 
 void CGameObject::shedule_Update	(u32 dt)
 {
-	//уничтожить
+	//СѓРЅРёС‡С‚РѕР¶РёС‚СЊ
 	if(NeedToDestroyObject())
 	{
 #ifndef MASTER_GOLD
@@ -840,7 +880,7 @@ BOOL CGameObject::net_SaveRelevant	()
 	return	(CScriptBinder::net_SaveRelevant());
 }
 
-//игровое имя объекта
+//РёРіСЂРѕРІРѕРµ РёРјСЏ РѕР±СЉРµРєС‚Р°
 LPCSTR CGameObject::Name () const
 {
 	return	(*cName());

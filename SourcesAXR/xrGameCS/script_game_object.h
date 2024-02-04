@@ -26,6 +26,7 @@ namespace MovementManager { enum EPathType; }
 namespace DetailPathManager { enum EDetailPathType; }
 namespace SightManager { enum ESightType; }
 namespace smart_cover { class object; }
+namespace doors { class door; }
 
 class NET_Packet;
 class CGameTask;
@@ -74,7 +75,7 @@ class CScriptMonsterHitInfo;
 class CScriptBinderObject;
 class CCoverPoint;
 class CScriptIniFile;
-class CPhysicsShell;
+class cphysics_shell_scripted;
 class CHelicopter;
 class CHangingLamp;
 class CHolderCustom;
@@ -135,6 +136,8 @@ namespace luabind {
 
 class CScriptGameObject {
 	mutable CGameObject		*m_game_object;
+							CScriptGameObject		(CScriptGameObject const& game_object);
+
 public:
 
 							CScriptGameObject		(CGameObject *tpGameObject);
@@ -289,7 +292,7 @@ public:
 	// CProjector
 			Fvector				GetCurrentDirection		();
 			bool				IsInvBoxEmpty			();
-	//передача порции информации InventoryOwner
+	//РїРµСЂРµРґР°С‡Р° РїРѕСЂС†РёРё РёРЅС„РѕСЂРјР°С†РёРё InventoryOwner
 			bool				GiveInfoPortion		(LPCSTR info_id);
 			bool				DisableInfoPortion	(LPCSTR info_id);
 			void				GiveGameNews		(LPCSTR caption, LPCSTR news, LPCSTR texture_name, int delay, int show_time);
@@ -297,11 +300,11 @@ public:
 
 			void				AddIconedTalkMessage_old(LPCSTR text, LPCSTR texture_name, LPCSTR templ_name) {};
 			void				AddIconedTalkMessage(LPCSTR caption, LPCSTR text, LPCSTR texture_name, LPCSTR templ_name);
-	//предикаты наличия/отсутствия порции информации у персонажа
+	//РїСЂРµРґРёРєР°С‚С‹ РЅР°Р»РёС‡РёСЏ/РѕС‚СЃСѓС‚СЃС‚РІРёСЏ РїРѕСЂС†РёРё РёРЅС„РѕСЂРјР°С†РёРё Сѓ РїРµСЂСЃРѕРЅР°Р¶Р°
 			bool				HasInfo				(LPCSTR info_id);
 			bool				DontHasInfo			(LPCSTR info_id);
 			xrTime				GetInfoTime			(LPCSTR info_id);
-	//работа с заданиями
+	//СЂР°Р±РѕС‚Р° СЃ Р·Р°РґР°РЅРёСЏРјРё
 			ETaskState			GetGameTaskState	(LPCSTR task_id);
 			void				SetGameTaskState	(ETaskState state, LPCSTR task_id);
 			void				GiveTaskToActor		(CGameTask* t, u32 dt, bool bCheckExisting, u32 t_timer);
@@ -381,10 +384,14 @@ public:
 			bool				Weapon_IsGrenadeLauncherAttached();
 			bool				Weapon_IsScopeAttached			();
 			bool				Weapon_IsSilencerAttached		();
+			bool				Weapon_IsLaserDesignatorAttached();
+			bool				Weapon_IsTacticalTorchAttached	();
 
 			int					Weapon_GrenadeLauncher_Status	();
 			int					Weapon_Scope_Status				();
 			int					Weapon_Silencer_Status			();
+			int					Weapon_LaserDesignator_Status	();
+			int					Weapon_TacticalTorch_Status		();
 
 			LPCSTR				ProfileName			();
 			LPCSTR				CharacterName		();
@@ -579,6 +586,8 @@ public:
 			bool				night_vision_enabled	() const;
 			void				enable_torch			(bool value);
 			bool				torch_enabled			() const;
+			
+			void				attachable_item_load_attach(LPCSTR section);
 			// CustomZone
 			void				EnableAnomaly			();
 			void				DisableAnomaly			();
@@ -619,11 +628,12 @@ public:
 			Fvector 			bone_position			(LPCSTR bone_name, bool bHud = false) const;
 			Fvector 			bone_direction			(LPCSTR bone_name, bool bHud = false) const;
 			LPCSTR 				bone_name				(u16 id, bool bHud = false);
-			u16					get_bone_id				(LPCSTR bone_name) const;
 			bool				is_body_turning			() const;
-			CPhysicsShell*		get_physics_shell		() const;
+	cphysics_shell_scripted*	get_physics_shell		() const;
+			u16					get_bone_id				(LPCSTR bone_name) const;					
 			bool				weapon_strapped			() const;
 			bool				weapon_unstrapped		() const;
+			bool				weapon_shooting			() const;
 			void				eat						(CScriptGameObject *item);
 			bool				inside					(const Fvector &position, float epsilon) const;
 			bool				inside					(const Fvector &position) const;
@@ -772,7 +782,16 @@ public:
 			void				take_items_enabled						(bool value);
 			bool				take_items_enabled						() const;
 
-			bool				addon_IsActorHideout					() const;		// проверка что актор под каким либо укрытием
+			void				register_door							();
+			void				unregister_door							();
+			void				on_door_is_open							();
+			void				on_door_is_closed						();
+			bool				is_door_locked_for_npc					() const;
+			void				lock_door_for_npc						();
+			void				unlock_door_for_npc						();
+			bool				is_door_blocked_by_npc					() const;
+
+			bool				addon_IsActorHideout					() const;		// РїСЂРѕРІРµСЂРєР° С‡С‚Рѕ Р°РєС‚РѕСЂ РїРѕРґ РєР°РєРёРј Р»РёР±Рѕ СѓРєСЂС‹С‚РёРµРј
 
 			// Alundaio
 			bool				IsOnBelt(CScriptGameObject* obj) const;
@@ -786,6 +805,36 @@ public:
 			void				inactualize_game_path();
 
 			void				SetHealthEx(float hp); //AVO
+
+			_DECLARE_FUNCTION10(IsEntityAlive, bool);
+			_DECLARE_FUNCTION10(IsInventoryItem, bool);
+			_DECLARE_FUNCTION10(IsInventoryOwner, bool);
+			_DECLARE_FUNCTION10(IsActor, bool);
+			_DECLARE_FUNCTION10(IsCustomMonster, bool);
+			_DECLARE_FUNCTION10(IsWeapon, bool);
+			_DECLARE_FUNCTION10(IsCustomOutfit, bool);
+			_DECLARE_FUNCTION10(IsHelmet, bool);
+			_DECLARE_FUNCTION10(IsScope, bool);
+			_DECLARE_FUNCTION10(IsSilencer, bool);
+			_DECLARE_FUNCTION10(IsGrenadeLauncher, bool);
+			_DECLARE_FUNCTION10(IsLaserDesignator, bool);
+			_DECLARE_FUNCTION10(IsTacticalTorch, bool);
+			_DECLARE_FUNCTION10(IsWeaponMagazined, bool);
+			_DECLARE_FUNCTION10(IsSpaceRestrictor, bool);
+			_DECLARE_FUNCTION10(IsStalker, bool);
+			_DECLARE_FUNCTION10(IsAnomaly, bool);
+			_DECLARE_FUNCTION10(IsMonster, bool);
+			_DECLARE_FUNCTION10(IsTrader, bool);
+			_DECLARE_FUNCTION10(IsHudItem, bool);
+			_DECLARE_FUNCTION10(IsArtefact, bool);
+			_DECLARE_FUNCTION10(IsAmmo, bool);
+			_DECLARE_FUNCTION10(IsWeaponGL, bool);
+			_DECLARE_FUNCTION10(IsInventoryBox, bool);
+			_DECLARE_FUNCTION10(IsEatableItem, bool);
+			_DECLARE_FUNCTION10(IsDetector, bool);
+			_DECLARE_FUNCTION10(IsDetectorAnomaly, bool);
+			_DECLARE_FUNCTION10(IsTorch, bool);
+			_DECLARE_FUNCTION10(IsAntigasFilter, bool);
 
 			float				GetLuminocityHemi();
 			float				GetLuminocity();
@@ -878,6 +927,14 @@ public:
 			u8 					GetRemainingUses();
 			u8 					GetMaxUses();
 
+			void				SetArtefactChargeLevel(float charge_level);
+			float				GetArtefactChargeLevel() const;
+			void				SetArtefactRank(int rank);
+			int					GetArtefactRank() const;
+
+			void				SetFilterChargeLevel(float charge_level);
+			float				GetFilterChargeLevel() const;
+
 			/*added by Ray Twitty (aka Shadows) START*/
 			float				GetActorMaxWeight						() const;
 			void				SetActorMaxWeight						(float max_weight);
@@ -891,6 +948,8 @@ public:
 			float				Weight									() const;
 			void				SetWeight								(float w);
 			/*added by Ray Twitty (aka Shadows) END*/
+
+	doors::door*				m_door;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

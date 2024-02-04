@@ -5,6 +5,7 @@ class CInventory;
 class CInventoryItem;
 class CHudItem;
 class CInventoryOwner;
+class CActor;
 
 class CInventorySlot
 {									
@@ -20,12 +21,6 @@ public:
 	bool					m_bAct;
 	int						m_blockCounter;
 };
-/*
-enum EActivationReason{
-	eGeneral,
-	eKeyAction,
-	eImportUpdate,
-};*/
 
 typedef xr_vector<CInventorySlot> TISlotArr;
 
@@ -72,6 +67,7 @@ public:
 	bool					Action				(s32 cmd, u32 flags);
 	void					ActiveWeapon		(u32 slot);
 	void					Update				();
+	void					UpdateUseAnim		(CActor* actor);
 	// Ищет на поясе аналогичный IItem
 	PIItem					Same				(const PIItem pIItem, bool bSearchRuck) const;
 	// Ищет на поясе IItem для указанного слота
@@ -114,11 +110,24 @@ public:
 	void					SetSlotsBlocked		(u16 mask, bool bBlock);
 
 	void					ChooseItmAnimOrNot	(PIItem pIItem);
+	void					TakeItemAnimCheck	(CGameObject* GameObj, CObject* Obj, bool use_pickup_anim);
+	void					TakeItemAnim		(CGameObject* GameObj, CObject* Obj, bool use_pickup_anim);
 
 	TIItemContainer			m_all;
 	TIItemContainer			m_ruck, m_belt;
 	TIItemContainer			m_activ_last_items;
 	TISlotArr				m_slots;
+
+	bool					m_bTakeItemActivated;
+	bool					m_bItemTaked;
+	bool					m_bUsePickupAnim;
+	int						m_iTakeAnimLength;
+	int						m_iActionTiming;
+
+	CGameObject*			GameObject;
+	CObject*				Object;
+
+	ref_sound				m_action_anim_sound;
 
 	//возвращает все кроме PDA в слоте и болта
 	void				AddAvailableItems			(TIItemContainer& items_container, bool for_trade) const;
@@ -147,9 +156,6 @@ protected:
 	u32 				m_iActiveSlot;
 	u32 				m_iNextActiveSlot;
 	u32 				m_iPrevActiveSlot;
-	//u32 				m_iLoadActiveSlot;
-	//u32 				m_iLoadActiveSlotFrame;
-	//EActivationReason	m_ActivationSlotReason;
 
 	CInventoryOwner*	m_pOwner;
 
@@ -162,10 +168,6 @@ protected:
 	float				m_fMaxWeight;
 	// текущий вес в инвентаре
 	float				m_fTotalWeight;
-
-	// Максимальное кол-во объектов
-	//на поясе
-///	u32					m_iMaxBelt;	= outfit->get_artefact_count();
 
 	//кадр на котором произошло последнее изменение в инвенторе
 	u32					m_dwModifyFrame;

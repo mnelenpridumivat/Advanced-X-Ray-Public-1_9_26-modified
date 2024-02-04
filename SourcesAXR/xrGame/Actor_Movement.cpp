@@ -19,7 +19,7 @@
 
 #include "Artefact.h"
 #include "CustomOutfit.h"
-#include "Backpack.h"
+#include "CustomBackpack.h"
 #include "AdvancedXrayGameConstants.h"
 #include "ActorSkills.h"
 
@@ -232,7 +232,8 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 			if (outfit)
 				jump_k *= outfit->m_fJumpSpeed;
 
-			CBackpack* backpack = smart_cast<CBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+			CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+
 			if (backpack)
 				jump_k *= backpack->m_fJumpSpeed;
 
@@ -244,6 +245,8 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 			//уменьшить силу игрока из-за выполненого прыжка
 			if (!GodMode())
 				conditions().ConditionJump(inventory().TotalWeight() / MaxCarryWeight());
+
+			this->callback(GameObject::eOnActorJump)(this->lua_game_object());
 		}
 
 		// mask input into "real" state
@@ -294,7 +297,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 			float hangover			= conditions().GetHangover();
 			float withdrawal		= conditions().GetWithdrawal();
 			float walkAccelSkill	= 0.0f;
-				
+
 			if (ActorSkills)
 				walkAccelSkill = conditions().m_fWalkAccelSkill * ActorSkills->enduranceSkillLevel;
 
@@ -326,7 +329,8 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 						accel_k *= outfit->m_fOverweightWalkK;
 				}
 
-				CBackpack* backpack = smart_cast<CBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+				CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+
 				if (backpack)
 				{
 					accel_k *= backpack->m_fWalkAccel;
@@ -385,10 +389,10 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 		state_anm					= "go_back";
 	else
 	if (mstate_real&mcJump && !(mstate_old&mcJump))
-		state_anm					= "jump";
+		state_anm = "jump";
 	else
 	if (mstate_real&mcFall && !(mstate_old&mcFall))
-		state_anm					= "down";
+		state_anm = "down";
 
 		if(state_anm)
 		{ //play moving cam effect
@@ -753,7 +757,6 @@ float CActor::MaxWalkWeight() const
 }
 
 #include "artefact.h"
-#include "Backpack.h"
 
 float CActor::get_additional_weight() const
 {
@@ -772,10 +775,10 @@ float CActor::get_additional_weight() const
 			res			+= artefact->AdditionalInventoryWeight();
 	}
 
-	CBackpack* backpack = smart_cast<CBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+	CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
 	if (backpack)
 	{
-		res += backpack->AdditionalInventoryWeight();
+		res += backpack->m_additional_weight;
 	}
 
 	CCustomOutfit* pants = smart_cast<CCustomOutfit*>(inventory().ItemFromSlot(PANTS_SLOT));
@@ -783,7 +786,7 @@ float CActor::get_additional_weight() const
 	{
 		res += pants->m_additional_weight;
 	}
-	
+
 	if (ActorSkills)
 		res += (ActorSkills->powerSkillLevel * conditions().m_fMaxWeightSkill);
 

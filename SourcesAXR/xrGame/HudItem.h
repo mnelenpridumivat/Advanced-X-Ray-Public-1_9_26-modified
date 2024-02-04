@@ -22,7 +22,9 @@ enum EHudStates {
 		eHiding,
 		eHidden,
 		eBore,
-		eLastBaseState = eBore,
+		eSprintStart,
+		eSprintEnd,
+		eLastBaseState = eSprintEnd,
 };
 
 private:
@@ -81,6 +83,7 @@ public:
 	virtual void				OnH_A_Independent	();
 	
 	virtual void				PlaySound			(LPCSTR alias, const Fvector& position);
+			void				StopAllSounds		() { m_sounds.StopAllSounds(); }
 
 	virtual bool				Action				(u16 cmd, u32 flags)			{return false;}
 			void				OnMovementChanged	(ACTOR_DEFS::EMoveCommand cmd)	;
@@ -114,6 +117,7 @@ public:
 	virtual bool				MovingAnimAllowedNow() { return true; }
 	virtual bool				IsMisfireNow		() { return false; }
 	virtual bool				IsMagazineEmpty		() { return false; }
+	virtual bool				IsGrenadeMode		() const { return false; }
 	virtual bool				NeedBlendAnm		();
 
 	virtual void				PlayAnimIdleMoving	();
@@ -121,6 +125,8 @@ public:
 	virtual void				PlayAnimIdleMovingCrouch();
 	virtual void				PlayAnimIdleMovingCrouchSlow();
 	virtual void				PlayAnimIdleSprint	();
+	virtual void				PlayAnimSprintStart	();
+	virtual void				PlayAnimSprintEnd	();
 
 	virtual void				UpdateCL			();
 	virtual void				renderable_Render	();
@@ -132,11 +138,12 @@ public:
 	virtual	void				UpdateXForm			()						= 0;
 
 	u32							PlayHUDMotion			(const shared_str& M, BOOL bMixIn, CHudItem*  W, u32 state, float speed = 1.f);
-	u32							PlayHUDMotionNew			(const shared_str& M, const bool bMixIn, const u32 state, const bool randomAnim = true, float speed = 1.f);
+	u32							PlayHUDMotionNew		(const shared_str& M, const bool bMixIn, const u32 state, const bool randomAnim = true, float speed = 1.f);
 	u32							PlayHUDMotionIfExists	(std::initializer_list<const char*>, const bool bMixIn, const u32 state, const bool randomAnim = true, float speed = 1.f);
 	u32							PlayHUDMotion_noCB		(const shared_str& M, const bool bMixIn, const bool randomAnim = true, float speed = 1.f);
 	bool						isHUDAnimationExist		(LPCSTR anim_name);
 	void						StopCurrentAnimWithoutCallback();
+	virtual void				UpdateAddonsTransform	(bool for_hud) {};
 
 	IC void						RenderHud				(BOOL B)	{ m_huditem_flags.set(fl_renderhud, B);}
 	IC BOOL						RenderHud				()			{ return m_huditem_flags.test(fl_renderhud);}
@@ -190,6 +197,7 @@ public:
 	float						GetHudFov				();
 
 	bool  m_nearwall_enabled;
+	bool  m_bSprintType;
 	float m_hud_fov_add_mod;
 	float m_nearwall_last_hud_fov;
 	float m_nearwall_dist_max		= 0.f;

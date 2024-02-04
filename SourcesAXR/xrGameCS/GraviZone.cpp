@@ -2,19 +2,13 @@
 
 #include "gravizone.h"
 
-#include "PhysicsShell.h"
+#include "../xrphysics/PhysicsShell.h"
 #include "entity_alive.h"
 #include "phmovementcontrol.h"
 #include "xrmessages.h"
 #include "PhysicsShellHolder.h"
 #include "Level.h"
 #include "CharacterPhysicsSupport.h"
-#include "../../xrCore/_detail_collision_point.h"
-
-ENGINE_API extern xr_vector<DetailCollisionPoint> level_detailcoll_points;
-ENGINE_API extern int ps_detail_enable_collision;
-ENGINE_API extern Fvector actor_position;
-ENGINE_API extern float ps_detail_collision_radius;
 
 CBaseGraviZone ::CBaseGraviZone (void)
 {
@@ -133,7 +127,7 @@ void CBaseGraviZone ::Affect(SZoneObjectInfo* O)
 
 
 	//////////////////////////////////////////////////////////////////////////
-	//	затягиваем объет по направлению к центру зоны
+	//	Р·Р°С‚СЏРіРёРІР°РµРј РѕР±СЉРµС‚ РїРѕ РЅР°РїСЂР°РІР»РµРЅРёСЋ Рє С†РµРЅС‚СЂСѓ Р·РѕРЅС‹
 
 	Fvector					throw_in_dir;
 	Fvector					zone_center;
@@ -159,9 +153,9 @@ void CBaseGraviZone ::Affect(SZoneObjectInfo* O)
 	else
 	{
 		//////////////////////////////////////////////////////////////////////////
-		// выброс аномалии
+		// РІС‹Р±СЂРѕСЃ Р°РЅРѕРјР°Р»РёРё
 		
-		//если время выброса еще не пришло
+		//РµСЃР»Рё РІСЂРµРјСЏ РІС‹Р±СЂРѕСЃР° РµС‰Рµ РЅРµ РїСЂРёС€Р»Рѕ
 		if(m_dwBlowoutExplosionTime<(u32)m_iPreviousStateTime ||
 			m_dwBlowoutExplosionTime>=(u32)m_iStateTime)
 		{
@@ -210,28 +204,15 @@ void CBaseGraviZone::AffectPullDead(CPhysicsShellHolder* GO,const Fvector& throw
 
 void CBaseGraviZone::AffectThrow(SZoneObjectInfo* O, CPhysicsShellHolder* GO,const Fvector& throw_in_dir,float dist)
 {
-	if (ps_detail_enable_collision)
-	{
-		//Msg("CBaseGraviZone::AffectThrow() has been activated()! Anomaly id = [%d]! Telekin hight = [%f]!", this->ID(), m_fTeleHeight);
-		//Msg("Obj y = [%f], Anomaly y = [%f]", O->object?O->object->Position().y:-1.f, Position().y);
-
-		if (actor_position.distance_to(Position()) <= ps_detail_collision_radius)
-		{
-			if (m_fTeleHeight <= 3.f)
-				level_detailcoll_points.push_back(DetailCollisionPoint(this->Position(), this->ID(), 4.0f, 0.4f, 1.f, true));
-		}
-	}
-
 	Fvector position_in_bone_space;
 
 	float power = Power(dist); //Power(GO->Position().distance_to(zone_center));
-	float power_critical = 0.0f; //Power(dist); or //Power_critical(dist); ??
 	float impulse = m_fHitImpulseScale*power*GO->GetMass();
 
 	if(power > 0.01f) 
 	{
 		position_in_bone_space.set(0.f,0.f,0.f);
-		CreateHit(GO->ID(),ID(),throw_in_dir,power,power_critical,0,position_in_bone_space,impulse,m_eHitTypeBlowout);
+		CreateHit(GO->ID(),ID(),throw_in_dir,power,0,position_in_bone_space,impulse,m_eHitTypeBlowout);
 		PlayHitParticles(GO);
 	}
 }
@@ -244,7 +225,7 @@ void CBaseGraviZone::PlayTeleParticles(CGameObject* pObject)
 
 	shared_str particle_str = NULL;
 
-	//разные партиклы для объектов разного размера
+	//СЂР°Р·РЅС‹Рµ РїР°СЂС‚РёРєР»С‹ РґР»СЏ РѕР±СЉРµРєС‚РѕРІ СЂР°Р·РЅРѕРіРѕ СЂР°Р·РјРµСЂР°
 	if(pObject->Radius()<SMALL_OBJECT_RADIUS)
 	{
 		if(!m_sTeleParticlesSmall) return;
@@ -265,7 +246,7 @@ void CBaseGraviZone::StopTeleParticles(CGameObject* pObject)
 	if(!PP) return;
 	shared_str particle_str = NULL;
 
-	//разные партиклы для объектов разного размера
+	//СЂР°Р·РЅС‹Рµ РїР°СЂС‚РёРєР»С‹ РґР»СЏ РѕР±СЉРµРєС‚РѕРІ СЂР°Р·РЅРѕРіРѕ СЂР°Р·РјРµСЂР°
 	if(pObject->Radius()<SMALL_OBJECT_RADIUS)
 	{
 		if(!m_sTeleParticlesSmall) return;
@@ -277,7 +258,7 @@ void CBaseGraviZone::StopTeleParticles(CGameObject* pObject)
 		particle_str = m_sTeleParticlesBig;
 	}
 
-	//остановить партиклы
+	//РѕСЃС‚Р°РЅРѕРІРёС‚СЊ РїР°СЂС‚РёРєР»С‹
 	PP->StopParticles	(particle_str, BI_NONE, true);
 }
 

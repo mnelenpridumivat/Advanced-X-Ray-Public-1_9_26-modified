@@ -11,18 +11,24 @@
 #include "inventory_item.h"
 #include "inventory_item_impl.h"
 #include "inventory.h"
-#include "Physics.h"
+//#include "Physics.h"
 #include "physicsshellholder.h"
 #include "entity_alive.h"
 #include "Level.h"
 #include "game_cl_base.h"
 #include "Actor.h"
+#include "HUDManager.h"
 #include "string_table.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "ai_object_location.h"
 #include "object_broker.h"
+#include "ui_base.h"
+#include "UIFontDefines.h"
 #include "../xrEngine/igame_persistent.h"
+#include "../xrEngine/xr_collide_form.h"
 
+#include "AdvancedXrayGameConstants.h"
+#include "Artefact.h"
 
 #ifdef DEBUG
 #	include "debug_renderer.h"
@@ -53,14 +59,24 @@ CInventoryItem::CInventoryItem()
 	m_flags.set			(FCanTrade, m_can_trade);
 	m_flags.set			(FUsingCondition,FALSE);
 	m_fCondition		= 1.0f;
+	m_fCurrentChargeLevel = 1.0f;
+	m_fUnchargeSpeed	= 0.0f;
+	m_fMaxChargeLevel	= 0.0f;
 
 	m_name = m_nameShort = NULL;
 
 	m_eItemCurrPlace	= EItemPlaceUndefined;
 	m_Description		= "";
 	m_section_id		= 0;
-	m_is_helper			= false;
 	m_bCanUse			= true;
+	m_flags.set						(FIsHelperItem,FALSE);
+	
+	m_custom_text		= nullptr;
+	m_custom_text_font	= nullptr;
+	m_custom_text_clr_inv = 0;
+	m_custom_text_clr_hud = 0;
+
+	m_fOccupiedInvSpace = 0.0f;
 }
 
 CInventoryItem::~CInventoryItem() 
@@ -106,9 +122,9 @@ void CInventoryItem::Load(LPCSTR section)
 	m_Description = CStringTable().translate( pSettings->r_string(section, "description") );
 
 	m_flags.set(Fbelt,			READ_IF_EXISTS(pSettings, r_bool, section, "belt",		FALSE));
-	m_flags.set(FCanTake,		READ_IF_EXISTS(pSettings, r_bool, section, "can_take",	TRUE));
-	m_can_trade = READ_IF_EXISTS(pSettings, r_bool, section, "can_trade",	TRUE);
-	m_flags.set(FCanTrade, m_can_trade);
+	m_can_trade = READ_IF_EXISTS(pSettings, r_bool, section, "can_take",	TRUE);
+	m_flags.set(FCanTake,		m_can_trade);
+	m_flags.set(FCanTrade,		READ_IF_EXISTS(pSettings, r_bool, section, "can_trade",	TRUE));
 	m_flags.set(FIsQuestItem,	READ_IF_EXISTS(pSettings, r_bool, section, "quest_item",FALSE));
 
 	// Added by Axel, to enable optional condition use on any item
@@ -117,7 +133,6 @@ void CInventoryItem::Load(LPCSTR section)
 
 	//время убирания объекта с уровня
 	m_dwItemRemoveTime			= READ_IF_EXISTS(pSettings, r_u32, section,"item_remove_time",	ITEM_REMOVE_TIME);
-	m_custom_text				= READ_IF_EXISTS(pSettings, r_string, section,"item_custom_text",	"");
 
 	if ( m_slot != -1 )
 	{
@@ -129,6 +144,85 @@ void CInventoryItem::Load(LPCSTR section)
 
 	m_fLowestBatteryCharge		= READ_IF_EXISTS(pSettings, r_float, section, "power_critical", .03f);
 	m_bCanUse					= READ_IF_EXISTS(pSettings, r_bool, section, "can_use", true);
+
+	
+	m_custom_text				= READ_IF_EXISTS(pSettings, r_string, section,"item_custom_text", nullptr);
+
+	if (!GameConstants::GetInventoryItemsAutoVolume())
+		m_fOccupiedInvSpace			= READ_IF_EXISTS(pSettings, r_float, section, "occupied_inv_space", 0.0f);
+
+	if (pSettings->line_exist(section, "item_custom_text_font"))
+	{
+		shared_str font_str = pSettings->r_string(section, "item_custom_text_font");
+		
+		if(!xr_strcmp(font_str, GRAFFITI19_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontGraffiti19Russian;
+		}
+		else if(!xr_strcmp(font_str, GRAFFITI22_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontGraffiti22Russian;
+		}
+		else if(!xr_strcmp(font_str, GRAFFITI32_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontGraffiti32Russian;
+		}
+		else if(!xr_strcmp(font_str, GRAFFITI50_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontGraffiti50Russian;
+		}
+		else if(!xr_strcmp(font_str, ARIAL_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontArial14;
+		}
+		else if(!xr_strcmp(font_str, MEDIUM_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontMedium;
+		}
+		else if(!xr_strcmp(font_str, SMALL_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontStat;
+		}
+		else if(!xr_strcmp(font_str, LETTERICA16_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontLetterica16Russian;
+		}
+		else if(!xr_strcmp(font_str, LETTERICA18_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontLetterica18Russian;
+		}
+		else if(!xr_strcmp(font_str, LETTERICA25_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontLetterica25;
+		}
+		else if(!xr_strcmp(font_str, DI_FONT_NAME))
+		{
+			m_custom_text_font = UI().Font().pFontDI;
+		}
+		else
+		{
+			m_custom_text_font = nullptr;
+		}
+	}
+	if (pSettings->line_exist(section, "item_custom_text_font"))
+	{
+		m_custom_text_clr_inv = pSettings->r_color(section, "item_custom_text_clr_inv");
+	}
+	else
+	{
+		m_custom_text_clr_inv = 0;
+	}
+	if (pSettings->line_exist(section, "item_custom_text_clr_hud"))
+	{
+		m_custom_text_clr_hud = pSettings->r_color(section, "item_custom_text_clr_hud");
+	}
+	else
+	{
+		if (m_custom_text_clr_inv != 0)
+			m_custom_text_clr_hud = m_custom_text_clr_inv;
+		else
+			m_custom_text_clr_hud = 0;
+	}
 }
 
 void  CInventoryItem::ChangeCondition(float fDeltaCondition)
@@ -137,6 +231,11 @@ void  CInventoryItem::ChangeCondition(float fDeltaCondition)
 	clamp(m_fCondition, 0.f, 1.f);
 }
 
+void  CInventoryItem::ChangeChargeLevel(float val)
+{
+	m_fCurrentChargeLevel += val;
+	clamp(m_fCurrentChargeLevel, 0.f, m_fMaxChargeLevel);
+}
 
 void	CInventoryItem::Hit					(SHit* pHDS)
 {
@@ -167,12 +266,12 @@ LPCSTR CInventoryItem::NameComplex()
 
 	if( m_flags.test(FUsingCondition) ){
 		string32		cond;
-		if(GetCondition()<0.33)		strcpy_s		(cond,	"[poor]");
-		else if(GetCondition()<0.66)strcpy_s		(cond,	"[bad]"	);
-		else						strcpy_s		(cond,	"[good]");
+		if(GetCondition()<0.33)		xr_strcpy		(cond,	"[poor]");
+		else if(GetCondition()<0.66)xr_strcpy		(cond,	"[bad]"	);
+		else						xr_strcpy		(cond,	"[good]");
 		string256		temp;
 		strconcat		(temp,*m_nameComplex," ",cond)	;
-		// sprintf			(temp,"%s %s",*m_nameComplex,cond);
+		// xr_sprintf			(temp,"%s %s",*m_nameComplex,cond);
 		m_nameComplex	= temp;
 	}
 
@@ -389,10 +488,19 @@ void CInventoryItem::save(NET_Packet &packet)
 {
 	packet.w_u8				((u8)m_eItemCurrPlace);
 	packet.w_float			(m_fCondition);
+	packet.w_float			(m_fCurrentChargeLevel);
 //--	save_data				(m_upgrades, packet);
 
 	if (object().H_Parent()) {
 		packet.w_u8			(0);
+		return;
+	}
+
+	CArtefact* artefact = smart_cast<CArtefact*>(this);
+
+	if (artefact && artefact->IsInContainer())
+	{
+		packet.w_u8(0);
 		return;
 	}
 
@@ -528,7 +636,7 @@ void CInventoryItem::net_Import_PH_Params(NET_Packet& P, net_update_IItem& N, ma
 	
 	//N.State.force.set			(0.f,0.f,0.f);
 	//N.State.torque.set			(0.f,0.f,0.f);
-	//HUD().Font().pFontStat->OutSet(100.0f,100.0f);
+	//UI().Font().pFontStat->OutSet(100.0f,100.0f);
 	P.r_vec3					(N.State.force);
 	//Msg("Import N.State.force.y:%4.6f",N.State.force.y);
 	P.r_vec3					(N.State.torque);
@@ -544,7 +652,7 @@ void CInventoryItem::net_Import_PH_Params(NET_Packet& P, net_update_IItem& N, ma
 
 
 	N.State.enabled				= num_items.mask & CSE_ALifeInventoryItem::inventory_item_state_enabled;
-	//HUD().Font().pFontStat->OutNext("Import N.State.enabled:%i",int(N.State.enabled));
+	//UI().Font().pFontStat->OutNext("Import N.State.enabled:%i",int(N.State.enabled));
 	if (!(num_items.mask & CSE_ALifeInventoryItem::inventory_item_angular_null)) {
 		N.State.angular_vel.x	= P.r_float();
 		N.State.angular_vel.y	= P.r_float();
@@ -568,11 +676,11 @@ void CInventoryItem::net_Import_PH_Params(NET_Packet& P, net_update_IItem& N, ma
 
 void CInventoryItem::net_Export_PH_Params(NET_Packet& P, SPHNetState& State, mask_inv_num_items&	num_items)
 {
-	//HUD().Font().pFontStat->OutSet(100.0f,100.0f);
+	//UI().Font().pFontStat->OutSet(100.0f,100.0f);
 	P.w_vec3				(State.force);
 	//Msg("Export State.force.y:%4.6f",State.force.y);
 	P.w_vec3				(State.torque);
-	//HUD().Font().pFontStat->OutNext("Export State.torque:%4.6f",State.torque.magnitude());
+	//UI().Font().pFontStat->OutNext("Export State.torque:%4.6f",State.torque.magnitude());
 	P.w_vec3				(State.position);
 	//Msg("Export State.position.y:%4.6f",State.position.y);
 	//Msg("Export State.enabled:%i",int(State.enabled));
@@ -772,6 +880,7 @@ void CInventoryItem::load(IReader &packet)
 {
 	m_eItemCurrPlace		= (EItemPlace)packet.r_u8();
 	m_fCondition			= packet.r_float();
+	m_fCurrentChargeLevel	= packet.r_float();
 
 //--	load_data( m_upgrades, packet );
 //--	install_loaded_upgrades();
@@ -1509,4 +1618,23 @@ void CInventoryItem::SetDropManual(BOOL val)
 bool CInventoryItem::has_network_synchronization	() const
 {
 	return false;
+}
+
+float CInventoryItem::GetOccupiedInvSpace()
+{
+	if (GameConstants::GetInventoryItemsAutoVolume())
+	{
+		if (!cast_physics_shell_holder()->m_pPhysicsShell)
+		{
+			cast_physics_shell_holder()->create_physic_shell();
+
+			m_fOccupiedInvSpace = cast_physics_shell_holder()->CFORM()->getRadius() * 10.0f;
+
+			cast_physics_shell_holder()->deactivate_physics_shell();
+		}
+		else
+			m_fOccupiedInvSpace = cast_physics_shell_holder()->CFORM()->getRadius() * 10.0f;
+	}
+
+	return m_fOccupiedInvSpace;
 }

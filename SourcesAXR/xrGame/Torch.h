@@ -53,9 +53,11 @@ public:
 	virtual void	UpdateCL				();
 
 			void	Switch					();
+			void	ProcessSwitch			();
 			void	Switch					(bool light_on);
 			bool	torch_active			() const;
 			void	UpdateChargeLevel		(void);
+			void	UpdateUseAnim			();
 	virtual void	save					(NET_Packet &output_packet);
 	virtual void	load					(IReader &input_packet);
 			float	GetCurrentChargeLevel	(void) const;
@@ -64,6 +66,7 @@ public:
 			float	GetUnchargeSpeed		(void) const;
 			void	Recharge				(float val);
 			bool	IsNecessaryItem			(const shared_str& item_sect, xr_vector<shared_str> item);
+			void	ReloadLights			();
 
 	virtual bool	can_be_attached			() const;
 
@@ -72,17 +75,19 @@ public:
 	//CAttachableItem
 	virtual	void	enable					(bool value);
 
-	float			m_fMaxChargeLevel;
-	float			m_fCurrentChargeLevel;
-	float			m_fUnchargeSpeed;
 	float			m_fMaxRange;
 	float			m_fCurveRange;
 	xr_vector<shared_str> m_SuitableBatteries;
+	int				m_iActionTiming;
+	int				m_iAnimLength;
+	bool			m_bActivated;
+	bool			m_bSwitched;
 
 	virtual CTorch* cast_torch				() { return this; }
  
 protected:
 	HUD_SOUND_COLLECTION_LAYERED m_sounds;
+	ref_sound		m_action_anim_sound;
 
 	enum EStats{
 		eTorchActive				= (1<<0),

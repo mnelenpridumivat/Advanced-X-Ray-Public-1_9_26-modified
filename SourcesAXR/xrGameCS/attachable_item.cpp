@@ -14,9 +14,7 @@
 #include "../xrEngine/xr_input.h"
 #include "HudManager.h"
 
-#ifdef DEBUG
-	CAttachableItem*	CAttachableItem::m_dbgItem = NULL;
-#endif
+CAttachableItem* CAttachableItem::m_dbgItem = nullptr;
 
 CPhysicsShellHolder &CAttachableItem::object	() const
 {
@@ -37,25 +35,27 @@ CAttachableItem::~CAttachableItem		()
 
 void CAttachableItem::reload			(LPCSTR section)
 {
-#ifdef DEBUG
-	m_valid							= true;
-#endif
+	m_valid = true;
 
+	if(load_attach_position(section))
+		enable						(false);
+}
+
+bool CAttachableItem::load_attach_position(LPCSTR section) 
+{
 	if (!pSettings->line_exist(section,"attach_angle_offset"))
-		return;
+		return false;
 
 	Fvector							angle_offset = pSettings->r_fvector3	(section,"attach_angle_offset");
 	Fvector							position_offset	= pSettings->r_fvector3	(section,"attach_position_offset");
 	m_offset.setHPB					(VPUSH(angle_offset));
 	m_offset.c						= position_offset;
 	m_bone_name						= pSettings->r_string	(section,"attach_bone_name");
-//	enable							(m_auto_attach = !!(READ_IF_EXISTS(pSettings,r_bool,section,"auto_attach",TRUE)));
-	enable							(false);
+	return							true;
 }
 
 void CAttachableItem::OnH_A_Chield		() 
 {
-//	VERIFY							(m_valid);
 	const CInventoryOwner			*inventory_owner = smart_cast<const CInventoryOwner*>(object().H_Parent());
 	if (inventory_owner && inventory_owner->attached(&item()))
 		object().setVisible			(true);
@@ -63,20 +63,17 @@ void CAttachableItem::OnH_A_Chield		()
 
 void CAttachableItem::renderable_Render	()
 {
-//	VERIFY							(m_valid);
 	::Render->set_Transform			(&object().XFORM());
 	::Render->add_Visual			(object().Visual());
 }
 
 void CAttachableItem::OnH_A_Independent	()
 {
-//	VERIFY							(m_valid);
-	enable							(false/*m_auto_attach*/);
+	enable							(false);
 }
 
 void CAttachableItem::enable			(bool value)
 {
-//	VERIFY							(m_valid);
 	if (!object().H_Parent()) 
 	{
 		m_enabled			= value;
@@ -86,7 +83,6 @@ void CAttachableItem::enable			(bool value)
 	if (value && !enabled() && object().H_Parent()) {
 		CGameObject			*game_object = smart_cast<CGameObject*>(object().H_Parent());
 		CAttachmentOwner	*owner = smart_cast<CAttachmentOwner*>(game_object);
-//		VERIFY				(owner);
 		if (owner) {
 			m_enabled			= value;
 			owner->attach		(&item());
@@ -97,7 +93,6 @@ void CAttachableItem::enable			(bool value)
 	if (!value && enabled() && object().H_Parent()) {
 		CGameObject			*game_object = smart_cast<CGameObject*>(object().H_Parent());
 		CAttachmentOwner	*owner = smart_cast<CAttachmentOwner*>(game_object);
-//		VERIFY				(owner);
 		if (owner) {
 			m_enabled			= value;
 			owner->detach		(&item());
@@ -108,7 +103,6 @@ void CAttachableItem::enable			(bool value)
 
 bool  CAttachableItem::can_be_attached	() const
 {
-//	VERIFY							(m_valid);
 	if (!item().m_pInventory)
 		return				(false);
 
@@ -132,7 +126,6 @@ void CAttachableItem::afterDetach		()
 	object().processing_deactivate	();
 }
 
-#ifdef DEBUG
 float ATT_ITEM_MOVE_CURR = 0.01f;
 float ATT_ITEM_ROT_CURR = 0.1f;
 
@@ -196,13 +189,13 @@ void attach_draw_adjust_mode()
 
 	string1024 _text;
 
-	CGameFont* F		= UI()->Font()->pFontDI;
+	CGameFont* F		= UI().Font().pFontDI;
 	F->SetAligment		(CGameFont::alCenter);
 	F->OutSetI			(0.f,-0.8f);
 	F->SetColor			(0xffffffff);
-	sprintf_s(_text, "Adjusting attachable item [%s]", CAttachableItem::m_dbgItem->object().cNameSect().c_str());
+	xr_sprintf(_text, "Adjusting attachable item [%s]", CAttachableItem::m_dbgItem->object().cNameSect().c_str());
 	F->OutNext			(_text);
-	sprintf_s(_text, "move step  [%3.3f] rotate step  [%3.3f]", ATT_ITEM_MOVE_CURR, ATT_ITEM_ROT_CURR);
+	xr_sprintf(_text, "move step  [%3.3f] rotate step  [%3.3f]", ATT_ITEM_MOVE_CURR, ATT_ITEM_ROT_CURR);
 	F->OutNext			(_text);
 
 	F->OutNext			("HOLD LShift to move. ALT to rotate");
@@ -212,11 +205,10 @@ void attach_draw_adjust_mode()
 	F->OutSkip			();
 
 	Fvector _pos = CAttachableItem::get_pos_offset();
-	sprintf_s(_text, "attach_position_offset IS [%3.3f][%3.3f][%3.3f]", _pos.x, _pos.y, _pos.z);
+	xr_sprintf(_text, "attach_position_offset IS [%3.3f][%3.3f][%3.3f]", _pos.x, _pos.y, _pos.z);
 	F->OutNext			(_text);
 
 	Fvector _ang = CAttachableItem::get_angle_offset();
-	sprintf_s(_text, "attach_angle_offset IS [%3.3f][%3.3f][%3.3f]", _ang.x, _ang.y, _ang.z);
+	xr_sprintf(_text, "attach_angle_offset IS [%3.3f][%3.3f][%3.3f]", _ang.x, _ang.y, _ang.z);
 	F->OutNext			(_text);
 }
-#endif // #ifdef DEBUG

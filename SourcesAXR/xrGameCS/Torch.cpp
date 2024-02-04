@@ -3,7 +3,7 @@
 #include "entity.h"
 #include "actor.h"
 #include "../xrEngine/LightAnimLibrary.h"
-#include "PhysicsShell.h"
+#include "../xrphysics/PhysicsShell.h"
 #include "xrserver_objects_alife_items.h"
 #include "ai_sounds.h"
 
@@ -11,15 +11,22 @@
 #include "level.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "../xrEngine/camerabase.h"
+#include "../xrengine/xr_collide_form.h"
 #include "inventory.h"
 #include "game_base_space.h"
 
 #include "UIGameCustom.h"
 #include "CustomOutfit.h"
-#include "..\XrEngine\xr_collide_form.h"
-
+#include "../xrPhysics/ElevatorState.h"
+#include "player_hud.h"
+#include "Weapon.h"
+#include "ActorEffector.h"
 #include "AdvancedXrayGameConstants.h"
 #include "Battery.h"
+#include "CustomDetector.h"
+
+std::atomic<bool> isHidingInProgressTorch(false);
+std::atomic<bool> processSwitchNeeded(false);
 
 static const float		TIME_2_HIDE					= 5.f;
 static const float		TORCH_INERTION_CLAMP		= PI_DIV_6;
@@ -30,6 +37,11 @@ static const Fvector	OMNI_OFFSET					= {-0.2f,+0.1f,-0.1f};
 static const float		OPTIMIZATION_DISTANCE		= 100.f;
 
 static bool stalker_use_dynamic_lights	= false;
+
+ENGINE_API int g_current_renderer;
+extern ENGINE_API bool ps_enchanted_shaders;
+
+extern bool g_block_all_except_movement;
 
 CTorch::CTorch(void) 
 {
@@ -54,14 +66,16 @@ CTorch::CTorch(void)
 	m_prev_hp.set				(0,0);
 	m_delta_h					= 0;
 
-	m_fMaxChargeLevel			= 0.0f;
-	m_fCurrentChargeLevel		= 1.0f;
-	m_fUnchargeSpeed			= 0.0f;
 	m_fMaxRange					= 20.f;
 	m_fCurveRange				= 20.f;
+
+	m_iAnimLength				= 0;
+	m_iActionTiming				= 0;
+	m_bActivated				= false;
+	m_bSwitched					= false;
 }
 
-CTorch::~CTorch(void) 
+CTorch::~CTorch() 
 {
 	light_render.destroy	();
 	light_omni.destroy		();
@@ -99,17 +113,17 @@ inline bool CTorch::can_use_dynamic_lights	()
 
 void CTorch::Load(LPCSTR section)
 {
-	inherited::Load(section);
-	light_trace_bone = pSettings->r_string(section, "light_trace_bone");
+	inherited::Load			(section);
+	light_trace_bone		= pSettings->r_string(section,"light_trace_bone");
 
 	m_light_section = READ_IF_EXISTS(pSettings, r_string, section, "light_section", "torch_definition");
 	m_fMaxChargeLevel = READ_IF_EXISTS(pSettings, r_float, section, "max_charge_level", 1.0f);
 	m_fUnchargeSpeed = READ_IF_EXISTS(pSettings, r_float, section, "uncharge_speed", 0.0f);
 
 	if (pSettings->line_exist(section, "snd_turn_on"))
-		m_sounds.LoadSound(section, "snd_turn_on", "sndTurnOn", SOUND_TYPE_ITEM_USING);
+		m_sounds.LoadSound(section, "snd_turn_on", "sndTurnOn", false, SOUND_TYPE_ITEM_USING);
 	if (pSettings->line_exist(section, "snd_turn_off"))
-		m_sounds.LoadSound(section, "snd_turn_off", "sndTurnOff", SOUND_TYPE_ITEM_USING);
+		m_sounds.LoadSound(section, "snd_turn_off", "sndTurnOff", false, SOUND_TYPE_ITEM_USING);
 
 	m_SuitableBatteries.clear();
 	LPCSTR batteries = READ_IF_EXISTS(pSettings, r_string, section, "suitable_batteries", "torch_battery");
@@ -125,7 +139,7 @@ void CTorch::Load(LPCSTR section)
 		}
 	}
 
-	//Случайный начальный заряд батареек в фонарике, если включена опция ограниченного заряда батареек у фонарика
+	//РЎР»СѓС‡Р°Р№РЅС‹Р№ РЅР°С‡Р°Р»СЊРЅС‹Р№ Р·Р°СЂСЏРґ Р±Р°С‚Р°СЂРµРµРє РІ С„РѕРЅР°СЂРёРєРµ, РµСЃР»Рё РІРєР»СЋС‡РµРЅР° РѕРїС†РёСЏ РѕРіСЂР°РЅРёС‡РµРЅРЅРѕРіРѕ Р·Р°СЂСЏРґР° Р±Р°С‚Р°СЂРµРµРє Сѓ С„РѕРЅР°СЂРёРєР°
 	if (GameConstants::GetTorchHasBattery())
 	{
 		float rnd_charge = ::Random.randF(0.0f, m_fMaxChargeLevel);
@@ -136,17 +150,135 @@ void CTorch::Load(LPCSTR section)
 	m_omni_offset = READ_IF_EXISTS(pSettings, r_fvector3, section, "omni_offset", OMNI_OFFSET);
 	m_torch_inertion_speed_max = READ_IF_EXISTS(pSettings, r_float, section, "torch_inertion_speed_max", TORCH_INERTION_SPEED_MAX);
 	m_torch_inertion_speed_min = READ_IF_EXISTS(pSettings, r_float, section, "torch_inertion_speed_min", TORCH_INERTION_SPEED_MIN);
-}
 
+	// Disabling shift by x and z axes for 1st render, 
+	// because we don't have dynamic lighting in it. 
+	if (g_current_renderer == 1)
+	{
+		m_torch_offset.x = 0;
+		m_torch_offset.z = 0;
+	}
+}
 
 void CTorch::Switch()
 {
-	if (OnClient()) return;
-	bool bActive			= !m_switched_on;
-	Switch					(bActive);
+	if (OnClient())
+		return;
+
+	if (isHidingInProgressTorch.load())
+		return;
+
+	CCustomDetector* pDet = smart_cast<CCustomDetector*>(Actor()->inventory().ItemFromSlot(DETECTOR_SLOT));
+	bool AnimEnabled = pAdvancedSettings->line_exist("actions_animations", "switch_torch_section");
+
+	if (!pDet || pDet->IsHidden() || !AnimEnabled)
+	{
+		ProcessSwitch();
+		return;
+	}
+
+	isHidingInProgressTorch.store(true);
+
+	std::thread hidingThread([&, pDet]
+		{
+			while (pDet && !pDet->IsHidden())
+				pDet->HideDetector(true);
+
+			isHidingInProgressTorch.store(false);
+			processSwitchNeeded.store(true);
+		});
+
+	hidingThread.detach();
 }
 
-void CTorch::Switch	(bool light_on)
+void CTorch::ProcessSwitch()
+{
+	if (OnClient())
+		return;
+
+	bool bActive			= !m_switched_on;
+
+	LPCSTR anim_sect = READ_IF_EXISTS(pAdvancedSettings, r_string, "actions_animations", "switch_torch_section", nullptr);
+
+	if (!anim_sect)
+	{
+		Switch(bActive);
+		return;
+	}
+
+	CWeapon* Wpn = smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
+
+	if (Wpn && !(Wpn->GetState() == CWeapon::eIdle))
+		return;
+
+	m_bActivated = true;
+
+	int anim_timer = READ_IF_EXISTS(pSettings, r_u32, anim_sect, "anim_timing", 0);
+
+	g_block_all_except_movement = true;
+	g_actor_allow_ladder = false;
+
+	LPCSTR use_cam_effector = READ_IF_EXISTS(pSettings, r_string, anim_sect, !Wpn ? "anim_camera_effector" : "anim_camera_effector_weapon", nullptr);
+	float effector_intensity = READ_IF_EXISTS(pSettings, r_float, anim_sect, "cam_effector_intensity", 1.0f);
+	float anim_speed = READ_IF_EXISTS(pSettings, r_float, anim_sect, "anim_speed", 1.0f);
+
+	if (pSettings->line_exist(anim_sect, "anm_use"))
+	{
+		g_player_hud->script_anim_play(!Actor()->inventory().GetActiveSlot() ? 2 : 1, anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", true, anim_speed);
+
+		if (use_cam_effector)
+			g_player_hud->PlayBlendAnm(use_cam_effector, 0, anim_speed, effector_intensity, false);
+
+		m_iAnimLength = Device.dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", anim_speed);
+	}
+
+	if (pSettings->line_exist(anim_sect, "snd_using"))
+	{
+		if (m_action_anim_sound._feedback())
+			m_action_anim_sound.stop();
+
+		shared_str snd_name = pSettings->r_string(anim_sect, "snd_using");
+		m_action_anim_sound.create(snd_name.c_str(), st_Effect, sg_SourceType);
+		m_action_anim_sound.play(NULL, sm_2D);
+	}
+
+	m_iActionTiming = Device.dwTimeGlobal + anim_timer;
+
+	m_bSwitched = false;
+	Actor()->m_bActionAnimInProcess = true;
+}
+
+void CTorch::UpdateUseAnim()
+{
+	if (OnClient())
+		return;
+
+	bool IsActorAlive = g_pGamePersistent->GetActorAliveStatus();
+	bool bActive = !m_switched_on;
+
+	if ((m_iActionTiming <= Device.dwTimeGlobal && !m_bSwitched) && IsActorAlive)
+	{
+		m_iActionTiming = Device.dwTimeGlobal;
+		Switch(bActive);
+		m_bSwitched = true;
+	}
+
+	if (m_bActivated)
+	{
+		if ((m_iAnimLength <= Device.dwTimeGlobal) || !IsActorAlive)
+		{
+			m_iAnimLength = Device.dwTimeGlobal;
+			m_iActionTiming = Device.dwTimeGlobal;
+			m_action_anim_sound.stop();
+			g_block_all_except_movement = false;
+			g_actor_allow_ladder = true;
+			Actor()->m_bActionAnimInProcess = false;
+			m_bActivated = false;
+		}
+	}
+}
+
+void CTorch::Switch(bool light_on)
 {
 	CActor* pActor = smart_cast<CActor*>(H_Parent());
 	if (pActor)
@@ -185,7 +317,6 @@ void CTorch::Switch	(bool light_on)
 
 		pVisual->LL_SetBoneVisible			(bi,	light_on,	TRUE);
 		pVisual->CalculateBones				(TRUE);
-//.		pVisual->LL_SetBoneVisible			(bi,	light_on,	TRUE); //hack
 	}
 }
 
@@ -220,6 +351,14 @@ BOOL CTorch::net_Spawn(CSE_Abstract* DC)
 	guid_bone = K->LL_BoneID(pUserData->r_string(m_light_section, "guide_bone"));	VERIFY(guid_bone != BI_NONE);
 
 	Fcolor clr = pUserData->r_fcolor(m_light_section, (b_r2) ? "color_r2" : "color");
+
+	if (!!psDeviceFlags.test(rsR4) && ps_enchanted_shaders)	//РљРѕСЃС‚С‹Р»СЊ РґР»СЏ РЅРѕСЂРјР°Р»РёР·Р°С†РёРё СЏСЂРєРѕСЃС‚Рё СЃ Enchanted Shaders
+	{
+		clr.r *= 2.5f;
+		clr.g *= 2.5f;
+		clr.b *= 2.5f;
+	}
+
 	fBrightness				= clr.intensity();
 
 	m_fMaxRange = pUserData->r_float(m_light_section, (b_r2) ? "max_range_r2" : "max_range");
@@ -253,7 +392,7 @@ BOOL CTorch::net_Spawn(CSE_Abstract* DC)
 	light_render->set_type((IRender_Light::LT)(READ_IF_EXISTS(pUserData, r_u8, m_light_section, "type", 2)));
 	light_omni->set_type((IRender_Light::LT)(READ_IF_EXISTS(pUserData, r_u8, m_light_section, "omni_type", 1)));
 
-	//включить/выключить фонарик
+	//РІРєР»СЋС‡РёС‚СЊ/РІС‹РєР»СЋС‡РёС‚СЊ С„РѕРЅР°СЂРёРє
 	Switch					(torch->m_active);
 	VERIFY					(!torch->m_active || (torch->ID_Parent != 0xffff));
 
@@ -275,7 +414,7 @@ void CTorch::OnH_A_Chield()
 	m_focus.set						(Position());
 }
 
-void CTorch::OnH_B_Independent	(bool just_before_destroy) 
+void CTorch::OnH_B_Independent(bool just_before_destroy) 
 {
 	inherited::OnH_B_Independent	(just_before_destroy);
 	time2hide						= TIME_2_HIDE;
@@ -288,11 +427,7 @@ void CTorch::UpdateChargeLevel(void)
 	if (GameConstants::GetTorchHasBattery())
 	{
 		float uncharge_coef = (m_fUnchargeSpeed / 16) * Device.fTimeDelta;
-
-		m_fCurrentChargeLevel -= uncharge_coef;
-
-		float condition = 1.f * m_fCurrentChargeLevel;
-		SetCondition(condition);
+		ChangeChargeLevel(-uncharge_coef);
 
 		float rangeCoef = atan(m_fCurveRange * m_fCurrentChargeLevel) / PI_DIV_2;
 		clamp(rangeCoef, 0.f, 1.f);
@@ -301,20 +436,28 @@ void CTorch::UpdateChargeLevel(void)
 		light_render->set_range(range);
 		m_delta_h = PI_DIV_2 - atan((range*0.5f) / _abs(TORCH_OFFSET.x));
 
-		if (m_fCurrentChargeLevel < 0.0)
+		if (m_fCurrentChargeLevel <= 0.0)
 		{
-			m_fCurrentChargeLevel = 0.0;
 			Switch(false);
 			return;
 		}
 	}
 	else
-		SetCondition(m_fCurrentChargeLevel);
+		SetChargeLevel(m_fCurrentChargeLevel);
 }
 
 void CTorch::UpdateCL() 
 {
 	inherited::UpdateCL			();
+
+	if (processSwitchNeeded.load())
+	{
+		ProcessSwitch();
+		processSwitchNeeded.store(false);
+	}
+
+	if (Actor()->m_bActionAnimInProcess && m_bActivated)
+		UpdateUseAnim();
 
 	if (!m_switched_on)			return;
 
@@ -412,15 +555,6 @@ void CTorch::UpdateCL()
 		{
 			M.mul						(XFORM(),BI.mTransform);
 
-			//. what should we do in case when 
-			// light_render is not active at this moment,
-			// but m_switched_on is true?
-//			light_render->set_rotation	(M.k,M.i);
-//			light_render->set_position	(M.c);
-//			glow_render->set_position	(M.c);
-//			glow_render->set_direction	(M.k);
-//
-//			time2hide					-= Device.fTimeDelta;
 //			if (time2hide<0)
 			{
 				m_switched_on			= false;
@@ -437,7 +571,7 @@ void CTorch::UpdateCL()
 	if (!lanim)							return;
 
 	int						frame;
-	// возвращает в формате BGR
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ РІ С„РѕСЂРјР°С‚Рµ BGR
 	u32 clr					= lanim->CalculateBGR(Device.fTimeGlobal,frame); 
 
 	Fcolor					fclr;
@@ -498,14 +632,12 @@ void CTorch::net_Import			(NET_Packet& P)
 void CTorch::save(NET_Packet &output_packet)
 {
 	inherited::save(output_packet);
-	save_data(m_fCurrentChargeLevel, output_packet);
 
 }
 
 void CTorch::load(IReader &input_packet)
 {
 	inherited::load(input_packet);
-	load_data(m_fCurrentChargeLevel, input_packet);
 }
 
 bool  CTorch::can_be_attached		() const
@@ -513,7 +645,6 @@ bool  CTorch::can_be_attached		() const
 	const CActor *pA = smart_cast<const CActor *>(H_Parent());
 	if (pA)
 	{
-		//return pA->inventory().InSlot(this);
 		return (this == smart_cast<CTorch*>(pA->inventory().ItemFromSlot(TORCH_SLOT)));
 	}
 	return true;
@@ -558,7 +689,7 @@ void CTorch::SetCurrentChargeLevel(float val)
 	clamp(m_fCurrentChargeLevel, 0.f, m_fMaxChargeLevel);
 
 	float condition = 1.f * m_fCurrentChargeLevel / m_fUnchargeSpeed;
-	SetCondition(condition);
+	SetChargeLevel(condition);
 }
 
 void CTorch::Recharge(float val)
@@ -566,7 +697,7 @@ void CTorch::Recharge(float val)
 	m_fCurrentChargeLevel += val;
 	clamp(m_fCurrentChargeLevel, 0.f, m_fMaxChargeLevel);
 
-	SetCondition(m_fCurrentChargeLevel);
+	SetChargeLevel(m_fCurrentChargeLevel);
 }
 
 float CTorch::get_range() const 
@@ -581,10 +712,71 @@ bool CTorch::install_upgrade_impl(LPCSTR section, bool test)
 	result |= process_if_exists(section, "uncharge_speed", &CInifile::r_float, m_fUnchargeSpeed, test);
 	result |= process_if_exists(section, "inv_weight", &CInifile::r_float, m_weight, test);
 
+	LPCSTR str;
+
+	// name of the ltx-section
+	bool result2 = process_if_exists_set(section, "light_section", &CInifile::r_string, str, test);
+
+	if (result2 && !test)
+	{
+		m_light_section._set(str);
+		ReloadLights();
+	}
+
 	return result;
 }
 
 bool CTorch::IsNecessaryItem(const shared_str& item_sect, xr_vector<shared_str> item)
 {
 	return (std::find(item.begin(), item.end(), item_sect) != item.end());
+}
+
+void CTorch::ReloadLights()
+{
+	bool b_r2 = !!psDeviceFlags.test(rsR2);
+	b_r2 |= !!psDeviceFlags.test(rsR4);
+
+	IKinematics* K = smart_cast<IKinematics*>(Visual());
+	CInifile* pUserData = K->LL_UserData();
+
+	R_ASSERT2(pUserData->section_exist(m_light_section), "Section not found in torch user data! Check 'light_section' field in config");
+
+	Fcolor clr = pUserData->r_fcolor(m_light_section, (b_r2) ? "color_r2" : "color");
+
+	if (!!psDeviceFlags.test(rsR4) && ps_enchanted_shaders)	//РљРѕСЃС‚С‹Р»СЊ РґР»СЏ РЅРѕСЂРјР°Р»РёР·Р°С†РёРё СЏСЂРєРѕСЃС‚Рё СЃ Enchanted Shaders
+	{
+		clr.r *= 2.5f;
+		clr.g *= 2.5f;
+		clr.b *= 2.5f;
+	}
+
+	fBrightness = clr.intensity();
+
+	m_fMaxRange = pUserData->r_float(m_light_section, (b_r2) ? "max_range_r2" : "max_range");
+	m_fCurveRange = pUserData->r_float(m_light_section, "curve_range");
+
+	float range = pUserData->r_float(m_light_section, (b_r2) ? "range_r2" : "range");
+	light_render->set_color(clr);
+	light_render->set_range(m_fMaxRange);
+
+	Fcolor clr_o = pUserData->r_fcolor(m_light_section, (b_r2) ? "omni_color_r2" : "omni_color");
+	float range_o = pUserData->r_float(m_light_section, (b_r2) ? "omni_range_r2" : "omni_range");
+
+	light_omni->set_color(clr_o);
+	light_omni->set_range(range_o);
+
+	light_render->set_cone(deg2rad(pUserData->r_float(m_light_section, "spot_angle")));
+	light_render->set_texture(READ_IF_EXISTS(pUserData, r_string, m_light_section, "spot_texture", (0)));
+
+	glow_render->set_texture(pUserData->r_string(m_light_section, "glow_texture"));
+	glow_render->set_color(clr);
+	glow_render->set_radius(pUserData->r_float(m_light_section, "glow_radius"));
+
+	light_render->set_volumetric(!!READ_IF_EXISTS(pUserData, r_bool, m_light_section, "volumetric", 0));
+	light_render->set_volumetric_quality(READ_IF_EXISTS(pUserData, r_float, m_light_section, "volumetric_quality", 1.f));
+	light_render->set_volumetric_intensity(READ_IF_EXISTS(pUserData, r_float, m_light_section, "volumetric_intensity", 1.f));
+	light_render->set_volumetric_distance(READ_IF_EXISTS(pUserData, r_float, m_light_section, "volumetric_distance", 1.f));
+
+	light_render->set_type((IRender_Light::LT)(READ_IF_EXISTS(pUserData, r_u8, m_light_section, "type", 2)));
+	light_omni->set_type((IRender_Light::LT)(READ_IF_EXISTS(pUserData, r_u8, m_light_section, "omni_type", 1)));
 }

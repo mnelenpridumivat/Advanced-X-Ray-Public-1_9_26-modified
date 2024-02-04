@@ -4,10 +4,113 @@ class CWound;
 class NET_Packet;
 class CEntityAlive;
 class CLevel;
+class CEatableItem;
 
 #include "hit_immunity.h"
 #include "Hit.h"
 #include "Level.h"
+
+enum EBoostParams
+{
+	eBoostHpRestore = 0,
+	eBoostPowerRestore,
+	eBoostRadiationRestore,
+	eBoostBleedingRestore,
+	eBoostSatietyRestore,
+	eBoostThirstRestore,
+	eBoostPsyHealthRestore,
+	eBoostIntoxicationRestore,
+	eBoostSleepenessRestore,
+	eBoostAlcoholRestore,
+	eBoostAlcoholismRestore,
+	eBoostHangoverRestore,
+	eBoostDrugsRestore,
+	eBoostNarcotismRestore,
+	eBoostWithdrawalRestore,
+	eBoostMaxWeight,
+	eBoostRadiationProtection,
+	eBoostTelepaticProtection,
+	eBoostChemicalBurnProtection,
+	eBoostBurnImmunity,
+	eBoostShockImmunity,
+	eBoostRadiationImmunity,
+	eBoostTelepaticImmunity,
+	eBoostChemicalBurnImmunity,
+	eBoostExplImmunity,
+	eBoostStrikeImmunity,
+	eBoostFireWoundImmunity,
+	eBoostWoundImmunity,
+	eBoostTimeFactor,
+	eBoostMaxCount,
+};
+
+static const LPCSTR ef_boosters_section_names[] =
+{
+	"boost_health_restore",
+	"boost_power_restore",
+	"boost_radiation_restore",
+	"boost_bleeding_restore",
+	"boost_satiety_restore",
+	"boost_thirst_restore",
+	"boost_psy_health_restore",
+	"boost_intoxication_restore",
+	"boost_sleepeness_restore",
+	"boost_alcohol_restore",
+	"boost_alcoholism_restore",
+	"boost_hangover_restore",
+	"boost_drugs_restore",
+	"boost_narcotism_restore",
+	"boost_withdrawal_restore",
+	"boost_max_weight",
+	"boost_radiation_protection",
+	"boost_telepat_protection",
+	"boost_chemburn_protection",
+	"boost_burn_immunity",
+	"boost_shock_immunity",
+	"boost_radiation_immunity",
+	"boost_telepat_immunity",
+	"boost_chemburn_immunity",
+	"boost_explosion_immunity",
+	"boost_strike_immunity",
+	"boost_fire_wound_immunity",
+	"boost_wound_immunity",
+	"boost_time_factor"
+};
+
+struct SBooster
+{
+	float fBoostTime;
+	float fBoostValue;
+	EBoostParams m_type;
+	SBooster():fBoostTime(-1.0f){};
+	void Load(const shared_str& sect, EBoostParams type);
+};
+
+struct SMedicineInfluenceValues
+{
+	float fHealth;
+	float fPower;
+	float fSatiety;
+	float fThirst;
+	float fIntoxication;
+	float fSleepeness;
+	float fAlcoholism;
+	float fHangover;
+	float fNarcotism;
+	float fWithdrawal;
+	float fRadiation;
+	float fPsyHealth;
+	float fWoundsHeal;
+	float fMaxPowerUp;
+	float fAlcohol;
+	float fDrugs;
+	float fTimeTotal;
+	float fTimeCurrent;
+
+	SMedicineInfluenceValues():fTimeCurrent(-1.0f){}
+	bool InProcess (){return fTimeCurrent>0.0f;}
+	void Load(const shared_str& sect);
+};
 
 class CEntityConditionSimple
 {
@@ -32,9 +135,10 @@ private:
 
 public:
 							CEntityCondition		(CEntityAlive *object);
-	virtual					~CEntityCondition		(void);
+	virtual					~CEntityCondition		();
 
 	virtual void			LoadCondition			(LPCSTR section);
+	virtual void			LoadTwoHitsDeathParams	(LPCSTR section);
 	virtual void			remove_links			(const CObject *object);
 
 	virtual void			save					(NET_Packet &output_packet);
@@ -44,31 +148,6 @@ public:
 	IC void					SetPower				(float value)		{m_fPower = value; clamp(m_fPower, 0.f, m_fPowerMax);}
 	IC float				GetRadiation			() const			{return m_fRadiation;}
 	IC float				GetPsyHealth			() const			{return m_fPsyHealth;}
-
-	IC float 				GetEntityMorale			() const			{return m_fEntityMorale;}
-
-	IC float 				GetHealthLost			() const			{return m_fHealthLost;}
-
-	virtual bool 			IsLimping				() const;
-
-	virtual void			ChangeSatiety			(float value)		{};
-	void 					ChangeHealth			(float value);
-	void 					ChangePower				(float value);
-	void 					ChangeRadiation			(float value);
-	void 					ChangePsyHealth			(float value);
-	virtual void 			ChangeAlcohol			(float value){};
-	virtual void 			ChangeThirst			(float value){};
-	virtual void			ChangeIntoxication		(const float value){};
-	virtual void			ChangeSleepeness		(const float value){};
-	virtual void			ChangeAlcoholism		(const float value){};
-	virtual void			ChangeHangover			(const float value){};
-	virtual void			ChangeNarcotism			(const float value){};
-	virtual void			ChangeWithdrawal		(const float value){};
-	virtual void 			ChangeDrugs				(float value){};
-
-	IC void					MaxPower				()					{m_fPower = m_fPowerMax;};
-	IC void					SetMaxPower				(float val)			{m_fPowerMax = val; clamp(m_fPowerMax,0.1f,1.0f);};
-	IC float				GetMaxPower				() const			{return m_fPowerMax;};
 	IC float				GetSatiety				() const			{return m_fSatiety;}
 	IC float				GetThirst				() const			{return m_fThirst;}
 	IC float				GetIntoxication			() const			{return m_fIntoxication;}
@@ -78,6 +157,31 @@ public:
 	IC float				GetHangover				() const			{return m_fHangover;}
 	IC float				GetNarcotism			() const			{return m_fNarcotism;}
 	IC float				GetWithdrawal			() const			{return m_fWithdrawal;}
+
+	IC float 				GetEntityMorale			() const			{return m_fEntityMorale;}
+
+	IC float 				GetHealthLost			() const			{return m_fHealthLost;}
+
+	virtual bool 			IsLimping				() const;
+
+	virtual void			ChangeSatiety			(float value)		{};
+	virtual void 			ChangeThirst			(float value)		{};
+	virtual void			ChangeIntoxication		(const float value)	{};
+	virtual void			ChangeSleepeness		(const float value)	{};
+	virtual void			ChangeAlcoholism		(const float value)	{};
+	virtual void			ChangeHangover			(const float value)	{};
+	virtual void			ChangeNarcotism			(const float value)	{};
+	virtual void			ChangeWithdrawal		(const float value)	{};
+	virtual void 			ChangeDrugs				(float value)		{};
+	void 					ChangeHealth			(float value);
+	void 					ChangePower				(float value);
+	void 					ChangeRadiation			(float value);
+	void 					ChangePsyHealth			(float value);
+	virtual void 			ChangeAlcohol			(float value){};
+
+	IC void					MaxPower				()					{m_fPower = m_fPowerMax;};
+	IC void					SetMaxPower				(float val)			{m_fPowerMax = val; clamp(m_fPowerMax,0.1f,1.0f);};
+	IC float				GetMaxPower				() const			{return m_fPowerMax;};
 
 	void 					ChangeBleeding			(float percent);
 
@@ -103,7 +207,14 @@ public:
 	IC void 				SetCanBeHarmedState		(bool CanBeHarmed) 			{m_bCanBeHarmed = CanBeHarmed;}
 	IC bool					CanBeHarmed				() const					{return OnServer() && m_bCanBeHarmed;};
 	
-	void					ClearWounds();
+	virtual bool			ApplyInfluence			(const SMedicineInfluenceValues& V, const shared_str& sect, CEatableItem* cur_eatable);
+	virtual bool			ApplyBooster			(const SBooster& B, const shared_str& sect);
+	void					ClearWounds				();
+
+	IC float				GetBoostRadiationImmunity() const {return m_fBoostRadiationImmunity;};
+
+	typedef					xr_map<EBoostParams, SBooster> BOOSTER_MAP;
+
 protected:
 	void					UpdateHealth			();
 	void					UpdatePower				();
@@ -132,15 +243,15 @@ protected:
 	float m_fRadiation;				//доза радиактивного облучения
 	float m_fPsyHealth;				//здоровье
 	float m_fEntityMorale;			//мораль
-	float m_fSatiety;				//голод
-	float m_fThirst;				//жажда
+	float m_fSatiety;				//Сытость
+	float m_fThirst;				//Жажда
 	float m_fIntoxication;			//Интоксикация
-	float m_fSleepeness;			//Потребность во сне
+	float m_fSleepeness;			//Сонливость
 	float m_fAlcoholism;			//Алкоголизм
 	float m_fAlcohol;				//Алкоголь
 	float m_fHangover;				//Похмелье
 	float m_fNarcotism;				//Наркомания
-	float m_fWithdrawal;			//Ломки
+	float m_fWithdrawal;			//Ломка
 
 	//максимальные величины
 	//	float m_fSatietyMax;
@@ -181,11 +292,27 @@ protected:
 	float				m_fHealthHitPart;
 	float				m_fPowerHitPart;
 
+	float				m_fBoostBurnImmunity;
+	float				m_fBoostShockImmunity;
+	float				m_fBoostRadiationImmunity;
+	float 				m_fBoostTelepaticImmunity;
+	float 				m_fBoostChemicalBurnImmunity;
+	float 				m_fBoostExplImmunity;
+	float 				m_fBoostStrikeImmunity;
+	float 				m_fBoostFireWoundImmunity;
+	float 				m_fBoostWoundImmunity;
+	float 				m_fBoostRadiationProtection;
+	float 				m_fBoostTelepaticProtection;
+	float 				m_fBoostChemicalBurnProtection;
+	float 				m_fBoostTimeFactor;
 
 	//потеря здоровья от последнего хита
 	float				m_fHealthLost;
 
-
+	float				m_fKillHitTreshold;
+	float				m_fLastChanceHealth;
+	float				m_fInvulnerableTime;
+	float				m_fInvulnerableTimeDelta;
 	//для отслеживания времени 
 	u64					m_iLastTimeCalled;
 	float				m_fDeltaTime;
@@ -201,6 +328,7 @@ protected:
 
 	bool				m_bTimeValid;
 	bool				m_bCanBeHarmed;
+	BOOSTER_MAP			m_booster_influences;
 
 public:
 	virtual void					reinit				();

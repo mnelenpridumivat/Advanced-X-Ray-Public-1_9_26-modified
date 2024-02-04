@@ -7,6 +7,17 @@
 #pragma once
 
 #include "../xrcdb/xr_collide_defs.h"
+#include "x_ray.h"
+
+static const int	max_desired_items = rain_max_desired_items;
+static const float	source_radius = rain_source_radius;
+static const float	source_offset = rain_source_offset;
+static const float	max_distance = source_offset * rain_max_distance_koef;
+static const float	sink_offset = -(max_distance - source_offset);
+
+const int	max_particles = rain_max_particles;
+const int	particles_cache = rain_particles_cache;
+const float particles_time = rain_particles_time;
 
 //refs
 class ENGINE_API IRender_DetailModel;
@@ -87,10 +98,11 @@ private:
 	void							p_free			(Particle* P);
 
 	// Some methods
-	void							Born			(Item& dest, float radius, float speed);
+	void							Born			(Item& dest, const float radius, const float speed);
 	void							Hit				(Fvector& pos);
 	BOOL							RayPick			(const Fvector& s, const Fvector& d, float& range, collide::rq_target tgt);
 	void							RenewItem		(Item& dest, float height, BOOL bHit);
+	void							Prepare			(Fvector2& offset, Fvector3& axis, float Wind_Vel, float Wind_Dir);
 public:
 									CEffect_Rain	();
 									~CEffect_Rain	();

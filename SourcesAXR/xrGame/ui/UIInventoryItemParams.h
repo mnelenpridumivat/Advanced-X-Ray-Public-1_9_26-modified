@@ -23,7 +23,18 @@ protected:
 	CUIInventoryItemInfo*	m_charge_level;
 	CUIInventoryItemInfo*	m_max_charge;
 	CUIInventoryItemInfo*	m_uncharge_speed;
+	CUIInventoryItemInfo*	m_artefacts_count;
+	CUIInventoryItemInfo*	m_additional_weight;
+	CUIInventoryItemInfo*	m_inv_capacity;
+
+	xr_vector<CUITextWnd*>	m_textArtefacts;
+	xr_vector<CUIStatic*>	m_stArtefacts;
+
 	CUIStatic*				m_Prop_line;
+
+	int						m_iMaxAfCount;
+	int						m_iIncWndHeight;
+	float					m_stArtefactsScale;
 
 }; // class CUIInventoryItem
 
@@ -37,7 +48,7 @@ public:
 
 	void	Init(CUIXml& xml, LPCSTR section);
 	void	SetCaption(LPCSTR name);
-	void	SetValue(float value, int vle = 0);
+	void	SetValue(float value, int vle = 0, int accuracy = 0);
 
 private:
 	CUIStatic*	m_caption;
@@ -56,20 +67,3 @@ private:
 	bool		clr_dynamic;
 
 }; // class CUIInventoryItemInfo
-
-// -------------------------------------------------------------------------------------------------
-
-class CUIItemConditionParams : public CUIWindow
-{
-public:
-	CUIItemConditionParams();
-	virtual					~CUIItemConditionParams();
-
-	void 					InitFromXml(CUIXml& xml_doc);
-	void					SetInfo(CInventoryItem const* slot_item, CInventoryItem const& cur_item);
-
-protected:
-	CUIStatic				m_icon_charge;
-	CUITextWnd				m_textCharge;
-	CUIDoubleProgressBar	m_ProgressCurCharge;
-};

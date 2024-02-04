@@ -9,7 +9,7 @@
 #include "fire_disp_controller.h"
 #include "entity_alive.h"
 #include "PHMovementControl.h"
-#include "PhysicsShell.h"
+#include "../xrphysics/PhysicsShell.h"
 #include "InventoryOwner.h"
 #include "../xrEngine/StatGraph.h"
 #include "PhraseDialogManager.h"
@@ -18,7 +18,9 @@
 #include "step_manager.h"
 #include "script_export_space.h"
 #include "xr_level_controller.h"
+
 #include "ActorSkills.h"
+#include "CustomTimer.h"
 
 using namespace ACTOR_DEFS;
 
@@ -124,8 +126,6 @@ public:
 
 	virtual void	 NewPdaContact		(CInventoryOwner*);
 	virtual void	 LostPdaContact		(CInventoryOwner*);
-	void			DisableHitMarks(bool disable)		{m_disabled_hitmarks = disable;};
-	bool			DisableHitMarks()					{return m_disabled_hitmarks;};
 
 #ifdef DEBUG
 	void			 DumpTasks();
@@ -212,10 +212,15 @@ public:
 			void		UpdateArtefactsOnBelt();
 			void		UpdateArtefactsInRuck();
 			void		UpdateSkills();
+			void		UpdateNVGUseAnim();
+			void		UpdateMaskUseAnim();
+			void		UpdateQuickKickAnim();
+			float		GetCamHeightFactor() { return m_fCamHeightFactor; }
+			void		SetCamHeightFactor(float height) { m_fCamHeightFactor = height; }
 
 	const xr_vector<const CArtefact*>& ArtefactsOnBelt() {return m_ArtefactsOnBelt;}
 protected:
-	//звук т¤желого дыхани¤
+	//звук тяжелого дыхания
 	ref_sound			m_HeavyBreathSnd;
 	ref_sound			m_BloodSnd;
 	ref_sound			m_DangerSnd;
@@ -243,13 +248,13 @@ protected:
 	BOOL					b_DropActivated;
 	float					f_DropPower;
 
-	//random seed дл¤ Zoom mode
+	//random seed для Zoom mode
 	s32						m_ZoomRndSeed;
-	//random seed дл¤ Weapon Effector Shot
+	//random seed для Weapon Effector Shot
 	s32						m_ShotRndSeed;
 
 	bool					m_bOutBorder;
-	//сохран¤ет счетчик объектов в feel_touch, дл¤ которых необходимо обновл¤ть размер колижена с актером 
+	//сохраняет счетчик объектов в feel_touch, для которых необходимо обновлять размер колижена с актером 
 	u32						m_feel_touch_characters;
 private:
 	void					SwitchOutBorder(bool new_border_state);
@@ -284,10 +289,10 @@ protected:
 	// Rotation
 	SRotation				r_torso;
 	float					r_torso_tgt_roll;
-	//положение торса без воздействи¤ эффекта отдачи оружи¤
+	//положение торса без воздействия эффекта отдачи оружия
 	SRotation				unaffected_r_torso;
 
-	//ориентаци¤ модели
+	//ориентация модели
 	float					r_model_yaw_dest;
 	float					r_model_yaw;			// orientation of model
 	float					r_model_yaw_delta;		// effect on multiple "strafe"+"something"
@@ -305,12 +310,12 @@ public:
 	MotionID				m_current_head;
 
 	// callback на анимации модели актера
-	void						SetCallbacks		();
-	void						ResetCallbacks		();
-	static void		_BCL		Spin0Callback		(CBoneInstance*);
-	static void		_BCL		Spin1Callback		(CBoneInstance*);
-	static void		_BCL		ShoulderCallback	(CBoneInstance*);
-	static void		_BCL		HeadCallback		(CBoneInstance*);
+	void					SetCallbacks		();
+	void					ResetCallbacks		();
+	static void		_BCL	Spin0Callback		(CBoneInstance*);
+	static void		_BCL	Spin1Callback		(CBoneInstance*);
+	static void		_BCL	ShoulderCallback	(CBoneInstance*);
+	static void		_BCL	HeadCallback		(CBoneInstance*);
 	static void		_BCL	VehicleHeadCallback	(CBoneInstance*);
 
 	virtual const SRotation	Orientation			()	const	{ return r_torso; };
@@ -348,6 +353,7 @@ protected:
 	CCameraBase*			cameras[eacMaxCam];
 	EActorCameras			cam_active;
 	float					fPrevCamPos;
+	float					current_ik_cam_shift;
 	Fvector					vPrevCamDir;
 	float					fCurAVelocity;
 	CEffectorBobbing*		pCamBobbing;
@@ -382,16 +388,17 @@ protected:
 	shared_str				m_sCharacterUseAction;
 	shared_str				m_sDeadCharacterUseAction;
 	shared_str				m_sDeadCharacterUseOrDragAction;
+	shared_str				m_sDeadCharacterDontUseAction;
 	shared_str				m_sCarCharacterUseAction;
 	shared_str				m_sInventoryItemUseAction;
 	shared_str				m_sInventoryBoxUseAction;
 
-	//режим подбирани¤ предметов
+	//режим подбирания предметов
 	bool					m_bPickupMode;
-	//рассто¤ние (в метрах) на котором актер чувствует гранату (любую)
+	//расстояние (в метрах) на котором актер чувствует гранату (любую)
 	float					m_fFeelGrenadeRadius;
-	float					m_fFeelGrenadeTime; 	//врем¤ гранаты (сек) после которого актер чувствует гранату
-	//рассто¤ние подсветки предметов
+	float					m_fFeelGrenadeTime; 	//время гранаты (сек) после которого актер чувствует гранату
+	//расстояние подсветки предметов
 	float					m_fPickupInfoRadius;
 
 	void					PickupModeUpdate	();
@@ -405,7 +412,7 @@ public:
 
 
 	//////////////////////////////////////////////////////////////////////////
-	// Motions (передвижени¤ актрера)
+	// Motions (передвижения актрера)
 	//////////////////////////////////////////////////////////////////////////
 public:
 	void					g_cl_CheckControls		(u32 mstate_wf, Fvector &vControlAccel, float &Jump, float dt);
@@ -454,6 +461,11 @@ public:
 	float					m_fRun_StrafeFactor;
 
 	u32						m_iBaseArtefactCount;
+
+	// For activating sprint when reloading
+	u8						m_iTrySprintCounter;
+public:
+	Fvector					GetMovementSpeed		() {return NET_SavedAccel;};
 	//////////////////////////////////////////////////////////////////////////
 	// User input/output
 	//////////////////////////////////////////////////////////////////////////
@@ -481,15 +493,15 @@ public:
 
 protected:
 	CFireDispertionController			m_fdisp_controller;
-	//если актер целитс¤ в прицел
+	//если актер целится в прицел
 	void								SetZoomAimingMode	(bool val)	{m_bZoomAimingMode = val;}
 	bool								m_bZoomAimingMode;
 
 	//настройки аккуратности стрельбы
-	//базова¤ дисперси¤ (когда игрок стоит на месте)
+	//базовая дисперсия (когда игрок стоит на месте)
 	float								m_fDispBase;
 	float								m_fDispAim;
-	//коэффициенты на сколько процентов увеличитс¤ базова¤ дисперси¤
+	//коэффициенты на сколько процентов увеличится базовая дисперсия
 	//учитывает скорость актера 
 	float								m_fDispVelFactor;
 	//если актер бежит
@@ -498,12 +510,6 @@ protected:
 	float								m_fDispCrouchFactor;
 	//crouch+no acceleration
 	float								m_fDispCrouchNoAccelFactor;
-	//смещение firepoint относительно default firepoint дл¤ бросани¤ болтов и гранат
-	Fvector								m_vMissileOffset;
-public:
-	// ѕолучение, и запись смещени¤ дл¤ гранат
-	Fvector								GetMissileOffset	() const;
-	void								SetMissileOffset	(const Fvector &vNewOffset);
 
 protected:
 	//косточки используемые при стрельбе
@@ -534,7 +540,7 @@ public:
 	virtual void						net_Destroy			();
 	virtual BOOL						net_Relevant		();//	{ return getSVU() | getLocal(); };		// relevant for export to server
 	virtual	void						net_Relcase			( CObject* O );					//
-	virtual void 		xr_stdcall		on_requested_spawn  (CObject *object);
+	virtual void xr_stdcall				on_requested_spawn  (CObject *object);
 	//object serialization
 	virtual void						save				(NET_Packet &output_packet);
 	virtual void						load				(IReader &input_packet);
@@ -565,9 +571,9 @@ virtual	bool				can_validate_position_on_spawn	(){return false;}
 	//---------------------------------------------
 //	bool					m_bHasUpdate;	
 	/// spline coeff /////////////////////
-	float			SCoeff[3][4];			//коэффициэнты дл¤ сплайна Ѕизье
-	float			HCoeff[3][4];			//коэффициэнты дл¤ сплайна Ёрмита
-	Fvector			IPosS, IPosH, IPosL;	//положение актера после интерпол¤ции Ѕизье, Ёрмита, линейной
+	float			SCoeff[3][4];			//коэффициэнты для сплайна Бизье
+	float			HCoeff[3][4];			//коэффициэнты для сплайна Эрмита
+	Fvector			IPosS, IPosH, IPosL;	//положение актера после интерполяции Бизье, Эрмита, линейной
 
 #ifdef DEBUG
 	DEF_DEQUE		(VIS_POSITION, Fvector);
@@ -629,7 +635,7 @@ public:
 		return				(true);
 	}
 
-	virtual	shared_str		GetDefaultVisualOutfit		() const { return m_DefaultVisualOutfit; };
+	virtual	shared_str		GetDefaultVisualOutfit	() const {return m_DefaultVisualOutfit;};
 	virtual	void			SetDefaultVisualOutfit	(shared_str DefaultOutfit) {m_DefaultVisualOutfit = DefaultOutfit;};
 	virtual void			UpdateAnimation			() 	{ g_SetAnimation(mstate_real); };
 
@@ -651,7 +657,7 @@ public:
 private:	
 	CActorInputHandler		*m_input_external_handler;
 	u32						m_time_lock_accel;
-	bool					m_disabled_hitmarks;
+
 	/////////////////////////////////////////
 	// DEBUG INFO
 protected:
@@ -673,9 +679,12 @@ protected:
 		void							SelectBestWeapon				(CObject* O);
 public:
 		void							SetWeaponHideState				(u32 State, bool bSet);
+private://IPhysicsShellHolder
+
+virtual	 void	_BCL	HideAllWeapons					( bool v ){ SetWeaponHideState(INV_STATE_BLOCK_ALL,v); }	
+
+public:
 		void							SetCantRunState					(bool bSet);
-		virtual CCustomOutfit*			GetOutfit() const;
-		virtual CCustomOutfit*			GetPants() const;
 private:
 	CActorCondition				*m_entity_condition;
 
@@ -711,8 +720,18 @@ public:
 	virtual	bool				InventoryAllowSprint			();
 	virtual void				OnNextWeaponSlot				();
 	virtual void				OnPrevWeaponSlot				();
+
+			void				NVGAnimCheckDetector			();
+			void				CleanMaskAnimCheckDetector		();
+			void				StartNVGAnimation				();
 			void				SwitchNightVision				();
 			void				SwitchTorch						();
+			void				CleanMask						();
+			void				QuickKick						();
+			bool				IsReloadingWeapon				();
+#ifdef DEBUG
+			void				NoClipFly						(int cmd);
+#endif //DEBUG
 
 public:
 	
@@ -783,32 +802,75 @@ public:
 				mstate_wishful = state;
 			}
 
-private:
-	static const float		cam_inert_value;
-	float					prev_cam_inert_value;
 public:
 	virtual void			On_SetEntity();
-	virtual void			On_LostEntity();
+	virtual void			On_LostEntity() {};
 
-static CPhysicsShell		*actor_camera_shell;
+			void			DisableHitMarks(bool disable)		{m_disabled_hitmarks = disable;};
+			bool			DisableHitMarks()					{return m_disabled_hitmarks;};
+
+			void			set_inventory_disabled (bool is_disabled) { m_inventory_disabled = is_disabled; }
+			bool			inventory_disabled () const { return m_inventory_disabled; }
+private:
+			void			set_state_box(u32	mstate);
+private:
+	bool					m_disabled_hitmarks;
+	bool					m_inventory_disabled;
+//static CPhysicsShell		*actor_camera_shell;
 
 public:
 	void					SwitchNightVision(bool light_on, bool use_sounds = true, bool send_event = true);
 
-	bool					GetNightVisionStatus() { return m_bNightVisionOn; }
-	void					SetNightVisionAllowed(bool bAllow) { m_bNightVisionAllow = bAllow; }
-	CNightVisionEffector*	GetNightVision() { return m_night_vision; }
+	bool					GetNightVisionStatus() {return m_bNightVisionOn;}
+	void					SetNightVisionAllowed(bool bAllow) {m_bNightVisionAllow = bAllow;}
+	CNightVisionEffector*	GetNightVision() {return m_night_vision;}
 
 	// Real Wolf. Start. 14.10.2014
 	void					block_action(EGameActions cmd);
 	void					unblock_action(EGameActions cmd);
 	// Real Wolf. End. 14.10.2014
 
+	bool					MaskClearInProcess() { return m_bMaskClear; }
+
+	float					GetDevicesPsyFactor() { return m_fDevicesPsyFactor; }
+	void					SetDevicesPsyFactor(float psy_factor) { m_fDevicesPsyFactor = psy_factor; }
+
 	bool					m_bEatAnimActive;
+	bool					m_bActionAnimInProcess;
 	CActorSkills*			ActorSkills;
+	CTimerManager*			TimerManager;
+
+	bool					HasItemsForRepair(xr_vector<std::pair<shared_str, int>> item);
+	void					RemoveItemsForRepair(xr_vector<std::pair<shared_str, int>> item);
+
+	float					GetInventoryCapacity() const { return m_fInventoryCapacity; }
+	float					GetInventoryFullness() const { return m_fInventoryFullness; }
+	float					MaxCarryInvCapacity	() const;
+	void					ChangeInventoryFullness(float val);
+	u16						GetLastActiveSlot	() { return m_last_active_slot; }
+
 protected:
 	bool					m_bNightVisionOn;
 	bool					m_bNightVisionAllow;
+	bool					m_bNVGActivated;
+	bool					m_bNVGSwitched;
+	bool					m_bMaskAnimActivated;
+	bool					m_bMaskClear;
+	bool					m_bQuickKickActivated;
+	bool					m_bQuickKick;
+	int						m_iNVGAnimLength;
+	int						m_iActionTiming;
+	int						m_iMaskAnimLength;
+	int						m_iQuickKickAnimLength;
+	float					m_fInventoryCapacity;
+	float					m_fInventoryFullness;
+	float					m_fInventoryFullnessCtrl; // Для контроля эвента. Иначе эвент отправляется пачкой и дропает больше, чем нужно.
+
+	u16						m_last_active_slot;
+
+	float					m_fDevicesPsyFactor;
+
+	ref_sound				m_action_anim_sound;
 
 	CNightVisionEffector*	m_night_vision;
 

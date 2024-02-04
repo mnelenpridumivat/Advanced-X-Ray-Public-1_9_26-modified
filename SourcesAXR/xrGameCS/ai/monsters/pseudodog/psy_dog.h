@@ -10,7 +10,7 @@ class CPsyDog : public CAI_PseudoDog {
 	friend class CPsyDogPhantom;
 	friend class CPsyDogAura;
 
-	// �������� � ������ ��� ���������� � ����
+	// эффектор у актера при нахождении в поле
 	CPsyDogAura		*m_aura;
 
 	// enemy transfered from phantom
@@ -39,6 +39,8 @@ public:
 		virtual void	Think				();
 //				void	on_phantom_appear	();
 		virtual IStateManagerBase *create_state_manager	();
+
+		virtual	char*	get_monster_class_name () { return "psydog"; }
 
 				u8		get_phantoms_count	();
 				bool	must_hide			() {return (get_phantoms_count() < m_phantoms_min);}

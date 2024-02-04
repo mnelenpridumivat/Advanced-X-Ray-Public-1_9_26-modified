@@ -3,16 +3,16 @@
 
 #include <boost/noncopyable.hpp>
 
-#include "../../Include/xrRender/Kinematics.h"
+#include "../../include/xrrender/Kinematics.h"
 
 #include "gameobject.h"
 
 #include "../game_object_space.h"
 #include "../ik_anim_state.h"
 
-#include "../ode_include.h"
-#include "../MathUtils.h"
-#include "../matrix_utils.h"
+//#include "../ode_include.h"
+#include "../../xrphysics/MathUtils.h"
+#include "../../xrphysics/matrix_utils.h"
 #include "../pose_extrapolation.h"
 #ifdef DEBUG
 #include "../PHDebug.h"
@@ -1004,11 +1004,11 @@ float	CIKLimb::ObjShiftDown( float current_shift, const SCalculateData& cd )  co
 
 float	CIKLimb::get_time_to_step_begin	( const CBlend& B )	const 
 {
-	float time = dInfinity;
+	float time = phInfinity;
 	if( anim_state.time_step_begin( KinematicsAnimated(), B, m_id, time ) )
 		return time;
 	else
-		return dInfinity;
+		return phInfinity;
 }
 
 struct ssaved_callback :
@@ -1031,7 +1031,7 @@ struct ssaved_callback :
 	const u32				callback_type;
 	CBoneInstance			&_bi;
 };
-static void _BCL get_matrix( CBoneInstance* P )
+static void	_BCL get_matrix( CBoneInstance* P )
 {
 	VERIFY( _valid(  P->mTransform ) );
 	*((Fmatrix*)P->callback_param()) = P->mTransform;
@@ -1084,7 +1084,7 @@ void	CIKLimb::step_predict( CGameObject *O, const CBlend *b, ik_limb_state_predi
 	if( !b )
 		return;
 	state.time_to_footstep = get_time_to_step_begin( *b );
-	if( state.time_to_footstep == dInfinity )
+	if( state.time_to_footstep == phInfinity )
 		return;
 	float footstep_time = Device.fTimeGlobal + state.time_to_footstep;
 	
@@ -1205,7 +1205,7 @@ void	DBG_DrawRotationLimitsY( const Fmatrix &start, float ang, float l, float h 
 {
 #ifdef DEBUG
 	DBG_DrawRotationY( start, ang - EPS, ang + EPS, 0.15f, color_xrgb( 0, 255, 0 ), false, 1 );
-	DBG_DrawRotationY( start, l, h, 0.15f, color_argb( 50, 0, 250, 0 ), true );
+	DBG_DrawRotationY( start, l, h, 0.15f, D3DCOLOR_ARGB( 50, 0, 250, 0 ), true );
 #endif // DEBUG
 }
 
@@ -1213,7 +1213,7 @@ void	DBG_DrawRotationLimitsZ( const Fmatrix &start, float ang, float l, float h 
 {
 #ifdef DEBUG
 	DBG_DrawRotationZ( start, ang - EPS, ang + EPS, 0.15f, color_xrgb( 0, 0, 255 ), false, 1 );
-	DBG_DrawRotationZ( start, l, h, 0.15f, color_argb( 50, 0, 0, 250 ), true );
+	DBG_DrawRotationZ( start, l, h, 0.15f, D3DCOLOR_ARGB( 50, 0, 0, 250 ), true );
 #endif // DEBUG
 }
 
@@ -1221,7 +1221,7 @@ void	DBG_DrawRotationLimitsX( const Fmatrix &start, float ang, float l, float h 
 {
 #ifdef DEBUG
 	DBG_DrawRotationX( start, ang + EPS, ang - EPS, 0.15f, color_xrgb( 255, 0, 0 ), false, 1 );
-	DBG_DrawRotationX( start, l, h, 0.15f, color_argb( 50, 255, 0, 0 ), true );
+	DBG_DrawRotationX( start, l, h, 0.15f, D3DCOLOR_ARGB( 50, 255, 0, 0 ), true );
 #endif // DEBUG
 }
 
@@ -1237,10 +1237,14 @@ void	DBG_DrawRotation3( const Fmatrix &start, const float angs[7], const AngleIn
 
 IC void ang_evaluate(Fmatrix& M, const float ang[3] )
 {
+	VERIFY( _valid( ang[0] ) );
+	VERIFY( _valid( ang[1] ) );
+	VERIFY( _valid( ang[2] ) );
 	Fmatrix ry;ry.rotateY( -ang[0] );
 	Fmatrix rz;rz.rotateZ( -ang[1] );
 	Fmatrix rx;rx.rotateX( -ang[2] );
 	M.mul_43(Fmatrix().mul_43( ry, rz ), rx);
+	VERIFY(_valid(M));
 }
 
 IC void CIKLimb::get_start( Fmatrix &start, SCalculateData &D, u16 bone )
@@ -1271,7 +1275,7 @@ void 	CIKLimb::BonesCallback0( CBoneInstance* B )
 		DBG_DrawMatrix( Fmatrix( ).mul_43( *D->m_obj, Fmatrix( ).mul_43( start, bm ) ), 0.75f );
 	}
 #endif
-	R_ASSERT2(  _valid( B->mTransform ), "CIKLimb::BonesCallback0" );
+	VERIFY2(  _valid( B->mTransform ), "CIKLimb::BonesCallback0" );
 }
 void 	CIKLimb::BonesCallback1				( CBoneInstance* B )
 {
@@ -1284,7 +1288,7 @@ void 	CIKLimb::BonesCallback1				( CBoneInstance* B )
 	Fmatrix start	; 
 	get_start		( start, *D, 1 );
 	B->mTransform.mul_43( start, bm );
-	R_ASSERT2(  _valid( B->mTransform ), "CIKLimb::BonesCallback1" );
+	VERIFY2(  _valid( B->mTransform ), "CIKLimb::BonesCallback1" );
 }
 void 	CIKLimb::BonesCallback2				( CBoneInstance* B )
 {
@@ -1296,6 +1300,10 @@ void 	CIKLimb::BonesCallback2				( CBoneInstance* B )
 
 	Fmatrix start	; 
 	get_start		( start, *D, 2 );
+
+	VERIFY2(  _valid( bm ), "CIKLimb::BonesCallback2" );
+	VERIFY2(  _valid( start ), "CIKLimb::BonesCallback2" );
+
 	B->mTransform.mul_43( start, bm );
 
 #ifdef DEBUG
@@ -1310,5 +1318,5 @@ void 	CIKLimb::BonesCallback2				( CBoneInstance* B )
 		DBG_DrawMatrix( Fmatrix( ).mul_43( *D->m_obj, start ), 0.3f );
 	}
 #endif
-	R_ASSERT2(  _valid( B->mTransform ), "CIKLimb::BonesCallback2" );
+	VERIFY2(  _valid( B->mTransform ), "CIKLimb::BonesCallback2" );
 }

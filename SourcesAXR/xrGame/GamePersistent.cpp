@@ -29,7 +29,7 @@
 #include "xrserver_objects_alife_monsters.h"
 #include "../xrServerEntities/xrServer_Object_Base.h"
 #include "UI/UIGameTutorial.h"
-#include "ActorHelmet.h"
+#include "Inventory.h"
 #include "ActorCondition.h"
 #include "AdvancedXrayGameConstants.h"
 #include "DynamicHudGlass.h"
@@ -300,19 +300,23 @@ void CGamePersistent::WeathersUpdate()
 		VERIFY						(_env);
 
 		CEnvAmbient* env_amb		= _env->env_ambient;
-		if (env_amb) {
+		if (env_amb)
+		{
 			CEnvAmbient::SSndChannelVec& vec	= current_env->env_ambient->get_snd_channels();
 			CEnvAmbient::SSndChannelVecIt I		= vec.begin();
 			CEnvAmbient::SSndChannelVecIt E		= vec.end();
 			
-			for (u32 idx=0; I!=E; ++I,++idx) {
+			for (u32 idx=0; I!=E; ++I,++idx)
+			{
 				CEnvAmbient::SSndChannel& ch	= **I;
-				R_ASSERT						(idx<20);
+
+				VERIFY							(idx < 40);
+
 				if(ambient_sound_next_time[idx]==0)//first
 				{
 					ambient_sound_next_time[idx] = Device.dwTimeGlobal + ch.get_rnd_sound_first_time();
-				}else
-				if(Device.dwTimeGlobal > ambient_sound_next_time[idx])
+				}
+				else if(Device.dwTimeGlobal > ambient_sound_next_time[idx])
 				{
 					ref_sound& snd					= ch.get_rnd_sound();
 
@@ -464,7 +468,7 @@ bool allow_intro ()
 
 void CGamePersistent::start_logo_intro()
 {
-	if(Device.dwPrecacheFrame==0)
+	if (Device.dwPrecacheFrame==0)
 	{
 		m_intro_event.bind		(this, &CGamePersistent::update_logo_intro);
 		if (!g_dedicated_server && 0==xr_strlen(m_game_params.m_game_or_spawn) && NULL==g_pGameLevel)
@@ -486,19 +490,19 @@ void CGamePersistent::update_logo_intro()
 		xr_delete				(m_intro);
 		Msg("intro_delete ::update_logo_intro");
 		Console->Execute		("main_menu on");
-	}else
-	if(!m_intro)
+	}
+	else if (!m_intro)
 	{
-		m_intro_event			= 0;
+		m_intro_event = 0;
 	}
 }
 
 extern int g_keypress_on_start;
 void CGamePersistent::game_loaded()
 {
-	if(Device.dwPrecacheFrame<=2)
+	if (Device.dwPrecacheFrame <= 2)
 	{
-		if(	g_pGameLevel							&&
+		if (g_pGameLevel							&&
 			g_pGameLevel->bReady					&&
 			(allow_intro() && g_keypress_on_start)	&&
 			load_screen_renderer.b_need_user_input	&& 
@@ -528,7 +532,7 @@ void CGamePersistent::update_game_loaded()
 
 void CGamePersistent::start_game_intro		()
 {
-	if(!allow_intro())
+	if (!allow_intro())
 	{
 		m_intro_event			= 0;
 		return;
@@ -555,8 +559,7 @@ void CGamePersistent::update_game_intro()
 		Msg("intro_delete ::update_game_intro");
 		m_intro_event			= 0;
 	}
-	else
-	if(!m_intro)
+	else if (!m_intro)
 	{
 		m_intro_event			= 0;
 	}
@@ -567,7 +570,7 @@ extern CUISequencer * g_tutorial2;
 
 void CGamePersistent::OnFrame	()
 {
-	if(Device.dwPrecacheFrame==5 && m_intro_event.empty())
+	if (Device.dwPrecacheFrame==5 && m_intro_event.empty())
 	{
 		SetLoadStageTitle();
 		m_intro_event.bind			(this,&CGamePersistent::game_loaded);
@@ -589,9 +592,10 @@ void CGamePersistent::OnFrame	()
 #ifdef DEBUG
 	++m_frame_counter;
 #endif
-	if (!g_dedicated_server && !m_intro_event.empty())	m_intro_event();
-	
-	if(!g_dedicated_server && Device.dwPrecacheFrame==0 && !m_intro && m_intro_event.empty())
+	if (!g_dedicated_server && !m_intro_event.empty())
+		m_intro_event();
+
+	if (!g_dedicated_server && Device.dwPrecacheFrame == 0 && !m_intro && m_intro_event.empty())
 		load_screen_renderer.stop();
 
 	if( !m_pMainMenu->IsActive() )
@@ -848,7 +852,7 @@ void CGamePersistent::SetLoadStageTitle(const char* ls_title)
 void CGamePersistent::LoadTitle(bool change_tip, shared_str map_name)
 {
 	pApp->LoadStage();
-	if(ls_tips_enabled && change_tip)
+	if (ls_tips_enabled && change_tip)
 	{
 		string512				buff;
 		u8						tip_num;
@@ -941,9 +945,22 @@ float CGamePersistent::GetActorIntoxication()
 	return 0.0f;
 }
 
+bool CGamePersistent::GetClearMaskProcess()
+{
+	return (Actor() && Actor()->MaskClearInProcess());
+}
+
 bool CGamePersistent::GetActorNightvision()
 {
-	return	(Actor()->GetNightVisionStatus());
+	CHelmet* pHelmet = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
+	CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
+
+	if (pHelmet)
+		return (Actor()->GetNightVisionStatus() && pHelmet->m_NightVisionSect.size());
+	else if (pOutfit)
+		return (Actor()->GetNightVisionStatus() && pOutfit->m_NightVisionSect.size());
+
+	return false;
 }
 
 int CGamePersistent::GetNightvisionType()
@@ -958,12 +975,36 @@ bool CGamePersistent::GetActorAliveStatus()
 
 bool CGamePersistent::IsCamFirstEye()
 {
-	return	(Actor()->active_cam() == eacFirstEye);
+	return	(Actor() && Actor()->active_cam() == eacFirstEye);
+}
+
+bool CGamePersistent::GetActorHelmetStatus()
+{
+	if (!Actor())
+		return false;
+
+	CCustomOutfit* outfit = Actor()->GetOutfit();
+	CHelmet* helmet = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
+
+	if (outfit || helmet)
+	{
+		if (outfit && !outfit->IsHelmetAvaliable())
+			return true;
+		else if (helmet)
+			return true;
+	}
+
+	return false;
 }
 
 bool CGamePersistent::GetActor()
 {
 	return	(Actor());
+}
+
+bool CGamePersistent::GetFogInfluenceVolumetricLight()
+{
+	return GameConstants::GetFogInfluenceVolumetricLight();
 }
 
 void CGamePersistent::EditorOnFrame()
@@ -1033,4 +1074,14 @@ void CGamePersistent::OnAssetsChanged()
 {
 	IGame_Persistent::OnAssetsChanged	();
 	CStringTable().rescan				();
+}
+
+std::string CGamePersistent::GetMoonPhase()
+{
+	return Level().GetMoonPhase();
+}
+
+u32 CGamePersistent::GetTimeHours()
+{
+	return Level().GetTimeHours();
 }

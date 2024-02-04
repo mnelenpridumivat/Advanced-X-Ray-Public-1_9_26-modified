@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "pch_script.h"
 
 #include "actor.h"
 #include "inventory.h"
@@ -16,20 +17,24 @@
 #include "CharacterPhysicsSupport.h"
 #include "actoreffector.h"
 #include "static_cast_checked.hpp"
+#include "player_hud.h"
 
 #include "Artefact.h"
 #include "CustomOutfit.h"
-#include "Backpack.h"
+#include "CustomBackpack.h"
 #include "AdvancedXrayGameConstants.h"
 #include "ActorSkills.h"
+
+#include "script_callback_ex.h"
+#include "script_game_object.h"
 
 #ifdef DEBUG
 #include "phdebug.h"
 #endif
-static const float	s_fLandingTime1		= 0.1f;// через сколько снять флаг Landing1 (т.е. включить следующую анимацию)
-static const float	s_fLandingTime2		= 0.3f;// через сколько снять флаг Landing2 (т.е. включить следующую анимацию)
+static const float	s_fLandingTime1		= 0.1f;// С‡РµСЂРµР· СЃРєРѕР»СЊРєРѕ СЃРЅСЏС‚СЊ С„Р»Р°Рі Landing1 (С‚.Рµ. РІРєР»СЋС‡РёС‚СЊ СЃР»РµРґСѓСЋС‰СѓСЋ Р°РЅРёРјР°С†РёСЋ)
+static const float	s_fLandingTime2		= 0.3f;// С‡РµСЂРµР· СЃРєРѕР»СЊРєРѕ СЃРЅСЏС‚СЊ С„Р»Р°Рі Landing2 (С‚.Рµ. РІРєР»СЋС‡РёС‚СЊ СЃР»РµРґСѓСЋС‰СѓСЋ Р°РЅРёРјР°С†РёСЋ)
 static const float	s_fJumpTime			= 0.3f;
-static const float	s_fJumpGroundTime	= 0.1f;	// для снятия флажка Jump если на земле
+static const float	s_fJumpGroundTime	= 0.1f;	// РґР»СЏ СЃРЅСЏС‚РёСЏ С„Р»Р°Р¶РєР° Jump РµСЃР»Рё РЅР° Р·РµРјР»Рµ
 	   const float	s_fFallTime			= 0.2f;
 
 BOOL	m_b_actor_walk_inertion = false;
@@ -52,7 +57,7 @@ void CActor::g_cl_ValidateMState(float dt, u32 mstate_wf)
 	if (mstate_real&(mcJump|mcFall|mcLanding|mcLanding2))
 		mstate_real		&= ~mcLookout;
 
-	// закончить приземление
+	// Р·Р°РєРѕРЅС‡РёС‚СЊ РїСЂРёР·РµРјР»РµРЅРёРµ
 	if (mstate_real&(mcLanding|mcLanding2)){
 		m_fLandingTime		-= dt;
 		if (m_fLandingTime<=0.f){
@@ -60,7 +65,7 @@ void CActor::g_cl_ValidateMState(float dt, u32 mstate_wf)
 			mstate_real		&=~	(mcFall|mcJump);
 		}
 	}
-	// закончить падение
+	// Р·Р°РєРѕРЅС‡РёС‚СЊ РїР°РґРµРЅРёРµ
 	if (character_physics_support()->movement()->gcontact_Was){
 		if (mstate_real&mcFall){
 			if (character_physics_support()->movement()->GetContactSpeed()>4.f){
@@ -80,14 +85,15 @@ void CActor::g_cl_ValidateMState(float dt, u32 mstate_wf)
 	if ((mstate_wf&mcJump)==0)	
 		m_bJumpKeyPressed	=	FALSE;
 
-	// Зажало-ли меня/уперся - не двигаюсь
+	// Р—Р°Р¶Р°Р»Рѕ-Р»Рё РјРµРЅСЏ/СѓРїРµСЂСЃСЏ - РЅРµ РґРІРёРіР°СЋСЃСЊ
 	if (((character_physics_support()->movement()->GetVelocityActual()<0.2f)&&(!(mstate_real&(mcFall|mcJump)))) || character_physics_support()->movement()->bSleep) 
 	{
-		mstate_real				&=~ mcAnyMove;
+		//KRodin: СЌС‚РѕС‚ РєРѕРґ СЂР°Р±РѕС‚Р°РµС‚ РЅРµРєРѕСЂСЂРµРєС‚РЅРѕ, СѓСЃР»РѕРІРёРµ СЃСЂР°Р±Р°С‚С‹РІР°РµС‚ РїСЂРё РІС…РѕРґРµ-РІС‹С…РѕРґРµ РёР· РїСЂРёСЃСЏРґР°. РР·-Р·Р° СЌС‚РѕРіРѕ РїСЂРѕРёСЃС…РѕРґРёС‚ 'РґРµСЂРіР°РЅРёРµ' Р°РЅРёРјР°С†РёР№ РѕСЂСѓР¶РёСЏ. РљРѕРґ СЌС‚РѕС‚ РЅРµ СЃРёР»СЊРЅРѕ РІР°Р¶РµРЅ, СЏ РґСѓРјР°СЋ РµСЃР»Рё Р°РєС‚РѕСЂ Р·Р°СЃС‚СЂСЏРЅРµС‚ - РѕРЅ РІСЃРµ СЂР°РІРЅРѕ РЅРµ Р±СѓРґРµС‚ РґРІРёРіР°С‚СЊСЃСЏ.
+		//mstate_real &=~ mcAnyMove;
 	}
 	if (character_physics_support()->movement()->Environment()==CPHMovementControl::peOnGround || character_physics_support()->movement()->Environment()==CPHMovementControl::peAtWall)
 	{
-		// если на земле гарантированно снимать флажок Jump
+		// РµСЃР»Рё РЅР° Р·РµРјР»Рµ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅРѕ СЃРЅРёРјР°С‚СЊ С„Р»Р°Р¶РѕРє Jump
 		if (((s_fJumpTime-m_fJumpTime)>s_fJumpGroundTime)&&(mstate_real&mcJump))
 		{
 			mstate_real			&=~	mcJump;
@@ -171,7 +177,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 	if (mstate_wf&mcRStrafe)	vControlAccel.x +=  1;
 
 	CPHMovementControl::EEnvironment curr_env = character_physics_support()->movement()->Environment();
-	if(curr_env==CPHMovementControl::peOnGround || curr_env==CPHMovementControl::peAtWall )
+	if(curr_env==CPHMovementControl::peOnGround || curr_env==CPHMovementControl::peAtWall)
 	{
 		// crouch
 		if ((0==(mstate_real&mcCrouch))&&(mstate_wf&mcCrouch))
@@ -232,7 +238,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 			if (outfit)
 				jump_k *= outfit->m_fJumpSpeed;
 
-			CBackpack* backpack = smart_cast<CBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+			CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
 			if (backpack)
 				jump_k *= backpack->m_fJumpSpeed;
 
@@ -240,9 +246,11 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 
 			character_physics_support()->movement()->SetJumpUpVelocity(jump_k);
 
-			//уменьшить силу игрока из-за выполненого прыжка
+			//СѓРјРµРЅСЊС€РёС‚СЊ СЃРёР»Сѓ РёРіСЂРѕРєР° РёР·-Р·Р° РІС‹РїРѕР»РЅРµРЅРѕРіРѕ РїСЂС‹Р¶РєР°
 			if (!GodMode())
 				conditions().ConditionJump(inventory().TotalWeight() / MaxCarryWeight());
+
+			this->callback(GameObject::eOnActorJump)(this->lua_game_object());
 		}
 
 		// mask input into "real" state
@@ -290,10 +298,9 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 
 			// normalize and analyze crouch and run
 			float	scale			= vControlAccel.magnitude();
-			float hangover = conditions().GetHangover();
-			float withdrawal = conditions().GetWithdrawal();
-			ActorSkills->enduranceSkillLevel;
-			float walkAccelSkill = 0.0f;
+			float hangover			= conditions().GetHangover();
+			float withdrawal		= conditions().GetWithdrawal();
+			float walkAccelSkill	= 0.0f;
 
 			if (ActorSkills)
 				walkAccelSkill = conditions().m_fWalkAccelSkill * ActorSkills->enduranceSkillLevel;
@@ -326,7 +333,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 						accel_k *= outfit->m_fOverweightWalkK;
 				}
 
-				CBackpack* backpack = smart_cast<CBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+				CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
 				if (backpack)
 				{
 					accel_k *= backpack->m_fWalkAccel;
@@ -335,7 +342,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 						accel_k *= backpack->m_fOverweightWalkK;
 				}
 
-				scale = accel_k / scale;
+				scale	= accel_k/scale;
 				if (bAccelerated)
 					if (mstate_real&mcBack)
 						scale *= m_fRunBackFactor;
@@ -398,7 +405,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 			if(NULL==ec)
 			{
 				string_path			eff_name;
-				sprintf_s			(eff_name, sizeof(eff_name), "%s.anm", state_anm);
+				xr_sprintf			(eff_name, sizeof(eff_name), "%s.anm", state_anm);
 				string_path			ce_path;
 				string_path			anm_name;
 				strconcat			(sizeof(anm_name), anm_name, "camera_effects\\actor_move\\", eff_name);
@@ -562,7 +569,7 @@ void CActor::g_cl_Orientate	(u32 mstate_rl, float dt)
 	unaffected_r_torso.roll		= r_torso.roll;
 
 	CWeaponMagazined *pWM = smart_cast<CWeaponMagazined*>(inventory().GetActiveSlot() != NO_ACTIVE_SLOT ? 
-		inventory().ItemFromSlot(inventory().GetActiveSlot())/*inventory().m_slots[inventory().GetActiveSlot()].m_pIItem*/ : NULL);
+		inventory().ItemFromSlot(inventory().GetActiveSlot()) : NULL);
 	if (pWM && pWM->GetCurrentFireMode() == 1 && eacFirstEye != cam_active)
 	{
 		Fvector dangle = weapon_recoil_last_delta();
@@ -570,12 +577,13 @@ void CActor::g_cl_Orientate	(u32 mstate_rl, float dt)
 		r_torso.pitch	=	unaffected_r_torso.pitch + dangle.x;
 	}
 	
-	// если есть движение - выровнять модель по камере
+	// РµСЃР»Рё РµСЃС‚СЊ РґРІРёР¶РµРЅРёРµ - РІС‹СЂРѕРІРЅСЏС‚СЊ РјРѕРґРµР»СЊ РїРѕ РєР°РјРµСЂРµ
 	if (mstate_rl&mcAnyMove)	
 	{
 		r_model_yaw		= angle_normalize(r_torso.yaw);
 		mstate_real		&=~mcTurn;
-	} else 
+	} 
+	else 
 	{
 		if (eacFirstEye != cam_active)
 		{
@@ -631,7 +639,7 @@ void CActor::g_sv_Orientate(u32 /**mstate_rl/**/, float /**dt/**/)
 	r_torso.roll	=	unaffected_r_torso.roll;
 
 	CWeaponMagazined *pWM = smart_cast<CWeaponMagazined*>(inventory().GetActiveSlot() != NO_ACTIVE_SLOT ? 
-		inventory().ItemFromSlot(inventory().GetActiveSlot())/*inventory().m_slots[inventory().GetActiveSlot()].m_pIItem*/ : NULL);
+		inventory().ItemFromSlot(inventory().GetActiveSlot()) : NULL);
 	if (pWM && pWM->GetCurrentFireMode() == 1/* && eacFirstEye != cam_active*/)
 	{
 		Fvector dangle = weapon_recoil_last_delta();
@@ -722,6 +730,11 @@ void CActor::StopAnyMove()
 {
 	mstate_wishful	&=		~mcAnyMove;
 	mstate_real		&=		~mcAnyMove;
+
+	if (this == Level().CurrentViewEntity())
+	{
+		g_player_hud->OnMovementChanged((EMoveCommand)0);
+	}
 }
 
 
@@ -730,7 +743,7 @@ bool CActor::is_jump()
 	return ((mstate_real & (mcJump|mcFall|mcLanding|mcLanding2)) != 0);
 }
 
-//максимальный переносимы вес
+//РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ РїРµСЂРµРЅРѕСЃРёРјС‹ РІРµСЃ
 float CActor::MaxCarryWeight () const
 {
 	float res = inventory().GetMaxWeight();
@@ -745,7 +758,7 @@ float CActor::MaxWalkWeight() const
 	return max_w;
 }
 
-#include "Backpack.h"
+#include "artefact.h"
 
 float CActor::get_additional_weight() const
 {
@@ -756,20 +769,18 @@ float CActor::get_additional_weight() const
 		res				+= outfit->m_additional_weight;
 	}
 
-	if ( !m_ArtefactsOnBelt.empty() )
+	for(TIItemContainer::const_iterator it = inventory().m_belt.begin(); 
+		inventory().m_belt.end() != it; ++it) 
 	{
-		xr_vector<const CArtefact*>::const_iterator it		= m_ArtefactsOnBelt.begin();
-		xr_vector<const CArtefact*>::const_iterator it_e	= m_ArtefactsOnBelt.end();
-		for ( ; it != it_e ; ++it )
-		{
-			res			+= (*it)->AdditionalInventoryWeight();
-		}
+		CArtefact*	artefact = smart_cast<CArtefact*>(*it);
+		if(artefact)
+			res			+= artefact->AdditionalInventoryWeight();
 	}
 
-	CBackpack* backpack = smart_cast<CBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+	CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
 	if (backpack)
 	{
-		res += backpack->AdditionalInventoryWeight();
+		res += backpack->m_additional_weight;
 	}
 
 	CCustomOutfit* pants = smart_cast<CCustomOutfit*>(inventory().ItemFromSlot(PANTS_SLOT));

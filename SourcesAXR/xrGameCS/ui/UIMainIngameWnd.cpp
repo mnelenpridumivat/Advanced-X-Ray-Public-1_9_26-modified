@@ -55,6 +55,9 @@
 #include "UIActorMenu.h"
 #include "UICellItem.h"
 #include "UICellItemFactory.h"
+#include "UIStatic.h"
+#include "UIHelper.h"
+#include "UIArtefactPanel.h"
 
 void test_draw	();
 void test_key	(int dik);
@@ -81,14 +84,16 @@ const u32	g_clWhite					= 0xffffffff;
 CUIMainIngameWnd::CUIMainIngameWnd()
 {
 //	m_pWeapon					= NULL;
-	m_pGrenade					= NULL;
-	m_pItem						= NULL;
+	m_pGrenade					= nullptr;
+	m_pItem						= nullptr;
 	UIZoneMap					= xr_new<CUIZoneMap>();
-	m_pPickUpItem				= NULL;
-	m_pMPChatWnd				= NULL;
-	m_pMPLogWnd					= NULL;	
-	uiPickUpItemIconNew_		= NULL;	
+	m_pPickUpItem				= nullptr;
+	m_pMPChatWnd				= nullptr;
+	m_pMPLogWnd					= nullptr;
+	uiPickUpItemIconNew_		= nullptr;
 	fuzzyShowInfo_				= 0.f;
+
+	UIArtefactsPanel			= nullptr;
 }
 
 #include "UIProgressShape.h"
@@ -100,6 +105,9 @@ CUIMainIngameWnd::~CUIMainIngameWnd()
 	xr_delete					(UIZoneMap);
 	HUD_SOUND_ITEM::DestroySound(m_contactSnd);
 	xr_delete					(g_MissileForceShape);
+
+	if (UIArtefactsPanel)
+		xr_delete				(UIArtefactsPanel);
 }
 
 void CUIMainIngameWnd::Init()
@@ -145,6 +153,43 @@ void CUIMainIngameWnd::Init()
 	xml_init.InitScrollView		(uiXml, "icons_scroll_view", 0, m_UIIcons);
 	AttachChild					(m_UIIcons);
 
+	m_ind_boost_psy			= UIHelper::CreateStatic(uiXml, "indicator_booster_psy", this);
+	m_ind_boost_radia		= UIHelper::CreateStatic(uiXml, "indicator_booster_radia", this);
+	m_ind_boost_chem		= UIHelper::CreateStatic(uiXml, "indicator_booster_chem", this);
+	m_ind_boost_wound		= UIHelper::CreateStatic(uiXml, "indicator_booster_wound", this);
+	m_ind_boost_weight		= UIHelper::CreateStatic(uiXml, "indicator_booster_weight", this);
+	m_ind_boost_health		= UIHelper::CreateStatic(uiXml, "indicator_booster_health", this);
+	m_ind_boost_power		= UIHelper::CreateStatic(uiXml, "indicator_booster_power", this);
+	m_ind_boost_rad			= UIHelper::CreateStatic(uiXml, "indicator_booster_rad", this);
+
+	m_ind_boost_satiety		= UIHelper::CreateStatic(uiXml, "indicator_booster_satiety", this);
+	m_ind_boost_thirst		= UIHelper::CreateStatic(uiXml, "indicator_booster_thirst", this);
+	m_ind_boost_psy_health	= UIHelper::CreateStatic(uiXml, "indicator_booster_psy_health", this);
+	m_ind_boost_intoxication = UIHelper::CreateStatic(uiXml, "indicator_booster_intoxication", this);
+	m_ind_boost_sleepeness	= UIHelper::CreateStatic(uiXml, "indicator_booster_sleepeness", this);
+	m_ind_boost_alcoholism	= UIHelper::CreateStatic(uiXml, "indicator_booster_alcoholism", this);
+	m_ind_boost_hangover	= UIHelper::CreateStatic(uiXml, "indicator_booster_hangover", this);
+	m_ind_boost_narcotism	= UIHelper::CreateStatic(uiXml, "indicator_booster_narcotism", this);
+	m_ind_boost_withdrawal	= UIHelper::CreateStatic(uiXml, "indicator_booster_withdrawal", this);
+
+	m_ind_boost_psy			->Show(false);
+	m_ind_boost_radia		->Show(false);
+	m_ind_boost_chem		->Show(false);
+	m_ind_boost_wound		->Show(false);
+	m_ind_boost_weight		->Show(false);
+	m_ind_boost_health		->Show(false);
+	m_ind_boost_power		->Show(false);
+	m_ind_boost_rad			->Show(false);
+	m_ind_boost_satiety		->Show(false);
+	m_ind_boost_thirst		->Show(false);
+	m_ind_boost_psy_health	->Show(false);
+	m_ind_boost_intoxication->Show(false);
+	m_ind_boost_sleepeness	->Show(false);
+	m_ind_boost_alcoholism	->Show(false);
+	m_ind_boost_hangover	->Show(false);
+	m_ind_boost_narcotism	->Show(false);
+	m_ind_boost_withdrawal	->Show(false);
+
 	// Загружаем иконки 
 	if ( IsGameTypeSingle() )
 	{
@@ -168,6 +213,13 @@ void CUIMainIngameWnd::Init()
 
 	hud_info_x					= uiXml.ReadAttribFlt("hud_info:position",		0, "x", 0.f);
 	hud_info_y					= uiXml.ReadAttribFlt("hud_info:position",		0, "y", 0.f);
+
+
+	u32 clr{};
+	if (uiXml.NavigateToNode("hud_info:font", 0))
+		xml_init.InitFont		(uiXml, "hud_info:font", 0, clr, m_HudInfoFont);
+	else
+		m_HudInfoFont			= UI().Font().pFontGraffiti19Russian;
 
 	hud_info_item_x				= uiXml.ReadAttribFlt("hud_info:item_name",		0, "x", 0.f);
 	hud_info_item_y1			= uiXml.ReadAttribFlt("hud_info:item_name",		0, "y1",0.25f);
@@ -241,6 +293,13 @@ void CUIMainIngameWnd::Init()
 	AttachChild								(&UIMotionIcon);
 	UIMotionIcon.Init						();
 
+	if (GameConstants::GetArtefactPanelEnabled())
+	{
+		UIArtefactsPanel					= xr_new<CUIArtefactPanel>();
+		UIArtefactsPanel->InitFromXML		(uiXml, "artefact_panel", 0);
+		AttachChild							(UIArtefactsPanel);
+	}
+
 	AttachChild								(&UIStaticDiskIO);
 	xml_init.InitStatic						(uiXml, "disk_io", 0, &UIStaticDiskIO);
 
@@ -249,7 +308,7 @@ void CUIMainIngameWnd::Init()
 	AttachChild								(m_ui_hud_states);
 	m_ui_hud_states->InitFromXml			(uiXml, "hud_states");
 
-	HUD_SOUND_ITEM::LoadSound					("maingame_ui", "snd_new_contact", m_contactSnd, SOUND_TYPE_IDLE);
+	HUD_SOUND_ITEM::LoadSound				("maingame_ui", "snd_new_contact", m_contactSnd, SOUND_TYPE_IDLE);
 }
 
 float UIStaticDiskIO_start_time = 0.0f;
@@ -286,6 +345,9 @@ void CUIMainIngameWnd::Draw()
 	UIMotionIcon.SetNoise((s16)(0xffff&iFloor(m_pActor->m_snd_noise*100.0f)));
 
 	CUIWindow::Draw();
+
+	if (UIArtefactsPanel)
+		UIArtefactsPanel->Draw();
 
 	UIZoneMap->visible = true;
 	UIZoneMap->Render();
@@ -612,9 +674,33 @@ void CUIMainIngameWnd::TurnOffWarningIcon(EWarningIcons icon)
 
 void CUIMainIngameWnd::SetFlashIconState_(EFlashingIcons type, bool enable)
 {
+	if (!GameConstants::GetPDA_FlashingIconsEnabled())
+		return;
+
 	// Включаем анимацию требуемой иконки
 	FlashingIcons_it icon = m_FlashingIcons.find(type);
-	R_ASSERT2(icon != m_FlashingIcons.end(), "Flashing icon with this type not existed");
+	shared_str iconType{};
+
+	switch (type)
+	{
+	case 0:
+		iconType = "pda";
+		break;
+	case 1:
+		iconType = "encyclopedia";
+		break;
+	case 2:
+		iconType = "journal";
+		break;
+	case 3:
+		iconType = "mail";
+		break;
+	default:
+		Msg("! [CUIMainIngameWnd::SetFlashIconState_]: Unknown flashing icon type: [%s]", iconType);
+	}
+
+	R_ASSERT3(icon != m_FlashingIcons.end(), "Flashing icon with this type not existed!", iconType.c_str());
+
 	icon->second->Show(enable);
 }
 
@@ -635,8 +721,10 @@ void CUIMainIngameWnd::InitFlashingIcons(CUIXml* node)
 		// Теперь запоминаем иконку и ее тип
 		EFlashingIcons type = efiPdaTask;
 
-		if		(iconType == "pda")		type = efiPdaTask;
-		else if (iconType == "mail")	type = efiMail;
+		if		(iconType == "pda")				type = efiPdaTask;
+		else if (iconType == "mail")			type = efiMail;
+		else if (iconType == "encyclopedia")	type = efiEncyclopedia;
+		else if (iconType == "journal")			type = efiJournal;
 		else	R_ASSERT(!"Unknown type of mainingame flashing icon");
 
 		R_ASSERT2(m_FlashingIcons.find(type) == m_FlashingIcons.end(), "Flashing icon with this type already exists");
@@ -693,7 +781,7 @@ void CUIMainIngameWnd::SetPickUpItem	(CInventoryItem* PickUpItem)
 
 	uiPickUpItemIconNew_ = create_cell_item(m_pPickUpItem); // use inventory cell item class
 
-	float x_size = m_pPickUpItem->GetInvGridRect().x2 * (UI()->is_16_9_mode() ? 30.f : 40.f);
+	float x_size = m_pPickUpItem->GetInvGridRect().x2 * (UI().is_widescreen() ? 30.f : 40.f);
 	float y_size = m_pPickUpItem->GetInvGridRect().y2 * 40.f;
 	uiPickUpItemIconNew_->SetAlignment(waCenter);
 	uiPickUpItemIconNew_->SetWndPos(Fvector2().set(m_iPickUpItemIconX, m_iPickUpItemIconY));
@@ -734,11 +822,8 @@ void CUIMainIngameWnd::reset_ui()
 
 void hud_adjust_mode_keyb(int dik);
 void hud_draw_adjust_mode();
-
-#ifdef DEBUG
 	void attach_adjust_mode_keyb(int dik);
 	void attach_draw_adjust_mode();
-#endif
 
 struct TS{
 	ref_sound test_sound;
@@ -746,45 +831,317 @@ struct TS{
 TS* pTS = NULL;
 void test_key(int dik)
 {
-	hud_adjust_mode_keyb	(dik);
-#ifdef DEBUG
-	attach_adjust_mode_keyb	(dik);
-#endif
-/*
-	if(dik==DIK_V)
+	if (Actor()->active_cam() == eacFirstEye)
 	{
-		if (!pTS)
-		{
-			pTS =  xr_new<TS>();
-			Msg("created");
-		}else
-		{
-			xr_delete(pTS);
-			Msg("destroyed");
-		}
+		hud_adjust_mode_keyb(dik);
+		attach_adjust_mode_keyb(dik);
 	}
-	if(dik==DIK_B && pTS)
-	{
-		pTS->test_sound.create("music\\combat\\theme1_intro", st_Effect, 0);
-		pTS->test_sound.play_at_pos(Actor(), Fvector().set(0,0,0), sm_2D);
-		pTS->test_sound.attach_tail("music\\combat\\theme1_combat_2");
-	}
-	if(dik==DIK_N && pTS)
-	{
-		pTS->test_sound.attach_tail("music\\combat\\theme1_combat_2");
-	}
-	if(dik==DIK_M && pTS)
-	{
-		pTS->test_sound.attach_tail("music\\combat\\theme1_final");
-	}
-*/
 }
 
 void test_draw()
 {
 	hud_draw_adjust_mode();
-#ifdef DEBUG
 	attach_draw_adjust_mode();
-#endif
 }
 
+void CUIMainIngameWnd::DrawMainIndicatorsForInventory()
+{
+	CActor* pActor = smart_cast<CActor*>(Level().CurrentViewEntity());
+	
+	if (!pActor)
+		return;
+
+	UpdateBoosterIndicators(pActor->conditions().GetCurBoosterInfluences());
+
+	if (m_ind_boost_psy->IsShown())
+	{
+		m_ind_boost_psy->Update();
+		m_ind_boost_psy->Draw();
+	}
+
+	if (m_ind_boost_radia->IsShown())
+	{
+		m_ind_boost_radia->Update();
+		m_ind_boost_radia->Draw();
+	}
+
+	if (m_ind_boost_chem->IsShown())
+	{
+		m_ind_boost_chem->Update();
+		m_ind_boost_chem->Draw();
+	}
+
+	if (m_ind_boost_wound->IsShown())
+	{
+		m_ind_boost_wound->Update();
+		m_ind_boost_wound->Draw();
+	}
+
+	if (m_ind_boost_weight->IsShown())
+	{
+		m_ind_boost_weight->Update();
+		m_ind_boost_weight->Draw();
+	}
+
+	if (m_ind_boost_health->IsShown())
+	{
+		m_ind_boost_health->Update();
+		m_ind_boost_health->Draw();
+	}
+
+	if (m_ind_boost_power->IsShown())
+	{
+		m_ind_boost_power->Update();
+		m_ind_boost_power->Draw();
+	}
+
+	if (m_ind_boost_rad->IsShown())
+	{
+		m_ind_boost_rad->Update();
+		m_ind_boost_rad->Draw();
+	}
+
+	if (m_ind_boost_satiety->IsShown())
+	{
+		m_ind_boost_satiety->Update();
+		m_ind_boost_satiety->Draw();
+	}
+
+	if (m_ind_boost_thirst->IsShown())
+	{
+		m_ind_boost_thirst->Update();
+		m_ind_boost_thirst->Draw();
+	}
+
+	if (m_ind_boost_psy_health->IsShown())
+	{
+		m_ind_boost_psy_health->Update();
+		m_ind_boost_psy_health->Draw();
+	}
+
+	if (m_ind_boost_intoxication->IsShown())
+	{
+		m_ind_boost_intoxication->Update();
+		m_ind_boost_intoxication->Draw();
+	}
+
+	if (m_ind_boost_sleepeness->IsShown())
+	{
+		m_ind_boost_sleepeness->Update();
+		m_ind_boost_sleepeness->Draw();
+	}
+
+	if (m_ind_boost_alcoholism->IsShown())
+	{
+		m_ind_boost_alcoholism->Update();
+		m_ind_boost_alcoholism->Draw();
+	}
+
+	if (m_ind_boost_hangover->IsShown())
+	{
+		m_ind_boost_hangover->Update();
+		m_ind_boost_hangover->Draw();
+	}
+
+	if (m_ind_boost_narcotism->IsShown())
+	{
+		m_ind_boost_narcotism->Update();
+		m_ind_boost_narcotism->Draw();
+	}
+
+	if (m_ind_boost_withdrawal->IsShown())
+	{
+		m_ind_boost_withdrawal->Update();
+		m_ind_boost_withdrawal->Draw();
+	}
+
+	if (UIArtefactsPanel && UIArtefactsPanel->GetShowInInventory() && UIArtefactsPanel->IsShown())
+		UIArtefactsPanel->Draw();
+}
+
+void CUIMainIngameWnd::UpdateBoosterIndicators(const xr_map<EBoostParams, SBooster> influences)
+{
+	m_ind_boost_psy->Show(false);
+	m_ind_boost_radia->Show(false);
+	m_ind_boost_chem->Show(false);
+	m_ind_boost_wound->Show(false);
+	m_ind_boost_weight->Show(false);
+	m_ind_boost_health->Show(false);
+	m_ind_boost_power->Show(false);
+	m_ind_boost_rad->Show(false);
+	m_ind_boost_satiety->Show(false);
+	m_ind_boost_thirst->Show(false);
+	m_ind_boost_psy_health->Show(false);
+	m_ind_boost_intoxication->Show(false);
+	m_ind_boost_sleepeness->Show(false);
+	m_ind_boost_alcoholism->Show(false);
+	m_ind_boost_hangover->Show(false);
+	m_ind_boost_narcotism->Show(false);
+	m_ind_boost_withdrawal->Show(false);
+
+	LPCSTR str_flag	= "ui_slow_blinking_alpha";
+
+	xr_map<EBoostParams, SBooster>::const_iterator b = influences.begin(), e = influences.end();
+	for(; b!=e; b++)
+	{
+		switch(b->second.m_type)
+		{
+			case eBoostHpRestore: 
+				{
+					m_ind_boost_health->Show(true);
+					if (b->second.fBoostTime <= 3.0f)
+						m_ind_boost_health->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_health->ResetClrAnimation();
+				}
+				break;
+			case eBoostPowerRestore: 
+				{
+					m_ind_boost_power->Show(true); 
+					if(b->second.fBoostTime<=3.0f)
+						m_ind_boost_power->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_power->ResetClrAnimation();
+				}
+				break;
+			case eBoostRadiationRestore: 
+				{
+					m_ind_boost_rad->Show(true); 
+					if(b->second.fBoostTime<=3.0f)
+						m_ind_boost_rad->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_rad->ResetClrAnimation();
+				}
+				break;
+			case eBoostBleedingRestore: 
+				{
+					m_ind_boost_wound->Show(true); 
+					if(b->second.fBoostTime<=3.0f)
+						m_ind_boost_wound->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_wound->ResetClrAnimation();
+				}
+				break;
+			case eBoostMaxWeight: 
+				{
+					m_ind_boost_weight->Show(true); 
+					if(b->second.fBoostTime<=3.0f)
+						m_ind_boost_weight->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_weight->ResetClrAnimation();
+				}
+				break;
+			case eBoostRadiationImmunity: 
+			case eBoostRadiationProtection: 
+				{
+					m_ind_boost_radia->Show(true); 
+					if(b->second.fBoostTime<=3.0f)
+						m_ind_boost_radia->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_radia->ResetClrAnimation();
+				}
+				break;
+			case eBoostTelepaticImmunity: 
+			case eBoostTelepaticProtection: 
+				{
+					m_ind_boost_psy->Show(true); 
+					if(b->second.fBoostTime<=3.0f)
+						m_ind_boost_psy->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_psy->ResetClrAnimation();
+				}
+				break;
+			case eBoostChemicalBurnImmunity: 
+			case eBoostChemicalBurnProtection: 
+				{
+					m_ind_boost_chem->Show(true); 
+					if(b->second.fBoostTime<=3.0f)
+						m_ind_boost_chem->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_chem->ResetClrAnimation();
+				}
+				break;
+			case eBoostSatietyRestore:
+				{
+					m_ind_boost_satiety->Show(true);
+					if (b->second.fBoostTime <= 3.0f)
+						m_ind_boost_satiety->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_satiety->ResetClrAnimation();
+				}
+				break;
+			case eBoostThirstRestore:
+				{
+					m_ind_boost_thirst->Show(true);
+					if (b->second.fBoostTime <= 3.0f)
+						m_ind_boost_thirst->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_thirst->ResetClrAnimation();
+				}
+				break;
+			case eBoostPsyHealthRestore:
+				{
+					m_ind_boost_psy_health->Show(true);
+					if (b->second.fBoostTime <= 3.0f)
+						m_ind_boost_psy_health->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_psy_health->ResetClrAnimation();
+				}
+				break;
+			case eBoostIntoxicationRestore:
+				{
+					m_ind_boost_intoxication->Show(true);
+					if (b->second.fBoostTime <= 3.0f)
+						m_ind_boost_intoxication->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_intoxication->ResetClrAnimation();
+				}
+				break;
+			case eBoostSleepenessRestore:
+				{
+					m_ind_boost_sleepeness->Show(true);
+					if (b->second.fBoostTime <= 3.0f)
+						m_ind_boost_sleepeness->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_sleepeness->ResetClrAnimation();
+				}
+				break;
+			case eBoostAlcoholismRestore:
+				{
+					m_ind_boost_alcoholism->Show(true);
+					if (b->second.fBoostTime <= 3.0f)
+						m_ind_boost_alcoholism->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_alcoholism->ResetClrAnimation();
+				}
+				break;
+			case eBoostHangoverRestore:
+				{
+					m_ind_boost_hangover->Show(true);
+					if (b->second.fBoostTime <= 3.0f)
+						m_ind_boost_hangover->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_hangover->ResetClrAnimation();
+				}
+				break;
+			case eBoostNarcotismRestore:
+				{
+					m_ind_boost_narcotism->Show(true);
+					if (b->second.fBoostTime <= 3.0f)
+						m_ind_boost_narcotism->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_narcotism->ResetClrAnimation();
+				}
+				break;
+			case eBoostWithdrawalRestore:
+				{
+					m_ind_boost_withdrawal->Show(true);
+					if (b->second.fBoostTime <= 3.0f)
+						m_ind_boost_withdrawal->SetClrLightAnim(str_flag, true, true, false, true);
+					else
+						m_ind_boost_withdrawal->ResetClrAnimation();
+				}
+				break;
+		}
+	}
+}

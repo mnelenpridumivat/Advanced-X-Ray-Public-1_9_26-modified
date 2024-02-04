@@ -15,7 +15,7 @@ public:
 				CUIMessageBox		();
 	virtual		~CUIMessageBox		();
 
-	//������������� MessageBox
+	//разновидности MessageBox
 	typedef enum {		
 		MESSAGEBOX_OK, 
 		MESSAGEBOX_INFO,
@@ -37,11 +37,12 @@ public:
 	LPCSTR		 GetUserPassword	();
 	void		 SetUserPasswordMode(bool);
 	void		 SetPasswordMode	(bool);
+	E_MESSAGEBOX_STYLE GetBoxStyle	()			{return m_eMessageBoxStyle;};
 
 	void		 SetTextEditURL		(LPCSTR text);
 	LPCSTR		 GetTextEditURL		();
 
-	virtual bool OnMouse			(float x, float y, EUIMessages mouse_action);
+	virtual bool OnMouseAction			(float x, float y, EUIMessages mouse_action);
 	virtual void SendMessage		(CUIWindow *pWnd, s16 msg, void *pData);
 
 	void		OnYesOk				();

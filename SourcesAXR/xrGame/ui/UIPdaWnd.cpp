@@ -12,6 +12,7 @@
 #include "UIStatic.h"
 #include "UIFrameWindow.h"
 #include "UITabControl.h"
+#include "UIDiaryWnd.h"
 #include "UIMapWnd.h"
 #include "UIFrameLineWnd.h"
 #include "object_broker.h"
@@ -26,6 +27,7 @@
 #include "UITaskWnd.h"
 #include "UIRankingWnd.h"
 #include "UILogsWnd.h"
+#include "UIEncyclopediaWnd.h"
 
 #include "UIScriptWnd.h"
 
@@ -48,6 +50,8 @@ CUIPdaWnd::CUIPdaWnd()
 	pUITaskWnd = nullptr;
 	pUIRankingWnd = nullptr;
 	pUILogsWnd = nullptr;
+	pUIEncyclopediaWnd = nullptr;
+	pUIDiaryWnd = nullptr;
 	m_hint_wnd = nullptr;
 	m_battery_bar = nullptr;
 	m_power = 0.f;
@@ -61,6 +65,8 @@ CUIPdaWnd::~CUIPdaWnd()
 	delete_data(pUITaskWnd);
 	delete_data(pUIRankingWnd);
 	delete_data(pUILogsWnd);
+	delete_data(pUIEncyclopediaWnd);
+	delete_data(pUIDiaryWnd);
 	delete_data(m_hint_wnd);
 	delete_data(UINoice);
 }
@@ -110,6 +116,12 @@ void CUIPdaWnd::Init()
 
 		pUILogsWnd = xr_new<CUILogsWnd>();
 		pUILogsWnd->Init();
+
+		pUIEncyclopediaWnd = xr_new<CUIEncyclopediaWnd>();
+		pUIEncyclopediaWnd->Init();
+
+		pUIDiaryWnd = xr_new<CUIDiaryWnd>();
+		pUIDiaryWnd->Init();
 	}
 
 	UITabControl = xr_new<CUITabControl>();
@@ -175,7 +187,8 @@ bool CUIPdaWnd::OnMouseAction(float x, float y, EUIMessages mouse_action)
 		break;
 	}
 	case WINDOW_RBUTTON_DOWN:
-		if (auto pda = Actor()->GetPDA()) {
+		if (auto pda = Actor()->GetPDA())
+		{
 			pda->m_bZoomed = false;
 
 			if (psActorFlags.test(AF_3D_PDA))
@@ -191,6 +204,8 @@ bool CUIPdaWnd::OnMouseAction(float x, float y, EUIMessages mouse_action)
 
 void CUIPdaWnd::MouseMovement(float x, float y)
 {
+	if (!Actor())
+		return;
 	CPda* pda = Actor()->GetPDA();
 	if (!pda) return;
 
@@ -238,7 +253,13 @@ void CUIPdaWnd::Show(bool status)
 	else
 	{
 		InventoryUtilities::SendInfoToActor("ui_pda_hide");
-		CurrentGameUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiPdaTask, false);
+
+		if (GameConstants::GetPDA_FlashingIconsQuestsEnabled())
+			CurrentGameUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiPdaTask, false);
+
+		CurrentGameUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiEncyclopedia, false);
+		CurrentGameUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiJournal, false);
+
 		if (m_pActiveDialog)
 		{
 			m_pActiveDialog->Show(false);
@@ -289,6 +310,14 @@ void CUIPdaWnd::SetActiveSubdialog(const shared_str& section)
 	else if (section == "eptLogs")
 	{
 		m_pActiveDialog = pUILogsWnd;
+	}
+	else if (section == "eptEnc")
+	{
+		m_pActiveDialog = pUIEncyclopediaWnd;
+	}
+	else if (section == "eptDiar")
+	{
+		m_pActiveDialog = pUIDiaryWnd;
 	}
 
 	luabind::functor<CUIDialogWndEx*> functor;
@@ -417,9 +446,11 @@ void CUIPdaWnd::Reset()
 {
 	inherited::ResetAll();
 
-	if (pUITaskWnd) pUITaskWnd->ResetAll();
-	if (pUIRankingWnd) pUIRankingWnd->ResetAll();
-	if (pUILogsWnd) pUILogsWnd->ResetAll();
+	if (pUITaskWnd)				pUITaskWnd->ResetAll();
+	if (pUIRankingWnd)			pUIRankingWnd->ResetAll();
+	if (pUILogsWnd)				pUILogsWnd->ResetAll();
+	if (pUIEncyclopediaWnd)		pUIEncyclopediaWnd->ResetAll();
+	if (pUIDiaryWnd)			pUIDiaryWnd->ResetAll();
 }
 
 void CUIPdaWnd::SetCaption(LPCSTR text)
@@ -495,7 +526,8 @@ bool CUIPdaWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 						HideDialog();
 						Console->Execute("main_menu");
 					}
-					else if (pda->m_bZoomed) {
+					else if (pda->m_bZoomed)
+					{
 						pda->m_bZoomed = false;
 						CurrentGameUI()->SetMainInputReceiver(nullptr, false);
 					}
@@ -552,25 +584,28 @@ bool CUIPdaWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 						pda->m_bZoomed = !pda->m_bZoomed;
 						return true;
 					}
-
-					/*
-					Че за кал вообще
-					if (action == kWPN_FUNC || (!IsEnabled() && action == kWPN_FIRE))
-					{
-						if (IsEnabled())
-						{
-							pda->m_bZoomed = false;
-							Enable(false);
-						}
-						else
-						{
-							Actor()->StopSprint();
-						}
-						return true;
-					}*/
 				}
 			}
 		}
 	}
 	return inherited::OnKeyboardAction(dik, keyboard_action);
+}
+
+void CUIPdaWnd::PdaContentsChanged(pda_section::part type)
+{
+	if (type == pda_section::encyclopedia)
+	{
+		pUIEncyclopediaWnd->ReloadArticles();
+		CurrentGameUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiEncyclopedia, true);
+
+	}
+	else if (type == pda_section::journal)
+	{
+		pUIDiaryWnd->ReloadArticles();
+		CurrentGameUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiJournal, true);
+	}
+	else if (type == pda_section::quests && GameConstants::GetPDA_FlashingIconsQuestsEnabled())
+	{
+		CurrentGameUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiPdaTask, true);
+	}
 }

@@ -14,6 +14,7 @@
 #include "UIFrameWindow.h"
 #include "UITabControl.h"
 #include "UIPdaContactsWnd.h"
+#include "UIDiaryWnd.h"
 #include "UIMapWnd.h"
 #include "UIFrameLineWnd.h"
 #include "UIActorInfo.h"
@@ -30,6 +31,7 @@
 #include "UIFactionWarWnd.h"
 #include "UIRankingWnd.h"
 #include "UILogsWnd.h"
+#include "UIEncyclopediaWnd.h"
 
 #include "UIScriptWnd.h"
 
@@ -55,6 +57,8 @@ CUIPdaWnd::CUIPdaWnd()
 	pUIFactionWarWnd = nullptr;
 	pUIRankingWnd = nullptr;
 	pUILogsWnd = nullptr;
+	pUIEncyclopediaWnd = nullptr;
+	pUIDiaryWnd = nullptr;
 	m_hint_wnd = nullptr;
 	last_cursor_pos.set(UI_BASE_WIDTH / 2.f, UI_BASE_HEIGHT / 2.f);
 	m_cursor_box.set(117.f, 39.f, UI_BASE_WIDTH - 121.f, UI_BASE_HEIGHT - 37.f);
@@ -67,6 +71,8 @@ CUIPdaWnd::~CUIPdaWnd()
 	delete_data(pUIFactionWarWnd);
 	delete_data(pUIRankingWnd);
 	delete_data(pUILogsWnd);
+	delete_data(pUIEncyclopediaWnd);
+	delete_data(pUIDiaryWnd);
 	delete_data(m_hint_wnd);
 	delete_data(UINoice);
 }
@@ -111,6 +117,11 @@ void CUIPdaWnd::Init()
 		pUILogsWnd = xr_new<CUILogsWnd>();
 		pUILogsWnd->Init();
 
+		pUIEncyclopediaWnd = xr_new<CUIEncyclopediaWnd>();
+		pUIEncyclopediaWnd->Init();
+
+		pUIDiaryWnd = xr_new<CUIDiaryWnd>();
+		pUIDiaryWnd->Init();
 	}
 
 	UITabControl = xr_new<CUITabControl>();
@@ -142,8 +153,15 @@ void CUIPdaWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 	{
 		if (pWnd == m_btn_close)
 		{
-			if (Actor()->inventory().GetActiveSlot() == PDA_SLOT)
-				Actor()->inventory().Activate(NO_ACTIVE_SLOT);
+			if (psActorFlags.test(AF_3D_PDA))
+			{
+				if (Actor()->inventory().GetActiveSlot() == PDA_SLOT)
+					Actor()->inventory().Activate(NO_ACTIVE_SLOT);
+			}
+			else
+			{
+				HUD().GetUI()->StartStopMenu(this, true);
+			}
 		}
 		break;
 	}
@@ -155,7 +173,7 @@ void CUIPdaWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 	};
 }
 
-bool CUIPdaWnd::OnMouse(float x, float y, EUIMessages mouse_action)
+bool CUIPdaWnd::OnMouseAction(float x, float y, EUIMessages mouse_action)
 {
 	switch (mouse_action)
 	{
@@ -187,12 +205,14 @@ bool CUIPdaWnd::OnMouse(float x, float y, EUIMessages mouse_action)
 		}
 		break;
 	}
-	CUIDialogWnd::OnMouse(x, y, mouse_action);
+	CUIDialogWnd::OnMouseAction(x, y, mouse_action);
 	return true; //always true because StopAnyMove() == false
 }
 
 void CUIPdaWnd::MouseMovement(float x, float y)
 {
+	if (!Actor())
+		return;
 	CPda* pda = Actor()->GetPDA();
 	if (!pda) return;
 
@@ -239,14 +259,27 @@ void CUIPdaWnd::Show()
 void CUIPdaWnd::Hide()
 {
 	inherited::Hide();
+	InventoryUtilities::SendInfoToActor("ui_pda_hide");
+
+	if (GameConstants::GetPDA_FlashingIconsQuestsEnabled())
+		HUD().GetUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiPdaTask, false);
+
+	HUD().GetUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiEncyclopedia, false);
+	HUD().GetUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiJournal, false);
+
 	if (m_pActiveDialog)
+	{
 		m_pActiveDialog->Update();
+	}
+	g_btnHint->Discard();
+	g_statHint->Discard();
 }
 
 void CUIPdaWnd::Update()
 {
 	inherited::Update();
-	m_pActiveDialog->Update();
+	if (m_pActiveDialog)
+		m_pActiveDialog->Update();
 
 	pUILogsWnd->PerformWork();
 }
@@ -278,6 +311,14 @@ void CUIPdaWnd::SetActiveSubdialog(const shared_str& section)
 	else if (section == "eptLogs")
 	{
 		m_pActiveDialog = pUILogsWnd;
+	}
+	else if (section == "eptEnc")
+	{
+		m_pActiveDialog = pUIEncyclopediaWnd;
+	}
+	else if (section == "eptDiar")
+	{
+		m_pActiveDialog = pUIDiaryWnd;
 	}
 
 	luabind::functor<CUIDialogWndEx*> functor;
@@ -328,7 +369,7 @@ void CUIPdaWnd::SetActiveCaption()
 void CUIPdaWnd::ResetCursor()
 {
 	if (!last_cursor_pos.similar({ 0.f, 0.f }))
-		GetUICursor()->SetUICursorPosition(last_cursor_pos);
+		GetUICursor().SetUICursorPosition(last_cursor_pos);
 }
 
 void CUIPdaWnd::Show_SecondTaskWnd(bool status)
@@ -398,9 +439,11 @@ void CUIPdaWnd::Reset()
 	inherited::ResetAll();
 
 	if (pUITaskWnd)		pUITaskWnd->ResetAll();
-	if (pUIFactionWarWnd)	pUITaskWnd->ResetAll();
-	if (pUIRankingWnd)	pUITaskWnd->ResetAll();
+	if (pUIFactionWarWnd)	pUIFactionWarWnd->ResetAll();
+	if (pUIRankingWnd)	pUIRankingWnd->ResetAll();
 	if (pUILogsWnd)		pUITaskWnd->ResetAll();
+	if (pUIEncyclopediaWnd)		pUIEncyclopediaWnd->ResetAll();
+	if (pUIDiaryWnd)		pUIDiaryWnd->ResetAll();
 }
 
 void CUIPdaWnd::SetCaption(LPCSTR text)
@@ -448,7 +491,7 @@ void CUIPdaWnd::Enable(bool status)
 	inherited::Enable(status);
 }
 
-bool CUIPdaWnd::OnKeyboard(int dik, EUIMessages keyboard_action)
+bool CUIPdaWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 {
 	if (WINDOW_KEY_PRESSED == keyboard_action && IsShown())
 	{
@@ -458,7 +501,7 @@ bool CUIPdaWnd::OnKeyboard(int dik, EUIMessages keyboard_action)
 
 			if (action == kQUIT || action == kINVENTORY || action == kACTIVE_JOBS)
 			{
-				HideDialog();
+				HUD().GetUI()->StartStopMenu(this, true);
 				return true;
 			}
 		}
@@ -473,7 +516,7 @@ bool CUIPdaWnd::OnKeyboard(int dik, EUIMessages keyboard_action)
 				{
 					if (pda->GetState() == CPda::eHiding || pda->GetState() == CPda::eHidden)
 					{
-						HideDialog();
+						HUD().GetUI()->StartStopMenu(this, true);
 						Console->Execute("main_menu");
 					}
 					else if (pda->m_bZoomed)
@@ -489,6 +532,14 @@ bool CUIPdaWnd::OnKeyboard(int dik, EUIMessages keyboard_action)
 
 				if (action == kUSE || action == kACTIVE_JOBS || action == kINVENTORY || (action > kCAM_ZOOM_OUT && action < kWPN_NEXT)) // Since UI no longer passes non-movement inputs to the actor input receiver this is needed now.
 				{
+					if (pda->m_bZoomed && action == kACTIVE_JOBS)
+					{
+						Enable(false);
+						HUD().GetUI()->SetMainInputReceiver(nullptr, false);
+
+						return false;
+					}
+
 					CObject* obj = (GameID() == eGameIDSingle) ? Level().CurrentEntity() : Level().CurrentControlEntity();
 					{
 						IInputReceiver* IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(obj));
@@ -539,5 +590,24 @@ bool CUIPdaWnd::OnKeyboard(int dik, EUIMessages keyboard_action)
 			}
 		}
 	}
-	return inherited::OnKeyboard(dik, keyboard_action);
+	return inherited::OnKeyboardAction(dik, keyboard_action);
+}
+
+void CUIPdaWnd::PdaContentsChanged(pda_section::part type)
+{
+	if (type == pda_section::encyclopedia)
+	{
+		pUIEncyclopediaWnd->ReloadArticles();
+		HUD().GetUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiEncyclopedia, true);
+
+	}
+	else if (type == pda_section::journal)
+	{
+		pUIDiaryWnd->ReloadArticles();
+		HUD().GetUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiJournal, true);
+	}
+	else if (type == pda_section::quests && GameConstants::GetPDA_FlashingIconsQuestsEnabled())
+	{
+		HUD().GetUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiPdaTask, true);
+	}
 }

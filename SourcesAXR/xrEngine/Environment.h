@@ -162,7 +162,10 @@ public:
 	float				bolt_duration;
 
     float				wind_velocity;
-    float				wind_direction;  
+    float				wind_direction;
+
+	float				clouds_velocity_0; //skyloader: speed of clouds
+	float				clouds_velocity_1; //skyloader: speed of second clouds
     
 	Fvector3			ambient		;
 	Fvector4			hemi_color	;	// w = R2 correction
@@ -183,6 +186,7 @@ public:
 //	int					lens_flare_id;
 //	int					tb_id;
 	shared_str			lens_flare_id;
+	shared_str			lens_flare_id_phased;
 	shared_str			tb_id;
 
 	//: swing values
@@ -194,6 +198,7 @@ public:
 		float						amp2;
 		float						speed;
 		void						lerp(const EnvSwingValue& v1, const EnvSwingValue& v2, float factor);
+		void						lerp_with_wind(const EnvSwingValue& v1, const EnvSwingValue& v2, CEnvDescriptor& A, CEnvDescriptor& B, float factor);
 	};
 	EnvSwingValue						m_cSwingDesc[2];
     
@@ -235,6 +240,8 @@ public:
 	INGAME_EDITOR_VIRTUAL void lerp			(CEnvironment* parent, CEnvDescriptor& A, CEnvDescriptor& B, float f, CEnvModifier& M, float m_power);
 	void				clear				();
 	void				destroy				();
+
+	INGAME_EDITOR_VIRTUAL void SetMoonPhase	(CEnvDescriptor& A, CEnvDescriptor& B);
 };
 
 class ENGINE_API	CEnvironment
@@ -262,6 +269,8 @@ private:
 
 	void					calculate_dynamic_sun_dir();
 public:
+	void					SetEnvDesc		(LPCSTR weather_section, CEnvDescriptor*& e);
+
 	static bool sort_env_pred	(const CEnvDescriptor* x, const CEnvDescriptor* y)
 	{	return x->exec_time < y->exec_time;	}
 	static bool sort_env_etl_pred	(const CEnvDescriptor* x, const CEnvDescriptor* y)
@@ -285,6 +294,8 @@ public:
 	float					wind_blast_strength_start_value;
 	float					wind_blast_strength_stop_value;
 	Fquaternion				wind_blast_current;
+
+	Fvector3				wind_anim;
 	
 	float					wetness_accum;
 	
@@ -357,11 +368,8 @@ public:
 	float					ed_to_time			;
 public:
     void					ED_Reload			();
-    float					GetGameTime			(){return fGameTime;}
 #else // #ifdef _EDITOR
-#	ifdef INGAME_EDITOR
-		float				GetGameTime			(){return fGameTime;}
-#	endif // #ifdef INGAME_EDITOR
+	float					GetGameTime			(){return fGameTime;}
 
 	bool					m_paused;
 #endif // #ifdef _EDITOR
