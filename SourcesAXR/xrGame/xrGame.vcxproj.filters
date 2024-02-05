@@ -859,9 +859,6 @@
     <Filter Include="AI\AMonsters\monsters\Poltergeist\Hidden Attack">
       <UniqueIdentifier>{2bc83d0f-5fc5-485c-a2a5-9f0a35c5510d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\AMonsters\monsters\Poltergeist\Abilities">
-      <UniqueIdentifier>{0a698384-d473-4310-a3a6-97d12a481617}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI\AMonsters\monsters\Zombie">
       <UniqueIdentifier>{53eac147-9148-4d3b-a507-f0bccf3ccd86}</UniqueIdentifier>
     </Filter>
@@ -2544,6 +2541,9 @@
     </Filter>
     <Filter Include="AI\AMonsters\monsters\Abilities">
       <UniqueIdentifier>{12bac0f1-ce7e-4857-9b5c-eb3cf49352e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\AMonsters\monsters\Abilities\Polter">
+      <UniqueIdentifier>{2299a837-4dd8-4de3-8a50-2ab5a0125760}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -7566,6 +7566,21 @@
     <ClInclude Include="ui\UIDiaryWnd.h">
       <Filter>UI\Common\PDA\Diary</Filter>
     </ClInclude>
+    <ClInclude Include="PolterAbility.h">
+      <Filter>AI\AMonsters\monsters\Abilities\Polter</Filter>
+    </ClInclude>
+    <ClInclude Include="PolterFlame.h">
+      <Filter>AI\AMonsters\monsters\Abilities\Polter</Filter>
+    </ClInclude>
+    <ClInclude Include="PolterTele.h">
+      <Filter>AI\AMonsters\monsters\Abilities\Polter</Filter>
+    </ClInclude>
+    <ClInclude Include="PolterChem.h">
+      <Filter>AI\AMonsters\monsters\Abilities\Polter</Filter>
+    </ClInclude>
+    <ClInclude Include="PolterInterface.h">
+      <Filter>AI\AMonsters\monsters\Abilities\Polter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -8323,15 +8338,6 @@
     </ClCompile>
     <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_script.cpp">
       <Filter>AI\AMonsters\monsters\Poltergeist\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_ability.cpp">
-      <Filter>AI\AMonsters\monsters\Poltergeist\Abilities</Filter>
-    </ClCompile>
-    <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_flame_thrower.cpp">
-      <Filter>AI\AMonsters\monsters\Poltergeist\Abilities</Filter>
-    </ClCompile>
-    <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_telekinesis.cpp">
-      <Filter>AI\AMonsters\monsters\Poltergeist\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="ai\Monsters\Zombie\zombie.cpp">
       <Filter>AI\AMonsters\monsters\Zombie</Filter>
@@ -11326,15 +11332,6 @@
     <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_script.cpp">
       <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Script</Filter>
     </ClCompile>
-    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_telekinesis.cpp">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_flame_thrower.cpp">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_ability.cpp">
-      <Filter>AI\AMonsters\monsters\AnomalPseudoGigant\Combat</Filter>
-    </ClCompile>
     <ClCompile Include="MagnetZone.cpp">
       <Filter>Core\Client\Objects\zones\MagnetZone</Filter>
     </ClCompile>
@@ -11349,6 +11346,18 @@
     </ClCompile>
     <ClCompile Include="patrol_path_labirint.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_labirint</Filter>
+    </ClCompile>
+    <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_telekinesis.cpp">
+      <Filter>AI\AMonsters\monsters\Abilities\Polter</Filter>
+    </ClCompile>
+    <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_flame_thrower.cpp">
+      <Filter>AI\AMonsters\monsters\Abilities\Polter</Filter>
+    </ClCompile>
+    <ClCompile Include="ai\monsters\poltergeist\poltergeist_chemical.cpp">
+      <Filter>AI\AMonsters\monsters\Abilities\Polter</Filter>
+    </ClCompile>
+    <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_ability.cpp">
+      <Filter>AI\AMonsters\monsters\Abilities\Polter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "poltergeist.h"
+#include "PolterChem.h"
 #include "../../../PhysicsShellHolder.h"
 #include "../../../level.h"
 #include "../../../actor.h"
 #include "../../../../xrPhysics/icolisiondamageinfo.h"
 
-CPolterChem::CPolterChem(CPoltergeist* polter) : inherited(polter) {
+CPolterChem::CPolterChem(IPolterInterface* polter) : inherited(polter) {
 
 }
 

@@ -12,6 +12,9 @@
 #include "Actor.h"
 #include "../control_movement_base.h"
 #include "anomal_pseudo_gigant_state_manager.h"
+#include "PolterChem.h"
+#include "PolterFlame.h"
+#include "PolterTele.h"
 
 CAnomalPseudoGigant::CAnomalPseudoGigant()
 {
@@ -25,15 +28,28 @@ CAnomalPseudoGigant::~CAnomalPseudoGigant()
 {
 	xr_delete(m_flame);
 	xr_delete(m_tele);
+	xr_delete(m_chem);
 }
 
 void CAnomalPseudoGigant::Load(LPCSTR section)
 {
 	inherited::Load(section);
-	m_flame = xr_new<CAnomalGigPolterFlame>(this);
-	m_flame->load(section);
-	m_tele = xr_new<CAnomalGigPolterTele>(this);
-	m_tele->load(section);
+	if (READ_IF_EXISTS(pSettings, r_bool, section, "use_flame", false)) {
+		m_flame = xr_new<CPolterFlame>(this);
+		m_flame->load(section);
+	}
+	if (READ_IF_EXISTS(pSettings, r_bool, section, "use_tele", false)) {
+		m_tele = xr_new<CPolterTele>(this);
+		m_tele->load(section);
+	}
+	if (READ_IF_EXISTS(pSettings, r_bool, section, "use_chem", false)) {
+		m_chem = xr_new<CPolterChem>(this);
+		m_chem->load(section);
+	}
+
+	m_flame_max_hp_to_activate = READ_IF_EXISTS(pSettings, r_float, section, "flame_max_hp_to_activate", 0.0f);
+	m_tele_max_hp_to_activate = READ_IF_EXISTS(pSettings, r_float, section, "tele_max_hp_to_activate", 0.0f);
+	m_chem_max_hp_to_activate = READ_IF_EXISTS(pSettings, r_float, section, "chem_max_hp_to_activate", 0.0f);
 
 	m_shield_cooldown = READ_IF_EXISTS(pSettings, r_u32, section, "shield_cooldown", 4000);
 	m_shield_time = READ_IF_EXISTS(pSettings, r_u32, section, "shield_time", 3000);
@@ -193,11 +209,15 @@ float	CAnomalPseudoGigant::get_detection_success_level()
 //IC		CAnomalGigPolterSpecialAbility* ability() { return (m_flame ? m_flame : m_tele); } // remake: tele on 66% hp, flame +tele on 33% hp
 
 bool CAnomalPseudoGigant::use_tele_ability() { 
-	return m_tele->is_avalable(); 
+	return m_tele && GetfHealth() <= m_tele_max_hp_to_activate; 
 }
 
 bool CAnomalPseudoGigant::use_fire_ability() { 
-	return m_flame->is_avalable(); 
+	return m_flame && GetfHealth() <= m_flame_max_hp_to_activate;
+}
+
+bool CAnomalPseudoGigant::use_chem_ability() {
+	return m_chem && GetfHealth() <= m_chem_max_hp_to_activate;
 }
 
 void CAnomalPseudoGigant::ActivateShield()

@@ -1807,6 +1807,11 @@
     <ClInclude Include="player_state_skewer.h" />
     <ClInclude Include="player_state_toughy.h" />
     <ClInclude Include="player_team_win_score.h" />
+    <ClInclude Include="PolterAbility.h" />
+    <ClInclude Include="PolterChem.h" />
+    <ClInclude Include="PolterFlame.h" />
+    <ClInclude Include="PolterInterface.h" />
+    <ClInclude Include="PolterTele.h" />
     <ClInclude Include="poses_blending.h" />
     <ClInclude Include="pose_extrapolation.h" />
     <ClInclude Include="PostprocessAnimator.h" />
@@ -3417,9 +3422,6 @@
     <ClCompile Include="ai\Monsters\ai_monster_utils.cpp" />
     <ClCompile Include="ai\Monsters\anim_triple.cpp" />
     <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant.cpp" />
-    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_ability.cpp" />
-    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_flame_thrower.cpp" />
-    <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_poltergeist_telekinesis.cpp" />
     <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_script.cpp" />
     <ClCompile Include="ai\monsters\anomalpseudogigant\anomal_pseudo_gigant_state_manager.cpp" />
     <ClCompile Include="ai\Monsters\anomaly_detector.cpp" />
@@ -3735,6 +3737,7 @@
     <ClCompile Include="ai\Monsters\monster_sound_memory.cpp" />
     <ClCompile Include="ai\Monsters\Poltergeist\poltergeist.cpp" />
     <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_ability.cpp" />
+    <ClCompile Include="ai\monsters\poltergeist\poltergeist_chemical.cpp" />
     <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_flame_thrower.cpp" />
     <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_movement.cpp" />
     <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_script.cpp">

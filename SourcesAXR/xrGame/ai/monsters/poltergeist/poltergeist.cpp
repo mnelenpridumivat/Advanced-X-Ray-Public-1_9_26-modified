@@ -18,7 +18,11 @@
 #include "../../../actor_memory.h"
 #include "../../../visual_memory_manager.h"
 #include "ActorEffector.h"
+#include "material_manager.h"
 #include "../../../ActorCondition.h"
+#include "PolterTele.h"
+#include "PolterFlame.h"
+#include "PolterChem.h"
 
 void SetActorVisibility(u16 who, float value);
 
@@ -554,6 +558,67 @@ float	CPoltergeist::get_detection_far_range()
 float	CPoltergeist::get_detection_success_level () 
 {
 	return override_if_debug("detection_success_level", m_detection_success_level);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Other
+//////////////////////////////////////////////////////////////////////////
+
+
+#define IMPULSE					10.f
+#define IMPULSE_RADIUS			5.f
+#define TRACE_DISTANCE			10.f
+#define TRACE_ATTEMPT_COUNT		3
+
+void CPoltergeist::PhysicalImpulse(const Fvector& position)
+{
+	m_nearest.clear_not_free();
+	Level().ObjectSpace.GetNearest(m_nearest, position, IMPULSE_RADIUS, NULL);
+	//xr_vector<CObject*> &m_nearest = Level().ObjectSpace.q_nearest;
+	if (m_nearest.empty())			return;
+
+	u32 index = Random.randI(m_nearest.size());
+
+	CPhysicsShellHolder* obj = smart_cast<CPhysicsShellHolder*>(m_nearest[index]);
+	if (!obj || !obj->m_pPhysicsShell) return;
+
+	Fvector dir;
+	dir.sub(obj->Position(), position);
+	dir.normalize();
+
+	CPhysicsElement* E = obj->m_pPhysicsShell->get_ElementByStoreOrder(static_cast<u16>(Random.randI(obj->m_pPhysicsShell->get_ElementsNumber())));
+	//E->applyImpulse(dir,IMPULSE * obj->m_pPhysicsShell->getMass());
+	E->applyImpulse(dir, IMPULSE * E->getMass());
+}
+
+void CPoltergeist::StrangeSounds(const Fvector& position)
+{
+	if (m_strange_sound._feedback()) return;
+
+	for (u32 i = 0; i < TRACE_ATTEMPT_COUNT; i++) {
+		Fvector dir;
+		dir.random_dir();
+
+		collide::rq_result	l_rq;
+		if (Level().ObjectSpace.RayPick(position, dir, TRACE_DISTANCE, collide::rqtStatic, l_rq, NULL)) {
+			if (l_rq.range < TRACE_DISTANCE) {
+
+				// Получить пару материалов
+				CDB::TRI* pTri = Level().ObjectSpace.GetStaticTris() + l_rq.element;
+				SGameMtlPair* mtl_pair = GMLib.GetMaterialPair(material().self_material_idx(), pTri->material);
+				if (!mtl_pair) continue;
+
+				// Играть звук
+				if (!mtl_pair->CollideSounds.empty()) {
+					CLONE_MTL_SOUND(m_strange_sound, mtl_pair, CollideSounds);
+					Fvector pos;
+					pos.mad(position, dir, ((l_rq.range - 0.1f > 0) ? l_rq.range - 0.1f : l_rq.range));
+					m_strange_sound.play_at_pos(this, pos);
+					return;
+				}
+			}
+		}
+	}
 }
 
 #ifdef DEBUG

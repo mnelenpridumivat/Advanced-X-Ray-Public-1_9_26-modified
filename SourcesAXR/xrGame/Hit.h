@@ -1,5 +1,7 @@
 #pragma once
 
+#include "alife_space.h"
+
 struct SHit
 {
 	SHit(float powerA, Fvector &dirA, CObject *whoA, u16 elementA, Fvector p_in_bone_spaceA,\

@@ -1,10 +1,16 @@
 #include "stdafx.h"
-#include "poltergeist.h"
+
+#include "ai_sounds.h"
+#include "PolterInterface.h"
+#include "PolterTele.h"
 #include "../../../PhysicsShellHolder.h"
 #include "../../../level.h"
 #include "../../../actor.h"
 #include "../../../../xrPhysics/icolisiondamageinfo.h"
-CPolterTele::CPolterTele(CPoltergeist *polter) : inherited (polter),m_pmt_object_collision_damage(0.5f)
+#include "ai/monsters/telekinesis.h"
+#include "ai/monsters/BaseMonster/base_monster.h"
+
+CPolterTele::CPolterTele(IPolterInterface* polter) : inherited (polter),m_pmt_object_collision_damage(0.5f)
 {
 }
 
@@ -47,16 +53,16 @@ void CPolterTele::update_schedule()
 {
 	inherited::update_schedule();
 	
-	if (!m_object->g_Alive() || m_object->get_actor_ignore())
+	if (!m_object->GetMonster()->g_Alive() || m_object->GetActorIgnore())
 		return;
 
 	Fvector const actor_pos				=	Actor()->Position();
-	float const dist2actor				=	actor_pos.distance_to(m_object->Position());
+	float const dist2actor				=	actor_pos.distance_to(m_object->GetMonster()->Position());
 
 	if ( dist2actor > m_pmt_distance ) 
 		return;
 
-	if ( m_object->get_current_detection_level() < m_object->get_detection_success_level() )
+	if ( m_object->GetCurrentDetectionLevel() < m_object->GetDetectionSuccessLevel() )
 		return;
 
 	switch (m_state) {
@@ -70,7 +76,7 @@ void CPolterTele::update_schedule()
 		}
 
 		if (m_state == eStartRaiseObjects) {
-			if (m_object->CTelekinesis::get_objects_count() >= m_pmt_object_count) {
+			if (m_object->GetTelekinesis()->get_objects_count() >= m_pmt_object_count) {
 				m_state		= eRaisingObjects;
 				m_time		= time();
 			}
@@ -92,7 +98,7 @@ void CPolterTele::update_schedule()
 			m_time_next	= m_pmt_time_to_wait_in_objects / 2 + Random.randI(m_pmt_time_to_wait_in_objects / 2);
 		}
 		
-		if (m_object->CTelekinesis::get_objects_count() == 0) {
+		if (m_object->GetTelekinesis()->get_objects_count() == 0) {
 			m_state		= eWait;
 			m_time			= time();
 		}
@@ -189,8 +195,8 @@ void CPolterTele::tele_find_objects(xr_vector<CObject*> &objects, const Fvector 
 			(obj->spawn_ini() && obj->spawn_ini()->section_exist("ph_heavy")) || 
 			(obj->m_pPhysicsShell->getMass() < m_pmt_object_min_mass) || 
 			(obj->m_pPhysicsShell->getMass() > m_pmt_object_max_mass) || 
-			(obj == m_object) || 
-			m_object->CTelekinesis::is_active_object(obj) || (pSettings->line_exist(obj->cNameSect().c_str(), "quest_item") &&
+			(obj == m_object->GetMonster()) || 
+			m_object->GetTelekinesis()->is_active_object(obj) || (pSettings->line_exist(obj->cNameSect().c_str(), "quest_item") &&
 				pSettings->r_bool(obj->cNameSect().c_str(), "quest_item")) ||
 			!obj->m_pPhysicsShell->get_ApplyByGravity()) continue;
 
@@ -213,20 +219,20 @@ bool CPolterTele::tele_raise_objects()
 	tele_find_objects	(tele_objects, Actor()->Position());
 
 	// получить список объектов вокруг монстра
-	tele_find_objects	(tele_objects, m_object->Position());
+	tele_find_objects	(tele_objects, m_object->GetMonster()->Position());
 
 	// получить список объектов между монстром и врагом
-	float dist			= Actor()->Position().distance_to(m_object->Position());
+	float dist			= Actor()->Position().distance_to(m_object->GetMonster()->Position());
 	Fvector dir;
-	dir.sub				(Actor()->Position(), m_object->Position());
+	dir.sub				(Actor()->Position(), m_object->GetMonster()->Position());
 	dir.normalize		();
 
 	Fvector pos;
-	pos.mad				(m_object->Position(), dir, dist / 2.f);
+	pos.mad				(m_object->GetMonster()->Position(), dir, dist / 2.f);
 	tele_find_objects	(tele_objects, pos);	
 
 	// сортировать и оставить только необходимое количество объектов
-	std::sort(tele_objects.begin(),tele_objects.end(),best_object_predicate2(m_object->Position(), Actor()->Position()));
+	std::sort(tele_objects.begin(),tele_objects.end(),best_object_predicate2(m_object->GetMonster()->Position(), Actor()->Position()));
 	
 	// оставить уникальные объекты
 	tele_objects.erase	(
@@ -256,7 +262,7 @@ bool CPolterTele::tele_raise_objects()
 		// применить телекинез на объект
 		bool	rotate = false;
 
-		CTelekineticObject		*tele_obj = m_object->CTelekinesis::activate		(obj, m_pmt_raise_speed, m_pmt_object_height, m_pmt_time_object_keep, rotate);
+		CTelekineticObject		*tele_obj = m_object->GetTelekinesis()->activate		(obj, m_pmt_raise_speed, m_pmt_object_height, m_pmt_time_object_keep, rotate);
 		tele_obj->set_sound		(m_sound_tele_hold,m_sound_tele_throw);
 
 		return true;
@@ -289,8 +295,8 @@ struct SCollisionHitCallback:
 
 void CPolterTele::tele_fire_objects()
 {
-	for (u32 i=0; i < m_object->CTelekinesis::get_objects_total_count();i++) {
-		CTelekineticObject tele_object = m_object->CTelekinesis::get_object_by_index(i);
+	for (u32 i=0; i < m_object->GetTelekinesis()->get_objects_total_count();i++) {
+		CTelekineticObject tele_object = m_object->GetTelekinesis()->get_object_by_index(i);
 		//if (tele_object.get_state() != TS_Fire) {
 		if ((tele_object.get_state() == TS_Raise) || (tele_object.get_state() == TS_Keep))  {
 			Fvector					enemy_pos;
@@ -299,7 +305,7 @@ void CPolterTele::tele_fire_objects()
 			
 			VERIFY( hobj );
 			hobj->set_collision_hit_callback( xr_new<SCollisionHitCallback>( hobj, m_pmt_object_collision_damage ) );
-			m_object->CTelekinesis::fire_t	(tele_object.get_object(),enemy_pos, tele_object.get_object()->Position().distance_to(enemy_pos) / m_pmt_fly_velocity);
+			m_object->GetTelekinesis()->fire_t	(tele_object.get_object(),enemy_pos, tele_object.get_object()->Position().distance_to(enemy_pos) / m_pmt_fly_velocity);
 			return;
 		}
 	}
