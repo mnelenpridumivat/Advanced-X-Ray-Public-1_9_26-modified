@@ -10,6 +10,8 @@
 #define XRAY_ALIFE_SPACE
 //#include "../xrcore/_std_extensions.h"
 
+//#define override
+
 // ALife objects, events and tasks
 #define ALIFE_VERSION				0x0006
 #define ALIFE_CHUNK_DATA			0x0000

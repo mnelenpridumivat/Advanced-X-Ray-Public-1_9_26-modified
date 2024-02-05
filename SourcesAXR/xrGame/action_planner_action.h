@@ -40,7 +40,7 @@ public:
 public:
 	IC					CActionPlannerAction	(_object_type *object = 0, LPCSTR action_name = "");
 	~CActionPlannerAction	() override;
-	void		setup					(_object_type *object, CPropertyStorage *storage) override;
+	virtual void		setup					(_object_type *object, CPropertyStorage *storage) override;
 	void		initialize				() override;
 	void		execute					() override;
 	void		finalize				() override;
