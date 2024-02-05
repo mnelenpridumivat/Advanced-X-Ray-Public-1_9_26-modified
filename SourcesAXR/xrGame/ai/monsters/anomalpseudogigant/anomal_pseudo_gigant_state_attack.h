@@ -10,13 +10,13 @@ class	CStateAnomalPseudoGigantAttack : public CState<Object>
 public:
 						CStateAnomalPseudoGigantAttack			(Object *obj);
 
-	virtual	void		initialize					();
-	virtual	void		execute						();
-	virtual void		remove_links				(CObject* object) { inherited::remove_links(object); }
+	void		initialize					() override;
+	void		execute						() override;
+	void		remove_links				(CObject* object) override { inherited::remove_links(object); }
 
-	virtual void		finalize					();
-	virtual void		critical_finalize			();
-	virtual void		setup_substates();
+	void		finalize					() override;
+	void		critical_finalize			() override;
+	void		setup_substates() override;
 
 private:
 	bool				m_wait_state_end;

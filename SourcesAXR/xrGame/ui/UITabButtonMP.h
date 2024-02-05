@@ -6,10 +6,10 @@ class CUITabButtonMP : public CUITabButton
 	typedef CUITabButton inherited;
 public:
 					CUITabButtonMP			();
-	virtual void 	Draw					();
-	virtual void 	Update					();
-	virtual void 	UpdateTextAlign			();	
-	virtual void 	SendMessage				(CUIWindow* pWnd, s16 msg, void* pData);
+	void 	Draw					() override;
+	void 	Update					() override;
+	virtual void 	UpdateTextAlign			();
+	void 	SendMessage				(CUIWindow* pWnd, s16 msg, void* pData) override;
 
 	virtual bool 	IsEnabled				()					{ return true; }
 			void 	SetOrientation			(bool bVert)		{m_orientationVertical = bVert;};

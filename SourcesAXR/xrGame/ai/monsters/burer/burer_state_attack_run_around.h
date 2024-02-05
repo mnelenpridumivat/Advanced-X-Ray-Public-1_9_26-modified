@@ -12,12 +12,12 @@ class	CStateBurerAttackRunAround : public CState<_Object> {
 
 public:
 						CStateBurerAttackRunAround	(_Object *obj);
-	virtual void		initialize					();
-	virtual void		execute						();
+	void		initialize					() override;
+	void		execute						() override;
 
-	virtual bool		check_start_conditions		();
-	virtual bool		check_completion			();
-	virtual void		remove_links				(CObject* object) { inherited::remove_links(object);}
+	bool		check_start_conditions		() override;
+	bool		check_completion			() override;
+	void		remove_links				(CObject* object) override { inherited::remove_links(object);}
 };
 
 #include "burer_state_attack_run_around_inline.h"

@@ -20,15 +20,15 @@ private:
 	void						FirePoint						(Fvector&);
 	void						ParticlesMatrix					(Fmatrix&);
 public:
-	virtual void				UpdateCL						();
-	virtual void				Load							(LPCSTR section);
-	virtual BOOL				net_Spawn						(CSE_Abstract* DC);
-	virtual void				net_Destroy						();
+	void				UpdateCL						() override;
+	void				Load							(LPCSTR section) override;
+	BOOL				net_Spawn						(CSE_Abstract* DC) override;
+	void				net_Destroy						() override;
 
-	virtual void				OnStateSwitch					(u32 S);
-	virtual void				OnAnimationEnd					(u32 state);
+	void				OnStateSwitch					(u32 S) override;
+	void				OnAnimationEnd					(u32 state) override;
 
-	virtual	void				UpdateXForm						();
+	void				UpdateXForm						() override;
 
 	void						ActivateFlare					();
 	void						DropFlare						();

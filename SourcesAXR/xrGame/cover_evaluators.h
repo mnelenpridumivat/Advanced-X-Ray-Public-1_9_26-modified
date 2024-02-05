@@ -89,8 +89,8 @@ public:
 	IC					CCoverEvaluatorCloseToEnemy	(CRestrictedObject *object);
 	IC		void		initialize			(const Fvector &start_position, bool fake_call = false);
 	IC		void		setup				(const Fvector &enemy_position, float min_enemy_distance, float	max_enemy_distance, float deviation = 0.f);
-	virtual	void		evaluate_cover		(const CCoverPoint *cover_point, float weight);
-	virtual	void		evaluate_smart_cover(smart_cover::cover const *smart_cover, float const &weight);
+	void		evaluate_cover		(const CCoverPoint *cover_point, float weight) override;
+	void		evaluate_smart_cover(smart_cover::cover const *smart_cover, float const &weight) override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -103,8 +103,8 @@ protected:
 
 public:
 	IC					CCoverEvaluatorFarFromEnemy	(CRestrictedObject *object);
-	virtual	void		evaluate_cover		(const CCoverPoint *cover_point, float weight);
-	virtual	void		evaluate_smart_cover(smart_cover::cover const *smart_cover, float const &weight);
+	void		evaluate_cover		(const CCoverPoint *cover_point, float weight) override;
+	void		evaluate_smart_cover(smart_cover::cover const *smart_cover, float const &weight) override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -120,8 +120,8 @@ private:
 
 public:
 	IC					CCoverEvaluatorBest	(CRestrictedObject *object);
-	virtual	void		evaluate_cover		(const CCoverPoint *cover_point, float weight);
-	virtual	void		evaluate_smart_cover(smart_cover::cover const *smart_cover, float const &weight);
+	void		evaluate_cover		(const CCoverPoint *cover_point, float weight) override;
+	void		evaluate_smart_cover(smart_cover::cover const *smart_cover, float const &weight) override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -142,8 +142,8 @@ public:
 	IC					CCoverEvaluatorAngle(CRestrictedObject *object);
 	IC		void		setup				(const Fvector &enemy_position, float min_enemy_distance, float	max_enemy_distance, u32 level_vertex_id);
 			void		initialize			(const Fvector &start_position, bool fake_call = false);
-	virtual	void		evaluate_cover		(const CCoverPoint *cover_point, float weight);
-	virtual	void		evaluate_smart_cover(smart_cover::cover const *smart_cover, float const &weight);
+	void		evaluate_cover		(const CCoverPoint *cover_point, float weight) override;
+	void		evaluate_smart_cover(smart_cover::cover const *smart_cover, float const &weight) override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -160,8 +160,8 @@ protected:
 public:
 	IC					CCoverEvaluatorSafe	(CRestrictedObject *object);
 	IC		void		setup				(float min_distance);
-	virtual	void		evaluate_cover		(const CCoverPoint *cover_point, float weight);
-	virtual	void		evaluate_smart_cover(smart_cover::cover const *smart_cover, float const &weight);
+	void		evaluate_cover		(const CCoverPoint *cover_point, float weight) override;
+	void		evaluate_smart_cover(smart_cover::cover const *smart_cover, float const &weight) override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -180,8 +180,8 @@ private:
 public:
 	IC					CCoverEvaluatorAmbush	(CRestrictedObject *object);
 			void		setup					(const Fvector &my_position, const Fvector &enemy_position, float min_enemy_distance);
-	virtual	void		evaluate_cover			(const CCoverPoint *cover_point, float weight);
-	virtual	void		evaluate_smart_cover	(smart_cover::cover const *smart_cover, float const &weight);
+	void		evaluate_cover			(const CCoverPoint *cover_point, float weight) override;
+	void		evaluate_smart_cover	(smart_cover::cover const *smart_cover, float const &weight) override;
 };
 
 #include "cover_evaluators_inline.h"

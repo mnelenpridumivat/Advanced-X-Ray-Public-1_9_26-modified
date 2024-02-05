@@ -147,8 +147,8 @@ private:
 
 	typedef associative_vector<xrClientData const *, buyMenuPlayerState> TBuyMenuPlayerStates;
 	TBuyMenuPlayerStates				m_buyMenuPlayerStates;
-	virtual void OnPlayerOpenBuyMenu(xrClientData const * pclient);				//this method invokes only if player dead
-	virtual void OnPlayerCloseBuyMenu(xrClientData const * pclient);			//if client state buyMenuPlayerReadyToSpawn respawn player
+	void OnPlayerOpenBuyMenu(xrClientData const * pclient) override;				//this method invokes only if player dead
+	void OnPlayerCloseBuyMenu(xrClientData const * pclient) override;			//if client state buyMenuPlayerReadyToSpawn respawn player
 	void OnCloseBuyMenuFromAll();										//just clears buy menu player states associative vector
 	bool CheckIfPlayerInBuyMenu(xrClientData const * pclient);
 	void SetReadyToSpawnPlayer(xrClientData const * pclient);
@@ -192,7 +192,7 @@ private:
 	void ResetTimeoutInvincibility(u32 currentTime);
 	bool ResetInvincibility(ClientID const clientId);
 
-	BOOL	isFriendlyFireEnabled	();
+	BOOL	isFriendlyFireEnabled	() override;
 	float	GetFriendlyFire			();
 	int		Get_TeamKillLimit		();
 	BOOL	Get_TeamKillPunishment	();
@@ -212,55 +212,55 @@ private:
 	s32		Get_ScoreLimit();
 	BOOL	Get_BearerCanSprint				();
 protected:
-	virtual	void ReadOptions(shared_str &options);
-	virtual void FillDeathActorRejectItems(CSE_ActorMP *actor, xr_vector<CSE_Abstract*> & to_reject);
+	void ReadOptions(shared_str &options) override;
+	void FillDeathActorRejectItems(CSE_ActorMP *actor, xr_vector<CSE_Abstract*> & to_reject) override;
 	shared_str m_not_free_ammo_str;
-	virtual	bool CanChargeFreeAmmo(char const * ammo_section);
-	virtual	void WriteGameState(CInifile& ini, LPCSTR sect, bool bRoundResult);
+	bool CanChargeFreeAmmo(char const * ammo_section) override;
+	void WriteGameState(CInifile& ini, LPCSTR sect, bool bRoundResult) override;
 public:
 	game_sv_CaptureTheArtefact();
-	virtual ~game_sv_CaptureTheArtefact();
-	
-	virtual LPCSTR type_name() const;
-	virtual	void Create(shared_str &options);
-	virtual void OnPlayerConnect(ClientID id_who);
-	virtual	void OnPlayerDisconnect(ClientID id_who, LPSTR Name, u16 GameID);
-	virtual	void OnPlayerConnectFinished(ClientID id_who);
-	virtual	void OnPlayerHitted(NET_Packet P);
-	
-	virtual	void OnPlayerReady(ClientID id_who);
-		
-	virtual	void OnPlayerSelectSkin(NET_Packet& P, ClientID sender);
-	virtual	void OnPlayerSelectTeam(NET_Packet& P, ClientID sender);
-	virtual	void OnPlayerSelectSpectator(NET_Packet& P, ClientID sender);
-	virtual	void OnRoundStart();
-	virtual	void OnRoundEnd();
+	~game_sv_CaptureTheArtefact() override;
 
-	virtual BOOL OnPreCreate	(CSE_Abstract* E);
-	virtual void OnCreate		(u16 eid_who);
-	virtual void OnPostCreate	(u16 id_who);
-	virtual	void OnDestroyObject(u16 eid_who);
-	
-	virtual	void Update();
-	
-	virtual	void net_Export_State(NET_Packet& P, ClientID id_to);
-	virtual	void net_Export_Update(NET_Packet& P, ClientID id_to, ClientID id);
+	LPCSTR type_name() const override;
+	void Create(shared_str &options) override;
+	void OnPlayerConnect(ClientID id_who) override;
+	void OnPlayerDisconnect(ClientID id_who, LPSTR Name, u16 GameID) override;
+	void OnPlayerConnectFinished(ClientID id_who) override;
+	void OnPlayerHitted(NET_Packet P) override;
+
+	void OnPlayerReady(ClientID id_who) override;
+
+	void OnPlayerSelectSkin(NET_Packet& P, ClientID sender) override;
+	void OnPlayerSelectTeam(NET_Packet& P, ClientID sender) override;
+	void OnPlayerSelectSpectator(NET_Packet& P, ClientID sender) override;
+	void OnRoundStart() override;
+	void OnRoundEnd() override;
+
+	BOOL OnPreCreate	(CSE_Abstract* E) override;
+	void OnCreate		(u16 eid_who) override;
+	void OnPostCreate	(u16 id_who) override;
+	void OnDestroyObject(u16 eid_who) override;
+
+	void Update() override;
+
+	void net_Export_State(NET_Packet& P, ClientID id_to) override;
+	void net_Export_Update(NET_Packet& P, ClientID id_to, ClientID id) override;
 	
 	virtual	void LoadSkinsForTeam(const shared_str& caSection, TEAM_SKINS_NAMES* pTeamSkins);
 	virtual void LoadDefItemsForTeam(const shared_str& caSection, DEF_ITEMS_LIST* pDefItems);
 	virtual void SpawnWeaponsForActor(CSE_Abstract* pE, game_PlayerState*	ps);
-	virtual void OnPlayerKillPlayer(game_PlayerState* ps_killer, game_PlayerState* ps_killed, KILL_TYPE KillType, SPECIAL_KILL_TYPE SpecialKillType, CSE_Abstract* pWeaponA);
-	
-	virtual void OnPlayerHitPlayer(u16 id_hitter, u16 id_hitted, NET_Packet& P);
+	void OnPlayerKillPlayer(game_PlayerState* ps_killer, game_PlayerState* ps_killed, KILL_TYPE KillType, SPECIAL_KILL_TYPE SpecialKillType, CSE_Abstract* pWeaponA) override;
+
+	void OnPlayerHitPlayer(u16 id_hitter, u16 id_hitted, NET_Packet& P) override;
 	virtual void OnPlayerHitPlayer_Case(game_PlayerState* ps_hitter, game_PlayerState* ps_hitted, SHit* pHitS);
 
-	virtual	BOOL OnTouch(u16 eid_who, u16 eid_target, BOOL bForced = FALSE);			// TRUE=allow ownership, FALSE=denied
-	virtual	void OnDetach(u16 eid_who, u16 eid_target);
-	virtual	BOOL OnActivate(u16 eid_who, u16 eid_target);
-	virtual	void OnEvent(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender );
-	virtual	void RespawnPlayer(ClientID id_who, bool NoSpectator);
-	virtual void OnPlayerBuySpawn(ClientID sender);
-	virtual	bool Player_Check_Rank(game_PlayerState* ps);
+	BOOL OnTouch(u16 eid_who, u16 eid_target, BOOL bForced = FALSE) override;			// TRUE=allow ownership, FALSE=denied
+	void OnDetach(u16 eid_who, u16 eid_target) override;
+	BOOL OnActivate(u16 eid_who, u16 eid_target) override;
+	void OnEvent(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender ) override;
+	void RespawnPlayer(ClientID id_who, bool NoSpectator) override;
+	void OnPlayerBuySpawn(ClientID sender) override;
+	bool Player_Check_Rank(game_PlayerState* ps) override;
 
 			void SwapTeams();
 };

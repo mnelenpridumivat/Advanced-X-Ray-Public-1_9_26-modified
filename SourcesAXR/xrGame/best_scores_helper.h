@@ -14,19 +14,19 @@ public:
 							best_scores_helper			(game_state_accumulator* pstate);
 	virtual					~best_scores_helper			();
 
-	virtual bool			OnWeapon_Fire				(u16 sender, u16 sender_weapon_id) { return false;};
-	virtual	bool			OnBullet_Fire				(u16 sender, u16 sender_weapon_id, const Fvector& position, const Fvector& direction) { return false; };
-	virtual bool			OnBullet_Hit				(CObject const * hitter, CObject const * victim, CObject const * weapon, u16 const bone) { return false; };
-	virtual bool			OnArtefactSpawned			() { return false; };
-	virtual bool			OnPlayerTakeArtefact		(game_PlayerState const * ps) { return false; };
-	virtual bool			OnPlayerDropArtefact		(game_PlayerState const * ps) { return false; };
-	virtual bool			OnPlayerBringArtefact		(game_PlayerState const * ps);
-	virtual bool			OnPlayerSpawned				(game_PlayerState const * ps);
-	virtual bool			OnPlayerKilled				(u16 killer_id, u16 target_id, u16 weapon_id, std::pair<KILL_TYPE, SPECIAL_KILL_TYPE> kill_type);
-	virtual bool			OnPlayerChangeTeam			(s8 team) { return false; };
-	virtual bool			OnRoundEnd					() { return false; };
-	virtual bool			OnRoundStart				();
-	virtual	bool			OnPlayerRankChanged			() { return false; };
+	bool			OnWeapon_Fire				(u16 sender, u16 sender_weapon_id) override { return false;};
+	bool			OnBullet_Fire				(u16 sender, u16 sender_weapon_id, const Fvector& position, const Fvector& direction) override { return false; };
+	bool			OnBullet_Hit				(CObject const * hitter, CObject const * victim, CObject const * weapon, u16 const bone) override { return false; };
+	bool			OnArtefactSpawned			() override { return false; };
+	bool			OnPlayerTakeArtefact		(game_PlayerState const * ps) override { return false; };
+	bool			OnPlayerDropArtefact		(game_PlayerState const * ps) override { return false; };
+	bool			OnPlayerBringArtefact		(game_PlayerState const * ps) override;
+	bool			OnPlayerSpawned				(game_PlayerState const * ps) override;
+	bool			OnPlayerKilled				(u16 killer_id, u16 target_id, u16 weapon_id, std::pair<KILL_TYPE, SPECIAL_KILL_TYPE> kill_type) override;
+	bool			OnPlayerChangeTeam			(s8 team) override { return false; };
+	bool			OnRoundEnd					() override { return false; };
+	bool			OnRoundStart				() override;
+	bool			OnPlayerRankChanged			() override { return false; };
 
 			void			fill_best_results			(gamespy_profile::all_best_scores_t & dest_br);
 private:

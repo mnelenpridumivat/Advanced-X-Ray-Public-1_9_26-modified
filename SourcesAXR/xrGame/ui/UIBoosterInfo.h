@@ -12,7 +12,7 @@ class CUIBoosterInfo : public CUIWindow
 {
 public:
 					CUIBoosterInfo		();
-	virtual			~CUIBoosterInfo		();
+					~CUIBoosterInfo		() override;
 			void	InitFromXml				(CUIXml& xml);
 			void	SetInfo					(CInventoryItem& pInvItem);
 
@@ -101,7 +101,7 @@ class UIBoosterInfoItem : public CUIWindow
 {
 public:
 				UIBoosterInfoItem	();
-	virtual		~UIBoosterInfoItem();
+				~UIBoosterInfoItem() override;
 		
 		void	Init				( CUIXml& xml, LPCSTR section );
 		void	SetCaption			( LPCSTR name );

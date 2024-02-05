@@ -7,16 +7,16 @@ class CWeaponPistol :
 	typedef CWeaponCustomPistol inherited;
 public:
 					CWeaponPistol	();
-	virtual			~CWeaponPistol	();
-	
-	virtual void	switch2_Reload	();
+	~CWeaponPistol	() override;
 
-	virtual void	OnAnimationEnd	(u32 state);
-	virtual void	net_Destroy		();
-	virtual void	OnH_B_Chield	();
+	void	switch2_Reload	() override;
 
-protected:	
-	virtual bool	AllowFireWhileWorking() {return true;}
+	void	OnAnimationEnd	(u32 state) override;
+	void	net_Destroy		() override;
+	void	OnH_B_Chield	() override;
+
+protected:
+	bool	AllowFireWhileWorking() override {return true;}
 
 	ESoundTypes			m_eSoundClose;
 };

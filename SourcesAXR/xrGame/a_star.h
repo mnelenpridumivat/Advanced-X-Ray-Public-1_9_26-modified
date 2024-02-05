@@ -127,7 +127,7 @@ protected:
 
 public:
 	IC							CAStar			(const u32 max_vertex_count);
-	virtual						~CAStar			();
+	~CAStar			() override;
 	template <typename _PathManager>
 	IC		bool				find			(_PathManager &path_manager);
 };

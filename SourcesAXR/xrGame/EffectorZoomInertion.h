@@ -35,12 +35,12 @@ class CEffectorZoomInertion : public CEffectorCam
 	void			LoadParams			(LPCSTR Section, LPCSTR Prefix);
 public:
 	CEffectorZoomInertion				();
-	virtual ~CEffectorZoomInertion		();
+	~CEffectorZoomInertion		() override;
 
 			void	Load				();
 			void	SetParams			(float disp);
 
-	virtual BOOL	ProcessCam			(SCamEffectorInfo& info);
+	BOOL	ProcessCam			(SCamEffectorInfo& info) override;
 	virtual	void	SetRndSeed			(s32 Seed) { m_Random.seed(Seed); };
 	virtual	void	Init				(CWeaponMagazined*	pWeapon);
 

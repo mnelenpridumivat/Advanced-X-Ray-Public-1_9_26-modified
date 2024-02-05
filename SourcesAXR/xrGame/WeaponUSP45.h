@@ -9,7 +9,7 @@ class CWeaponUSP45 :
 	typedef CWeaponPistol inherited;
 public:
 				CWeaponUSP45();
-	virtual		~CWeaponUSP45();
+	~CWeaponUSP45() override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

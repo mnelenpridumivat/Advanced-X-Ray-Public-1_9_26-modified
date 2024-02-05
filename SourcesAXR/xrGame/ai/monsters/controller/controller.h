@@ -71,33 +71,33 @@ public:
 
 public:
 					CController			();
-	virtual			~CController		();	
+	~CController		() override;
 
-	virtual void	Load				(LPCSTR section);
-	virtual void	reload				(LPCSTR section);
-	virtual void	reinit				();
-	virtual void	UpdateCL			();
-	virtual void	shedule_Update		(u32 dt);
-	virtual void	Die					(CObject* who);
+	void	Load				(LPCSTR section) override;
+	void	reload				(LPCSTR section) override;
+	void	reinit				() override;
+	void	UpdateCL			() override;
+	void	shedule_Update		(u32 dt) override;
+	void	Die					(CObject* who) override;
 
-	virtual void	net_Destroy			();
-	virtual BOOL	net_Spawn			(CSE_Abstract *DC);
-	virtual void	net_Relcase			(CObject *O);
+	void	net_Destroy			() override;
+	BOOL	net_Spawn			(CSE_Abstract *DC) override;
+	void	net_Relcase			(CObject *O) override;
 
-	virtual	void	CheckSpecParams		(u32 spec_params);
-	virtual void	InitThink			();
+	void	CheckSpecParams		(u32 spec_params) override;
+	void	InitThink			() override;
 
-	virtual void	create_base_controls();	
-	
-	virtual const MonsterSpace::SBoneRotation &head_orientation	() const;
+	void	create_base_controls() override;
 
-	virtual void	TranslateActionToPathParams	();
+	const MonsterSpace::SBoneRotation &head_orientation	() const override;
 
-	virtual bool	ability_pitch_correction () {return false;}
+	void	TranslateActionToPathParams	() override;
+
+	bool	ability_pitch_correction () override {return false;}
 
 	//-------------------------------------------------------------------
 
-	virtual	bool	is_relation_enemy	(const CEntityAlive *tpEntityAlive) const;
+	bool	is_relation_enemy	(const CEntityAlive *tpEntityAlive) const override;
 	xr_vector<shared_str>				m_friend_community_overrides;
 	void								load_friend_community_overrides	(LPCSTR section);
 	bool								is_community_friend_overrides	(const CEntityAlive *tpEntityAlive) const;
@@ -153,22 +153,22 @@ public:
 	} m_mental_state;
 
 	void				set_mental_state			(EMentalState state);
-	virtual void		HitEntity					(const CEntity *pEntity, float fDamage, 
-													 float impulse, Fvector &dir, ALife::EHitType hit_type, bool draw_hit_marks);
+	void		HitEntity					(const CEntity *pEntity, float fDamage, 
+								              float impulse, Fvector &dir, ALife::EHitType hit_type, bool draw_hit_marks) override;
 
 public:
-	virtual bool		use_center_to_aim			() const {return true;}
+	bool		use_center_to_aim			() const override {return true;}
 
 	SAnimationTripleData anim_triple_control;
 
-	virtual	char*		get_monster_class_name		() { return "controller"; }
+	char*		get_monster_class_name		() override { return "controller"; }
 
 private:
 	float				m_stamina_hit;
 
 
 #ifdef DEBUG
-	virtual CBaseMonster::SDebugInfo show_debug_info();
+	CBaseMonster::SDebugInfo show_debug_info() override;
 
 #endif
 
@@ -180,7 +180,7 @@ private:
 #endif
 
 public:
-	virtual bool					run_home_point_when_enemy_inaccessible () const { return false; }
+	bool					run_home_point_when_enemy_inaccessible () const override { return false; }
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 

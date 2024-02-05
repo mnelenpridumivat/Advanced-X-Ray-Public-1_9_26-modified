@@ -134,7 +134,7 @@ private:
 
 public:
 							CEntityCondition		(CEntityAlive *object);
-	virtual					~CEntityCondition		();
+	~CEntityCondition		() override;
 
 	virtual void			LoadCondition			(LPCSTR section);
 	virtual void			LoadTwoHitsDeathParams	(LPCSTR section);

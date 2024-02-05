@@ -55,66 +55,66 @@ protected:
 	void							UpdatePlayersNotSendedMoveRespond();
 	void							ReplicatePlayersStateToPlayer(ClientID CID);
 
-	virtual		void				check_Player_for_Invincibility	(game_PlayerState* ps);
-	virtual		void				Check_ForClearRun		(game_PlayerState* ps);
+	void				check_Player_for_Invincibility	(game_PlayerState* ps) override;
+	void				Check_ForClearRun		(game_PlayerState* ps) override;
 
-	virtual		void				ReadOptions				(shared_str &options);
-	virtual		void				ConsoleCommands_Create	();
-	virtual		void				ConsoleCommands_Clear	();
+	void				ReadOptions				(shared_str &options) override;
+	void				ConsoleCommands_Create	() override;
+	void				ConsoleCommands_Clear	() override;
 
-	virtual		bool				Player_Check_Rank		(game_PlayerState* ps);
+	bool				Player_Check_Rank		(game_PlayerState* ps) override;
 	//virtual		void			DestroyAllPlayerItems(ClientID id_who);
 
 	bool		assign_rp_tmp		(game_PlayerState* ps_who, xr_vector<RPoint>& points_vec, xr_vector<u32>& dest, xr_vector<u32>& rpIDEnemy, xr_vector<ClientID>& EnemyIt,  bool use_safe_dist);
 public:
 
 									game_sv_ArtefactHunt	(){m_type = eGameIDArtefactHunt;}
-	virtual		void				Create					(shared_str& options);
+	void				Create					(shared_str& options) override;
 
-	virtual		LPCSTR				type_name			() const { return "artefacthunt";};
+	LPCSTR				type_name			() const override { return "artefacthunt";};
 	// Events	
-	virtual		void				OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender );
-	virtual		void				OnRoundStart			();							// старт раунда
-	virtual		KILL_RES			GetKillResult			(game_PlayerState* pKiller, game_PlayerState* pVictim);
-	virtual		bool				OnKillResult			(KILL_RES KillResult, game_PlayerState* pKiller, game_PlayerState* pVictim);
-	virtual		void				OnGiveBonus				(KILL_RES KillResult, game_PlayerState* pKiller, game_PlayerState* pVictim, KILL_TYPE KillType, SPECIAL_KILL_TYPE SpecialKillType, CSE_Abstract* pWeaponA);
-	virtual		void				OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_Packet& P);
-	virtual		void				OnPlayerHitPlayer_Case	(game_PlayerState* ps_hitter, game_PlayerState* ps_hitted, SHit* pHitS);	
-	virtual		void				OnPlayerKillPlayer		(game_PlayerState* ps_killer, game_PlayerState* ps_killed, KILL_TYPE KillType, SPECIAL_KILL_TYPE SpecialKillType, CSE_Abstract* pWeaponA);
-	virtual		void				OnPlayerFire			(ClientID id_who, NET_Packet &P) {};
-	virtual		void				Victim_Exp				(game_PlayerState* pVictim) {};
-	virtual		void				UpdateTeamScore			(game_PlayerState* ps_killer, s16 OldKills) {};
-	virtual		void				OnPlayerReady			(ClientID id_who);
-	virtual		void				OnPlayerBuySpawn		(ClientID sender);
+	void				OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender ) override;
+	void				OnRoundStart			() override;							// старт раунда
+	KILL_RES			GetKillResult			(game_PlayerState* pKiller, game_PlayerState* pVictim) override;
+	bool				OnKillResult			(KILL_RES KillResult, game_PlayerState* pKiller, game_PlayerState* pVictim) override;
+	void				OnGiveBonus				(KILL_RES KillResult, game_PlayerState* pKiller, game_PlayerState* pVictim, KILL_TYPE KillType, SPECIAL_KILL_TYPE SpecialKillType, CSE_Abstract* pWeaponA) override;
+	void				OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_Packet& P) override;
+	void				OnPlayerHitPlayer_Case	(game_PlayerState* ps_hitter, game_PlayerState* ps_hitted, SHit* pHitS) override;
+	void				OnPlayerKillPlayer		(game_PlayerState* ps_killer, game_PlayerState* ps_killed, KILL_TYPE KillType, SPECIAL_KILL_TYPE SpecialKillType, CSE_Abstract* pWeaponA) override;
+	void				OnPlayerFire			(ClientID id_who, NET_Packet &P) override {};
+	void				Victim_Exp				(game_PlayerState* pVictim) override {};
+	void				UpdateTeamScore			(game_PlayerState* ps_killer, s16 OldKills) override {};
+	void				OnPlayerReady			(ClientID id_who) override;
+	void				OnPlayerBuySpawn		(ClientID sender) override;
 
-	virtual		void				OnTimelimitExceed		();
+	void				OnTimelimitExceed		() override;
 
-	virtual		void				assign_RP				(CSE_Abstract* E, game_PlayerState* ps_who);
-	virtual		u32					RP_2_Use				(CSE_Abstract* E);	
+	void				assign_RP				(CSE_Abstract* E, game_PlayerState* ps_who) override;
+	u32					RP_2_Use				(CSE_Abstract* E) override;	
 	virtual		void				CheckRPUnblock			();
 	virtual		void				SetRP					(CSE_Abstract* E, RPoint* pRP);
 
-	virtual		void				LoadTeams				();
+	void				LoadTeams				() override;
 
-	virtual		char*				GetAnomalySetBaseName	() {return "artefacthunt_game_anomaly_sets";};
+	char*				GetAnomalySetBaseName	() override {return "artefacthunt_game_anomaly_sets";};
 
 	virtual		void				OnObjectEnterTeamBase	(u16 id, u16 zone_team);
 	virtual		void				OnObjectLeaveTeamBase	(u16 id, u16 zone_team);
 	
 	void							OnArtefactOnBase		(ClientID id_who);
 
-	virtual		BOOL				OnTouch					(u16 eid_who, u16 eid_what, BOOL bForced = FALSE);
-	virtual		void				OnDetach				(u16 eid_who, u16 eid_what);
-	virtual		void				OnCreate				(u16 id_who);
+	BOOL				OnTouch					(u16 eid_who, u16 eid_what, BOOL bForced = FALSE) override;
+	void				OnDetach				(u16 eid_who, u16 eid_what) override;
+	void				OnCreate				(u16 id_who) override;
 
 
-	virtual		void				Update					();
+	void				Update					() override;
 				
 				void				SpawnArtefact			();
 				void				RemoveArtefact			();
 				void				Assign_Artefact_RPoint	(CSE_Abstract* E);
 
-	virtual		void				net_Export_State		(NET_Packet& P, ClientID id_to);				// full state
+	void				net_Export_State		(NET_Packet& P, ClientID id_to) override;				// full state
 				bool				ArtefactSpawn_Allowed	();
 	//-------------------------------------------------------------------------------
 	virtual		void				RespawnAllNotAlivePlayers	();
@@ -122,7 +122,7 @@ public:
 	virtual		void				MoveAllAlivePlayers			();
 	virtual		void				CheckForTeamElimination		();
 	virtual		void				CheckForTeamWin				();
-	virtual		BOOL				CanHaveFriendlyFire		()	{return TRUE;}
+	BOOL				CanHaveFriendlyFire		() override {return TRUE;}
 
 	//-----------------------------------------------------------------------------
 	virtual		int					Get_ArtefactsCount			();
@@ -137,9 +137,9 @@ public:
 
 	//  [7/5/2005]
 #ifdef DEBUG
-	virtual		void				OnRender				();
+	void				OnRender				() override;
 #endif
 	//  [7/5/2005]
 protected:
-	virtual		void				WriteGameState			(CInifile& ini, LPCSTR sect, bool bRoundResult);
+	void				WriteGameState			(CInifile& ini, LPCSTR sect, bool bRoundResult) override;
 };

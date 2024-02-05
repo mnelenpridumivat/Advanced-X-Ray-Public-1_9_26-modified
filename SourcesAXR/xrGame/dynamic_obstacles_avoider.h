@@ -15,8 +15,8 @@ private:
 	typedef static_obstacles_avoider		inherited;
 
 protected:
-	virtual	void		query				();
-	virtual	bool		process_query		(const bool &change_path_state);
+	void		query				() override;
+	bool		process_query		(const bool &change_path_state) override;
 
 public:
 			bool		movement_enabled	() const;

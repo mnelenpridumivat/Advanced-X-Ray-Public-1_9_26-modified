@@ -73,7 +73,7 @@ private:
 
 public:
 								CScriptEngine				();
-	virtual						~CScriptEngine				();
+	~CScriptEngine				() override;
 			void				init						();
 	virtual	void				unload						();
 	static	int					lua_panic					(lua_State *L);
@@ -110,7 +110,7 @@ public:
 	inline cs::lua_studio::world* debugger					() const { return m_lua_studio_world; }
 #	endif // ifndef USE_LUA_STUDIO
 #endif
-	virtual	void				on_error					(lua_State* state);
+	void				on_error					(lua_State* state) override;
 			void				collect_all_garbage			();
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION

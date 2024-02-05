@@ -94,15 +94,15 @@ class CControlPathBuilderBase : public CControl_ComBase {
 	
 public:
 						CControlPathBuilderBase				();
-	virtual				~CControlPathBuilderBase			();
+	~CControlPathBuilderBase			() override;
 	
 	// -------------------------------------------------------------------
 	// Control Interface
-	virtual void		reinit				();
-	virtual void		update_frame		();
-	virtual void		on_event			(ControlCom::EEventType, ControlCom::IEventData*);	
-	virtual void		on_start_control	(ControlCom::EControlType type);
-	virtual void		on_stop_control		(ControlCom::EControlType type);
+	void		reinit				() override;
+	void		update_frame		() override;
+	void		on_event			(ControlCom::EEventType, ControlCom::IEventData*) override;
+	void		on_start_control	(ControlCom::EControlType type) override;
+	void		on_stop_control		(ControlCom::EControlType type) override;
 
 	// -------------------------------------------------------------------
 

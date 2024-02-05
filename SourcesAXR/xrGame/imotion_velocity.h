@@ -6,8 +6,8 @@ class imotion_velocity:
 	public interactive_motion
 {
 	typedef			interactive_motion inherited;
-	virtual	void	move_update	(  );
-	virtual	void	collide		(  );
-	virtual	void	state_end	(  );
-	virtual	void	state_start (  );
+	void	move_update	(  ) override;
+	void	collide		(  ) override;
+	void	state_end	(  ) override;
+	void	state_start (  ) override;
 };

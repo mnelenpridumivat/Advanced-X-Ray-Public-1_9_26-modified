@@ -22,7 +22,7 @@ class separation final :
 {
 public:
 						separation	(CAI_Rat const *object);
-	virtual	Fvector		direction	();
+						Fvector		direction	() override;
 
 private:
 	typedef base		inherited;

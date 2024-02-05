@@ -18,9 +18,9 @@ private:
 
 public:
 						CStalkerAnomalyPlanner	(CAI_Stalker *object = 0, LPCSTR action_name = "");
-	virtual				~CStalkerAnomalyPlanner	();
+	~CStalkerAnomalyPlanner	() override;
 	virtual	void		setup					(CAI_Stalker *object, CPropertyStorage *storage);
-	virtual	void		update					();
+	void		update					() override;
 			void		add_evaluators			();
 			void		add_actions				();
 };

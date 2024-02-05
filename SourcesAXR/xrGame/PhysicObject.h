@@ -77,36 +77,36 @@ public:
 			bool						get_door_vectors				( Fvector& closed, Fvector& open ) const;
 public:
 			CPhysicObject(void);
-	virtual ~CPhysicObject(void);
+	~CPhysicObject(void) override;
 	//virtual void						make_Interpolation	(); // interpolation from last visible to corrected position/rotation
 	virtual	void						Interpolate();
 			float						interpolate_states(net_update_PItem const & first, net_update_PItem const & last, SPHNetState & current);
 
-	virtual BOOL						net_Spawn						( CSE_Abstract* DC)																	;
+	BOOL						net_Spawn						( CSE_Abstract* DC) override;
 	virtual void						CreatePhysicsShell				(CSE_Abstract* e)																;
-	virtual void						net_Destroy						()																				;
-	virtual void						Load							(LPCSTR section)																;
-	virtual void						shedule_Update					(u32 dt)																		;	//
-	virtual void						UpdateCL						()																				;
-	virtual void						net_Save						(NET_Packet& P)																	;
-	virtual	BOOL						net_SaveRelevant				()																				;
-	virtual BOOL						UsedAI_Locations				()																				;
-	virtual ICollisionHitCallback		*get_collision_hit_callback		()																				;
-	virtual void						set_collision_hit_callback		(ICollisionHitCallback *cc)														;
-	virtual	bool						is_ai_obstacle					() const;
+	void						net_Destroy						() override;
+	void						Load							(LPCSTR section) override;
+	void						shedule_Update					(u32 dt) override;	//
+	void						UpdateCL						() override;
+	void						net_Save						(NET_Packet& P) override;
+	BOOL						net_SaveRelevant				() override;
+	BOOL						UsedAI_Locations				() override;
+	ICollisionHitCallback		*get_collision_hit_callback		() override;
+	void						set_collision_hit_callback		(ICollisionHitCallback *cc) override;
+	bool						is_ai_obstacle					() const override;
 
-	virtual void						net_Export						(NET_Packet& P);
-	virtual void						net_Import						(NET_Packet& P);
+	void						net_Export						(NET_Packet& P) override;
+	void						net_Import						(NET_Packet& P) override;
 
-	virtual void						PH_B_CrPr						();					// actions & operations before physic correction-prediction steps
-	virtual void						PH_I_CrPr						();					// actions & operations after correction before prediction steps
-	virtual void						PH_A_CrPr						();					// actions & operations after phisic correction-prediction steps
+	void						PH_B_CrPr						() override;					// actions & operations before physic correction-prediction steps
+	void						PH_I_CrPr						() override;					// actions & operations after correction before prediction steps
+	void						PH_A_CrPr						() override;					// actions & operations after phisic correction-prediction steps
 protected:
-	virtual void						SpawnInitPhysics				(CSE_Abstract	*D)																;
+	void						SpawnInitPhysics				(CSE_Abstract	*D) override;
 	virtual void						RunStartupAnim					(CSE_Abstract	*D)																;
-	virtual CPhysicsShellHolder			*PPhysicsShellHolder			()													{return PhysicsShellHolder();}
-	virtual CPHSkeleton					*PHSkeleton						()																	{return this;}
-	virtual	void						InitServerObject				(CSE_Abstract	*po)															;
+	CPhysicsShellHolder			*PPhysicsShellHolder			() override {return PhysicsShellHolder();}
+	CPHSkeleton					*PHSkeleton						() override {return this;}
+	void						InitServerObject				(CSE_Abstract	*po) override;
 	virtual void						PHObjectPositionUpdate			()																				;
 
 	void								net_Export_PH_Params			(NET_Packet& P, SPHNetState& State, mask_num_items&	num_items);

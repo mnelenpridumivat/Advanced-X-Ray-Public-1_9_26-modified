@@ -20,13 +20,13 @@ class CALifeSimulator :
 	public CALifeInteractionManager
 {
 protected:
-	virtual void	setup_simulator		(CSE_ALifeObject *object);
-	virtual void	reload				(LPCSTR section);
+	void	setup_simulator		(CSE_ALifeObject *object) override;
+	void	reload				(LPCSTR section) override;
 
 public:
 					CALifeSimulator		(xrServer *server, shared_str* command_line);
-	virtual			~CALifeSimulator	();
-	virtual	void	destroy				();
+	~CALifeSimulator	() override;
+	void	destroy				() override;
 	IReader const* get_config			( shared_str config ) const;
 
 #if 0//def DEBUG

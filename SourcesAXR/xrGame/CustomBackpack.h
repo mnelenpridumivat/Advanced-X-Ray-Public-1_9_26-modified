@@ -7,29 +7,29 @@ class CCustomBackpack : public CHudItemObject
 	typedef	CHudItemObject	inherited;
 public:
 	CCustomBackpack();
-	virtual ~CCustomBackpack();
+	~CCustomBackpack() override;
 
-	virtual BOOL 	net_Spawn(CSE_Abstract* DC);
-	virtual void	Load(LPCSTR section);
+	BOOL 	net_Spawn(CSE_Abstract* DC) override;
+	void	Load(LPCSTR section) override;
 
-	virtual void 	OnH_A_Chield();
-	virtual void 	OnH_B_Independent(bool just_before_destroy);
+	void 	OnH_A_Chield() override;
+	void 	OnH_B_Independent(bool just_before_destroy) override;
 
-	virtual void 	shedule_Update(u32 dt);
-	virtual void 	UpdateCL();
+	void 	shedule_Update(u32 dt) override;
+	void 	UpdateCL() override;
 
-	virtual void 	OnMoveToSlot(const SInvItemPlace& prev);
-	virtual void 	OnMoveToRuck(const SInvItemPlace& prev);
-	virtual void	OnActiveItem();
-	virtual void	OnHiddenItem();
+	void 	OnMoveToSlot(const SInvItemPlace& prev) override;
+	void 	OnMoveToRuck(const SInvItemPlace& prev) override;
+	void	OnActiveItem() override;
+	void	OnHiddenItem() override;
 
 	void			ToggleBackpack();
 	void			HideBackpack();
 	void			ShowBackpack();
 
-	virtual void	OnStateSwitch(u32 S);
-	virtual void	OnAnimationEnd(u32 state);
-	virtual	void	UpdateXForm();
+	void	OnStateSwitch(u32 S) override;
+	void	OnAnimationEnd(u32 state) override;
+	void	UpdateXForm() override;
 
 	float			GetInventoryCapacity() const { return m_fInventoryCapacity; }
 
@@ -56,6 +56,6 @@ public:
 	float			m_fInventoryCapacity;
 
 protected:
-	virtual bool	install_upgrade_impl(LPCSTR section, bool test);
+	bool	install_upgrade_impl(LPCSTR section, bool test) override;
 };
 

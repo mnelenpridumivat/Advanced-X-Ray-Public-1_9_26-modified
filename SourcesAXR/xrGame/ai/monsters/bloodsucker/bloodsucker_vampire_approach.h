@@ -7,11 +7,11 @@ class CStateBloodsuckerVampireApproach : public CState<_Object> {
 
 public:
 						CStateBloodsuckerVampireApproach	(_Object *obj);
-	virtual				~CStateBloodsuckerVampireApproach	();
+	~CStateBloodsuckerVampireApproach	() override;
 
-	virtual void		initialize							();
-	virtual	void		execute								();
-	virtual void		remove_links						(CObject* object) { inherited::remove_links(object);}
+	void		initialize							() override;
+	void		execute								() override;
+	void		remove_links						(CObject* object) override { inherited::remove_links(object);}
 };
 
 #include "bloodsucker_vampire_approach_inline.h"

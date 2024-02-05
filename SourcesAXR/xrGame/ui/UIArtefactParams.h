@@ -13,7 +13,7 @@ class CUIArtefactParams : public CUIWindow
 {
 public:
 					CUIArtefactParams		();
-	virtual			~CUIArtefactParams		();
+					~CUIArtefactParams		() override;
 			void	InitFromXml				(CUIXml& xml);
 			bool	Check					(const shared_str& af_section);
 			bool	CheckDescrInfoPortions	(const shared_str& af_section);
@@ -47,7 +47,7 @@ class UIArtefactParamItem : public CUIWindow
 {
 public:
 				UIArtefactParamItem	();
-	virtual		~UIArtefactParamItem();
+				~UIArtefactParamItem() override;
 		
 		void	Init				( CUIXml& xml, LPCSTR section );
 		void	SetCaption			( LPCSTR name );

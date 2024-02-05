@@ -27,19 +27,19 @@ public:
 	float			GetItemHeight					();
 	float			GetLongestLength				();
 
-	virtual	void	SetSelected						(CUIWindow* w)	{CUIScrollView::SetSelected(w);};
+					void	SetSelected						(CUIWindow* w) override {CUIScrollView::SetSelected(w);};
 		u32			GetSelectedIDX					();
 		void		SetSelectedIDX					(u32 idx);
 		void		SetSelectedTAG					(u32 tag_val);
 		void		SetSelectedText					(LPCSTR txt);
 		void		SetImmediateSelection			(bool f);
 
-virtual bool		OnMouseAction							(float x, float y, EUIMessages mouse_action);
-virtual void		SendMessage						(CUIWindow* pWnd, s16 msg, void* pData = 0);
+					bool		OnMouseAction							(float x, float y, EUIMessages mouse_action) override;
+					void		SendMessage						(CUIWindow* pWnd, s16 msg, void* pData = 0) override;
 
 			void			SetTextColor			(u32 color);
 			u32				GetTextColor			();
-			void			SetFont					(CGameFont* pFont);
+			void			SetFont					(CGameFont* pFont) override;
 			CGameFont*		GetFont					();
 
 protected:

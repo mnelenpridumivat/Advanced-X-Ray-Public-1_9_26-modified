@@ -23,9 +23,9 @@ public:
 public:
 	IC						CActionScriptBase	(const xr_vector<COperatorCondition> &conditions, const xr_vector<COperatorCondition> &effects, _object_type *object = 0, LPCSTR action_name = "");
 	IC						CActionScriptBase	(_object_type *object = 0, LPCSTR action_name = "");
-	virtual					~CActionScriptBase	();
-	virtual	void			setup				(_object_type *object, CPropertyStorage *storage);
-	virtual	void			setup				(CScriptGameObject *object, CPropertyStorage *storage);
+	~CActionScriptBase	() override;
+	void			setup				(_object_type *object, CPropertyStorage *storage);
+	void			setup				(CScriptGameObject *object, CPropertyStorage *storage);
 };
 
 #include "action_script_base_inline.h"

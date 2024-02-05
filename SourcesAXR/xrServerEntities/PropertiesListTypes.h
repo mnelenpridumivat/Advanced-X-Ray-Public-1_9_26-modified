@@ -104,14 +104,15 @@ public:
     	set_value		(value,val);
     	set_value		(init_value,*val);
     };
-    virtual xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText){return "";}
-    virtual bool		Equal			(PropValue* val)
-    {
+	xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText) override {return "";}
+
+	bool		Equal			(PropValue* val) override
+	{
     	CustomValue<T>* prop = static_cast<CustomValue<T>*>(val);
         return (*value==*prop->value);
     }
     virtual const T&	GetValue		(){return *value; }
-    virtual void		ResetValue		(){set_value(*value,init_value);}
+	void		ResetValue		() override {set_value(*value,init_value);}
     bool				ApplyValue		(const T& val)
     {
 		if (!(*value==val)){
@@ -261,9 +262,9 @@ class CaptionValue: public PropValue{
 	shared_str			value;
 public:
 						CaptionValue	(const shared_str& val){value=val;}
-    virtual xr_string	GetDrawText		(TOnDrawTextEvent)	{return value.c_str()?value.c_str():"";}
-    virtual	void		ResetValue		(){;}
-    virtual	bool		Equal			(PropValue* val)	{return (value==static_cast<CaptionValue*>(val)->value);}
+	xr_string	GetDrawText		(TOnDrawTextEvent) override {return value.c_str()?value.c_str():"";}
+	void		ResetValue		() override {;}
+	bool		Equal			(PropValue* val) override {return (value==static_cast<CaptionValue*>(val)->value);}
     bool				ApplyValue		(const shared_str& val){value=val; return false;}
 };
 
@@ -278,10 +279,11 @@ public:
     TOnDrawCanvasEvent	OnDrawCanvasEvent;
 public:
 						CanvasValue		(const shared_str& val, int h):OnDrawCanvasEvent(0),OnTestEqual(0),height(h){value=val;}
-    virtual xr_string	GetDrawText		(TOnDrawTextEvent){return value.c_str()?value.c_str():"";}
-    virtual	void		ResetValue		(){;}
-    virtual	bool		Equal			(PropValue* val)
-    {
+	xr_string	GetDrawText		(TOnDrawTextEvent) override {return value.c_str()?value.c_str():"";}
+	void		ResetValue		() override {;}
+
+	bool		Equal			(PropValue* val) override
+	{
     	if (!OnTestEqual.empty()){bool res=true; OnTestEqual(this,static_cast<CanvasValue*>(val),res); return res;}
     	return false;
     }
@@ -308,13 +310,15 @@ public:
         for (int k=0; k<cnt; ++k)
         	value.push_back(_GetItem(val.c_str(),k,v));
     }
-    virtual xr_string	GetDrawText		(TOnDrawTextEvent)
-    {
+
+	xr_string	GetDrawText		(TOnDrawTextEvent) override
+	{
     	shared_str t	= _ListToSequence(value);
         return 			t.c_str()?t.c_str():"";
     }
-    virtual	void		ResetValue		(){;}
-    virtual	bool		Equal			(PropValue* val)							{return true;}
+
+	void		ResetValue		() override {;}
+	bool		Equal			(PropValue* val) override {return true;}
     bool				OnBtnClick		(bool& bSafe){if(!OnBtnClickEvent.empty())	{bool bDModif=true; OnBtnClickEvent(this,bDModif,bSafe); return bDModif;}else return false;}
 };
 //------------------------------------------------------------------------------
@@ -326,7 +330,7 @@ public:
     TOnValidateResult	OnValidateResultEvent;
 public:
 						ShortcutValue	(TYPE* val):CustomValue<xr_shortcut>(val){}
-    virtual xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText);
+	xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText) override;
     bool				ApplyValue		(const xr_shortcut& val)
     {
 		if (!(*value==val)){
@@ -344,8 +348,9 @@ public:
 class RTextValue: public CustomValue<shared_str>{
 public:
 						RTextValue		(TYPE* val):CustomValue<shared_str>(val){};
-    virtual xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText)
-    {
+
+						xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText) override
+						{
         xr_string txt	= GetValue().c_str()?GetValue().c_str():"";
         if (!OnDrawText.empty())OnDrawText(this, txt);
         return txt;
@@ -354,8 +359,9 @@ public:
 class STextValue: public CustomValue<xr_string>{
 public:
 						STextValue		(TYPE* val):CustomValue<xr_string>(val){};
-    virtual xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText)
-    {
+
+						xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText) override
+						{
         xr_string txt		= GetValue();
         if (!OnDrawText.empty())OnDrawText(this, txt);
         return txt;
@@ -379,14 +385,16 @@ public:
     	OnBeforeEditEvent 	= 0;
         OnAfterEditEvent	= 0;
     };
-    virtual xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText)
-    {
+
+	xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText) override
+	{
         xr_string txt		= GetValue();
         if (!OnDrawText.empty())OnDrawText(this, txt);
         return txt;
     }
-    virtual bool		Equal			(PropValue* val)
-    {
+
+	bool		Equal			(PropValue* val) override
+	{
         return (0==xr_strcmp(value,static_cast<CTextValue*>(val)->value));
     }
     bool				ApplyValue		(LPCSTR val)
@@ -398,7 +406,7 @@ public:
         return 			false;
     }
     LPSTR				GetValue		(){return value;}
-    virtual void		ResetValue		(){xr_strcpy(value,init_value.size()+1,init_value.c_str());}
+	void		ResetValue		() override {xr_strcpy(value,init_value.size()+1,init_value.c_str());}
 };
 //------------------------------------------------------------------------------
 
@@ -426,14 +434,14 @@ IC bool operator == (const WaveForm& A, const WaveForm& B){return !!A.Similar(B)
 class WaveValue: public CustomValue<WaveForm>{
 public:
 						WaveValue		(TYPE* val):CustomValue<WaveForm>(val){};
-    virtual xr_string	GetDrawText		(TOnDrawTextEvent){return "[Wave]";}
+						xr_string	GetDrawText		(TOnDrawTextEvent) override {return "[Wave]";}
 };
 
 IC bool operator == (const GameTypeChooser& A, const GameTypeChooser& B){return A.m_GameType.flags==B.m_GameType.flags;}
 class GameTypeValue: public CustomValue<GameTypeChooser>{
 public:
 						GameTypeValue	(TYPE* val):CustomValue<GameTypeChooser>(val){};
-    virtual xr_string	GetDrawText		(TOnDrawTextEvent);
+						xr_string	GetDrawText		(TOnDrawTextEvent) override;
 };
 
 //------------------------------------------------------------------------------
@@ -470,8 +478,9 @@ public:
     	clamp			(val,lim_mn,lim_mx);
         return CustomValue<T>::ApplyValue(val);
     }
-	virtual xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText)
-	{
+
+    xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText) override
+    {
         xr_string		draw_val;
         if (!OnDrawText.empty())	OnDrawText(this, draw_val);
         else			draw_sprintf	(draw_val,*value,dec);
@@ -556,17 +565,19 @@ public:
     FLAG_TYPE			mask;
 public:
 						FlagValue		(T* val, FLAG_TYPE _mask, LPCSTR c0, LPCSTR c1, u32 flags):CustomValue<T>(val),FlagValueCustom(flags,c0,c1),mask(_mask){}
-    virtual xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText)
-    {	
+
+	xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText) override
+	{	
         xr_string		draw_val;
         if (!OnDrawText.empty())	OnDrawText(this, draw_val);
         else 			return HaveCaption()?caption[GetValueEx()?1:0].c_str():"";
         return			draw_val;
     }
-    virtual bool		Equal			(PropValue* val){return !!value->equal(*static_cast<FlagValue<T>*>(val)->value,mask);}
-    virtual const T&	GetValue		()				{return *value; }
-    virtual void		ResetValue		()				{value->set(mask,init_value.is(mask));}
-    virtual bool		GetValueEx		()				{return !!value->is(mask);}
+
+	bool		Equal			(PropValue* val) override {return !!value->equal(*static_cast<FlagValue<T>*>(val)->value,mask);}
+	const T&	GetValue		() override {return *value; }
+	void		ResetValue		() override {value->set(mask,init_value.is(mask));}
+	bool		GetValueEx		() override {return !!value->is(mask);}
     bool				ApplyValue		(const T& val)
     {
         if (!val.equal(*value,mask)){
@@ -595,8 +606,9 @@ class TokenValue: public CustomValue<T>, public TokenValueCustom
 {
 public:
 						TokenValue		(T* val, xr_token* _token):TokenValueCustom(_token),CustomValue<T>(val){};
-    virtual xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText)
-    {
+
+						xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText) override
+						{
         xr_string		draw_val;
         if (!OnDrawText.empty())	OnDrawText(this, draw_val);
         else			for(int i=0; token[i].name; i++) if (token[i].id==static_cast<int>(GetValue())) return token[i].name;
@@ -620,8 +632,9 @@ class RTokenValue: public CustomValue<T>, public RTokenValueCustom
 {
 public:
 						RTokenValue		(T* val, xr_rtoken* _token, u32 _t_cnt):CustomValue<T>(val),RTokenValueCustom(_token,_t_cnt){};
-    virtual xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText)
-    {
+
+						xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText) override
+						{
         xr_string draw_val;
         if (!OnDrawText.empty())	OnDrawText(this, draw_val);
         else			for(u32 k=0; k<token_count; k++) if (static_cast<T>(token[k].id)==GetValue()) return *token[k].name;
@@ -644,8 +657,9 @@ public:
     const Item*			items;
 public:
 						TokenValueSH	(u32* val, const Item* _items, u32 _cnt):CustomValue<u32>(val),cnt(_cnt),items(_items){};
-	virtual xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText)
-    {
+
+	xr_string	GetDrawText		(TOnDrawTextEvent OnDrawText) override
+	{
         u32 draw_val 	= GetValue();
         for(u32 i=0; i<cnt; i++) if (items[i].ID==draw_val) return items[i].str;
         return 0;
@@ -659,8 +673,9 @@ public:
     u32					item_count;
 public:                                   
 						RListValue		(shared_str* val, shared_str* _items, u32 cnt):RTextValue(val),items(_items),item_count(cnt){};
-	virtual bool		Equal			(PropValue* val)
-    {
+
+	bool		Equal			(PropValue* val) override
+	{
         if (items!=static_cast<RListValue*>(val)->items){
         	m_Owner->m_Flags.set(PropItem::flDisabled,TRUE); 
         	return false;
@@ -674,8 +689,9 @@ public:
     u32					item_count;
 public:                                   
 						CListValue		(LPSTR val, u32 sz, xr_string* _items, u32 cnt):CTextValue(val,sz),items(_items),item_count(cnt){};
-	virtual bool		Equal			(PropValue* val)
-    {
+
+	bool		Equal			(PropValue* val) override
+	{
         if (items!=static_cast<CListValue*>(val)->items){
         	m_Owner->m_Flags.set(PropItem::flDisabled,TRUE); 
         	return false;

@@ -26,12 +26,12 @@ private:
 
 public:
 					UIMapLegend			();
-	virtual			~UIMapLegend		();
+	~UIMapLegend		() override;
 
 			void	init_from_xml		( CUIXml& xml, LPCSTR path );
 
-	virtual void	Show				( bool status );
-	virtual void	SendMessage			( CUIWindow* pWnd, s16 msg, void* pData );
+	void	Show				( bool status ) override;
+	void	SendMessage			( CUIWindow* pWnd, s16 msg, void* pData ) override;
 
 private: // m_
 	CUIFrameWindow*		m_background;
@@ -51,7 +51,7 @@ private:
 
 public:
 					UIMapLegendItem		();
-	virtual			~UIMapLegendItem	();
+	~UIMapLegendItem	() override;
 
 			void	init_from_xml		( CUIXml& xml, int index );
 //	virtual void	Update				();

@@ -39,14 +39,14 @@ class CControlManagerCustom : public CControl_ComBase {
 
 public:
 					CControlManagerCustom	();
-					~CControlManagerCustom	();
+					~CControlManagerCustom	() override;
 
-	virtual void	reinit					();
-	virtual void	on_event				(ControlCom::EEventType, ControlCom::IEventData*);
-	virtual void	on_start_control		(ControlCom::EControlType type);
-	virtual void	on_stop_control			(ControlCom::EControlType type);
-	virtual void	update_frame			();
-	virtual void	update_schedule			();
+	void	reinit					() override;
+	void	on_event				(ControlCom::EEventType, ControlCom::IEventData*) override;
+	void	on_start_control		(ControlCom::EControlType type) override;
+	void	on_stop_control			(ControlCom::EControlType type) override;
+	void	update_frame			() override;
+	void	update_schedule			() override;
 
 			void	add_ability				(ControlCom::EControlType);
 

@@ -38,8 +38,8 @@ public:
 	// manual setup
 	void		setup			(CBaseMonster *object, const Fvector &position, float min_pos_distance, float	max_pos_distance, float deviation = 0.f);
 
-	virtual	void	evaluate_cover		(const CCoverPoint *cover_point, float weight);
-	virtual void	evaluate_smart_cover(smart_cover::cover const *smart_cover, float const &weight);
+	void	evaluate_cover		(const CCoverPoint *cover_point, float weight) override;
+	void	evaluate_smart_cover(smart_cover::cover const *smart_cover, float const &weight) override;
 };
 
 //////////////////////////////////////////////////////////////////////////

@@ -105,8 +105,8 @@ public:
 	bool						IsHiding			()	const		{	return GetState() == eHiding;}
 	bool						IsShowing			()	const		{	return GetState() == eShowing;}
 
-	virtual void				SwitchState			(u32 S);
-	virtual void				OnStateSwitch		(u32 S);
+							void				SwitchState			(u32 S) override;
+							void				OnStateSwitch		(u32 S) override;
 
 	virtual void				OnAnimationEnd		(u32 state);
 	virtual void				OnMotionMark		(u32 state, const motion_marks&){};

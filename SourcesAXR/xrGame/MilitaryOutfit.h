@@ -15,7 +15,7 @@ private:
 	typedef	CCustomOutfit inherited;
 public:
 	CMilitaryOutfit(void);
-	virtual ~CMilitaryOutfit(void);
+	~CMilitaryOutfit(void) override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

@@ -28,9 +28,9 @@ protected:
 
 public:
 						CStalkerActionGetReadyToKillLowCover(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize							();
-	virtual void		execute								();
-	virtual void		finalize							();
+	void		initialize							() override;
+	void		execute								() override;
+	void		finalize							() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -47,9 +47,9 @@ private:
 
 public:
 						CStalkerActionKillEnemyLowCover		(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize							();
-	virtual void		execute								();
-	virtual void		finalize							();
+	void		initialize							() override;
+	void		execute								() override;
+	void		finalize							() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -66,9 +66,9 @@ private:
 
 public:
 						CStalkerActionHoldPositionLowCover	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize							();
-	virtual void		execute								();
-	virtual void		finalize							();
+	void		initialize							() override;
+	void		execute								() override;
+	void		finalize							() override;
 };
 
 #endif // STALKER_LOW_COVER_ACTIONS_H_INCLUDED

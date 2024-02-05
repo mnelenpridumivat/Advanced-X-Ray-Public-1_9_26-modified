@@ -8,12 +8,12 @@ class CSimpleDetector :public CCustomDetector
 	typedef CCustomDetector	inherited;
 public:
 					CSimpleDetector				();
-	virtual			~CSimpleDetector			();
+	~CSimpleDetector			() override;
 	
 protected:
 //.	virtual void 	UpdateZones					();
-	virtual void 	UpdateAf					();
-	virtual void 	CreateUI					();
+	void 	UpdateAf					() override;
+	void 	CreateUI					() override;
 	CUIArtefactDetectorSimple&	ui				();
 };
 

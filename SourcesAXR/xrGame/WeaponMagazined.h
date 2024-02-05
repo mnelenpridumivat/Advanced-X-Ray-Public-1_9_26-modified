@@ -42,7 +42,7 @@ protected:
 
 	bool            m_bCustomShotSounds;
 protected:
-	virtual void	OnMagazineEmpty	();
+	void	OnMagazineEmpty	() override;
 
 	virtual void	switch2_Idle	();
 	virtual void	switch2_Fire	();
@@ -55,13 +55,13 @@ protected:
 	virtual void	switch2_ChangeFireMode();
 	virtual void	switch2_LaserSwitch();
 	virtual void	switch2_FlashlightSwitch();
-	
-	virtual void	OnShot			();	
+
+	void	OnShot			() override;	
 	
 	virtual void	OnEmptyClick	();
 
-	virtual void	OnAnimationEnd	(u32 state);
-	virtual void	OnStateSwitch	(u32 S);
+	void	OnAnimationEnd	(u32 state) override;
+	void	OnStateSwitch	(u32 S) override;
 
 	virtual void	UpdateSounds	();
 
@@ -77,41 +77,41 @@ protected:
 	virtual void	state_Misfire	(float dt);
 public:
 					CWeaponMagazined	(ESoundTypes eSoundType=SOUND_TYPE_WEAPON_SUBMACHINEGUN);
-	virtual			~CWeaponMagazined	();
+	~CWeaponMagazined	() override;
 
-	virtual void	Load			(LPCSTR section);
+	void	Load			(LPCSTR section) override;
 			void	LoadSilencerKoeffs();
-	virtual CWeaponMagazined*cast_weapon_magazined	()		 {return this;}
+	CWeaponMagazined*cast_weapon_magazined	() override {return this;}
 
-	virtual bool    UseScopeTexture	();
-	virtual void	SetDefaults		();
-	virtual void	FireStart		();
-	virtual void	FireEnd			();
-	virtual void	Reload			();
-	
+	bool    UseScopeTexture	() override;
+	void	SetDefaults		() override;
+	void	FireStart		() override;
+	void	FireEnd			() override;
+	void	Reload			() override;
 
-	virtual	void	UpdateCL		();
-	virtual void	net_Destroy		();
-	virtual void	net_Export		(NET_Packet& P);
-	virtual void	net_Import		(NET_Packet& P);
 
-	virtual void	OnH_A_Chield		();
+	void	UpdateCL		() override;
+	void	net_Destroy		() override;
+	void	net_Export		(NET_Packet& P) override;
+	void	net_Import		(NET_Packet& P) override;
 
-	virtual bool	Attach			(PIItem pIItem, bool b_send_event);
-	virtual bool	Detach			(const char* item_section_name, bool b_spawn_item);
+	void	OnH_A_Chield		() override;
+
+	bool	Attach			(PIItem pIItem, bool b_send_event) override;
+	bool	Detach			(const char* item_section_name, bool b_spawn_item) override;
 			bool	DetachScope		(const char* item_section_name, bool b_spawn_item);
-	virtual bool	CanAttach		(PIItem pIItem);
-	virtual bool	CanDetach		(const char* item_section_name);
+	bool	CanAttach		(PIItem pIItem) override;
+	bool	CanDetach		(const char* item_section_name) override;
 
-	virtual void	InitAddons		();
+	void	InitAddons		() override;
 
-	virtual bool	Action			(u16 cmd, u32 flags);
+	bool	Action			(u16 cmd, u32 flags) override;
 	bool			IsAmmoAvailable	();
 	virtual void	UnloadMagazine	(bool spawn_ammo = true);
 	virtual int     CheckAmmoBeforeReload(u8& v_ammoType);
-	virtual void	OnMotionMark	(u32 state, const motion_marks& M);
+	void	OnMotionMark	(u32 state, const motion_marks& M) override;
 
-	virtual bool	GetBriefInfo	(II_BriefInfo& info);
+	bool	GetBriefInfo	(II_BriefInfo& info) override;
 
 public:
 	virtual bool	SwitchMode				();
@@ -120,7 +120,7 @@ public:
 	IC		int		GetQueueSize			() const	{return m_iQueueSize;};
 	virtual bool	StopedAfterQueueFired	()			{return m_bStopedAfterQueueFired; }
 	virtual void	StopedAfterQueueFired	(bool value){m_bStopedAfterQueueFired = value; }
-	virtual float	GetFireDispersion		(float cartridge_k, bool for_crosshair = false);
+	float	GetFireDispersion		(float cartridge_k, bool for_crosshair = false) override;
 
 protected:
 	//максимальный размер очереди, которой можно стрельнуть
@@ -154,18 +154,18 @@ protected:
 	bool m_bUseFiremodeChangeAnim;
 
 public:
-	virtual void	OnZoomIn			();
-	virtual void	OnZoomOut			();
+	void	OnZoomIn			() override;
+	void	OnZoomOut			() override;
 			void	OnNextFireMode		();
 			void	OnPrevFireMode		();
 			bool	HasFireModes		() { return m_bHasDifferentFireModes; };
-	virtual	int		GetCurrentFireMode	() { return m_aFireModes[m_iCurFireMode]; };	
+	int		GetCurrentFireMode	() override { return m_aFireModes[m_iCurFireMode]; };
 
-	virtual void	save				(NET_Packet &output_packet);
-	virtual void	load				(IReader &input_packet);
+	void	save				(NET_Packet &output_packet) override;
+	void	load				(IReader &input_packet) override;
 
 protected:
-	virtual bool	install_upgrade_impl( LPCSTR section, bool test );
+	bool	install_upgrade_impl( LPCSTR section, bool test ) override;
 
 protected:
 	virtual bool	AllowFireWhileWorking() {return false;}
@@ -174,13 +174,13 @@ protected:
 	virtual void	PlayAnimShow		();
 	virtual void	PlayAnimHide		();
 	virtual void	PlayAnimReload		();
-	virtual void	PlayAnimIdle		();
+	void	PlayAnimIdle		() override;
 	virtual void	PlayAnimShoot		();
 	virtual void	PlayReloadSound		();
 	virtual void	PlayAnimAim			();
-	virtual void	PlayAnimBore		();
-	virtual void	PlayAnimIdleSprint	();
-	virtual void	PlayAnimIdleMoving	();
+	void	PlayAnimBore		() override;
+	void	PlayAnimIdleSprint	() override;
+	void	PlayAnimIdleMoving	() override;
 	virtual void	PlayAnimFireMode	();
 	virtual void	PlayAnimLaserSwitch	();
 	virtual void	PlayAnimFlashlightSwitch();
@@ -211,16 +211,16 @@ protected:
 
 	bool WeaponSoundExist(LPCSTR section, LPCSTR sound_name, bool log = false) const;
 
-	virtual	int		ShotsFired			() { return m_iShotNum; }
-	virtual float	GetWeaponDeterioration	();
+	int		ShotsFired			() override { return m_iShotNum; }
+	float	GetWeaponDeterioration	() override;
 
 
-	virtual void	FireBullet			(const Fvector& pos, 
-        								 const Fvector& dir, 
-										 float fire_disp,
-										 const CCartridge& cartridge,
-										 u16 parent_id,
-										 u16 weapon_id,
-										 bool send_hit);
+	void	FireBullet			(const Fvector& pos, 
+					               const Fvector& dir, 
+					               float fire_disp,
+					               const CCartridge& cartridge,
+					               u16 parent_id,
+					               u16 weapon_id,
+					               bool send_hit) override;
 
 };

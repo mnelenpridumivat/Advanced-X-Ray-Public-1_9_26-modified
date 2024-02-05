@@ -35,55 +35,55 @@ private:
 
 public:
 	CAI_Trader		();
-	virtual				~CAI_Trader		();
+	~CAI_Trader		() override;
 
-	virtual CAttachmentOwner*			cast_attachment_owner	()						{return this;}
-	virtual CInventoryOwner*			cast_inventory_owner	()						{return this;}
-	virtual CEntityAlive*				cast_entity_alive		()						{return this;}
-	virtual CEntity*					cast_entity				()						{return this;}
-	virtual CGameObject*				cast_game_object		()						{return this;}
-	virtual CPhysicsShellHolder*		cast_physics_shell_holder	()					{return this;}
-	virtual CParticlesPlayer*			cast_particles_player	()						{return this;}
-	virtual CScriptEntity*				cast_script_entity		()						{return this;}
+	CAttachmentOwner*			cast_attachment_owner	() override {return this;}
+	CInventoryOwner*			cast_inventory_owner	() override {return this;}
+	CEntityAlive*				cast_entity_alive		() override {return this;}
+	CEntity*					cast_entity				() override {return this;}
+	CGameObject*				cast_game_object		() override {return this;}
+	CPhysicsShellHolder*		cast_physics_shell_holder	() override {return this;}
+	CParticlesPlayer*			cast_particles_player	() override {return this;}
+	CScriptEntity*				cast_script_entity		() override {return this;}
 
-	virtual DLL_Pure	*_construct		();
-	virtual void		Load			( LPCSTR section );
-	virtual BOOL		net_Spawn		( CSE_Abstract* DC );
-	virtual void		net_Export		(NET_Packet& P);
-	virtual void		net_Import		(NET_Packet& P);
-	virtual	void		net_Destroy		();
+	DLL_Pure	*_construct		() override;
+	void		Load			( LPCSTR section ) override;
+	BOOL		net_Spawn		( CSE_Abstract* DC ) override;
+	void		net_Export		(NET_Packet& P) override;
+	void		net_Import		(NET_Packet& P) override;
+	void		net_Destroy		() override;
 
-	virtual void		save			(NET_Packet &output_packet);
-	virtual void		load			(IReader &input_packet);
-	virtual BOOL		net_SaveRelevant()							{return inherited::net_SaveRelevant();}
+	void		save			(NET_Packet &output_packet) override;
+	void		load			(IReader &input_packet) override;
+	BOOL		net_SaveRelevant() override {return inherited::net_SaveRelevant();}
 
-	virtual void		Die				(CObject* who);
+	void		Die				(CObject* who) override;
 	virtual void		Think			();
-	virtual void		HitSignal		(float /**P/**/, Fvector &/**local_dir/**/,	CObject* /**who/**/, s16 /**element/**/){};
-	virtual void		HitImpulse		(float /**P/**/, Fvector &/**vWorldDir/**/, 	Fvector& /**vLocalDir/**/){};
-	virtual	void		Hit				(SHit* pHDS){inherited::Hit(pHDS);}
-	virtual	void		UpdateCL		();
+	void		HitSignal		(float /**P/**/, Fvector &/**local_dir/**/,	CObject* /**who/**/, s16 /**element/**/) override {};
+	void		HitImpulse		(float /**P/**/, Fvector &/**vWorldDir/**/, 	Fvector& /**vLocalDir/**/) override {};
+	void		Hit				(SHit* pHDS) override {inherited::Hit(pHDS);}
+	void		UpdateCL		() override;
 
-	virtual void		g_fireParams			(CHudItem* pHudItem, Fvector& P, Fvector& D) override;
-	virtual void		g_WeaponBones			(int &L, int &R1, int &R2);
-	virtual	float		ffGetFov				()	const {return 150.f;}
-	virtual	float		ffGetRange				()	const {return 30.f;}
-	virtual	void		OnEvent					(NET_Packet& P, u16 type);
+	void		g_fireParams			(CHudItem* pHudItem, Fvector& P, Fvector& D) override;
+	void		g_WeaponBones			(int &L, int &R1, int &R2) override;
+	float		ffGetFov				()	const override {return 150.f;}
+	float		ffGetRange				()	const override {return 30.f;}
+	void		OnEvent					(NET_Packet& P, u16 type) override;
 	virtual	void		feel_touch_new			(CObject* O);
 	virtual	void		DropItemSendMessage		(CObject *O);
-	virtual void		shedule_Update			(u32 dt);
+	void		shedule_Update			(u32 dt) override;
 
-	virtual BOOL		UsedAI_Locations		();
+	BOOL		UsedAI_Locations		() override;
 
 	///////////////////////////////////////////////////////////////////////
-	virtual u16					PHGetSyncItemsNumber	()			{return inherited ::PHGetSyncItemsNumber();}
-	virtual CPHSynchronize*		PHGetSyncItem			(u16 item)	{return inherited ::PHGetSyncItem(item);}
-	virtual void				PHUnFreeze				()			{return inherited ::PHUnFreeze();}
-	virtual void				PHFreeze				()			{return inherited ::PHFreeze();}
+	u16					PHGetSyncItemsNumber	() override {return inherited ::PHGetSyncItemsNumber();}
+	CPHSynchronize*		PHGetSyncItem			(u16 item) override {return inherited ::PHGetSyncItem(item);}
+	void				PHUnFreeze				() override {return inherited ::PHUnFreeze();}
+	void				PHFreeze				() override {return inherited ::PHFreeze();}
 	///////////////////////////////////////////////////////////////////////
 
-	virtual void			reinit					();
-	virtual void			reload					(LPCSTR section);
+	void			reinit					() override;
+	void			reload					(LPCSTR section) override;
 
 static	void	_BCL		BoneCallback			(CBoneInstance *B);
 
@@ -93,16 +93,16 @@ static	void	_BCL		BoneCallback			(CBoneInstance *B);
 	void			OnStopTrade				();
 
 	//игровое имя 
-	virtual LPCSTR			Name					() const {return CInventoryOwner::Name();}
+	LPCSTR			Name					() const override {return CInventoryOwner::Name();}
 
-	virtual	bool			can_attach				(const CInventoryItem *inventory_item) const;
-	virtual bool			use_bolts				() const;
-	virtual	void			spawn_supplies			();
+	bool			can_attach				(const CInventoryItem *inventory_item) const override;
+	bool			use_bolts				() const override;
+	void			spawn_supplies			() override;
 
 
-	virtual	bool			bfAssignSound			(CScriptEntityAction *tpEntityAction);
+	bool			bfAssignSound			(CScriptEntityAction *tpEntityAction) override;
 
-	virtual	ALife::ERelationType tfGetRelationType	(const CEntityAlive *tpEntityAlive) const;
+	ALife::ERelationType tfGetRelationType	(const CEntityAlive *tpEntityAlive) const override;
 
 	//////////////////////////////////////////////////////////////////////////
 	//генерируемые задания
@@ -127,10 +127,11 @@ public:
 		VERIFY				(m_sound_player);
 		return				(*m_sound_player);
 	}
-	virtual bool			unlimited_ammo			()	{return false;};
-	virtual bool			natural_weapon			() const {return false;}
-	virtual bool			natural_detector		() const {return false;}
-	virtual bool			AllowItemToTrade 		(CInventoryItem const * item, const SInvItemPlace& place) const;
+
+	bool			unlimited_ammo			() override {return false;};
+	bool			natural_weapon			() const override {return false;}
+	bool			natural_detector		() const override {return false;}
+	bool			AllowItemToTrade 		(CInventoryItem const * item, const SInvItemPlace& place) const override;
 
 			void			dialog_sound_start		(LPCSTR phrase);
 			void			dialog_sound_stop		();

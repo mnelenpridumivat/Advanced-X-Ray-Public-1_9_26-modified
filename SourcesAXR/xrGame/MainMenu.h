@@ -131,37 +131,37 @@ protected:
 public:
 	u32				m_deactivated_frame;
 	bool			m_activatedScreenRatio;
-	virtual void	DestroyInternal					(bool bForce);
+	void	DestroyInternal					(bool bForce) override;
 					CMainMenu						();
-	virtual			~CMainMenu						();
+	~CMainMenu						() override;
 
-	virtual void	Activate						(bool bActive); 
-	virtual	bool	IsActive						(); 
-	virtual	bool	CanSkipSceneRendering			(); 
+	void	Activate						(bool bActive) override;
+	bool	IsActive						() override;
+	bool	CanSkipSceneRendering			() override;
 
-	virtual bool	IgnorePause						()	{return true;}
+	bool	IgnorePause						() override {return true;}
 
 
-	virtual void	IR_OnMousePress					(int btn);
-	virtual void	IR_OnMouseRelease				(int btn);
-	virtual void	IR_OnMouseHold					(int btn);
-	virtual void	IR_OnMouseMove					(int x, int y);
-	virtual void	IR_OnMouseStop					(int x, int y);
+	void	IR_OnMousePress					(int btn) override;
+	void	IR_OnMouseRelease				(int btn) override;
+	void	IR_OnMouseHold					(int btn) override;
+	void	IR_OnMouseMove					(int x, int y) override;
+	void	IR_OnMouseStop					(int x, int y) override;
 
-	virtual void	IR_OnKeyboardPress				(int dik);
-	virtual void	IR_OnKeyboardRelease			(int dik);
-	virtual void	IR_OnKeyboardHold				(int dik);
+	void	IR_OnKeyboardPress				(int dik) override;
+	void	IR_OnKeyboardRelease			(int dik) override;
+	void	IR_OnKeyboardHold				(int dik) override;
 
-	virtual void	IR_OnMouseWheel					(int direction)	;
+	void	IR_OnMouseWheel					(int direction) override;
 
 	bool			OnRenderPPUI_query				();
 	void			OnRenderPPUI_main				();
 	void			OnRenderPPUI_PP					();
 
-	virtual void			OnRender						();
-	virtual void	_BCL	OnFrame							(void);
+	void			OnRender						() override;
+	void	_BCL	OnFrame							(void) override;
 
-	virtual bool	UseIndicators					()						{return false;}
+	bool	UseIndicators					() override {return false;}
 
 	void			OnDeviceCreate					();
 
@@ -193,7 +193,7 @@ public:
 	void			Show_CTMS_Dialog				();
 	void			Hide_CTMS_Dialog				();
 	void			SetNeedVidRestart				();
-	virtual void	OnDeviceReset					();
+	void	OnDeviceReset					() override;
 	LPCSTR			GetGSVer						();
 	LPCSTR			GetAxrPlatform					();
 

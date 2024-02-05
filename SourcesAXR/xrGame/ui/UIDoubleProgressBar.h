@@ -8,7 +8,7 @@ class CUIDoubleProgressBar : public CUIWindow
 {
 public: // func
 						CUIDoubleProgressBar	();
-	virtual				~CUIDoubleProgressBar	();
+						~CUIDoubleProgressBar	() override;
 
 			void		InitFromXml		( CUIXml& xml_doc, LPCSTR path );
 			void		SetTwoPos		( float cur_value, float compare_value );

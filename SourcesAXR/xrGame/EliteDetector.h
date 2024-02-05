@@ -9,13 +9,13 @@ class CEliteDetector :public CCustomDetector
 	typedef CCustomDetector	inherited;
 public:
 					CEliteDetector				();
-	virtual			~CEliteDetector				();
-	virtual void	render_item_3d_ui			();
-	virtual bool	render_item_3d_ui_query		();
+	~CEliteDetector				() override;
+	void	render_item_3d_ui			() override;
+	bool	render_item_3d_ui_query		() override;
 	virtual LPCSTR	ui_xml_tag					() const {return "elite";}
 protected:
-	virtual void 	UpdateAf					();
-	virtual void 	CreateUI					();
+	void 	UpdateAf					() override;
+	void 	CreateUI					() override;
 	CUIArtefactDetectorElite& ui				();
 };
 
@@ -26,13 +26,13 @@ class CScientificDetector :public CEliteDetector
 	typedef CEliteDetector	inherited;
 public:
 					CScientificDetector			();
-	virtual			~CScientificDetector		();
-	virtual void 	Load						(LPCSTR section);
-	virtual void 	OnH_B_Independent			(bool just_before_destroy);
-	virtual void 	shedule_Update				(u32 dt);
-	virtual LPCSTR	ui_xml_tag					() const {return "scientific";}
+	~CScientificDetector		() override;
+	void 	Load						(LPCSTR section) override;
+	void 	OnH_B_Independent			(bool just_before_destroy) override;
+	void 	shedule_Update				(u32 dt) override;
+	LPCSTR	ui_xml_tag					() const override {return "scientific";}
 protected:
-	virtual void	UpfateWork					();
+	void	UpfateWork					() override;
 	CZoneList		m_zones;
 };
 

@@ -15,16 +15,16 @@ private:
     typedef	CFoodItem inherited;
 public:
 				CBottleItem			();
-	virtual		~CBottleItem		();
+    ~CBottleItem		() override;
 
 
-	virtual void Load				(LPCSTR section);
+    void Load				(LPCSTR section) override;
 	
 
-	void	OnEvent					(NET_Packet& P, u16 type);
+	void	OnEvent					(NET_Packet& P, u16 type) override;
 
 
-	virtual	void	Hit				(SHit* pHDS);
+    void	Hit				(SHit* pHDS) override;
 	
 
 			void					BreakToPieces		();

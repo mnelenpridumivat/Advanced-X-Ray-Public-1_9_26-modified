@@ -48,23 +48,23 @@ private:
 
 public:
 	IC							CSpaceRestrictor	();
-	virtual						~CSpaceRestrictor	();
-	virtual	BOOL				net_Spawn			(CSE_Abstract* data);
-	virtual	void				net_Destroy			();
+	~CSpaceRestrictor	() override;
+	BOOL				net_Spawn			(CSE_Abstract* data) override;
+	void				net_Destroy			() override;
 			bool				inside				(const Fsphere &sphere) const;
-	virtual void				Center				(Fvector &C) const;
-	virtual float				Radius				() const;
-	virtual BOOL				UsedAI_Locations	();
-	virtual void				spatial_move		();
+	void				Center				(Fvector &C) const override;
+	float				Radius				() const override;
+	BOOL				UsedAI_Locations	() override;
+	void				spatial_move		() override;
 	IC		bool				actual				() const;
-	virtual	CSpaceRestrictor	*cast_restrictor	() {return this;}
-	virtual	bool				register_schedule	() const {return false;}
+	CSpaceRestrictor	*cast_restrictor	() override {return this;}
+	bool				register_schedule	() const override {return false;}
 
 	IC RestrictionSpace::ERestrictorTypes restrictor_type() const; 
 
 public:
 #ifdef DEBUG
-	virtual void				OnRender			();
+	void				OnRender			() override;
 #endif
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

@@ -12,7 +12,7 @@ class CUIStatsPlayerList : public CUIScrollView
 {
 public:
 					CUIStatsPlayerList			();
-	virtual			~CUIStatsPlayerList			();
+					~CUIStatsPlayerList			() override;
 
 			void 	Init						(CUIXml& xml_doc, LPCSTR path);
 			void 	SetSpectator				(bool f);
@@ -23,12 +23,12 @@ public:
 			void 	SetTextParams				(CGameFont* pF, u32 col);
 			void 	SetHeaderHeight				(float h);
 	virtual void 	AddWindow					(CUIWindow* pWnd, bool auto_delete = true);
-	virtual void 	Update						();
+					void 	Update						() override;
 
 protected:
 			void	InitHeader					(CUIXml& xml_doc, LPCSTR path);
 			void	InitTeamHeader				(CUIXml& xml_doc, LPCSTR path);
-	virtual void	RecalcSize					();
+					void	RecalcSize					() override;
 			void	ShowHeader					(bool bShow);
 			LPCSTR	GetST_entry					(LPCSTR itm);
 

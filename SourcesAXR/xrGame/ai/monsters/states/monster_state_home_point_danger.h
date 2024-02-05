@@ -13,16 +13,16 @@ protected:
 
 public:
 						CStateMonsterDangerMoveToHomePoint(_Object *obj);
-	virtual	void		initialize				();
-	virtual void 		finalize				();
-	virtual void 		critical_finalize		();
+	void		initialize				() override;
+	void 		finalize				() override;
+	void 		critical_finalize		() override;
 
-	virtual bool		check_start_conditions	();
-	virtual bool		check_completion		();
-	virtual void		remove_links			(CObject* object) { inherited::remove_links(object);}
+	bool		check_start_conditions	() override;
+	bool		check_completion		() override;
+	void		remove_links			(CObject* object) override { inherited::remove_links(object);}
 
-	virtual	void		reselect_state			();
-	virtual	void		setup_substates			();
+	void		reselect_state			() override;
+	void		setup_substates			() override;
 private:
 			Fvector		&get_most_danger_pos	();
 };

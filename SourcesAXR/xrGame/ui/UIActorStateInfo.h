@@ -57,13 +57,13 @@ private:
 
 public:
 							ui_actor_state_wnd	();
-	virtual					~ui_actor_state_wnd	();
+	~ui_actor_state_wnd	() override;
 			void			init_from_xml			( CUIXml& xml, LPCSTR path );
 			void			UpdateActorInfo			( CInventoryOwner* owner );
 			void			UpdateHitZone			();
 
-	virtual void			Draw					();
-	virtual void			Show					( bool status );
+	void			Draw					() override;
+	void			Show					( bool status ) override;
 
 private:
 			void			update_round_states		( CActor* actor, ALife::EHitType hit_type, EStateType stt_type );
@@ -97,7 +97,7 @@ protected:
 
 public:
 					ui_actor_state_item		();
-	virtual			~ui_actor_state_item	();
+	~ui_actor_state_item	() override;
 			void	init_from_xml			( CUIXml& xml, LPCSTR path );
 	
 			void	set_text				( float value ); // 0..1

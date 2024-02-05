@@ -23,33 +23,33 @@ class CAnomalPseudoGigant : public CPseudoGigant,
 
 public:
 	CAnomalPseudoGigant();
-	virtual			~CAnomalPseudoGigant();
+							~CAnomalPseudoGigant() override;
 
-	virtual void	Load(LPCSTR section);
-	virtual void	reinit();
+							void	Load(LPCSTR section) override;
+							void	reinit() override;
 
-	virtual void	UpdateCL();
-	virtual	void	shedule_Update(u32 dt);
-	virtual	void	Hit(SHit* pHDS);
+							void	UpdateCL() override;
+							void	shedule_Update(u32 dt) override;
+							void	Hit(SHit* pHDS) override;
 
-	virtual bool	check_start_conditions(ControlCom::EControlType type);
+							bool	check_start_conditions(ControlCom::EControlType type) override;
 
-	virtual	char* get_monster_class_name() { return "anomalpseudogigant"; }
+							char* get_monster_class_name() override { return "anomalpseudogigant"; }
 
 	void	set_actor_ignore(bool const actor_ignore) { m_actor_ignore = actor_ignore; } // can be used for diabling abilities when no combat
 	bool	get_actor_ignore() const { return m_actor_ignore; }
 
 	// snork jump
 
-	virtual void	HitEntityInJump(const CEntity* pEntity);
+							void	HitEntityInJump(const CEntity* pEntity) override;
 
 	bool	find_geometry(Fvector& dir);
 	float	trace(const Fvector& dir);
 
 	bool	trace_geometry(const Fvector& d, float& range);
 
-	virtual void	jump(const Fvector& position, float factor);
-	virtual bool	ability_jump_over_physics() { return true; }
+							void	jump(const Fvector& position, float factor) override;
+							bool	ability_jump_over_physics() override { return true; }
 
 
 	// Poltergeist ability
@@ -225,18 +225,17 @@ private:
 
 public:
 	CAnomalGigPolterFlame(CAnomalPseudoGigant* gigant);
-	virtual			~CAnomalGigPolterFlame();
+	~CAnomalGigPolterFlame() override;
 
-	virtual void	load(LPCSTR section);
-	virtual void	update_schedule();
-	virtual void	on_destroy();
+	void	load(LPCSTR section) override;
+	void	update_schedule() override;
+	void	on_destroy() override;
 	//virtual void	on_die();
 
-	virtual bool	is_avalable();
+	bool	is_avalable() override;
 
 protected:
-
-	virtual u32 select_amount();
+	u32 select_amount() override;
 	virtual u32 select_delay();
 
 private:
@@ -287,13 +286,13 @@ class CAnomalGigPolterTele : public CAnomalGigPolterSpecialAbility {
 
 public:
 	CAnomalGigPolterTele(CAnomalPseudoGigant* gigant);
-	virtual			~CAnomalGigPolterTele();
+	~CAnomalGigPolterTele() override;
 
-	virtual void	load(LPCSTR section);
-	virtual void	update_schedule();
-	virtual void	update_frame();
+	void	load(LPCSTR section) override;
+	void	update_schedule() override;
+	void	update_frame() override;
 
-	virtual bool	is_avalable();
+	bool	is_avalable() override;
 
 private:
 	void	tele_find_objects(xr_vector<CObject*>& objects, const Fvector& pos);
@@ -304,6 +303,5 @@ private:
 	bool	is_not_valid_object_for_carring(CPhysicsShellHolder* obj, CCustomMonster* custom_monster);
 
 protected:
-
-	virtual u32 select_amount();
+	u32 select_amount() override;
 };

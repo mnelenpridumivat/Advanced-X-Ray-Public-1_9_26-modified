@@ -35,16 +35,18 @@ class CPHOnesCondition:
 	bool b_called;
 public:
 							CPHOnesCondition				(){b_called=false;}
-	virtual bool 			is_true							(){b_called =true;return true;}
-	virtual bool 			obsolete						()const{return b_called;}
+	bool 			is_true							() override
+	{b_called =true;return true;}
+
+	bool 			obsolete						()const override {return b_called;}
 };
 
 class CPHDummiAction:
 	public CPHAction
 {
 public:
-	virtual void 			run								(){;}
-	virtual bool 			obsolete						()const	{return false;}
+	void 			run								() override {;}
+	bool 			obsolete						()const override {return false;}
 };
 
 class CPHCall
@@ -73,7 +75,7 @@ class CPHCommander:
 	PHCALL_STORAGE	m_calls_as_add_buffer;
 	PHCALL_STORAGE	m_calls_as_remove_buffer;
 public:
-						~CPHCommander				()																;
+						~CPHCommander				() override;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool				add_call_unique				(CPHCondition* condition,CPHReqComparerV* cmp_condition,CPHAction* action,CPHReqComparerV* cmp_action);
@@ -111,7 +113,7 @@ IC	PHCALL_I			find_call					(CPHReqComparerV* cmp_condition,CPHReqComparerV* cmp
 IC	void				remove_call					(CPHReqComparerV* cmp_condition,CPHReqComparerV* cmp_action,PHCALL_STORAGE& cs)	;
 IC	void				remove_calls				(CPHReqComparerV* cmp_object,PHCALL_STORAGE& cs)								;
 private:
-	virtual	void		update_step			()						{update_threadsafety 			();}
-	virtual	void		phys_shell_relcase	(CPhysicsShell* sh)		;
+	void		update_step			() override {update_threadsafety 			();}
+	void		phys_shell_relcase	(CPhysicsShell* sh) override;
 };
 #endif

@@ -11,16 +11,16 @@ protected:
 
 public:
 						CStateControllerAttack	(_Object *obj);
-	virtual				~CStateControllerAttack	() {}
+	~CStateControllerAttack	() override {}
 
-	virtual void		initialize				();
-	virtual void		finalize				();
-	virtual void		critical_finalize		();
-	
-	virtual void		execute					();
-	virtual void		setup_substates			();
-	virtual void		check_force_state		();
-	virtual void		remove_links			(CObject * ) {}
+	void		initialize				() override;
+	void		finalize				() override;
+	void		critical_finalize		() override;
+
+	void		execute					() override;
+	void		setup_substates			() override;
+	void		check_force_state		() override;
+	void		remove_links			(CObject * ) override {}
 			bool		check_home_point		();
 };
 

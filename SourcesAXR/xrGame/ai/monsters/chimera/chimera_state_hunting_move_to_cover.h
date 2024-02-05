@@ -9,10 +9,10 @@ protected:
 public:
 						CStateChimeraHuntingMoveToCover	(_Object *obj);
 
-	virtual void		initialize						();
-	virtual	void		execute							();
-	virtual bool 		check_start_conditions			();
-	virtual bool 		check_completion				();
+	void		initialize						() override;
+	void		execute							() override;
+	bool 		check_start_conditions			() override;
+	bool 		check_completion				() override;
 };
 
 #include "chimera_state_hunting_move_to_cover_inline.h"

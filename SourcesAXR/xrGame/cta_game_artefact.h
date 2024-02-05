@@ -18,18 +18,18 @@ class	CtaGameArtefact :
 {
 public:
 						CtaGameArtefact				();
-	virtual				~CtaGameArtefact			();
+						~CtaGameArtefact			() override;
 
 	virtual		bool	Action						(s32 cmd, u32 flags);
-	virtual		void	OnStateSwitch				(u32 S);
-	virtual		void	OnAnimationEnd				(u32 state);
-	virtual		void	UpdateCLChild				();
-	virtual		bool	CanTake						() const;
+						void	OnStateSwitch				(u32 S) override;
+						void	OnAnimationEnd				(u32 state) override;
+						void	UpdateCLChild				() override;
+						bool	CanTake						() const override;
 	//virtual		void	net_Export					(NET_Packet& P);
-	virtual void				PH_A_CrPr			();
+						void				PH_A_CrPr			() override;
 	//virtual void				Interpolate			();
 protected:
-	virtual		void	CreateArtefactActivation	();
+						void	CreateArtefactActivation	() override;
 	virtual		void	InitializeArtefactRPoint	();
 	//virtual		BOOL	net_Relevant				();
 private:

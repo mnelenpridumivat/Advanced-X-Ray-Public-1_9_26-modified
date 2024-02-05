@@ -30,18 +30,18 @@ class CProjector: public CScriptObject {
 
 public:
 					CProjector		();
-	virtual			~CProjector		();
+	~CProjector		() override;
 
-	virtual void	Load			( LPCSTR section);
-	virtual BOOL	net_Spawn		( CSE_Abstract* DC);
-	virtual void	shedule_Update	( u32 dt);							// Called by sheduler
-	virtual void	UpdateCL		( );								// Called each frame, so no need for dt
-	virtual void	renderable_Render( );
+	void	Load			( LPCSTR section) override;
+	BOOL	net_Spawn		( CSE_Abstract* DC) override;
+	void	shedule_Update	( u32 dt) override;							// Called by sheduler
+	void	UpdateCL		( ) override;								// Called each frame, so no need for dt
+	void	renderable_Render( ) override;
 
-	virtual BOOL	UsedAI_Locations();
+	BOOL	UsedAI_Locations() override;
 
-	virtual	bool	bfAssignWatch(CScriptEntityAction	*tpEntityAction);
-	virtual	bool	bfAssignObject(CScriptEntityAction *tpEntityAction);
+	bool	bfAssignWatch(CScriptEntityAction	*tpEntityAction) override;
+	bool	bfAssignObject(CScriptEntityAction *tpEntityAction) override;
 
 			Fvector GetCurrentDirection	();
 private:

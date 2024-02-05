@@ -62,10 +62,10 @@ private:
 
 public:
 						CUIRankingWnd			();
-	virtual				~CUIRankingWnd			();
+	~CUIRankingWnd			() override;
 
-	virtual void 		Show					(bool status);
-	virtual void		Update					();
+	void 		Show					(bool status) override;
+	void		Update					() override;
 	virtual void		DrawHint				();
 	virtual void		ResetAll				();
 

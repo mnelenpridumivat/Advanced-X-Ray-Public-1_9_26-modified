@@ -31,14 +31,14 @@ class CControllerPsyHit : public CControl_ComCustom<> {
 	u32					m_time_last_tube;
 
 public:
-	virtual void	load					(LPCSTR section);
-	virtual	void	reinit					();
-	virtual	void	update_frame			();
-	virtual bool	check_start_conditions	();
-	virtual void	activate				();
-	virtual void	deactivate				();
-	
-	virtual void	on_event				(ControlCom::EEventType, ControlCom::IEventData*);
+	void	load					(LPCSTR section) override;
+	void	reinit					() override;
+	void	update_frame			() override;
+	bool	check_start_conditions	() override;
+	void	activate				() override;
+	void	deactivate				() override;
+
+	void	on_event				(ControlCom::EEventType, ControlCom::IEventData*) override;
 
 			void	on_death				();
 			bool	tube_ready				() const;

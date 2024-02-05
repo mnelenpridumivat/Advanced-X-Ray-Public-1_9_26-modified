@@ -11,11 +11,11 @@ protected:
 
 public:
 	CStateCaptureJumpBloodsucker		(_Object *obj);
-	virtual				~CStateCaptureJumpBloodsucker		();
+	~CStateCaptureJumpBloodsucker		() override;
 
-	virtual	void		execute					();
-	virtual void		setup_substates			();
-	virtual void		remove_links			(CObject* object) { inherited::remove_links(object);}
+	void		execute					() override;
+	void		setup_substates			() override;
+	void		remove_links			(CObject* object) override { inherited::remove_links(object);}
 };
 
 #include "bloodsucker_state_capture_jump_inline.h"

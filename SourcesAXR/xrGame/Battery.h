@@ -8,15 +8,15 @@ class CBattery : public CEatableItemObject
 
 public:
 							CBattery();
-	virtual					~CBattery();
+    ~CBattery() override;
 
-	virtual void			Load(LPCSTR section);
-	virtual bool			Useful() const;
+    void			Load(LPCSTR section) override;
+    bool			Useful() const override;
 
-	virtual BOOL			net_Spawn(CSE_Abstract* DC);
+    BOOL			net_Spawn(CSE_Abstract* DC) override;
 
-	virtual	bool			UseBy(CEntityAlive* npc);
-	virtual	bool			Empty() { return m_iPortionsNum == 0; };
+    bool			UseBy(CEntityAlive* npc) override;
+    bool			Empty() override { return m_iPortionsNum == 0; };
 			int				m_iUseFor;
 			float			m_fBatteryChargeLevel;
 			float			GetCurrentChargeLevel(void) const;

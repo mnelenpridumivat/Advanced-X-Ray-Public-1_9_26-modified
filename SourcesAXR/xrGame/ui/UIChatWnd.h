@@ -13,14 +13,14 @@ class CUIChatWnd: public CUIDialogWnd, public CUIWndCallback
 
 public:
 						CUIChatWnd			();
-	virtual void		Show				(bool status);
+	void		Show				(bool status) override;
 	virtual bool		NeedCursor			() {return false;}
 	void				Init				(CUIXml& uiXml);
 	void				SetEditBoxPrefix	(LPCSTR prefix);
 	void				ChatToAll			(bool b) { sendNextMessageToAll = b; }
 	void				PendingMode			(bool const is_pending_mode);
-	virtual bool		NeedCursor			()const {return false;}
-	virtual void		SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	bool		NeedCursor			()const override {return false;}
+	void		SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 
 
 protected:

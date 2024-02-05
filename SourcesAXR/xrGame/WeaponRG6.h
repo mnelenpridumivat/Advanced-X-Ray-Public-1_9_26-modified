@@ -11,13 +11,13 @@ class CWeaponRG6 :  public CRocketLauncher,
 	typedef CWeaponShotgun		inheritedSG;
 	
 public:
-	virtual			~CWeaponRG6				();
-	virtual BOOL	net_Spawn				(CSE_Abstract* DC);
-	virtual void	Load					(LPCSTR section);
-	virtual void	OnEvent					(NET_Packet& P, u16 type);
+	~CWeaponRG6				() override;
+	BOOL	net_Spawn				(CSE_Abstract* DC) override;
+	void	Load					(LPCSTR section) override;
+	void	OnEvent					(NET_Packet& P, u16 type) override;
 protected:
-	virtual void	FireStart				();
-	virtual u8		AddCartridge			(u8 cnt);
+	void	FireStart				() override;
+	u8		AddCartridge			(u8 cnt) override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

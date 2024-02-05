@@ -55,14 +55,14 @@ public:
 
 public:
 								CUITaskWnd				();
-	virtual						~CUITaskWnd				();
-	virtual void				SendMessage				(CUIWindow* pWnd, s16 msg, void* pData);
+	~CUITaskWnd				() override;
+	void				SendMessage				(CUIWindow* pWnd, s16 msg, void* pData) override;
 			void				Init					();
-	virtual void				Update					();
-	virtual void				Draw					();
+	void				Update					() override;
+	void				Draw					() override;
 			void				DrawHint				();
-	virtual void				Show					(bool status);
-	virtual void				Reset					();
+	void				Show					(bool status) override;
+	void				Reset					() override;
 
 			void				ReloadTaskInfo			();
 			void				ShowMapLegend			(bool status);
@@ -103,14 +103,14 @@ private:
 	CGameTask*											m_owner;
 public:
 								CUITaskItem				();
-	virtual						~CUITaskItem			();
+	~CUITaskItem			() override;
 
-	virtual void 				OnFocusReceive			();
-	virtual void	 			OnFocusLost				();
-	virtual void				Update					();
-	virtual void				OnMouseScroll			(float iDirection);
-	virtual bool				OnMouseAction					(float x, float y, EUIMessages mouse_action);
-	virtual void				SendMessage				(CUIWindow* pWnd, s16 msg, void* pData);
+	void 				OnFocusReceive			() override;
+	void	 			OnFocusLost				() override;
+	void				Update					() override;
+	void				OnMouseScroll			(float iDirection) override;
+	bool				OnMouseAction					(float x, float y, EUIMessages mouse_action) override;
+	void				SendMessage				(CUIWindow* pWnd, s16 msg, void* pData) override;
 
 	void						Init					(CUIXml& uiXml, LPCSTR path);
 	void						InitTask				(CGameTask* task);

@@ -11,14 +11,14 @@ class CStateZombieAttackRun : public CState<_Object> {
 
 public:
 						CStateZombieAttackRun	(_Object *obj);
-	virtual				~CStateZombieAttackRun	();
+	~CStateZombieAttackRun	() override;
 
-	virtual void		initialize				();
-	virtual	void		execute					();
+	void		initialize				() override;
+	void		execute					() override;
 
-	virtual bool 		check_completion		();
-	virtual bool 		check_start_conditions	();
-	virtual void		remove_links			(CObject* object) { inherited::remove_links(object);}
+	bool 		check_completion		() override;
+	bool 		check_start_conditions	() override;
+	void		remove_links			(CObject* object) override { inherited::remove_links(object);}
 
 private:
 			void		choose_action			();

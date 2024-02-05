@@ -174,14 +174,14 @@ public:
 									CSE_Shape		();
 	virtual							~CSE_Shape		();
 	virtual ISE_Shape*  __stdcall	shape			() = 0;
-	virtual void __stdcall			assign_shapes	(CShapeData::shape_def* shapes, u32 cnt);
+void __stdcall			assign_shapes	(CShapeData::shape_def* shapes, u32 cnt) override;
 };
 add_to_type_list(CSE_Shape)
 #define script_type_list save_type_list(CSE_Shape)
 
 SERVER_ENTITY_DECLARE_BEGIN(CSE_Spectator,CSE_Abstract)
 									CSE_Spectator	(LPCSTR caSection);
-	virtual							~CSE_Spectator	();
+~CSE_Spectator	() override;
 	virtual u8						g_team			();
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_Spectator)
@@ -190,7 +190,7 @@ add_to_type_list(CSE_Spectator)
 SERVER_ENTITY_DECLARE_BEGIN(CSE_Temporary,CSE_Abstract)
 	u32								m_tNodeID;
 									CSE_Temporary	(LPCSTR caSection);
-	virtual							~CSE_Temporary	();
+~CSE_Temporary	() override;
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_Temporary)
 #define script_type_list save_type_list(CSE_Temporary)
@@ -226,8 +226,8 @@ SERVER_ENTITY_DECLARE_BEGIN2(CSE_AbstractVisual,CSE_Abstract,CSE_Visual)
 	typedef CSE_Visual				inherited2;
 
 	CSE_AbstractVisual										(LPCSTR caSection);
-	virtual	~CSE_AbstractVisual								();
-	virtual CSE_Visual* __stdcall	visual					();
+~CSE_AbstractVisual								() override;
+CSE_Visual* __stdcall	visual					() override;
 	LPCSTR							getStartupAnimation		();
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_AbstractVisual)

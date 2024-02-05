@@ -5,11 +5,10 @@ class CBurerFastGravi : public CControl_ComCustom<> {
 	typedef CControl_ComCustom<> inherited;
 
 public:
-	
-	virtual bool	check_start_conditions	();
-	virtual void	activate				();
-	virtual void	deactivate				();
-	virtual void	on_event				(ControlCom::EEventType, ControlCom::IEventData*);
+	bool	check_start_conditions	() override;
+	void	activate				() override;
+	void	deactivate				() override;
+	void	on_event				(ControlCom::EEventType, ControlCom::IEventData*) override;
 	
 private:	
 			void	process_hit				();

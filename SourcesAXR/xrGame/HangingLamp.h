@@ -42,35 +42,35 @@ private:
 
 public:
 					CHangingLamp	();
-	virtual			~CHangingLamp	();
+	~CHangingLamp	() override;
 	void			TurnOn			();
 	void			TurnOff			();
 	void			Toggle          ();
-	virtual void	Load			( LPCSTR section);
-	virtual BOOL	net_Spawn		( CSE_Abstract* DC);
-	virtual void	net_Destroy		();
-	virtual void	shedule_Update	( u32 dt);							// Called by sheduler
-	virtual void	UpdateCL		( );								// Called each frame, so no need for dt
+	void	Load			( LPCSTR section) override;
+	BOOL	net_Spawn		( CSE_Abstract* DC) override;
+	void	net_Destroy		() override;
+	void	shedule_Update	( u32 dt) override;							// Called by sheduler
+	void	UpdateCL		( ) override;								// Called each frame, so no need for dt
 
 
-	virtual void	SpawnInitPhysics	(CSE_Abstract	*D)																;
-	virtual CPhysicsShellHolder*	PPhysicsShellHolder	()	{return PhysicsShellHolder();}								;
-	virtual	void	CopySpawnInit		()																				;
-	virtual void	net_Save			(NET_Packet& P)																	;
-	virtual	BOOL	net_SaveRelevant	();
-	virtual void	save				(NET_Packet &output_packet);
-	virtual void	load				(IReader &input_packet);
+	void	SpawnInitPhysics	(CSE_Abstract	*D) override;
+	CPhysicsShellHolder*	PPhysicsShellHolder	() override {return PhysicsShellHolder();}								;
+	void	CopySpawnInit		() override;
+	void	net_Save			(NET_Packet& P) override;
+	BOOL	net_SaveRelevant	() override;
+	void	save				(NET_Packet &output_packet) override;
+	void	load				(IReader &input_packet) override;
 
-	virtual BOOL	renderable_ShadowGenerate	( ) { return TRUE;	}
-	virtual BOOL	renderable_ShadowReceive	( ) { return TRUE;	}
-	
-	virtual	void	Hit				(SHit* pHDS);
-	virtual void	net_Export		(NET_Packet& P);
-	virtual void	net_Import		(NET_Packet& P);
-	virtual BOOL	UsedAI_Locations();
+	BOOL	renderable_ShadowGenerate	( ) override { return TRUE;	}
+	BOOL	renderable_ShadowReceive	( ) override { return TRUE;	}
 
-	virtual void	Center			(Fvector& C)	const;
-	virtual float	Radius			()				const;
+	void	Hit				(SHit* pHDS) override;
+	void	net_Export		(NET_Packet& P) override;
+	void	net_Import		(NET_Packet& P) override;
+	BOOL	UsedAI_Locations() override;
+
+	void	Center			(Fvector& C)	const override;
+	float	Radius			()				const override;
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CHangingLamp)

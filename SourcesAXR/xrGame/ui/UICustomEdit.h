@@ -16,21 +16,21 @@ private:
 
 public:
 					CUICustomEdit	();
-	virtual			~CUICustomEdit	();
+	~CUICustomEdit	() override;
 
 			void	Init			(u32 max_char_count, bool number_only_mode = false, bool read_mode = false, bool fn_mode = false );
 		
 	virtual void	InitCustomEdit	(Fvector2 pos, Fvector2 size);
-	virtual void	SendMessage		(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	void	SendMessage		(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 
-	virtual bool	OnMouseAction			(float x, float y, EUIMessages mouse_action);
-	virtual bool	OnKeyboardAction		(int dik, EUIMessages keyboard_action);
-	virtual bool	OnKeyboardHold	(int dik);
+	bool	OnMouseAction			(float x, float y, EUIMessages mouse_action) override;
+	bool	OnKeyboardAction		(int dik, EUIMessages keyboard_action) override;
+	bool	OnKeyboardHold	(int dik) override;
 
-	virtual void	OnFocusLost		();
-	virtual void	Update			();
-	virtual void	Draw			();
-	virtual void	Show			(bool status);
+	void	OnFocusLost		() override;
+	void	Update			() override;
+	void	Draw			() override;
+	void	Show			(bool status) override;
 
 			void	CaptureFocus	(bool bCapture);
 			void	SetNextFocusCapturer(CUICustomEdit* next_capturer) { m_next_focus_capturer = next_capturer; };
@@ -39,7 +39,7 @@ public:
 	virtual	void	SetText			(LPCSTR str);
 	virtual LPCSTR	GetText			()	const;
 
-	virtual void	Enable			(bool status);
+	void	Enable			(bool status) override;
 			
 			void	SetPasswordMode	(bool mode = true);
 

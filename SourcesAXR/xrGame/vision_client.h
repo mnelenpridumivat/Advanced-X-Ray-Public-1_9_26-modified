@@ -40,19 +40,19 @@ private:
 
 public:
 									vision_client			(CEntity *object,const u32 &update_interval);
-	virtual							~vision_client			();
+	~vision_client			() override;
 
 public:
-	virtual float					shedule_Scale			();
-	virtual void					shedule_Update			(u32 dt);
-	virtual	shared_str				shedule_Name			() const;
-	virtual bool					shedule_Needed			();
+	float					shedule_Scale			() override;
+	void					shedule_Update			(u32 dt) override;
+	shared_str				shedule_Name			() const override;
+	bool					shedule_Needed			() override;
 
 public:
-	virtual	float					feel_vision_mtl_transp	(CObject *object, u32 element);
+	float					feel_vision_mtl_transp	(CObject *object, u32 element) override;
 
 public:
-	virtual	BOOL					feel_vision_isRelevant	(CObject *object) = 0;
+	BOOL					feel_vision_isRelevant	(CObject *object) override = 0;
 	virtual	void					camera					(
 										Fvector &position,
 										Fvector &direction,

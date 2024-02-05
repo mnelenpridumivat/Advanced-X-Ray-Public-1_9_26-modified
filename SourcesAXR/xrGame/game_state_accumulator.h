@@ -24,7 +24,7 @@ class game_state_accumulator : public game_events_handler
 {
 public:
 				game_state_accumulator	();
-	virtual		~game_state_accumulator	();
+				~game_state_accumulator	() override;
 
 	void		update						();
 	void		init						();
@@ -48,19 +48,19 @@ public:
 
 	void		reset_player_game			();
 
-	virtual void		OnWeapon_Fire				(u16 sender, u16 sender_weapon_id);
-	virtual	void		OnBullet_Fire				(u16 sender, u16 sender_weapon_id, const Fvector& position, const Fvector& direction);
-	virtual void		OnBullet_Hit				(CObject const * hitter, CObject const * victim, CObject const * weapon, u16 const bone);
-	virtual void		OnArtefactSpawned			();
-	virtual void		OnPlayerTakeArtefact		(game_PlayerState const * ps);
-	virtual void		OnPlayerDropArtefact		(game_PlayerState const * ps);
-	virtual void		OnPlayerBringArtefact		(game_PlayerState const * ps);
-	virtual void		OnPlayerSpawned				(game_PlayerState const * ps);
-	virtual void		OnPlayerKilled				(u16 killer_id, u16 target_id, u16 weapon_id, std::pair<KILL_TYPE, SPECIAL_KILL_TYPE> kill_type);
-	virtual void		OnPlayerChangeTeam			(s8 team);
-	virtual	void		OnPlayerRankChanged			();
-	virtual void		OnRoundEnd					();
-	virtual void		OnRoundStart				();
+				void		OnWeapon_Fire				(u16 sender, u16 sender_weapon_id) override;
+				void		OnBullet_Fire				(u16 sender, u16 sender_weapon_id, const Fvector& position, const Fvector& direction) override;
+				void		OnBullet_Hit				(CObject const * hitter, CObject const * victim, CObject const * weapon, u16 const bone) override;
+				void		OnArtefactSpawned			() override;
+				void		OnPlayerTakeArtefact		(game_PlayerState const * ps) override;
+				void		OnPlayerDropArtefact		(game_PlayerState const * ps) override;
+				void		OnPlayerBringArtefact		(game_PlayerState const * ps) override;
+				void		OnPlayerSpawned				(game_PlayerState const * ps) override;
+				void		OnPlayerKilled				(u16 killer_id, u16 target_id, u16 weapon_id, std::pair<KILL_TYPE, SPECIAL_KILL_TYPE> kill_type) override;
+				void		OnPlayerChangeTeam			(s8 team) override;
+				void		OnPlayerRankChanged			() override;
+				void		OnRoundEnd					() override;
+				void		OnRoundStart				() override;
 
 	bool	check_hit_params				(u32 count,
 											 ammunition_group::enum_group_id weapon_group_id,

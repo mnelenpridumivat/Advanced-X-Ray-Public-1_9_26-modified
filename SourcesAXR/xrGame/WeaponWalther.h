@@ -9,7 +9,7 @@ class CWeaponWalther :
 	typedef CWeaponPistol inherited;
 public:
 	CWeaponWalther(void);
-	virtual ~CWeaponWalther(void);
+	~CWeaponWalther(void) override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

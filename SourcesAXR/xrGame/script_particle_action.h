@@ -37,7 +37,7 @@ public:
 	IC					CScriptParticleAction	();
 	IC					CScriptParticleAction	(LPCSTR caPartcileToRun, LPCSTR caBoneName, const CParticleParams &tParticleParams = CParticleParams(), bool bAutoRemove = false);
 	IC					CScriptParticleAction	(LPCSTR caPartcileToRun, const CParticleParams &tParticleParams = CParticleParams(), bool bAutoRemove = false);
-	virtual				~CScriptParticleAction	();
+	~CScriptParticleAction	() override;
 			void		SetParticle				(LPCSTR caParticleToRun, bool bAutoRemove);
 	IC		void		SetPosition				(const Fvector &tPosition);
 	IC		void		SetBone					(LPCSTR caBoneName);

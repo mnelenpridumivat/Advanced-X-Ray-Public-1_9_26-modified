@@ -41,32 +41,32 @@ public:
 public:
 
 						CCustomZone						();
-	virtual				~CCustomZone					();
+    ~CCustomZone					() override;
 
-	virtual		BOOL	net_Spawn						(CSE_Abstract* DC);
-	virtual		void	net_Import						(NET_Packet& P);
-	virtual		void	net_Export						(NET_Packet& P);
-	virtual		void	Load							(LPCSTR section);
-	virtual		void	net_Destroy						();
+    BOOL	net_Spawn						(CSE_Abstract* DC) override;
+    void	net_Import						(NET_Packet& P) override;
+    void	net_Export						(NET_Packet& P) override;
+    void	Load							(LPCSTR section) override;
+    void	net_Destroy						() override;
 
-	virtual		void	save							(NET_Packet &output_packet);
-	virtual		void	load							(IReader &input_packet);
-	
-	virtual		void	UpdateCL						();
+    void	save							(NET_Packet &output_packet) override;
+    void	load							(IReader &input_packet) override;
+
+    void	UpdateCL						() override;
 	virtual		void	UpdateWorkload					(u32 dt);
-	virtual		void	shedule_Update					(u32 dt);
+    void	shedule_Update					(u32 dt) override;
 	virtual		void	enter_Zone						(SZoneObjectInfo& io);
 	virtual		void	exit_Zone						(SZoneObjectInfo& io);
-	virtual		void	feel_touch_new					(CObject* O);
-	virtual		void	feel_touch_delete				(CObject* O);
-	virtual		BOOL	feel_touch_contact				(CObject* O);
-	virtual		BOOL	feel_touch_on_contact			(CObject* O);
+    void	feel_touch_new					(CObject* O) override;
+    void	feel_touch_delete				(CObject* O) override;
+    BOOL	feel_touch_contact				(CObject* O) override;
+    BOOL	feel_touch_on_contact			(CObject* O) override;
 				
 				float	effective_radius				(float nearest_shape_radius);
 	float GetEffectiveRadius() { return m_fEffectiveRadius; }
 	void SetEffectiveRadius(float p) { m_fEffectiveRadius = p; }
-	virtual		void	net_Relcase						(CObject* O);
-	virtual		void	OnEvent							(NET_Packet& P, u16 type);
+    void	net_Relcase						(CObject* O) override;
+    void	OnEvent							(NET_Packet& P, u16 type) override;
 
 				float	GetMaxPower						()							{return m_fMaxPower;}
 				void	SetMaxPower						(float p)					{m_fMaxPower = p;}
@@ -79,7 +79,7 @@ public:
 	//абсолютный размер
 				float	Power							(float dist, float nearest_shape_radius);
 
-	virtual CCustomZone	*cast_custom_zone				()							{return this;}
+    CCustomZone	*cast_custom_zone				() override {return this;}
 
 	//различные состояния в которых может находиться зона
 	typedef enum {
@@ -288,9 +288,9 @@ protected:
 															const Fvector& pos_in_bone, 
 															float hit_impulse, 
 															ALife::EHitType hit_type);
-		
 
-	virtual	void	Hit					(SHit* pHDS);
+
+    void	Hit					(SHit* pHDS) override;
 
 
 	//для визуализации зоны
@@ -308,7 +308,7 @@ protected:
 				void		PlayObjectIdleParticles		(CGameObject* pObject);
 				void		StopObjectIdleParticles		(CGameObject* pObject);
 
-	virtual		bool		IsVisibleForZones			() { return false;}
+    bool		IsVisibleForZones			() override { return false;}
 
 	//обновление, если зона передвигается
 	virtual		void		OnMove						();
@@ -322,13 +322,13 @@ protected:
 	u32						m_ef_weapon_type;
 public:
 	void					CalcDistanceTo				(const Fvector& P, float& dist, float& radius);
-	virtual u32				ef_anomaly_type				() const;
-	virtual u32				ef_weapon_type				() const;
-	virtual	bool			register_schedule			() const {return true;}
+    u32				ef_anomaly_type				() const override;
+    u32				ef_weapon_type				() const override;
+    bool			register_schedule			() const override {return true;}
 
 	// optimization FAST/SLOW mode
-public:	
-	virtual BOOL			AlwaysTheCrow				();
+public:
+    BOOL			AlwaysTheCrow				() override;
 	void					o_switch_2_fast				();
 	void					o_switch_2_slow				();
 

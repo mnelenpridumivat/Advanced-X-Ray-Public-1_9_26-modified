@@ -36,21 +36,21 @@ private:
 
 public:
 					CTorch					();
-	virtual			~CTorch					();
+    ~CTorch					() override;
 
-	virtual void	Load					(LPCSTR section);
-	virtual BOOL	net_Spawn				(CSE_Abstract* DC);
-	virtual void	net_Destroy				();
-	virtual void	net_Export				(NET_Packet& P);				// export to server
-	virtual void	net_Import				(NET_Packet& P);				// import from server
+    void	Load					(LPCSTR section) override;
+    BOOL	net_Spawn				(CSE_Abstract* DC) override;
+    void	net_Destroy				() override;
+    void	net_Export				(NET_Packet& P) override;				// export to server
+    void	net_Import				(NET_Packet& P) override;				// import from server
 
-	virtual void	OnH_A_Chield			();
-	virtual void	OnH_B_Independent		(bool just_before_destroy);
+    void	OnH_A_Chield			() override;
+    void	OnH_B_Independent		(bool just_before_destroy) override;
 
-	virtual void	OnMoveToSlot			(const SInvItemPlace& prev);
-	virtual void	OnMoveToRuck			(const SInvItemPlace& prev);
+    void	OnMoveToSlot			(const SInvItemPlace& prev) override;
+    void	OnMoveToRuck			(const SInvItemPlace& prev) override;
 
-	virtual void	UpdateCL				();
+    void	UpdateCL				() override;
 
 			void	Switch					();
 			void	ProcessSwitch			();
@@ -58,8 +58,8 @@ public:
 			bool	torch_active			() const;
 			void	UpdateChargeLevel		(void);
 			void	UpdateUseAnim			();
-	virtual void	save					(NET_Packet &output_packet);
-	virtual void	load					(IReader &input_packet);
+    void	save					(NET_Packet &output_packet) override;
+    void	load					(IReader &input_packet) override;
 			float	GetCurrentChargeLevel	(void) const;
 			void	SetCurrentChargeLevel	(float val);
 			bool	IsSwitchedOn			(void) const;
@@ -68,12 +68,12 @@ public:
 			bool	IsNecessaryItem			(const shared_str& item_sect, xr_vector<shared_str> item);
 			void	ReloadLights			();
 
-	virtual bool	can_be_attached			() const;
+    bool	can_be_attached			() const override;
 
 			float	get_range				() const;
 
 	//CAttachableItem
-	virtual	void	enable					(bool value);
+    void	enable					(bool value) override;
 
 	float			m_fMaxRange;
 	float			m_fCurveRange;
@@ -83,7 +83,7 @@ public:
 	bool			m_bActivated;
 	bool			m_bSwitched;
 
-	virtual CTorch* cast_torch				() { return this; }
+    CTorch* cast_torch				() override { return this; }
  
 protected:
 	HUD_SOUND_COLLECTION_LAYERED m_sounds;
@@ -96,19 +96,19 @@ protected:
 	};
 
 public:
-
-	virtual bool			use_parent_ai_locations	() const
-	{
+    bool			use_parent_ai_locations	() const override
+    {
 		return				(!H_Parent());
 	}
-	virtual void	create_physic_shell		();
-	virtual void	activate_physic_shell	();
-	virtual void	setup_physic_shell		();
 
-	virtual void	afterDetach				();
-	virtual void	renderable_Render		();
+    void	create_physic_shell		() override;
+    void	activate_physic_shell	() override;
+    void	setup_physic_shell		() override;
 
-	virtual bool	install_upgrade_impl	(LPCSTR section, bool test);
+    void	afterDetach				() override;
+    void	renderable_Render		() override;
+
+    bool	install_upgrade_impl	(LPCSTR section, bool test) override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

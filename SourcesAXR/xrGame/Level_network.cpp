@@ -330,7 +330,7 @@ void CLevel::net_Update	()
 
 struct _NetworkProcessor	: public pureFrame
 {
-	virtual void	_BCL OnFrame	( )
+	void	_BCL OnFrame	( ) override
 	{
 		if (g_pGameLevel && !Device.Paused() )	g_pGameLevel->net_Update();
 	}

@@ -19,7 +19,7 @@ public:
 	*/
 
 					CWeaponLR300		();
-	virtual			~CWeaponLR300		();
+	~CWeaponLR300		() override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

@@ -80,20 +80,20 @@ static	const u16				cAsCallsnum						=3;
 	void					ASCUpdate			(EAsyncCalls c)	;
 	void					AscCall				(EAsyncCalls c)	;
 ////////////////////////////////////////////////////////////////////////////////////////
-	virtual bool						CanRemoveObject				();
+	bool						CanRemoveObject				() override;
 ////////////////////////////////////////////////////////////////////////
 	static	BONE_P_MAP					bone_map;					//interface for PhysicsShell
 	static	void 						ActorObstacleCallback		(bool& do_colide,bool bo1,dContact& c,SGameMtl* material_1,SGameMtl* material_2);
-	virtual void						PhDataUpdate				(float step)			;
-	virtual void						PhTune						(float step)			;
+	void						PhDataUpdate				(float step) override;
+	void						PhTune						(float step) override;
 /////////////////////////////////////////////////////////////////////////
-	virtual void						ApplyDamage					(u16 level)				;
-	virtual	float						Health						()						{return GetfHealth();}
-	virtual void						ChangeCondition				(float fDeltaCondition)	;
-	virtual void						StartTimerEffects			()						{};
+	void						ApplyDamage					(u16 level) override;
+	float						Health						() override {return GetfHealth();}
+	void						ChangeCondition				(float fDeltaCondition) override;
+	void						StartTimerEffects			() override {};
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	virtual CPhysicsShellHolder*		PPhysicsShellHolder			()						{return static_cast<CPhysicsShellHolder*>(this);}
-	virtual ICollisionDamageReceiver	*PHCollisionDamageReceiver	()						{ return this; }
+	CPhysicsShellHolder*		PPhysicsShellHolder			() override {return static_cast<CPhysicsShellHolder*>(this);}
+	ICollisionDamageReceiver	*PHCollisionDamageReceiver	() override { return this; }
 
 ////////////////////////////////////////////////////////////////////////
 	CCarDamageParticles					m_damage_particles;
@@ -182,7 +182,7 @@ public:
 				void			SetSteerHiLimit							(float hi)																						;
 				void			SetSteerLimits							(float hi,float lo)																				;
 
-virtual void ApplyDamage			(u16 level);
+		void ApplyDamage			(u16 level) override;
 		SWheel(CCar* acar)
 		{
 			bone_id=BI_NONE;
@@ -291,7 +291,7 @@ virtual void ApplyDamage			(u16 level);
 		void Open();
 		void Close();
 		void Break();
-virtual void ApplyDamage(u16 level);
+		void ApplyDamage(u16 level) override;
 		void Update();
 		float GetAngle();
 		bool CanEnter(const Fvector& pos,const Fvector& dir,const Fvector& foot_pos);
@@ -488,7 +488,7 @@ IC	size_t				CurrentTransmission					(){return m_current_transmission_num;}
 	void				ReleaseBack							();
 	void				ReleaseBreaks						();
 	void				Revert								();
-	float				EffectiveGravity					();
+	float				EffectiveGravity					() override;
 	float				AntiGravityAccel					();
 	float				GravityFactorImpulse				();
 	void StartBreaking									();
@@ -535,20 +535,20 @@ IC	size_t				CurrentTransmission					(){return m_current_transmission_num;}
 
 	static void	_BCL		Rotate_z					(CBoneInstance* B);
 	static void	_BCL		cb_Steer					(CBoneInstance* B);
-	virtual	void			Hit							(SHit* pHDS);
-	virtual void			Die							(CObject* who);
-	virtual void PHHit									(SHit &H);
+	void			Hit							(SHit* pHDS) override;
+	void			Die							(CObject* who) override;
+	void PHHit									(SHit &H) override;
 			bool WheelHit								(float P,s16 element,ALife::EHitType hit_type);
 			bool DoorHit								(float P,s16 element,ALife::EHitType hit_type);
 public:
-	virtual bool			allowWeapon					() const		{return true;};
-	virtual bool			HUDView						() const;
-	virtual Fvector			ExitPosition				(){return m_exit_position;}
-	virtual Fvector			ExitVelocity				();
+	bool			allowWeapon					() const override {return true;};
+	bool			HUDView						() const override;
+	Fvector			ExitPosition				() override {return m_exit_position;}
+	Fvector			ExitVelocity				() override;
 	void					GetVelocity					(Fvector& vel)	{m_pPhysicsShell->get_LinearVel(vel);}
-	void					cam_Update					(float dt, float fov);
-	void					detach_Actor				();
-	bool					attach_Actor				(CGameObject* actor);
+	void					cam_Update					(float dt, float fov) override;
+	void					detach_Actor				() override;
+	bool					attach_Actor				(CGameObject* actor) override;
 	bool					is_Door						(u16 id,xr_map<u16,SDoor>::iterator& i);
 	bool					is_Door						(u16 id);
 	bool					DoorOpen					(u16 id);
@@ -557,43 +557,43 @@ public:
 	bool					DoorSwitch					(u16 id);
 	bool					Enter						(const Fvector& pos,const Fvector& dir,const Fvector& foot_pos);
 	bool					Exit						(const Fvector& pos,const Fvector& dir);
-	bool					Use							(const Fvector& pos,const Fvector& dir,const Fvector& foot_pos);
+	bool					Use							(const Fvector& pos,const Fvector& dir,const Fvector& foot_pos) override;
 	u16						DriverAnimationType 		();
 	// Core events
-	virtual DLL_Pure		*_construct					();
-	virtual void			Load						( LPCSTR section );
-	virtual BOOL			net_Spawn					( CSE_Abstract* DC );
-	virtual void			net_Destroy					();
-	virtual void			UpdateCL					( ); 
-	virtual	void			UpdateEx					(float fov); //called by owner
+	DLL_Pure		*_construct					() override;
+	void			Load						( LPCSTR section ) override;
+	BOOL			net_Spawn					( CSE_Abstract* DC ) override;
+	void			net_Destroy					() override;
+	void			UpdateCL					( ) override;
+	void			UpdateEx					(float fov) override; //called by owner
 
-	virtual void			shedule_Update				(u32 dt);
-	virtual void			renderable_Render			( ); 
-	virtual	bool			bfAssignMovement			(CScriptEntityAction *tpEntityAction);
-	virtual	bool			bfAssignObject				(CScriptEntityAction *tpEntityAction);
+	void			shedule_Update				(u32 dt) override;
+	void			renderable_Render			( ) override;
+	bool			bfAssignMovement			(CScriptEntityAction *tpEntityAction) override;
+	bool			bfAssignObject				(CScriptEntityAction *tpEntityAction) override;
 
 	// Network
-	virtual void			net_Export					(NET_Packet& P);				// export to server
-	virtual void			net_Import					(NET_Packet& P);				// import from server
-	virtual BOOL			net_Relevant				()	{ return getLocal(); };		// relevant for export to server
-	virtual BOOL			UsedAI_Locations			();
-	virtual	void			net_Relcase					(CObject* O );
+	void			net_Export					(NET_Packet& P) override;				// export to server
+	void			net_Import					(NET_Packet& P) override;				// import from server
+	BOOL			net_Relevant				() override { return getLocal(); };		// relevant for export to server
+	BOOL			UsedAI_Locations			() override;
+	void			net_Relcase					(CObject* O ) override;
 	// Input
-	virtual void			OnMouseMove					(int x, int y);
-	virtual void			OnKeyboardPress				(int dik);
-	virtual void			OnKeyboardRelease			(int dik);
-	virtual void			OnKeyboardHold				(int dik);
+	void			OnMouseMove					(int x, int y) override;
+	void			OnKeyboardPress				(int dik) override;
+	void			OnKeyboardRelease			(int dik) override;
+	void			OnKeyboardHold				(int dik) override;
 	virtual void			vfProcessInputKey			(int iCommand, bool bPressed);
-	virtual void			OnEvent						( NET_Packet& P, u16 type);
-	virtual void			OnAfterExplosion			();
-	virtual void			OnBeforeExplosion			();
-	virtual void			GetRayExplosionSourcePos	(Fvector &pos);
-	virtual void			ActivateExplosionBox		(const Fvector &size,Fvector &in_out_pos){};
-	virtual void			ResetScriptData				(void *P=0);
+	void			OnEvent						( NET_Packet& P, u16 type) override;
+	void			OnAfterExplosion			() override;
+	void			OnBeforeExplosion			() override;
+	void			GetRayExplosionSourcePos	(Fvector &pos) override;
+	void			ActivateExplosionBox		(const Fvector &size,Fvector &in_out_pos) override {};
+	void			ResetScriptData				(void *P=0) override;
 
-	virtual void			Action						(u16 id, u32 flags);
-	virtual void			SetParam					(int id, Fvector2 val);
-	virtual void			SetParam					(int id, Fvector val);
+	void			Action						(u16 id, u32 flags) override;
+	void			SetParam					(int id, Fvector2 val) override;
+	void			SetParam					(int id, Fvector val) override;
 			bool			HasWeapon					();
 			bool			WpnCanHit					();
 			float			FireDirDiff					();
@@ -603,54 +603,54 @@ public:
 	virtual float			SetfHealth					(float value)	{return CEntity::SetfHealth(value);};
 
 	// Hits
-	virtual void			HitSignal					(float /**HitAmount/**/,	Fvector& /**local_dir/**/, CObject* /**who/**/, s16 /**element/**/)	{};
-	virtual void			HitImpulse					(float /**amount/**/,		Fvector& /**vWorldDir/**/, Fvector& /**vLocalDir/**/)			{};
-	virtual void			g_fireParams				(CHudItem* /**pHudItem/**/, Fvector& /**P/**/, Fvector& /**D/**/) override {};
-	virtual u16				Initiator					();
+	void			HitSignal					(float /**HitAmount/**/,	Fvector& /**local_dir/**/, CObject* /**who/**/, s16 /**element/**/) override {};
+	void			HitImpulse					(float /**amount/**/,		Fvector& /**vWorldDir/**/, Fvector& /**vLocalDir/**/) override {};
+	void			g_fireParams				(CHudItem* /**pHudItem/**/, Fvector& /**P/**/, Fvector& /**D/**/) override {};
+	u16				Initiator					() override;
 	// HUD
-	virtual void			OnHUDDraw					(CCustomHUD* hud);
+	void			OnHUDDraw					(CCustomHUD* hud) override;
 	
-	CCameraBase*			Camera						()			{return active_camera;}
+	CCameraBase*			Camera						() override {return active_camera;}
 	void					SetExplodeTime				(u32 et)	;
 			u32				ExplodeTime					()			;
 	// Inventory for the car	
-	CInventory*						GetInventory						() {return NULL/*inventory*/;}
+	CInventory*						GetInventory						() override {return NULL/*inventory*/;}
 		  void						VisualUpdate						(float fov=90.0f);
 		  void						AddAvailableItems					(TIItemContainer& items_container) const;
 		  void						ShowTrunk							();
 protected:
-	virtual void					SpawnInitPhysics					(CSE_Abstract	*D)																;
-	virtual void					net_Save							(NET_Packet& P)																	;
-	virtual	BOOL					net_SaveRelevant					()																				;
-			void					SaveNetState						(NET_Packet& P)																	;
-	virtual	void					RestoreNetState						(CSE_PHSkeleton* po)															;
+	void					SpawnInitPhysics					(CSE_Abstract	*D) override;
+	void					net_Save							(NET_Packet& P) override;
+	BOOL					net_SaveRelevant					() override;
+			void					SaveNetState						(NET_Packet& P) override;
+	void					RestoreNetState						(CSE_PHSkeleton* po) override;
 			void					SetDefaultNetState					(CSE_PHSkeleton* po)															;
 
 	virtual bool					IsHudModeNow		(){return false;};
 	
 public:
 	CCar(void);
-	virtual ~CCar(void);
-	virtual BOOL					AlwaysTheCrow						();
+	~CCar(void) override;
+	BOOL					AlwaysTheCrow						() override;
 
 public:
-	virtual CEntity*					cast_entity				()						{return this;}
+	CEntity*					cast_entity				() override {return this;}
 	u32 GetSize() {return m_items.size();}
 	xr_vector<u16> m_items;
 private:
 	template <class T> IC void fill_wheel_vector(LPCSTR S,xr_vector<T>& type_wheels);
 	IC void fill_exhaust_vector(LPCSTR S,xr_vector<SExhaust>& exhausts);
 	IC void fill_doors_map(LPCSTR S,xr_map<u16,SDoor>& doors);
-	
-	virtual	void reinit			();
-	virtual	void reload			(LPCSTR section);
-	virtual CGameObject			*cast_game_object			()	{return this;}
-	virtual CExplosive			*cast_explosive				()	{return this;}
-	virtual CPhysicsShellHolder	*cast_physics_shell_holder	()	{return this;}
-	virtual CParticlesPlayer	*cast_particles_player		()	{return this;}
-	virtual CScriptEntity		*cast_script_entity			()	{return this;}
-	virtual IDamageSource		*cast_IDamageSource			()	{return this;}
-	virtual CHolderCustom		*cast_holder_custom			()	{return this;}
+
+	void reinit			() override;
+	void reload			(LPCSTR section) override;
+	CGameObject			*cast_game_object			() override {return this;}
+	CExplosive			*cast_explosive				() override {return this;}
+	CPhysicsShellHolder	*cast_physics_shell_holder	() override {return this;}
+	CParticlesPlayer	*cast_particles_player		() override {return this;}
+	CScriptEntity		*cast_script_entity			() override {return this;}
+	IDamageSource		*cast_IDamageSource			() override {return this;}
+	CHolderCustom		*cast_holder_custom			() override {return this;}
 
 private:
 	car_memory	*m_memory;

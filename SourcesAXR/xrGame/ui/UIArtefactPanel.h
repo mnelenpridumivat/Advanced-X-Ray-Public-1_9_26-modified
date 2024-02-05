@@ -13,10 +13,10 @@ class CUIArtefactPanel : public CUIWindow
 
 public:
 	CUIArtefactPanel			();
-	~CUIArtefactPanel			();
+	~CUIArtefactPanel			() override;
 
 	void InitIcons				(const xr_vector<const CArtefact*>& artefacts);
-	void Draw					();
+	void Draw					() override;
 	void InitFromXML			(CUIXml& xml, LPCSTR path, int index);
 	bool GetShowInInventory		() { return m_bShowInInventory; }
 

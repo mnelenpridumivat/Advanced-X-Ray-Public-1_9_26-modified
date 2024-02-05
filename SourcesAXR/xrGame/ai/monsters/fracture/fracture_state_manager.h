@@ -8,8 +8,8 @@ class CStateManagerFracture : public CMonsterStateManager<CFracture> {
 
 public:
 						CStateManagerFracture	(CFracture *obj);
-	virtual				~CStateManagerFracture	();
+	~CStateManagerFracture	() override;
 
-	virtual	void		execute					();
-	virtual void		remove_links			(CObject* object) { inherited::remove_links(object);}
+	void		execute					() override;
+	void		remove_links			(CObject* object) override { inherited::remove_links(object);}
 };

@@ -9,7 +9,7 @@ class CWeaponVintorez :
 	typedef CWeaponMagazined inherited;
 public:
 	CWeaponVintorez(void);
-	virtual ~CWeaponVintorez(void);
+	~CWeaponVintorez(void) override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

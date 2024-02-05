@@ -38,13 +38,13 @@ protected:
 
 public:
 	IC						CSpaceRestrictionComposition	(CSpaceRestrictionHolder *space_restriction_holder, shared_str space_restrictors);
-		virtual				~CSpaceRestrictionComposition	();
-		virtual void		initialize						();
-		virtual bool		inside							(const Fsphere &sphere);
-	IC	virtual shared_str	name							() const;
-	IC	virtual bool		shape							() const;
-	IC	virtual bool		default_restrictor				() const;
-		virtual	Fsphere		sphere							() const;
+	~CSpaceRestrictionComposition	() override;
+	void		initialize						() override;
+	bool		inside							(const Fsphere &sphere) override;
+	IC shared_str	name							() const override;
+	IC bool		shape							() const override;
+	IC bool		default_restrictor				() const override;
+	Fsphere		sphere							() const override;
 #ifdef DEBUG
 				void		test_correctness				();
 #endif

@@ -19,17 +19,17 @@ class CStateControlHide : public CState<_Object> {
 public:
 
 					CStateControlHide		(_Object *obj) : inherited(obj) {}
-	virtual			~CStateControlHide		() {}
+	~CStateControlHide		() override {}
 
-	virtual void	initialize				();
-	virtual void	execute					();
+	void	initialize				() override;
+	void	execute					() override;
 
-	virtual void	finalize				();
-	virtual void	critical_finalize		();
-	virtual void	remove_links			(CObject* object) { inherited::remove_links(object);}
+	void	finalize				() override;
+	void	critical_finalize		() override;
+	void	remove_links			(CObject* object) override { inherited::remove_links(object);}
 
-	virtual bool 	check_completion		();
-	virtual bool 	check_start_conditions	();
+	bool 	check_completion		() override;
+	bool 	check_start_conditions	() override;
 
 
 private:

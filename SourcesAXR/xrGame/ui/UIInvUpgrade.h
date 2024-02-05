@@ -89,26 +89,26 @@ protected:
 
 public:
 						UIUpgrade( CUIInventoryUpgradeWnd* parent_wnd );
-	virtual				~UIUpgrade();
+	~UIUpgrade() override;
 
 			void		init_upgrade( LPCSTR upgrade_id, CInventoryItem& item );
 
 			void		load_from_xml( CUIXml& ui_xml, int i_column, int i_cell, Frect const& t_cell_item );
 			void		set_texture( Layer layer, LPCSTR texture );
-			
-	virtual	void		Draw();
-	virtual	void		Update();
-	virtual	void		Reset();
+
+	void		Draw() override;
+	void		Update() override;
+	void		Reset() override;
 
 			void		update_upgrade_state();
 			void		update_mask();
 			void		update_item( CInventoryItem* inv_item );
 
-	virtual bool		OnMouseAction( float x, float y, EUIMessages mouse_action );
-	virtual void		OnFocusReceive();
-	virtual void		OnFocusLost();
+	bool		OnMouseAction( float x, float y, EUIMessages mouse_action ) override;
+	void		OnFocusReceive() override;
+	void		OnFocusLost() override;
 	virtual void		OnClick();
-	virtual bool 		OnDbClick();
+	bool 		OnDbClick() override;
 			void		OnRClick();
 
 			void		on_over_window();
@@ -136,11 +136,11 @@ private:
 
 public:
 						CUIUpgradePoint(UIUpgrade* upgr);
-	virtual				~CUIUpgradePoint();
+	~CUIUpgradePoint() override;
 			void		load_from_xml(CUIXml& ui_xml, int i_cell);
-	virtual bool		OnMouseAction( float x, float y, EUIMessages mouse_action );
-	virtual void		OnFocusReceive();
-	virtual void		OnFocusLost();
+	bool		OnMouseAction( float x, float y, EUIMessages mouse_action ) override;
+	void		OnFocusReceive() override;
+	void		OnFocusLost() override;
 };
 
 #endif // UI_INVENTORY_UPGRADE_H_INCLUDED

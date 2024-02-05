@@ -14,13 +14,13 @@ typedef	physics_shell_animated inherited;
 	CBlend					*blend;
 public:
 			interactive_animation	( CPhysicsShellHolder* ca, CBlend* b );
-virtual		~interactive_animation	( );
+~interactive_animation	( ) override;
 
 public:
 virtual		bool update					( const Fmatrix	&xrorm );
 
 private:
-virtual		void create_shell			( CPhysicsShellHolder* O );
+void create_shell			( CPhysicsShellHolder* O ) override;
 		bool collide				( );
 static	void contact_callback		( bool& do_colide, bool bo1, dContact& c,SGameMtl * /*material_1*/, SGameMtl * /*material_2*/ );
 };

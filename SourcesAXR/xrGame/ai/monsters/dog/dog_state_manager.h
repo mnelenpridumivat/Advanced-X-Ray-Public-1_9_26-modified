@@ -8,8 +8,8 @@ class CStateManagerDog : public CMonsterStateManager<CAI_Dog> {
 
 public:
 
-					CStateManagerDog	(CAI_Dog *monster); 
-	virtual void	execute				();
+					CStateManagerDog	(CAI_Dog *monster);
+	void	execute				() override;
 			bool	check_eat			();
-	virtual void	remove_links		(CObject* object) { inherited::remove_links(object);}
+	void	remove_links		(CObject* object) override { inherited::remove_links(object);}
 };

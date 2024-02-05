@@ -20,20 +20,20 @@ public:
 	typedef	CSpaceRestrictor inherited;
 
 					CScriptZone			();
-	virtual			~CScriptZone		();
-	virtual void	reinit				();
-	virtual BOOL	net_Spawn			(CSE_Abstract* DC);
-	virtual void	net_Destroy			();
-	virtual void	net_Relcase			(CObject* O);
-	virtual void	shedule_Update		(u32 dt);
-	virtual void	feel_touch_new		(CObject* O);
-	virtual void	feel_touch_delete	(CObject* O);
-	virtual BOOL	feel_touch_contact	(CObject* O);
+	~CScriptZone		() override;
+	void	reinit				() override;
+	BOOL	net_Spawn			(CSE_Abstract* DC) override;
+	void	net_Destroy			() override;
+	void	net_Relcase			(CObject* O) override;
+	void	shedule_Update		(u32 dt) override;
+	void	feel_touch_new		(CObject* O) override;
+	void	feel_touch_delete	(CObject* O) override;
+	BOOL	feel_touch_contact	(CObject* O) override;
 			bool	active_contact		(u16 id) const;
-	virtual bool	IsVisibleForZones	()				{return false;}
-	virtual	bool	register_schedule	() const		{return true;}
+	bool	IsVisibleForZones	() override {return false;}
+	bool	register_schedule	() const override {return true;}
 #ifdef DEBUG
-	virtual	void	OnRender			();
+	void	OnRender			() override;
 #endif
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

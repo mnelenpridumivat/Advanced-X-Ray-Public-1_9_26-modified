@@ -17,17 +17,16 @@ protected:
 	float			m_fThrowInAtten;
 
 public:
-
-	virtual void	Load(LPCSTR section);
+	void	Load(LPCSTR section) override;
 
 	//воздействие зоной на объект
-	virtual void	Affect(SZoneObjectInfo* O);
+	void	Affect(SZoneObjectInfo* O) override;
 	virtual void	AffectPull(CPhysicsShellHolder* GO, const Fvector& throw_in_dir, float dist);
 	virtual void	AffectPullAlife(CEntityAlive* EA, const Fvector& throw_in_dir, float dist);
 	virtual void	AffectPullDead(CPhysicsShellHolder* GO, const Fvector& throw_in_dir, float dist);
 	virtual void	ThrowInCenter(Fvector& C);
 
-	virtual bool	BlowoutState();
+	bool	BlowoutState() override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 

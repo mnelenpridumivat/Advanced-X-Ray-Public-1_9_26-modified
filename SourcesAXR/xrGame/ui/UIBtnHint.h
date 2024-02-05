@@ -11,7 +11,7 @@ class CUIButtonHint :public CUIFrameWindow
 	bool				m_enabledOnFrame;
 public:
 					CUIButtonHint	();
-	virtual			~CUIButtonHint	();
+	~CUIButtonHint	() override;
 	CUIWindow*		Owner			()	{return m_ownerWnd;}
 	void			Discard			()	{m_ownerWnd=NULL;};
 	void			OnRender		();

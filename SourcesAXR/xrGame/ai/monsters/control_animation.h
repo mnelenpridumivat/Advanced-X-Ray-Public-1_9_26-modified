@@ -69,9 +69,9 @@ public:
 	bool					m_torso_animation_end;
 
 public:
-	virtual void	reinit					();
-	virtual void	update_frame			();
-	virtual	void	reset_data				();
+	void	reinit					() override;
+	void	update_frame			() override;
+	void	reset_data				() override;
 				
 			void	add_anim_event			(MotionID, float, u32);
 

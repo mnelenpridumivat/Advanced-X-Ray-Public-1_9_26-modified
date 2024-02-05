@@ -11,22 +11,22 @@ class CUICheckButton : public CUI3tButton, public CUIOptionsItem
 
 public:
 					CUICheckButton			();
-	virtual			~CUICheckButton			();
+	~CUICheckButton			() override;
 
-	virtual void	Update					();
+	void	Update					() override;
 
 	// CUIOptionsItem
-	virtual void	SetCurrentOptValue	();	// opt->current
-	virtual void	SaveBackUpOptValue	();	// current->backup
-	virtual void	SaveOptValue		();	// current->opt
-	virtual void	UndoOptValue		();	// backup->current
-	virtual bool	IsChangedOptValue	() const;	// backup!=current
+	void	SetCurrentOptValue	() override;	// opt->current
+	void	SaveBackUpOptValue	() override;	// current->backup
+	void	SaveOptValue		() override;	// current->opt
+	void	UndoOptValue		() override;	// backup->current
+	bool	IsChangedOptValue	() const override;	// backup!=current
 
-	virtual void 	OnFocusReceive		();
-	virtual void	OnFocusLost			();
-	virtual void	Show				( bool status );
-	virtual bool 	OnMouseAction				( float x, float y, EUIMessages mouse_action );
-	virtual bool	OnMouseDown			( int mouse_btn );
+	void 	OnFocusReceive		() override;
+	void	OnFocusLost			() override;
+	void	Show				( bool status ) override;
+	bool 	OnMouseAction				( float x, float y, EUIMessages mouse_action ) override;
+	bool	OnMouseDown			( int mouse_btn ) override;
 
 			void InitCheckButton		(Fvector2 pos, Fvector2 size, LPCSTR texture_name);
 

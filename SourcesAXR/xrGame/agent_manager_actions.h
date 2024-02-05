@@ -24,7 +24,7 @@ protected:
 
 public:
 						CAgentManagerActionNoOrders	(CAgentManager *object, LPCSTR action_name = "");
-	virtual void		finalize					();
+	void		finalize					() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,9 +49,9 @@ protected:
 
 public:
 						CAgentManagerActionKillEnemy(CAgentManager *object, LPCSTR action_name = "");
-	virtual void		initialize					();
-	virtual void		finalize					();
-	virtual void		execute						();
+	void		initialize					() override;
+	void		finalize					() override;
+	void		execute						() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -64,6 +64,6 @@ protected:
 
 public:
 						CAgentManagerActionReactOnDanger(CAgentManager *object, LPCSTR action_name = "");
-	virtual void		initialize						();
-	virtual void		execute							();
+	void		initialize						() override;
+	void		execute							() override;
 };

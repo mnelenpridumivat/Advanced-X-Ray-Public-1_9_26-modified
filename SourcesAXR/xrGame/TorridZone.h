@@ -10,16 +10,16 @@ private:
 	CObjectAnimator		*m_animator;
 public:
 						CTorridZone			();
-	virtual				~CTorridZone		();
-	virtual void		UpdateWorkload		(u32 dt);
-	virtual void		shedule_Update		(u32 dt);
-	BOOL				net_Spawn			(CSE_Abstract* DC);
+	~CTorridZone		() override;
+	void		UpdateWorkload		(u32 dt) override;
+	void		shedule_Update		(u32 dt) override;
+	BOOL				net_Spawn			(CSE_Abstract* DC) override;
 
-	virtual bool		IsVisibleForZones	() { return true;		}
-	virtual	bool		Enable				();
-	virtual	bool		Disable				();
+	bool		IsVisibleForZones	() override { return true;		}
+	bool		Enable				() override;
+	bool		Disable				() override;
 
 	// Lain: added
-	virtual bool        light_in_slow_mode  ();
-	virtual BOOL        AlwaysTheCrow       ();
+	bool        light_in_slow_mode  () override;
+	BOOL        AlwaysTheCrow       () override;
 };

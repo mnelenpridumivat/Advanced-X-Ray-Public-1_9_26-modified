@@ -12,16 +12,16 @@ class stalker_flair : public player_state_param
 	typedef player_state_param inherited;
 public:
 						stalker_flair	(game_state_accumulator* owner);
-	virtual 			~stalker_flair	() {};
+	~stalker_flair	() override {};
 
-	virtual void		update						() {};
-	
-	virtual	u32 const	get_u32_param				();
-	virtual float const get_float_param				() { return -1.0f; };
-	virtual void		reset_game					();
-	
-	virtual void		OnArtefactSpawned			();
-	virtual void		OnPlayerTakeArtefact		(game_PlayerState const * ps);
+	void		update						() override {};
+
+	u32 const	get_u32_param				() override;
+	float const get_float_param				() override { return -1.0f; };
+	void		reset_game					() override;
+
+	void		OnArtefactSpawned			() override;
+	void		OnPlayerTakeArtefact		(game_PlayerState const * ps) override;
 protected:
 	u32					m_art_spawn_time;
 	u32					m_art_take_time;

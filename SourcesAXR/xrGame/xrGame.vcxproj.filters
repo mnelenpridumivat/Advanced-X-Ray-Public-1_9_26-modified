@@ -2542,6 +2542,9 @@
     <Filter Include="AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_labirint">
       <UniqueIdentifier>{e854a4fd-4e4d-4047-a336-286a768d75f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\AMonsters\monsters\Abilities">
+      <UniqueIdentifier>{12bac0f1-ce7e-4857-9b5c-eb3cf49352e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">

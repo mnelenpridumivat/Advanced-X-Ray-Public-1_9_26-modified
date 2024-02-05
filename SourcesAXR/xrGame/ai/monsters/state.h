@@ -75,8 +75,10 @@ class CStateMove : public CState<_Object> {
 	typedef CState<_Object> inherited;
 public:
 						CStateMove	(_Object *obj, void *data = 0) : inherited(obj,data){}
-	virtual 			~CStateMove	(){}
-	virtual void initialize() {
+	~CStateMove	() override {}
+
+	void initialize() override
+	{
 		inherited::initialize();
 		object->path().prepare_builder();
 	}

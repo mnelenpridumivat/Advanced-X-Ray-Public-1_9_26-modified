@@ -24,55 +24,55 @@ public IClimableObject
 	u16					m_material;
 public:
 					CClimableObject		();
-					~CClimableObject	();
-	virtual void	Load				( LPCSTR section);
-	virtual BOOL	net_Spawn			( CSE_Abstract* DC);
-	virtual	void	net_Destroy			();
-	virtual void	shedule_Update		( u32 dt);							// Called by sheduler
-	virtual void	UpdateCL			( );								// Called each frame, so no need for dt
-	virtual void	Center				(Fvector &C) const;
-	virtual float	Radius				() const;
+					~CClimableObject	() override;
+	void	Load				( LPCSTR section) override;
+	BOOL	net_Spawn			( CSE_Abstract* DC) override;
+	void	net_Destroy			() override;
+	void	shedule_Update		( u32 dt) override;							// Called by sheduler
+	void	UpdateCL			( ) override;								// Called each frame, so no need for dt
+	void	Center				(Fvector &C) const override;
+	float	Radius				() const override;
 ////////////////////////////////////////////////////////////////////
-	virtual IPhysicsShellHolder			*cast_IPhysicsShellHolder	(){ return this; }
+	IPhysicsShellHolder			*cast_IPhysicsShellHolder	() override { return this; }
 
 #ifdef DEBUG
-	virtual void	OnRender			();
+	void	OnRender			() override;
 #endif
 protected:
-	virtual BOOL	UsedAI_Locations	();
+	BOOL	UsedAI_Locations	() override;
 public:
 			const Fvector&	Axis				()const		{return m_axis;}
-	virtual float			DDAxis				(Fvector& dir)const;
+	float			DDAxis				(Fvector& dir)const override;
 
 	virtual const Fvector&	Side				()const {return m_side;}
-	virtual float			DDSide				(Fvector& dir)const;
+	float			DDSide				(Fvector& dir)const override;
 
-	virtual const Fvector&	Norm				()const{return m_norm;} 
-	virtual float			DDNorm				(Fvector &dir)const;
-	virtual bool			BeforeLadder		(CPHCharacter *actor,float tolerance=0.f)const;
-	virtual float			DDLowerP			(CPHCharacter	*actor,Fvector &out_dir)const;//returns distance and dir to lover point
-	virtual float			DDUpperP			(CPHCharacter	*actor,Fvector &out_dir)const;//returns distance and dir to upper point
+	const Fvector&	Norm				()const override {return m_norm;}
+	float			DDNorm				(Fvector &dir)const override;
+	bool			BeforeLadder		(CPHCharacter *actor,float tolerance=0.f)const override;
+	float			DDLowerP			(CPHCharacter	*actor,Fvector &out_dir)const override;//returns distance and dir to lover point
+	float			DDUpperP			(CPHCharacter	*actor,Fvector &out_dir)const override;//returns distance and dir to upper point
 
 			void			DToAxis				(CPHCharacter	*actor,Fvector &dir)const;
-	virtual float			DDToAxis			(CPHCharacter	*actor,Fvector &out_dir)const;//returns distance and dir to ladder axis
+	float			DDToAxis			(CPHCharacter	*actor,Fvector &out_dir)const override;//returns distance and dir to ladder axis
 			void			POnAxis				(CPHCharacter	*actor,Fvector	&P)const;
-	
-	virtual float			AxDistToUpperP		(CPHCharacter	*actor)const;
-	virtual float			AxDistToLowerP		(CPHCharacter	*actor)const;
+
+	float			AxDistToUpperP		(CPHCharacter	*actor)const override;
+	float			AxDistToLowerP		(CPHCharacter	*actor)const override;
 
 			void			DSideToAxis			(CPHCharacter	*actor,Fvector	&dir)const;
 			float			DDSideToAxis		(CPHCharacter	*actor,Fvector	&dir)const;
-	
-	virtual void			DToPlain			(CPHCharacter	*actor,Fvector	&dist)const;
-	virtual float			DDToPlain			(CPHCharacter	*actor,Fvector	&dir)const;
+
+	void			DToPlain			(CPHCharacter	*actor,Fvector	&dist)const override;
+	float			DDToPlain			(CPHCharacter	*actor,Fvector	&dir)const override;
 			bool			InRange				(CPHCharacter	*actor)const;
-	virtual bool			InTouch				(CPHCharacter	*actor)const;
-	virtual u16				Material			()const		{return m_material; }
+	bool			InTouch				(CPHCharacter	*actor)const override;
+	u16				Material			()const override {return m_material; }
 			void			LowerPoint			(Fvector	&P)const;
 			void			UpperPoint			(Fvector	&P)const;
 			void			DefineClimbState	(CPHCharacter	*actor)const;
 	static 	void			ObjectContactCallback(bool& /**do_colide/**/,bool bo1,dContact& c,SGameMtl * /*material_1*/,SGameMtl * /*material_2*/);
 
 public:
-	virtual bool	register_schedule	() const {return false;}
+	bool	register_schedule	() const override {return false;}
 };

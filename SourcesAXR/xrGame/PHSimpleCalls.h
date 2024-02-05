@@ -11,8 +11,8 @@ class CPHCallOnStepCondition:
 						u64					m_step																	;
 public:
 											CPHCallOnStepCondition		()											;
-	virtual				bool				obsolete					()					const					;
-	virtual				bool				is_true						()											;
+						bool				obsolete					()					const override;
+						bool				is_true						() override;
 IC						void				set_step					(u64 step)									{m_step=step;}
 						void				set_steps_interval			(u64 steps)									;
 						void				set_time_interval			(u32 time)									;
@@ -36,8 +36,7 @@ class CPHExpireOnStepCondition:
 {
 
 public:
-									
-	virtual				bool				is_true						()											{return true;}
+	bool				is_true						() override {return true;}
 DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 
@@ -55,7 +54,7 @@ public:
 
 
 	virtual				bool				compare					(const	CPhysicsShell	* shl)			const	{return shl==m_shell;}
-	virtual				bool				obsolete				()										const	;
+				bool				obsolete				()										const override;
 };
 
 class CPHConstForceAction:
@@ -65,10 +64,10 @@ class CPHConstForceAction:
 						Fvector				m_force;
 public:
 											CPHConstForceAction		(CPhysicsShell	*shell,const Fvector &force)	;
-	virtual				void				run						()												;
+						void				run						() override;
 
-	virtual				bool				compare					(const CPHReqComparerV	* v)		const		{return v->compare(this);}
-	virtual				bool				compare					(const	CPhysicsShell	* shl)		const		{return CPHShellBasedAction::compare(shl);}
+						bool				compare					(const CPHReqComparerV	* v)		const override {return v->compare(this);}
+						bool				compare					(const	CPhysicsShell	* shl)		const override {return CPHShellBasedAction::compare(shl);}
 #ifdef	DEBUG
 		const			Fvector				&force					()const  { return	m_force;	}
 #endif
@@ -84,5 +83,5 @@ class CPHReqComparerHasShell	:
 											CPhysicsShell			*m_shell																		;
 public:
 											CPHReqComparerHasShell	(CPhysicsShell		*shl)														;
-	virtual				bool				compare					(const	CPHConstForceAction* v)			const		{return v->compare(m_shell);}
+											bool				compare					(const	CPHConstForceAction* v)			const override {return v->compare(m_shell);}
 };

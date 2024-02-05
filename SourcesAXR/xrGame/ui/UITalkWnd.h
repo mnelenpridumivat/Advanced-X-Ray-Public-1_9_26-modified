@@ -29,20 +29,20 @@ private:
 
 public:
 						CUITalkWnd();
-	virtual				~CUITalkWnd();
+	~CUITalkWnd() override;
 
 	IC		bool		playing_sound			()		 { return !!m_sound._feedback(); }
 	IC	CInventoryOwner*OthersInvOwner			() const { return m_pOthersInvOwner;	 };
 
 			void		InitTalkWnd				();
 
-	virtual bool		StopAnyMove				(){return true;}
-	virtual void		SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	bool		StopAnyMove				() override {return true;}
+	void		SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 
-	virtual void		Draw					();
-	virtual void		Update					();
-		
-	virtual void		Show					(bool status);
+	void		Draw					() override;
+	void		Update					() override;
+
+	void		Show					(bool status) override;
 	
 	void				Stop					();					//deffered
 	void				StopTalk				();
@@ -51,7 +51,7 @@ public:
 	void				NeedUpdateQuestions		();
 	//инициализации начального диалога собеседника
 	void				InitOthersStartDialog	();
-	virtual bool		OnKeyboardAction				(int dik, EUIMessages keyboard_action);
+	bool		OnKeyboardAction				(int dik, EUIMessages keyboard_action) override;
 	void				SwitchToTrade			();
 	void				SwitchToUpgrade			();
 	void				AddIconedMessage		(LPCSTR caption, LPCSTR text, LPCSTR texture_name, LPCSTR templ_name);

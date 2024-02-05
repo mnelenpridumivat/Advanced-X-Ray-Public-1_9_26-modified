@@ -61,82 +61,81 @@ class CBaseMonster : public CCustomMonster, public CStepManager
 	
 public:
 							CBaseMonster						();
-	virtual					~CBaseMonster						();
+	~CBaseMonster						() override;
 
 public:
-	virtual	Feel::Sound*				dcast_FeelSound				()	{ return this;	}
-	virtual	CCharacterPhysicsSupport*	character_physics_support	()	{return m_pPhysics_support;}
-	virtual const	CCharacterPhysicsSupport*	character_physics_support()const{return m_pPhysics_support;}
-	virtual CPHDestroyable*				ph_destroyable				();
-	virtual CEntityAlive*				cast_entity_alive			()	{return this;}
-	virtual CEntity*					cast_entity					()	{return this;}
-	virtual CPhysicsShellHolder*		cast_physics_shell_holder	()	{return this;}
-	virtual CParticlesPlayer*			cast_particles_player		()	{return this;}
-	virtual CCustomMonster*				cast_custom_monster			()	{return this;}
-	virtual CScriptEntity*				cast_script_entity			()	{return this;}
-	virtual CBaseMonster*				cast_base_monster			()	{return this;}
+	Feel::Sound*				dcast_FeelSound				() override { return this;	}
+	CCharacterPhysicsSupport*	character_physics_support	() override {return m_pPhysics_support;}
+	const	CCharacterPhysicsSupport*	character_physics_support()const override {return m_pPhysics_support;}
+	CPHDestroyable*				ph_destroyable				() override;
+	CEntityAlive*				cast_entity_alive			() override {return this;}
+	CEntity*					cast_entity					() override {return this;}
+	CPhysicsShellHolder*		cast_physics_shell_holder	() override {return this;}
+	CParticlesPlayer*			cast_particles_player		() override {return this;}
+	CCustomMonster*				cast_custom_monster			() override {return this;}
+	CScriptEntity*				cast_script_entity			() override {return this;}
+	CBaseMonster*				cast_base_monster			() override {return this;}
 
-	virtual CGameObject*				cast_game_object			() {return this;}
+	CGameObject*				cast_game_object			() override {return this;}
 
 public:
-	
-	virtual	BOOL			renderable_ShadowReceive		()	{ return TRUE;	}  
-	virtual void			Die								(CObject* who);
-	virtual void			HitSignal						(float amount, Fvector& vLocalDir, CObject* who, s16 element);
-	virtual	void			Hit								(SHit* pHDS);
-	virtual	void			PHHit							( SHit &H );
-	virtual void			SelectAnimation					(const Fvector& _view, const Fvector& _move, float speed );
+	BOOL			renderable_ShadowReceive		() override { return TRUE;	}
+	void			Die								(CObject* who) override;
+	void			HitSignal						(float amount, Fvector& vLocalDir, CObject* who, s16 element) override;
+	void			Hit								(SHit* pHDS) override;
+	void			PHHit							( SHit &H ) override;
+	void			SelectAnimation					(const Fvector& _view, const Fvector& _move, float speed ) override;
 
-	virtual void			Load							(LPCSTR section);
+	void			Load							(LPCSTR section) override;
 
 	// must be called at the end of most derived's Load
 	virtual void			PostLoad						(LPCSTR section);
 
-	virtual DLL_Pure		*_construct						();
+	DLL_Pure		*_construct						() override;
 
-	virtual BOOL			net_Spawn						(CSE_Abstract* DC);
-	virtual void			net_Destroy						();
-	virtual void			net_Save						(NET_Packet& P);
-	virtual	BOOL			net_SaveRelevant				();
-	virtual void			net_Export						(NET_Packet& P);
-	virtual void			net_Import						(NET_Packet& P);
-	virtual void			net_Relcase						(CObject *O);
+	BOOL			net_Spawn						(CSE_Abstract* DC) override;
+	void			net_Destroy						() override;
+	void			net_Save						(NET_Packet& P) override;
+	BOOL			net_SaveRelevant				() override;
+	void			net_Export						(NET_Packet& P) override;
+	void			net_Import						(NET_Packet& P) override;
+	void			net_Relcase						(CObject *O) override;
 
 	//save/load server serialization
-	virtual void			save							(NET_Packet &output_packet) {inherited::save(output_packet);}
-	virtual void			load							(IReader &input_packet)		{inherited::load(input_packet);}
+	void			save							(NET_Packet &output_packet) override {inherited::save(output_packet);}
+	void			load							(IReader &input_packet) override {inherited::load(input_packet);}
 
 
-	virtual void			UpdateCL						();
-	virtual void			shedule_Update					(u32 dt);
+	void			UpdateCL						() override;
+	void			shedule_Update					(u32 dt) override;
 
 	virtual void			InitThink						() {}
-	virtual void			Think							();
-	virtual	void			reinit							();
-	virtual void			reload							(LPCSTR section);
+	void			Think							() override;
+	void			reinit							() override;
+	void			reload							(LPCSTR section) override;
 
 	virtual void			init							() {}
 
-	virtual void			feel_sound_new					(CObject* who, int eType, CSound_UserDataPtr user_data, const Fvector &Position, float power);
-	virtual BOOL			feel_vision_isRelevant			(CObject* O);
-	virtual BOOL			feel_touch_on_contact			(CObject* O);
-	virtual BOOL			feel_touch_contact				(CObject *);
+	void			feel_sound_new					(CObject* who, int eType, CSound_UserDataPtr user_data, const Fvector &Position, float power) override;
+	BOOL			feel_vision_isRelevant			(CObject* O) override;
+	BOOL			feel_touch_on_contact			(CObject* O) override;
+	BOOL			feel_touch_contact				(CObject *) override;
 
-	virtual bool			useful							(const CItemManager *manager, const CGameObject *object) const;
-	virtual float			evaluate						(const CItemManager *manager, const CGameObject *object) const;
+	bool			useful							(const CItemManager *manager, const CGameObject *object) const override;
+	float			evaluate						(const CItemManager *manager, const CGameObject *object) const override;
 
-	virtual void			OnEvent							(NET_Packet& P, u16 type);
-	virtual void			OnHUDDraw						(CCustomHUD* hud)			{return inherited::OnHUDDraw(hud);}
-	virtual u16				PHGetSyncItemsNumber			()							{return inherited::PHGetSyncItemsNumber();}
-	virtual CPHSynchronize*	PHGetSyncItem					(u16 item)					{return inherited::PHGetSyncItem(item);}
-	virtual void			PHUnFreeze						()							{return inherited::PHUnFreeze();}
-	virtual void			PHFreeze						()							{return inherited::PHFreeze();}
-	virtual BOOL			UsedAI_Locations				()							{return inherited::UsedAI_Locations();}
+	void			OnEvent							(NET_Packet& P, u16 type) override;
+	void			OnHUDDraw						(CCustomHUD* hud) override {return inherited::OnHUDDraw(hud);}
+	u16				PHGetSyncItemsNumber			() override {return inherited::PHGetSyncItemsNumber();}
+	CPHSynchronize*	PHGetSyncItem					(u16 item) override {return inherited::PHGetSyncItem(item);}
+	void			PHUnFreeze						() override {return inherited::PHUnFreeze();}
+	void			PHFreeze						() override {return inherited::PHFreeze();}
+	BOOL			UsedAI_Locations				() override {return inherited::UsedAI_Locations();}
 
-	virtual const SRotation	Orientation						() const					{return inherited::Orientation();}
-	virtual void			renderable_Render				()							{return inherited::renderable_Render();} 
+	const SRotation	Orientation						() const override {return inherited::Orientation();}
+	void			renderable_Render				() override {return inherited::renderable_Render();}
 
-	virtual	void			on_restrictions_change			();
+	void			on_restrictions_change			() override;
 
 	virtual	void			SetAttackEffector				();
 	
@@ -162,23 +161,23 @@ public:
 	// ---------------------------------------------------------------------------------
 	// Process scripts
 	// ---------------------------------------------------------------------------------
-	virtual	bool			bfAssignMovement				(CScriptEntityAction	*tpEntityAction);
+	bool			bfAssignMovement				(CScriptEntityAction	*tpEntityAction) override;
 			bool			AssignGamePathIfNeeded			(Fvector target_pos, u32 level_vertex);
-	virtual	bool			bfAssignObject					(CScriptEntityAction	*tpEntityAction);
-	virtual	bool			bfAssignWatch					(CScriptEntityAction	*tpEntityAction);
-	virtual bool			bfAssignAnimation				(CScriptEntityAction  *tpEntityAction);
-	virtual	bool			bfAssignMonsterAction			(CScriptEntityAction	*tpEntityAction);
-	virtual bool			bfAssignSound					(CScriptEntityAction *tpEntityAction);
-	
-	virtual	void			vfFinishAction					(CScriptEntityAction		*tpEntityAction);
-	
-	virtual void			ProcessScripts					();
+	bool			bfAssignObject					(CScriptEntityAction	*tpEntityAction) override;
+	bool			bfAssignWatch					(CScriptEntityAction	*tpEntityAction) override;
+	bool			bfAssignAnimation				(CScriptEntityAction  *tpEntityAction) override;
+	bool			bfAssignMonsterAction			(CScriptEntityAction	*tpEntityAction) override;
+	bool			bfAssignSound					(CScriptEntityAction *tpEntityAction) override;
 
-	virtual	CEntity			*GetCurrentEnemy				();
-	virtual	CEntity 		*GetCurrentCorpse				();
-	virtual int				get_enemy_strength				();
-	
-	virtual void			SetScriptControl				(const bool bScriptControl, shared_str caSciptName);
+	void			vfFinishAction					(CScriptEntityAction		*tpEntityAction) override;
+
+	void			ProcessScripts					() override;
+
+	CEntity			*GetCurrentEnemy				() override;
+	CEntity 		*GetCurrentCorpse				() override;
+	int				get_enemy_strength				() override;
+
+	void			SetScriptControl				(const bool bScriptControl, shared_str caSciptName) override;
 
 	virtual void			SetEnemy						(const CEntityAlive *sent);
 	bool					m_force_real_speed;
@@ -203,7 +202,7 @@ public:
 	virtual void			LookPosition					(Fvector to_point, float angular_speed = PI_DIV_3);		// каждый монстр может по-разному реализвать эту функ (e.g. кровосос с поворотом головы и т.п.)
 
 	// Team	
-	virtual void			ChangeTeam						(int team, int squad, int group);
+	void			ChangeTeam						(int team, int squad, int group) override;
 		
 	// ---------------------------------------------------------------------------------
 	// Abilities
@@ -219,8 +218,8 @@ public:
 	virtual bool			ability_jump_over_physics		() {return false;}
 	virtual bool			ability_pitch_correction		() {return true;}
 	// ---------------------------------------------------------------------------------
-	
-	virtual void			event_on_step					() {}
+
+	void			event_on_step					() override {}
 	virtual void			on_threaten_execute				() {}
 	// ---------------------------------------------------------------------------------
 	// Memory
@@ -240,7 +239,7 @@ public:
 protected:
 	CControlPathBuilder			*m_movement_manager;
 protected:
-	virtual CMovementManager	*create_movement_manager();
+	CMovementManager	*create_movement_manager() override;
 
 // members
 public:
@@ -281,7 +280,7 @@ public:
 	const CEntityAlive		*EatedCorpse;
 	// Lain: added
 	bool                    check_eated_corpse_draggable();
-	virtual bool			is_base_monster_with_enemy	() { return EnemyMan.get_enemy() != NULL; }
+	bool			is_base_monster_with_enemy	() override { return EnemyMan.get_enemy() != NULL; }
 
 
 
@@ -468,10 +467,10 @@ protected:
 		critical_wound_type_torso,
 		critical_wound_type_legs
 	};
-	
-	virtual void			load_critical_wound_bones					();
-	virtual bool			critical_wound_external_conditions_suitable	();
-	virtual void			critical_wounded_state_start				();
+
+	void			load_critical_wound_bones					() override;
+	bool			critical_wound_external_conditions_suitable	() override;
+	void			critical_wounded_state_start				() override;
 	
 			void			fill_bones_body_parts						(LPCSTR body_part, CriticalWoundType wound_type);
 	

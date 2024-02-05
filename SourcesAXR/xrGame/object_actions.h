@@ -31,7 +31,7 @@ protected:
 
 public:
 	IC					CObjectActionBase	(_item_type *item, CAI_Stalker *owner, CPropertyStorage *storage, LPCSTR action_name = "");
-	virtual void		initialize			();
+	void		initialize			() override;
 	IC		void		set_property		(_condition_type condition_id, _value_type value);
 	IC		CAI_Stalker &object				() const;
 			void		prevent_weapon_state_switch_ugly	( );
@@ -57,7 +57,7 @@ protected:
 
 public:
 	IC					CObjectActionMember	(_item_type *item, CAI_Stalker *owner, CPropertyStorage *storage, _condition_type condition_id, _value_type value, LPCSTR action_name = "");
-	virtual void		execute				();
+	void		execute				() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -73,7 +73,7 @@ protected:
 
 public:
 						CObjectActionCommand(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, u32 command, LPCSTR action_name = "");
-	virtual void		initialize			();
+	void		initialize			() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -89,8 +89,8 @@ private:
 
 public:
 						CObjectActionShow	(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, LPCSTR action_name = "");
-	virtual void		initialize			();
-	virtual void		execute				();
+	void		initialize			() override;
+	void		execute				() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -103,8 +103,8 @@ protected:
 
 public:
 						CObjectActionHide	(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, LPCSTR action_name = "");
-	virtual void		execute				();
-	virtual void		finalize			();
+	void		execute				() override;
+	void		finalize			() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -120,8 +120,8 @@ protected:
 
 public:
 						CObjectActionReload	(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, _condition_type type, LPCSTR action_name = "");
-	virtual void		initialize			();
-	virtual void		execute				();
+	void		initialize			() override;
+	void		execute				() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -137,9 +137,9 @@ protected:
 
 public:
 						CObjectActionFire	(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, _condition_type type, LPCSTR action_name = "");
-	virtual void		initialize			();
-	virtual void		execute				();
-	virtual void		finalize			();
+	void		initialize			() override;
+	void		execute				() override;
+	void		finalize			() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -156,9 +156,9 @@ protected:
 
 public:
 						CObjectActionFireNoReload	(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, _condition_type type, LPCSTR action_name = "");
-	virtual void		initialize					();
-	virtual void		execute						();
-	virtual void		finalize					();
+	void		initialize					() override;
+	void		execute						() override;
+	void		finalize					() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -177,10 +177,10 @@ private:
 
 public:
 						CObjectActionStrapping	(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, LPCSTR action_name = "");
-	virtual				~CObjectActionStrapping	();
-	virtual void		initialize				();
-	virtual void		execute					();
-	virtual void		finalize				();
+	~CObjectActionStrapping	() override;
+	void		initialize				() override;
+	void		execute					() override;
+	void		finalize				() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -199,10 +199,10 @@ private:
 
 public:
 						CObjectActionStrappingToIdle	(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, LPCSTR action_name = "");
-	virtual				~CObjectActionStrappingToIdle	();
-	virtual void		initialize						();
-	virtual void		execute							();
-	virtual void		finalize						();
+	~CObjectActionStrappingToIdle	() override;
+	void		initialize						() override;
+	void		execute							() override;
+	void		finalize						() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -221,10 +221,10 @@ private:
 
 public:
 						CObjectActionUnstrapping	(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, LPCSTR action_name = "");
-	virtual				~CObjectActionUnstrapping	();
-	virtual void		initialize					();
-	virtual void		execute						();
-	virtual void		finalize					();
+	~CObjectActionUnstrapping	() override;
+	void		initialize					() override;
+	void		execute						() override;
+	void		finalize					() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -243,10 +243,10 @@ private:
 
 public:
 						CObjectActionUnstrappingToIdle	(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, LPCSTR action_name = "");
-	virtual				~CObjectActionUnstrappingToIdle	();
-	virtual void		initialize						();
-	virtual void		execute							();
-	virtual void		finalize						();
+	~CObjectActionUnstrappingToIdle	() override;
+	void		initialize						() override;
+	void		execute							() override;
+	void		finalize						() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -263,9 +263,9 @@ protected:
 
 public:
 						CObjectActionQueueWait	(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, _condition_type type, LPCSTR action_name = "");
-	virtual void		initialize				();
-	virtual void		execute					();
-	virtual void		finalize				();
+	void		initialize				() override;
+	void		execute					() override;
+	void		finalize				() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -281,9 +281,9 @@ protected:
 
 public:
 						CObjectActionSwitch	(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, _condition_type type, LPCSTR action_name = "");
-	virtual void		initialize			();
-	virtual void		execute				();
-	virtual void		finalize			();
+	void		initialize			() override;
+	void		execute				() override;
+	void		finalize			() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -296,7 +296,7 @@ protected:
 
 public:
 						CObjectActionDrop	(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, LPCSTR action_name = "");
-	virtual void		initialize			();
+	void		initialize			() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -312,8 +312,8 @@ private:
 
 public:
 						CObjectActionAim		(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, _condition_type condition_id, _value_type value, LPCSTR action_name = "");
-	virtual void		initialize				();
-	virtual void		execute					();
+	void		initialize				() override;
+	void		execute					() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -326,7 +326,7 @@ protected:
 
 public:
 						CObjectActionIdle		(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, LPCSTR action_name = "");
-	virtual void		initialize				();
+	void		initialize				() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -339,7 +339,7 @@ protected:
 
 public:
 						CObjectActionIdleMissile(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, LPCSTR action_name = "");
-	virtual void		initialize				();
+	void		initialize				() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -352,7 +352,7 @@ protected:
 
 public:
 						CObjectActionThrowMissile	(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, LPCSTR action_name = "");
-	virtual void		initialize				();
-	virtual void		execute					();
+	void		initialize				() override;
+	void		execute					() override;
 };
 #include "object_actions_inline.h"

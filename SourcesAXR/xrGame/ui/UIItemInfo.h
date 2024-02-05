@@ -34,7 +34,7 @@ private:
 	CInventoryItem* m_pInvItem;
 public:
 						CUIItemInfo			();
-	virtual				~CUIItemInfo		();
+	~CUIItemInfo		() override;
 	CInventoryItem*		CurrentItem			() const {return m_pInvItem;}
 	void				InitItemInfo		(Fvector2 pos, Fvector2 size, LPCSTR xml_name);
 	void				InitItemInfo		(LPCSTR xml_name);
@@ -50,8 +50,8 @@ public:
 	void				TryAddItemInfo		(CInventoryItem& pInvItem);
 
 	void				ResetInventoryItem	();
-	
-	virtual void		Draw				();
+
+	void		Draw				() override;
 	bool				m_b_FitToHeight;
 	u32					delay;
 	

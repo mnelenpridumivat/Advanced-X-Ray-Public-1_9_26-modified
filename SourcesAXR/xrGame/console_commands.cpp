@@ -254,7 +254,9 @@ public:
 		bEmptyArgsHandled = TRUE;
 		g_full_memory_stats_callback	= &full_memory_stats;
 	};
-	virtual void Execute(LPCSTR args) {
+
+	void Execute(LPCSTR args) override
+	{
 		full_memory_stats( );
 	}
 };
@@ -263,11 +265,13 @@ class CCC_MemCheckpoint : public IConsole_Command
 {
 public:
 	CCC_MemCheckpoint(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = FALSE; };
-	virtual void Execute(LPCSTR args) 
+
+	void Execute(LPCSTR args) override
 	{
 		memory_monitor::make_checkpoint(args);
 	}
-	virtual void	Save	(IWriter *F)	{}
+
+	void	Save	(IWriter *F) override {}
 };
 
 #endif // #ifdef DEBUG
@@ -277,7 +281,9 @@ public:
 class CCC_Spawn : public IConsole_Command {
 public:
 	CCC_Spawn(LPCSTR N) : IConsole_Command(N) { };
-	virtual void Execute(LPCSTR args) {
+
+	void Execute(LPCSTR args) override
+	{
 		if (!g_pGameLevel) return;
 
 		int count = 1;
@@ -324,7 +330,7 @@ public:
 		}
 	}
 
-	virtual void fill_tips(vecTips& tips, u32 mode)
+	void fill_tips(vecTips& tips, u32 mode) override
 	{
 		for (auto sect : pSettings->sections())
 		{
@@ -333,7 +339,7 @@ public:
 		}
 	}
 
-	virtual void	Info(TInfo& I)
+	void	Info(TInfo& I) override
 	{
 		strcpy(I, "name,team,squad,group");
 	}
@@ -343,7 +349,9 @@ public:
 class CCC_Giveinfo : public IConsole_Command {
 public:
 	CCC_Giveinfo(LPCSTR N) : IConsole_Command(N) { };
-	virtual void Execute(LPCSTR info_id) {
+
+	void Execute(LPCSTR info_id) override
+	{
 #ifdef DEBUG
 		if (!g_pGameLevel) return;
 
@@ -364,7 +372,7 @@ public:
 #endif
 	}
 
-	virtual void fill_tips(vecTips& tips, u32 mode)
+	void fill_tips(vecTips& tips, u32 mode) override
 	{
 		if (!ai().get_alife())
 		{
@@ -383,7 +391,9 @@ public:
 class CCC_Disinfo : public IConsole_Command {
 public:
 	CCC_Disinfo(LPCSTR N) : IConsole_Command(N) { };
-	virtual void Execute(LPCSTR info_id) {
+
+	void Execute(LPCSTR info_id) override
+	{
 #ifdef DEBUG
 		if (!g_pGameLevel) return;
 
@@ -404,7 +414,7 @@ public:
 #endif
 	}
 
-	virtual void fill_tips(vecTips& tips, u32 mode)
+	void fill_tips(vecTips& tips, u32 mode) override
 	{
 		if (!ai().get_alife())
 		{
@@ -425,7 +435,9 @@ public:
 class CCC_Spawn_to_inv : public IConsole_Command {
 public:
 	CCC_Spawn_to_inv(LPCSTR N) : IConsole_Command(N) { };
-	virtual void Execute(LPCSTR args) {
+
+	void Execute(LPCSTR args) override
+	{
 #ifdef DEBUG
 		if (!g_pGameLevel)
 		{
@@ -467,12 +479,12 @@ public:
 #endif
 	}
 
-	virtual void	Info(TInfo& I)
+	void	Info(TInfo& I) override
 	{
 		strcpy(I, "name,team,squad,group");
 	}
 
-	virtual void fill_tips(vecTips& tips, u32 mode)
+	void fill_tips(vecTips& tips, u32 mode) override
 	{
 		for (auto sect : pSettings->sections()) {
 			if (sect->line_exist("class") && sect->line_exist("inv_weight"))
@@ -485,7 +497,8 @@ class CCC_GiveTask : public IConsole_Command
 {
 public:
 	CCC_GiveTask(LPCSTR N) : IConsole_Command(N) { };
-	virtual void Execute(LPCSTR task) 
+
+	void Execute(LPCSTR task) override
 	{
 #ifdef DEBUG
 		if (!g_pGameLevel)
@@ -509,7 +522,7 @@ public:
 #endif
 	}
 
-	virtual void fill_tips(vecTips& tips, u32 mode)
+	void fill_tips(vecTips& tips, u32 mode) override
 	{
 		string_path fname;
 		FS.update_path(fname, "$game_config$", "misc\\task_manager.ltx"); // Читаем так, потому что в pSettings этого файла нет. В ресурсах его скрипты читают.
@@ -527,7 +540,8 @@ class CCC_GiveMoney : public IConsole_Command
 {
 public:
 	CCC_GiveMoney(LPCSTR N) : IConsole_Command(N) { };
-	virtual void Execute(LPCSTR money)
+
+	void Execute(LPCSTR money) override
 	{
 #ifdef DEBUG
 		if (!g_pGameLevel)
@@ -559,7 +573,8 @@ public:
 class CCC_KillEntity : public IConsole_Command {
 public:
 	CCC_KillEntity(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args)
+
+	void Execute(LPCSTR args) override
 	{
 		if (!g_pGameLevel) return;
 
@@ -620,7 +635,7 @@ public:
 			Msg("! [kill] : Empty entity to kill or is not EntityAlive!");
 	}
 
-	virtual void	Info(TInfo& I)
+	void	Info(TInfo& I) override
 	{
 		strcpy(I, "name,team,squad,group");
 	}
@@ -629,7 +644,7 @@ public:
 struct DumpTxrsForPrefetching : public IConsole_Command {
 	DumpTxrsForPrefetching(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
 
-	virtual void Execute(LPCSTR args)
+	void Execute(LPCSTR args) override
 	{
 		MainMenu()->ReportTxrsForPrefetching();
 	}
@@ -638,7 +653,9 @@ struct DumpTxrsForPrefetching : public IConsole_Command {
 class CCC_GameDifficulty : public CCC_Token {
 public:
 	CCC_GameDifficulty(LPCSTR N) : CCC_Token(N,(u32*)&g_SingleGameDifficulty,difficulty_type_token)  {};
-	virtual void Execute(LPCSTR args) {
+
+	void Execute(LPCSTR args) override
+	{
 		CCC_Token::Execute(args);
 		if (g_pGameLevel && Level().game){
 //#ifndef	DEBUG
@@ -652,7 +669,8 @@ public:
 			game->OnDifficultyChanged	();
 		}
 	}
-	virtual void	Info	(TInfo& I)		
+
+	void	Info	(TInfo& I) override
 	{
 		xr_strcpy(I,"game difficulty"); 
 	}
@@ -666,7 +684,9 @@ public:
 class CCC_ALifePath : public IConsole_Command {
 public:
 	CCC_ALifePath(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) {
+
+	void Execute(LPCSTR args) override
+	{
 		if (!ai().get_level_graph())
 			Msg("! there is no graph!");
 		else {
@@ -695,7 +715,9 @@ public:
 class CCC_ALifeTimeFactor : public IConsole_Command {
 public:
 	CCC_ALifeTimeFactor(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) {
+
+	void Execute(LPCSTR args) override
+	{
 		float id1 = 0.0f;
 		sscanf(args ,"%f",&id1);
 		if (id1 < EPS_L)
@@ -707,9 +729,10 @@ public:
 			Level().SetGameTimeFactor(id1);
 		}
 	}
-	
-	virtual void	Save	(IWriter *F)	{};
-	virtual void	Status	(TStatus& S)
+
+	void	Save	(IWriter *F) override {};
+
+	void	Status	(TStatus& S) override
 	{	
 		if ( !g_pGameLevel )	return;
 
@@ -717,13 +740,15 @@ public:
 		xr_sprintf	(S,sizeof(S),"%3.5f", v);
 		while	(xr_strlen(S) && ('0'==S[xr_strlen(S)-1]))	S[xr_strlen(S)-1] = 0;
 	}
-	virtual void	Info	(TInfo& I)
+
+	void	Info	(TInfo& I) override
 	{	
 		if (!OnServer())	return;
 		float v = Level().GetGameTimeFactor();
 		xr_sprintf(I,sizeof(I)," value = %3.5f", v);
 	}
-	virtual void	fill_tips(vecTips& tips, u32 mode)
+
+	void	fill_tips(vecTips& tips, u32 mode) override
 	{
 		if (!OnServer())	return;
 		float v = Level().GetGameTimeFactor();
@@ -738,7 +763,9 @@ public:
 class CCC_ALifeSwitchDistance : public IConsole_Command {
 public:
 	CCC_ALifeSwitchDistance(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) {
+
+	void Execute(LPCSTR args) override
+	{
 		if ((GameID() == eGameIDSingle)  &&ai().get_alife()) {
 			float id1 = 0.0f;
 			sscanf(args ,"%f",&id1);
@@ -759,7 +786,9 @@ public:
 class CCC_ALifeProcessTime : public IConsole_Command {
 public:
 	CCC_ALifeProcessTime(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) {
+
+	void Execute(LPCSTR args) override
+	{
 		if ((GameID() == eGameIDSingle)  &&ai().get_alife()) {
 			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
 			VERIFY			(tpGame);
@@ -780,7 +809,9 @@ public:
 class CCC_ALifeObjectsPerUpdate : public IConsole_Command {
 public:
 	CCC_ALifeObjectsPerUpdate(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) {
+
+	void Execute(LPCSTR args) override
+	{
 		if ((GameID() == eGameIDSingle)  &&ai().get_alife()) {
 			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
 			VERIFY			(tpGame);
@@ -796,7 +827,9 @@ public:
 class CCC_ALifeSwitchFactor : public IConsole_Command {
 public:
 	CCC_ALifeSwitchFactor(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) {
+
+	void Execute(LPCSTR args) override
+	{
 		if ((GameID() == eGameIDSingle)  &&ai().get_alife()) {
 			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
 			VERIFY			(tpGame);
@@ -816,7 +849,9 @@ class CCC_DemoRecord : public IConsole_Command
 public:
 
 	CCC_DemoRecord(LPCSTR N) : IConsole_Command(N) {};
-	virtual void Execute(LPCSTR args) {
+
+	void Execute(LPCSTR args) override
+	{
 		//#ifndef	DEBUG
 		//if (GameID() != eGameIDSingle) 
 		//{
@@ -850,7 +885,9 @@ class CCC_DemoRecordSetPos : public CCC_Vector3
 public:
 
 	CCC_DemoRecordSetPos(LPCSTR N) : CCC_Vector3( N, &p, Fvector().set( -FLT_MAX, -FLT_MAX, -FLT_MAX ),Fvector().set( FLT_MAX, FLT_MAX, FLT_MAX ) ) {};
-	virtual void Execute(LPCSTR args) {
+
+	void Execute(LPCSTR args) override
+	{
 		#ifndef	DEBUG
 		//if (GameID() != eGameIDSingle) 
 		//{
@@ -862,7 +899,8 @@ public:
 		CCC_Vector3::Execute(args);
 		CDemoRecord::SetGlobalPosition( p );
 	}
-	virtual void	Save	(IWriter *F)	{;}
+
+	void	Save	(IWriter *F) override {;}
 
 };
 Fvector CCC_DemoRecordSetPos::p = {0,0,0};
@@ -873,7 +911,9 @@ public:
 	CCC_DemoPlay(LPCSTR N) : 
 	  IConsole_Command(N) 
 	  { bEmptyArgsHandled = TRUE; };
-	  virtual void Execute(LPCSTR args) {
+
+	void Execute(LPCSTR args) override
+	{
 		#ifndef	DEBUG
 		//if (GameID() != eGameIDSingle) 
 		//{
@@ -952,7 +992,9 @@ void get_files_list( xr_vector<shared_str>& files, LPCSTR dir, LPCSTR file_ext )
 class CCC_ALifeSave : public IConsole_Command {
 public:
 	CCC_ALifeSave(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args) {
+
+	void Execute(LPCSTR args) override
+	{
 		
 #if 0
 		if (!Level().autosave_manager().ready_for_autosave()) {
@@ -1039,7 +1081,7 @@ public:
 #endif
 	}//virtual void Execute
 
-	virtual void fill_tips			(vecTips& tips, u32 mode)
+	void fill_tips			(vecTips& tips, u32 mode) override
 	{
 		get_files_list				(tips, "$game_saves$", SAVE_EXTENSION);
 	}
@@ -1049,7 +1091,8 @@ public:
 class CCC_ALifeLoadFrom : public IConsole_Command {
 public:
 	CCC_ALifeLoadFrom(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute( LPCSTR args )
+
+	void Execute( LPCSTR args ) override
 	{
 		string_path				saved_game;
 		strncpy_s				(saved_game, sizeof(saved_game), args, _MAX_PATH - 1 );
@@ -1109,8 +1152,8 @@ public:
 		net_packet.w_stringZ		(saved_game);
 		Level().Send				(net_packet,net_flags(TRUE));
 	}
-	
-	virtual void fill_tips			(vecTips& tips, u32 mode)
+
+	void fill_tips			(vecTips& tips, u32 mode) override
 	{
 		get_files_list				(tips, "$game_saves$", SAVE_EXTENSION);
 	}
@@ -1124,8 +1167,8 @@ public:
 		bEmptyArgsHandled		= true;
 	}
 
-	virtual void	Execute				(LPCSTR args)
-	{
+					void	Execute				(LPCSTR args) override
+					{
 		string_path				saved_game = "";
 		if ( args )
 		{
@@ -1170,9 +1213,9 @@ public:
 		STRCONCAT				(command, "start server(", g_last_saved_game, "/single/alife/load)");
 		Console->Execute		(command);
 	}
-	
-	virtual void	Save				(IWriter *F)
-	{
+
+					void	Save				(IWriter *F) override
+					{
 		if (!*g_last_saved_game)
 			return;
 
@@ -1185,7 +1228,8 @@ class CCC_UiHud_Mode : public CCC_Token
 public:
 	CCC_UiHud_Mode(LPCSTR N, u32* V, xr_token* T) : CCC_Token(N, V, T) {};
 
-	virtual void	Execute(LPCSTR args) {
+	void	Execute(LPCSTR args) override
+	{
 		CCC_Token::Execute(args);
 
 		if (g_pGamePersistent && g_pGameLevel && Level().game)
@@ -1202,7 +1246,9 @@ public:
 class CCC_FlushLog : public IConsole_Command {
 public:
 	CCC_FlushLog(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR /**args/**/) {
+
+	void Execute(LPCSTR /**args/**/) override
+	{
 		FlushLog();
 		Msg		("* Log file has been saved successfully!");
 	}
@@ -1211,7 +1257,9 @@ public:
 class CCC_ClearLog : public IConsole_Command {
 public:
 	CCC_ClearLog(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR) {
+
+	void Execute(LPCSTR) override
+	{
 		LogFile->clear_not_free	();
 		FlushLog				();
 		Msg						("* Log file has been cleaned successfully!");
@@ -1224,8 +1272,8 @@ public:
 	  CCC_Float(N,V,_min,_max)
 	  {};
 
-	  virtual void	Execute	(LPCSTR args)
-	  {
+	void	Execute	(LPCSTR args) override
+	{
 #ifdef _DEBUG
 		  CCC_Float::Execute(args);
 #else
@@ -1250,8 +1298,8 @@ public:
 		  value_blin(V)
 	  {};
 
-	  virtual void	Execute	(LPCSTR args)
-	  {
+	void	Execute	(LPCSTR args) override
+	{
 		  CCC_Integer::Execute(args);
 		  if ((*value_blin > 0) && g_pGameLevel)
 		  {
@@ -1270,8 +1318,8 @@ public:
 		bEmptyArgsHandled = true;
 	}
 
-	virtual void Execute				(LPCSTR args)
-	{
+				 void Execute				(LPCSTR args) override
+				 {
 		if (!ai().get_level_graph())
 			return;
 
@@ -1286,8 +1334,8 @@ public:
 		bEmptyArgsHandled = true;
 	}
 
-	virtual void Execute					(LPCSTR args)
-	{
+				 void Execute					(LPCSTR args) override
+				 {
 		if (!ai().get_level_graph())
 			return;
 
@@ -1303,8 +1351,8 @@ public:
 	{
 	}
 
-	virtual void Execute					(LPCSTR args)
-	{
+				 void Execute					(LPCSTR args) override
+				 {
 		if (!ai().get_level_graph())
 			return;
 
@@ -1367,7 +1415,8 @@ public:
 class CCC_ScriptLuaStudioConnect : public IConsole_Command {
 public:
 	CCC_ScriptLuaStudioConnect(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args)
+
+	void Execute(LPCSTR args) override
 	{
 		ai().script_engine().try_connect_to_debugger	();
 	};
@@ -1376,7 +1425,8 @@ public:
 class CCC_ScriptLuaStudioDisconnect : public IConsole_Command {
 public:
 	CCC_ScriptLuaStudioDisconnect(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args)
+
+	void Execute(LPCSTR args) override
 	{
 		ai().script_engine().disconnect_from_debugger	();
 	};
@@ -1386,12 +1436,15 @@ public:
 class CCC_DumpInfos : public IConsole_Command {
 public:
 	CCC_DumpInfos	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute				(LPCSTR args) {
+
+	void	Execute				(LPCSTR args) override
+	{
 		CActor* A =smart_cast<CActor*>(Level().CurrentEntity());
 		if(A)
 			A->DumpInfo();
 	}
-	virtual void	Info	(TInfo& I)		
+
+	void	Info	(TInfo& I) override
 	{
 		xr_strcpy(I,"dumps all infoportions that actor have"); 
 	}
@@ -1399,12 +1452,15 @@ public:
 class CCC_DumpTasks : public IConsole_Command {
 public:
 	CCC_DumpTasks	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute				(LPCSTR args) {
+
+	void	Execute				(LPCSTR args) override
+	{
 		CActor* A =smart_cast<CActor*>(Level().CurrentEntity());
 		if(A)
 			A->DumpTasks();
 	}
-	virtual void	Info	(TInfo& I)		
+
+	void	Info	(TInfo& I) override
 	{
 		xr_strcpy(I,"dumps all tasks that actor have"); 
 	}
@@ -1413,10 +1469,13 @@ public:
 class CCC_DumpMap : public IConsole_Command {
 public:
 	CCC_DumpMap	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute				(LPCSTR args) {
+
+	void	Execute				(LPCSTR args) override
+	{
 		Level().MapManager().Dump();
 	}
-	virtual void	Info	(TInfo& I)		
+
+	void	Info	(TInfo& I) override
 	{
 		xr_strcpy(I,"dumps all currentmap locations"); 
 	}
@@ -1427,7 +1486,9 @@ public:
 class CCC_DumpCreatures : public IConsole_Command {
 public:
 	CCC_DumpCreatures	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void	Execute				(LPCSTR args) {
+
+	void	Execute				(LPCSTR args) override
+	{
 		
 		typedef CSafeMapIterator<ALife::_OBJECT_ID,CSE_ALifeDynamicObject>::_REGISTRY::const_iterator const_iterator;
 
@@ -1441,7 +1502,8 @@ public:
 		}		
 
 	}
-	virtual void	Info	(TInfo& I)		
+
+	void	Info	(TInfo& I) override
 	{
 		xr_strcpy(I,"dumps all creature names"); 
 	}
@@ -1453,7 +1515,8 @@ public:
 class CCC_DebugFonts : public IConsole_Command {
 public:
 	CCC_DebugFonts (LPCSTR N) : IConsole_Command(N) {bEmptyArgsHandled = true; }
-	virtual void Execute				(LPCSTR args) 
+
+	void Execute				(LPCSTR args) override
 	{
 		xr_new<CUIDebugFonts>()->ShowDialog(true);		
 	}
@@ -1463,7 +1526,8 @@ class CCC_DebugNode : public IConsole_Command {
 public:
 	CCC_DebugNode(LPCSTR N) : IConsole_Command(N)  { };
 
-	virtual void Execute(LPCSTR args) {
+	void Execute(LPCSTR args) override
+	{
 
 		string128 param1, param2;
 		VERIFY( xr_strlen(args) < sizeof(string128) );
@@ -1491,7 +1555,8 @@ class CCC_ShowMonsterInfo : public IConsole_Command {
 public:
 				CCC_ShowMonsterInfo(LPCSTR N) : IConsole_Command(N)  { };
 
-	virtual void Execute(LPCSTR args) {
+				void Execute(LPCSTR args) override
+				{
 
 		string128 param1, param2;
 		VERIFY( xr_strlen(args) < sizeof(string128) );
@@ -1515,7 +1580,9 @@ extern string64 s_dbg_trace_obj_name;
 class CCC_DbgPhTrackObj : public CCC_String {
 public:
 	CCC_DbgPhTrackObj( LPCSTR N ) : CCC_String( N, s_dbg_trace_obj_name, sizeof(s_dbg_trace_obj_name) )  { };
-	virtual void Execute(LPCSTR args/**/) {
+
+	void Execute(LPCSTR args/**/) override
+	{
 		CCC_String::Execute( args );
 			if(!xr_strcmp(args,"none"))
 			{
@@ -1545,8 +1612,9 @@ public:
 		CCC_PHIterations(LPCSTR N) :
 		CCC_Integer(N,&phIterations,15,50)
 		{};
-	  virtual void	Execute	(LPCSTR args)
-	  {
+
+		void	Execute	(LPCSTR args) override
+		{
 		  CCC_Integer::Execute	(args);
 		 // dWorldSetQuickStepNumIterations(NULL,phIterations);
 		  if( physics_world() )
@@ -1560,8 +1628,9 @@ public:
 		CCC_PHGravity(LPCSTR N) :
 		IConsole_Command(N)
 		{};
-	  virtual void	Execute	(LPCSTR args)
-	  {
+
+		void	Execute	(LPCSTR args) override
+		{
 		  if( !physics_world() )	
 			  return;
 #ifndef DEBUG
@@ -1573,8 +1642,9 @@ public:
 #endif
 		  physics_world()->SetGravity(static_cast<float>(atof(args)));
 	  }
-	  virtual void	Status	(TStatus& S)
-	{	
+
+		void	Status	(TStatus& S) override
+		{	
 		if(physics_world())
 			xr_sprintf	(S,"%3.5f",physics_world()->Gravity());
 		else
@@ -1590,8 +1660,9 @@ public:
 	CCC_PHFps(LPCSTR N) :
 	  IConsole_Command(N)
 	  {};
-	  virtual void	Execute	(LPCSTR args)
-	  {
+
+	void	Execute	(LPCSTR args) override
+	{
 		  float				step_count = static_cast<float>(atof(args));
 #ifndef		DEBUG
 		  clamp				(step_count,50.f,200.f);
@@ -1602,8 +1673,9 @@ public:
 		  if(physics_world())
 			 physics_world()->SetStep(ph_console::ph_step_time);
 	  }
-	  virtual void	Status	(TStatus& S)
-	  {	
+
+	void	Status	(TStatus& S) override
+	{	
 		 	xr_sprintf	(S,"%3.5f",1.f/ph_console::ph_step_time);	  
 	  }
 
@@ -1615,7 +1687,8 @@ extern void print_help(lua_State *L);
 struct CCC_LuaHelp : public IConsole_Command {
 	CCC_LuaHelp(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 
-	virtual void Execute(LPCSTR args) {
+	void Execute(LPCSTR args) override
+	{
 		print_help(ai().script_engine().lua());
 	}
 };
@@ -1623,7 +1696,8 @@ struct CCC_LuaHelp : public IConsole_Command {
 struct CCC_ShowSmartCastStats : public IConsole_Command {
 	CCC_ShowSmartCastStats(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 
-	virtual void Execute(LPCSTR args) {
+	void Execute(LPCSTR args) override
+	{
 		show_smart_cast_stats();
 	}
 };
@@ -1631,7 +1705,8 @@ struct CCC_ShowSmartCastStats : public IConsole_Command {
 struct CCC_ClearSmartCastStats : public IConsole_Command {
 	CCC_ClearSmartCastStats(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 
-	virtual void Execute(LPCSTR args) {
+	void Execute(LPCSTR args) override
+	{
 		clear_smart_cast_stats();
 	}
 };
@@ -1641,7 +1716,7 @@ struct CCC_ClearSmartCastStats : public IConsole_Command {
 struct CCC_JumpToLevel : public IConsole_Command {
 	CCC_JumpToLevel(LPCSTR N) : IConsole_Command(N)  {};
 
-	virtual void Execute(LPCSTR level)
+	void Execute(LPCSTR level) override
 	{
 #ifdef DEBUG
 		if ( !ai().get_alife() )
@@ -1667,8 +1742,9 @@ struct CCC_JumpToLevel : public IConsole_Command {
 #endif
 	}
 
-	virtual void	Save	(IWriter *F)	{};
-	virtual void	fill_tips(vecTips& tips, u32 mode)
+	void	Save	(IWriter *F) override {};
+
+	void	fill_tips(vecTips& tips, u32 mode) override
 	{
 		if ( !ai().get_alife() )
 		{
@@ -1690,7 +1766,8 @@ struct CCC_JumpToLevel : public IConsole_Command {
 class CCC_Script : public IConsole_Command {
 public:
 	CCC_Script(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
-	virtual void Execute( LPCSTR args )
+
+	void Execute( LPCSTR args ) override
 	{
 		if ( !xr_strlen(args) )
 		{
@@ -1708,13 +1785,14 @@ public:
 		}
 	}
 
-	virtual void Status( TStatus& S )
+	void Status( TStatus& S ) override
 	{
 		xr_strcpy( S, "<script_name> (Specify script name!)" );
 	}
-	virtual void Save( IWriter* F ) {}
 
-	virtual void fill_tips( vecTips& tips, u32 mode )
+	void Save( IWriter* F ) override {}
+
+	void fill_tips( vecTips& tips, u32 mode ) override
 	{
 		get_files_list( tips, "$game_scripts$", ".script" );
 	}
@@ -1724,8 +1802,8 @@ public:
 class CCC_ScriptCommand : public IConsole_Command {
 public:
 	CCC_ScriptCommand	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
-	
-	virtual void	Execute				(LPCSTR args)
+
+	void	Execute				(LPCSTR args) override
 	{
 		if (!xr_strlen(args))
 			Log("* Specify string to run!");
@@ -1752,13 +1830,14 @@ public:
 		}
 	}//void	Execute
 
-	virtual void Status( TStatus& S )
+	void Status( TStatus& S ) override
 	{
 		xr_strcpy( S, "<script_name.function()> (Specify script and function name!)" );
 	}
-	virtual void Save( IWriter* F ) {}
 
-	virtual void fill_tips( vecTips& tips, u32 mode )
+	void Save( IWriter* F ) override {}
+
+	void fill_tips( vecTips& tips, u32 mode ) override
 	{
 		if ( mode == 1 )
 		{
@@ -1774,25 +1853,27 @@ public:
 class CCC_TimeFactor : public IConsole_Command {
 public:
 					CCC_TimeFactor	(LPCSTR N) : IConsole_Command(N) {}
-	virtual void	Execute			(LPCSTR args)
-	{
+
+					void	Execute			(LPCSTR args) override
+					{
 		float				time_factor = static_cast<float>(atof(args));
 		clamp				(time_factor,EPS,1000.f);
 		Device.time_factor	(time_factor);
 		psSpeedOfSound = time_factor;
 	}
-	virtual void	Status			(TStatus &S)
-	{
+
+					void	Status			(TStatus &S) override
+					{
 		xr_sprintf	(S,sizeof(S),"%f",Device.time_factor());
 	}
 
-	virtual void	Info	(TInfo& I)
-	{
+					void	Info	(TInfo& I) override
+					{
 		xr_strcpy				(I,"[0.001 - 1000.0]");
 	}
-	
-	virtual void	fill_tips(vecTips& tips, u32 mode)
-	{
+
+					void	fill_tips(vecTips& tips, u32 mode) override
+					{
 		TStatus  str;
 		xr_sprintf( str, sizeof(str), "%3.3f  (current)  [0.001 - 1000.0]", Device.time_factor() );
 		tips.push_back( str );
@@ -1806,7 +1887,9 @@ public:
 class CCC_MainMenu : public IConsole_Command {
 public:
 	CCC_MainMenu(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args) {
+
+	void Execute(LPCSTR args) override
+	{
 
 		bool bWhatToDo = TRUE;
 		if( 0==xr_strlen(args) ){
@@ -1825,7 +1908,8 @@ public:
 
 struct CCC_StartTimeSingle : public IConsole_Command {
 	CCC_StartTimeSingle(LPCSTR N) : IConsole_Command(N) {};
-	virtual void	Execute	(LPCSTR args)
+
+	void	Execute	(LPCSTR args) override
 	{
 		u32 year = 1, month = 1, day = 1, hours = 0, mins = 0, secs = 0, milisecs = 0;
 		sscanf				(args,"%d.%d.%d %d:%d:%d.%d",&year,&month,&day,&hours,&mins,&secs,&milisecs);
@@ -1846,7 +1930,7 @@ struct CCC_StartTimeSingle : public IConsole_Command {
 		Level().SetGameTimeFactor(g_qwStartGameTime,g_fTimeFactor);
 	}
 
-	virtual void	Status	(TStatus& S)
+	void	Status	(TStatus& S) override
 	{
 		u32 year = 1, month = 1, day = 1, hours = 0, mins = 0, secs = 0, milisecs = 0;
 		split_time	(g_qwStartGameTime, year, month, day, hours, mins, secs, milisecs);
@@ -1857,7 +1941,7 @@ struct CCC_StartTimeSingle : public IConsole_Command {
 struct CCC_TimeFactorSingle : public CCC_Float {
 	CCC_TimeFactorSingle(LPCSTR N, float* V, float _min=0.f, float _max=1.f) : CCC_Float(N,V,_min,_max) {};
 
-	virtual void	Execute	(LPCSTR args)
+	void	Execute	(LPCSTR args) override
 	{
 		CCC_Float::Execute	(args);
 		
@@ -1890,7 +1974,8 @@ public:
 	{
 		group=G													;
 	}
-virtual	void	Execute		(LPCSTR args)						;
+
+	void	Execute		(LPCSTR args) override;
 	
 IC		void	Set			(BOOL V)
 	  {
@@ -1939,7 +2024,7 @@ static CCC_RadioGroupMask2 x##CCC_RadioGroupMask2(&x##CCC_RadioMask1,&x##CCC_Rad
 struct CCC_DbgBullets : public CCC_Integer {
 	CCC_DbgBullets(LPCSTR N, int* V, int _min=0, int _max=999) : CCC_Integer(N,V,_min,_max) {};
 
-	virtual void	Execute	(LPCSTR args)
+	void	Execute	(LPCSTR args) override
 	{
 		extern FvectorVec g_hit[];
 		g_hit[0].clear();
@@ -1957,7 +2042,8 @@ class CCC_TuneAttachableItem : public IConsole_Command
 {
 public		:
 	CCC_TuneAttachableItem(LPCSTR N):IConsole_Command(N){};
-	virtual void	Execute	(LPCSTR args)
+
+	void	Execute	(LPCSTR args) override
 	{
 		if( CAttachableItem::m_dbgItem){
 			CAttachableItem::m_dbgItem = NULL;	
@@ -1987,7 +2073,7 @@ public		:
 			Msg("CCC_TuneAttachableItem cannot find attached item [%s]",args);
 	}
 
-	virtual void	Info	(TInfo& I)
+	void	Info	(TInfo& I) override
 	{	
 		xr_sprintf(I,"allows to change bind rotation and position offsets for attached item, <section_name> given as arguments");
 	}
@@ -1996,7 +2082,9 @@ public		:
 class CCC_Crash : public IConsole_Command {
 public:
 	CCC_Crash(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR /**args/**/) {
+
+	void Execute(LPCSTR /**args/**/) override
+	{
 		VERIFY3					(false,"This is a test crash","Do not post it as a bug");
 		int						*pointer = 0;
 		*pointer				= 0;
@@ -2028,8 +2116,8 @@ public:
 	CCC_DumpModelBones	(LPCSTR N) : IConsole_Command(N)
 	{
 	}
-	
-	virtual void Execute(LPCSTR arguments)
+
+	void Execute(LPCSTR arguments) override
 	{
 		if (!arguments || !*arguments) {
 			Msg					("! no arguments passed");
@@ -2071,7 +2159,8 @@ extern void show_animation_stats	();
 class CCC_ShowAnimationStats : public IConsole_Command {
 public:
 	CCC_ShowAnimationStats(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR)
+
+	void Execute(LPCSTR) override
 	{
 		show_animation_stats	();
 	}
@@ -2081,7 +2170,8 @@ class CCC_InvUpgradesHierarchy : public IConsole_Command
 {
 public:
 	CCC_InvUpgradesHierarchy(LPCSTR N) : IConsole_Command(N)	{ bEmptyArgsHandled = TRUE; };
-	virtual void Execute( LPCSTR args )
+
+	void Execute( LPCSTR args ) override
 	{
 		if ( ai().get_alife() )
 		{
@@ -2095,7 +2185,8 @@ class CCC_InvUpgradesCurItem : public IConsole_Command
 {
 public:
 	CCC_InvUpgradesCurItem(LPCSTR N) : IConsole_Command(N)	{ bEmptyArgsHandled = TRUE; };
-	virtual void Execute( LPCSTR args )
+
+	void Execute( LPCSTR args ) override
 	{
 		if ( !g_pGameLevel )
 		{
@@ -2122,7 +2213,8 @@ class CCC_InvDropAllItems : public IConsole_Command
 {
 public:
 	CCC_InvDropAllItems(LPCSTR N) : IConsole_Command(N)	{ bEmptyArgsHandled = TRUE; };
-	virtual void Execute( LPCSTR args )
+
+	void Execute( LPCSTR args ) override
 	{
 		if ( !g_pGameLevel )
 		{
@@ -2151,7 +2243,8 @@ public:
 class CCC_DumpObjects : public IConsole_Command {
 public:
 	CCC_DumpObjects(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR)
+
+	void Execute(LPCSTR) override
 	{
 		Level().Objects.dump_all_objects();
 	}
@@ -2160,7 +2253,8 @@ public:
 class CCC_GSCheckForUpdates : public IConsole_Command {
 public:
 	CCC_GSCheckForUpdates(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR arguments)
+
+	void Execute(LPCSTR arguments) override
 	{
 		if (!MainMenu()) return;
 		/*
@@ -2197,8 +2291,8 @@ public:
 		  value_blin(V)
 	  {};
 
-	  virtual void	Execute	(LPCSTR args)
-	  {
+	void	Execute	(LPCSTR args) override
+	{
 		  CCC_Integer::Execute(args);
 	  }
 };
@@ -2208,8 +2302,8 @@ class CCC_DBGDrawCashedClear : public IConsole_Command {
 public:
 	CCC_DBGDrawCashedClear(LPCSTR N) :IConsole_Command(N)  { bEmptyArgsHandled =true; }
 private:
-	 virtual void	Execute	(LPCSTR args)
-	 {
+	void	Execute	(LPCSTR args) override
+	{
 		
 		 DBG_CashedClear();
 	 }
@@ -2220,7 +2314,8 @@ private:
 class CCC_DbgVar : public IConsole_Command {
 public:
 	CCC_DbgVar(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = false; };
-	virtual void Execute(LPCSTR arguments) 
+
+	void Execute(LPCSTR arguments) override
 	{
 		if (!arguments || !*arguments)
 		{
@@ -2247,7 +2342,8 @@ class CCC_SetWeather : public IConsole_Command
 {
 public:
 	CCC_SetWeather(LPCSTR N) : IConsole_Command(N) {};
-	virtual void Execute(LPCSTR args)
+
+	void Execute(LPCSTR args) override
 	{
 		if (!xr_strlen(args))
 			return;
@@ -2257,7 +2353,7 @@ public:
 		g_pGamePersistent->Environment().SetWeather(args, true);
 	}
 
-	virtual void fill_tips(vecTips& tips, u32 mode)
+	void fill_tips(vecTips& tips, u32 mode) override
 	{
 		get_files_list(tips, "$game_weathers$", ".ltx");
 	}
@@ -2268,7 +2364,8 @@ class CCC_MaskCheat : public CCC_Mask
 public:
 	CCC_MaskCheat(LPCSTR N, Flags32* V, u32 M) : CCC_Mask(N, V, M){}
 
-	virtual void	Execute(LPCSTR args) {
+	void	Execute(LPCSTR args) override
+	{
 #ifndef ALLOW_CHEATS
 		if (g_pGamePersistent && (mask == AF_GODMODE || mask == AF_UNLIMITEDAMMO)) {
 			GAME_NEWS_DATA				news_data;
@@ -2292,7 +2389,7 @@ struct CCC_ReloadSystemLtx : public IConsole_Command
 		bEmptyArgsHandled = true;
 	};
 
-	virtual void Execute(LPCSTR args)
+	void Execute(LPCSTR args) override
 	{
 		string_path fname;
 		FS.update_path(fname, "$game_config$", "system.ltx");
@@ -2310,7 +2407,7 @@ struct CCC_ReloadAdvancedXRayCfg : public IConsole_Command
 		bEmptyArgsHandled = true;
 	};
 
-	virtual void Execute(LPCSTR args)
+	void Execute(LPCSTR args) override
 	{
 		string_path fname;
 		FS.update_path(fname, "$game_config$", "AdvancedXRay.ltx");

@@ -18,10 +18,10 @@ private:
 
 public:
 	CUIListItemEx(void);
-	virtual ~CUIListItemEx(void);
-	virtual void SendMessage(CUIWindow *pWnd, s16 msg, void* pData);
+	~CUIListItemEx(void) override;
+	void SendMessage(CUIWindow *pWnd, s16 msg, void* pData) override;
 	virtual void SetSelectionColor(u32 dwColor);
-	virtual void Draw();
+	void Draw() override;
 	virtual void dummy			(){}
 protected:
 	u32 m_dwSelectionColor;

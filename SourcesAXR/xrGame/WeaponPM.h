@@ -13,7 +13,7 @@ private:
 protected:
 public:
 					CWeaponPM			();
-	virtual			~CWeaponPM		();
+	~CWeaponPM		() override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

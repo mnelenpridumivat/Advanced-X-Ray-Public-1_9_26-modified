@@ -12,15 +12,15 @@ protected:
 	float			dist, prev_d;
 public:
 					CCameraLook		( CObject* p, u32 flags=0);
-	virtual			~CCameraLook	( );
-	virtual void	Load			(LPCSTR section);
-	virtual void	Move			( int cmd, float val=0, float factor=1.0f );
+	~CCameraLook	( ) override;
+	void	Load			(LPCSTR section) override;
+	void	Move			( int cmd, float val=0, float factor=1.0f ) override;
 
-	virtual	void	OnActivate		( CCameraBase* old_cam );
-	virtual void	Update			( Fvector& point, Fvector& noise_dangle );
+	void	OnActivate		( CCameraBase* old_cam ) override;
+	void	Update			( Fvector& point, Fvector& noise_dangle ) override;
 
-	virtual float	GetWorldYaw		( )	{ return -yaw;	};
-	virtual float	GetWorldPitch	( )	{ return pitch; };
+	float	GetWorldYaw		( ) override { return -yaw;	};
+	float	GetWorldPitch	( ) override { return pitch; };
 
 			void	save			(NET_Packet& output_packet) override;
 			void	load			(IReader& input_packet) override;
@@ -36,10 +36,10 @@ protected:
 	CObject*		m_locked_enemy;
 public:
 					CCameraLook2	( CObject* p, u32 flags=0):CCameraLook(p, flags){m_locked_enemy=NULL;};
-	virtual			~CCameraLook2	(){}
-	virtual	void	OnActivate		( CCameraBase* old_cam );
-	virtual void	Update			( Fvector& point, Fvector& noise_dangle );
-	virtual void	Load			(LPCSTR section);
+	~CCameraLook2	() override {}
+	void	OnActivate		( CCameraBase* old_cam ) override;
+	void	Update			( Fvector& point, Fvector& noise_dangle ) override;
+	void	Load			(LPCSTR section) override;
 };
 
 class CCameraFixedLook : public CCameraLook
@@ -47,12 +47,12 @@ class CCameraFixedLook : public CCameraLook
 	typedef CCameraLook inherited;
 public:
 					CCameraFixedLook(CObject* p, u32 flags=0) : CCameraLook(p, flags) {};
-	virtual			~CCameraFixedLook() {};
-	virtual void	Load			(LPCSTR section);
-	virtual void	Move			(int cmd, float val=0, float factor=1.0f);
-	virtual	void	OnActivate		(CCameraBase* old_cam);
-	virtual void	Update			(Fvector& point, Fvector& noise_dangle);
-	virtual void	Set				(float Y, float P, float R);
+	~CCameraFixedLook() override {};
+	void	Load			(LPCSTR section) override;
+	void	Move			(int cmd, float val=0, float factor=1.0f) override;
+	void	OnActivate		(CCameraBase* old_cam) override;
+	void	Update			(Fvector& point, Fvector& noise_dangle) override;
+	void	Set				(float Y, float P, float R) override;
 private:
 	Fquaternion		m_final_dir;
 	Fquaternion		m_current_dir;

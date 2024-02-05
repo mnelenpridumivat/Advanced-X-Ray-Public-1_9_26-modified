@@ -53,8 +53,8 @@ private:
 	IC	EWorldProperties	object_property			(EObjectAction object_action) const;
 #ifdef LOG_ACTION
 public:
-	virtual LPCSTR			action2string			(const _action_id_type &action_id);
-	virtual LPCSTR			property2string			(const _condition_type &property_id);
+	LPCSTR			action2string			(const _action_id_type &action_id) override;
+	LPCSTR			property2string			(const _condition_type &property_id) override;
 #endif
 
 public:
@@ -69,8 +69,8 @@ public:
 	IC		CAI_Stalker		&object					() const;
 
 public:
-	virtual	void			setup					(CAI_Stalker *object);
-	virtual	void			update					();
+	void			setup					(CAI_Stalker *object) override;
+	void			update					() override;
 			void			add_item				(CInventoryItem *inventory_item);
 			void			remove_item				(CInventoryItem *inventory_item);
 			void			set_goal				(EObjectAction object_action, CGameObject *game_object, u32 min_queue_size, u32 max_queue_size, u32 min_queue_interval, u32 max_queue_interval);

@@ -15,25 +15,25 @@ class CUIEditKeyBind : public CUIStatic, public CUIOptionsItem
 	_keyboard*		m_opt_backup_value;
 public:
 					CUIEditKeyBind			(bool bPrim);
-	virtual			~CUIEditKeyBind			();
+	~CUIEditKeyBind			() override;
 	// options item
-	virtual void	AssignProps				(const shared_str& entry, const shared_str& group);
+	void	AssignProps				(const shared_str& entry, const shared_str& group) override;
 
-	virtual void	SetCurrentOptValue		();	// opt->current
-	virtual void	SaveBackUpOptValue		();	// current->backup
-	virtual void	SaveOptValue			();	// current->opt
-	virtual void	UndoOptValue			();	// backup->current
-	virtual bool	IsChangedOptValue		() const;	// backup!=current
+	void	SetCurrentOptValue		() override;	// opt->current
+	void	SaveBackUpOptValue		() override;	// current->backup
+	void	SaveOptValue			() override;	// current->opt
+	void	UndoOptValue			() override;	// backup->current
+	bool	IsChangedOptValue		() const override;	// backup!=current
 	
 			void	SetValue				();
-	virtual	void	OnMessage				(LPCSTR message);
+	void	OnMessage				(LPCSTR message) override;
 
 	// CUIWindow methods
 			void	InitKeyBind				(Fvector2 pos, Fvector2 size);
-	virtual void	Update					();
-	virtual bool	OnMouseDown				(int mouse_btn);
-	virtual void	OnFocusLost				();
-	virtual bool	OnKeyboardAction				(int dik, EUIMessages keyboard_action);
+	void	Update					() override;
+	bool	OnMouseDown				(int mouse_btn) override;
+	void	OnFocusLost				() override;
+	bool	OnKeyboardAction				(int dik, EUIMessages keyboard_action) override;
 
 	virtual void	SetText					(LPCSTR text);
 			void	SetEditMode				(bool b);

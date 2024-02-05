@@ -20,7 +20,7 @@ protected:
 
 public:
 	IC					CPropertyEvaluatorConst	(_value_type value, LPCSTR evaluator_name = "");
-	virtual _value_type	evaluate				();
+	_value_type	evaluate				() override;
 };
 
 

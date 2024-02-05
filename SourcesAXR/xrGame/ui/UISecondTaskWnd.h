@@ -30,17 +30,17 @@ private:
 
 public:
 					UITaskListWnd		();
-	virtual			~UITaskListWnd		();
+	~UITaskListWnd		() override;
 
 			void	init_from_xml		( CUIXml& xml, LPCSTR path );
 
-	virtual bool	OnMouseAction		( float x, float y, EUIMessages mouse_action );
-	virtual void 	OnMouseScroll		(float iDirection);
-	virtual void	Show				( bool status );
-	virtual void 	OnFocusReceive		();
-	virtual void	OnFocusLost			();
-	virtual void	Update				();
-	virtual void	SendMessage			( CUIWindow* pWnd, s16 msg, void* pData );
+	bool	OnMouseAction		( float x, float y, EUIMessages mouse_action ) override;
+	void 	OnMouseScroll		(float iDirection) override;
+	void	Show				( bool status ) override;
+	void 	OnFocusReceive		() override;
+	void	OnFocusLost			() override;
+	void	Update				() override;
+	void	SendMessage			( CUIWindow* pWnd, s16 msg, void* pData ) override;
 
 			void	UpdateList			();
 
@@ -74,16 +74,16 @@ private:
 
 public:
 					UITaskListWndItem	();
-	virtual			~UITaskListWndItem	();
+	~UITaskListWndItem	() override;
 
 			bool	init_task			( CGameTask* task, UITaskListWnd* parent );
 	IC		u32		get_priority_task	() const;
 
-	virtual void 	OnFocusReceive		();
-	virtual void	OnFocusLost			();
-	virtual void	Update				();
-	virtual void	SendMessage			( CUIWindow* pWnd, s16 msg, void* pData );
-	virtual bool	OnMouseAction				( float x, float y, EUIMessages mouse_action );
+	void 	OnFocusReceive		() override;
+	void	OnFocusLost			() override;
+	void	Update				() override;
+	void	SendMessage			( CUIWindow* pWnd, s16 msg, void* pData ) override;
+	bool	OnMouseAction				( float x, float y, EUIMessages mouse_action ) override;
 
 private:
 			void	hide_hint			();

@@ -12,51 +12,51 @@ protected:
 	bool								m_bFriendlyIndicators;
 	bool								m_bFriendlyNames;
 
-	virtual			void				shedule_Update			(u32 dt);
-	virtual			void				TranslateGameMessage	(u32 msg, NET_Packet& P);
+void				shedule_Update			(u32 dt) override;
+void				TranslateGameMessage	(u32 msg, NET_Packet& P) override;
 
-	virtual			void				LoadSndMessages				();
+void				LoadSndMessages				() override;
 public :
 										game_cl_TeamDeathmatch	();
-	virtual								~game_cl_TeamDeathmatch	();
-	virtual			void				Init					();
-	virtual			void				net_import_state		(NET_Packet& P);
-	virtual			CUIGameCustom*		createGameUI			();
-	virtual			void				SetGameUI				(CUIGameCustom*);
-	virtual			void				GetMapEntities			(xr_vector<SZoneMapEntityData>& dst);
-	
-	virtual BOOL					CanCallBuyMenu			();
-	virtual BOOL					CanCallSkinMenu			();
-	virtual	BOOL					CanCallInventoryMenu	();
+~game_cl_TeamDeathmatch	() override;
+void				Init					() override;
+void				net_import_state		(NET_Packet& P) override;
+CUIGameCustom*		createGameUI			() override;
+void				SetGameUI				(CUIGameCustom*) override;
+void				GetMapEntities			(xr_vector<SZoneMapEntityData>& dst) override;
+
+BOOL					CanCallBuyMenu			() override;
+BOOL					CanCallSkinMenu			() override;
+BOOL					CanCallInventoryMenu	() override;
 	virtual	BOOL					CanCallTeamSelectMenu	();
 
 
-	virtual	void					OnSpectatorSelect		();
-	virtual		void				OnSkinMenuBack			();
-	virtual		void				OnTeamMenuBack			();
-	virtual		void				OnMapInfoAccept			();
+void					OnSpectatorSelect		() override;
+void				OnSkinMenuBack			() override;
+void				OnTeamMenuBack			() override;
+void				OnMapInfoAccept			() override;
 
-	virtual		void				OnGameMenuRespond_ChangeTeam	(NET_Packet& P);
+void				OnGameMenuRespond_ChangeTeam	(NET_Packet& P) override;
 
-	virtual			void				OnTeamSelect			(int Result);
-	virtual			char*				getTeamSection			(int Team);
-	virtual			void				OnTeamChanged			();
-	virtual			void				PlayRankChangesSndMessage ();
-	virtual			void				OnTeamMenu_Cancel		();
+void				OnTeamSelect			(int Result) override;
+char*				getTeamSection			(int Team) override;
+void				OnTeamChanged			() override;
+void				PlayRankChangesSndMessage () override;
+void				OnTeamMenu_Cancel		() override;
 
 	virtual			void				Set_ShowPlayerNames		(bool Show) {m_bShowPlayersNames = Show;};
 	virtual			bool				Get_ShowPlayerNames		() {return m_bShowPlayersNames;};
-	virtual			s16					ModifyTeam				(s16 Team)	{return (Team != -1) ? Team-1 : Team;};
+s16					ModifyTeam				(s16 Team) override {return (Team != -1) ? Team-1 : Team;};
 	virtual			bool				Get_ShowPlayerNamesEnabled () {return m_bFriendlyNames;};
-	
-	virtual			bool				IsPlayerInTeam			(game_PlayerState* ps, ETeam team);
-	virtual			LPCSTR				GetGameScore			(string32&	score_dest);
+
+bool				IsPlayerInTeam			(game_PlayerState* ps, ETeam team) override;
+LPCSTR				GetGameScore			(string32&	score_dest) override;
 	s32									GetGreenTeamScore		() const { return teams[0].score; };
 	s32									GetBlueTeamScore		() const { return teams[1].score; };
 //from UIGameTDM
 protected:
-	virtual const shared_str			GetBaseCostSect			() {return "teamdeathmatch_base_cost";}
-	virtual const shared_str			GetTeamMenu				(s16 team);
+const shared_str			GetBaseCostSect			() override {return "teamdeathmatch_base_cost";}
+const shared_str			GetTeamMenu				(s16 team) override;
 //	CUISpawnWnd*						pUITeamSelectWnd;
 
 	PRESET_ITEMS						PresetItemsTeam1;
@@ -65,24 +65,24 @@ protected:
 	BOOL								m_bTeamSelected;
 	bool								m_bShowPlayersNames;
 
-	virtual bool						CanBeReady				();
-	virtual	void						SetCurrentBuyMenu		();
-	virtual	void						SetCurrentSkinMenu		();
+bool						CanBeReady				() override;
+void						SetCurrentBuyMenu		() override;
+void						SetCurrentSkinMenu		() override;
 
-	virtual	bool						OnKeyboardPress			(int key);
+bool						OnKeyboardPress			(int key) override;
 
-	virtual		void					OnRender				();
-	virtual		bool					IsEnemy					(game_PlayerState* ps);
-	virtual		bool					IsEnemy					(CEntityAlive* ea1, CEntityAlive* ea2);
+void					OnRender				() override;
+bool					IsEnemy					(game_PlayerState* ps) override;
+bool					IsEnemy					(CEntityAlive* ea1, CEntityAlive* ea2) override;
 
-	virtual void						UpdateMapLocations		();
-	virtual	void						OnSwitchPhase			(u32 old_phase, u32 new_phase);	
+void						UpdateMapLocations		() override;
+void						OnSwitchPhase			(u32 old_phase, u32 new_phase) override;
 
-	virtual	void						SetScore				();
-	virtual	void						OnSwitchPhase_InProgress();
+void						SetScore				() override;
+void						OnSwitchPhase_InProgress() override;
 
-	virtual		u8						GetTeamCount			() { return 2; };
-	virtual		void					OnConnected				();
+u8						GetTeamCount			() override { return 2; };
+void					OnConnected				() override;
 };
 
 IC bool	TDM_Compare_Players		(game_PlayerState* p1, game_PlayerState* p2)

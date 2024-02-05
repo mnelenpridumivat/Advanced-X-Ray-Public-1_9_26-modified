@@ -27,20 +27,20 @@ class CPsyDog : public CAI_PseudoDog {
 
 public:
 						CPsyDog				();
-		virtual			~CPsyDog			();
+	~CPsyDog			() override;
 
-		virtual void	Load				(LPCSTR section);
-		virtual BOOL	net_Spawn			(CSE_Abstract *dc);
-		virtual void	reinit				();
-		virtual void	reload				(LPCSTR section);
-		virtual void	net_Destroy			();
-		virtual void	Die					(CObject* who);
+	void	Load				(LPCSTR section) override;
+	BOOL	net_Spawn			(CSE_Abstract *dc) override;
+	void	reinit				() override;
+	void	reload				(LPCSTR section) override;
+	void	net_Destroy			() override;
+	void	Die					(CObject* who) override;
 
-		virtual void	Think				();
+	void	Think				() override;
 //				void	on_phantom_appear	();
-		virtual IStateManagerBase *create_state_manager	();
+	IStateManagerBase *create_state_manager	() override;
 
-		virtual	char*	get_monster_class_name () { return "psydog"; }
+	char*	get_monster_class_name () override { return "psydog"; }
 
 				u8		get_phantoms_count	();
 				bool	must_hide			() {return get_phantoms_count() == 0;}
@@ -87,13 +87,13 @@ class CPsyDogPhantom : public CAI_PseudoDog {
 
 public:
 					CPsyDogPhantom		();
-	virtual			~CPsyDogPhantom		();
-	virtual BOOL	net_Spawn			(CSE_Abstract *dc);
-	virtual void	Think				();
-	virtual	void	Hit					(SHit* pHDS);
+	~CPsyDogPhantom		() override;
+	BOOL	net_Spawn			(CSE_Abstract *dc) override;
+	void	Think				() override;
+	void	Hit					(SHit* pHDS) override;
 
-	virtual void	net_Destroy			();
-	virtual void	Die					(CObject* who);
+	void	net_Destroy			() override;
+	void	Die					(CObject* who) override;
 
 			void	destroy_from_parent	();
 private:

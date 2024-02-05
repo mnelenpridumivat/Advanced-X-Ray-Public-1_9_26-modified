@@ -61,7 +61,7 @@ public:
 
 
 								CCharacterInfo		();
-								~CCharacterInfo		();
+								~CCharacterInfo		() override;
 
 	virtual void Load	(shared_str id);
 
@@ -84,7 +84,7 @@ protected:
 
 
 	//загрузка из XML файла
-	virtual void				load_shared			(LPCSTR);
+	void				load_shared			(LPCSTR) override;
 
 	//индекс загруженного профиля
 	shared_str					m_ProfileId;

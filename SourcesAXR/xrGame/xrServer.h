@@ -52,7 +52,7 @@ public:
 	s32							m_last_key_sync_request_seed;
 
 							xrClientData			();
-	virtual					~xrClientData			();
+	~xrClientData			() override;
 	virtual void			Clear					();
 };
 
@@ -198,9 +198,9 @@ public:
 protected:
 	xrClientsPool			m_disconnected_clients;
 	bool					CheckAdminRights		(const shared_str& user, const shared_str& pass, string512& reason);
-	virtual IClient*		new_client				( SClientConnectData* cl_data );
-	
-	virtual bool			Check_ServerAccess( IClient* CL, string512& reason )	{ return true; }
+	IClient*		new_client				( SClientConnectData* cl_data ) override;
+
+	bool			Check_ServerAccess( IClient* CL, string512& reason ) override { return true; }
 
 	virtual bool			NeedToCheckClient_GameSpy_CDKey		(IClient* CL)	{ return false; }
 	virtual void			Check_GameSpy_CDKey_Success			(IClient* CL);
@@ -224,24 +224,24 @@ protected:
 public:
 	// constr / destr
 	xrServer				();
-	virtual ~xrServer		();
+	~xrServer		() override;
 
 	// extended functionality
-	virtual u32				OnMessage			(NET_Packet& P, ClientID sender);	// Non-Zero means broadcasting with "flags" as returned
+	u32				OnMessage			(NET_Packet& P, ClientID sender) override;	// Non-Zero means broadcasting with "flags" as returned
 			u32				OnMessageSync		(NET_Packet& P, ClientID sender);
-	virtual void			OnCL_Connected		(IClient* CL);
-	virtual void			OnCL_Disconnected	(IClient* CL);
-	virtual bool			OnCL_QueryHost		();
-	virtual void			SendTo_LL			(ClientID ID, void* data, u32 size, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0);
+	void			OnCL_Connected		(IClient* CL) override;
+	void			OnCL_Disconnected	(IClient* CL) override;
+	bool			OnCL_QueryHost		() override;
+	void			SendTo_LL			(ClientID ID, void* data, u32 size, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0) override;
 			void			SecureSendTo		(xrClientData* xrCL, NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0);
-	virtual	void			SendBroadcast		(ClientID exclude, NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED);
+	void			SendBroadcast		(ClientID exclude, NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED) override;
 			void			GetPooledState			(xrClientData* xrCL);
 			void			ClearDisconnectedPool	() { m_disconnected_clients.Clear(); };
 
-	virtual IClient*		client_Create		();								// create client info
-	virtual void			client_Replicate	();								// replicate current state to client
+	IClient*		client_Create		() override;								// create client info
+	void			client_Replicate	() override;								// replicate current state to client
 	virtual IClient*		client_Find_Get		(ClientID ID);					// Find earlier disconnected client
-	virtual void			client_Destroy		(IClient* C);					// destroy client info
+	void			client_Destroy		(IClient* C) override;					// destroy client info
 
 	// utilities
 	CSE_Abstract*			entity_Create		(LPCSTR name);
@@ -255,7 +255,7 @@ public:
 
 	// main
 	virtual EConnect		Connect				(shared_str& session_name, GameDescriptionData & game_descr);
-	virtual void			Disconnect			();
+	void			Disconnect			() override;
 	virtual void			Update				();
 	void					SLS_Default			();
 	void					SLS_Clear			();
@@ -268,14 +268,14 @@ public:
 	void					create_direct_client();
 	BOOL					IsDedicated			() const	{return m_bDedicated;};
 
-	virtual void			Assign_ServerType	( string512& res ) {};
+	void			Assign_ServerType	( string512& res ) override {};
 	virtual bool			HasPassword			()	{ return false; }
 	virtual bool			HasProtected		()	{ return false; }
 			void			AddCheater			(shared_str const & reason, ClientID const & cheaterID);
 			void			MakeScreenshot		(ClientID const & admin_id, ClientID const & cheater_id);
 			void			MakeConfigDump		(ClientID const & admin_id, ClientID const & cheater_id);
 
-	virtual void			GetServerInfo		( CServerInfo* si );
+	void			GetServerInfo		( CServerInfo* si ) override;
 			void			SendPlayersInfo		(ClientID const & to_client);
 public:
 	xr_string				ent_name_safe		(u16 eid);

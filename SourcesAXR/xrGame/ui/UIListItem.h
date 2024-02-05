@@ -7,11 +7,11 @@ private:
 	typedef CUIButton inherited;
 public:
 				CUIListItem		();
-	virtual		~CUIListItem	();
+	~CUIListItem	() override;
 
 			void InitListItem(Fvector2 pos, Fvector2 size);
 //.	virtual void Init(const char* str, float x, float y, float width, float height);
-	virtual void InitTexture(LPCSTR tex_name);
+	void InitTexture(LPCSTR tex_name) override;
 	
 			void* GetData() {return m_pData;}
 			void SetData(void* pData) { m_pData = pData;}

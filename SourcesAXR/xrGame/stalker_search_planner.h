@@ -24,9 +24,9 @@ private:
 public:
 					CStalkerSearchPlanner	(CAI_Stalker *object = 0, LPCSTR action_name = "");
 	virtual	void	setup					(CAI_Stalker *object, CPropertyStorage *storage);
-	virtual void	update					();
-	virtual void	initialize				();
-	virtual void	finalize				();
+	void	update					() override;
+	void	initialize				() override;
+	void	finalize				() override;
 };
 
 #endif // STALKER_SEARCH_PLANNER_H_INCLUDED

@@ -12,5 +12,5 @@ private:
 	typedef CArtefact inherited;
 public:
 	CNeedles(void);
-	virtual ~CNeedles(void);
+	~CNeedles(void) override;
 };

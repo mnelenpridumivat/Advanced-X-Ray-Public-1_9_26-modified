@@ -32,7 +32,7 @@ private:
 
 public:
 	CHARACTER_REPUTATION		():m_current_value(NO_REPUTATION){};
-	~CHARACTER_REPUTATION		(){};
+	~CHARACTER_REPUTATION		() override {};
 
 	void						set				(CHARACTER_REPUTATION_VALUE);
 

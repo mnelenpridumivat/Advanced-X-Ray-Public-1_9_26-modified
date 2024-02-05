@@ -9,13 +9,13 @@ class	CStateMonsterPanic : public CState<_Object> {
 	
 public:
 						CStateMonsterPanic		(_Object *obj);
-	virtual				~CStateMonsterPanic		();
+	~CStateMonsterPanic		() override;
 
-	virtual void		initialize				();
-	virtual	void		reselect_state			();
-	virtual void		check_force_state		();
-	virtual void		setup_substates			();
-	virtual void		remove_links			(CObject* object) { inherited::remove_links(object);}
+	void		initialize				() override;
+	void		reselect_state			() override;
+	void		check_force_state		() override;
+	void		setup_substates			() override;
+	void		remove_links			(CObject* object) override { inherited::remove_links(object);}
 };
 
 #include "monster_state_panic_inline.h"

@@ -25,7 +25,7 @@ public:
 	CUIPdaKillMessage*		AddLogMessage	(KillMessageStruct& msg);
 	CUIPdaMsgListItem*		AddPdaMessage	();
 	void					AddChatMessage	(LPCSTR msg, LPCSTR author);
-	virtual void			Update			();
+							void			Update			() override;
 
 	void					SetTextAtrib	(CGameFont* pFont, u32 color);
 	u32						GetTextColor	()								{return txt_color;}

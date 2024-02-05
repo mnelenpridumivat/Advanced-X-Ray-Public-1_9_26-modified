@@ -17,8 +17,8 @@ class CUINewsItemWnd :public CUIWindow
 
 public:
 					CUINewsItemWnd		();
-	virtual			~CUINewsItemWnd		();
+	~CUINewsItemWnd		() override;
 			void	Init				(CUIXml& uiXml, LPCSTR start_from);
 			void	Setup				(GAME_NEWS_DATA& news_data);
-	virtual	void	Update				(){};
+	void	Update				() override {};
 };

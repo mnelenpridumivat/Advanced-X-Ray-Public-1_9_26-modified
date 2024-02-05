@@ -12,9 +12,9 @@ private:
 	typedef CArtefact inherited;
 public:
 	CGalantineArtefact(void);
-	virtual ~CGalantineArtefact(void);
+	~CGalantineArtefact(void) override;
 
-	virtual void Load				(LPCSTR section);
+	void Load				(LPCSTR section) override;
 
 protected:
 };

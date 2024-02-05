@@ -10,9 +10,9 @@ class CUIListBoxItem : public CUIFrameLineWnd, public CUISelectable
 public:
 						CUIListBoxItem			(float height);
 
-	virtual void		Draw					();
-	virtual bool		OnMouseDown				(int mouse_btn);
-	virtual void		OnFocusReceive			();
+	void		Draw					() override;
+	bool		OnMouseDown				(int mouse_btn) override;
+	void		OnFocusReceive			() override;
 			void		InitDefault				();
 			void		SetTAG					(u32 value);
 			u32			GetTAG					();
@@ -30,7 +30,7 @@ public:
 		LPCSTR			GetText					();
 		void			SetTextColor			(u32 color);
 		u32				GetTextColor			();
-		void			SetFont					(CGameFont* F);
+		void			SetFont					(CGameFont* F) override;
 		CGameFont*		GetFont					();
 
 protected:

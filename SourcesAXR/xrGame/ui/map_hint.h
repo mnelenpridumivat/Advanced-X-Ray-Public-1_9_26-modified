@@ -17,7 +17,7 @@ class CUIMapLocationHint :public CUIFrameWindow
 	void				SetInfoMode					(u8 mode);
 public:
 					CUIMapLocationHint	():m_owner(NULL){};
-	virtual 		~CUIMapLocationHint	(){};
+	~CUIMapLocationHint	() override {};
 
 	void			Init		(CUIXml& uiXml, LPCSTR path);
 
@@ -25,7 +25,7 @@ public:
 	void			SetInfoMSpot(CMapSpot* spot);
 	void			SetInfoTask	(CGameTask* task);
 
-	virtual void	Draw		(){return;};
+	void	Draw		() override {return;};
 			void	Draw_		();
 	void			SetOwner	(CUIWindow* w)	{m_owner = w;}
 	CUIWindow*		GetOwner	()				{return m_owner;}

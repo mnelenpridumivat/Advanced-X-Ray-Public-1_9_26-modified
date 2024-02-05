@@ -9,15 +9,15 @@ private:
 	typedef	CCustomZone	inherited;
 public:
 					CMosquitoBald				();
-	virtual			~CMosquitoBald				();
+	~CMosquitoBald				() override;
 
-	virtual void	Load						(LPCSTR section);
+	void	Load						(LPCSTR section) override;
 
-	virtual void	Affect						(SZoneObjectInfo* O);
+	void	Affect						(SZoneObjectInfo* O) override;
 
 protected:
-	virtual bool	BlowoutState				();
-	virtual	void	UpdateSecondaryHit			();
+	bool	BlowoutState				() override;
+	void	UpdateSecondaryHit			() override;
 	//для того чтобы blowout обновился один раз
 	//после того как зона перключилась в другое состояние
 	bool			m_bLastBlowoutUpdate;

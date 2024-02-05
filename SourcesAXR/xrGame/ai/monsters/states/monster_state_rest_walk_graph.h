@@ -7,10 +7,10 @@ class CStateMonsterRestWalkGraph : public CState<_Object> {
 
 public:
 						CStateMonsterRestWalkGraph	(_Object *obj);
-	virtual				~CStateMonsterRestWalkGraph	();
+	~CStateMonsterRestWalkGraph	() override;
 
-	virtual	void		execute					();
-	virtual void		remove_links			(CObject* object) { inherited::remove_links(object);}
+	void		execute					() override;
+	void		remove_links			(CObject* object) override { inherited::remove_links(object);}
 };
 
 #include "monster_state_rest_walk_graph_inline.h"

@@ -214,7 +214,7 @@ protected:
 	float							m_death_lin_vel_k;
 	shared_str						m_death_bones_to_hide;
 
-	virtual bool					IsHudModeNow		(){return false;};
+	bool					IsHudModeNow		() override {return false;};
 
 //////////////////////////////////////////////////
 
@@ -237,9 +237,9 @@ protected:
 	void							TurnLighting				(bool bOn);
 	void							TurnEngineSound				(bool bOn);
 	//explosive
-	virtual void					OnAfterExplosion			(){};
-	virtual void					GetRayExplosionSourcePos	(Fvector &pos){random_point_in_object_box(pos,this);}
-	virtual void					ActivateExplosionBox		(const Fvector &size,Fvector &in_out_pos){};
+	void					OnAfterExplosion			() override {};
+	void					GetRayExplosionSourcePos	(Fvector &pos) override {random_point_in_object_box(pos,this);}
+	void					ActivateExplosionBox		(const Fvector &size,Fvector &in_out_pos) override {};
 //general
 	EHeliState						m_curState;
 
@@ -254,7 +254,7 @@ public:
 
 
 	CHelicopter();
-	virtual							~CHelicopter();
+	~CHelicopter() override;
 	
 	CHelicopter::EHeliState			state		()		{return m_curState;};
 	int								state_script()		{return m_curState;};
@@ -263,45 +263,45 @@ public:
 	void							setState_script	(u32 s)					{setState(static_cast<CHelicopter::EHeliState>(s));};
 
 	void							init		();
-	virtual	void					reinit		();
+	void					reinit		() override;
 
-	virtual	void					Load				(LPCSTR		section);
-	virtual	void					reload				(LPCSTR		section);
+	void					Load				(LPCSTR		section) override;
+	void					reload				(LPCSTR		section) override;
 
-	virtual BOOL					net_Spawn			(CSE_Abstract*		DC);
-	virtual void					net_Destroy			();
-	virtual void					net_Export			(NET_Packet &P){};
-	virtual void					net_Import			(NET_Packet &P){};
-	virtual void					net_Relcase			(CObject* O );
-	virtual void					save				(NET_Packet &output_packet);
-	virtual void					load				(IReader &input_packet);
+	BOOL					net_Spawn			(CSE_Abstract*		DC) override;
+	void					net_Destroy			() override;
+	void					net_Export			(NET_Packet &P) override {};
+	void					net_Import			(NET_Packet &P) override {};
+	void					net_Relcase			(CObject* O ) override;
+	void					save				(NET_Packet &output_packet) override;
+	void					load				(IReader &input_packet) override;
 
-	virtual void					SpawnInitPhysics	(CSE_Abstract	*D);
-	virtual CPhysicsShellHolder*	PPhysicsShellHolder	()						{return PhysicsShellHolder();}
-	virtual void					net_Save			(NET_Packet& P);
-	virtual	BOOL					net_SaveRelevant	()						{return (inherited::net_SaveRelevant() && static_cast<BOOL>(PPhysicsShell() != NULL))||m_exploded;};					
+	void					SpawnInitPhysics	(CSE_Abstract	*D) override;
+	CPhysicsShellHolder*	PPhysicsShellHolder	() override {return PhysicsShellHolder();}
+	void					net_Save			(NET_Packet& P) override;
+	BOOL					net_SaveRelevant	() override {return (inherited::net_SaveRelevant() && static_cast<BOOL>(PPhysicsShell() != NULL))||m_exploded;};
 
-	virtual void					renderable_Render				()			{ inherited::renderable_Render();};
-	virtual BOOL					renderable_ShadowGenerate		()			{ return FALSE;	}
-	virtual BOOL					renderable_ShadowReceive		()			{ return TRUE;	}
+	void					renderable_Render				() override { inherited::renderable_Render();};
+	BOOL					renderable_ShadowGenerate		() override { return FALSE;	}
+	BOOL					renderable_ShadowReceive		() override { return TRUE;	}
 
-	virtual void					OnEvent				(NET_Packet& P, u16 type);
-	virtual void					UpdateCL			();
-	virtual void					shedule_Update		(u32		time_delta);
+	void					OnEvent				(NET_Packet& P, u16 type) override;
+	void					UpdateCL			() override;
+	void					shedule_Update		(u32		time_delta) override;
 			void					MoveStep			();
 
-	virtual	void					Hit					(SHit* pHDS);
-	virtual void					PHHit				(SHit &H);
+	void					Hit					(SHit* pHDS) override;
+	void					PHHit				(SHit &H) override;
 	//CEntity
-	virtual void					HitSignal			(float P, Fvector &local_dir,	CObject* who, s16 element){;}
-	virtual void					HitImpulse			(float P, Fvector &vWorldDir, 	Fvector& vLocalDir){;}
-	
-	virtual const Fmatrix&			get_ParticlesXFORM			();
-	virtual const Fvector&			get_CurrentFirePoint		();
+	void					HitSignal			(float P, Fvector &local_dir,	CObject* who, s16 element) override {;}
+	void					HitImpulse			(float P, Fvector &vWorldDir, 	Fvector& vLocalDir) override {;}
 
-	virtual CGameObject				*cast_game_object			()	{return this;}
-	virtual CExplosive				*cast_explosive				()	{return this;}
-	virtual CPHSkeleton				*PHSkeleton					()	{return this;}
+	const Fmatrix&			get_ParticlesXFORM			() override;
+	const Fvector&			get_CurrentFirePoint		() override;
+
+	CGameObject				*cast_game_object			() override {return this;}
+	CExplosive				*cast_explosive				() override {return this;}
+	CPHSkeleton				*PHSkeleton					() override {return this;}
 
 public:
 	//for scripting
@@ -342,14 +342,14 @@ public:
 	int						GetHuntState					();
 	int						GetBodyState					();
 
-	virtual DLL_Pure		*_construct						();
+	DLL_Pure		*_construct						() override;
 	float					GetSafeAltitude					()				{return m_movement.GetSafeAltitude();};
 	float					GetHeliHealth					() const		{return inherited::GetfHealth();}
 	float					SetHeliHealth					(float value)	{return inherited::SetfHealth(value);}
 
 #ifdef DEBUG
 public:
-	virtual void			OnRender						();
+	void			OnRender						() override;
 #endif
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION

@@ -22,7 +22,7 @@ public:
 	shared_str		m_shader_name;
 
 					CUICustomMap					();
-	virtual			~CUICustomMap					();
+	~CUICustomMap					() override;
 
 	virtual void	SetActivePoint					(const Fvector &vNewPoint);
 	
@@ -42,9 +42,9 @@ public:
 	const shared_str& MapName						() {return m_name;}
 	virtual CUIGlobalMapSpot*	GlobalMapSpot		() {return NULL;}
 
-	virtual void	Draw							();
-	virtual void	Update							();
-	virtual void	SendMessage						(CUIWindow* pWnd, s16 msg, void* pData);
+	void	Draw							() override;
+	void	Update							() override;
+	void	SendMessage						(CUIWindow* pWnd, s16 msg, void* pData) override;
 	virtual bool	IsRectVisible					(Frect r);
 	virtual	bool	NeedShowPointer					(Frect r);
 			bool	Locked							()				{return !!m_flags.test(eLocked);}
@@ -66,18 +66,17 @@ class CUIGlobalMap: public CUICustomMap
 	float			m_minZoom;
 	float			m_max_zoom;
 public:
-
-	virtual Fvector2 ConvertRealToLocal		(const Fvector2& src, bool for_drawing);// pixels->pixels (relatively own left-top pos)
+	Fvector2 ConvertRealToLocal		(const Fvector2& src, bool for_drawing) override;// pixels->pixels (relatively own left-top pos)
 
 					CUIGlobalMap			(CUIMapWnd*	pMapWnd);
-	virtual			~CUIGlobalMap			();
+	~CUIGlobalMap			() override;
 	
 	IC void			SetMinZoom				(float zoom){m_minZoom=zoom;}
 	IC float		GetMinZoom				(){return m_minZoom;}
 	IC float		GetMaxZoom				(){return m_max_zoom;}
 	IC void			SetMaxZoom				(float zoom){m_max_zoom = zoom;}
 
-	virtual bool	OnMouseAction					(float x, float y, EUIMessages mouse_action);
+	bool	OnMouseAction					(float x, float y, EUIMessages mouse_action) override;
 
 	CUIMapWnd*		MapWnd					() {return m_mapWnd;}
 	void			MoveWndDelta			(const Fvector2& d);
@@ -85,10 +84,10 @@ public:
 	float			CalcOpenRect			(const Fvector2& center_point, Frect& map_desired_rect, float tgt_zoom);
 
 	void			ClipByVisRect			();
-	virtual void	Update					();
+	void	Update					() override;
 	void			Initialize				();
 protected:
-	virtual void	Init_internal			(const shared_str& name, CInifile& pLtx, const shared_str& sect_name, LPCSTR sh_name);
+	void	Init_internal			(const shared_str& name, CInifile& pLtx, const shared_str& sect_name, LPCSTR sh_name) override;
 };
 
 class CUILevelMap: public CUICustomMap
@@ -102,22 +101,22 @@ class CUILevelMap: public CUICustomMap
 			CUILevelMap			&operator=			(const CUILevelMap &obj) {}
 public:
 								CUILevelMap			(CUIMapWnd*);
-	virtual						~CUILevelMap		();
+	~CUILevelMap		() override;
 	const Frect&				GlobalRect			() const								{return m_GlobalRect;}
-	virtual void				Draw				();
-	virtual void				Show				(bool status);
-	virtual void				Update				();
-	virtual bool				OnMouseAction				(float x, float y, EUIMessages mouse_action);
-	virtual void				SendMessage			(CUIWindow* pWnd, s16 msg, void* pData);
+	void				Draw				() override;
+	void				Show				(bool status) override;
+	void				Update				() override;
+	bool				OnMouseAction				(float x, float y, EUIMessages mouse_action) override;
+	void				SendMessage			(CUIWindow* pWnd, s16 msg, void* pData) override;
 	
 	Frect						CalcWndRectOnGlobal	();
 	CUIMapWnd*					MapWnd				() {return m_mapWnd;}
 
-	virtual		void			OnFocusLost			();
+	void			OnFocusLost			() override;
 
 protected:
-	virtual void				UpdateSpots			();
-	virtual void				Init_internal		(const shared_str& name, CInifile& pLtx, const shared_str& sect_name, LPCSTR sh_name);
+	void				UpdateSpots			() override;
+	void				Init_internal		(const shared_str& name, CInifile& pLtx, const shared_str& sect_name, LPCSTR sh_name) override;
 };
 
 class CUIMiniMap: public CUICustomMap
@@ -126,12 +125,12 @@ class CUIMiniMap: public CUICustomMap
 
 public:
 								CUIMiniMap			();
-	virtual						~CUIMiniMap			();
-	virtual void				Draw				();
-	virtual bool				GetPointerTo		(const Fvector2& src, float item_radius, Fvector2& pos, float& heading);//position and heading for drawing pointer to src pos
-	virtual	bool				NeedShowPointer		(Frect r);
-	virtual bool				IsRectVisible		(Frect r);
+	~CUIMiniMap			() override;
+	void				Draw				() override;
+	bool				GetPointerTo		(const Fvector2& src, float item_radius, Fvector2& pos, float& heading) override;//position and heading for drawing pointer to src pos
+	bool				NeedShowPointer		(Frect r) override;
+	bool				IsRectVisible		(Frect r) override;
 protected:
-	virtual void				UpdateSpots			();
-	virtual void				Init_internal		(const shared_str& name, CInifile& pLtx, const shared_str& sect_name, LPCSTR sh_name);
+	void				UpdateSpots			() override;
+	void				Init_internal		(const shared_str& name, CInifile& pLtx, const shared_str& sect_name, LPCSTR sh_name) override;
 };

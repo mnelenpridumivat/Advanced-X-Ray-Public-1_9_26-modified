@@ -12,18 +12,18 @@ class	CStateBloodsuckerPredator : public CState<_Object> {
 public:
 						CStateBloodsuckerPredator		(_Object *obj);
 
-	virtual void		reinit							();
+	void		reinit							() override;
 
-	virtual void		initialize						();
-	virtual	void		reselect_state					();
-	virtual	void		finalize						();
-	virtual	void		critical_finalize				();
-	virtual bool		check_start_conditions			();
-	virtual bool		check_completion				();
-	virtual void		remove_links					(CObject* object) { inherited::remove_links(object);}
+	void		initialize						() override;
+	void		reselect_state					() override;
+	void		finalize						() override;
+	void		critical_finalize				() override;
+	bool		check_start_conditions			() override;
+	bool		check_completion				() override;
+	void		remove_links					(CObject* object) override { inherited::remove_links(object);}
 
-	virtual void		setup_substates					();
-	virtual void		check_force_state				();
+	void		setup_substates					() override;
+	void		check_force_state				() override;
 
 private:
 			void		select_camp_point				();

@@ -50,12 +50,12 @@ protected:
 
 public:
 								CEnemyManager		(CCustomMonster *object);
-	virtual void				reload				(LPCSTR section);
+	void				reload				(LPCSTR section) override;
 	virtual bool				useful				(const CEntityAlive *object) const;
-	virtual bool				is_useful			(const CEntityAlive *object) const;
+	bool				is_useful			(const CEntityAlive *object) const override;
 	virtual	float				evaluate			(const CEntityAlive *object) const;
-	virtual	float				do_evaluate			(const CEntityAlive *object) const;
-	virtual void				update				();
+	float				do_evaluate			(const CEntityAlive *object) const override;
+	void				update				() override;
 	virtual void				set_ready_to_save	();
 	IC		u32					last_enemy_time		() const;
 	IC		const CEntityAlive	*last_enemy			() const;

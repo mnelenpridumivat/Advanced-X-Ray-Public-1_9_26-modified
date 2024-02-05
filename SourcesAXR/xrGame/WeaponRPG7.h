@@ -11,27 +11,27 @@ private:
 	typedef CWeaponCustomPistol inherited;
 public:
 				CWeaponRPG7		();
-	virtual		~CWeaponRPG7	();
+	~CWeaponRPG7	() override;
 
-	virtual BOOL net_Spawn		(CSE_Abstract* DC);
-	virtual void OnStateSwitch	(u32 S);
-	virtual void OnEvent		(NET_Packet& P, u16 type);
-	virtual void ReloadMagazine	();
-	virtual void Load			(LPCSTR section);
-	virtual void switch2_Fire	();
-	virtual	void FireTrace		(const Fvector& P, const Fvector& D);
-	virtual void on_a_hud_attach();
+	BOOL net_Spawn		(CSE_Abstract* DC) override;
+	void OnStateSwitch	(u32 S) override;
+	void OnEvent		(NET_Packet& P, u16 type) override;
+	void ReloadMagazine	() override;
+	void Load			(LPCSTR section) override;
+	void switch2_Fire	() override;
+	void FireTrace		(const Fvector& P, const Fvector& D) override;
+	void on_a_hud_attach() override;
 
-	virtual void FireStart		();
-	virtual void SwitchState	(u32 S);
+	void FireStart		() override;
+	void SwitchState	(u32 S) override;
 
 			void UpdateMissileVisibility	();
-	virtual void UnloadMagazine				(bool spawn_ammo = true);
+	void UnloadMagazine				(bool spawn_ammo = true) override;
 
-	virtual void net_Import			( NET_Packet& P);				// import from server
+	void net_Import			( NET_Packet& P) override;				// import from server
 protected:
-	virtual bool	AllowBore		();
-	virtual void	PlayAnimReload	();
+	bool	AllowBore		() override;
+	void	PlayAnimReload	() override;
 
 	shared_str	m_sRocketSection;
 

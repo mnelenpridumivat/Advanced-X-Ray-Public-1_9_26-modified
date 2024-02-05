@@ -16,32 +16,32 @@ class CArtefact :	public CHudItemObject,
 	typedef			CHudItemObject	inherited;
 public:
 									CArtefact						();
-	virtual							~CArtefact						();
+	~CArtefact						() override;
 
-	virtual void					Load							(LPCSTR section);
-	virtual BOOL					net_Spawn						(CSE_Abstract* DC);
-	virtual void					net_Destroy						();
+	void					Load							(LPCSTR section) override;
+	BOOL					net_Spawn						(CSE_Abstract* DC) override;
+	void					net_Destroy						() override;
 
-	virtual void					OnH_A_Chield					();
-	virtual void					OnH_B_Independent				(bool just_before_destroy);
-	virtual void					save							(NET_Packet &output_packet);
-	virtual void					load							(IReader &input_packet);
-	virtual void					OnActiveItem					();
-	virtual void					OnHiddenItem					();
-	
-	virtual void					UpdateCL						();
-	virtual void					shedule_Update					(u32 dt);	
+	void					OnH_A_Chield					() override;
+	void					OnH_B_Independent				(bool just_before_destroy) override;
+	void					save							(NET_Packet &output_packet) override;
+	void					load							(IReader &input_packet) override;
+	void					OnActiveItem					() override;
+	void					OnHiddenItem					() override;
+
+	void					UpdateCL						() override;
+	void					shedule_Update					(u32 dt) override;	
 			void					UpdateWorkload					(u32 dt);
 
-	
-	virtual bool					CanTake							() const;
 
-	virtual BOOL					renderable_ShadowGenerate		()		{ return FALSE;	}
-	virtual BOOL					renderable_ShadowReceive		()		{ return TRUE;	}
-	virtual void					create_physic_shell				();
+	bool					CanTake							() const override;
 
-	virtual CArtefact*				cast_artefact					()		{return this;}
-	virtual	u32						Cost							() const;
+	BOOL					renderable_ShadowGenerate		() override { return FALSE;	}
+	BOOL					renderable_ShadowReceive		() override { return TRUE;	}
+	void					create_physic_shell				() override;
+
+	CArtefact*				cast_artefact					() override {return this;}
+	u32						Cost							() const override;
 
 			float					GetHealthPower					() const { return m_fHealthRestoreSpeed; }
 			float					GetRadiationPower				() const { return m_fRadiationRestoreSpeed; }
@@ -86,8 +86,8 @@ public:
 	virtual void					StartLights();
 	virtual void					StopLights();
 
-	virtual void					PhDataUpdate					(float step);
-	virtual void					PhTune							(float step)	{};
+	void					PhDataUpdate					(float step) override;
+	void					PhTune							(float step) override {};
 
 	float							m_additional_weight;
 	float							AdditionalInventoryWeight		() const {return m_additional_weight;}
@@ -147,20 +147,21 @@ public:
 	enum EAFHudStates {
 		eActivating = eLastBaseState+1,
 	};
-	virtual void					Interpolate			();
 
-	virtual	void					PlayAnimIdle		();
-	virtual void					MoveTo(Fvector const & position);
+	void					Interpolate			() override;
+
+	void					PlayAnimIdle		() override;
+	void					MoveTo(Fvector const & position) override;
 	virtual void					StopActivation		();
 
-	virtual void					ForceTransform		(const Fmatrix& m);
+	void					ForceTransform		(const Fmatrix& m) override;
 
 	virtual void					Hide				();
 	virtual void					Show				();
-	virtual	void					UpdateXForm			();
-	virtual bool					Action				(u16 cmd, u32 flags);
-	virtual void					OnStateSwitch		(u32 S);
-	virtual void					OnAnimationEnd		(u32 state);
+	void					UpdateXForm			() override;
+	bool					Action				(u16 cmd, u32 flags) override;
+	void					OnStateSwitch		(u32 S) override;
+	void					OnAnimationEnd		(u32 state) override;
 	virtual bool					IsHidden			()	const	{return GetState()==eHidden;}
 
 			void					UpdateDegradation	(void);

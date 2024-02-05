@@ -8,8 +8,10 @@ class CCC_CreateGameSpyAccount : public IConsole_Command
 {
 public:
 	CCC_CreateGameSpyAccount(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = false; };
-	virtual void	Execute(LPCSTR args);
-	virtual void	Info	(TInfo& I){
+	void	Execute(LPCSTR args) override;
+
+	void	Info	(TInfo& I) override
+	{
 		xr_strcpy(I,"Creates GameSpy account:gs_create_account <nick> <unique_nick> <email> <password>");
 	}
 }; //CCC_CreateGameSpyAccount
@@ -20,8 +22,10 @@ public:
 	CCC_GapySpyListProfiles(LPCSTR N) : 
 	  IConsole_Command(N) { bEmptyArgsHandled = false; };
 
-	virtual void	Execute(LPCSTR args);
-	virtual void	Info	(TInfo& I){
+	void	Execute(LPCSTR args) override;
+
+	void	Info	(TInfo& I) override
+	{
 		xr_strcpy(I,"Lists account profiles : gs_list_profiles <email> <password>");
 	}
 };//CCC_GapySpyListProfiles
@@ -32,8 +36,10 @@ public:
 	CCC_GameSpyLogin(LPCSTR N) : 
 	  IConsole_Command(N) { bEmptyArgsHandled = false; };
 
-	virtual void	Execute(LPCSTR args);
-	virtual void	Info	(TInfo& I){
+	void	Execute(LPCSTR args) override;
+
+	void	Info	(TInfo& I) override
+	{
 		xr_strcpy(I,"Logins to GameSpy: gs_login <email> <nick> <password>");
 	}
 };//CCC_GameSpyLogin
@@ -45,8 +51,10 @@ public:
 	CCC_GameSpyLogout(LPCSTR N) : 
 	  IConsole_Command(N) { bEmptyArgsHandled = true; };
 
-	virtual void	Execute(LPCSTR args);	
-	virtual void	Info	(TInfo& I){
+	void	Execute(LPCSTR args) override;
+
+	void	Info	(TInfo& I) override
+	{
 		xr_strcpy(I,"Logouts from the GameSpy session.");
 	}
 };//CCC_GameSpyLogout
@@ -57,8 +65,10 @@ public:
 	CCC_GameSpyPrintProfile(LPCSTR N) : 
 	  IConsole_Command(N) { bEmptyArgsHandled = true; };
 
-	virtual void	Execute(LPCSTR args);
-	virtual void	Info	(TInfo& I){
+	void	Execute(LPCSTR args) override;
+
+	void	Info	(TInfo& I) override
+	{
 		xr_strcpy(I,"Prints current profile information.");
 	}
 };//CCC_GameSpyPrintProfile
@@ -70,8 +80,10 @@ public:
 	CCC_GameSpySuggestUNicks(LPCSTR N) : 
 	  IConsole_Command(N) { bEmptyArgsHandled = false; };
 
-	virtual void	Execute(LPCSTR args);
-	virtual void	Info	(TInfo& I){
+	void	Execute(LPCSTR args) override;
+
+	void	Info	(TInfo& I) override
+	{
 		xr_strcpy(I,"Suggests unique nicks");
 	}
 };//CCC_GameSpySuggestUNicks
@@ -82,8 +94,10 @@ public:
 	CCC_GameSpyRegisterUniqueNick(LPCSTR N) : 
 	  IConsole_Command(N) { bEmptyArgsHandled = false; };
 
-	virtual void	Execute(LPCSTR args);
-	virtual void	Info	(TInfo& I){
+	void	Execute(LPCSTR args) override;
+
+	void	Info	(TInfo& I) override
+	{
 		xr_strcpy(I,"Registers new unique nick to the current profile");
 	}
 };//CCC_GameSpySuggestUNicks
@@ -94,8 +108,10 @@ public:
 	CCC_GameSpyDeleteProfile(LPCSTR N) : 
 	  IConsole_Command(N) { bEmptyArgsHandled = true; };
 
-	virtual void Execute(LPCSTR args);
-	virtual void	Info	(TInfo& I){
+	void Execute(LPCSTR args) override;
+
+	void	Info	(TInfo& I) override
+	{
 		xr_strcpy(I,"Deletes current profile.");
 	}
 };//CCC_GameSpyDeleteProfile
@@ -106,8 +122,10 @@ public:
 	CCC_GameSpyProfile(LPCSTR N) : 
 	  IConsole_Command(N) { bEmptyArgsHandled = false; };
 
-	virtual void	Execute(LPCSTR args);
-	virtual void	Info	(TInfo& I){
+	void	Execute(LPCSTR args) override;
+
+	void	Info	(TInfo& I) override
+	{
 		xr_strcpy(I,"Loads current profile information.");
 	}
 };//CCC_GameSpyProfile

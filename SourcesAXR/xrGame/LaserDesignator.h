@@ -14,7 +14,7 @@ private:
 	typedef CInventoryItemObject inherited;
 public:
 	CLaserDesignator();
-	virtual ~CLaserDesignator();
+	~CLaserDesignator() override;
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CLaserDesignator)

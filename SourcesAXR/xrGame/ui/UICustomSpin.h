@@ -19,14 +19,14 @@ class CUICustomSpin : public CUIWindow, public CUIOptionsItem
 {
 public:
 					CUICustomSpin		();
-	virtual			~CUICustomSpin		();
+					~CUICustomSpin		() override;
 
 	// CUIWindow
 	virtual void	InitSpin			(Fvector2 pos, Fvector2 size);
-	virtual void	SendMessage			(CUIWindow* pWnd, s16 msg, void* pData  = NULL);
-	virtual void	Draw				();
-	virtual void	Update				();
-	virtual void	Enable				(bool status);
+					void	SendMessage			(CUIWindow* pWnd, s16 msg, void* pData  = NULL) override;
+					void	Draw				() override;
+					void	Update				() override;
+					void	Enable				(bool status) override;
 
 	// own
 	virtual void	OnBtnUpClick		();

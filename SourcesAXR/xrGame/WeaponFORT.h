@@ -10,7 +10,7 @@ private:
 protected:
 public:
 					CWeaponFORT			();
-	virtual			~CWeaponFORT		();
+	~CWeaponFORT		() override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

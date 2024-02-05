@@ -39,15 +39,15 @@ class CControlPathBuilder :
 
 public:
 					CControlPathBuilder		(CCustomMonster *monster);
-	virtual			~CControlPathBuilder	();
+	~CControlPathBuilder	() override;
 
-	virtual void	load					(LPCSTR section);
-	virtual void	reinit					();
-	virtual void	update_schedule			();
+	void	load					(LPCSTR section) override;
+	void	reinit					() override;
+	void	update_schedule			() override;
 
-	virtual	void	on_travel_point_change	(const u32 &previous_travel_point_index);
-	virtual void	on_build_path			();
-	virtual	bool	can_use_distributed_computations (u32 option) const;
+	void	on_travel_point_change	(const u32 &previous_travel_point_index) override;
+	void	on_build_path			() override;
+	bool	can_use_distributed_computations (u32 option) const override;
 
 			// services
 			bool	is_path_end				(float dist_to_end);

@@ -8,11 +8,11 @@ class CStateMonsterFindEnemyAngry : public CState<_Object> {
 
 public:
 						CStateMonsterFindEnemyAngry	(_Object *obj);
-	virtual				~CStateMonsterFindEnemyAngry();
+	~CStateMonsterFindEnemyAngry() override;
 
-	virtual	void		execute						();
-	virtual bool		check_completion			();
-	virtual void		remove_links				(CObject* object) { inherited::remove_links(object);}
+	void		execute						() override;
+	bool		check_completion			() override;
+	void		remove_links				(CObject* object) override { inherited::remove_links(object);}
 };
 
 #include "monster_state_find_enemy_angry_inline.h"

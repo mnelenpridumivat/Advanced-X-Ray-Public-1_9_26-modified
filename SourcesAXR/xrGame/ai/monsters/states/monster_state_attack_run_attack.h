@@ -8,14 +8,14 @@ class CStateMonsterAttackRunAttack : public CState<_Object> {
 public:
 						CStateMonsterAttackRunAttack	(_Object *obj) : inherited(obj) {};
 
-	virtual	void		initialize						();
-	virtual	void		execute							();
-	virtual	void		finalize						();
-	virtual	void		critical_finalize				();
-	virtual void		remove_links					(CObject* object) { inherited::remove_links(object);}
+	void		initialize						() override;
+	void		execute							() override;
+	void		finalize						() override;
+	void		critical_finalize				() override;
+	void		remove_links					(CObject* object) override { inherited::remove_links(object);}
 
-	virtual bool 		check_completion				();
-	virtual bool 		check_start_conditions			();
+	bool 		check_completion				() override;
+	bool 		check_start_conditions			() override;
 };
 
 #include "monster_state_attack_run_attack_inline.h"

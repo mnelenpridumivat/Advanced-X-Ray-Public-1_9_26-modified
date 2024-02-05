@@ -7,14 +7,14 @@ class CStateMonsterMoveToRestrictor : public CState<_Object> {
 
 public:
 						CStateMonsterMoveToRestrictor	(_Object *obj) : inherited(obj) {}
-	virtual				~CStateMonsterMoveToRestrictor	() {}
+	~CStateMonsterMoveToRestrictor	() override {}
 
-	virtual void		initialize					();
-	virtual	void		execute						();
+	void		initialize					() override;
+	void		execute						() override;
 
-	virtual bool		check_start_conditions		();
-	virtual bool		check_completion			();
-	virtual void		remove_links				(CObject* object) { inherited::remove_links(object);}
+	bool		check_start_conditions		() override;
+	bool		check_completion			() override;
+	void		remove_links				(CObject* object) override { inherited::remove_links(object);}
 };
 
 #include "state_move_to_restrictor_inline.h"

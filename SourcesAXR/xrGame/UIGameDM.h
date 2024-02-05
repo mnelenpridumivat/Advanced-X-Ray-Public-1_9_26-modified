@@ -44,19 +44,19 @@ protected:
 	UIVoteStatusWnd*				m_voteStatusWnd;
 public:
 									CUIGameDM				();
-	virtual 						~CUIGameDM				();
+	~CUIGameDM				() override;
 
-	virtual void					SetClGame				(game_cl_GameState* g);
-	virtual	void					Init					(int stage);
-	virtual void					UnLoad					();
-	virtual void					Render					();
-	virtual void	_BCL			OnFrame					();
+	void					SetClGame				(game_cl_GameState* g) override;
+	void					Init					(int stage) override;
+	void					UnLoad					() override;
+	void					Render					() override;
+	void	_BCL			OnFrame					() override;
 
 	void							SetRank							(s16 team, u8 rank);
 
-	virtual void					ChangeTotalMoneyIndicator		(LPCSTR newMoneyString);
-	virtual void					DisplayMoneyChange				(LPCSTR deltaMoney);
-	virtual void					DisplayMoneyBonus				(KillMessageStruct* bonus);
+	void					ChangeTotalMoneyIndicator		(LPCSTR newMoneyString) override;
+	void					DisplayMoneyChange				(LPCSTR deltaMoney) override;
+	void					DisplayMoneyBonus				(KillMessageStruct* bonus) override;
 	virtual void					SetFraglimit					(int local_frags, int fraglimit);
 
 			void					SetTimeMsgCaption				(LPCSTR str);

@@ -10,13 +10,13 @@ class CStateMonsterHideFromPoint : public CState<_Object> {
 
 public:
 						CStateMonsterHideFromPoint	(_Object *obj) : inherited(obj, &data){}
-	virtual				~CStateMonsterHideFromPoint	() {}
+	~CStateMonsterHideFromPoint	() override {}
 
-	virtual void		initialize					();
-	virtual	void		execute						();
-	virtual void		remove_links				(CObject* object) { inherited::remove_links(object);}
+	void		initialize					() override;
+	void		execute						() override;
+	void		remove_links				(CObject* object) override { inherited::remove_links(object);}
 
-	virtual bool		check_completion			();
+	bool		check_completion			() override;
 						
 };
 

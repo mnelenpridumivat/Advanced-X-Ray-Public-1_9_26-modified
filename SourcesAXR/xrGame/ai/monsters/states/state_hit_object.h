@@ -11,11 +11,11 @@ class CStateMonsterHitObject : public CState<_Object> {
 		
 public:
 					CStateMonsterHitObject	(_Object *obj) : inherited(obj) {}
-	
-	virtual	void	initialize				();
-	virtual	void	execute					();
-	virtual bool	check_start_conditions	();
-	virtual bool	check_completion		();
+
+	void	initialize				() override;
+	void	execute					() override;
+	bool	check_start_conditions	() override;
+	bool	check_completion		() override;
 };
 
 #include "state_hit_object_inline.h"

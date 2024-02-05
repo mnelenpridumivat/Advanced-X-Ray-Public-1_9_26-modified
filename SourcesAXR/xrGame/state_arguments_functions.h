@@ -16,7 +16,7 @@ template<typename T>
 class ge_function : public binary_function<T>
 {
 public:
-	virtual bool exec(T const left, T const right)
+	bool exec(T const left, T const right) override
 	{
 		return left >= right;
 	}
@@ -26,7 +26,7 @@ template<typename T>
 class le_function : public binary_function<T>
 {
 public:
-	virtual bool exec(T const left, T const right)
+	bool exec(T const left, T const right) override
 	{
 		return left <= right;
 	}

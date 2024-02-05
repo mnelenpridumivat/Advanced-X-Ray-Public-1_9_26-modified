@@ -11,16 +11,16 @@ class	CBloodsuckerStateAttackHide : public CState<_Object> {
 public:
 						CBloodsuckerStateAttackHide			(_Object *obj);
 
-	virtual void		reinit							();
+	void		reinit							() override;
 
-	virtual void		initialize						();
-	virtual	void		reselect_state					();
-	virtual	void		finalize						();
-	virtual	void		critical_finalize				();
-	virtual bool		check_completion				();
+	void		initialize						() override;
+	void		reselect_state					() override;
+	void		finalize						() override;
+	void		critical_finalize				() override;
+	bool		check_completion				() override;
 
-	virtual void		setup_substates					();
-	virtual void		check_force_state				();
+	void		setup_substates					() override;
+	void		check_force_state				() override;
 
 private:
 	void		select_camp_point				();

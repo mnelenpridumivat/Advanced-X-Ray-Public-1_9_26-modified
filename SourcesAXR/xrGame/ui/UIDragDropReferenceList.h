@@ -12,17 +12,17 @@ private:
 	ITEMS_REFERENCES_VEC m_references;
 public:
 	CUIDragDropReferenceList();
-	virtual ~CUIDragDropReferenceList();
-	virtual void SetItem(CUICellItem* itm);
-	virtual void SetItem(CUICellItem* itm, Fvector2 abs_pos);
-	virtual void SetItem(CUICellItem* itm, Ivector2 cell_pos);
-	virtual CUICellItem* RemoveItem(CUICellItem* itm, bool force_root);
+	~CUIDragDropReferenceList() override;
+	void SetItem(CUICellItem* itm) override;
+	void SetItem(CUICellItem* itm, Fvector2 abs_pos) override;
+	void SetItem(CUICellItem* itm, Ivector2 cell_pos) override;
+	CUICellItem* RemoveItem(CUICellItem* itm, bool force_root) override;
 
 	void Initialize();
 	CUICellContainer* GetContainer() {return m_container;};
 	void LoadItemTexture(LPCSTR section, Ivector2 cell_pos);
 	void ReloadReferences(CInventoryOwner* pActor);
 
-	virtual void __stdcall	OnItemDBClick		(CUIWindow* w, void* pData);
-	virtual void __stdcall	OnItemDrop			(CUIWindow* w, void* pData);
+	void __stdcall	OnItemDBClick		(CUIWindow* w, void* pData) override;
+	void __stdcall	OnItemDrop			(CUIWindow* w, void* pData) override;
 };

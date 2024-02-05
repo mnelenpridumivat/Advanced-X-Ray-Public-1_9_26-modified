@@ -65,9 +65,9 @@ class CUIMpServerAdm :	public CUIWindow, public CUIWndCallback
 		CUICheckButton*		m_pBearerCantSprintCheck;
 public:
 							CUIMpServerAdm();
-							~CUIMpServerAdm();
+							~CUIMpServerAdm() override;
 				void		Init(CUIXml& xml_doc);
-		virtual void 		SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+		void 		SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 				void		ShowChangeWeatherBtns();
 				void		ShowChangeGameTypeBtns();
 				void		ShowChangeGameLimitsBtns();

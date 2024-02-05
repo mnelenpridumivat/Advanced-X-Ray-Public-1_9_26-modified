@@ -45,8 +45,9 @@ public:
 			c.normal[0]=-c.normal[0];c.normal[1]=-c.normal[1];c.normal[2]=-c.normal[2];
 		}
 	}
-	virtual void 			run								()
-	{
+
+void 			run								() override
+{
 		CParticlesObject* ps = CParticlesObject::Create(ps_name,TRUE);
 
 		Fmatrix pos; 
@@ -58,7 +59,7 @@ public:
 		ps->UpdateParent(pos,zero_vel);
 		GamePersistent().ps_needtoplay.push_back(ps);
 	};
-	virtual bool 			obsolete						()const{return false;}
+bool 			obsolete						()const override {return false;}
 };
 static const float minimal_plane_distance_between_liquid_particles = 0.2f;
 class CPHLiquidParticlesPlayCall :
@@ -79,16 +80,17 @@ public:
 		return cast_fv( c.pos );
 	}
 private:
-	virtual bool			compare							(const	CPHReqComparerV* v)					const	{return v->compare(this);}
+	bool			compare							(const	CPHReqComparerV* v)					const override {return v->compare(this);}
 
-	virtual void 			run								()
+	void 			run								() override
 	{
 		if( b_called )
 			return;
 		b_called = true;
 		CPHParticlesPlayCall::run();
 	}
-	virtual bool 			obsolete						()const{return Device.dwTimeGlobal > remove_time ;}
+
+	bool 			obsolete						()const override {return Device.dwTimeGlobal > remove_time ;}
 };
 
 
@@ -99,9 +101,9 @@ class CPHLiquidParticlesCondition:
 
 
 private:
-	virtual bool			compare							(const	CPHReqComparerV* v)					const	{return v->compare(this);}
-	virtual bool 			is_true							(){return true;}
-	virtual bool 			obsolete						()const{return false;}
+	bool			compare							(const	CPHReqComparerV* v)					const override {return v->compare(this);}
+	bool 			is_true							() override {return true;}
+	bool 			obsolete						()const override {return false;}
 };
 class CPHFindLiquidParticlesComparer:
 	public CPHReqComparerV
@@ -111,8 +113,9 @@ public:
 	CPHFindLiquidParticlesComparer( const Fvector &position ): m_position(position) {}
 private:
 	virtual bool			compare							(const	CPHReqComparerV* v)					const	{return v->compare(this);}
-	virtual bool			compare							(const	CPHLiquidParticlesCondition* v)		const	{return true;}
-	virtual bool			compare							(const	CPHLiquidParticlesPlayCall* v )		const	
+	bool			compare							(const	CPHLiquidParticlesCondition* v)		const override {return true;}
+
+	bool			compare							(const	CPHLiquidParticlesPlayCall* v )		const override
 	{
 		VERIFY( v );
 		
@@ -144,14 +147,15 @@ public:
 		pos.set(p);
 		T=Tri;
 	}
-	virtual void 			run								()
+
+	void 			run								() override
 	{
 		//добавить отметку на материале
 		::Render->add_StaticWallmark(pWallmarkShader,pos, 
 			0.09f, T,
 			Level().ObjectSpace.GetStaticVerts());
 	};
-	virtual bool 			obsolete						()const{return false;}
+	bool 			obsolete						()const override {return false;}
 };
 
 static void play_object( dxGeomUserData* data, SGameMtlPair* mtl_pair, const dContactGeom* c )

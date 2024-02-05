@@ -11,16 +11,16 @@ class CAI_Flesh : public CBaseMonster,
 
 public:
 							CAI_Flesh		();
-	virtual					~CAI_Flesh		();	
-	
-	virtual	void	Load					(LPCSTR section);
-	virtual	BOOL	net_Spawn				(CSE_Abstract* DC);
+	~CAI_Flesh		() override;
 
-	virtual	void	CheckSpecParams			(u32 spec_params);
+	void	Load					(LPCSTR section) override;
+	BOOL	net_Spawn				(CSE_Abstract* DC) override;
 
-	virtual bool	ability_can_drag		() {return true;}
+	void	CheckSpecParams			(u32 spec_params) override;
 
-	virtual	char*	get_monster_class_name () { return "flesh"; }
+	bool	ability_can_drag		() override {return true;}
+
+	char*	get_monster_class_name () override { return "flesh"; }
 
 
 private:

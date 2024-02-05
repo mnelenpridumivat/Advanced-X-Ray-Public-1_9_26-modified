@@ -7,10 +7,10 @@ class CFryupZone : public CScriptObject {
 
 public:
 	CFryupZone	();
-	virtual			~CFryupZone	();
+	~CFryupZone	() override;
 
 #ifdef DEBUG
-	virtual void	OnRender				( );
+	void	OnRender				( ) override;
 #endif
 
 };

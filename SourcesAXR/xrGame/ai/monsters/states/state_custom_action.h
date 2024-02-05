@@ -10,11 +10,11 @@ class CStateMonsterCustomAction : public CState<_Object> {
 
 public:
 						CStateMonsterCustomAction	(_Object *obj);
-	virtual				~CStateMonsterCustomAction	();
+	~CStateMonsterCustomAction	() override;
 
-	virtual	void		execute						();
-	virtual bool		check_completion			();
-	virtual void		remove_links				(CObject* object) { inherited::remove_links(object);}
+	void		execute						() override;
+	bool		check_completion			() override;
+	void		remove_links				(CObject* object) override { inherited::remove_links(object);}
 };
 
 #include "state_custom_action_inline.h"

@@ -13,7 +13,7 @@ private:
 	typedef CInventoryItemObject inherited;
 public:
 			CScope ();
-	virtual ~CScope();
+	~CScope() override;
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CScope)

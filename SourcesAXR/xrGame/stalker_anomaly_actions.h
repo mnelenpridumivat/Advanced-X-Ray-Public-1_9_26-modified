@@ -24,9 +24,9 @@ protected:
 
 public:
 						CStalkerActionGetOutOfAnomaly	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize						();
-	virtual void		execute							();
-	virtual void		finalize						();
+	void		initialize						() override;
+	void		execute							() override;
+	void		finalize						() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -39,8 +39,8 @@ protected:
 
 public:
 						CStalkerActionDetectAnomaly	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize					();
-	virtual void		execute						();
-	virtual void		finalize					();
+	void		initialize					() override;
+	void		execute						() override;
+	void		finalize					() override;
 };
 

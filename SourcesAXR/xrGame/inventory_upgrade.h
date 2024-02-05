@@ -101,7 +101,7 @@ private:
 	typedef		UpgradeBase	inherited;
 public:
 							Upgrade();
-	virtual					~Upgrade();
+	~Upgrade() override;
 				void		construct( const shared_str& upgrade_id, Group& parental_group, Manager& manager_r );
 
 	IC			LPCSTR		section() const;
@@ -118,18 +118,18 @@ public:
 	IC	Ivector2 const&		get_scheme_index() const;
 
 #ifdef DEBUG
-	virtual		void		log_hierarchy( LPCSTR nest );
+	void		log_hierarchy( LPCSTR nest ) override;
 #endif // DEBUG
 
-	virtual		void		fill_root_container( Root* root );
+	void		fill_root_container( Root* root ) override;
 
-	virtual		UpgradeStateResult		can_install( CInventoryItem& item, bool loading );
+	UpgradeStateResult		can_install( CInventoryItem& item, bool loading ) override;
 				bool		check_scheme_index( const Ivector2& scheme_index );
 				void		set_highlight( bool value );
 				void		run_effects( bool loading );
 
-	virtual		void		highlight_up();
-	virtual		void		highlight_down();
+	void		highlight_up() override;
+	void		highlight_down() override;
 
 protected:
 	typedef detail::functor<bool>			BoolFunctor;

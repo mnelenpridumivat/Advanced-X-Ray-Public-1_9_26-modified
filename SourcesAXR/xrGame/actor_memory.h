@@ -21,8 +21,8 @@ private:
 
 public:
 					CActorMemory			(CActor *actor);
-	virtual	BOOL	feel_vision_isRelevant	(CObject *object);
-	virtual	void	camera					(
+	BOOL	feel_vision_isRelevant	(CObject *object) override;
+	void	camera					(
 						Fvector &position,
 						Fvector &direction,
 						Fvector &normal,
@@ -30,5 +30,5 @@ public:
 						float &aspect_ratio,
 						float &near_plane,
 						float &far_plane
-					);
+					) override;
 };

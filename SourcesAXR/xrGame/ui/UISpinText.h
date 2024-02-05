@@ -5,23 +5,23 @@ class CUISpinText : public CUICustomSpin
 public:
 					CUISpinText			();
 	// CUIOptionsItem
-	virtual void	SetCurrentOptValue	();	// opt->current
-	virtual void	SaveBackUpOptValue	();	// current->backup
-	virtual void	SaveOptValue		();	// current->opt
-	virtual void	UndoOptValue		();	// backup->current
-	virtual bool	IsChangedOptValue	() const;	// backup!=current
+					void	SetCurrentOptValue	() override;	// opt->current
+					void	SaveBackUpOptValue	() override;	// current->backup
+					void	SaveOptValue		() override;	// current->opt
+					void	UndoOptValue		() override;	// backup->current
+					bool	IsChangedOptValue	() const override;	// backup!=current
 
 	// own
-	virtual void	OnBtnUpClick();
-	virtual void	OnBtnDownClick();
+					void	OnBtnUpClick() override;
+					void	OnBtnDownClick() override;
 
 			void	AddItem_(const char* item, int id);
 			LPCSTR	GetTokenText();
 protected:
-	virtual bool	CanPressUp		();
-	virtual bool	CanPressDown	();
-	virtual void	IncVal			(){};
-	virtual void	DecVal			(){};
+					bool	CanPressUp		() override;
+					bool	CanPressDown	() override;
+					void	IncVal			() override {};
+					void	DecVal			() override {};
 			void	SetItem			(int v);
 			struct SInfo{
 				shared_str	_orig;

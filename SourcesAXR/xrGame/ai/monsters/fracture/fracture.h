@@ -9,12 +9,12 @@ class CFracture : public CBaseMonster {
 	
 public:
 					CFracture 			();
-	virtual			~CFracture 			();	
+	~CFracture 			() override;
 
-	virtual void	Load				(LPCSTR section);
-	virtual void	CheckSpecParams		(u32 spec_params);
+	void	Load				(LPCSTR section) override;
+	void	CheckSpecParams		(u32 spec_params) override;
 
-	virtual	char*	get_monster_class_name () { return "fracture"; }
+	char*	get_monster_class_name () override { return "fracture"; }
 
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION

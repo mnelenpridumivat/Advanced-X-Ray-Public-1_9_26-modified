@@ -23,7 +23,7 @@ protected:
 public:
 						CStalkerDangerBySoundPlanner	(CAI_Stalker *object = 0, LPCSTR action_name = "");
 	virtual	void		setup							(CAI_Stalker *object, CPropertyStorage *storage);
-	virtual void		initialize						();
-	virtual void		update							();
-	virtual void		finalize						();
+	void		initialize						() override;
+	void		update							() override;
+	void		finalize						() override;
 };

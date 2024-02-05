@@ -8,9 +8,9 @@ class CStateMonsterTestState : public CState<_Object> {
 
 public:
 						CStateMonsterTestState	(_Object *obj);
-	virtual	void		reselect_state			();
-	virtual	void		setup_substates			();
-	virtual void		remove_links			(CObject* object) { inherited::remove_links(object);}
+	void		reselect_state			() override;
+	void		setup_substates			() override;
+	void		remove_links			(CObject* object) override { inherited::remove_links(object);}
 };
 
 template<typename _Object>
@@ -22,11 +22,11 @@ class CStateMonsterTestCover : public CState<_Object> {
 
 public:
 						CStateMonsterTestCover	(_Object *obj);
-	virtual void		initialize				();	
-	virtual void		check_force_state		();
-	virtual	void		reselect_state			();
-	virtual	void		setup_substates			();
-	virtual void		remove_links			(CObject* object) { inherited::remove_links(object);}
+	void		initialize				() override;
+	void		check_force_state		() override;
+	void		reselect_state			() override;
+	void		setup_substates			() override;
+	void		remove_links			(CObject* object) override { inherited::remove_links(object);}
 };
 
 #include "state_test_state_inline.h"

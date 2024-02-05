@@ -27,7 +27,7 @@ public:
 					CUIDetectorWave		():m_curr_v(0.0f),m_step(0.0f){};
 			void	InitFromXML			(CUIXml& xml, LPCSTR path);
 			void	SetVelocity			(float v);
-	virtual void	Update				();
+	void	Update				() override;
 };
 
 class CUIArtefactDetectorSimple :public CUIArtefactDetectorBase
@@ -45,8 +45,8 @@ class CUIArtefactDetectorSimple :public CUIArtefactDetectorBase
 	CLAItem*			m_pFlashLAnim;
 	void				setup_internals			();
 public:
-	virtual				~CUIArtefactDetectorSimple	();
-	void				update						();
+	~CUIArtefactDetectorSimple	() override;
+	void				update						() override;
 	void				Flash						(bool bOn, float fRelPower);
 
 	void				construct					(CSimpleDetector* p);
@@ -71,9 +71,8 @@ class CUIArtefactDetectorElite :public CUIArtefactDetectorBase, public CUIWindow
 
 	void				GetUILocatorMatrix			(Fmatrix& _m);
 public:
-
-	virtual void	update			();
-	virtual void	Draw			();
+	void	update			() override;
+	void	Draw			() override;
 
 	void		construct			(CEliteDetector* p);
 	void		Clear				();
@@ -92,8 +91,8 @@ class CUIArtefactDetectorAdv :public CUIArtefactDetectorBase
 	u16						m_bid;
 
 public:
-	virtual					~CUIArtefactDetectorAdv			();
-	virtual void			update							();
+	~CUIArtefactDetectorAdv			() override;
+	void			update							() override;
 	void					construct						(CAdvancedDetector* p);
 	void					SetValue						(const float v1, const Fvector& v2);
 	float					CurrentYRotation				()	const;

@@ -16,51 +16,51 @@ public:
 		eThrowQuick,
 	};
 							CMissile					();
-	virtual					~CMissile					();
+	~CMissile					() override;
 
-	virtual BOOL			AlwaysTheCrow				()				{ return TRUE; }
-	virtual void			render_item_ui					();
-	virtual bool			render_item_ui_query					();
+	BOOL			AlwaysTheCrow				() override { return TRUE; }
+	void			render_item_ui					() override;
+	bool			render_item_ui_query					() override;
 
-	virtual void			reinit						();
-	virtual CMissile*		cast_missile				()				{return this;}
+	void			reinit						() override;
+	CMissile*		cast_missile				() override {return this;}
 
-	virtual void 			Load						(LPCSTR section);
-	virtual BOOL 			net_Spawn					(CSE_Abstract* DC);
-	virtual void 			net_Destroy					();
+	void 			Load						(LPCSTR section) override;
+	BOOL 			net_Spawn					(CSE_Abstract* DC) override;
+	void 			net_Destroy					() override;
 
-	virtual void 			UpdateCL					();
-	virtual void 			shedule_Update				(u32 dt);
+	void 			UpdateCL					() override;
+	void 			shedule_Update				(u32 dt) override;
 
-	virtual void 			OnH_A_Chield				();
-	virtual void 			OnH_B_Independent			(bool just_before_destroy);
+	void 			OnH_A_Chield				() override;
+	void 			OnH_B_Independent			(bool just_before_destroy) override;
 
-	virtual void 			OnEvent						(NET_Packet& P, u16 type);
+	void 			OnEvent						(NET_Packet& P, u16 type) override;
 
-	virtual void 			OnAnimationEnd				(u32 state);
-	virtual void			OnMotionMark				(u32 state, const motion_marks&);
+	void 			OnAnimationEnd				(u32 state) override;
+	void			OnMotionMark				(u32 state, const motion_marks&) override;
 
 
 	virtual void 			Throw();
 	virtual void 			Destroy();
 
-	virtual bool 			Action						(u16 cmd, u32 flags);
+	bool 			Action						(u16 cmd, u32 flags) override;
 
 	virtual void 			State						(u32 state);
-	virtual void 			OnStateSwitch				(u32 S);
-	virtual bool			GetBriefInfo				(II_BriefInfo& info);
+	void 			OnStateSwitch				(u32 S) override;
+	bool			GetBriefInfo				(II_BriefInfo& info) override;
 
 protected:
 	virtual void			UpdateFireDependencies_internal	();
-	virtual void			UpdateXForm						();
+	void			UpdateXForm						() override;
 	void					UpdatePosition					(const Fmatrix& trans);
 	void					spawn_fake_missile				();
 
-	virtual void			OnActiveItem		();
-	virtual void			OnHiddenItem		();
+	void			OnActiveItem		() override;
+	void			OnHiddenItem		() override;
 
 	//для сети
-	virtual void			net_Relcase			(CObject* O );
+	void			net_Relcase			(CObject* O ) override;
 protected:
 
 	//время нахождения в текущем состоянии
@@ -95,11 +95,11 @@ protected:
 			void			setup_throw_params		();
 public:
 	Fvector const&			throw_point_offset		() const {return m_vThrowPoint;}
-	virtual void			activate_physic_shell	();
-	virtual void			setup_physic_shell		();
-	virtual void			create_physic_shell		();
+	void			activate_physic_shell	() override;
+	void			setup_physic_shell		() override;
+	void			create_physic_shell		() override;
 	IC		void			set_destroy_time		(u32 delta_destroy_time) {m_dwDestroyTime = delta_destroy_time + Device.dwTimeGlobal;}
-	virtual void			PH_A_CrPr				();
+	void			PH_A_CrPr				() override;
 
 			void			SetQuickThrowActive		(bool status) { m_bQuickThrowActive = status; }
 
@@ -107,7 +107,7 @@ protected:
 	u32						m_ef_weapon_type;
 
 public:
-	virtual u32				ef_weapon_type			() const;
+	u32				ef_weapon_type			() const override;
 	IC		u32				destroy_time			() const { return m_dwDestroyTime; }
 	IC		int				time_from_begin_throw	() const { return (Device.dwTimeGlobal + m_dwDestroyTimeMax - m_dwDestroyTime); }
 	static	void			ExitContactCallback		(bool& do_colide,bool bo1,dContact& c,SGameMtl *material_1,SGameMtl* material_2);

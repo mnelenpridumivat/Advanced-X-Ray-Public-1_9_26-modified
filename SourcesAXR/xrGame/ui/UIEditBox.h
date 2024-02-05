@@ -9,18 +9,18 @@ class CUIEditBox : public CUIOptionsItem, public CUICustomEdit
 public:
 					CUIEditBox				();
 
-	virtual void	InitCustomEdit			(Fvector2 pos, Fvector2 size);
+					void	InitCustomEdit			(Fvector2 pos, Fvector2 size) override;
 
 	// CUIOptionsItem
-	virtual void			SetCurrentOptValue	();// opt->current
-	virtual void			SaveBackUpOptValue	();// current->backup
-	virtual void			SaveOptValue		();// current->opt
-	virtual void			UndoOptValue		();// backup->current
-	virtual bool			IsChangedOptValue	() const;// backup!=current
+					void			SetCurrentOptValue	() override;// opt->current
+					void			SaveBackUpOptValue	() override;// current->backup
+					void			SaveOptValue		() override;// current->opt
+					void			UndoOptValue		() override;// backup->current
+					bool			IsChangedOptValue	() const override;// backup!=current
 
 	// CUIMultiTextureOwner
-	virtual void	InitTexture				(LPCSTR texture);
-	virtual void	InitTextureEx			(LPCSTR texture, LPCSTR  shader);
+					void	InitTexture				(LPCSTR texture) override;
+					void	InitTextureEx			(LPCSTR texture, LPCSTR  shader) override;
 protected:
 	CUIFrameLineWnd*	m_frameLine;
 	shared_str			m_opt_backup_value;

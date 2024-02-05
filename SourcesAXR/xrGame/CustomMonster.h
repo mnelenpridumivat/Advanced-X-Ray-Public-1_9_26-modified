@@ -114,8 +114,8 @@ public:
 	u32						NET_Time;				// server time of last update
 //------------------------------
 
-	virtual BOOL		feel_touch_on_contact	(CObject *);
-	virtual BOOL		feel_touch_contact		(CObject *);
+	BOOL		feel_touch_on_contact	(CObject *) override;
+	BOOL		feel_touch_contact		(CObject *) override;
 	// utils
 	void				mk_orientation			( Fvector& dir, Fmatrix& mR );
 	void				mk_rotation				( Fvector& dir, SRotation &R);
@@ -132,27 +132,26 @@ public:
 
 public:
 						CCustomMonster			( );
-	virtual				~CCustomMonster			( );
+	~CCustomMonster			( ) override;
 
 public:
-	virtual CEntityAlive*				cast_entity_alive		()						{return this;}
-	virtual CEntity*					cast_entity				()						{return this;}
+	CEntityAlive*				cast_entity_alive		() override {return this;}
+	CEntity*					cast_entity				() override {return this;}
 
 public:
-
-	virtual DLL_Pure	*_construct				();
-	virtual BOOL		net_Spawn				( CSE_Abstract* DC);
-	virtual void		Die						( CObject* who);
+	DLL_Pure	*_construct				() override;
+	BOOL		net_Spawn				( CSE_Abstract* DC) override;
+	void		Die						( CObject* who) override;
 
 	virtual void		HitSignal				( float P,	Fvector& vLocalDir, CObject* who);
-	virtual void		g_WeaponBones			(int &/**L/**/, int &/**R1/**/, int &/**R2/**/) {};
-	virtual void		shedule_Update					( u32		DT		);
-	virtual void		UpdateCL				( );
+	void		g_WeaponBones			(int &/**L/**/, int &/**R1/**/, int &/**R2/**/) override {};
+	void		shedule_Update					( u32		DT		) override;
+	void		UpdateCL				( ) override;
 
 	// Network
-	virtual void		net_Export				(NET_Packet& P);				// export to server
-	virtual void		net_Import				(NET_Packet& P);				// import from server
-	virtual void		net_Relcase				(CObject*	 O);
+	void		net_Export				(NET_Packet& P) override;				// export to server
+	void		net_Import				(NET_Packet& P) override;				// import from server
+	void		net_Relcase				(CObject*	 O) override;
 
 	virtual void		SelectAnimation			( const Fvector& _view, const Fvector& _move, float speed ) = 0;
 
@@ -160,8 +159,8 @@ public:
 
 	// debug
 #ifdef DEBUG
-	virtual void		OnRender				( );
-	virtual void		OnHUDDraw				(CCustomHUD* hud);
+	void		OnRender				( ) override;
+	void		OnHUDDraw				(CCustomHUD* hud) override;
 #endif
 
 	virtual bool		bfExecMovement			(){return(false);};
@@ -171,55 +170,56 @@ public:
 	IC	void					vfNormalizeSafe			(Fvector& Vector);
 
 public:
-	virtual	float				ffGetFov				()	const								{return eye_fov;}	
-	virtual	float				ffGetRange				()	const								{return eye_range;}
+	float				ffGetFov				()	const override {return eye_fov;}
+	float				ffGetRange				()	const override {return eye_range;}
 			void				set_fov					(float new_fov);
 			void				set_range				(float new_range);
 //	virtual	void				feel_touch_new			(CObject	*O);
 	virtual BOOL				feel_visible_isRelevant	(CObject		*O);
-	virtual	Feel::Sound*		dcast_FeelSound			()			{ return this;	}
-	virtual	void				Hit						(SHit* pHDS);
+	Feel::Sound*		dcast_FeelSound			() override { return this;	}
+	void				Hit						(SHit* pHDS) override;
 
-	virtual void				OnEvent					( NET_Packet& P, u16 type		);
-	virtual void				net_Destroy				();
-	virtual BOOL				UsedAI_Locations		();
+	void				OnEvent					( NET_Packet& P, u16 type		) override;
+	void				net_Destroy				() override;
+	BOOL				UsedAI_Locations		() override;
 	///////////////////////////////////////////////////////////////////////
-	virtual u16					PHGetSyncItemsNumber	()			{return inherited ::PHGetSyncItemsNumber();}
-	virtual CPHSynchronize*		PHGetSyncItem			(u16 item)	{return inherited ::PHGetSyncItem(item);}
-	virtual void				PHUnFreeze				()			{return inherited ::PHUnFreeze();}
-	virtual void				PHFreeze				()			{return inherited ::PHFreeze();}
+	u16					PHGetSyncItemsNumber	() override {return inherited ::PHGetSyncItemsNumber();}
+	CPHSynchronize*		PHGetSyncItem			(u16 item) override {return inherited ::PHGetSyncItem(item);}
+	void				PHUnFreeze				() override {return inherited ::PHUnFreeze();}
+	void				PHFreeze				() override {return inherited ::PHFreeze();}
 	///////////////////////////////////////////////////////////////////////
 public:
-	virtual void				Load					(LPCSTR	section);				
-	virtual	void				reinit					();
-	virtual void				reload					(LPCSTR	section);				
-	virtual const SRotation		Orientation				() const;
+	void				Load					(LPCSTR	section) override;
+	void				reinit					() override;
+	void				reload					(LPCSTR	section) override;
+	const SRotation		Orientation				() const override;
 	virtual float				get_custom_pitch_speed	(float def_speed) {return def_speed;}
-	virtual bool				human_being				() const
+
+	bool				human_being				() const override
 	{
 		return					(false);
 	}
 	virtual	void				PitchCorrection			();
 
-	virtual void				save					(NET_Packet &output_packet);
-	virtual void				load					(IReader &input_packet);
-	virtual BOOL				net_SaveRelevant		()							{return inherited::net_SaveRelevant();}
+	void				save					(NET_Packet &output_packet) override;
+	void				load					(IReader &input_packet) override;
+	BOOL				net_SaveRelevant		() override {return inherited::net_SaveRelevant();}
 	
 	virtual	const MonsterSpace::SBoneRotation &head_orientation	() const;
 	
 	virtual void				UpdatePositionAnimation	();
-	virtual void				set_ready_to_save		();
-	virtual CPhysicsShellHolder*cast_physics_shell_holder	()	{return this;}
-	virtual CParticlesPlayer*	cast_particles_player	()	{return this;}
-	virtual CCustomMonster*		cast_custom_monster		()	{return this;}
-	virtual CScriptEntity*		cast_script_entity		()	{return this;}
+	void				set_ready_to_save		() override;
+	CPhysicsShellHolder*cast_physics_shell_holder	() override {return this;}
+	CParticlesPlayer*	cast_particles_player	() override {return this;}
+	CCustomMonster*		cast_custom_monster		() override {return this;}
+	CScriptEntity*		cast_script_entity		() override {return this;}
 
 			void				load_killer_clsids		(LPCSTR section);
 			bool				is_special_killer		(CObject *obj);
 
 	IC		CMemoryManager		&memory					() const;
-	virtual float				feel_vision_mtl_transp	(CObject* O, u32 element);
-	virtual	void				feel_sound_new			(CObject* who, int type, CSound_UserDataPtr user_data, const Fvector &Position, float power);
+	float				feel_vision_mtl_transp	(CObject* O, u32 element) override;
+	void				feel_sound_new			(CObject* who, int type, CSound_UserDataPtr user_data, const Fvector &Position, float power) override;
 
 	virtual bool				useful					(const CItemManager *manager, const CGameObject *object) const;
 	virtual float				evaluate				(const CItemManager *manager, const CGameObject *object) const;
@@ -260,16 +260,16 @@ public:
 	virtual	void					on_restrictions_change	();
 
 	virtual bool					should_wait_to_use_corspe_visual () { return true; }
-	virtual	LPCSTR					visual_name				(CSE_Abstract *server_entity);
+	LPCSTR					visual_name				(CSE_Abstract *server_entity) override;
 
 private:
 	bool							m_already_dead;
 
 public:
 	IC		const bool				&already_dead			() const {return (m_already_dead);};
-	virtual	bool					use_simplified_visual	() const {return false;} //(already_dead());};
+	bool					use_simplified_visual	() const override {return false;} //(already_dead());};
 	virtual void					on_enemy_change			(const CEntityAlive *enemy);
-	virtual	CVisualMemoryManager	*visual_memory			() const;
+	CVisualMemoryManager	*visual_memory			() const override;
 
 public:
 	IC		float					client_update_fdelta	() const;
@@ -319,9 +319,9 @@ private:
 
 public:
 	IC			moving_object		*get_moving_object	() const;
-	virtual		void				spatial_move		();
-	virtual		Fvector				predict_position	(const float &time_to_check) const;
-	virtual		Fvector				target_position		() const;
+	void				spatial_move		() override;
+	Fvector				predict_position	(const float &time_to_check) const override;
+	Fvector				target_position		() const override;
 
 protected:
 	bool	m_update_rotation_on_frame;
@@ -330,12 +330,12 @@ private:
 	bool	m_movement_enabled_before_animation_controller;
 
 public:
-	virtual	void					create_anim_mov_ctrl	( CBlend *b, Fmatrix *start_pose, bool local_animation  );
-	virtual	void					destroy_anim_mov_ctrl	( );
-	virtual void					ForceTransform			( Fmatrix const& m );
+	void					create_anim_mov_ctrl	( CBlend *b, Fmatrix *start_pose, bool local_animation  ) override;
+	void					destroy_anim_mov_ctrl	( ) override;
+	void					ForceTransform			( Fmatrix const& m ) override;
 	
 public:
-	virtual	Fvector					spatial_sector_point	( );
+	Fvector					spatial_sector_point	( ) override;
 
 #ifdef DEBUG
 	xr_vector<trajectory_pick>			m_jump_picks;

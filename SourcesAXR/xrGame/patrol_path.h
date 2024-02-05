@@ -31,7 +31,7 @@ public:
 
 public:
 							CPatrolPath		(shared_str name = "");
-	virtual					~CPatrolPath	();
+	~CPatrolPath	() override;
 			CPatrolPath		&load_raw		(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, const CGameGraph *game_graph, IReader &stream);
 	IC		const CVertex	*point			(shared_str name) const;
 	template <typename T>
@@ -42,7 +42,7 @@ public:
 
 #ifdef DEBUG
 public:
-	virtual void			load			(IReader &stream);
+	void			load			(IReader &stream) override;
 	IC		void			name			(const shared_str &name);
 #endif
 };

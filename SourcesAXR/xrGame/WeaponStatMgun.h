@@ -30,23 +30,23 @@ private:
 
 //casts
 public:
-	virtual CHolderCustom	*cast_holder_custom	()				{return this;}
+	CHolderCustom	*cast_holder_custom	() override {return this;}
 
 //general
 public:
 							CWeaponStatMgun		();
-	virtual					~CWeaponStatMgun	();
+	~CWeaponStatMgun	() override;
 
-	virtual void			Load				(LPCSTR section);
+	void			Load				(LPCSTR section) override;
 
-	virtual BOOL			net_Spawn			(CSE_Abstract* DC);
-	virtual void			net_Destroy			();
-	virtual void			net_Export			(NET_Packet& P);	// export to server
-	virtual void			net_Import			(NET_Packet& P);	// import from server
+	BOOL			net_Spawn			(CSE_Abstract* DC) override;
+	void			net_Destroy			() override;
+	void			net_Export			(NET_Packet& P) override;	// export to server
+	void			net_Import			(NET_Packet& P) override;	// import from server
 
-	virtual void			UpdateCL			();
+	void			UpdateCL			() override;
 
-	virtual	void			Hit					(SHit* pHDS);
+	void			Hit					(SHit* pHDS) override;
 
 //shooting
 private:
@@ -67,38 +67,38 @@ private:
 
 protected:
 	void					UpdateBarrelDir		();
-	virtual const Fvector&	get_CurrentFirePoint();
-	virtual const Fmatrix&	get_ParticlesXFORM	();
+	const Fvector&	get_CurrentFirePoint() override;
+	const Fmatrix&	get_ParticlesXFORM	() override;
 
-	virtual	void			FireStart			();
-	virtual	void			FireEnd				();
+	void			FireStart			() override;
+	void			FireEnd				() override;
 	virtual	void			UpdateFire			();
 	virtual	void			OnShot				();
 			void			AddShotEffector		();
 			void			RemoveShotEffector	();
 			void			SetDesiredDir		(float h, float p);
-	virtual bool			IsHudModeNow		(){return false;};
+	bool			IsHudModeNow		() override {return false;};
 
 //HolderCustom
 public:
-	virtual bool			Use					(const Fvector& pos,const Fvector& dir,const Fvector& foot_pos) {return !Owner();};
-	virtual void			OnMouseMove			(int x, int y);
-	virtual void			OnKeyboardPress		(int dik);
-	virtual void			OnKeyboardRelease	(int dik);
-	virtual void			OnKeyboardHold		(int dik);
-	virtual CInventory*		GetInventory		()						{return NULL;};
-	virtual void			cam_Update			(float dt, float fov=90.0f);
+	bool			Use					(const Fvector& pos,const Fvector& dir,const Fvector& foot_pos) override {return !Owner();};
+	void			OnMouseMove			(int x, int y) override;
+	void			OnKeyboardPress		(int dik) override;
+	void			OnKeyboardRelease	(int dik) override;
+	void			OnKeyboardHold		(int dik) override;
+	CInventory*		GetInventory		() override {return NULL;};
+	void			cam_Update			(float dt, float fov=90.0f) override;
 
-	virtual void			renderable_Render	();
+	void			renderable_Render	() override;
 
-	virtual bool			attach_Actor		(CGameObject* actor);
-	virtual void			detach_Actor		();
-	virtual bool			allowWeapon			()	const				{return false;};
-	virtual bool			HUDView				()	const				{return true;};
-	virtual Fvector			ExitPosition		()						{return Fvector().set(0.0f,0.0f,0.0f);};
+	bool			attach_Actor		(CGameObject* actor) override;
+	void			detach_Actor		() override;
+	bool			allowWeapon			()	const override {return false;};
+	bool			HUDView				()	const override {return true;};
+	Fvector			ExitPosition		() override {return Fvector().set(0.0f,0.0f,0.0f);};
 
-	virtual CCameraBase*	Camera				()						{return camera;};
+	CCameraBase*	Camera				() override {return camera;};
 
-	virtual void			Action				(u16 id, u32 flags);
-	virtual void			SetParam			(int id, Fvector2 val);
+	void			Action				(u16 id, u32 flags) override;
+	void			SetParam			(int id, Fvector2 val) override;
 };

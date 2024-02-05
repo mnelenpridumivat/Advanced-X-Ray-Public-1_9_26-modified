@@ -70,9 +70,9 @@ protected:
 public:
 //-					CCameraShotEffector	(float max_angle, float relax_speed, float max_angle_horz, float step_angle_horz, float angle_frac);
 					CCameraShotEffector	(const CameraRecoil& cam_recoil);
-	virtual			~CCameraShotEffector();
-	
-	virtual BOOL	ProcessCam			(SCamEffectorInfo& info);
+	~CCameraShotEffector() override;
+
+	BOOL	ProcessCam			(SCamEffectorInfo& info) override;
 	virtual void	SetActor			(CActor* pActor) {m_pActor = pActor;};
 	
 	virtual CCameraShotEffector*		cast_effector_shot				()	{return this;}

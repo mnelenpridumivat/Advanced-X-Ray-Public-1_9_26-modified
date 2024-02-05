@@ -18,14 +18,14 @@ class CUIDemoPlayControl :
 	typedef CUIDialogWnd inherited;
 public:
 	CUIDemoPlayControl	();
-	~CUIDemoPlayControl	();
+	~CUIDemoPlayControl	() override;
 
 	virtual void	Init			();
-	virtual void	SendMessage		(CUIWindow *pWnd, s16 msg, void *pData = NULL);
-	virtual bool OnKeyboardAction	(int dik, EUIMessages keyboard_action);
-	virtual bool WorkInPause			() const	{return true;}
+	void	SendMessage		(CUIWindow *pWnd, s16 msg, void *pData = NULL) override;
+	bool OnKeyboardAction	(int dik, EUIMessages keyboard_action) override;
+	bool WorkInPause			() const override {return true;}
 
-	virtual	void		Update			();
+	void		Update			() override;
 	Fvector2 const &	GetLastCursorPos() const	{ return m_last_curr_pos; };
 
 	void	xr_stdcall		OnRestart		(CUIWindow* w, void* d);

@@ -24,19 +24,19 @@ private:
 
 public:
 							Root();
-	virtual					~Root();
+	~Root() override;
 				void		construct( const shared_str& root_id, Manager& manager_r );
 	IC			LPCSTR		scheme() const;
 
 				void		add_upgrade( Upgrade* upgr );
-	virtual		bool		is_root();
+	bool		is_root() override;
 
 #ifdef DEBUG
-	virtual		void		log_hierarchy( LPCSTR nest );
+	void		log_hierarchy( LPCSTR nest ) override;
 				void		test_all_upgrades( CInventoryItem& item );
 #endif // DEBUG
 
-	virtual		bool		contain_upgrade( const shared_str& upgrade_id );
+	bool		contain_upgrade( const shared_str& upgrade_id ) override;
 				bool		verify_scheme_index( const Ivector2& scheme_index );
 				Upgrade*	get_upgrade_by_index( Ivector2 const& index );
 

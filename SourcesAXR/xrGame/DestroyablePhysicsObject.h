@@ -13,20 +13,20 @@ typedef  CPhysicObject inherited;
 	shared_str							m_destroy_particles;
 public:
 										CDestroyablePhysicsObject									()																																			;
-	virtual								~CDestroyablePhysicsObject									()																																			;
-	virtual CPhysicsShellHolder*		PPhysicsShellHolder											()																																			;
-	virtual BOOL						net_Spawn													(CSE_Abstract* DC)																																	;
-	virtual	void						net_Destroy													()																																			;
-	virtual	void						Hit															(SHit* pHDS);
-	virtual	void						InitServerObject			(CSE_Abstract*				D)																																				;
-	virtual ICollisionDamageReceiver	*PHCollisionDamageReceiver	()								{return (this);}
-	virtual DLL_Pure					*_construct					()								;
-	virtual CPhysicsShellHolder*		cast_physics_shell_holder	()								{return this;}
-	virtual CParticlesPlayer*			cast_particles_player		()								{return this;}
-	virtual CPHDestroyable*				ph_destroyable				()								{return this;}
-	virtual void						shedule_Update				(u32 dt)						;
-	virtual bool						CanRemoveObject				()								;
-	virtual void						OnChangeVisual				();
+~CDestroyablePhysicsObject									() override;
+CPhysicsShellHolder*		PPhysicsShellHolder											() override;
+BOOL						net_Spawn													(CSE_Abstract* DC) override;
+void						net_Destroy													() override;
+void						Hit															(SHit* pHDS) override;
+void						InitServerObject			(CSE_Abstract*				D) override;
+ICollisionDamageReceiver	*PHCollisionDamageReceiver	() override {return (this);}
+DLL_Pure					*_construct					() override;
+CPhysicsShellHolder*		cast_physics_shell_holder	() override {return this;}
+CParticlesPlayer*			cast_particles_player		() override {return this;}
+CPHDestroyable*				ph_destroyable				() override {return this;}
+void						shedule_Update				(u32 dt) override;
+bool						CanRemoveObject				() override;
+void						OnChangeVisual				() override;
 protected:
 			void						Destroy						()								;
 private:

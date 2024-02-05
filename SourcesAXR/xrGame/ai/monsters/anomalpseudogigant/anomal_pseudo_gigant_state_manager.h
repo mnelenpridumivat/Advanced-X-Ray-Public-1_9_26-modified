@@ -7,8 +7,8 @@ class CStateManagerAnomalPseudoGigant : public CMonsterStateManager<CAnomalPseud
 	typedef CMonsterStateManager<CAnomalPseudoGigant> inherited;
 public:
 					CStateManagerAnomalPseudoGigant(CAnomalPseudoGigant* monster);
-	virtual void	execute					();
-	virtual void	setup_substates			();
-	virtual void	remove_links			(CObject* object) { inherited::remove_links(object);}
+	void	execute					() override;
+	void	setup_substates			() override;
+	void	remove_links			(CObject* object) override { inherited::remove_links(object);}
 };
 

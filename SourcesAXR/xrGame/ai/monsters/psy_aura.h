@@ -16,11 +16,11 @@ class CPsyAura : public Feel::Touch, public CEnergyHolder {
 
 public:
 					CPsyAura				();
-	virtual			~CPsyAura				();
+	~CPsyAura				() override;
 	
 			void	init_external			(CBaseMonster *obj) {m_object = obj;}
-	virtual BOOL	feel_touch_contact		(CObject* O){return FALSE;}
-	virtual	void	schedule_update			();
+	BOOL	feel_touch_contact		(CObject* O) override {return FALSE;}
+	void	schedule_update			() override;
 	virtual void	process_objects_in_aura	() {}
 
 	// свойства поля

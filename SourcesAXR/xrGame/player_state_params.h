@@ -12,12 +12,12 @@ class player_death_counter : public player_state_param
 	typedef	player_state_param inherited;
 public:
 						player_death_counter		(game_state_accumulator* owner);
-	virtual				~player_death_counter		() {};
+	~player_death_counter		() override {};
 
-	virtual void		update						() {};
-	virtual	u32 const	get_u32_param				();
-	virtual float const get_float_param				() { return -1.0f; };
-	virtual void		reset_game					() {};
+	void		update						() override {};
+	u32 const	get_u32_param				() override;
+	float const get_float_param				() override { return -1.0f; };
+	void		reset_game					() override {};
 };//class player_death_counter
 
 ADD_ACCUMULATIVE_STATE(acpv_death_count, player_death_counter);
@@ -29,12 +29,12 @@ class player_artdeliver_counter : public player_state_param
 	typedef player_state_param inherited;
 public:
 						player_artdeliver_counter	(game_state_accumulator* owner);
-	virtual				~player_artdeliver_counter	() {};
+	~player_artdeliver_counter	() override {};
 
-	virtual void		update						() {};
-	virtual	u32 const	get_u32_param				();
-	virtual float const get_float_param				() { return 0.0f; };
-	virtual void		reset_game					() {};
+	void		update						() override {};
+	u32 const	get_u32_param				() override;
+	float const get_float_param				() override { return 0.0f; };
+	void		reset_game					() override {};
 }; //class player_artdeliver_counter
 
 ADD_ACCUMULATIVE_STATE(acpv_artdeliver_count, player_artdeliver_counter);
@@ -47,15 +47,15 @@ class player_rawkill_counter : public player_state_param
 	typedef player_state_param inherited;
 public:
 						player_rawkill_counter		(game_state_accumulator* owner);
-	virtual				~player_rawkill_counter		() {};
-	
-	virtual void		update						() {};
-	virtual	u32 const	get_u32_param				();
-	virtual float const get_float_param				() { return 0.0f; };
-	virtual void		reset_game					();
-	
-	virtual void		OnPlayerSpawned				(game_PlayerState const * ps);
-	virtual void		OnPlayerKilled				(u16 killer_id, u16 target_id, u16 weapon_id, std::pair<KILL_TYPE, SPECIAL_KILL_TYPE> kill_type);
+	~player_rawkill_counter		() override {};
+
+	void		update						() override {};
+	u32 const	get_u32_param				() override;
+	float const get_float_param				() override { return 0.0f; };
+	void		reset_game					() override;
+
+	void		OnPlayerSpawned				(game_PlayerState const * ps) override;
+	void		OnPlayerKilled				(u16 killer_id, u16 target_id, u16 weapon_id, std::pair<KILL_TYPE, SPECIAL_KILL_TYPE> kill_type) override;
 protected:
 	u32					m_raw_kills;
 }; //class player_rawkill_counter
@@ -69,12 +69,12 @@ class player_state_move : public player_state_param
 	typedef player_state_param inherited;
 public:
 						player_state_move	(game_state_accumulator* owner);
-	virtual				~player_state_move	() {};
+	~player_state_move	() override {};
 
-	virtual void		update						() {};
-	virtual	u32 const	get_u32_param				();
-	virtual float const get_float_param				() { return 0.0f; };
-	virtual void		reset_game					() {};
+	void		update						() override {};
+	u32 const	get_u32_param				() override;
+	float const get_float_param				() override { return 0.0f; };
+	void		reset_game					() override {};
 }; //class player_state_move
 
 ADD_ACCUMULATIVE_STATE(acpv_move_state, player_state_move);
@@ -86,12 +86,12 @@ class player_state_velocity : public player_state_param
 	typedef player_state_param inherited;
 public:
 						player_state_velocity	(game_state_accumulator* owner);
-	virtual				~player_state_velocity	() {};
+	~player_state_velocity	() override {};
 
-	virtual void		update						() {};
-	virtual	u32 const	get_u32_param				() { return 0; }
-	virtual float const get_float_param				();
-	virtual void		reset_game					() {};
+	void		update						() override {};
+	u32 const	get_u32_param				() override { return 0; }
+	float const get_float_param				() override;
+	void		reset_game					() override {};
 }; //class player_state_velocity
 
 ADD_ACCUMULATIVE_STATE(acpv_move_velocity, player_state_velocity);
@@ -103,12 +103,12 @@ class player_state_ang_velocity : public player_state_param
 	typedef player_state_param inherited;
 public:
 						player_state_ang_velocity	(game_state_accumulator* owner);
-	virtual				~player_state_ang_velocity	() {};
+	~player_state_ang_velocity	() override {};
 
-	virtual void		update						() {};
-	virtual	u32 const	get_u32_param				() { return 0; }
-	virtual float const get_float_param				();
-	virtual void		reset_game					() {};
+	void		update						() override {};
+	u32 const	get_u32_param				() override { return 0; }
+	float const get_float_param				() override;
+	void		reset_game					() override {};
 }; //class player_state_ang_velocity
 
 ADD_ACCUMULATIVE_STATE(acpv_move_ang_velocity, player_state_ang_velocity);

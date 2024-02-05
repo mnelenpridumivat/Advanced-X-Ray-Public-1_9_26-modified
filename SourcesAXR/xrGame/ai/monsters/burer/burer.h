@@ -123,23 +123,23 @@ public:
 
 public:
 					CBurer				();
-	virtual			~CBurer				();	
+	~CBurer				() override;
 
 
-	virtual void	reinit				();
-	virtual void	reload				(LPCSTR section);
+	void	reinit				() override;
+	void	reload				(LPCSTR section) override;
 
-	virtual void	Load				(LPCSTR section);
-	virtual void	PostLoad			(LPCSTR section);
+	void	Load				(LPCSTR section) override;
+	void	PostLoad			(LPCSTR section) override;
 
-	virtual void	net_Destroy			();
-	virtual void	net_Relcase			(CObject *O);
-	virtual	void	shedule_Update		(u32 dt);
-	virtual void	UpdateCL			();
-	virtual	void	Hit					(SHit* pHDS);
-	virtual void	Die					(CObject* who);
+	void	net_Destroy			() override;
+	void	net_Relcase			(CObject *O) override;
+	void	shedule_Update		(u32 dt) override;
+	void	UpdateCL			() override;
+	void	Hit					(SHit* pHDS) override;
+	void	Die					(CObject* who) override;
 			void	ProcessTurn			();
-	virtual void	CheckSpecParams		(u32 spec_params);
+	void	CheckSpecParams		(u32 spec_params) override;
 
 			void	UpdateGraviObject	();
 
@@ -152,13 +152,13 @@ public:
 			void	ActivateShield		();
 			void	DeactivateShield	();
 
-			bool	need_shotmark () const { return !m_shield_active; }
+			bool	need_shotmark () const override { return !m_shield_active; }
 
-	virtual bool	ability_distant_feel() {return true;}
-	virtual	char*	get_monster_class_name () { return "burer"; }
+	bool	ability_distant_feel() override {return true;}
+	char*	get_monster_class_name () override { return "burer"; }
 
 #ifdef DEBUG
-	virtual CBaseMonster::SDebugInfo show_debug_info();
+	CBaseMonster::SDebugInfo show_debug_info() override;
 #endif
 
 			void			set_force_gravi_attack (bool force_gravi) { m_force_gravi_attack = force_gravi; }

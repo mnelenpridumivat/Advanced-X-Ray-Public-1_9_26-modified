@@ -13,14 +13,14 @@ class CStatePsyDogHide : public CState<_Object> {
 
 public:
 					CStatePsyDogHide		(_Object *obj) : inherited(obj) {}
-	virtual			~CStatePsyDogHide		() {}
+	~CStatePsyDogHide		() override {}
 
-	virtual void	initialize				();
-	virtual void	execute					();
-	virtual void	remove_links			(CObject* object) { inherited::remove_links(object);}
+	void	initialize				() override;
+	void	execute					() override;
+	void	remove_links			(CObject* object) override { inherited::remove_links(object);}
 
-	virtual bool 	check_completion		();
-	virtual bool 	check_start_conditions	();
+	bool 	check_completion		() override;
+	bool 	check_start_conditions	() override;
 
 private:
 			void	select_target_point		();

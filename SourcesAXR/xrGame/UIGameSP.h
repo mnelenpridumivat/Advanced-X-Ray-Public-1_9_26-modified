@@ -21,11 +21,11 @@ private:
 	typedef CUIGameCustom inherited;
 public:
 	CUIGameSP									();
-	virtual				~CUIGameSP				();
+	~CUIGameSP				() override;
 
-	virtual void		SetClGame				(game_cl_GameState* g);
-	virtual bool		IR_UIOnKeyboardPress	(int dik);
-	virtual void _BCL	OnFrame					();
+	void		SetClGame				(game_cl_GameState* g) override;
+	bool		IR_UIOnKeyboardPress	(int dik) override;
+	void _BCL	OnFrame					() override;
 
 	void				StartTalk				(bool disable_break);
 	void				StartTrade				(CInventoryOwner* pActorInv, CInventoryOwner* pOtherOwner);
@@ -35,8 +35,8 @@ public:
 	void				StartCarBody			(CInventoryOwner* pActorInv, CCar* pCar);
 	void				ChangeLevel				(GameGraph::_GRAPH_ID game_vert_id, u32 level_vert_id, Fvector pos, Fvector ang, Fvector pos2, Fvector ang2, bool b, const shared_str& message, bool b_allow_change_level);
 
-	virtual void		HideShownDialogs		();
-	virtual void		Render					();
+	void		HideShownDialogs		() override;
+	void		Render					() override;
 
 	CUITalkWnd*			TalkMenu;
 	CChangeLevelWnd*	UIChangeLevelWnd;
@@ -63,9 +63,9 @@ public:
 	shared_str				m_message_str;
 
 						CChangeLevelWnd				();
-	virtual				~CChangeLevelWnd			()									{};
-	virtual void		SendMessage					(CUIWindow *pWnd, s16 msg, void *pData);
-	virtual bool		WorkInPause					()const {return true;}
-	virtual void		Show						(bool status);
-	virtual bool		OnKeyboardAction					(int dik, EUIMessages keyboard_action);
+	~CChangeLevelWnd			() override {};
+	void		SendMessage					(CUIWindow *pWnd, s16 msg, void *pData) override;
+	bool		WorkInPause					()const override {return true;}
+	void		Show						(bool status) override;
+	bool		OnKeyboardAction					(int dik, EUIMessages keyboard_action) override;
 };

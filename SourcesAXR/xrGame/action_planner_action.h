@@ -33,23 +33,26 @@ public:
 
 #ifdef LOG_ACTION
 public:
-	virtual	void		set_use_log				(bool value);
-	virtual void		show					(LPCSTR offset = "");
+	void		set_use_log				(bool value) override;
+	void		show					(LPCSTR offset = "") override;
 #endif
 
 public:
 	IC					CActionPlannerAction	(_object_type *object = 0, LPCSTR action_name = "");
-	virtual				~CActionPlannerAction	();
-	virtual	void		setup					(_object_type *object, CPropertyStorage *storage);
-	virtual void		initialize				();
-	virtual void		execute					();
-	virtual void		finalize				();
+	~CActionPlannerAction	() override;
+	void		setup					(_object_type *object, CPropertyStorage *storage) override;
+	void		initialize				() override;
+	void		execute					() override;
+	void		finalize				() override;
 	virtual bool		completed				() const;
 	IC		void		add_condition			(_world_operator *action, _condition_type condition_id, _value_type condition_value);
 	IC		void		add_effect				(_world_operator *action, _condition_type condition_id, _value_type condition_value);
 
-	virtual	void		save					(NET_Packet &packet) {inherited_planner::save(packet); inherited_action::save(packet);}
-	virtual	void		load					(IReader &packet)	 {inherited_planner::load(packet); inherited_action::load(packet);}
+	void		save					(NET_Packet &packet) override
+	{inherited_planner::save(packet); inherited_action::save(packet);}
+
+	void		load					(IReader &packet) override
+	{inherited_planner::load(packet); inherited_action::load(packet);}
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

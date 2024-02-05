@@ -13,7 +13,7 @@ private:
 protected:
 public:
 					CWeaponHPSA			();
-	virtual			~CWeaponHPSA		();
+	~CWeaponHPSA		() override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

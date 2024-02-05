@@ -15,7 +15,7 @@ private:
     typedef	CCustomOutfit inherited;
 public:
 	CExoOutfit(void);
-	virtual ~CExoOutfit(void);
+    ~CExoOutfit(void) override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

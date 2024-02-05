@@ -9,20 +9,20 @@ class CUIFrameWindow: public CUIWindow,
 public:
 					CUIFrameWindow				();
 
-	virtual void	SetTextureRect				(const Frect& r)	{};
-	virtual const Frect& GetTextureRect			()										const	{return m_tex_rect[fmBK];}
-	virtual void	SetWndSize					(const Fvector2& size);
+	void	SetTextureRect				(const Frect& r) override {};
+	const Frect& GetTextureRect			()										const override {return m_tex_rect[fmBK];}
+	void	SetWndSize					(const Fvector2& size) override;
 
-	virtual void	SetTextureColor				(u32 color)										{m_texture_color = color;}
-	virtual u32		GetTextureColor				()										const	{return m_texture_color;}
+	void	SetTextureColor				(u32 color) override {m_texture_color = color;}
+	u32		GetTextureColor				()										const override {return m_texture_color;}
 
-	virtual void	InitTexture					(LPCSTR texture);
-	virtual void	InitTextureEx				(LPCSTR texture, LPCSTR  shader);
+	void	InitTexture					(LPCSTR texture) override;
+	void	InitTextureEx				(LPCSTR texture, LPCSTR  shader) override;
 
-	virtual void	SetStretchTexture			(bool stretch)	{}
-	virtual bool	GetStretchTexture			()				{return false;};	
+	void	SetStretchTexture			(bool stretch) override {}
+	bool	GetStretchTexture			() override {return false;};
 
-	virtual void	Draw						();
+	void	Draw						() override;
 	
 protected:
 	bool			m_bTextureVisible;

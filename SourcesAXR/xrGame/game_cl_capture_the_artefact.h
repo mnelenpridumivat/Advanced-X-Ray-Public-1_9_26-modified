@@ -60,7 +60,7 @@ private:
 
 	void UpdateMoneyIndicator();
 	
-	void LoadSndMessages();
+	void LoadSndMessages() override;
 	void OnPlayerEnterBase();
 	void OnPlayerLeaveBase();
 	void SetInvinciblePlayer(u16 const gameId, bool const invincible);
@@ -76,32 +76,32 @@ private:
 	void UpdateTimeLimit(u32 current_time);
 public:
 	game_cl_CaptureTheArtefact();
-	void	SetGameUI(CUIGameCustom * already_created_ui);
-	virtual	~game_cl_CaptureTheArtefact();
-	virtual	CUIGameCustom * createGameUI();
+	void	SetGameUI(CUIGameCustom * already_created_ui) override;
+	~game_cl_CaptureTheArtefact() override;
+	CUIGameCustom * createGameUI() override;
 	/// Initializes teams
-	virtual	void Init();
-	virtual	void shedule_Update(u32 dt);
-	virtual	void net_import_state(NET_Packet& P);
-	virtual	void net_import_update(NET_Packet& P);
-	virtual	void TranslateGameMessage(u32 msg, NET_Packet& P);
-	
-	virtual	void OnGameMenuRespond_ChangeSkin(NET_Packet& P);
-	virtual	void OnGameMenuRespond_ChangeTeam(NET_Packet& P);
-	virtual	void OnPlayerFlagsChanged(game_PlayerState* ps);
-	virtual	void OnNewPlayerConnected(ClientID const & newClient);
-	virtual void OnRender();
-	
-	virtual	bool IsEnemy(game_PlayerState* ps);
+	void Init() override;
+	void shedule_Update(u32 dt) override;
+	void net_import_state(NET_Packet& P) override;
+	void net_import_update(NET_Packet& P) override;
+	void TranslateGameMessage(u32 msg, NET_Packet& P) override;
 
-	virtual	bool CanBeReady();
-	virtual bool NeedToSendReady_Actor			(int key, game_PlayerState* ps);
-	virtual bool NeedToSendReady_Spectator		(int key, game_PlayerState* ps);
+	void OnGameMenuRespond_ChangeSkin(NET_Packet& P) override;
+	void OnGameMenuRespond_ChangeTeam(NET_Packet& P) override;
+	void OnPlayerFlagsChanged(game_PlayerState* ps) override;
+	void OnNewPlayerConnected(ClientID const & newClient) override;
+	void OnRender() override;
 
-	virtual bool OnKeyboardPress(int key);
-	virtual	bool OnKeyboardRelease(int key);
-	
-	virtual	void OnSpawn(CObject* pObj);
+	bool IsEnemy(game_PlayerState* ps) override;
+
+	bool CanBeReady() override;
+	bool NeedToSendReady_Actor			(int key, game_PlayerState* ps) override;
+	bool NeedToSendReady_Spectator		(int key, game_PlayerState* ps) override;
+
+	bool OnKeyboardPress(int key) override;
+	bool OnKeyboardRelease(int key) override;
+
+	void OnSpawn(CObject* pObj) override;
 	virtual	BOOL CanCallBuyMenu();
 	virtual BOOL CanCallSkinMenu() {return TRUE;};
 	virtual BOOL CanCallTeamSelectMenu();
@@ -113,43 +113,43 @@ public:
 			bool	Get_ShowPlayerNamesEnabled	()			{return m_bFriendlyNames;};
 
 	//ui part
-	virtual	void OnSpectatorSelect();
-	virtual	void OnMapInfoAccept();
-	
-	virtual	void OnTeamChanged();
-	virtual	void OnRankChanged(u8 OldRank);
+	void OnSpectatorSelect() override;
+	void OnMapInfoAccept() override;
+
+	void OnTeamChanged() override;
+	void OnRankChanged(u8 OldRank) override;
 			void OnTeamScoresChanged();
 
-	virtual	void OnTeamMenuBack();
-	virtual	void OnTeamMenu_Cancel();
-	virtual	void OnTeamSelect(int Team);
-	virtual	void OnBuyMenu_Ok();
-	virtual	void OnBuyMenu_Cancel();
-	virtual void OnBuySpawnMenu_Ok();
+	void OnTeamMenuBack() override;
+	void OnTeamMenu_Cancel() override;
+	void OnTeamSelect(int Team) override;
+	void OnBuyMenu_Ok() override;
+	void OnBuyMenu_Cancel() override;
+	void OnBuySpawnMenu_Ok() override;
 			
 			void OnBuyMenuOpen();
 
-	virtual	void OnSkinMenuBack			();
-	virtual void OnSkinMenu_Ok			();
-	virtual	void OnSkinMenu_Cancel		();
+	void OnSkinMenuBack			() override;
+	void OnSkinMenu_Ok			() override;
+	void OnSkinMenu_Cancel		() override;
 
-	virtual void UpdateMapLocations		();
+	void UpdateMapLocations		() override;
 
-	virtual	void	OnVoteStart(NET_Packet& P);
-	virtual	void	OnVoteStop(NET_Packet& P);
-	virtual	void	OnVoteEnd(NET_Packet& P);
-	
-	virtual	char*	getTeamSection			(int Team);
+	void	OnVoteStart(NET_Packet& P) override;
+	void	OnVoteStop(NET_Packet& P) override;
+	void	OnVoteEnd(NET_Packet& P) override;
 
-	virtual	s16	ModifyTeam(s16 Team) {return Team;};
-	virtual	bool PlayerCanSprint(CActor* pActor);
+	char*	getTeamSection			(int Team) override;
+
+	s16	ModifyTeam(s16 Team) override {return Team;};
+	bool PlayerCanSprint(CActor* pActor) override;
 
 	//very bad... need to fix problem with team indexes...
-	virtual void OnSpeechMessage(NET_Packet& P);
-	virtual	u8 GetTeamCount	() { return 2; };
-	
-	virtual	void OnSwitchPhase(u32 old_phase, u32 new_phase);
-	virtual	void OnGameRoundStarted	();
+	void OnSpeechMessage(NET_Packet& P) override;
+	u8 GetTeamCount	() override { return 2; };
+
+	void OnSwitchPhase(u32 old_phase, u32 new_phase) override;
+	void OnGameRoundStarted	() override;
 	u16 GetGreenArtefactOwnerID		() const;
 	u16 GetBlueArtefactOwnerID		() const;
 	
@@ -161,11 +161,11 @@ public:
 	bool			CanActivateArtefact		()	const;
 
 	bool			InWarmUp				()	const;
-	virtual	bool	Is_Rewarding_Allowed	()  const { return !InWarmUp(); };
+	bool	Is_Rewarding_Allowed	()  const override { return !InWarmUp(); };
 	bool			HasTimeLimit			()	const;
 
-	virtual	LPCSTR	GetGameScore			(string32&	score_dest);
-	virtual	void	OnConnected				();
+	LPCSTR	GetGameScore			(string32&	score_dest) override;
+	void	OnConnected				() override;
 	s32				GetGreenTeamScore		() const { return greenTeamScore; };
 	s32				GetBlueTeamScore		() const { return blueTeamScore; };
 };

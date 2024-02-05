@@ -21,11 +21,11 @@ class CUIMainIngameWnd: public CUIWindow
 {
 public:
 			CUIMainIngameWnd();
-	virtual ~CUIMainIngameWnd();
+			~CUIMainIngameWnd() override;
 
 	virtual void Init();
-	virtual void Draw();
-	virtual void Update();
+			void Draw() override;
+			void Update() override;
 	
 	CUIStatic*			UIStaticDiskIO;
 	CUITextWnd*			UIStaticQuickHelp;

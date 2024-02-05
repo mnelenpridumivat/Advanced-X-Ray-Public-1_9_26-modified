@@ -44,30 +44,30 @@ private:
 			void 		UpdateAlcoholism			();
 			void 		UpdateNarcotism				();
 			void 		UpdatePsyHealth				();
-	virtual void		UpdateRadiation				();
+	void		UpdateRadiation				() override;
 public:
 						CActorCondition				(CActor *object);
-	virtual				~CActorCondition			();
+	~CActorCondition			() override;
 
 	//CActorDeathEffector*							m_eatable_effector;
 
-	virtual void		LoadCondition				(LPCSTR section);
-	virtual void		reinit						();
+	void		LoadCondition				(LPCSTR section) override;
+	void		reinit						() override;
 
-	virtual CWound*		ConditionHit				(SHit* pHDS);
-	virtual void		UpdateCondition				();
+	CWound*		ConditionHit				(SHit* pHDS) override;
+	void		UpdateCondition				() override;
 			void		UpdateBoosters				();
 
-	virtual void 		ChangeAlcohol				(const float value);
-	virtual void 		ChangeSatiety				(const float value);
-	virtual void 		ChangeThirst				(const float value);
-	virtual void 		ChangeIntoxication			(const float value);
-	virtual void 		ChangeSleepeness			(const float value);
-	virtual void 		ChangeAlcoholism			(const float value);
-	virtual void 		ChangeHangover				(const float value);
-	virtual void 		ChangeNarcotism				(const float value);
-	virtual void 		ChangeWithdrawal			(const float value);
-	virtual void 		ChangeDrugs					(const float value);
+	void 		ChangeAlcohol				(const float value) override;
+	void 		ChangeSatiety				(const float value) override;
+	void 		ChangeThirst				(const float value) override;
+	void 		ChangeIntoxication			(const float value) override;
+	void 		ChangeSleepeness			(const float value) override;
+	void 		ChangeAlcoholism			(const float value) override;
+	void 		ChangeHangover				(const float value) override;
+	void 		ChangeNarcotism				(const float value) override;
+	void 		ChangeWithdrawal			(const float value) override;
+	void 		ChangeDrugs					(const float value) override;
 	virtual void 		ChangePsyHealth				(const float value);
 
 	void 				BoostParameters				(const SBooster& B, bool need_change_tf = true);
@@ -108,7 +108,7 @@ public:
 	BOOSTER_MAP			GetCurBoosterInfluences		() {return m_booster_influences;};
 
 	// хромание при потере сил и здоровья
-	virtual	bool		IsLimping					() const;
+	bool		IsLimping					() const override;
 	virtual bool		IsCantWalk					() const;
 	virtual bool		IsCantWalkWeight			();
 	virtual bool		IsCantSprint				() const;
@@ -145,8 +145,9 @@ public:
 		VERIFY			(m_object);
 		return			(*m_object);
 	}
-	virtual void			save					(NET_Packet &output_packet);
-	virtual void			load					(IReader &input_packet);
+
+	void			save					(NET_Packet &output_packet) override;
+	void			load					(IReader &input_packet) override;
 	IC		float const&	V_Satiety				()	{ return m_fV_Satiety; }
 	IC		float const&	V_SatietyPower			()	{ return m_fV_SatietyPower; }
 	IC		float const&	V_SatietyHealth			()	{ return m_fV_SatietyHealth; }
@@ -174,8 +175,8 @@ public:
 	bool	DisableSprint							(SHit* pHDS);
 	bool	PlayHitSound							(SHit* pHDS);
 	float	HitSlowmo								(SHit* pHDS);
-	virtual bool			ApplyInfluence			(const SMedicineInfluenceValues& V, const shared_str& sect, CEatableItem* cur_eatable);
-	virtual bool			ApplyBooster			(const SBooster& B, const shared_str& sect);
+	bool			ApplyInfluence			(const SMedicineInfluenceValues& V, const shared_str& sect, CEatableItem* cur_eatable) override;
+	bool			ApplyBooster			(const SBooster& B, const shared_str& sect) override;
 	float	GetMaxPowerRestoreSpeed					() {return m_max_power_restore_speed;};
 	float	GetMaxWoundProtection					() {return m_max_wound_protection;};
 	float	GetMaxFireWoundProtection				() {return m_max_fire_wound_protection;};

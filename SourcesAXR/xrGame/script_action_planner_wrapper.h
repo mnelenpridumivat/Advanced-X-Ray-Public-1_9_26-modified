@@ -12,9 +12,9 @@
 
 class CScriptActionPlannerWrapper : public CScriptActionPlanner, public luabind::wrap_base {
 public:
-	virtual void		setup						(CScriptGameObject *object);
+	void		setup						(CScriptGameObject *object) override;
 	static	void		setup_static				(CScriptActionPlanner *planner, CScriptGameObject *object);
-	virtual void		update						();
+	void		update						() override;
 	static	void		update_static				(CScriptActionPlanner *planner);
 };
 

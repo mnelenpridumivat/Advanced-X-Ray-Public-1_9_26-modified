@@ -9,6 +9,6 @@ class CUIFrameWindow;
 class CUIStats : public CUIScrollView {
 public:
 				CUIStats		();
-	virtual		~CUIStats		();
+				~CUIStats		() override;
 	CUIWindow* InitStats		(CUIXml& xml_doc, LPCSTR path,int team);
 };

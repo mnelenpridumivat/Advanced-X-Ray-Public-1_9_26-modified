@@ -8,9 +8,9 @@ private:
 	typedef CWeaponMagazined inherited;
 public:
 					CWeaponCustomPistol	();
-	virtual			~CWeaponCustomPistol();
-	virtual	int		GetCurrentFireMode();
+	~CWeaponCustomPistol() override;
+	int		GetCurrentFireMode() override;
 protected:
-	virtual void	FireEnd				();
-	virtual void	switch2_Fire		();
+	void	FireEnd				() override;
+	void	switch2_Fire		() override;
 };

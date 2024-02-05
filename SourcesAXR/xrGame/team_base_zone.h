@@ -18,21 +18,21 @@ public:
 	typedef	CGameObject	inherited;
 
 	CTeamBaseZone		();
-	virtual			~CTeamBaseZone		();
-	virtual void	reinit				();
-	virtual BOOL	net_Spawn			(CSE_Abstract* DC);
-	virtual void	net_Destroy			();
+	~CTeamBaseZone		() override;
+	void	reinit				() override;
+	BOOL	net_Spawn			(CSE_Abstract* DC) override;
+	void	net_Destroy			() override;
 
-	virtual void	Center				(Fvector &C)	const;
-	virtual float	Radius				() const;
+	void	Center				(Fvector &C)	const override;
+	float	Radius				() const override;
 
-	virtual void	shedule_Update		(u32 dt);
-	virtual void	feel_touch_new		(CObject* O);
-	virtual void	feel_touch_delete	(CObject* O);
-	virtual BOOL	feel_touch_contact	(CObject* O);
+	void	shedule_Update		(u32 dt) override;
+	void	feel_touch_new		(CObject* O) override;
+	void	feel_touch_delete	(CObject* O) override;
+	BOOL	feel_touch_contact	(CObject* O) override;
 
 	virtual u8		GetZoneTeam			()	{ return m_Team; };
 #ifdef DEBUG
-	virtual	void	OnRender			();
+	void	OnRender			() override;
 #endif
 };

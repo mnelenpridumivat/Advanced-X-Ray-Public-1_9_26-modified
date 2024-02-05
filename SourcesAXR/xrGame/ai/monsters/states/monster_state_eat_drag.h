@@ -12,15 +12,15 @@ class CStateMonsterDrag : public CState<_Object> {
 
 public:
 						CStateMonsterDrag		(_Object *obj);
-	virtual				~CStateMonsterDrag		();
+	~CStateMonsterDrag		() override;
 
-	virtual void		initialize				();
-	virtual	void		execute					();
-	virtual void		finalize				();
-	virtual void		critical_finalize		();
-	virtual void		remove_links			(CObject* object) { inherited::remove_links(object);}
+	void		initialize				() override;
+	void		execute					() override;
+	void		finalize				() override;
+	void		critical_finalize		() override;
+	void		remove_links			(CObject* object) override { inherited::remove_links(object);}
 
-	virtual bool		check_completion		();
+	bool		check_completion		() override;
 };
 
 

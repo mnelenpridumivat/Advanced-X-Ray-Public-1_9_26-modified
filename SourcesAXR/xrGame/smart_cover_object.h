@@ -29,22 +29,22 @@ private:
 	float				m_exit_min_enemy_distance;
 
 public:
-	virtual void		Load							(LPCSTR section);
-	virtual BOOL		feel_touch_on_contact			(CObject *)				{ return FALSE; }
-	virtual bool		use								(CGameObject* who_use)	{ return false; }
-	virtual BOOL		net_Spawn						(CSE_Abstract* DC);
-	virtual void		UpdateCL						();
-	virtual void		shedule_Update					(u32 dt);
-	virtual bool		IsVisibleForZones				()						{ return false; }
-	virtual BOOL		UsedAI_Locations				()						{ return true; }
-	virtual	bool		can_validate_position_on_spawn	()						{ return false; }
-	virtual bool		use_parent_ai_locations			() const				{ return false; }
-	virtual	bool		is_ai_obstacle					() const				{ return false; }
-	virtual bool		register_schedule				() const				{ return false; }
-	virtual void		Center							(Fvector &result) const;
-	virtual float		Radius							() const;
+	void		Load							(LPCSTR section) override;
+	BOOL		feel_touch_on_contact			(CObject *) override { return FALSE; }
+	bool		use								(CGameObject* who_use) override { return false; }
+	BOOL		net_Spawn						(CSE_Abstract* DC) override;
+	void		UpdateCL						() override;
+	void		shedule_Update					(u32 dt) override;
+	bool		IsVisibleForZones				() override { return false; }
+	BOOL		UsedAI_Locations				() override { return true; }
+	bool		can_validate_position_on_spawn	() override { return false; }
+	bool		use_parent_ai_locations			() const override { return false; }
+	bool		is_ai_obstacle					() const override { return false; }
+	bool		register_schedule				() const override { return false; }
+	void		Center							(Fvector &result) const override;
+	float		Radius							() const override;
 #ifdef DEBUG
-	virtual	void		OnRender						();
+	void		OnRender						() override;
 #endif // DEBUG
 			bool		inside							(Fvector const &position) const;
 

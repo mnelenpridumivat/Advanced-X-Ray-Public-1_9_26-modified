@@ -123,11 +123,11 @@ public:
 	static void 				PhisStepsCallback		( u32 Time0, u32 Time1 );
 	bool						In_NetCorrectionPrediction	() {return m_bIn_CrPr;};
 
-	virtual void				OnMessage				(void* data, u32 size);
-	virtual void				OnInvalidHost			();
-	virtual void				OnInvalidPassword		();
-	virtual void				OnSessionFull			();
-	virtual void				OnConnectRejected		();
+	void				OnMessage				(void* data, u32 size) override;
+	void				OnInvalidHost			() override;
+	void				OnInvalidPassword		() override;
+	void				OnSessionFull			() override;
+	void				OnConnectRejected		() override;
 
 private:
 			
@@ -251,28 +251,28 @@ public:
 	shared_str					m_caClientOptions;
 
 	// Starting/Loading
-	virtual BOOL				net_Start				( LPCSTR op_server, LPCSTR op_client);
-	virtual void				net_Load				( LPCSTR name );
-	virtual void				net_Save				( LPCSTR name );
-	virtual void				net_Stop				( );
+	BOOL				net_Start				( LPCSTR op_server, LPCSTR op_client) override;
+	void				net_Load				( LPCSTR name ) override;
+	void				net_Save				( LPCSTR name ) override;
+	void				net_Stop				( ) override;
 	virtual BOOL				net_Start_client		( LPCSTR name );
-	virtual void				net_Update				( );
+	void				net_Update				( ) override;
 
 
-	virtual BOOL				Load_GameSpecific_Before( );
-	virtual BOOL				Load_GameSpecific_After ( );
-	virtual void				Load_GameSpecific_CFORM	( CDB::TRI* T, u32 count );
+	BOOL				Load_GameSpecific_Before( ) override;
+	BOOL				Load_GameSpecific_After ( ) override;
+	void				Load_GameSpecific_CFORM	( CDB::TRI* T, u32 count ) override;
 	void						Load_GameSpecific_CFORM_Serialize(IWriter& writer) override;
 	bool						Load_GameSpecific_CFORM_Deserialize(IReader& reader) override;
 
 	// Events
-	virtual void				OnEvent					( EVENT E, u64 P1, u64 P2 );
-	virtual void	_BCL		OnFrame					( void );
-	virtual void				OnRender				( );
-	virtual void				ApplyCamera				();
+	void				OnEvent					( EVENT E, u64 P1, u64 P2 ) override;
+	void	_BCL		OnFrame					( void ) override;
+	void				OnRender				( ) override;
+	void				ApplyCamera				() override;
 
-	virtual	shared_str			OpenDemoFile			(LPCSTR demo_file_name);
-	virtual void				net_StartPlayDemo		();
+	shared_str			OpenDemoFile			(LPCSTR demo_file_name) override;
+	void				net_StartPlayDemo		() override;
 
 	void						cl_Process_Event		(u16 dest, u16 type, NET_Packet& P);
 	void						cl_Process_Spawn		(NET_Packet& P);
@@ -281,16 +281,16 @@ public:
 	void						ProcessCompressedUpdate	(NET_Packet& P, u8 const compression_type);
 
 	// Input
-	virtual	void				IR_OnKeyboardPress		( int btn );
-	virtual void				IR_OnKeyboardRelease	( int btn );
-	virtual void				IR_OnKeyboardHold		( int btn );
-	virtual void				IR_OnMousePress			( int btn );
-	virtual void				IR_OnMouseRelease		( int btn );
-	virtual void				IR_OnMouseHold			( int btn );
-	virtual void				IR_OnMouseMove			( int, int);
-	virtual void				IR_OnMouseStop			( int, int);
-	virtual void				IR_OnMouseWheel			( int direction);
-	virtual void				IR_OnActivate			(void);
+	void				IR_OnKeyboardPress		( int btn ) override;
+	void				IR_OnKeyboardRelease	( int btn ) override;
+	void				IR_OnKeyboardHold		( int btn ) override;
+	void				IR_OnMousePress			( int btn ) override;
+	void				IR_OnMouseRelease		( int btn ) override;
+	void				IR_OnMouseHold			( int btn ) override;
+	void				IR_OnMouseMove			( int, int) override;
+	void				IR_OnMouseStop			( int, int) override;
+	void				IR_OnMouseWheel			( int direction) override;
+	void				IR_OnActivate			(void) override;
 	
 			int					get_RPID				(LPCSTR name);
 
@@ -302,7 +302,7 @@ public:
 	void						ClientSendProfileData	();
 	void						ClientSave				();
 			u32					Objects_net_Save		(NET_Packet* _Packet, u32 start, u32 count);
-	virtual	void				Send					(NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0);
+	void				Send					(NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0) override;
 	
 	void						g_cl_Spawn				(LPCSTR name, u8 rp, u16 flags, Fvector pos);	// only ask server
 	void						g_sv_Spawn				(CSE_Abstract* E);					// server reply/command spawning
@@ -327,13 +327,13 @@ public:
 
 	// C/D
 	CLevel();
-	virtual ~CLevel();
+	~CLevel() override;
 
 	//названияе текущего уровня
-	virtual shared_str			name					() const;
+	shared_str			name					() const override;
 			shared_str			version					() const { return map_data.m_map_version.c_str(); } //this method can be used ONLY from CCC_ChangeGameType
 
-	virtual void				GetLevelInfo		( CServerInfo* si );
+	void				GetLevelInfo		( CServerInfo* si ) override;
 
 	//gets the time from the game simulation
 	
@@ -348,10 +348,10 @@ public:
 	float				GetGameTimeFactor		();
 	void				SetGameTimeFactor		(const float fTimeFactor);
 	void				SetGameTimeFactor		(ALife::_TIME_ID GameTime, const float fTimeFactor);
-	virtual void		SetEnvironmentGameTimeFactor(u64 const& GameTime, float const& fTimeFactor);
-	virtual float		GetEnvironmentTimeFactor() const; // override;
-	virtual void		SetEnvironmentTimeFactor(const float fTimeFactor); // override;
-	virtual u64			GetEnvironmentGameTime	() const; // override
+	void		SetEnvironmentGameTimeFactor(u64 const& GameTime, float const& fTimeFactor) override;
+	float		GetEnvironmentTimeFactor() const override; // override;
+	void		SetEnvironmentTimeFactor(const float fTimeFactor) override; // override;
+	u64			GetEnvironmentGameTime	() const override; // override
 
 	// gets current daytime [0..23]
 	u8					GetDayTime				();
@@ -394,7 +394,7 @@ private:
 public:
 			bool			is_removing_objects			() { return m_is_removing_objects; }
 			void			remove_objects				();
-			virtual void	OnSessionTerminate		(LPCSTR reason);
+	void	OnSessionTerminate		(LPCSTR reason) override;
 			void			OnDestroyObject			(std::uint16_t id) override;
 			
 			file_transfer::client_site*					m_file_transfer;

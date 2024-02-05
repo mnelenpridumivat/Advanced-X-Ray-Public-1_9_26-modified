@@ -13,11 +13,11 @@ class CUIChangeMap : public CUIDialogWnd
 {
 public:
 					CUIChangeMap			();
-					~CUIChangeMap			();
+					~CUIChangeMap			() override;
 			void	InitChangeMap			(CUIXml& xml_doc);
 
-	virtual bool	OnKeyboardAction				(int dik, EUIMessages keyboard_action);
-	virtual void	SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = 0);
+					bool	OnKeyboardAction				(int dik, EUIMessages keyboard_action) override;
+					void	SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = 0) override;
 
 	void 			OnBtnOk					();
 	void 			OnBtnCancel				();

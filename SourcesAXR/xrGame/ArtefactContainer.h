@@ -13,16 +13,16 @@ protected:
 public:
 
 	CArtefactContainer(void);
-	virtual ~CArtefactContainer(void);
+	~CArtefactContainer(void) override;
 
-	virtual void			Load						(LPCSTR section);
-	virtual BOOL			net_Spawn					(CSE_Abstract* DC);
+	void			Load						(LPCSTR section) override;
+	BOOL			net_Spawn					(CSE_Abstract* DC) override;
 
-	virtual void			save						(NET_Packet& output_packet);
-	virtual void			load						(IReader& input_packet);
+	void			save						(NET_Packet& output_packet) override;
+	void			load						(IReader& input_packet) override;
 
-	virtual	u32				Cost						() const;
-	virtual float			Weight						() const;
+	u32				Cost						() const override;
+	float			Weight						() const override;
 
 	size_t					GetContainerSize			() const { return m_iContainerSize; }
 	void					SetContainerSize			(size_t new_size) { m_iContainerSize = new_size; }

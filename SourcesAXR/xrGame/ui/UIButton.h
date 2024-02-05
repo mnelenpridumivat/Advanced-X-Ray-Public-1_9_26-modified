@@ -10,19 +10,19 @@ private:
 	typedef			CUIStatic				inherited;
 public:
 					CUIButton				();
-	virtual			~CUIButton				()			{};
+	~CUIButton				() override {};
 
-	virtual bool	OnMouseAction					(float x, float y, EUIMessages mouse_action);
+	bool	OnMouseAction					(float x, float y, EUIMessages mouse_action) override;
 	virtual void	OnClick					();
 
 	//прорисовка окна
-	virtual void	DrawTexture				();
-	virtual void	DrawText				();
+	void	DrawTexture				() override;
+	void	DrawText				() override;
 
-	virtual void	Update					();
-	virtual void	Enable					(bool status);
-	virtual bool	OnKeyboardAction				(int dik, EUIMessages keyboard_action);
-	virtual void	OnFocusLost				();
+	void	Update					() override;
+	void	Enable					(bool status) override;
+	bool	OnKeyboardAction				(int dik, EUIMessages keyboard_action) override;
+	void	OnFocusLost				() override;
 
 	//режимы в которых можно нажимать кнопку
 	typedef enum{NORMAL_PRESS, //кнопка нажимается при 
@@ -38,7 +38,7 @@ public:
 
 
 	//заново подготовить состояние
-    virtual void	Reset					();
+	void	Reset					() override;
 
 	// Установка состояния кнопки: утоплена, не утоплена
 	void				SetButtonState			(E_BUTTON_STATE eBtnState)	{ m_eButtonState = eBtnState; }

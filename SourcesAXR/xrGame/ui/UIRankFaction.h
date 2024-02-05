@@ -48,7 +48,7 @@ private:
 public:
 			CUIRankFaction		();
 			CUIRankFaction		( shared_str const& faction_id );
-	virtual	~CUIRankFaction	();
+	~CUIRankFaction	() override;
 
 	void	init_from_xml		( CUIXml& xml );
 	void	rating				( u8 new_sn, bool force = false );

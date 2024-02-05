@@ -20,9 +20,9 @@ protected:
 
 public:
 						CStalkerActionDangerGrenadeTakeCover	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize									();
-	virtual void		execute										();
-	virtual void		finalize									();
+	void		initialize									() override;
+	void		execute										() override;
+	void		finalize									() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -35,9 +35,9 @@ protected:
 
 public:
 						CStalkerActionDangerGrenadeWaitForExplosion		(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize									();
-	virtual void		execute										();
-	virtual void		finalize									();
+	void		initialize									() override;
+	void		execute										() override;
+	void		finalize									() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -53,9 +53,9 @@ private:
 
 public:
 						CStalkerActionDangerGrenadeTakeCoverAfterExplosion	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize									();
-	virtual void		execute										();
-	virtual void		finalize									();
+	void		initialize									() override;
+	void		execute										() override;
+	void		finalize									() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -68,9 +68,9 @@ protected:
 
 public:
 						CStalkerActionDangerGrenadeLookAround	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize									();
-	virtual void		execute										();
-	virtual void		finalize									();
+	void		initialize									() override;
+	void		execute										() override;
+	void		finalize									() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ protected:
 
 public:
 						CStalkerActionDangerGrenadeSearch	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize								();
-	virtual void		execute									();
-	virtual void		finalize								();
+	void		initialize								() override;
+	void		execute									() override;
+	void		finalize								() override;
 };

@@ -18,7 +18,7 @@ protected:
 public:
 						CScriptIniFile		(IReader *F, LPCSTR path=0);
 						CScriptIniFile		(LPCSTR szFileName, BOOL ReadOnly=TRUE, BOOL bLoadAtStart=TRUE, BOOL SaveAtEnd=TRUE);
-	virtual 			~CScriptIniFile		();
+	~CScriptIniFile		() override;
 			bool		line_exist			(LPCSTR S, LPCSTR L);
 			bool		section_exist		(LPCSTR S);
 			int			r_clsid				(LPCSTR S, LPCSTR L);

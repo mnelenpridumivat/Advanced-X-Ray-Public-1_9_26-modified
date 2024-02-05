@@ -25,15 +25,15 @@ public:
 
 public:
 							CMapSpot						(CMapLocation*);
-	virtual					~CMapSpot						();
+	~CMapSpot						() override;
 	virtual		void		Load							(CUIXml* xml, LPCSTR path);
 	CMapLocation*			MapLocation						()							{return m_map_location;}
 				int			get_location_level				()							{return m_location_level;}
 	virtual LPCSTR			GetHint							();
-	virtual		void		SetWndPos						(const Fvector2& pos);
-	virtual		void		Update							();
-	virtual		bool		OnMouseDown						(int mouse_btn);
-	virtual		void		OnFocusLost						();
+	void		SetWndPos						(const Fvector2& pos) override;
+	void		Update							() override;
+	bool		OnMouseDown						(int mouse_btn) override;
+	void		OnFocusLost						() override;
 
 				void		show_static_border				(bool status);
 				void		mark_focused					();
@@ -46,8 +46,8 @@ class CMapSpotPointer :public CMapSpot
 	xr_string				m_pointer_hint;
 public:
 							CMapSpotPointer					(CMapLocation*);
-	virtual					~CMapSpotPointer				();
-	virtual		LPCSTR		GetHint							();
+	~CMapSpotPointer				() override;
+	LPCSTR		GetHint							() override;
 };
 
 class CMiniMapSpot :public CMapSpot
@@ -57,9 +57,9 @@ class CMiniMapSpot :public CMapSpot
 	Frect					m_tex_rect_above,m_tex_rect_normal,m_tex_rect_below;
 public:
 							CMiniMapSpot					(CMapLocation*);
-	virtual					~CMiniMapSpot					();
-	virtual		void		Load							(CUIXml* xml, LPCSTR path);
-	virtual		void		Draw							();
+	~CMiniMapSpot					() override;
+	void		Load							(CUIXml* xml, LPCSTR path) override;
+	void		Draw							() override;
 };
 
 // -------------------------------------------------------------------------------------------------
@@ -96,10 +96,10 @@ class CComplexMapSpot : public CMapSpot
 
 public:
 							CComplexMapSpot					(CMapLocation*);
-	virtual					~CComplexMapSpot				();
-	virtual		void		Load							(CUIXml* xml, LPCSTR path);
-	virtual		void		Update							();
-	virtual		void		SetWndSize						(const Fvector2& size);
+	~CComplexMapSpot				() override;
+	void		Load							(CUIXml* xml, LPCSTR path) override;
+	void		Update							() override;
+	void		SetWndSize						(const Fvector2& size) override;
 
 				void		SetLeftTexture(  LPCSTR texture_name )	{ VERIFY2(m_left_icon, texture_name);	m_left_icon->InitTexture(  texture_name ); }
 				void		SetRightTexture( LPCSTR texture_name )	{ VERIFY2(m_right_icon, texture_name);	m_right_icon->InitTexture( texture_name ); }

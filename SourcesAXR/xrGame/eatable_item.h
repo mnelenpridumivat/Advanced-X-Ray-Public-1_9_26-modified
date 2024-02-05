@@ -15,19 +15,19 @@ protected:
 
 public:
 							CEatableItem				();
-	virtual					~CEatableItem				();
-	virtual	DLL_Pure*		_construct					();
-	virtual CEatableItem	*cast_eatable_item			()	{return this;}
+	~CEatableItem				() override;
+	DLL_Pure*		_construct					() override;
+	CEatableItem	*cast_eatable_item			() override {return this;}
 
-	virtual void			Load						(LPCSTR section);
-	virtual bool			Useful						() const;
+	void			Load						(LPCSTR section) override;
+	bool			Useful						() const override;
 
-	virtual BOOL			net_Spawn					(CSE_Abstract* DC);
+	BOOL			net_Spawn					(CSE_Abstract* DC) override;
 
-	virtual void			OnH_B_Independent			(bool just_before_destroy);
-	virtual void			OnH_A_Independent			();
-	virtual void			save						(NET_Packet &output_packet);
-	virtual void			load						(IReader &input_packet);
+	void			OnH_B_Independent			(bool just_before_destroy) override;
+	void			OnH_A_Independent			() override;
+	void			save						(NET_Packet &output_packet) override;
+	void			load						(IReader &input_packet) override;
 			void			UpdateInRuck				(CActor* actor);
 			void			UpdateUseAnim				(CActor* actor);
 			void			HideWeapon					();
@@ -36,8 +36,8 @@ public:
 			u8 GetMaxUses() const { return m_iConstPortions; };
 	virtual	bool			UseBy						(CEntityAlive* npc);
 	virtual	bool			Empty						()						{return m_iPortionsNum==0;};
-	virtual	u32				Cost						()	const;
-	virtual float			Weight						()	const;
+	u32				Cost						()	const override;
+	float			Weight						()	const override;
 
 	IC		u32				GetPortionsNum				()	const				{return m_iPortionsNum;}
 			u32				m_iConstPortions;

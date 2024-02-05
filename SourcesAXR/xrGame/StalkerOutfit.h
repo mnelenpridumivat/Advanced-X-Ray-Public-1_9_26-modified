@@ -14,7 +14,7 @@ private:
     typedef	CCustomOutfit inherited;
 public:
 	CStalkerOutfit(void);
-	virtual ~CStalkerOutfit(void);
+    ~CStalkerOutfit(void) override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

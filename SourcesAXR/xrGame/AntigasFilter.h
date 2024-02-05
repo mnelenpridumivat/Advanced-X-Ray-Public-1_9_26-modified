@@ -8,16 +8,16 @@ class CAntigasFilter : public CEatableItemObject
 
 public:
 	CAntigasFilter();
-	virtual					~CAntigasFilter();
-	virtual CAntigasFilter  *cast_filter			()	{return this;}
+	~CAntigasFilter() override;
+	CAntigasFilter  *cast_filter			() override {return this;}
 
-	virtual void			Load(LPCSTR section);
-	virtual bool			Useful() const;
+	void			Load(LPCSTR section) override;
+	bool			Useful() const override;
 
-	virtual BOOL			net_Spawn(CSE_Abstract* DC);
+	BOOL			net_Spawn(CSE_Abstract* DC) override;
 
-	virtual	bool			UseBy(CEntityAlive* npc);
-	virtual	bool			Empty() { return m_iPortionsNum == 0; };
+	bool			UseBy(CEntityAlive* npc) override;
+	bool			Empty() override { return m_iPortionsNum == 0; };
 	int						m_iUseFor;
 	float					m_fCondition;
 	void					ChangeInOutfit();

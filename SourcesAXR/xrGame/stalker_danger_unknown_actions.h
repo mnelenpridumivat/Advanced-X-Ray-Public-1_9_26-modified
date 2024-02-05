@@ -23,9 +23,9 @@ private:
 
 public:
 						CStalkerActionDangerUnknownTakeCover	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize								();
-	virtual void		execute									();
-	virtual void		finalize								();
+	void		initialize								() override;
+	void		execute									() override;
+	void		finalize								() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,9 +38,9 @@ protected:
 
 public:
 						CStalkerActionDangerUnknownLookAround	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize								();
-	virtual void		execute									();
-	virtual void		finalize								();
+	void		initialize								() override;
+	void		execute									() override;
+	void		finalize								() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ protected:
 
 public:
 						CStalkerActionDangerUnknownSearch	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize							();
-	virtual void		execute								();
-	virtual void		finalize							();
+	void		initialize							() override;
+	void		execute								() override;
+	void		finalize							() override;
 };

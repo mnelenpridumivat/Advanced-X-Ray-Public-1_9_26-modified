@@ -16,7 +16,7 @@ protected:
 
 public:
 					CTelekinesis		();
-	virtual			~CTelekinesis		();
+	~CTelekinesis		() override;
 
 			// allocates relevant TelekineticObject
 
@@ -74,8 +74,8 @@ protected:
 private:
 
 	// обновление на шагах физики
-	virtual void 	PhDataUpdate		(float step);
-	virtual void 	PhTune				(float step);
+	void 	PhDataUpdate		(float step) override;
+	void 	PhTune				(float step) override;
 	
 
 };

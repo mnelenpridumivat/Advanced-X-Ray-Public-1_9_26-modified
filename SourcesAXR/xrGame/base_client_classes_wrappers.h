@@ -254,8 +254,9 @@ typedef IRenderableWrapper<CGameObjectISheduled>			CGameObjectIRenderable;
 class CGameObjectWrapper : public CGameObjectIRenderable {
 public:
 	IC						CGameObjectWrapper	() {};
-	virtual					~CGameObjectWrapper	() {};
-	virtual bool			use					(CGameObject* who_use)
+	~CGameObjectWrapper	() override {};
+
+	bool			use					(CGameObject* who_use) override
 	{
 		return call<bool>("use",who_use);
 	}
@@ -266,7 +267,7 @@ public:
 	}
 
 
-	virtual void			net_Import			(NET_Packet &packet)
+	void			net_Import			(NET_Packet &packet) override
 	{
 		call<void>("net_Import",&packet);
 	}
@@ -276,7 +277,7 @@ public:
 		self->CGameObject::net_Import(*packet);
 	}
 
-	virtual void			net_Export			(NET_Packet &packet)
+	void			net_Export			(NET_Packet &packet) override
 	{
 		call<void>("net_Export",&packet);
 	}
@@ -286,7 +287,7 @@ public:
 		self->CGameObject::net_Export(*packet);
 	}
 
-	virtual BOOL			net_Spawn			(CSE_Abstract* data)
+	BOOL			net_Spawn			(CSE_Abstract* data) override
 	{
 		return			(luabind::call_member<bool>(this,"net_Spawn",data));
 	}
@@ -300,9 +301,9 @@ public:
 class CEntityWrapper : public CEntity, public luabind::wrap_base {
 public:
 	IC						CEntityWrapper		() {}
-	virtual					~CEntityWrapper		() {}
+	~CEntityWrapper		() override {}
 
-	virtual void			HitSignal			(float P, Fvector &local_dir,	CObject* who, s16 element)
+	void			HitSignal			(float P, Fvector &local_dir,	CObject* who, s16 element) override
 	{
 		luabind::call_member<void>(this,"HitSignal",P,local_dir,who,element);
 	}
@@ -312,7 +313,7 @@ public:
 		ai().script_engine().script_log(eLuaMessageTypeError,"You are trying to call a pure virtual function CEntity::HitSignal!");
 	}
 
-	virtual void			HitImpulse			(float P, Fvector &vWorldDir, 	Fvector& vLocalDir)
+	void			HitImpulse			(float P, Fvector &vWorldDir, 	Fvector& vLocalDir) override
 	{
 		luabind::call_member<void>(this,"HitImpulse",P,vWorldDir,vLocalDir);
 	}

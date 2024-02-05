@@ -47,7 +47,7 @@ private:
 	friend id_to_index;
 public:
 							CPhraseDialog		();
-	virtual					~CPhraseDialog		();
+	~CPhraseDialog		() override;
 
 							CPhraseDialog		(const CPhraseDialog& pharase_dialog) {*this = pharase_dialog;}
 							CPhraseDialog&		operator = (const CPhraseDialog& pharase_dialog) {*this = pharase_dialog; return *this;}
@@ -124,7 +124,7 @@ protected:
 	SPhraseDialogData*		data		()			{ VERIFY(inherited_shared::get_sd()); return inherited_shared::get_sd();}
 
 	//загрузка диалога из XML файла
-	virtual void			load_shared	(LPCSTR);
+	void			load_shared	(LPCSTR) override;
 	
 	//рекурсивное добавление фраз в граф
 	void					AddPhrase	(CUIXml* pXml, XML_NODE* phrase_node, const shared_str& phrase_id, const shared_str& prev_phrase_id);

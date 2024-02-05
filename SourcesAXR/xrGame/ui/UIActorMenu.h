@@ -341,16 +341,16 @@ protected:
 
 public:
 								CUIActorMenu				();
-	virtual						~CUIActorMenu				();
+	~CUIActorMenu				() override;
 
-	virtual bool				StopAnyMove					();
-	virtual void				SendMessage					(CUIWindow* pWnd, s16 msg, void* pData = NULL);
-	virtual void				Draw						();
-	virtual void				Update						();
-	virtual void				Show						(bool status);
+	bool				StopAnyMove					() override;
+	void				SendMessage					(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
+	void				Draw						() override;
+	void				Update						() override;
+	void				Show						(bool status) override;
 
-	virtual bool				OnKeyboardAction					(int dik, EUIMessages keyboard_action);
-	virtual bool				OnMouseAction						(float x, float y, EUIMessages mouse_action);
+	bool				OnKeyboardAction					(int dik, EUIMessages keyboard_action) override;
+	bool				OnMouseAction						(float x, float y, EUIMessages mouse_action) override;
 
 	void						CallMessageBoxYesNo			(LPCSTR text);
 	void						CallMessageBoxOK			(LPCSTR text);

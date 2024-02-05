@@ -12,7 +12,7 @@ class CUIRankIndicator :public CUIWindow
 public:
 
 					CUIRankIndicator		();
-	virtual			~CUIRankIndicator		();
+	~CUIRankIndicator		() override;
 	void			InitFromXml				(CUIXml& xml_doc);
 	void			SetRank					(u8 team, u8 rank);
 };

@@ -42,9 +42,9 @@ protected:
 
 	LPCSTR							pWinnigPlayerName;
 
-	virtual		void				ReadOptions				(shared_str &options);
-	virtual		void				ConsoleCommands_Create	();
-	virtual		void				ConsoleCommands_Clear	();
+	void				ReadOptions				(shared_str &options) override;
+	void				ConsoleCommands_Create	() override;
+	void				ConsoleCommands_Clear	() override;
 	/////////////////////////////////////////////////////////////
 	DEF_VECTOR(ANOMALIES, xr_string);
 	DEF_VECTOR(ANOMALY_SETS, ANOMALIES);
@@ -91,7 +91,7 @@ protected:
 	virtual		void				check_Player_for_Invincibility	(game_PlayerState* ps);
 
 	virtual		void				Check_ForClearRun		(game_PlayerState* ps);
-	virtual		void				FillDeathActorRejectItems(CSE_ActorMP *actor, xr_vector<CSE_Abstract*> & to_reject);
+	void				FillDeathActorRejectItems(CSE_ActorMP *actor, xr_vector<CSE_Abstract*> & to_reject) override;
 
 	u32								m_dwWarmUp_CurTime;
 	bool							m_bInWarmUp;
@@ -100,67 +100,67 @@ protected:
 
 public:
 									game_sv_Deathmatch		();
-				virtual				~game_sv_Deathmatch		();
-	virtual		void				Create					(shared_str &options);
+	~game_sv_Deathmatch		() override;
+	void				Create					(shared_str &options) override;
 
-	virtual		LPCSTR				type_name				() const { return "deathmatch";};
-	virtual		void				net_Export_State		(NET_Packet& P, ClientID id_to);
+	LPCSTR				type_name				() const override { return "deathmatch";};
+	void				net_Export_State		(NET_Packet& P, ClientID id_to) override;
 
-	virtual		void				OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender );
+	void				OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender ) override;
 
 	virtual		void				OnTeamScore				(u32 /**team/**/, bool)						;		// команда выиграла
 	virtual		void				OnTeamsInDraw			()								{};		// ничья
 
 	// Events
-	virtual		void				OnRoundStart			();												// старт раунда
-	virtual		void				OnRoundEnd				();	// round_end_reason							// конец раунда
+	void				OnRoundStart			() override;												// старт раунда
+	void				OnRoundEnd				() override;	// round_end_reason							// конец раунда
 	virtual		void				OnDelayedRoundEnd		( ERoundEnd_Result reason );
 	virtual		void				OnDelayedTeamEliminated();
 
-	virtual		void				OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_Packet& P); //игрок получил Hit
-	virtual		void				OnPlayerHitPlayer_Case	(game_PlayerState* ps_hitter, game_PlayerState* ps_hitted, SHit* pHitS);	
+	void				OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_Packet& P) override; //игрок получил Hit
+	virtual		void				OnPlayerHitPlayer_Case	(game_PlayerState* ps_hitter, game_PlayerState* ps_hitted, SHit* pHitS);
 
-	virtual		BOOL				OnTouch					(u16 eid_who, u16 eid_what, BOOL bForced = FALSE);
-	virtual		void				OnDetach				(u16 eid_who, u16 eid_what);
+	BOOL				OnTouch					(u16 eid_who, u16 eid_what, BOOL bForced = FALSE) override;
+	void				OnDetach				(u16 eid_who, u16 eid_what) override;
 
-	virtual		BOOL				OnPreCreate				(CSE_Abstract* E);
-	virtual		void				OnCreate				(u16 eid_who);
-	virtual		void				OnPostCreate			(u16 id_who);
+	BOOL				OnPreCreate				(CSE_Abstract* E) override;
+	void				OnCreate				(u16 eid_who) override;
+	void				OnPostCreate			(u16 id_who) override;
 
-	virtual		void				OnPlayerConnect			(ClientID id_who);
-	virtual		void				OnPlayerConnectFinished	(ClientID id_who);
-	virtual		void				OnPlayerDisconnect		(ClientID id_who, LPSTR Name, u16 GameID);
-	virtual		void				OnPlayerReady			(ClientID id_who);
+	void				OnPlayerConnect			(ClientID id_who) override;
+	void				OnPlayerConnectFinished	(ClientID id_who) override;
+	void				OnPlayerDisconnect		(ClientID id_who, LPSTR Name, u16 GameID) override;
+	void				OnPlayerReady			(ClientID id_who) override;
 	virtual		KILL_RES			GetKillResult			(game_PlayerState* pKiller, game_PlayerState* pVictim);
 	virtual		bool				OnKillResult			(KILL_RES KillResult, game_PlayerState* pKiller, game_PlayerState* pVictim);
 	virtual		void				OnGiveBonus				(KILL_RES KillResult, game_PlayerState* pKiller, game_PlayerState* pVictim, KILL_TYPE KillType, SPECIAL_KILL_TYPE SpecialKillType, CSE_Abstract* pWeaponA);
 	virtual		void				Processing_Victim		(game_PlayerState* pVictim, game_PlayerState* pKiller);
 	virtual		void				Victim_Exp				(game_PlayerState* pVictim);
-	virtual		bool				CheckTeams				() { return false; };
-	virtual		void				OnPlayerKillPlayer		(game_PlayerState* ps_killer, game_PlayerState* ps_killed, KILL_TYPE KillType, SPECIAL_KILL_TYPE SpecialKillType, CSE_Abstract* pWeaponA);
-		
-	virtual		void				OnPlayer_Sell_Item		(ClientID id_who, NET_Packet &P);
-	
-	virtual		void				OnPlayerSelectSkin		(NET_Packet& P, ClientID sender);
+	bool				CheckTeams				() override { return false; };
+	void				OnPlayerKillPlayer		(game_PlayerState* ps_killer, game_PlayerState* ps_killed, KILL_TYPE KillType, SPECIAL_KILL_TYPE SpecialKillType, CSE_Abstract* pWeaponA) override;
+
+	void				OnPlayer_Sell_Item		(ClientID id_who, NET_Packet &P) override;
+
+	void				OnPlayerSelectSkin		(NET_Packet& P, ClientID sender) override;
 	virtual		void				OnPlayerChangeSkin		(ClientID id_who, s8 skin);
 	
 	virtual		void				OnFraglimitExceed		();
 	virtual		void				OnTimelimitExceed		();
 				void				OnPlayerScores			();
-	virtual		void				OnDestroyObject			(u16 eid_who);
-	virtual		void				OnPlayerFire (ClientID id_who, NET_Packet &P);
+	void				OnDestroyObject			(u16 eid_who) override;
+	void				OnPlayerFire (ClientID id_who, NET_Packet &P) override;
 	// Main
-	virtual		void				Update					();
+	void				Update					() override;
 				BOOL				AllPlayers_Ready		();
 
-	virtual		void				assign_RP				(CSE_Abstract* E, game_PlayerState* ps_who);
+	void				assign_RP				(CSE_Abstract* E, game_PlayerState* ps_who) override;
 	virtual		u32					RP_2_Use				(CSE_Abstract* E);
 
 #ifdef DEBUG
-	virtual		void				OnRender				();
+	void				OnRender				() override;
 #endif
 
-	virtual		void				SetSkin					(CSE_Abstract* E, u16 Team, u16 ID);//	{};
+	void				SetSkin					(CSE_Abstract* E, u16 Team, u16 ID) override;//	{};
 
 	virtual		void				SpawnWeaponsForActor	(CSE_Abstract* pE, game_PlayerState*	ps);
 
@@ -185,11 +185,11 @@ public:
 				int					GetTeamScore			(u32 idx);
 				void				SetTeamScore			(u32 idx, int val);
 				game_PlayerState*	GetWinningPlayer		();
-	virtual		BOOL				CanHaveFriendlyFire		()	{return FALSE;}
-	virtual		void				RespawnPlayer			(ClientID id_who, bool NoSpectator);
+	BOOL				CanHaveFriendlyFire		() override {return FALSE;}
+	void				RespawnPlayer			(ClientID id_who, bool NoSpectator) override;
 	virtual		void				check_InvinciblePlayers	();	
 	virtual		void				check_ForceRespawn		();
-	virtual		void				on_death				(CSE_Abstract *e_dest, CSE_Abstract *e_src);
+	void				on_death				(CSE_Abstract *e_dest, CSE_Abstract *e_src) override;
 	//---------------------------------------------------------------------------------------------------
 	virtual		BOOL				IsDamageBlockIndEnabled	();
 	virtual		s32					GetTimeLimit			();
@@ -200,12 +200,12 @@ public:
 	virtual		BOOL				IsAnomaliesEnabled		();
 	virtual		u32					GetAnomaliesTime		();
 
-	virtual		u32					GetNumTeams				() {return teams.size();};
+	u32					GetNumTeams				() override {return teams.size();};
 
 	// adtitional methods for predicates
 	void		__stdcall			RespawnPlayerAsSpectator(IClient* client);
 protected:
-	virtual		void				WriteGameState			(CInifile& ini, LPCSTR sect, bool bRoundResult);
+	void				WriteGameState			(CInifile& ini, LPCSTR sect, bool bRoundResult) override;
 	shared_str m_not_free_ammo_str;
-	virtual	bool CanChargeFreeAmmo(char const * ammo_section);
+	bool CanChargeFreeAmmo(char const * ammo_section) override;
 };

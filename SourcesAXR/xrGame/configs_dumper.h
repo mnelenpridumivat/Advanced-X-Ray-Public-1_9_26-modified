@@ -29,12 +29,12 @@ public:
 	typedef fastdelegate::FastDelegate1< long >						yield_callback_t;
 
 							configs_dumper		();
-	virtual					~configs_dumper		();
+	~configs_dumper		() override;
 
-	virtual float			shedule_Scale		()			{ return 1.0f; };
-	virtual void			shedule_Update		(u32 dt);
-	virtual	shared_str		shedule_Name		() const	{ return shared_str("configs_dumper"); };
-	virtual bool			shedule_Needed		()			{ return true; };
+	float			shedule_Scale		() override { return 1.0f; };
+	void			shedule_Update		(u32 dt) override;
+	shared_str		shedule_Name		() const override { return shared_str("configs_dumper"); };
+	bool			shedule_Needed		() override { return true; };
 
 	void					dump_config			(complete_callback_t complete_cb);
 private:

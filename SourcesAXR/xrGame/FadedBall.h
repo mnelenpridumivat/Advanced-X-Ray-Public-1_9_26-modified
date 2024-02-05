@@ -12,9 +12,9 @@ private:
 	typedef CArtefact inherited;
 public:
 	CFadedBall(void);
-	virtual ~CFadedBall(void);
+	~CFadedBall(void) override;
 
-	virtual void Load				(LPCSTR section);
+	void Load				(LPCSTR section) override;
 
 protected:
 };

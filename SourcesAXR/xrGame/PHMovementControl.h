@@ -195,12 +195,12 @@ public:
 	void				CalcMaximumVelocity			(float& /**dest/**/, float /**accel/**/, float /**friction/**/){};
 	void				ActivateBox					(DWORD id, BOOL Check = false);
 	bool				ActivateBoxDynamic			(DWORD id,int num_it=9,int num_steps=5,float resolve_depth=0.01f);
-	void				InterpolateBox				(DWORD id,float k);
+	void				InterpolateBox				(DWORD id,float k) override;
 	EEnvironment		Environment					( )			{ return eEnvironment; }
 	EEnvironment		OldEnvironment				( )			{ return eOldEnvironment; }
-	const Fbox&			Box							( )			{ return aabb; }
+	const Fbox&			Box							( ) override { return aabb; }
 	DWORD				BoxID						( )const	{ return m_dwCurBox;}
-	const Fbox*			Boxes						( )			{return boxes;}
+	const Fbox*			Boxes						( ) override {return boxes;}
 	float				FootRadius					( )			;
 	void				CollisionEnable 			(BOOL enable);
 	void				SetBox						(DWORD id, const Fbox &BB)	{ boxes[id].set(BB); aabb.set(BB); }
@@ -282,10 +282,10 @@ public:
 	CPHMovementControl(CObject* parent);
 	~CPHMovementControl(void);
 
-	CPHCharacter		*character				()	{		return m_character; };
+	CPHCharacter		*character				() override {		return m_character; };
 	void				NetRelcase				( CObject* O );
 private:
-	void				actor_calculate			(Fvector& vAccel,const Fvector& camDir, float ang_speed, float jump, float dt, bool bLight);
+	void				actor_calculate			(Fvector& vAccel,const Fvector& camDir, float ang_speed, float jump, float dt, bool bLight) override;
 	void				UpdateCollisionDamage	( );
 	bool				MakeJumpPath			(xr_vector<DetailPathManager::STravelPathPoint> & out_path, 
 												 u32 & travel_point,

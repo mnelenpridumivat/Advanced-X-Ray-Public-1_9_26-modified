@@ -79,11 +79,11 @@ public:
 	// ATTENTION! Для корректного функционирования значков [+-] вызов SetText
 	// Должен предшествовать SetRoot
 	virtual void SetText(LPCSTR str);
-	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData);
+	void SendMessage(CUIWindow* pWnd, s16 msg, void* pData) override;
 
 	// Ctor and Dtor
 	CUITreeViewItem();
-	virtual		~CUITreeViewItem();
+	~CUITreeViewItem() override;
 
 	// Устанавливаем цвет текста в зависимости от того, прочитан ли артикл
 	void	MarkArticleAsRead(bool value);

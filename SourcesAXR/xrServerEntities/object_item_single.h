@@ -23,9 +23,9 @@ protected:
 public:
 	IC											CObjectItemSingle	(const CLASS_ID &clsid, LPCSTR script_clsid);
 #ifndef NO_XR_GAME
-	virtual ObjectFactory::CLIENT_BASE_CLASS	*client_object		() const;
+	ObjectFactory::CLIENT_BASE_CLASS	*client_object		() const override;
 #endif
-	virtual ObjectFactory::SERVER_BASE_CLASS	*server_object		(LPCSTR section) const;
+	ObjectFactory::SERVER_BASE_CLASS	*server_object		(LPCSTR section) const override;
 };
 
 #ifndef NO_XR_GAME
@@ -37,8 +37,8 @@ protected:
 
 public:
 	IC											CObjectItemSingle	(const CLASS_ID &clsid, LPCSTR script_clsid);
-	virtual ObjectFactory::CLIENT_BASE_CLASS	*client_object		() const;
-	virtual ObjectFactory::SERVER_BASE_CLASS	*server_object		(LPCSTR section) const;
+	ObjectFactory::CLIENT_BASE_CLASS	*client_object		() const override;
+	ObjectFactory::SERVER_BASE_CLASS	*server_object		(LPCSTR section) const override;
 };
 #endif
 

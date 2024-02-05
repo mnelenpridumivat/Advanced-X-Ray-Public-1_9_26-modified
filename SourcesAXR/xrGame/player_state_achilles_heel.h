@@ -12,13 +12,13 @@ class achilles_heel_kill : public player_state_param
 	typedef player_state_param inherited;
 public:
 				achilles_heel_kill	(game_state_accumulator* owner);
-	virtual		~achilles_heel_kill	() {};
+	~achilles_heel_kill	() override {};
 
-	virtual void		update						() {};
-	virtual	u32 const	get_u32_param				();
-	virtual float const get_float_param				() { return 0.0f; };
-	virtual void		reset_game					();
-	virtual void		OnPlayerKilled				(u16 killer_id, u16 target_id, u16 weapon_id, std::pair<KILL_TYPE, SPECIAL_KILL_TYPE> kill_type);
+	void		update						() override {};
+	u32 const	get_u32_param				() override;
+	float const get_float_param				() override { return 0.0f; };
+	void		reset_game					() override;
+	void		OnPlayerKilled				(u16 killer_id, u16 target_id, u16 weapon_id, std::pair<KILL_TYPE, SPECIAL_KILL_TYPE> kill_type) override;
 protected:
 	bool				m_achilles_kill_was;
 };//class achilles_heel_kill

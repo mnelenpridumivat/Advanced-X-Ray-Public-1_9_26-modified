@@ -35,12 +35,12 @@ public:
 
 public:
 						CStalkerCombatPlanner		(CAI_Stalker *object = 0, LPCSTR action_name = "");
-	virtual				~CStalkerCombatPlanner		();
+	~CStalkerCombatPlanner		() override;
 	virtual	void		setup						(CAI_Stalker *object, CPropertyStorage *storage);
-	virtual void		update						();
-	virtual void		initialize					();
-	virtual void		execute						();
-	virtual void		finalize					();
-	virtual	void		save						(NET_Packet &packet);
-	virtual	void		load						(IReader &packet);
+	void		update						() override;
+	void		initialize					() override;
+	void		execute						() override;
+	void		finalize					() override;
+	void		save						(NET_Packet &packet) override;
+	void		load						(IReader &packet) override;
 };

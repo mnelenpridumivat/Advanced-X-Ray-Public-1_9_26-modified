@@ -156,78 +156,78 @@ public:
 
 public:
 										CAI_Stalker					();
-	virtual								~CAI_Stalker				();
+	~CAI_Stalker				() override;
 
 public:
-	virtual	CCharacterPhysicsSupport*	character_physics_support	()						{return m_pPhysics_support;}
-	virtual	const CCharacterPhysicsSupport*	character_physics_support() const 			{return m_pPhysics_support;}
-	virtual CPHDestroyable*				ph_destroyable				()						;
-	virtual CAttachmentOwner*			cast_attachment_owner		()						{return this;}
-	virtual CInventoryOwner*			cast_inventory_owner		()						{return this;}
-	virtual CEntityAlive*				cast_entity_alive			()						{return this;}
-	virtual CEntity*					cast_entity					()						{return this;}
-	virtual CGameObject*				cast_game_object			()						{return this;}
-	virtual CPhysicsShellHolder*		cast_physics_shell_holder	()						{return this;}
-	virtual CParticlesPlayer*			cast_particles_player		()						{return this;}
-	virtual	Feel::Sound*				dcast_FeelSound				()						{return this;}
-	virtual CAI_Stalker*				cast_stalker				()						{return this;}
-	virtual CCustomMonster*				cast_custom_monster			()						{return this;}
-	virtual CScriptEntity*				cast_script_entity			()						{return this;}
+	CCharacterPhysicsSupport*	character_physics_support	() override {return m_pPhysics_support;}
+	const CCharacterPhysicsSupport*	character_physics_support() const override {return m_pPhysics_support;}
+	CPHDestroyable*				ph_destroyable				() override;
+	CAttachmentOwner*			cast_attachment_owner		() override {return this;}
+	CInventoryOwner*			cast_inventory_owner		() override {return this;}
+	CEntityAlive*				cast_entity_alive			() override {return this;}
+	CEntity*					cast_entity					() override {return this;}
+	CGameObject*				cast_game_object			() override {return this;}
+	CPhysicsShellHolder*		cast_physics_shell_holder	() override {return this;}
+	CParticlesPlayer*			cast_particles_player		() override {return this;}
+	Feel::Sound*				dcast_FeelSound				() override {return this;}
+	CAI_Stalker*				cast_stalker				() override {return this;}
+	CCustomMonster*				cast_custom_monster			() override {return this;}
+	CScriptEntity*				cast_script_entity			() override {return this;}
 
 public:
 			void						init								();
-	virtual void						Load								(LPCSTR	section );				
-	virtual	void						reinit								();
-	virtual void						reload								(LPCSTR	section );				
+	void						Load								(LPCSTR	section ) override;
+	void						reinit								() override;
+	void						reload								(LPCSTR	section ) override;				
 	virtual void						LoadSounds							(LPCSTR section );
-	
-	virtual BOOL						net_Spawn							(CSE_Abstract* DC);
-	virtual void						net_Export							(NET_Packet& P);
-	virtual void						net_Import							(NET_Packet& P);
-	virtual void						net_Destroy							();
-	virtual void						net_Save							(NET_Packet& P);
-	virtual	BOOL						net_SaveRelevant					();
-	virtual void						net_Relcase							(CObject*	 O);
+
+	BOOL						net_Spawn							(CSE_Abstract* DC) override;
+	void						net_Export							(NET_Packet& P) override;
+	void						net_Import							(NET_Packet& P) override;
+	void						net_Destroy							() override;
+	void						net_Save							(NET_Packet& P) override;
+	BOOL						net_SaveRelevant					() override;
+	void						net_Relcase							(CObject*	 O) override;
 
 	//save/load server serialization
-	virtual void						save								(NET_Packet &output_packet);
-	virtual void						load								(IReader &input_packet);
+	void						save								(NET_Packet &output_packet) override;
+	void						load								(IReader &input_packet) override;
 
-	virtual void						UpdateCL							();
-	virtual void						shedule_Update						(u32 dt);
-	virtual void						Think								();
-	virtual void						SelectAnimation						(const Fvector& _view, const Fvector& _move, float speed );
-	virtual BOOL						UsedAI_Locations					();
+	void						UpdateCL							() override;
+	void						shedule_Update						(u32 dt) override;
+	void						Think								() override;
+	void						SelectAnimation						(const Fvector& _view, const Fvector& _move, float speed ) override;
+	BOOL						UsedAI_Locations					() override;
 
-	virtual void						g_WeaponBones						(int &L, int &R1, int &R2);
-	virtual void						g_fireParams						(CHudItem* pHudItem, Fvector& P, Fvector& D) override;
-	virtual void						HitSignal							(float P,	Fvector& vLocalDir, CObject* who, s16 element);
-	virtual void						Die									(CObject* who);
+	void						g_WeaponBones						(int &L, int &R1, int &R2) override;
+	void						g_fireParams						(CHudItem* pHudItem, Fvector& P, Fvector& D) override;
+	void						HitSignal							(float P,	Fvector& vLocalDir, CObject* who, s16 element) override;
+	void						Die									(CObject* who) override;
 
-	virtual void						OnEvent								(NET_Packet& P, u16 type);
-	virtual void						feel_touch_new						(CObject* O);
-	virtual void						feel_touch_delete					(CObject* O);
+	void						OnEvent								(NET_Packet& P, u16 type) override;
+	void						feel_touch_new						(CObject* O) override;
+	void						feel_touch_delete					(CObject* O) override;
 			void						on_ownership_reject					( CObject*O, bool just_before_destroy );
-	virtual void						renderable_Render					();
-	virtual void						Exec_Look							(float dt);
-	virtual	void						Hit									(SHit* pHDS);
-	virtual	void						PHHit								(SHit &H);
-	virtual BOOL						feel_vision_isRelevant				(CObject* who);
-	virtual float						Radius								() const;
+	void						renderable_Render					() override;
+	void						Exec_Look							(float dt) override;
+	void						Hit									(SHit* pHDS) override;
+	void						PHHit								(SHit &H) override;
+	BOOL						feel_vision_isRelevant				(CObject* who) override;
+	float						Radius								() const override;
 #ifdef DEBUG
-	virtual void						OnHUDDraw							(CCustomHUD* hud);
-	virtual void						OnRender							();
+	void						OnHUDDraw							(CCustomHUD* hud) override;
+	void						OnRender							() override;
 			void						debug_text							();
 			bool						m_dbg_hud_draw						;
 #endif
 
-	virtual bool						useful								(const CItemManager *manager, const CGameObject *object) const;
-	virtual	float						evaluate							(const CItemManager *manager, const CGameObject *object) const;
-	virtual bool						useful								(const CEnemyManager *manager, const CEntityAlive *object) const;
+	bool						useful								(const CItemManager *manager, const CGameObject *object) const override;
+	float						evaluate							(const CItemManager *manager, const CGameObject *object) const override;
+	bool						useful								(const CEnemyManager *manager, const CEntityAlive *object) const override;
 	
 	// PDA && Dialogs
 //	virtual void						ReceivePdaMessage					(u16 who, EPdaMsg msg, shared_str info_id);
-	virtual void						UpdateAvailableDialogs				(CPhraseDialogManager* partner);
+	void						UpdateAvailableDialogs				(CPhraseDialogManager* partner) override;
 
 	// scripts
 	virtual CWeapon						*GetCurrentWeapon		() const;
@@ -235,34 +235,34 @@ public:
 //	virtual CInventoryItem				*GetCurrentEquipment	() const; <- moved to InventoryOwner::GetCurrentOutfit
 	virtual CInventoryItem				*GetMedikit				() const;
 	virtual CInventoryItem				*GetFood				() const;
-	virtual	bool						bfAssignMovement		(CScriptEntityAction			*tpEntityAction);
-	virtual	bool						bfAssignWatch			(CScriptEntityAction			*tpEntityAction);
-	virtual	void						ResetScriptData			(void					*P = 0);
-	virtual	bool						bfAssignObject			(CScriptEntityAction			*tpEntityAction);
-	virtual	bool						bfAssignAnimation		(CScriptEntityAction			*tpEntityAction);
+	bool						bfAssignMovement		(CScriptEntityAction			*tpEntityAction) override;
+	bool						bfAssignWatch			(CScriptEntityAction			*tpEntityAction) override;
+	void						ResetScriptData			(void					*P = 0) override;
+	bool						bfAssignObject			(CScriptEntityAction			*tpEntityAction) override;
+	bool						bfAssignAnimation		(CScriptEntityAction			*tpEntityAction) override;
 	
 	// physics
-	virtual u16							PHGetSyncItemsNumber	()			{return inherited ::PHGetSyncItemsNumber();}
-	virtual CPHSynchronize*				PHGetSyncItem			(u16 item)	{return inherited ::PHGetSyncItem(item);}
-	virtual void						PHUnFreeze				()			{return inherited ::PHUnFreeze();}
-	virtual void						PHFreeze				()			{return inherited ::PHFreeze();}
+	u16							PHGetSyncItemsNumber	() override {return inherited ::PHGetSyncItemsNumber();}
+	CPHSynchronize*				PHGetSyncItem			(u16 item) override {return inherited ::PHGetSyncItem(item);}
+	void						PHUnFreeze				() override {return inherited ::PHUnFreeze();}
+	void						PHFreeze				() override {return inherited ::PHFreeze();}
 
 	// miscellanious functions
 			void						DropItemSendMessage		(CObject *O);
 			bool						bfCheckForNodeVisibility(u32 dwNodeID, bool bIfRyPick = false);
-	virtual	ALife::ERelationType 		tfGetRelationType		(const CEntityAlive *tpEntityAlive) const;
-	virtual const SRotation				Orientation				() const;
-	virtual	const MonsterSpace::SBoneRotation &head_orientation	() const;
+	ALife::ERelationType 		tfGetRelationType		(const CEntityAlive *tpEntityAlive) const override;
+	const SRotation				Orientation				() const override;
+	const MonsterSpace::SBoneRotation &head_orientation	() const override;
 
 	//InventoryOwner stuff
-	virtual bool						CanPutInSlot			(PIItem item, u32 slot)		{return(slot!=OUTFIT_SLOT)&&(slot!=PDA_SLOT);};
+	bool						CanPutInSlot			(PIItem item, u32 slot) override {return(slot!=OUTFIT_SLOT)&&(slot!=PDA_SLOT);};
 
 	//////////////////////////////////////////////////////////////////////////
 	// action/evaluators support functions
 	//////////////////////////////////////////////////////////////////////////
 public:
-	virtual void						OnItemTake				(CInventoryItem *inventory_item);
-	virtual void						OnItemDrop				(CInventoryItem *inventory_item, bool just_before_destroy);
+	void						OnItemTake				(CInventoryItem *inventory_item) override;
+	void						OnItemDrop				(CInventoryItem *inventory_item, bool just_before_destroy) override;
 			bool						item_to_kill			();
 			bool						item_can_kill			();
 			bool						remember_item_to_kill	();
@@ -272,12 +272,12 @@ public:
 			void						update_best_item_info	();
 			void						update_best_item_info_impl();
 			void						ResetBoneProtections	(pcstr imm_sect, pcstr bone_sect);
-	virtual float						GetWeaponAccuracy		() const;
-	virtual bool						unlimited_ammo			();
-	virtual	void						spawn_supplies			();
+	float						GetWeaponAccuracy		() const override;
+	bool						unlimited_ammo			() override;
+	void						spawn_supplies			() override;
 	IC		CAgentManager				&agent_manager			() const;
-	
-	virtual bool						human_being				() const
+
+	bool						human_being				() const override
 	{
 		return							(true);
 	}
@@ -303,10 +303,10 @@ public:
 			float						pick_distance			();
 	IC		float						start_pick_distance		() const;
 			bool						fire_make_sense			();
-			
-	virtual LPCSTR						Name					() const;
-	virtual BOOL						feel_touch_contact		(CObject* O);
-	virtual BOOL						feel_touch_on_contact	(CObject* O);
+
+	LPCSTR						Name					() const override;
+	BOOL						feel_touch_contact		(CObject* O) override;
+	BOOL						feel_touch_on_contact	(CObject* O) override;
 
 	//флаги, какие действия совершал актер по отношению к сталкеру
 	//(помог, атаковал и т.д.)
@@ -370,7 +370,7 @@ protected:
 			void						update_conflicted				(CInventoryItem *item, const CWeapon *new_weapon);
 			void						remove_personal_only_ammo		(const CInventoryItem *item);
 			void						on_after_take					(const CGameObject *object);
-	virtual bool						AllowItemToTrade 				(CInventoryItem const * item, const SInvItemPlace& place) const;
+	bool						AllowItemToTrade 				(CInventoryItem const * item, const SInvItemPlace& place) const override;
 public:
 	IC		CStalkerAnimationManager	&animation						() const;
 	IC		CStalkerPlanner				&brain							() const;
@@ -380,19 +380,19 @@ private:
 	CStalkerSoundDataVisitor			*m_sound_user_data_visitor;
 
 protected:
-	virtual CSound_UserDataVisitor		*create_sound_visitor			();
-	virtual CMemoryManager				*create_memory_manager			();
-	virtual CMovementManager			*create_movement_manager		();
+	CSound_UserDataVisitor		*create_sound_visitor			() override;
+	CMemoryManager				*create_memory_manager			() override;
+	CMovementManager			*create_movement_manager		() override;
 
 public:
 	IC		stalker_movement_manager_smart_cover		&movement						() const;
-	virtual DLL_Pure					*_construct						();
+	DLL_Pure					*_construct						() override;
 
 private:
 	IC		bool						frame_check						(u32 &frame);
-	virtual bool						natural_weapon					() const {return false;}
-	virtual bool						natural_detector				() const {return false;}
-	virtual bool						use_center_to_aim				() const;
+	bool						natural_weapon					() const override {return false;}
+	bool						natural_detector				() const override {return false;}
+	bool						use_center_to_aim				() const override;
 			void						process_enemies					();
 
 private:
@@ -400,7 +400,7 @@ private:
 
 public:
 	IC		bool						group_behaviour					() const;
-	virtual	void						update_range_fov				(float &new_range, float &new_fov, float start_range, float start_fov);
+	void						update_range_fov				(float &new_range, float &new_fov, float start_range, float start_fov) override;
 			void __stdcall				update_object_handler			();
 			bool						zoom_state						() const;
 			void						react_on_grenades				();
@@ -410,17 +410,17 @@ private:
 	s32									m_weapon_shot_random_seed;
 
 public:
-	virtual	void						on_weapon_shot_start			(CWeapon *weapon);
-	virtual	void						on_weapon_shot_update			();
-	virtual	void						on_weapon_shot_stop				();
-	virtual	void						on_weapon_shot_remove			(CWeapon *weapon);
-	virtual	void						on_weapon_hide					(CWeapon *weapon);
+	void						on_weapon_shot_start			(CWeapon *weapon) override;
+	void						on_weapon_shot_update			() override;
+	void						on_weapon_shot_stop				() override;
+	void						on_weapon_shot_remove			(CWeapon *weapon) override;
+	void						on_weapon_hide					(CWeapon *weapon) override;
 	IC		CWeaponShotEffector			&weapon_shot_effector			() const;
 	IC		Fvector						weapon_shot_effector_direction	(const Fvector &current) const;
-	virtual void						UpdateCamera					();
-	virtual	bool						can_attach						(const CInventoryItem *inventory_item) const;
+	void						UpdateCamera					() override;
+	bool						can_attach						(const CInventoryItem *inventory_item) const override;
 	// because we don't want to use this feature for stalkers
-	virtual	bool						use_simplified_visual			() const {return false; } //(already_dead());};
+	bool						use_simplified_visual			() const override {return false; } //(already_dead());};
 #ifdef DEBUG
 			void						debug_planner					(const script_planner *planner);
 #endif
@@ -657,8 +657,8 @@ public:
 			void						unsubscribe_on_best_cover_changed	(const on_best_cover_changed_delegate &delegate);
 
 public:
-	virtual void						on_enemy_change						(const CEntityAlive *enemy);
-	virtual	void						on_restrictions_change				();
+	void						on_enemy_change						(const CEntityAlive *enemy) override;
+	void						on_restrictions_change				() override;
 			void						on_cover_blocked					(const CCoverPoint *cover);
 			void						on_danger_location_add				(const CDangerLocation &location);
 			void						on_danger_location_remove			(const CDangerLocation &location);
@@ -715,9 +715,9 @@ private:
 			void						compute_throw_miss					( u32 const vertex_id );
 
 public:
-	virtual	bool						use_default_throw_force				();
-	virtual	float						missile_throw_force					(); 
-	virtual	bool						use_throw_randomness				();
+	bool						use_default_throw_force				() override;
+	float						missile_throw_force					() override;
+	bool						use_throw_randomness				() override;
 			void						throw_target						(const Fvector &position, CObject *throw_ignore_object );
 			void						throw_target						(const Fvector &position, u32 const vertex_id, CObject *throw_ignore_object );
 	IC		const Fvector				&throw_target						() const;
@@ -735,10 +735,10 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// Critical Wounds
 	//////////////////////////////////////////////////////////////////////////	
-private:	
-	virtual void						load_critical_wound_bones					();
-	virtual bool						critical_wound_external_conditions_suitable	();
-	virtual void						critical_wounded_state_start				();
+private:
+	void						load_critical_wound_bones					() override;
+	bool						critical_wound_external_conditions_suitable	() override;
+	void						critical_wounded_state_start				() override;
 
 			void						fill_bones_body_parts						(LPCSTR bone_id, const ECriticalWoundType &wound_type);
 public:
@@ -763,12 +763,12 @@ private:
 	bool	m_registered_in_combat_on_migration;
 
 public:
-	virtual	void						on_before_change_team						();
-	virtual	void						on_after_change_team						();
+	void						on_before_change_team						() override;
+	void						on_after_change_team						() override;
 
 public:
-	virtual	void						create_anim_mov_ctrl						( CBlend *b, Fmatrix *start_pose, bool local_animation );
-	virtual	void						destroy_anim_mov_ctrl						();
+	void						create_anim_mov_ctrl						( CBlend *b, Fmatrix *start_pose, bool local_animation ) override;
+	void						destroy_anim_mov_ctrl						() override;
 
 private:
 	bool	m_can_select_items;
@@ -781,7 +781,7 @@ public:
 			bool						too_far_to_kill_enemy						(const Fvector &position);
 
 public:
-	virtual	float						shedule_Scale								();
+	float						shedule_Scale								() override;
 
 private:
 	bool	m_sniper_update_rate;
@@ -813,7 +813,7 @@ public:
 	typedef fastdelegate::FastDelegate<void (Fmatrix& )>							EyeMatrixCallback;
 
 private:
-	virtual BOOL						AlwaysTheCrow								();
+	BOOL						AlwaysTheCrow								() override;
 
 public:
 	IC		void						take_items_enabled							(bool value);

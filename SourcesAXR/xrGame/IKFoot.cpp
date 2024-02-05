@@ -78,7 +78,7 @@ public SEnumVerticesCallback
 	const Fvector &ax;
 	envc( const Fmatrix &_i_bind_transform, const Fvector &_ax,  Fvector &_pos ): 
 	SEnumVerticesCallback(), i_bind_transform( _i_bind_transform ), ax( _ax ), pos( _pos ) { start_pos.set( 0, 0, 0 ); }
-	void operator () (const Fvector& p)
+	void operator () (const Fvector& p) override
 	{
 		Fvector lpos;
 		i_bind_transform.transform_tiny(lpos, p );

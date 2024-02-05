@@ -10,8 +10,8 @@ class CUIMoneyIndicator: public CUIWindow
 {
 public:
 						CUIMoneyIndicator		();
-	virtual				~CUIMoneyIndicator		();
-	virtual void 		Update					();
+						~CUIMoneyIndicator		() override;
+						void 		Update					() override;
 			void 		InitFromXML				(CUIXml& xml_doc);
 			void 		SetMoneyAmount			(LPCSTR money);
 			void 		SetMoneyChange			(LPCSTR money);

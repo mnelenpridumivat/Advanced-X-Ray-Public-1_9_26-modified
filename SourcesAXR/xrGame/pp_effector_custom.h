@@ -11,7 +11,7 @@ public:
 	EEffectorPPType	get_type			(){return m_type;}
 
 protected:
-	virtual	BOOL	Process				(SPPInfo& pp);
+	BOOL	Process				(SPPInfo& pp) override;
 
 	// update factor; if return FALSE - destroy
 	virtual BOOL	update				(){return TRUE;}
@@ -72,7 +72,7 @@ class CPPEffectorControlled : public CPPEffectorCustom {
 	CPPEffectorController	*m_controller;
 public:
 					CPPEffectorControlled	(CPPEffectorController *controller, const SPPInfo &ppi, bool one_instance = false, bool destroy_from_engine = true);
-	virtual BOOL	update					();
+	BOOL	update					() override;
 	IC		void	set_factor				(float value){m_factor = value;}
 };
 

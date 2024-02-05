@@ -40,7 +40,7 @@ class CUILightAnimColorConrollerImpl :public CUILightAnimColorConroller
 {
 	color_animation			m_lanim_clr;
 public:
-	void	SetColorAnimation(LPCSTR lanim, u8 const& flags, float delay=0.0f)
+	void	SetColorAnimation(LPCSTR lanim, u8 const& flags, float delay=0.0f) override
 	{
 		if(lanim && lanim[0]!=0)
 			m_lanim_clr.m_lanim	= LALib.FindItem(lanim);
@@ -54,11 +54,13 @@ public:
 		m_lanim_clr.m_lanimFlags.assign		(flags);
 		R_ASSERT( (m_lanim_clr.m_lanim==NULL) || m_lanim_clr.m_lanimFlags.test(LA_TEXTCOLOR|LA_TEXTURECOLOR) );
 	}
-	virtual void	ResetColorAnimation	()
+
+	void	ResetColorAnimation	() override
 	{
 		m_lanim_clr.m_lanim_start_time = Device.dwTimeContinual/1000.0f + m_lanim_clr.m_lanim_delay_time/1000.0f;
 	}
-	virtual bool IsColorAnimationPresent()
+
+	bool IsColorAnimationPresent() override
 	{
 		if(m_lanim_clr.m_lanim==NULL)	return false;
 
@@ -112,7 +114,7 @@ class CUIColorAnimConrollerContainer :	public CUIWindow,
 {
 	typedef CUIWindow		inherited;
 public:
-	virtual void			Update							();
-	virtual void			ColorAnimationSetTextureColor	(u32 color, bool only_alpha);
-	virtual void			ColorAnimationSetTextColor		(u32 color, bool only_alpha);
+	void			Update							() override;
+	void			ColorAnimationSetTextureColor	(u32 color, bool only_alpha) override;
+	void			ColorAnimationSetTextColor		(u32 color, bool only_alpha) override;
 };

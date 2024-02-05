@@ -6,12 +6,12 @@ class CUIStatix : public CUIStatic
 {
 public:
 					CUIStatix			();
-	virtual			~CUIStatix			();
+					~CUIStatix			() override;
 
-	virtual void 	Update				();
-	virtual void 	OnFocusReceive		();
-	virtual void 	OnFocusLost			();
-	virtual bool 	OnMouseDown			(int mouse_btn);
+					void 	Update				() override;
+					void 	OnFocusReceive		() override;
+					void 	OnFocusLost			() override;
+					bool 	OnMouseDown			(int mouse_btn) override;
 			void 	SetSelectedState	(bool state);
 			bool 	GetSelectedState	();
 

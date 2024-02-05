@@ -24,7 +24,7 @@ class stats_submitter :
 {
 public:
 							stats_submitter			(CGameSpy_Full* fullgs);
-							~stats_submitter		();
+							~stats_submitter		() override;
 
 			void			reward_with_award		(enum_awards_t award_id,
 													 u32 const count,
@@ -40,10 +40,10 @@ public:
 													 gamespy_gp::profile const * profile,
 													 store_operation_cb opcb);
 
-	virtual void			shedule_Update			(u32 dt);
-	virtual	shared_str		shedule_Name			() const	{ return shared_str("gamespy_atlas_updator"); };
-	virtual bool			shedule_Needed			()			{ return true; };
-	virtual float			shedule_Scale			()			{ return 1.0f; };
+							void			shedule_Update			(u32 dt) override;
+							shared_str		shedule_Name			() const override { return shared_str("gamespy_atlas_updator"); };
+							bool			shedule_Needed			() override { return true; };
+							float			shedule_Scale			() override { return 1.0f; };
 	
 	static u8 const p_number[crypto::xr_dsa::public_key_length];
 	static u8 const q_number[crypto::xr_dsa::private_key_length];

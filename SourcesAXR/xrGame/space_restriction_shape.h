@@ -32,12 +32,12 @@ protected:
 
 public:
 	IC						CSpaceRestrictionShape	(CSpaceRestrictor *space_restrictor, bool default_restrictor);
-	IC	virtual void		initialize				();
-		virtual bool		inside					(const Fsphere &sphere);
-		virtual shared_str	name					() const;
-	IC	virtual bool		shape					() const;
-	IC	virtual bool		default_restrictor		() const;
-		virtual	Fsphere		sphere					() const;
+	IC void		initialize				() override;
+	bool		inside					(const Fsphere &sphere) override;
+	shared_str	name					() const override;
+	IC bool		shape					() const override;
+	IC bool		default_restrictor		() const override;
+	Fsphere		sphere					() const override;
 #ifdef DEBUG
 				void		test_correctness		();
 #endif

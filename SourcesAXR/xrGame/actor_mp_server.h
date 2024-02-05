@@ -17,14 +17,14 @@ private:
 
 public:
 							CSE_ActorMP		(LPCSTR		section);
-	virtual void 			UPDATE_Read		(NET_Packet &packet);
-	virtual void 			UPDATE_Write	(NET_Packet &packet);
-	virtual void 			STATE_Read		(NET_Packet &packet, u16 size);
-	virtual void 			STATE_Write		(NET_Packet &packet);
-	virtual BOOL			Net_Relevant	();
+	void 			UPDATE_Read		(NET_Packet &packet) override;
+	void 			UPDATE_Write	(NET_Packet &packet) override;
+	void 			STATE_Read		(NET_Packet &packet, u16 size) override;
+	void 			STATE_Write		(NET_Packet &packet) override;
+	BOOL			Net_Relevant	() override;
 
 #ifdef XRGAME_EXPORTS
-	virtual	void			on_death				(CSE_Abstract *killer);	
+	void			on_death				(CSE_Abstract *killer) override;	
 #endif
 };
 

@@ -33,7 +33,7 @@ protected:
 
 public:
 							CScriptThread		(LPCSTR caNamespaceName, bool do_string = false, bool reload = false);
-	virtual					~CScriptThread		();
+	~CScriptThread		() override;
 			bool			update				();
 	IC		bool			active				() const;
 	IC		shared_str		script_name			() const;

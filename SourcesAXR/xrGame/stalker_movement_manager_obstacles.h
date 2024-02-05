@@ -25,10 +25,10 @@ private:
 
 public:
 						stalker_movement_manager_obstacles	(CAI_Stalker *object);
-	virtual				~stalker_movement_manager_obstacles	();
-	virtual	void				move_along_path				(CPHMovementControl *movement_control, Fvector &dest_position, float time_delta);
-	virtual	void				remove_links				(CObject *object);
-	virtual	void				Load						( LPCSTR section );
+	~stalker_movement_manager_obstacles	() override;
+	void				move_along_path				(CPHMovementControl *movement_control, Fvector &dest_position, float time_delta) override;
+	void				remove_links				(CObject *object) override;
+	void				Load						( LPCSTR section ) override;
 			float				is_going_through			( Fmatrix const& matrix, Fvector const& vector, float max_distance ) const;
 			void				on_death					( );
 
@@ -39,7 +39,7 @@ private:
 	typedef obstacles_query::AREA							AREA;
 
 private:
-	virtual	CRestrictedObject	*create_restricted_object	();
+	CRestrictedObject	*create_restricted_object	() override;
 
 public:
 	IC	CRestrictedObjectObstacle	&restricted_object		() const;
@@ -66,8 +66,8 @@ private:
 			bool				simulate_path_navigation	();
 
 public:
-	virtual	void				build_level_path			();
-	virtual	const float			&prediction_speed			() const;
+	void				build_level_path			() override;
+	const float			&prediction_speed			() const override;
 #ifdef DEBUG
 	inline	doors::actor const&	get_doors_actor				() const { return *m_doors_actor; }
 #endif // #ifdef DEBUG

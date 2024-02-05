@@ -9,22 +9,22 @@ private:
 
 public:
 					CUICDkey		();
-	virtual	void	SetText			(LPCSTR str) {}
+	void	SetText			(LPCSTR str) override {}
 	virtual	LPCSTR	GetText			();
 
 	// CUIOptionsItem
-	virtual void	SetCurrentOptValue	();	// opt->current
-	virtual void	SaveBackUpOptValue	();	// current->backup
-	virtual void	SaveOptValue		();	// current->opt
-	virtual void	UndoOptValue		();	// backup->current
-	virtual bool	IsChangedOptValue	() const;	// backup!=current
+	void	SetCurrentOptValue	() override;	// opt->current
+	void	SaveBackUpOptValue	() override;	// current->backup
+	void	SaveOptValue		() override;	// current->opt
+	void	UndoOptValue		() override;	// backup->current
+	bool	IsChangedOptValue	() const override;	// backup!=current
 	
 			void	CreateCDKeyEntry();			
 			void	assign_callbacks();
 
-	virtual void	Show			(bool status);
-	virtual void	Draw			();
-	virtual void	OnFocusLost		();
+	void	Show			(bool status) override;
+	void	Draw			() override;
+	void	OnFocusLost		() override;
 
 private:
 	void xr_stdcall	paste_from_clipboard();
@@ -41,7 +41,7 @@ private:
 
 public:
 					CUIMPPlayerName	() {};
-	virtual			~CUIMPPlayerName() {};
+	~CUIMPPlayerName() override {};
 
 //	virtual	void	SetText			(LPCSTR str) {}
 
@@ -49,7 +49,7 @@ public:
 //	virtual void	SaveValue();
 //	virtual bool	IsChanged();
 
-	virtual void	OnFocusLost		();
+	void	OnFocusLost		() override;
 
 }; // class CUIMPPlayerName
 

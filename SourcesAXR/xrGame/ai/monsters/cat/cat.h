@@ -6,20 +6,20 @@ class CCat : public CBaseMonster{
 	typedef		CBaseMonster	inherited;
 public:
 					CCat				();
-	virtual			~CCat				();	
+	~CCat				() override;
 
-	virtual void	Load				(LPCSTR section);
-	virtual void	reinit				();
+	void	Load				(LPCSTR section) override;
+	void	reinit				() override;
 
-	virtual	void	UpdateCL			();
+	void	UpdateCL			() override;
 
-	virtual void	CheckSpecParams		(u32 spec_params);
+	void	CheckSpecParams		(u32 spec_params) override;
 
 			void	try_to_jump			();
 
-	virtual	void	HitEntityInJump		(const CEntity *pEntity);
+	void	HitEntityInJump		(const CEntity *pEntity) override;
 
-	virtual	char*	get_monster_class_name () { return "cat"; }
+	char*	get_monster_class_name () override { return "cat"; }
 
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION

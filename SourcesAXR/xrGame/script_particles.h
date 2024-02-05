@@ -18,18 +18,18 @@ class CScriptParticles;
 class CScriptParticlesCustom : public CParticlesObject
 {
 	CObjectAnimator* m_animator;
-	virtual ~CScriptParticlesCustom();
+	~CScriptParticlesCustom() override;
 	CScriptParticles* m_owner;
 public:
 	CScriptParticlesCustom(CScriptParticles* owner, LPCSTR caParticlesName);
-	virtual void shedule_Update(u32 dt);
+	void shedule_Update(u32 dt) override;
 
 	void LoadPath(LPCSTR caPathName);
 	void StartPath(bool looped);
 	void StopPath();
 	void PausePath(bool val);
-	virtual void PSI_internal_delete();
-	virtual void PSI_destroy();
+	void PSI_internal_delete() override;
+	void PSI_destroy() override;
 	void remove_owner();
 };
 

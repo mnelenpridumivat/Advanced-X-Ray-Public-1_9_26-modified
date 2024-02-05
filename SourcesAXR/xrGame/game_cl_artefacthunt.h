@@ -12,18 +12,18 @@ class game_cl_ArtefactHunt :public game_cl_TeamDeathmatch
 	typedef game_cl_TeamDeathmatch inherited;
 
 protected:
-	virtual const shared_str			GetBaseCostSect			() {return "artefacthunt_base_cost";}
-	virtual			void				TranslateGameMessage	(u32 msg, NET_Packet& P);
-	virtual			void				shedule_Update			(u32 dt);
+	const shared_str			GetBaseCostSect			() override {return "artefacthunt_base_cost";}
+	void				TranslateGameMessage	(u32 msg, NET_Packet& P) override;
+	void				shedule_Update			(u32 dt) override;
 
-	virtual			BOOL				CanCallBuyMenu			();
-	virtual			bool				CanBeReady				();
-	virtual			void				UpdateMapLocations		();
+	BOOL				CanCallBuyMenu			() override;
+	bool				CanBeReady				() override;
+	void				UpdateMapLocations		() override;
 
-	virtual			bool				NeedToSendReady_Spectator		(int key, game_PlayerState* ps);
-	virtual			void				LoadSndMessages				();
+	bool				NeedToSendReady_Spectator		(int key, game_PlayerState* ps) override;
+	void				LoadSndMessages				() override;
 
-	virtual			void				OnBuySpawnMenu_Ok		();	
+	void				OnBuySpawnMenu_Ok		() override;	
 public:
 	u8									artefactsNum;//ah
 	u16									artefactBearerID;//ah,ZoneMap
@@ -39,20 +39,20 @@ public:
 
 public :
 										game_cl_ArtefactHunt	();
-	virtual								~game_cl_ArtefactHunt	();
-	virtual			void				Init					();
-	virtual			CUIGameCustom*		createGameUI			();
-	virtual			void				SetGameUI				(CUIGameCustom*);
-	virtual			void				net_import_state		(NET_Packet& P);
-	virtual			void				GetMapEntities(xr_vector<SZoneMapEntityData>& dst);
-	virtual			char*				getTeamSection			(int Team);
-	virtual			bool				PlayerCanSprint			(CActor* pActor);
+	~game_cl_ArtefactHunt	() override;
+	void				Init					() override;
+	CUIGameCustom*		createGameUI			() override;
+	void				SetGameUI				(CUIGameCustom*) override;
+	void				net_import_state		(NET_Packet& P) override;
+	void				GetMapEntities(xr_vector<SZoneMapEntityData>& dst) override;
+	char*				getTeamSection			(int Team) override;
+	bool				PlayerCanSprint			(CActor* pActor) override;
 
-	virtual	void						SetScore				();
-	virtual			void				OnSellItemsFromRuck		();
+	void						SetScore				() override;
+	void				OnSellItemsFromRuck		() override;
 
-	virtual			void				OnSpawn					(CObject* pObj);
-	virtual			void				OnDestroy				(CObject* pObj);	
-	virtual			void				SendPickUpEvent			(u16 ID_who, u16 ID_what);
-	virtual		void					OnConnected				();
+	void				OnSpawn					(CObject* pObj) override;
+	void				OnDestroy				(CObject* pObj) override;
+	void				SendPickUpEvent			(u16 ID_who, u16 ID_what) override;
+	void					OnConnected				() override;
 };

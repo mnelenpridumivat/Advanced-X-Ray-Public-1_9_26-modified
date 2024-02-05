@@ -12,7 +12,7 @@ private:
 	typedef CWeaponMagazined inherited;
 public:
 					CWeaponFN2000	();
-	virtual			~CWeaponFN2000	();
+	~CWeaponFN2000	() override;
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CWeaponFN2000)

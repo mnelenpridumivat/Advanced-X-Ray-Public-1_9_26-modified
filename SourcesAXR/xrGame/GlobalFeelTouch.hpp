@@ -8,9 +8,9 @@ class GlobalFeelTouch : public Feel::Touch
 {
 public:
 							GlobalFeelTouch();
-	virtual					~GlobalFeelTouch();
+							~GlobalFeelTouch() override;
 
-	virtual void			feel_touch_update			(Fvector& P, float	R);
+							void			feel_touch_update			(Fvector& P, float	R) override;
 	//virtual void			feel_touch_deny				(CObject* O, DWORD	T); - implemented in inherited class
 
 			bool			is_object_denied			(CObject const * O);

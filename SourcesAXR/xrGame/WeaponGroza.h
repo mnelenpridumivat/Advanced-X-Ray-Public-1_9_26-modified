@@ -9,7 +9,7 @@ class CWeaponGroza :
 	typedef CWeaponMagazinedWGrenade inherited;
 public:
 				CWeaponGroza();
-	virtual		~CWeaponGroza();
+	~CWeaponGroza() override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

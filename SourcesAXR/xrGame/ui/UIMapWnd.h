@@ -113,13 +113,13 @@ protected:
 
 public:
 								CUIMapWnd				();
-	virtual						~CUIMapWnd				();
+	~CUIMapWnd				() override;
 
 	virtual void				Init					(LPCSTR xml_name, LPCSTR start_from);
-	virtual void				Show					(bool status);
-	virtual void				Draw					();
-	virtual void				Reset					();
-	virtual void				Update					();
+	void				Show					(bool status) override;
+	void				Draw					() override;
+	void				Reset					() override;
+	void				Update					() override;
 			void				DrawHint				();
 
 		
@@ -138,11 +138,11 @@ public:
 			void				HideHint				(CUIWindow* parent);
 			void				HideCurHint				();
 			void				Hint					(const shared_str& text);
-	virtual bool				OnMouseAction					(float x, float y, EUIMessages mouse_action);
-	virtual bool				OnKeyboardAction				(int dik, EUIMessages keyboard_action);
-	virtual bool				OnKeyboardHold			(int dik);
+	bool				OnMouseAction					(float x, float y, EUIMessages mouse_action) override;
+	bool				OnKeyboardAction				(int dik, EUIMessages keyboard_action) override;
+	bool				OnKeyboardHold			(int dik) override;
 
-	virtual void				SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	void				SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 
 	void						SetTargetMap			(CUICustomMap* m, bool bZoomIn = false);
 	void						SetTargetMap			(CUICustomMap* m, const Fvector2& pos, bool bZoomIn = false);

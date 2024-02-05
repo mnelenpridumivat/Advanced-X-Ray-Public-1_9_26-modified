@@ -22,14 +22,14 @@ class CStateMonsterFindEnemyLook : public CState<_Object> {
 
 public:
 						CStateMonsterFindEnemyLook	(_Object *obj);
-	virtual				~CStateMonsterFindEnemyLook	();
+	~CStateMonsterFindEnemyLook	() override;
 
-	virtual	void		initialize					();	
-	virtual	void		reselect_state				();
-	virtual bool		check_completion			();
-	virtual void		remove_links				(CObject* object) { inherited::remove_links(object);}
+	void		initialize					() override;
+	void		reselect_state				() override;
+	bool		check_completion			() override;
+	void		remove_links				(CObject* object) override { inherited::remove_links(object);}
 
-	virtual void		setup_substates				();
+	void		setup_substates				() override;
 };
 
 #include "monster_state_find_enemy_look_inline.h"

@@ -26,7 +26,7 @@ public:
 	IC				CScriptObjectAction	(CScriptGameObject *tpLuaGameObject, MonsterSpace::EObjectAction tObjectActionType, u32 dwQueueSize = static_cast<u32>(-1));
 	IC				CScriptObjectAction	(LPCSTR caBoneName, MonsterSpace::EObjectAction tObjectActionType);
 	IC				CScriptObjectAction	(MonsterSpace::EObjectAction tObjectActionType);
-	virtual			~CScriptObjectAction();
+	~CScriptObjectAction() override;
 			void	SetObject			(CScriptGameObject *tpLuaGameObject);
 	IC		void	SetObject			(LPCSTR	caBoneName);
 	IC		void	SetObjectAction		(MonsterSpace::EObjectAction tObjectActionType);

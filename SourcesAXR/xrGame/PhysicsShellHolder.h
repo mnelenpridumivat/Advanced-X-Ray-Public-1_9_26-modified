@@ -37,7 +37,7 @@ public:
 
 
 			CPhysicsShellHolder							();
-	virtual	~CPhysicsShellHolder						();
+	~CPhysicsShellHolder						() override;
 
 	virtual bool		ActivationSpeedOverriden (Fvector& dest, bool clear_override) { return false; }
 
@@ -50,15 +50,16 @@ public:
 	{
 		return this;
 	}
-	virtual	const IObjectPhysicsCollision*physics_collision			()							;
-	virtual	const IPhysicsShell			*physics_shell				()const						;
-	virtual		  IPhysicsShell			*physics_shell				()							;
-	virtual const IPhysicsElement		*physics_character			()const						;
+
+	const IObjectPhysicsCollision*physics_collision			() override;
+	const IPhysicsShell			*physics_shell				()const override;
+	IPhysicsShell			*physics_shell				() override;
+	const IPhysicsElement		*physics_character			()const override;
 	virtual CPHDestroyable				*ph_destroyable				()							{return NULL;}
 	virtual ICollisionDamageReceiver	*PHCollisionDamageReceiver	()							{return NULL;}
 	virtual CPHSkeleton					*PHSkeleton					()							{return NULL;}
-	virtual CPhysicsShellHolder			*cast_physics_shell_holder	()							{return this;}
-	virtual CParticlesPlayer			*cast_particles_player		()							{return this;}
+	CPhysicsShellHolder			*cast_physics_shell_holder	() override {return this;}
+	CParticlesPlayer			*cast_particles_player		() override {return this;}
 	virtual IDamageSource				*cast_IDamageSource			()							{return NULL;}
 	virtual CPHSoundPlayer				*ph_sound_player			()  						{return NULL;}
 	virtual	CCharacterPhysicsSupport	*character_physics_support	()							{return NULL;}
@@ -66,7 +67,7 @@ public:
 	virtual	CIKLimbsController			*character_ik_controller	()							{return NULL;}
 	virtual ICollisionHitCallback		*get_collision_hit_callback ()							{return NULL;}
 	virtual void						set_collision_hit_callback	(ICollisionHitCallback *cc)	{;}
-	virtual void			_BCL			enable_notificate			()							{;}
+	void			_BCL			enable_notificate			() override {;}
 public:
 
 	virtual void			PHGetLinearVell		(Fvector& velocity);
@@ -77,7 +78,7 @@ public:
 			void			PHLoadState			(IReader &P);
 	virtual f32				GetMass				();
 	virtual	void			PHHit				(SHit &H);
-	virtual	void			Hit					(SHit* pHDS);
+	void			Hit					(SHit* pHDS) override;
 ///////////////////////////////////////////////////////////////////////
 	virtual u16				PHGetSyncItemsNumber();
 	virtual CPHSynchronize*	PHGetSyncItem		(u16 item);
@@ -90,56 +91,56 @@ public:
 	virtual void			setup_physic_shell		();
 	virtual void			deactivate_physics_shell ();
 
-	virtual void			net_Destroy			();
-	virtual BOOL			net_Spawn			(CSE_Abstract*	DC);
-	virtual void			save				(NET_Packet &output_packet);
-	virtual void			load				(IReader &input_packet);
+	void			net_Destroy			() override;
+	BOOL			net_Spawn			(CSE_Abstract*	DC) override;
+	void			save				(NET_Packet &output_packet) override;
+	void			load				(IReader &input_packet) override;
 			void			init				();
 
-	virtual void			OnChangeVisual		();
+	void			OnChangeVisual		() override;
 	//для наследования CParticlesPlayer
-	virtual void			UpdateCL			();
+	void			UpdateCL			() override;
 			void			correct_spawn_pos	();
 protected:
 	virtual	bool			has_shell_collision_place( const CPhysicsShellHolder* obj ) const;
 	virtual void			on_child_shell_activate	 ( CPhysicsShellHolder* obj );
 public:
-	virtual bool			register_schedule	() const;
+	bool			register_schedule	() const override;
 
 public:
-	virtual	void					_BCL					on_physics_disable					();
+	void					_BCL					on_physics_disable					() override;
 private://IPhysicsShellHolder
-	virtual	Fmatrix&				_BCL					ObjectXFORM							()						;
-	virtual	Fvector&				_BCL					ObjectPosition						()						;
-	virtual	LPCSTR					_BCL					ObjectName							()		const			;
-	virtual	LPCSTR					_BCL					ObjectNameVisual					()		const			;
-	virtual	LPCSTR					_BCL					ObjectNameSect						()		const			;
-	virtual	bool					_BCL					ObjectGetDestroy					()		const			;
-	virtual ICollisionHitCallback*	_BCL 					ObjectGetCollisionHitCallback		()						;
-	virtual	u16						_BCL					ObjectID							()		const			;
-	virtual	ICollisionForm*			_BCL					ObjectCollisionModel				()						;
+	Fmatrix&				_BCL					ObjectXFORM							() override;
+	Fvector&				_BCL					ObjectPosition						() override;
+	LPCSTR					_BCL					ObjectName							()		const override;
+	LPCSTR					_BCL					ObjectNameVisual					()		const override;
+	LPCSTR					_BCL					ObjectNameSect						()		const override;
+	bool					_BCL					ObjectGetDestroy					()		const override;
+	ICollisionHitCallback*	_BCL 					ObjectGetCollisionHitCallback		() override;
+	u16						_BCL					ObjectID							()		const override;
+	ICollisionForm*			_BCL					ObjectCollisionModel				() override;
 	//virtual	IRenderVisual*			_BCL					ObjectVisual						()						;
-	virtual	IKinematics*			_BCL					ObjectKinematics					()						;
-	virtual IDamageSource*			_BCL					ObjectCastIDamageSource				()						;
-	virtual	void					_BCL					ObjectProcessingDeactivate			()						;
-	virtual	void					_BCL					ObjectProcessingActivate			()						;				
-	virtual	void					_BCL					ObjectSpatialMove					()						;
-	virtual	CPhysicsShell*&			_BCL					ObjectPPhysicsShell					()						;
+	IKinematics*			_BCL					ObjectKinematics					() override;
+	IDamageSource*			_BCL					ObjectCastIDamageSource				() override;
+	void					_BCL					ObjectProcessingDeactivate			() override;
+	void					_BCL					ObjectProcessingActivate			() override;
+	void					_BCL					ObjectSpatialMove					() override;
+	CPhysicsShell*&			_BCL					ObjectPPhysicsShell					() override;
 //	virtual	void						enable_notificate					()						;
-	virtual bool					_BCL					has_parent_object					()						;
+	bool					_BCL					has_parent_object					() override;
 //	virtual	void						on_physics_disable					()						;
-	virtual	IPHCapture*				_BCL					PHCapture							()						;
-	virtual	bool					_BCL					IsInventoryItem						()						;
-	virtual	bool					_BCL					IsActor								()						;
-	virtual bool					_BCL					IsStalker							()						;
+	IPHCapture*				_BCL					PHCapture							() override;
+	bool					_BCL					IsInventoryItem						() override;
+	bool					_BCL					IsActor								() override;
+	bool					_BCL					IsStalker							() override;
 	//virtual	void						SetWeaponHideState					( u16 State, bool bSet )=0;
-	virtual	void					_BCL					HideAllWeapons						( bool v )				;//(SetWeaponHideState(INV_STATE_BLOCK_ALL,true))
-	virtual	void					_BCL					MovementCollisionEnable				( bool enable )			;
-	virtual CPHSoundPlayer*			_BCL					ObjectPhSoundPlayer					()  					{return ph_sound_player();}
-	virtual	ICollisionDamageReceiver* _BCL				ObjectPhCollisionDamageReceiver		()						;
-	virtual	void					_BCL					BonceDamagerCallback				(float &damage_factor)	;
+	void					_BCL					HideAllWeapons						( bool v ) override;//(SetWeaponHideState(INV_STATE_BLOCK_ALL,true))
+	void					_BCL					MovementCollisionEnable				( bool enable ) override;
+	CPHSoundPlayer*			_BCL					ObjectPhSoundPlayer					() override {return ph_sound_player();}
+	ICollisionDamageReceiver* _BCL				ObjectPhCollisionDamageReceiver		() override;
+	void					_BCL					BonceDamagerCallback				(float &damage_factor) override;
 #ifdef	DEBUG
-	virtual	std::string				_BCL					dump								(EDumpType type) const  ;
+	std::string				_BCL					dump								(EDumpType type) const override;
 #endif
 };
 

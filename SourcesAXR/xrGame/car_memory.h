@@ -29,10 +29,10 @@ private:
 public:
 					car_memory				(CCar *object);
 
-	virtual	void	reload					(LPCSTR section);
+	void	reload					(LPCSTR section) override;
 
-	virtual	BOOL	feel_vision_isRelevant	(CObject *object);
-	virtual	void	camera					(
+	BOOL	feel_vision_isRelevant	(CObject *object) override;
+	void	camera					(
 						Fvector &position,
 						Fvector &direction,
 						Fvector &normal,
@@ -40,7 +40,7 @@ public:
 						float &aspect_ratio,
 						float &near_plane,
 						float &far_plane
-					);
+					) override;
 			void	set_camera(
 						const Fvector &position,
 						const Fvector &direction,

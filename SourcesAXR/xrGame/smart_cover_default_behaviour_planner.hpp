@@ -29,16 +29,16 @@ private:
 
 public:
 							default_behaviour_planner	(animation_planner *object, LPCSTR action_name);
-							virtual ~default_behaviour_planner() {}
-		virtual	void		setup						(animation_planner *object, CPropertyStorage *storage);
-		virtual	void		initialize					();
-		virtual void		update						();
-		virtual	void		finalize					();
+	~default_behaviour_planner() override {}
+	void		setup						(animation_planner *object, CPropertyStorage *storage) override;
+	void		initialize					() override;
+	void		update						() override;
+	void		finalize					() override;
 	IC			u32	const	&idle_time					() const;
 	IC			void		idle_time					(u32 const &value);
 	IC			u32	const	&lookout_time				() const;
 	IC			void		lookout_time				(u32 const &value);
-		virtual LPCSTR		object_name					() const;
+	LPCSTR		object_name					() const override;
 
 private:
 		u32				m_idle_time;

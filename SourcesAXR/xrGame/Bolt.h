@@ -9,23 +9,23 @@ class CBolt :
 	u16			m_thrower_id;
 public:
 				CBolt				();
-	virtual		~CBolt				();
+	~CBolt				() override;
 
-	virtual void Load				(LPCSTR section);
-	virtual void OnH_A_Chield		();
-	
-	virtual	void SetInitiator		(u16 id);
-	virtual	u16	 Initiator			();
+	void Load				(LPCSTR section) override;
+	void OnH_A_Chield		() override;
 
-	virtual void Throw				();
-	virtual bool Action				(u16 cmd, u32 flags);
-	virtual bool Useful				() const;
-    virtual void activate_physic_shell	();
+	void SetInitiator		(u16 id) override;
+	u16	 Initiator			() override;
+
+	void Throw				() override;
+	bool Action				(u16 cmd, u32 flags) override;
+	bool Useful				() const override;
+	void activate_physic_shell	() override;
 
 	void		 PutNextToSlot		();
-	virtual void State				(u32 state);
-	virtual void OnAnimationEnd		(u32 state);
+	void State				(u32 state) override;
+	void OnAnimationEnd		(u32 state) override;
 
-	virtual BOOL UsedAI_Locations	() {return FALSE;}
-	virtual IDamageSource*	cast_IDamageSource			()	{return this;}
+	BOOL UsedAI_Locations	() override {return FALSE;}
+	IDamageSource*	cast_IDamageSource			() override {return this;}
 };

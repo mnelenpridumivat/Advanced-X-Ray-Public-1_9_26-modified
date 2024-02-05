@@ -45,13 +45,13 @@ private:
 	friend id_to_index;
 public:
 						CEncyclopediaArticle		();
-	virtual				~CEncyclopediaArticle		();
+	~CEncyclopediaArticle		() override;
 
 	virtual void Load	(shared_str str_id);
 
 protected:
 	shared_str			m_ArticleId;
-	virtual	void		load_shared					(LPCSTR);
+	void		load_shared					(LPCSTR) override;
 	static  void		InitXmlIdToIndex			();
 public:
 	const shared_str	Id							()						{return m_ArticleId;}

@@ -22,7 +22,7 @@ private:
 
 public:
 					UIHint		();
-	virtual			~UIHint		() {};
+	~UIHint		() override {};
 
 	IC		void	set_visible	( bool status = true )	{ m_visible = status; }
 	IC		bool	is_visible	() const				{ return m_visible; }
@@ -36,7 +36,7 @@ public:
 			LPCSTR	get_text	() const;
 	
 //	virtual void	Update		();
-	virtual void	Draw		();
+	void	Draw		() override;
 
 protected:
 	CUIFrameWindow*	m_background;
@@ -55,12 +55,12 @@ class UIHintWindow : public CUIWindow
 
 public:
 					UIHintWindow	();
-	virtual			~UIHintWindow	() {};
+	~UIHintWindow	() override {};
 
-	virtual void	Update			();
-	virtual void	OnFocusReceive	();
-	virtual void	OnFocusLost		();
-	virtual void	Show			( bool status );
+	void	Update			() override;
+	void	OnFocusReceive	() override;
+	void	OnFocusLost		() override;
+	void	Show			( bool status ) override;
 
 	IC		void	set_hint_wnd	( UIHint* hint_wnd )	{ m_hint_wnd = hint_wnd; }
 	IC		UIHint*	get_hint_wnd	() const				{ return m_hint_wnd; }

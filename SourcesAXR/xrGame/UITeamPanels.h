@@ -26,8 +26,8 @@ private:
 	void InitAllTeams(shared_str const & team_node);
 public:
 	UITeamPanels();
-	virtual ~UITeamPanels();
-	virtual void Update();
+	~UITeamPanels() override;
+	void Update() override;
 	
 	void Init(LPCSTR xmlName, LPCSTR panelsRootNode);
 	

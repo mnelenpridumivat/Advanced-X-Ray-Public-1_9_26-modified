@@ -14,13 +14,13 @@ protected:
 
 public:
 						CStateGroupRest		(_Object *obj);
-	virtual				~CStateGroupRest		();
+	~CStateGroupRest		() override;
 
-	virtual	void		initialize				();
-	virtual	void		execute					();
-	virtual	void		finalize				();
-	virtual	void		critical_finalize		();
-	virtual void		remove_links			(CObject* object) { inherited::remove_links(object);}
+	void		initialize				() override;
+	void		execute					() override;
+	void		finalize				() override;
+	void		critical_finalize		() override;
+	void		remove_links			(CObject* object) override { inherited::remove_links(object);}
 };
 
 #include "group_state_rest_inline.h"

@@ -16,9 +16,9 @@ protected:
 	virtual void		switch2_Showing				();
 			void		switch2_Attacking			(u32 state);
 
-	virtual void		OnAnimationEnd				(u32 state);
-	virtual void		OnMotionMark				(u32 state, const motion_marks&);
-	virtual void		OnStateSwitch				(u32 S);
+	void		OnAnimationEnd				(u32 state) override;
+	void		OnMotionMark				(u32 state, const motion_marks&) override;
+	void		OnStateSwitch				(u32 S) override;
 
 	void				state_Attacking				(float dt);
 
@@ -45,27 +45,27 @@ protected:
 	float				fHitImpulse_cur;
 
 protected:
-	virtual void		LoadFireParams					(LPCSTR section);
+	void		LoadFireParams					(LPCSTR section) override;
 public:
-						CWeaponKnife(); 
-	virtual				~CWeaponKnife(); 
+						CWeaponKnife();
+	~CWeaponKnife() override; 
 
-	void				Load							(LPCSTR section);
+	void				Load							(LPCSTR section) override;
 
 	virtual bool		IsZoomEnabled					()	const	{return false;}
 
 			void		Fire2Start						();
-	virtual void		FireStart						();
+	void		FireStart						() override;
 
 
-	virtual bool		Action							(u16 cmd, u32 flags);
+	bool		Action							(u16 cmd, u32 flags) override;
 
-	virtual bool		GetBriefInfo					(II_BriefInfo& info);
+	bool		GetBriefInfo					(II_BriefInfo& info) override;
 
 			void		FastStrike						(u32 state);
 
 #ifdef DEBUG
-	virtual void		OnRender						();
+	void		OnRender						() override;
 #endif
 
 private:

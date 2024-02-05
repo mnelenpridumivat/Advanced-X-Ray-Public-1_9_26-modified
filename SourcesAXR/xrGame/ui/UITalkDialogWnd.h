@@ -23,12 +23,12 @@ private:
 	CUIXml*			m_uiXml;
 public:
 				CUITalkDialogWnd		();
-	virtual		~CUITalkDialogWnd		();
+	~CUITalkDialogWnd		() override;
 	
 
 			void InitTalkDialogWnd		();
-	
-	virtual void SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+
+	void SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 
 	virtual void Show();
 	virtual void Hide();
@@ -93,7 +93,7 @@ public:
 					CUIQuestionItem			(CUIXml* xml_doc, LPCSTR path);
 	void			Init					(LPCSTR val, LPCSTR text);
 
-	virtual void	SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	void	SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 	void __stdcall	OnTextClicked			(CUIWindow* w, void*);
 };
 

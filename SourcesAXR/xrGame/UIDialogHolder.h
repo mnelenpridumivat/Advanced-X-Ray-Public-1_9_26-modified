@@ -44,7 +44,7 @@ public:
 	CUIDialogWnd*			TopInputReceiver				();
 	void					AddDialogToRender				(CUIWindow* pDialog);
 	void					RemoveDialogToRender			(CUIWindow* pDialog);
-	virtual void	_BCL	OnFrame							();
+	void	_BCL	OnFrame							() override;
 	virtual bool			UseIndicators					()						{return true;}
 
 	virtual void			StartDialog						(CUIDialogWnd* pDialog, bool bDoHideIndicators);

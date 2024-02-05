@@ -9,9 +9,9 @@ class CControlCriticalWound : public CControl_ComCustom<SControlCriticalWoundDat
 	typedef CControl_ComCustom<SControlCriticalWoundData> inherited;
 
 public:
-	virtual void	on_event				(ControlCom::EEventType, ControlCom::IEventData*);
-	virtual void	activate				();
-	virtual void	on_release				();
-	virtual bool	check_start_conditions	();
+	void	on_event				(ControlCom::EEventType, ControlCom::IEventData*) override;
+	void	activate				() override;
+	void	on_release				() override;
+	bool	check_start_conditions	() override;
 };
 

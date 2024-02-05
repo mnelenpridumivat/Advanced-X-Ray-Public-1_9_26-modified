@@ -8,11 +8,11 @@ class CWeaponSVD :
 {
 	typedef CWeaponCustomPistol inherited;
 protected:
-	virtual void switch2_Fire	();
-	virtual void OnAnimationEnd (u32 state);
+	void switch2_Fire	() override;
+	void OnAnimationEnd (u32 state) override;
 public:
 	CWeaponSVD(void);
-	virtual ~CWeaponSVD(void);
+	~CWeaponSVD(void) override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

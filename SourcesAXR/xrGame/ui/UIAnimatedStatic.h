@@ -50,7 +50,7 @@ public:
 	// Флаг-признак циклического проигрывания
 	bool m_bCyclic;
 
-	virtual void Update();
+	void Update() override;
 };
 
 class CUISleepStatic: public CUIStatic
@@ -62,8 +62,8 @@ private:
 	CUIStaticItem	m_UIStaticItem2;
 public:
 					CUISleepStatic();
-	virtual	void	Draw				();
-	virtual	void	Update				();
-	virtual void	InitTextureEx		(LPCSTR tex_name, LPCSTR sh_name="hud\\default");
+	void	Draw				() override;
+	void	Update				() override;
+	void	InitTextureEx		(LPCSTR tex_name, LPCSTR sh_name="hud\\default") override;
 };
 #endif	//UI_ANIMATED_STATIC_H_

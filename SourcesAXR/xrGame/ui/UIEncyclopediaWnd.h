@@ -31,12 +31,12 @@ private:
 	Flags16				m_flags;
 public:
 						CUIEncyclopediaWnd			();
-	virtual				~CUIEncyclopediaWnd			();
+	~CUIEncyclopediaWnd			() override;
 
 	virtual void		Init						();
-	virtual void		Show						(bool status);
-	virtual void		SendMessage					(CUIWindow *pWnd, s16 msg, void* pData = NULL);
-	virtual void		Draw						();
+	void		Show						(bool status) override;
+	void		SendMessage					(CUIWindow *pWnd, s16 msg, void* pData = NULL) override;
+	void		Draw						() override;
 
 	void				AddArticle					(shared_str, bool bReaded);
 	void				DeleteArticles				();

@@ -27,7 +27,7 @@ protected:
 
 public:
 	IC					CAgentManagerPropertyEvaluatorItem	(CAgentManager *object = 0, LPCSTR evaluator_name = "");
-	virtual _value_type	evaluate						();
+	_value_type	evaluate						() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -40,7 +40,7 @@ protected:
 
 public:
 	IC					CAgentManagerPropertyEvaluatorEnemy	(CAgentManager *object = 0, LPCSTR evaluator_name = "");
-	virtual _value_type	evaluate						();
+	_value_type	evaluate						() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ protected:
 
 public:
 	IC					CAgentManagerPropertyEvaluatorDanger	(CAgentManager *object = 0, LPCSTR evaluator_name = "");
-	virtual _value_type	evaluate								();
+	_value_type	evaluate								() override;
 };
 
 #include "agent_manager_properties_inline.h"

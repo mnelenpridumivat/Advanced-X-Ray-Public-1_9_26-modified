@@ -40,9 +40,9 @@ private:
 	friend class CLevelPathBuilder;
 
 protected:
-	IC	virtual	void	before_search				(const _vertex_id_type start_vertex_id, const _vertex_id_type dest_vertex_id);
-	IC	virtual	void	after_search				();
-	IC	virtual	bool	check_vertex				(const _vertex_id_type vertex_id) const;
+	IC void	before_search				(const _vertex_id_type start_vertex_id, const _vertex_id_type dest_vertex_id) override;
+	IC void	after_search				() override;
+	IC bool	check_vertex				(const _vertex_id_type vertex_id) const override;
 
 public:
 	IC					CBasePathManager			(CRestrictedObject *object);

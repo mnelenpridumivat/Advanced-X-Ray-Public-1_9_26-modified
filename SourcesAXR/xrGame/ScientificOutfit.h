@@ -15,7 +15,7 @@ private:
     typedef	CCustomOutfit inherited;
 public:
 	CScientificOutfit(void);
-	virtual ~CScientificOutfit(void);
+    ~CScientificOutfit(void) override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

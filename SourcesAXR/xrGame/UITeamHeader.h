@@ -34,9 +34,9 @@ private:
 	void			InitFieldsStatics	(CUIXml& uiXml);
 public:
 					UITeamHeader	(UITeamState const * const parent);
-	virtual			~UITeamHeader	();
+	~UITeamHeader	() override;
 			void	Init			(CUIXml& uiXml, LPCSTR path);
-	virtual	void	Update			();
+	void	Update			() override;
 
 protected:
 private:

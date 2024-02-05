@@ -6,7 +6,7 @@ class CUIPdaMsgListItem : public CUIColorAnimConrollerContainer
 	typedef	CUIColorAnimConrollerContainer	inherited;
 public:
 			void		InitPdaMsgListItem				(const Fvector2& size);
-	virtual void		SetFont							(CGameFont* pFont);
+	void		SetFont							(CGameFont* pFont) override;
 	
 	CUIStatic			UIIcon;
 	CUITextWnd			UITimeText;

@@ -9,7 +9,7 @@ class CF1 :
 	typedef CGrenade inherited;
 public:
 	CF1(void);
-	virtual ~CF1(void);
+	~CF1(void) override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

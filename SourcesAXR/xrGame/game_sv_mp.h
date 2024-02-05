@@ -105,35 +105,35 @@ protected:
 
 public:
 									game_sv_mp				();
-				virtual				~game_sv_mp				();
-	virtual		void				Create					(shared_str &options);
-	virtual		void				OnPlayerConnect			(ClientID id_who);
-	virtual		void				OnPlayerDisconnect		(ClientID id_who, LPSTR Name, u16 GameID);
-	virtual		BOOL				OnTouch					(u16 eid_who, u16 eid_target, BOOL bForced = FALSE){return true;};			// TRUE=allow ownership, FALSE=denied
-	virtual		void				OnDetach				(u16 eid_who, u16 eid_target){};
+	~game_sv_mp				() override;
+	void				Create					(shared_str &options) override;
+	void				OnPlayerConnect			(ClientID id_who) override;
+	void				OnPlayerDisconnect		(ClientID id_who, LPSTR Name, u16 GameID) override;
+	BOOL				OnTouch					(u16 eid_who, u16 eid_target, BOOL bForced = FALSE) override {return true;};			// TRUE=allow ownership, FALSE=denied
+	void				OnDetach				(u16 eid_who, u16 eid_target) override {};
 	virtual		void				OnPlayerKillPlayer		(game_PlayerState* ps_killer, game_PlayerState* ps_killed, KILL_TYPE KillType, SPECIAL_KILL_TYPE SpecialKillType, CSE_Abstract* pWeaponA){};
 	virtual		void				OnPlayerKilled			(NET_Packet P);
 	virtual		bool				CheckTeams				() { return false; };
 	virtual		void				OnPlayerHitted			(NET_Packet P);
-	virtual		void				OnPlayerEnteredGame		(ClientID id_who);
+	void				OnPlayerEnteredGame		(ClientID id_who) override;
 
-	virtual		void				OnDestroyObject			(u16 eid_who);			
+	virtual		void				OnDestroyObject			(u16 eid_who);
 
-	virtual		void				net_Export_State		(NET_Packet& P, ClientID id_to);
+	void				net_Export_State		(NET_Packet& P, ClientID id_to) override;
 
-	virtual		void				OnRoundStart			();												// старт раунда
-	virtual		void				OnRoundEnd				();	//round_end_reason							// конец раунда
-	virtual		bool				OnNextMap				();
-	virtual		void				OnPrevMap				();
-	
-	virtual		void				OnVoteStart				(LPCSTR VoteCommand, ClientID sender);
+	void				OnRoundStart			() override;												// старт раунда
+	void				OnRoundEnd				() override;	//round_end_reason							// конец раунда
+	bool				OnNextMap				() override;
+	void				OnPrevMap				() override;
+
+	void				OnVoteStart				(LPCSTR VoteCommand, ClientID sender) override;
 				void				SendActiveVotingTo		(ClientID const & receiver);
-	virtual		bool				IsVotingActive			()	{ return m_bVotingActive; };
-	virtual		void				SetVotingActive			( bool Active )	{ m_bVotingActive = Active; };
+	bool				IsVotingActive			() override { return m_bVotingActive; };
+	void				SetVotingActive			( bool Active ) override { m_bVotingActive = Active; };
 	virtual		void				UpdateVote				();
 	virtual		void				OnVoteYes				(ClientID sender);
 	virtual		void				OnVoteNo				(ClientID sender);
-	virtual		void				OnVoteStop				();
+	void				OnVoteStop				() override;
 	
 	virtual		void				OnPlayerChangeName		(NET_Packet& P, ClientID sender);
 	virtual		void				OnPlayerSpeechMessage	(NET_Packet& P, ClientID sender);
@@ -143,19 +143,19 @@ public:
 	virtual		void				OnPlayerSelectTeam		(NET_Packet& P, ClientID sender) {};
 	virtual		void				OnPlayerSelectSkin		(NET_Packet& P, ClientID sender) {};
 	virtual		void				OnPlayerBuySpawn		(ClientID sender)					{};
-	
-	virtual		void				OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender );
-	virtual		void				Update					();
+
+	void				OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender ) override;
+	void				Update					() override;
 				void				KillPlayer				(ClientID id_who, u16 GameID);
-	virtual		BOOL				CanHaveFriendlyFire		()	{return TRUE;};
+	BOOL				CanHaveFriendlyFire		() override {return TRUE;};
 	
 	virtual		void				ClearPlayerState		(game_PlayerState* ps);
 	virtual		void				ClearPlayerItems		(game_PlayerState* ps);
 	virtual		void				SetPlayersDefItems		(game_PlayerState* ps);
 
-	virtual		void				ReadOptions				(shared_str &options);
-	virtual		void				ConsoleCommands_Create	();
-	virtual		void				ConsoleCommands_Clear	();
+	void				ReadOptions				(shared_str &options) override;
+	void				ConsoleCommands_Create	() override;
+	void				ConsoleCommands_Clear	() override;
 
 	virtual		u32					GetTeamCount			()	{return TeamList.size();};	
 				TeamStruct*			GetTeamData				(u32 Team);
@@ -163,7 +163,7 @@ public:
 	virtual		u8					GetSpectatorModes		() {return m_u8SpectatorModes;};
 	virtual		u32					GetNumTeams				() {return 0;};
 
-	virtual		void				DumpOnlineStatistic		();
+	void				DumpOnlineStatistic		() override;
 				void				DestroyGameItem(CSE_Abstract* entity);
 				void				RejectGameItem(CSE_Abstract* entity);
 				

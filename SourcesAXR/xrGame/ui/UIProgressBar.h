@@ -42,7 +42,7 @@ public:
 
 
 						CUIProgressBar				();
-	virtual				~CUIProgressBar				();
+	~CUIProgressBar				() override;
 
 
 			void		InitProgressBar				(Fvector2 pos, Fvector2 size, EOrientMode mode);
@@ -58,8 +58,8 @@ public:
 	void				ShowBackground				(bool status)				{ m_bBackgroundPresent = status; }
 	bool				IsShownBackground			()							{ return m_bBackgroundPresent; }
 
-	virtual void		Draw						();
-	virtual void		Update						();
+	void		Draw						() override;
+	void		Update						() override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

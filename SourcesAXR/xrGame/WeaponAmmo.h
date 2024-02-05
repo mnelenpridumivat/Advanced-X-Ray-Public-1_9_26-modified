@@ -46,8 +46,8 @@ public:
 	Flags8	m_flags;
 
 	shared_str	m_InvShortName;
-	virtual void				DumpActiveParams		(shared_str const & section_name, CInifile & dst_ini) const;
-	virtual shared_str const 	GetAnticheatSectionName	() const { return m_ammoSect; };
+	void				DumpActiveParams		(shared_str const & section_name, CInifile & dst_ini) const override;
+	shared_str const 	GetAnticheatSectionName	() const override { return m_ammoSect; };
 };
 
 class CWeaponAmmo :	
@@ -55,22 +55,22 @@ class CWeaponAmmo :
 	typedef CInventoryItemObject		inherited;
 public:
 									CWeaponAmmo			(void);
-	virtual							~CWeaponAmmo		(void);
+	~CWeaponAmmo		(void) override;
 
-	virtual CWeaponAmmo				*cast_weapon_ammo	()	{return this;}
-	virtual void					Load				(LPCSTR section);
-	virtual BOOL					net_Spawn			(CSE_Abstract* DC);
-	virtual void					net_Destroy			();
-	virtual void					net_Export			(NET_Packet& P);
-	virtual void					net_Import			(NET_Packet& P);
-	virtual void					OnH_B_Chield		();
-	virtual void					OnH_B_Independent	(bool just_before_destroy);
-	virtual void					UpdateCL			();
-	virtual void					renderable_Render	();
+	CWeaponAmmo				*cast_weapon_ammo	() override {return this;}
+	void					Load				(LPCSTR section) override;
+	BOOL					net_Spawn			(CSE_Abstract* DC) override;
+	void					net_Destroy			() override;
+	void					net_Export			(NET_Packet& P) override;
+	void					net_Import			(NET_Packet& P) override;
+	void					OnH_B_Chield		() override;
+	void					OnH_B_Independent	(bool just_before_destroy) override;
+	void					UpdateCL			() override;
+	void					renderable_Render	() override;
 
-	virtual bool					Useful				() const;
-	virtual float					Weight				() const;
-	virtual	u32						Cost				() const;
+	bool					Useful				() const override;
+	float					Weight				() const override;
+	u32						Cost				() const override;
 
 	bool							Get					(CCartridge &cartridge);
 
@@ -81,5 +81,5 @@ public:
 	bool		m_tracer;
 
 public:
-	virtual CInventoryItem *can_make_killing	(const CInventory *inventory) const;
+	CInventoryItem *can_make_killing	(const CInventory *inventory) const override;
 };

@@ -27,8 +27,9 @@ CUIOptConCom::CUIOptConCom()
 
 class CCC_UserName: public CCC_String{
 public:
-	CCC_UserName(LPCSTR N, LPSTR V, int _size) : CCC_String(N, V, _size)  { bEmptyArgsHandled = false; };	
-	virtual void Execute(LPCSTR arguments)
+	CCC_UserName(LPCSTR N, LPSTR V, int _size) : CCC_String(N, V, _size)  { bEmptyArgsHandled = false; };
+
+	void Execute(LPCSTR arguments) override
 	{
 		string512 str;
 		xr_strcpy(str, arguments);
@@ -41,7 +42,8 @@ public:
 
 		WritePlayerName_ToRegistry( value );
 	}
-	virtual void	Save	(IWriter *F)	{};
+
+	void	Save	(IWriter *F) override {};
 };
 
 

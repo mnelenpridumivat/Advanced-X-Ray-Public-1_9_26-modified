@@ -135,7 +135,8 @@ void imotion_position::state_start( )
 		CBlend					*blend;
 		const	PlayCallback	cb;
 		get_controled_blend(const	PlayCallback	_cb):blend( 0 ),cb(_cb){}
-		virtual	void	operator () ( CBlend &B )
+
+		void	operator () ( CBlend &B ) override
 		{
 			if( cb == B.Callback && B.bone_or_part == 0 )
 				blend = &B;
@@ -437,7 +438,8 @@ static u32	blends_num( IKinematicsAnimated& KA )
 	{
 		u32 count;
 		scbl(  ):count(){}
-		virtual	void	operator () ( CBlend &B ) 
+
+		void	operator () ( CBlend &B ) override
 		{
 			++count;
 		}
@@ -473,7 +475,8 @@ static void save_blends( buffer_vector<sblend_save>& buffer, IKinematicsAnimated
 	{
 		buffer_vector<sblend_save>& _buffer;
 		scbl( buffer_vector<sblend_save>& bf ): _buffer( bf ){}
-		virtual	void	operator () ( CBlend &B ) 
+
+		void	operator () ( CBlend &B ) override
 		{
 			sblend_save s;
 			s.save( &B );

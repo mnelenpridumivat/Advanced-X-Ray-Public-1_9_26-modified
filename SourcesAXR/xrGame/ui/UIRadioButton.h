@@ -7,7 +7,7 @@ class CUIRadioButton : public CUITabButton
 {
 	typedef CUITabButton inherited;
 public:
-	virtual void InitButton(Fvector2 pos, Fvector2 size);
-	virtual void InitTexture(LPCSTR tex_name);
+	void InitButton(Fvector2 pos, Fvector2 size) override;
+	void InitTexture(LPCSTR tex_name) override;
 	virtual void SetTextX(float x)	{/*do nothing*/}
 };

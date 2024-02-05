@@ -12,9 +12,9 @@ private:
 	typedef CArtefact inherited;
 public:
 	CRustyHairArtefact(void);
-	virtual ~CRustyHairArtefact(void);
+	~CRustyHairArtefact(void) override;
 
-	virtual void Load				(LPCSTR section);
+	void Load				(LPCSTR section) override;
 
 protected:
 };

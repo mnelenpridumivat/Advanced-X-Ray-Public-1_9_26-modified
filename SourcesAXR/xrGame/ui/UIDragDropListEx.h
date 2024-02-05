@@ -63,7 +63,7 @@ protected:
 public:
 	static CUIDragItem*		m_drag_item;
 							CUIDragDropListEx	();
-	virtual					~CUIDragDropListEx	();
+	~CUIDragDropListEx	() override;
 				void		InitDragDropList		(Fvector2 pos, Fvector2 size);
 
 	typedef					fastdelegate::FastDelegate1<CUICellItem*, bool>			DRAG_CELL_EVENT;
@@ -139,10 +139,10 @@ public:
 
 public:
 	//UIWindow overriding
-	virtual		void		Draw				();
-	virtual		void		Update				();
-	virtual		bool		OnMouseAction		(float x, float y, EUIMessages mouse_action);
-	virtual		void		SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	void		Draw				() override;
+	void		Update				() override;
+	bool		OnMouseAction		(float x, float y, EUIMessages mouse_action) override;
+	void		SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 
 				void		OnDragEvent			(CUIDragItem* drag_item, bool b_receive);
 };
@@ -171,9 +171,9 @@ protected:
 
 public:							
 								CUICellContainer	(CUIDragDropListEx* parent);
-	virtual						~CUICellContainer	();
+	~CUICellContainer	() override;
 protected:
-	virtual		void			Draw				();
+	void			Draw				() override;
 
 	IC const	Ivector2&		CellsCapacity		()								{return m_cellsCapacity;};	
 				void			SetCellsCapacity	(const Ivector2& c);

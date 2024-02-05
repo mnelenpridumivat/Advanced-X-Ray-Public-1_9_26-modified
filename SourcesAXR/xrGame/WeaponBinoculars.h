@@ -14,31 +14,31 @@ private:
 protected:
 	bool			m_bVision;
 public:
-					CWeaponBinoculars	(); 
-	virtual			~CWeaponBinoculars	();
+					CWeaponBinoculars	();
+	~CWeaponBinoculars	() override;
 
-	void			Load				(LPCSTR section);
+	void			Load				(LPCSTR section) override;
 
-	virtual void	OnZoomIn			();
-	virtual void	OnZoomOut			();
-	virtual	void	ZoomInc				();
-	virtual	void	ZoomDec				();
+	void	OnZoomIn			() override;
+	void	OnZoomOut			() override;
+	void	ZoomInc				() override;
+	void	ZoomDec				() override;
 	virtual void	GetZoomData			(const float scope_factor, float& delta, float& min_zoom_factor);
-	virtual	float	CurrentZoomFactor	() { return m_fRTZoomFactor; }
+	float	CurrentZoomFactor	() override { return m_fRTZoomFactor; }
 
-	virtual void	net_Destroy			();
-	virtual BOOL	net_Spawn			(CSE_Abstract* DC);
-	bool			can_kill			() const;
-	virtual void	save				(NET_Packet &output_packet);
-	virtual void	load				(IReader &input_packet);
+	void	net_Destroy			() override;
+	BOOL	net_Spawn			(CSE_Abstract* DC) override;
+	bool			can_kill			() const override;
+	void	save				(NET_Packet &output_packet) override;
+	void	load				(IReader &input_packet) override;
 
-	virtual bool	Action				(u16 cmd, u32 flags);
-	virtual void	UpdateCL			();
-	virtual void	render_item_ui		();
-	virtual bool	render_item_ui_query();
-	virtual bool	use_crosshair		()	const {return false;}
-	virtual bool	GetBriefInfo		(II_BriefInfo& info);
-	virtual void	net_Relcase			(CObject *object);
+	bool	Action				(u16 cmd, u32 flags) override;
+	void	UpdateCL			() override;
+	void	render_item_ui		() override;
+	bool	render_item_ui_query() override;
+	bool	use_crosshair		()	const override {return false;}
+	bool	GetBriefInfo		(II_BriefInfo& info) override;
+	void	net_Relcase			(CObject *object) override;
 protected:
 	CBinocularsVision*					m_binoc_vision;
 

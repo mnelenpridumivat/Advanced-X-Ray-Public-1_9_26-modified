@@ -9,7 +9,7 @@ class CWeaponSVU :
 	typedef CWeaponCustomPistol inherited;
 public:
 	CWeaponSVU(void);
-	virtual ~CWeaponSVU(void);
+	~CWeaponSVU(void) override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

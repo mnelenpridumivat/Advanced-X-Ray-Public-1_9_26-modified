@@ -25,9 +25,9 @@ private:
 
 public:
 						target_provider					(animation_planner *object, LPCSTR name, StalkerDecisionSpace::EWorldProperties const &world_property, u32 const &loophole_value);
-	virtual	void		setup							(animation_planner *object, CPropertyStorage *storage);
-	virtual	void		initialize						();
-	virtual void		finalize						();
+	void		setup							(animation_planner *object, CPropertyStorage *storage) override;
+	void		initialize						() override;
+	void		finalize						() override;
 
 private:
 	StalkerDecisionSpace::EWorldProperties m_world_property;
@@ -46,7 +46,7 @@ private:
 
 public:
 						target_idle						(animation_planner *object, LPCSTR name, StalkerDecisionSpace::EWorldProperties const &world_property, u32 const &loophole_value);
-	virtual	void		execute							();
+	void		execute							() override;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -60,8 +60,8 @@ private:
 
 public:
 						target_fire						(animation_planner *object, LPCSTR name, StalkerDecisionSpace::EWorldProperties const &world_property, u32 const &loophole_value);
-	virtual	void		initialize						();
-	virtual	void		execute							();
+	void		initialize						() override;
+	void		execute							() override;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -75,8 +75,8 @@ private:
 
 public:
 						target_fire_no_lookout			(animation_planner *object, LPCSTR name, StalkerDecisionSpace::EWorldProperties const &world_property, u32 const &loophole_value);
-	virtual	void		initialize						();
-	virtual ~target_fire_no_lookout() {}
+	void		initialize						() override;
+	~target_fire_no_lookout() override {}
 
 private:
 	StalkerDecisionSpace::EWorldProperties m_world_property;

@@ -40,31 +40,31 @@ class CDetectorAnomaly :
 	using inherited = CInventoryItemObject;
 public:
 	CDetectorAnomaly(void);
-	virtual ~CDetectorAnomaly(void);
+	~CDetectorAnomaly(void) override;
 
-	virtual BOOL net_Spawn			(CSE_Abstract* DC);
-	virtual void Load				(LPCSTR section);
+	BOOL net_Spawn			(CSE_Abstract* DC) override;
+	void Load				(LPCSTR section) override;
 
-	virtual void OnH_A_Chield		();
-	virtual void OnH_B_Independent	(bool just_before_destroy);
+	void OnH_A_Chield		() override;
+	void OnH_B_Independent	(bool just_before_destroy) override;
 
-	virtual void shedule_Update		(u32 dt);
-	virtual void UpdateCL			();
+	void shedule_Update		(u32 dt) override;
+	void UpdateCL			() override;
 
-	virtual void feel_touch_new		(CObject* O);
-	virtual void feel_touch_delete	(CObject* O);
-	virtual BOOL feel_touch_contact	(CObject* O);
+	void feel_touch_new		(CObject* O) override;
+	void feel_touch_delete	(CObject* O) override;
+	BOOL feel_touch_contact	(CObject* O) override;
 
 			void TurnOn				();
 			void TurnOff			();
 			bool IsWorking			() {return m_bWorking;}
 
-	virtual void OnMoveToSlot(const SInvItemPlace& prev);
-	virtual void OnMoveToRuck(const SInvItemPlace& prev);
+	void OnMoveToSlot(const SInvItemPlace& prev) override;
+	void OnMoveToRuck(const SInvItemPlace& prev) override;
 
 			void UpdateChargeLevel	(void);
-	virtual void save				(NET_Packet &output_packet);
-	virtual void load				(IReader &input_packet);
+	void save				(NET_Packet &output_packet) override;
+	void load				(IReader &input_packet) override;
 			float GetCurrentChargeLevel(void) const;
 			void SetCurrentChargeLevel(float val);
 			float GetUnchargeSpeed	(void) const;
@@ -98,5 +98,5 @@ protected:
 	u32					m_ef_detector_type;
 
 public:
-	virtual u32			ef_detector_type	() const;
+	u32			ef_detector_type	() const override;
 };

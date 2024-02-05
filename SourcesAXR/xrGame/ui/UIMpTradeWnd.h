@@ -81,45 +81,45 @@ public:
 	};
 public:
 								CUIMpTradeWnd				();
-	virtual						~CUIMpTradeWnd				();
-	virtual void				SendMessage					(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+		~CUIMpTradeWnd				() override;
+		void				SendMessage					(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 	
 	//
-	virtual void				Update						();				
-	virtual bool 				OnKeyboardAction					(int dik, EUIMessages keyboard_action);
+		void				Update						() override;
+		bool 				OnKeyboardAction					(int dik, EUIMessages keyboard_action) override;
 
 public:
-	virtual void 				Init						(const shared_str& sectionName, const shared_str& sectionPrice);
-	virtual void				BindDragDropListEvents		(CUIDragDropListEx* lst, bool bDrag);
+		void 				Init						(const shared_str& sectionName, const shared_str& sectionPrice) override;
+		void				BindDragDropListEvents		(CUIDragDropListEx* lst, bool bDrag) override;
 
-	virtual void				GetWeaponIndexByName		(const shared_str& sectionName, u8 &grpNum, u8 &idx);
-	virtual u32					GetMoneyAmount				() const;
-	virtual void 				SetMoneyAmount				(u32 money);
-	virtual void				IgnoreMoney					(bool ignore);
-	virtual void				SectionToSlot				(const u8 grpNum, u8 uIndexInSlot, bool bRealRepresentationSet);
-	virtual bool 				CheckBuyAvailabilityInSlots	();
-	virtual void				AddonToSlot					(int add_on, int slot, bool bRealRepresentationSet);
-	virtual const shared_str&	GetWeaponNameByIndex		(u8 grpNum, u8 idx);
-	virtual void				IgnoreMoneyAndRank			(bool ignore);
-	virtual bool 				CanBuyAllItems				();
-	virtual void 				ResetItems					();
-	virtual void				SetRank						(u32 rank);
-	virtual u32					GetRank						();
+		void				GetWeaponIndexByName		(const shared_str& sectionName, u8 &grpNum, u8 &idx) override;
+		u32					GetMoneyAmount				() const override;
+		void 				SetMoneyAmount				(u32 money) override;
+		void				IgnoreMoney					(bool ignore) override;
+		void				SectionToSlot				(const u8 grpNum, u8 uIndexInSlot, bool bRealRepresentationSet) override;
+		bool 				CheckBuyAvailabilityInSlots	() override;
+		void				AddonToSlot					(int add_on, int slot, bool bRealRepresentationSet) override;
+		const shared_str&	GetWeaponNameByIndex		(u8 grpNum, u8 idx) override;
+		void				IgnoreMoneyAndRank			(bool ignore) override;
+		bool 				CanBuyAllItems				() override;
+		void 				ResetItems					() override;
+		void				SetRank						(u32 rank) override;
+		u32					GetRank						() override;
 
-	virtual void				ItemToBelt					(const shared_str& sectionName);
-	virtual void				ItemToRuck					(const shared_str& sectionName, u8 addons);
-	virtual void				ItemToSlot					(const shared_str& sectionName, u8 addons);
-	virtual void				SetupPlayerItemsBegin		();
-	virtual void				SetupPlayerItemsEnd			();
-	virtual void				SetupDefaultItemsBegin		();
-	virtual void				SetupDefaultItemsEnd		();
+		void				ItemToBelt					(const shared_str& sectionName) override;
+		void				ItemToRuck					(const shared_str& sectionName, u8 addons) override;
+		void				ItemToSlot					(const shared_str& sectionName, u8 addons) override;
+		void				SetupPlayerItemsBegin		() override;
+		void				SetupPlayerItemsEnd			() override;
+		void				SetupDefaultItemsBegin		() override;
+		void				SetupDefaultItemsEnd		() override;
 
-	virtual const preset_items&	GetPreset					(ETradePreset idx);
-	virtual u32					GetPresetCost				(ETradePreset idx);
-	virtual	void				ClearPreset					(ETradePreset idx);
-	virtual	void				TryUsePreset				(ETradePreset idx);
-	virtual void 				Show						(bool status);
-	virtual bool				IsIgnoreMoneyAndRank		();
+		const preset_items&	GetPreset					(ETradePreset idx) override;
+		u32					GetPresetCost				(ETradePreset idx) override;
+		void				ClearPreset					(ETradePreset idx) override;
+		void				TryUsePreset				(ETradePreset idx) override;
+		void 				Show						(bool status) override;
+		bool				IsIgnoreMoneyAndRank		() override;
 			
 			bool				HasItemInGroup				(shared_str const & section_name);
 			CItemMgr const *	GetItemMngr					() const { return m_item_mngr; };
@@ -283,5 +283,5 @@ class CUICellItemTradeMenuDraw :public ICustomDrawCellItem
 	SBuyItemInfo*			m_info_item;
 public:
 						CUICellItemTradeMenuDraw(CUIMpTradeWnd* w, SBuyItemInfo* info):m_trade_wnd(w),m_info_item(info){}
-	virtual void		OnDraw					(CUICellItem* cell);
+	void		OnDraw					(CUICellItem* cell) override;
 };

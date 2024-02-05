@@ -22,10 +22,10 @@ private:
 
 public:
 					CStalkerKillWoundedPlanner	(CAI_Stalker *object = 0, LPCSTR action_name = "");
-	virtual			~CStalkerKillWoundedPlanner	();
+	~CStalkerKillWoundedPlanner	() override;
 	virtual	void	setup						(CAI_Stalker *object, CPropertyStorage *storage);
-	virtual void	update						();
-	virtual void	initialize					();
-	virtual void	execute						();
-	virtual void	finalize					();
+	void	update						() override;
+	void	initialize					() override;
+	void	execute						() override;
+	void	finalize					() override;
 };

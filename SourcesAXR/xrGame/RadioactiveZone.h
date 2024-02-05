@@ -8,17 +8,17 @@ private:
 	typedef	CCustomZone	inherited;
 public:
 	CRadioactiveZone(void);
-	virtual ~CRadioactiveZone(void);
+	~CRadioactiveZone(void) override;
 
-	virtual void Load					(LPCSTR section);
-	virtual void Affect					(SZoneObjectInfo* O);
-	virtual	void feel_touch_new			(CObject* O	);
-	virtual	void UpdateWorkload			(u32	dt	);				// related to fast-mode optimizations
-	virtual	BOOL feel_touch_contact		(CObject* O	);
+	void Load					(LPCSTR section) override;
+	void Affect					(SZoneObjectInfo* O) override;
+	void feel_touch_new			(CObject* O	) override;
+	void UpdateWorkload			(u32	dt	) override;				// related to fast-mode optimizations
+	BOOL feel_touch_contact		(CObject* O	) override;
 			float nearest_shape_radius	(SZoneObjectInfo* O);
 
 protected:
-	virtual bool BlowoutState			();
+	bool BlowoutState			() override;
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CRadioactiveZone)

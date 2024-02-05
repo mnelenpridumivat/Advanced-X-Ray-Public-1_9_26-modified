@@ -37,15 +37,15 @@ public:
 protected:
 			void		new_game				(LPCSTR	save_name);
 			void		init_ef_storage			() const;
-	virtual	void		reload					(LPCSTR section);
+	void		reload					(LPCSTR section) override;
 
 public:
 						CALifeUpdateManager		(xrServer *server, LPCSTR section);
-	virtual 			~CALifeUpdateManager	();
-	virtual	shared_str	shedule_Name			() const		{ return shared_str("alife_simulator"); };
-	virtual float		shedule_Scale			();
-	virtual void		shedule_Update			(u32 dt);	
-	virtual bool		shedule_Needed			()				{return true;};
+	~CALifeUpdateManager	() override;
+	shared_str	shedule_Name			() const override { return shared_str("alife_simulator"); };
+	float		shedule_Scale			() override;
+	void		shedule_Update			(u32 dt) override;
+	bool		shedule_Needed			() override {return true;};
 			void		update_switch			();
 			void		update_scheduled		(bool init_ef = true);
 			void		load					(LPCSTR game_name = 0, bool no_assert = false, bool new_only = false);

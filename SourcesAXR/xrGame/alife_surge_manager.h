@@ -30,7 +30,7 @@ protected:
 
 public:
 	IC						CALifeSurgeManager			(xrServer *server, LPCSTR section);
-	virtual					~CALifeSurgeManager			();
+	~CALifeSurgeManager			() override;
 };
 
 #include "alife_surge_manager_inline.h"

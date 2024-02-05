@@ -30,14 +30,14 @@ private:
 
 public:
 						UIInvUpgradeInfo();
-	virtual				~UIInvUpgradeInfo();
+	~UIInvUpgradeInfo() override;
 
 			void		init_from_xml( LPCSTR xml_name );
 			bool		init_upgrade( Upgrade_type* upgr, CInventoryItem* inv_item );
 			bool		is_upgrade() { return (m_upgrade != NULL); }
 	IC Upgrade_type const*	get_upgrade() const { return m_upgrade; }
 
-	virtual void		Draw();
+	void		Draw() override;
 
 protected:
 	Upgrade_type*		m_upgrade;

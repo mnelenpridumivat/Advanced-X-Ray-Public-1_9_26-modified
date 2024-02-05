@@ -9,35 +9,35 @@ class CHudItemObject :
 {
 protected: //чтоб нельзя было вызвать на прямую
 						CHudItemObject		();
-	virtual				~CHudItemObject		();
+						~CHudItemObject		() override;
 
 public:
-	virtual	DLL_Pure	*_construct			();
+						DLL_Pure	*_construct			() override;
 
 public:
-	virtual CHudItem	*cast_hud_item		()	{return this;}
+						CHudItem	*cast_hud_item		() override {return this;}
 
 public:
-	virtual void		Load				(LPCSTR section);
-	virtual bool		Action				(u16 cmd, u32 flags);
-	virtual void		SwitchState			(u32 S);
-	virtual void		OnStateSwitch		(u32 S);
-	virtual void		OnEvent				(NET_Packet& P, u16 type);
-	virtual void		OnH_A_Chield		();
-	virtual void		OnH_B_Chield		();
-	virtual void		OnH_B_Independent	(bool just_before_destroy);
-	virtual void		OnH_A_Independent	();
-	virtual	BOOL		net_Spawn			(CSE_Abstract* DC);
-	virtual void		net_Destroy			();
-	virtual bool		ActivateItem		();
-	virtual void		DeactivateItem	();
-	virtual void		UpdateCL			();
-	virtual void		renderable_Render	();
-	virtual void		on_renderable_Render();
-	virtual void		OnMoveToRuck		(const SInvItemPlace& prev);
+						void		Load				(LPCSTR section) override;
+						bool		Action				(u16 cmd, u32 flags) override;
+						void		SwitchState			(u32 S) override;
+						void		OnStateSwitch		(u32 S) override;
+						void		OnEvent				(NET_Packet& P, u16 type) override;
+						void		OnH_A_Chield		() override;
+						void		OnH_B_Chield		() override;
+						void		OnH_B_Independent	(bool just_before_destroy) override;
+						void		OnH_A_Independent	() override;
+						BOOL		net_Spawn			(CSE_Abstract* DC) override;
+						void		net_Destroy			() override;
+						bool		ActivateItem		() override;
+						void		DeactivateItem	() override;
+						void		UpdateCL			() override;
+						void		renderable_Render	() override;
+						void		on_renderable_Render() override;
+						void		OnMoveToRuck		(const SInvItemPlace& prev) override;
 
-	virtual bool			use_parent_ai_locations	() const
-	{
+						bool			use_parent_ai_locations	() const override
+						{
 		return				CInventoryItemObject::use_parent_ai_locations	() && (Device.dwFrame != dwXF_Frame);
 	}
 };

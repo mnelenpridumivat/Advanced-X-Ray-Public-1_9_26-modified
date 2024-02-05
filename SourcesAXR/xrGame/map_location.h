@@ -73,7 +73,7 @@ protected :
 public:
 							CMapLocation					(LPCSTR type, u16 object_id);
 	virtual					~CMapLocation					();
-	virtual void			destroy							();
+void			destroy							() override;
 
 	IC		bool			HintEnabled						()					{return !!m_flags.test(eHintEnabled);}
 			LPCSTR			GetHint							();
@@ -128,13 +128,13 @@ protected:
 	bool					IsVisible							() const {return m_b_visible;};
 public:
 							CRelationMapLocation			(const shared_str& type, u16 object_id, u16 pInvOwnerActorID);
-	virtual					~CRelationMapLocation			();
-	virtual bool			Update							();
+	~CRelationMapLocation			() override;
+	bool			Update							() override;
 
-	virtual void			UpdateMiniMap					(CUICustomMap* map);
-	virtual void			UpdateLevelMap					(CUICustomMap* map);
+	void			UpdateMiniMap					(CUICustomMap* map) override;
+	void			UpdateLevelMap					(CUICustomMap* map) override;
 
 #ifdef DEBUG
-	virtual void			Dump							();
+	void			Dump							() override;
 #endif
 };

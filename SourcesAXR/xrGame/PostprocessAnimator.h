@@ -67,14 +67,18 @@ protected:
     float          *m_pfParam;
 public:
                     CPostProcessValue               (float *pfparam) 		{m_pfParam = pfparam;}
-    virtual void    update                          (float dt)
-                    {
+
+    void    update                          (float dt) override
+    {
                     *m_pfParam = m_Value.Evaluate (dt);
                     }
-    virtual void    load                            (IReader &pReader);
-    virtual void    save                            (IWriter &pWriter);
-    virtual float   get_length                      ()                    	{float mn, mx; return m_Value.GetLength (&mn, &mx);}
-    virtual size_t  get_keys_count                  () 						{return m_Value.keys.size ();}
+
+    void    load                            (IReader &pReader) override;
+    void    save                            (IWriter &pWriter) override;
+    float   get_length                      () override
+    {float mn, mx; return m_Value.GetLength (&mn, &mx);}
+
+    size_t  get_keys_count                  () override {return m_Value.keys.size ();}
 #ifdef _PP_EDITOR_
     virtual void    add_value                       (float time, float value, int index = 0);
     virtual void    delete_value                    (float time);
@@ -96,16 +100,19 @@ protected:
 	SPPInfo::SColor *m_pColor;
 public:
                     CPostProcessColor               (SPPInfo::SColor *pcolor) { m_pColor = pcolor; }
-    virtual void    update                          (float dt)
-                    {
+
+    void    update                          (float dt) override
+    {
                     m_pColor->r = m_Red.Evaluate (dt);
                     m_pColor->g = m_Green.Evaluate (dt);
                     m_pColor->b = m_Blue.Evaluate (dt);
                     }
-    virtual void    load                            (IReader &pReader);
-    virtual void    save                            (IWriter &pWriter);
-    virtual float   get_length                      ()
-                    {
+
+    void    load                            (IReader &pReader) override;
+    void    save                            (IWriter &pWriter) override;
+
+    float   get_length                      () override
+    {
                     float mn, mx,
                     r = m_Red.GetLength (&mn, &mx),
                     g = m_Green.GetLength (&mn, &mx),
@@ -113,8 +120,9 @@ public:
                     mn = (r > g ? r : g);
                     return mn > b ? mn : b;
                     }
-    virtual size_t  get_keys_count                  ()
-                    {
+
+    size_t  get_keys_count                  () override
+    {
                     return m_Red.keys.size ();
                     }
 #ifdef _PP_EDITOR_
@@ -154,19 +162,19 @@ protected:
 public:
                     CPostprocessAnimator            (int id, bool cyclic);
                     CPostprocessAnimator            ();
-        virtual    ~CPostprocessAnimator            ();
+    ~CPostprocessAnimator            () override;
         void        Clear                           ();
         void        Load                            (LPCSTR name);
     IC  LPCSTR      Name                            (){return *m_Name;}
-  virtual void      Stop                            (float speed);
+    void      Stop                            (float speed) override;
 		void		SetDesiredFactor				(float f, float sp);
 		void		SetCurrentFactor				(float f);
 		void		SetCyclic						(bool b)					{m_bCyclic=b;}
         float       GetLength                       ();
         SPPInfo&	PPinfo							() {return m_EffectorParams;}
 #ifndef _PP_EDITOR_
-virtual	BOOL		Valid							();
-virtual	BOOL		Process							(SPPInfo &PPInfo);
+    BOOL		Valid							() override;
+    BOOL		Process							(SPPInfo &PPInfo) override;
 #else
 virtual	BOOL		Process							(float dt, SPPInfo &PPInfo);
 #endif /*_PP_EDITOR_*/
@@ -185,7 +193,7 @@ protected:
 		fastdelegate::FastDelegate0<float>	m_get_factor_func;
 public:
 	void			SetFactorFunc				(fastdelegate::FastDelegate0<float> f)	{m_get_factor_func=f;}
-virtual	BOOL		Process						(SPPInfo &PPInfo);
+		BOOL		Process						(SPPInfo &PPInfo) override;
 };
 
 class CPostprocessAnimatorLerpConst :public CPostprocessAnimator
@@ -195,16 +203,16 @@ protected:
 public:
 					CPostprocessAnimatorLerpConst	()					{m_power = 1.0f;}
 		void		SetPower						(float val)			{m_power=val;}
-virtual	BOOL		Process							(SPPInfo &PPInfo);
+		BOOL		Process							(SPPInfo &PPInfo) override;
 };
 
 class CPostprocessAnimatorControlled :public CPostprocessAnimatorLerp
 {
 	CEffectorController*		m_controller;
 public:
-	virtual				~CPostprocessAnimatorControlled		();
+	~CPostprocessAnimatorControlled		() override;
 						CPostprocessAnimatorControlled		(CEffectorController* c);
-	virtual BOOL		Valid								();
+	BOOL		Valid								() override;
 };
 
 #endif

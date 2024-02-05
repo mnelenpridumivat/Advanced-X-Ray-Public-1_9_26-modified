@@ -13,12 +13,12 @@ protected:
 public:
 	bool										m_bWorkInPause;
 				CUIDialogWnd					();
-	virtual		~CUIDialogWnd					();
+	~CUIDialogWnd					() override;
 
-	virtual void Show							(bool status);
+	void Show							(bool status) override;
 
-	virtual bool OnKeyboardAction						(int dik, EUIMessages keyboard_action);
-	virtual bool OnKeyboardHold					(int dik);
+	bool OnKeyboardAction						(int dik, EUIMessages keyboard_action) override;
+	bool OnKeyboardHold					(int dik) override;
 
 	CDialogHolder* GetHolder					()								{return m_pParentHolder;};
 			void SetHolder						(CDialogHolder* h)				{m_pParentHolder = h;};

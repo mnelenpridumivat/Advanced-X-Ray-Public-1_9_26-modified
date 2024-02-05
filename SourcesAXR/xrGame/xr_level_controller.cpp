@@ -404,7 +404,8 @@ class CCC_Bind : public IConsole_Command
 	int m_work_idx;
 public:
 	CCC_Bind(LPCSTR N, int idx) : IConsole_Command(N),m_work_idx(idx) {};
-	virtual void Execute(LPCSTR args) 
+
+	void Execute(LPCSTR args) override
 	{
 		string256							action;
 		string256							key;
@@ -457,7 +458,8 @@ public:
 
 		CStringTable::ReparseKeyBindings();
 	}
-	virtual void Save(IWriter* F) 
+
+	void Save(IWriter* F) override
 	{
 		if(m_work_idx==0)
 			F->w_printf		("default_controls\r\n");
@@ -482,7 +484,8 @@ class CCC_UnBind : public IConsole_Command
 public:
 	CCC_UnBind(LPCSTR N, int idx) : IConsole_Command(N),m_work_idx(idx) 
 	{ bEmptyArgsHandled=TRUE; };
-	virtual void Execute(LPCSTR args)
+
+	void Execute(LPCSTR args) override
 	{
 		int action_id						= action_name_to_id			(args);
 		_binding*	pbinding				= &g_key_bindings[action_id];
@@ -498,7 +501,8 @@ public:
 	CCC_ListActions(LPCSTR N) : IConsole_Command(N)
 	{ bEmptyArgsHandled=TRUE; };
 
-	virtual void Execute(LPCSTR args) {
+	void Execute(LPCSTR args) override
+	{
 		Log("- --- Action list start ---");
 		for(int idx=0; idx<bindings_count;++idx)
 		{
@@ -515,7 +519,7 @@ public:
 	CCC_UnBindAll(LPCSTR N) : IConsole_Command(N)
 	{ bEmptyArgsHandled=TRUE; };
 
-	virtual void Execute(LPCSTR args) 
+	void Execute(LPCSTR args) override
 	{
 		for(int idx=0; idx<bindings_count;++idx)
 		{
@@ -532,7 +536,7 @@ class CCC_DefControls : public CCC_UnBindAll
 public:
 	CCC_DefControls(LPCSTR N) : CCC_UnBindAll(N){}
 
-	virtual void Execute(LPCSTR args) 
+	void Execute(LPCSTR args) override
 	{
 		CCC_UnBindAll::Execute(args);
 		string_path				_cfg;
@@ -549,7 +553,8 @@ public:
 	CCC_BindList(LPCSTR N) : IConsole_Command(N)
 	{ bEmptyArgsHandled=TRUE; };
 
-	virtual void Execute(LPCSTR args) {
+	void Execute(LPCSTR args) override
+	{
 		Log				("- --- Bind list start ---");
 		string512		buff;			
 		
@@ -570,7 +575,8 @@ class CCC_BindConsoleCmd : public IConsole_Command
 {
 public:
 	CCC_BindConsoleCmd(LPCSTR N) : IConsole_Command(N) {};
-	virtual void Execute(LPCSTR args) 
+
+	void Execute(LPCSTR args) override
 	{
 		string512				console_command;
 		string256				key;
@@ -582,7 +588,7 @@ public:
 		bindConsoleCmds.bind	(dik, console_command);
 	}
 
-	virtual void Save(IWriter* F) 
+	void Save(IWriter* F) override
 	{
 		bindConsoleCmds.save(F);
 	}
@@ -596,7 +602,7 @@ public:
 	CCC_UnBindConsoleCmd(LPCSTR N) : IConsole_Command(N)
 	{ bEmptyArgsHandled=FALSE; };
 
-	virtual void Execute(LPCSTR args) 
+	void Execute(LPCSTR args) override
 	{
 		int _dik = keyname_to_dik	(args);
 		bindConsoleCmds.unbind		(_dik);

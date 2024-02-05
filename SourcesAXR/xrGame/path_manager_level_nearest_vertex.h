@@ -67,7 +67,7 @@ protected:
 	float		m_best_distance_to_target;
 
 public:
-	virtual				~CPathManager	();
+	~CPathManager	() override;
 	IC		void		setup			(const _Graph *graph, _DataStorage *_data_storage, xr_vector<_index_type> *_path, const _index_type	&_start_node_index, const _index_type &_goal_node_index, const _Parameters &params);
 	IC		bool		is_goal_reached	(const _index_type &node_index);
 	IC		_dist_type	evaluate		(const _index_type &node_index1, const _index_type &node_index2, const _Graph::const_iterator &i);

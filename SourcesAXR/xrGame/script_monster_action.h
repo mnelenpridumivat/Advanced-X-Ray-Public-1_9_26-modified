@@ -23,7 +23,7 @@ public:
 	IC				CScriptMonsterAction	();
 	IC				CScriptMonsterAction	(MonsterSpace::EScriptMonsterGlobalAction action);
 	IC				CScriptMonsterAction	(MonsterSpace::EScriptMonsterGlobalAction action, CScriptGameObject *tObj);
-	virtual			~CScriptMonsterAction	();
+	~CScriptMonsterAction	() override;
 			void	SetObject				(CScriptGameObject *tObj);
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION

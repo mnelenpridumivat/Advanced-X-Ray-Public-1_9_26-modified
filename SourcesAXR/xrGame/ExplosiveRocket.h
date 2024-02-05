@@ -19,63 +19,62 @@ private:
 	friend CRocketLauncher;
 public:
 	CExplosiveRocket(void);
-	virtual ~CExplosiveRocket(void);
-	virtual DLL_Pure	*_construct	();
+	~CExplosiveRocket(void) override;
+	DLL_Pure	*_construct	() override;
 public:
-	virtual CExplosive					*cast_explosive			()						{return this;}
-	virtual CInventoryItem				*cast_inventory_item	()						{return this;}
-	virtual CAttachableItem				*cast_attachable_item	()						{return this;}
-	virtual CWeapon						*cast_weapon			()						{return NULL;}
-	virtual CGameObject					*cast_game_object		()						{return this;}
-	virtual IDamageSource*				cast_IDamageSource()							{return CExplosive::cast_IDamageSource();}
-	virtual void						on_activate_physic_shell();
+	CExplosive					*cast_explosive			() override {return this;}
+	CInventoryItem				*cast_inventory_item	() override {return this;}
+	CAttachableItem				*cast_attachable_item	() override {return this;}
+	CWeapon						*cast_weapon			() override {return NULL;}
+	CGameObject					*cast_game_object		() override {return this;}
+	IDamageSource*				cast_IDamageSource() override {return CExplosive::cast_IDamageSource();}
+	void						on_activate_physic_shell() override;
 public:
+	void Load				(LPCSTR section) override;
+	BOOL net_Spawn			(CSE_Abstract* DC) override;
+	void net_Destroy		() override;
+	void net_Relcase		(CObject* O ) override;
+	void OnH_A_Independent	() override;
+	void OnH_B_Independent	(bool just_before_destroy) override;
+	void UpdateCL			() override;
 
-	virtual void Load				(LPCSTR section);
-	virtual BOOL net_Spawn			(CSE_Abstract* DC);
-	virtual void net_Destroy		();
-	virtual	void net_Relcase		(CObject* O );
-	virtual void OnH_A_Independent	();
-	virtual void OnH_B_Independent	(bool just_before_destroy);
-	virtual void UpdateCL			();
+	void Contact(const Fvector &pos, const Fvector &normal) override;
 
-	virtual void Contact(const Fvector &pos, const Fvector &normal);
+	void OnEvent (NET_Packet& P, u16 type) override;
 
-	virtual void OnEvent (NET_Packet& P, u16 type) ;
-
-	virtual	void Hit	(SHit* pHDS)
-						{ inherited::Hit(pHDS); };
+	void Hit	(SHit* pHDS) override
+	{ inherited::Hit(pHDS); };
 
 public:
-	virtual BOOL			UsedAI_Locations	()				{return inherited::UsedAI_Locations();}
-	virtual void			net_Import			(NET_Packet& P)	{inherited::net_Import(P);}
-	virtual void			net_Export			(NET_Packet& P) {inherited::net_Export(P);}
-	
-	virtual void			save				(NET_Packet &output_packet) {inherited::save(output_packet);}
-	virtual void			load				(IReader &input_packet)		{inherited::load(input_packet);}
-	virtual BOOL			net_SaveRelevant	()							{return inherited::net_SaveRelevant();}
+	BOOL			UsedAI_Locations	() override {return inherited::UsedAI_Locations();}
+	void			net_Import			(NET_Packet& P) override {inherited::net_Import(P);}
+	void			net_Export			(NET_Packet& P) override {inherited::net_Export(P);}
 
-	virtual void			OnH_A_Chield		()				{inherited::OnH_A_Chield();}
-	virtual void			OnH_B_Chield		()				{inherited::OnH_B_Chield();}
-	virtual void			renderable_Render	()				{inherited::renderable_Render();}
-	virtual void			make_Interpolation	();
-	virtual void			PH_B_CrPr			(); // actions & operations before physic correction-prediction steps
-	virtual void			PH_I_CrPr			(); // actions & operations after correction before prediction steps
+	void			save				(NET_Packet &output_packet) override {inherited::save(output_packet);}
+	void			load				(IReader &input_packet) override {inherited::load(input_packet);}
+	BOOL			net_SaveRelevant	() override {return inherited::net_SaveRelevant();}
+
+	void			OnH_A_Chield		() override {inherited::OnH_A_Chield();}
+	void			OnH_B_Chield		() override {inherited::OnH_B_Chield();}
+	void			renderable_Render	() override {inherited::renderable_Render();}
+	void			make_Interpolation	() override;
+	void			PH_B_CrPr			() override; // actions & operations before physic correction-prediction steps
+	void			PH_I_CrPr			() override; // actions & operations after correction before prediction steps
 #ifdef DEBUG
-	virtual void			PH_Ch_CrPr			(); // 
-	virtual void			OnRender			();
+	void			PH_Ch_CrPr			() override; // 
+	void			OnRender			() override;
 #endif
-	virtual void			PH_A_CrPr			(); // actions & operations after phisic correction-prediction steps
-	virtual void			reinit				();
-	virtual void			reload				(LPCSTR section);
-	virtual void			activate_physic_shell	();
-	virtual void			setup_physic_shell		();
-	virtual void			create_physic_shell		();
+	void			PH_A_CrPr			() override; // actions & operations after phisic correction-prediction steps
+	void			reinit				() override;
+	void			reload				(LPCSTR section) override;
+	void			activate_physic_shell	() override;
+	void			setup_physic_shell		() override;
+	void			create_physic_shell		() override;
 
 public:
-	virtual bool			Useful				() const;
+	bool			Useful				() const override;
 protected:
-	virtual bool	use_parent_ai_locations	() const
+	bool	use_parent_ai_locations	() const override
 	{
 		return CAttachableItem::use_parent_ai_locations();
 	}

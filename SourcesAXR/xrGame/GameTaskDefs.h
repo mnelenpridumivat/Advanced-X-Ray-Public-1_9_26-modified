@@ -29,21 +29,22 @@ struct SGameTaskKey : public IPureSerializeObject<IReader,IWriter>,public IPureD
 	SGameTaskKey	():task_id(NULL),game_task(NULL)						{};
 
 
-	virtual void 	save								(IWriter &stream);
-	virtual void 	load								(IReader &stream);
-	virtual void 	destroy								();
+	void 	save								(IWriter &stream) override;
+	void 	load								(IReader &stream) override;
+	void 	destroy								() override;
 };
 
 DEFINE_VECTOR (SGameTaskKey, vGameTasks, vGameTasks_it);
 
 struct CGameTaskRegistry : public CALifeAbstractRegistry<u16, vGameTasks> 
 {
-	virtual void save(IWriter &stream)
+	void save(IWriter &stream) override
 	{
 		CALifeAbstractRegistry<u16, vGameTasks>::save(stream);
 		save_data		(g_active_task_id,		stream);
 	};
-	virtual void load(IReader &stream)
+
+	void load(IReader &stream) override
 	{
 		CALifeAbstractRegistry<u16, vGameTasks>::load(stream);
 		load_data		(g_active_task_id,		stream);

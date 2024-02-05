@@ -33,16 +33,16 @@ protected:
 	CUITextWnd*			m_buy_msg_caption;
 public:
 	CUIGameTDM			();
-	virtual 			~CUIGameTDM				();
-	virtual void		SetClGame				(game_cl_GameState* g);
-	virtual	void		UnLoad					();
-	virtual	void		Init					(int stage);
+	~CUIGameTDM				() override;
+	void		SetClGame				(game_cl_GameState* g) override;
+	void		UnLoad					() override;
+	void		Init					(int stage) override;
 			void		SetScoreCaption			(int t1, int t2);			
 			void		SetBuyMsgCaption		(LPCSTR str);
-	virtual void		SetFraglimit			(int local_frags, int fraglimit);
-	virtual void		Render					();
-	virtual void _BCL	OnFrame					();
-	
-	virtual	bool		IR_UIOnKeyboardPress	(int dik);
-	virtual bool		IR_UIOnKeyboardRelease	(int dik);
+	void		SetFraglimit			(int local_frags, int fraglimit) override;
+	void		Render					() override;
+	void _BCL	OnFrame					() override;
+
+	bool		IR_UIOnKeyboardPress	(int dik) override;
+	bool		IR_UIOnKeyboardRelease	(int dik) override;
 };

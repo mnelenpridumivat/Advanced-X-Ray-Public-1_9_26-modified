@@ -52,29 +52,29 @@ private:
 	EActorCameras			m_last_camera;
 public:
 							CSpectator				( );
-	virtual					~CSpectator				( );
+	~CSpectator				( ) override;
 
-	virtual void			IR_OnMouseMove			(int x, int y);
-	virtual void			IR_OnKeyboardPress		(int dik);
-	virtual void			IR_OnKeyboardRelease	(int dik);
-	virtual void			IR_OnKeyboardHold		(int dik);
-	virtual void			shedule_Update			( u32 T ); 
-	virtual void			UpdateCL				( );
-	virtual BOOL			net_Spawn				( CSE_Abstract*	DC );
-	virtual void			net_Destroy			();
+	void			IR_OnMouseMove			(int x, int y) override;
+	void			IR_OnKeyboardPress		(int dik) override;
+	void			IR_OnKeyboardRelease	(int dik) override;
+	void			IR_OnKeyboardHold		(int dik) override;
+	void			shedule_Update			( u32 T ) override;
+	void			UpdateCL				( ) override;
+	BOOL			net_Spawn				( CSE_Abstract*	DC ) override;
+	void			net_Destroy			() override;
 
-	virtual void			Center					(Fvector& C)	const	{ C.set(Position());	}
-	virtual float			Radius					()				const	{ return EPS;}
+	void			Center					(Fvector& C)	const override { C.set(Position());	}
+	float			Radius					()				const override { return EPS;}
 //	virtual const Fbox&		BoundingBox				()				const	{ VERIFY2(renderable.visual,*cName()); return renderable.visual->vis.box;									}
-	virtual CGameObject*	cast_game_object		()						{return this;}
-	virtual IInputReceiver*	cast_input_receiver		()						{return this;}
+	CGameObject*	cast_game_object		() override {return this;}
+	IInputReceiver*	cast_input_receiver		() override {return this;}
 
-	virtual void			net_Relcase				(CObject *O);
+	void			net_Relcase				(CObject *O) override;
 			void			GetSpectatorString		(string1024& pStr);
 
-			
-	virtual void			On_SetEntity			();
-	virtual void			On_LostEntity			();
+
+	void			On_SetEntity			() override;
+	void			On_LostEntity			() override;
 
 	inline	EActorCameras	GetActiveCam			() const {return cam_active;};
 };

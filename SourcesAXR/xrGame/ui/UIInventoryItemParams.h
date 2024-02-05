@@ -13,7 +13,7 @@ class CUIInventoryItem : public CUIWindow
 {
 public:
 	CUIInventoryItem();
-	virtual				~CUIInventoryItem();
+	~CUIInventoryItem() override;
 	void				InitFromXml(CUIXml& xml);
 	void				SetInfo(CInventoryItem& pInvItem);
 
@@ -44,7 +44,7 @@ class CUIInventoryItemInfo : public CUIWindow
 {
 public:
 	CUIInventoryItemInfo();
-	virtual		~CUIInventoryItemInfo();
+	~CUIInventoryItemInfo() override;
 
 	void	Init(CUIXml& xml, LPCSTR section);
 	void	SetCaption(LPCSTR name);

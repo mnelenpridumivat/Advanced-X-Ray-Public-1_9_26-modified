@@ -9,7 +9,7 @@ class CUILines : public CDeviceResetNotifier
 	 friend class CUICDkey;
 public:
 							CUILines		();
-	virtual					~CUILines		();
+	 ~CUILines		() override;
 
 			void			SetText			(LPCSTR text);
 			void			SetTextST		(LPCSTR text);
@@ -37,7 +37,7 @@ public:
 
 
     // CDeviceResetNotifier methods
-	virtual void			OnDeviceReset								();
+	 void			OnDeviceReset								() override;
 
 	// own methods
 			void			Reset										();

@@ -8,14 +8,14 @@ class CWeaponAutomaticShotgun :	public CWeaponMagazined
 	typedef CWeaponMagazined inherited;
 public:
 					CWeaponAutomaticShotgun	();
-	virtual			~CWeaponAutomaticShotgun();
+	~CWeaponAutomaticShotgun() override;
 
-	virtual void	Load					(LPCSTR section);
-	
-	virtual void	net_Export				(NET_Packet& P);
-	virtual void	net_Import				(NET_Packet& P);
+	void	Load					(LPCSTR section) override;
 
-	virtual void	Reload					();
+	void	net_Export				(NET_Packet& P) override;
+	void	net_Import				(NET_Packet& P) override;
+
+	void	Reload					() override;
 	void			switch2_StartReload		();
 	void			switch2_AddCartgidge	();
 	void			switch2_EndReload		();
@@ -24,13 +24,13 @@ public:
 	virtual void	PlayAnimAddOneCartridgeWeapon();
 	void			PlayAnimCloseWeapon		();
 
-	virtual bool	Action					(u16 cmd, u32 flags);
-	virtual	int		GetCurrentFireMode	() { return m_aFireModes[m_iCurFireMode]; };
+	bool	Action					(u16 cmd, u32 flags) override;
+	int		GetCurrentFireMode	() override { return m_aFireModes[m_iCurFireMode]; };
 
 protected:
-	virtual void	OnAnimationEnd			(u32 state);
+	void	OnAnimationEnd			(u32 state) override;
 	void			TriStateReload			();
-	virtual void	OnStateSwitch			(u32 S);
+	void	OnStateSwitch			(u32 S) override;
 
 	bool			HaveCartridgeInInventory(u8 cnt);
 	virtual u8		AddCartridge			(u8 cnt);

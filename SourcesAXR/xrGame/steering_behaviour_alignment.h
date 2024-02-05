@@ -22,7 +22,7 @@ class alignment final :
 {
 public:
 						alignment	(CAI_Rat const *object);
-	virtual	Fvector		direction	();
+						Fvector		direction	() override;
 
 private:
 	typedef base		inherited;

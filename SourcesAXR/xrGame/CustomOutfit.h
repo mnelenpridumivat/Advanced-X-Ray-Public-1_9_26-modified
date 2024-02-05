@@ -9,13 +9,13 @@ private:
     typedef	CInventoryItemObject inherited;
 public:
 							CCustomOutfit		();
-	virtual					~CCustomOutfit		();
+    ~CCustomOutfit		() override;
 
-	virtual void			Load				(LPCSTR section);
+    void			Load				(LPCSTR section) override;
 	
 	//уменьшенная версия хита, для вызова, когда костюм надет на персонажа
 	virtual void			Hit					(float P, ALife::EHitType hit_type);
-	virtual void			UpdateCL			();
+    void			UpdateCL			() override;
 
 	//коэффициенты на которые домножается хит
 	//при соответствующем типе воздействия
@@ -26,11 +26,11 @@ public:
 
 	float					HitThroughArmor		(float hit_power, s16 element, float ap, bool& add_wound, ALife::EHitType hit_type);
 
-	virtual void			OnMoveToSlot		(const SInvItemPlace& prev);
-	virtual void			OnMoveToRuck		(const SInvItemPlace& previous_place);
-	virtual void			OnH_A_Chield		();
-	virtual void			save				(NET_Packet& output_packet);
-	virtual void			load				(IReader& input_packet);
+    void			OnMoveToSlot		(const SInvItemPlace& prev) override;
+    void			OnMoveToRuck		(const SInvItemPlace& previous_place) override;
+    void			OnH_A_Chield		() override;
+    void			save				(NET_Packet& output_packet) override;
+    void			load				(IReader& input_packet) override;
 	void					UpdateFilterCondition(void);
 	float					GetFilterCondition	(void) const;
 	void					SetFilterCondition	(float val);
@@ -91,15 +91,15 @@ public:
 	u32						m_NightVisionType;
 	float					m_fNightVisionLumFactor;
 
-	virtual u32				ef_equipment_type		() const;
-	virtual	BOOL			BonePassBullet			(int boneID);
+    u32				ef_equipment_type		() const override;
+    BOOL			BonePassBullet			(int boneID) override;
 	const shared_str&		GetFullIconName			() const	{ return m_full_icon_name; }
 	u32						get_artefact_count		() const	{ return m_artefact_count; }
 	float					GetInventoryCapacity	() const	{ return m_fInventoryCapacity; }
 
-	virtual BOOL			net_Spawn				(CSE_Abstract* DC);
-	virtual void			net_Export				(NET_Packet& P);
-	virtual void			net_Import				(NET_Packet& P);
+    BOOL			net_Spawn				(CSE_Abstract* DC) override;
+    void			net_Export				(NET_Packet& P) override;
+    void			net_Import				(NET_Packet& P) override;
 			void			ApplySkinModel			(CActor* pActor, bool bDress, bool bHUDOnly);
 			void			ReloadBonesProtection	();
 			void			AddBonesProtection		(LPCSTR bones_section);
@@ -111,7 +111,7 @@ public:
 	HitImmunity::HitTypeSVec m_ConstHitTypeProtection;
 	HitImmunity::HitTypeSVec m_HitTypeProtection;
 protected:
-	virtual bool			install_upgrade_impl( LPCSTR section, bool test );
+    bool			install_upgrade_impl( LPCSTR section, bool test ) override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

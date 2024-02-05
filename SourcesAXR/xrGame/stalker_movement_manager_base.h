@@ -42,14 +42,14 @@ public:
 
 public:
 					stalker_movement_manager_base	(CAI_Stalker *object);
-	virtual			~stalker_movement_manager_base	();
-	virtual	void	Load							(LPCSTR section);
-	virtual	void	reinit							();
-	virtual	void	reload							(LPCSTR section);
+	~stalker_movement_manager_base	() override;
+	void	Load							(LPCSTR section) override;
+	void	reinit							() override;
+	void	reload							(LPCSTR section) override;
 	virtual	void	update							(u32 time_delta);
-	virtual void	on_travel_point_change			(const u32 &previous_travel_point_index);
-	virtual	void	on_restrictions_change			();
-	virtual	void	set_level_dest_vertex			(u32 const& level_vertex_id);
+	void	on_travel_point_change			(const u32 &previous_travel_point_index) override;
+	void	on_restrictions_change			() override;
+	void	set_level_dest_vertex			(u32 const& level_vertex_id) override;
 	virtual	void	remove_links					(CObject *object);
 			void	initialize						();
 	IC		float	path_direction_angle			();
@@ -87,7 +87,7 @@ public:
 	IC stalker_movement_params&		target_params			();
 
 public:
-	virtual void	on_build_path					();
+	void	on_build_path					() override;
 			void	update_object_on_the_way		(const CGameObject *object, const float &distance);
 			bool	is_object_on_the_way			(const CGameObject *object, const float &distance);
 			void	force_update					(const bool &force_update);

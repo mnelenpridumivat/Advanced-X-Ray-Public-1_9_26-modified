@@ -31,7 +31,7 @@ private:
 	float				blend_angular_speed;
 	static void	_BCL	RootBoneCallback				( CBoneInstance* B );
 	void				deinitialize					();
-	void				BlendDestroy					( CBlend& blend );
+	void				BlendDestroy					( CBlend& blend ) override;
 public:		
 			animation_movement_controller		( Fmatrix	*_pObjXForm, const Fmatrix &inital_pose,  IKinematics *_pKinematicsC,CBlend *b );
 virtual		~animation_movement_controller		( );

@@ -7,19 +7,19 @@ class game_cl_Single :public game_cl_GameState
 	typedef game_cl_GameState	inherited;
 public :
 										game_cl_Single			();
-	virtual		CUIGameCustom*			createGameUI			();
-	virtual		char*					getTeamSection			(int Team);
-	virtual		bool					IsServerControlHits		()	{return true;};
+	CUIGameCustom*			createGameUI			() override;
+	char*					getTeamSection			(int Team) override;
+	bool					IsServerControlHits		() override {return true;};
 
-	virtual		ALife::_TIME_ID			GetStartGameTime		();
-	virtual		ALife::_TIME_ID			GetGameTime				();	
-	virtual		float					GetGameTimeFactor		();	
-	virtual		void					SetGameTimeFactor		(const float fTimeFactor);
+	ALife::_TIME_ID			GetStartGameTime		() override;
+	ALife::_TIME_ID			GetGameTime				() override;
+	float					GetGameTimeFactor		() override;
+	void					SetGameTimeFactor		(const float fTimeFactor) override;
 
-	virtual		ALife::_TIME_ID		GetEnvironmentGameTime		();
-	virtual		float				GetEnvironmentGameTimeFactor();
+	ALife::_TIME_ID		GetEnvironmentGameTime		() override;
+	float				GetEnvironmentGameTimeFactor() override;
 				void				SetEnvironmentGameTimeFactor(ALife::_TIME_ID GameTime, const float fTimeFactor) override;
-	virtual		void				SetEnvironmentGameTimeFactor(const float fTimeFactor);
+	void				SetEnvironmentGameTimeFactor(const float fTimeFactor) override;
 
 	void		OnDifficultyChanged		();
 };

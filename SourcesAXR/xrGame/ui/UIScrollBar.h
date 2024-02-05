@@ -48,23 +48,23 @@ public:
 
 			void	SetEnabled			(bool b)			{m_b_enabled = b;if(!m_b_enabled)Show(m_b_enabled);}
 			bool	GetEnabled			()					{return m_b_enabled;}
-	virtual void	Show				(bool b);
-	virtual void	Enable				(bool b);
+	void	Show				(bool b) override;
+	void	Enable				(bool b) override;
 	virtual	void	InitScrollBar		(Fvector2 pos, float length, bool bIsHorizontal, LPCSTR profile = "default");
 
-	virtual void	SendMessage			(CUIWindow *pWnd, s16 msg, void *pData);
-	virtual bool	OnMouseAction				(float x, float y, EUIMessages mouse_action);
-	virtual bool 	OnMouseDown			(int mouse_btn);
+	void	SendMessage			(CUIWindow *pWnd, s16 msg, void *pData) override;
+	bool	OnMouseAction				(float x, float y, EUIMessages mouse_action) override;
+	bool 	OnMouseDown			(int mouse_btn) override;
 	virtual	bool	OnMouseDownEx		();
-	virtual void	OnMouseUp			(int mouse_btn);
-	virtual bool	OnKeyboardHold		(int dik);
+	void	OnMouseUp			(int mouse_btn) override;
+	bool	OnKeyboardHold		(int dik) override;
 
-	virtual void	Draw				();
+	void	Draw				() override;
 
-	virtual void	SetWidth			(float width);
-	virtual void	SetHeight			(float height);
+	void	SetWidth			(float width) override;
+	void	SetHeight			(float height) override;
 
-	virtual void	Reset				();
+	void	Reset				() override;
 	void			Refresh				();
 	void			SetStepSize			(int step);
 	IC int			GetStepSize			() { return m_iStepSize; }

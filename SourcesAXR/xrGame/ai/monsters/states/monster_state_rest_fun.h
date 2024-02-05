@@ -11,11 +11,11 @@ class CStateMonsterRestFun : public CState<_Object> {
 
 public:
 						CStateMonsterRestFun	(_Object *obj);
-	virtual	void		initialize				();
-	virtual	void		execute					();
-	virtual	bool		check_completion		();
-	virtual	bool		check_start_conditions	();
-	virtual void		remove_links			(CObject* object) { inherited::remove_links(object);}
+	void		initialize				() override;
+	void		execute					() override;
+	bool		check_completion		() override;
+	bool		check_start_conditions	() override;
+	void		remove_links			(CObject* object) override { inherited::remove_links(object);}
 };
 
 #include "monster_state_rest_fun_inline.h"

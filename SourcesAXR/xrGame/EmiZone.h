@@ -9,11 +9,10 @@ private:
 	typedef		CCustomZone					inherited;
 
 public:
+	void	Load(LPCSTR section) override;
 
-	virtual void	Load(LPCSTR section);
-
-	virtual		void	enter_Zone(SZoneObjectInfo& io);
-	virtual		void	exit_Zone(SZoneObjectInfo& io);
+	void	enter_Zone(SZoneObjectInfo& io) override;
+	void	exit_Zone(SZoneObjectInfo& io) override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 

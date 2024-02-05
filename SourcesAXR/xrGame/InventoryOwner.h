@@ -32,7 +32,7 @@ class CHelmet;
 class CInventoryOwner : public CAttachmentOwner {
 public:
 					CInventoryOwner				();
-	virtual			~CInventoryOwner			();
+					~CInventoryOwner			() override;
 
 public:
 	virtual CInventoryOwner*	cast_inventory_owner	()						{return this;}
@@ -40,11 +40,11 @@ public:
 
 	virtual DLL_Pure	*_construct				();
 	virtual BOOL		net_Spawn				(CSE_Abstract* DC);
-	virtual void		net_Destroy				();
+					void		net_Destroy				() override;
 			void		Init					();
 	virtual void		Load					(LPCSTR section);
-	virtual void		reinit					();
-	virtual void		reload					(LPCSTR section);
+					void		reinit					() override;
+					void		reload					(LPCSTR section) override;
 	virtual void		OnEvent					(NET_Packet& P, u16 type);
 
 	//serialization
@@ -186,7 +186,7 @@ protected:
 	shared_str				m_character_icon;
 
 public:
-	virtual void			renderable_Render		();
+					void			renderable_Render		() override;
 	virtual void			OnItemTake				(CInventoryItem *inventory_item);
 	
 	virtual void			OnItemBelt				(CInventoryItem *inventory_item, const SInvItemPlace& previous_place);

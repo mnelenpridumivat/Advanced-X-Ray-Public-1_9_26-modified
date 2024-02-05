@@ -12,9 +12,9 @@ private:
 	typedef CArtefact inherited;
 public:
 	CBlackDrops(void);
-	virtual ~CBlackDrops(void);
+	~CBlackDrops(void) override;
 
-	virtual void Load				(LPCSTR section);
+	void Load				(LPCSTR section) override;
 
 protected:
 };

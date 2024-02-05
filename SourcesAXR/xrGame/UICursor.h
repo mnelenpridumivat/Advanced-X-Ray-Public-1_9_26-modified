@@ -15,14 +15,14 @@ class CUICursor:	public pureRender,
 public:
 					CUICursor					();
 	virtual			~CUICursor					();
-	virtual void	OnRender					();
+	void	OnRender					() override;
 	
 	Fvector2		GetCursorPositionDelta		();
 
 	Fvector2		GetCursorPosition			();
 	void			SetUICursorPosition			(Fvector2 pos);
 	void			UpdateCursorPosition		(int _dx, int _dy);
-	virtual void	OnScreenResolutionChanged	();
+	void	OnScreenResolutionChanged	() override;
 
 	bool			IsVisible					() {return bVisible;}
 	void			Show						() {bVisible = true;}

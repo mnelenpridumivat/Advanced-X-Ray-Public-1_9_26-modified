@@ -50,7 +50,7 @@ private: // sub-classes
 
 public:
 							CUIInventoryUpgradeWnd();
-	virtual					~CUIInventoryUpgradeWnd();
+	~CUIInventoryUpgradeWnd() override;
 
 	virtual void			Init();
 			void			InitInventory( CInventoryItem* item, bool can_upgrade );
@@ -61,9 +61,9 @@ public:
 	Fvector2				get_scheme_position() const { return m_scheme_wnd->GetWndPos(); }
 	Fvector2				get_item_position() const { return m_item->GetWndPos(); }
 
-	virtual void			Show( bool status );
-	virtual void			Update();
-	virtual void			Reset();
+	void			Show( bool status ) override;
+	void			Update() override;
+	void			Reset() override;
 			void			UpdateAllUpgrades();
 
 			bool			DBClickOnUIUpgrade( Upgrade_type const* upgr );

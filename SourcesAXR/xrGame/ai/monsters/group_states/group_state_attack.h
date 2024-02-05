@@ -8,14 +8,14 @@ class	CStateGroupAttack : public CState<_Object>
 {
 public:
 	CStateGroupAttack (_Object *obj);
-	virtual				~CStateGroupAttack	();
+	~CStateGroupAttack	() override;
 
-	virtual void		initialize			();
-	virtual	void		execute				();
-	virtual void		setup_substates		();
-	virtual	void		critical_finalize	();
-	virtual	void		finalize		    ();
-	virtual void		remove_links		(CObject* object);
+	void		initialize			() override;
+	void		execute				() override;
+	void		setup_substates		() override;
+	void		critical_finalize	() override;
+	void		finalize		    () override;
+	void		remove_links		(CObject* object) override;
 
 protected:
 	typedef CState<_Object>		inherited;

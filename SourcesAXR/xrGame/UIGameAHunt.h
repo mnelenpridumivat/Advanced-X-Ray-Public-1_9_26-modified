@@ -24,12 +24,12 @@ public:
 	CUIMessageBoxEx*	m_pBuySpawnMsgBox;
 
 public:
-	virtual void		SetClGame				(game_cl_GameState* g);
+	void		SetClGame				(game_cl_GameState* g) override;
 	CUIGameAHunt								();
-	virtual 			~CUIGameAHunt			();
+	~CUIGameAHunt			() override;
 
-	virtual	void		Init					(int stage);
-	virtual	void		UnLoad					();
+	void		Init					(int stage) override;
+	void		UnLoad					() override;
 			void		SetBuyMsgCaption		(LPCSTR str);
 
 protected:

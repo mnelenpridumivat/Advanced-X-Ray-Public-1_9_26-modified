@@ -20,9 +20,9 @@ class CControllerDirection : public CControlDirectionBase {
 	
 	Fvector							m_head_look_point;
 
-public:	
-	virtual void		reinit				();
-	virtual	void		update_schedule		();	
+public:
+	void		reinit				() override;
+	void		update_schedule		() override;	
 
 			void		head_look_point		(const Fvector &look_point);
 			Fvector		&get_head_look_point() {return m_head_look_point;}

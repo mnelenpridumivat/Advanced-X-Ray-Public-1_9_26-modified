@@ -13,8 +13,8 @@ class CUIAchivementIndicator : public CUIWindow
 	typedef CUIWindow inherited;
 public:
 						CUIAchivementIndicator	();
-	virtual				~CUIAchivementIndicator	();
-	virtual void 		Update					();
+	~CUIAchivementIndicator	() override;
+	void 		Update					() override;
 			
 			void		AddAchivement			(shared_str const & achivement_name,
 												 shared_str const & color_animation,

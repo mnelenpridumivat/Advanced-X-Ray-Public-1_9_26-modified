@@ -50,7 +50,7 @@ struct CDataStorageBucketList {
 
 	public:
 		IC						CDataStorage		(const u32 vertex_count);
-		virtual					~CDataStorage		();
+		~CDataStorage		() override;
 		IC		void			init				();
 		IC		void			add_best_closed		();
 		IC		bool			is_opened_empty		();

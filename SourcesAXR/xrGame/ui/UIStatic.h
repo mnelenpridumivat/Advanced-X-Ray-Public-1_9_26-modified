@@ -32,22 +32,22 @@ private:
 public:
 
 							CUIStatic				();
-	virtual					~CUIStatic				();
+	~CUIStatic				() override;
 
-	virtual void			Draw					();
-	virtual void			Update					();
-	virtual void			OnFocusLost				();
+	void			Draw					() override;
+	void			Update					() override;
+	void			OnFocusLost				() override;
 
 	virtual void			CreateShader			(LPCSTR tex, LPCSTR sh = "hud\\default");
 	ui_shader&				GetShader				()							{return m_UIStaticItem.GetShader();};
 
-	virtual void			SetTextureColor			(u32 color)					{ m_UIStaticItem.SetTextureColor(color);}
-	virtual u32				GetTextureColor			() const					{ return m_UIStaticItem.GetTextureColor();}
-	virtual void			SetTextureRect			(const Frect& r)			{m_UIStaticItem.SetTextureRect(r);}
-	virtual const Frect&	GetTextureRect			() const					{return m_UIStaticItem.GetTextureRect();}
-	
-	virtual void			InitTexture				(LPCSTR tex_name);
-	virtual void			InitTextureEx			(LPCSTR tex_name, LPCSTR sh_name="hud\\default");
+	void			SetTextureColor			(u32 color) override { m_UIStaticItem.SetTextureColor(color);}
+	u32				GetTextureColor			() const override { return m_UIStaticItem.GetTextureColor();}
+	void			SetTextureRect			(const Frect& r) override {m_UIStaticItem.SetTextureRect(r);}
+	const Frect&	GetTextureRect			() const override {return m_UIStaticItem.GetTextureRect();}
+
+	void			InitTexture				(LPCSTR tex_name) override;
+	void			InitTextureEx			(LPCSTR tex_name, LPCSTR sh_name="hud\\default") override;
 	CUIStaticItem*			GetStaticItem			()							{return &m_UIStaticItem;}
 			void			SetTextureRect_script	(Frect* pr)					{m_UIStaticItem.SetTextureRect(*pr);}
 	const	Frect*			GetTextureRect_script	()							{return &m_UIStaticItem.GetTextureRect();}
@@ -80,8 +80,8 @@ public:
 			void			SetShader				(const ui_shader& sh);
 			CUIStaticItem&	GetUIStaticItem			()						{return m_UIStaticItem;}
 
-			void			SetStretchTexture		(bool stretch_texture)	{m_bStretchTexture = stretch_texture;}
-			bool			GetStretchTexture		()						{return m_bStretchTexture;}
+			void			SetStretchTexture		(bool stretch_texture) override {m_bStretchTexture = stretch_texture;}
+			bool			GetStretchTexture		() override {return m_bStretchTexture;}
 			
 			void			SetHeading				(float f)				{m_fHeading = f;};
 			float			GetHeading				()						{return m_fHeading;}
@@ -91,8 +91,8 @@ public:
 			void			SetConstHeading			(bool b)				{m_bConstHeading = b;};
 			bool			GetConstHeading			()						{return m_bConstHeading;}
 
-	virtual void			ColorAnimationSetTextureColor	(u32 color, bool only_alpha);
-	virtual void			ColorAnimationSetTextColor		(u32 color, bool only_alpha);
+	void			ColorAnimationSetTextureColor	(u32 color, bool only_alpha) override;
+	void			ColorAnimationSetTextColor		(u32 color, bool only_alpha) override;
 
 			void			SetHint					(LPCSTR hint_text); //MNP
 protected:
@@ -121,9 +121,9 @@ class CUITextWnd :public CUIWindow, public CUILightAnimColorConrollerImpl
 	CUILines			m_lines;
 public:
 						CUITextWnd				();
-	virtual				~CUITextWnd				(){};
-	virtual void		Draw					();
-	virtual void		Update					();
+	~CUITextWnd				() override {};
+	void		Draw					() override;
+	void		Update					() override;
 
 			void 		AdjustHeightToText		();
 			void 		AdjustWidthToText		();
@@ -131,7 +131,7 @@ public:
 			void		SetText					(LPCSTR txt)				{TextItemControl().SetText(txt);}
 			void		SetTextST				(LPCSTR txt)				{TextItemControl().SetTextST(txt);}
 			LPCSTR		GetText					()							{return TextItemControl().GetText();}
-			void		SetFont					(CGameFont* F)				{TextItemControl().SetFont(F);}
+			void		SetFont					(CGameFont* F) override {TextItemControl().SetFont(F);}
 			CGameFont*	GetFont					()							{return TextItemControl().GetFont();}
 			void		SetTextColor			(u32 color)					{TextItemControl().SetTextColor(color);}
 			u32			GetTextColor			()							{return TextItemControl().GetTextColor();}
@@ -142,7 +142,7 @@ public:
 			void		SetCutWordsMode			(bool mode)					{TextItemControl().SetCutWordsMode(mode);}
 			void		SetTextOffset			(float x, float y)			{TextItemControl().m_TextOffset.x = x; TextItemControl().m_TextOffset.y = y;}
 
-	virtual void		ColorAnimationSetTextColor(u32 color, bool only_alpha);
+	void		ColorAnimationSetTextColor(u32 color, bool only_alpha) override;
 
 	CUILines&			TextItemControl			()							{return m_lines;}
 };

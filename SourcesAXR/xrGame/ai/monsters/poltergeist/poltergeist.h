@@ -33,6 +33,7 @@ class CPoltergeist :	public CBaseMonster ,
 
 	CPolterSpecialAbility	*m_flame;
 	CPolterSpecialAbility	*m_tele;
+	CPolterSpecialAbility	*m_chem;
 
 	bool					m_actor_ignore;
 
@@ -54,42 +55,38 @@ public:
 
 public:
 					CPoltergeist		();
-	virtual			~CPoltergeist		();	
+	~CPoltergeist		() override;
 
-	virtual void	Load				(LPCSTR section);
-	virtual void	reload				(LPCSTR section);
-	virtual void	reinit				();
+	void	Load				(LPCSTR section) override;
+	void	reload				(LPCSTR section) override;
+	void	reinit				() override;
 
-	virtual BOOL	net_Spawn			(CSE_Abstract* DC);
-	virtual void	net_Destroy			();
-	virtual void	net_Relcase			(CObject *O);
+	BOOL	net_Spawn			(CSE_Abstract* DC) override;
+	void	net_Destroy			() override;
+	void	net_Relcase			(CObject *O) override;
 
-	virtual void	UpdateCL			();
-	virtual	void	shedule_Update		(u32 dt);
+	void	UpdateCL			() override;
+	void	shedule_Update		(u32 dt) override;
 
 			void	set_actor_ignore	(bool const actor_ignore) { m_actor_ignore = actor_ignore; }
 			bool	get_actor_ignore	() const { return m_actor_ignore; }
 
-	virtual void	Die					(CObject* who);
+	void	Die					(CObject* who) override;
 
-	virtual CMovementManager *create_movement_manager();
-	
-	virtual void	ForceFinalAnimation	();
+	CMovementManager *create_movement_manager() override;
 
-	virtual	void	on_activate			();
-	virtual	void	on_deactivate		();
-	virtual	void	Hit					(SHit* pHDS);
-	virtual	char*	get_monster_class_name () { return "poltergeist"; }
+	void	ForceFinalAnimation	() override;
+
+	void	on_activate			() override;
+	void	on_deactivate		() override;
+	void	Hit					(SHit* pHDS) override;
+	char*	get_monster_class_name () override { return "poltergeist"; }
 
 			bool	detected_enemy		();
 			float	get_fly_around_distance	() const { return m_fly_around_distance; }
 			float	get_fly_around_change_direction_time() const { return m_fly_around_change_direction_time; }
 
-	virtual	void	renderable_Render	();
-
-	IC		CPolterSpecialAbility		*ability() {return (m_flame ? m_flame : m_tele);}
-	
-	
+	void	renderable_Render	() override;
 
 	IC		bool	is_hidden			() {return state_invisible;}
 
@@ -115,7 +112,7 @@ public:
 			void	DisableHide				(){m_disable_hide = true;}
 
 public:
-	virtual bool	run_home_point_when_enemy_inaccessible () const { return false; }
+	bool	run_home_point_when_enemy_inaccessible () const override { return false; }
 	
 private:
 			void	Hide					();
@@ -146,7 +143,7 @@ private:
 
 public:
 #ifdef DEBUG
-			virtual CBaseMonster::SDebugInfo show_debug_info();
+	CBaseMonster::SDebugInfo show_debug_info() override;
 #endif
 	
 
@@ -267,12 +264,12 @@ private:
 
 public:	
 					CPolterFlame				(CPoltergeist *polter);
-	virtual			~CPolterFlame				();
+	~CPolterFlame				() override;
 
-	virtual void	load						(LPCSTR section);
-	virtual void	update_schedule				();
-	virtual void	on_destroy					();
-	virtual void	on_die						();
+	void	load						(LPCSTR section) override;
+	void	update_schedule				() override;
+	void	on_destroy					() override;
+	void	on_die						() override;
 
 private:
 			void	select_state				(SFlameElement *elem, EFlameState state);
@@ -321,11 +318,11 @@ class CPolterTele : public CPolterSpecialAbility {
 
 public:	
 					CPolterTele						(CPoltergeist *polter);
-	virtual			~CPolterTele					();
+	~CPolterTele					() override;
 
-	virtual void	load							(LPCSTR section);
-	virtual void	update_schedule					();
-	virtual void	update_frame					();
+	void	load							(LPCSTR section) override;
+	void	update_schedule					() override;
+	void	update_frame					() override;
 
 private:
 			void	tele_find_objects				(xr_vector<CObject*> &objects, const Fvector &pos);
@@ -333,5 +330,29 @@ private:
 			void	tele_fire_objects				();
 
 			bool	trace_object					(CObject *obj, const Fvector &target);
+};
+
+
+
+//////////////////////////////////////////////////////////////////////////
+// Chemical
+//////////////////////////////////////////////////////////////////////////
+class CPolterChem : public CPolterSpecialAbility {
+
+	typedef CPolterSpecialAbility inherited;
+
+public:
+
+	CPolterChem(CPoltergeist* polter);
+	~CPolterChem() override;
+
+	void	load(LPCSTR section) override;
+	void	update_schedule() override;
+	void	update_frame() override;
+	void	on_hide() override;
+	void	on_show() override;
+	void	on_destroy() override;
+	void	on_die() override;
+	void	on_hit(SHit* pHDS) override;
 };
 

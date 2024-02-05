@@ -8,9 +8,9 @@ class CUIListBoxItemMsgChain : public CUIListBoxItem
 	typedef CUIListBoxItem inherited;
 public:
 					CUIListBoxItemMsgChain	(float height) : CUIListBoxItem(height) {};
-	virtual			~CUIListBoxItemMsgChain	() {};
+	~CUIListBoxItemMsgChain	() override {};
 
-	virtual bool	OnMouseDown				(int mouse_btn);
+	bool	OnMouseDown				(int mouse_btn) override;
 };
 
 #endif //#ifndef UILISTBOXITEMMSGCHAIN_H_INCLUDED

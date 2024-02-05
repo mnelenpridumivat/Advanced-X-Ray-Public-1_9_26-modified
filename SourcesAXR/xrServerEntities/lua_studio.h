@@ -27,68 +27,68 @@ class lua_studio_engine :
 	private boost::noncopyable
 {
 public:
-	virtual	int				CS_LUA_STUDIO_BACKEND_CALL	luaL_loadstring				(lua_State *L, const char *s);
-	virtual	int				CS_LUA_STUDIO_BACKEND_CALL	luaL_newmetatable			(lua_State *L, const char *tname);
+	int				CS_LUA_STUDIO_BACKEND_CALL	luaL_loadstring				(lua_State *L, const char *s) override;
+	int				CS_LUA_STUDIO_BACKEND_CALL	luaL_newmetatable			(lua_State *L, const char *tname) override;
 
 public:
-	virtual	void			CS_LUA_STUDIO_BACKEND_CALL	lua_createtable				(lua_State *L, int narray, int nrec);
+	void			CS_LUA_STUDIO_BACKEND_CALL	lua_createtable				(lua_State *L, int narray, int nrec) override;
 
-	virtual	int				CS_LUA_STUDIO_BACKEND_CALL	lua_sethook					(lua_State *L, lua_Hook func, lua_mask_type mask, int count);
-	virtual	lua_Hook		CS_LUA_STUDIO_BACKEND_CALL	lua_gethook					(lua_State *L);
+	int				CS_LUA_STUDIO_BACKEND_CALL	lua_sethook					(lua_State *L, lua_Hook func, lua_mask_type mask, int count) override;
+	lua_Hook		CS_LUA_STUDIO_BACKEND_CALL	lua_gethook					(lua_State *L) override;
 
-	virtual	int				CS_LUA_STUDIO_BACKEND_CALL	lua_getinfo					(lua_State *L, const char *what, lua_Debug *ar);
-	virtual	void			CS_LUA_STUDIO_BACKEND_CALL	lua_getfenv					(lua_State *L, int idx);
-	virtual	void			CS_LUA_STUDIO_BACKEND_CALL	lua_getfield				(lua_State *L, int idx, const char *k);
-	virtual	char const*		CS_LUA_STUDIO_BACKEND_CALL	lua_getlocal				(lua_State *L, const lua_Debug *ar, int n);
-	virtual	void			CS_LUA_STUDIO_BACKEND_CALL	lua_gettable				(lua_State *L, int idx);
-	virtual	int				CS_LUA_STUDIO_BACKEND_CALL	lua_getstack				(lua_State *L, int level, lua_Debug *ar);
-	virtual	int				CS_LUA_STUDIO_BACKEND_CALL	lua_gettop					(lua_State *L);
-	virtual	char const*		CS_LUA_STUDIO_BACKEND_CALL	lua_getupvalue				(lua_State *L, int funcindex, int n);
+	int				CS_LUA_STUDIO_BACKEND_CALL	lua_getinfo					(lua_State *L, const char *what, lua_Debug *ar) override;
+	void			CS_LUA_STUDIO_BACKEND_CALL	lua_getfenv					(lua_State *L, int idx) override;
+	void			CS_LUA_STUDIO_BACKEND_CALL	lua_getfield				(lua_State *L, int idx, const char *k) override;
+	char const*		CS_LUA_STUDIO_BACKEND_CALL	lua_getlocal				(lua_State *L, const lua_Debug *ar, int n) override;
+	void			CS_LUA_STUDIO_BACKEND_CALL	lua_gettable				(lua_State *L, int idx) override;
+	int				CS_LUA_STUDIO_BACKEND_CALL	lua_getstack				(lua_State *L, int level, lua_Debug *ar) override;
+	int				CS_LUA_STUDIO_BACKEND_CALL	lua_gettop					(lua_State *L) override;
+	char const*		CS_LUA_STUDIO_BACKEND_CALL	lua_getupvalue				(lua_State *L, int funcindex, int n) override;
 
-	virtual	int				CS_LUA_STUDIO_BACKEND_CALL	lua_iscfunction				(lua_State *L, int idx);
-	virtual	int				CS_LUA_STUDIO_BACKEND_CALL	lua_next					(lua_State *L, int idx);
+	int				CS_LUA_STUDIO_BACKEND_CALL	lua_iscfunction				(lua_State *L, int idx) override;
+	int				CS_LUA_STUDIO_BACKEND_CALL	lua_next					(lua_State *L, int idx) override;
 
-	virtual	int				CS_LUA_STUDIO_BACKEND_CALL	lua_pcall					(lua_State *L, int nargs, int nresults, int errfunc);
+	int				CS_LUA_STUDIO_BACKEND_CALL	lua_pcall					(lua_State *L, int nargs, int nresults, int errfunc) override;
 
-	virtual	void			CS_LUA_STUDIO_BACKEND_CALL	lua_pushcclosure			(lua_State *L, lua_CFunction fn, int n);
-	virtual	void			CS_LUA_STUDIO_BACKEND_CALL	lua_pushnil					(lua_State *L);
-	virtual	void			CS_LUA_STUDIO_BACKEND_CALL	lua_pushstring				(lua_State *L, const char *s);
-	virtual	void			CS_LUA_STUDIO_BACKEND_CALL	lua_pushvalue				(lua_State *L, int idx);
-	virtual	void			CS_LUA_STUDIO_BACKEND_CALL	lua_pushnumber				(lua_State *L, lua_Number idx);
+	void			CS_LUA_STUDIO_BACKEND_CALL	lua_pushcclosure			(lua_State *L, lua_CFunction fn, int n) override;
+	void			CS_LUA_STUDIO_BACKEND_CALL	lua_pushnil					(lua_State *L) override;
+	void			CS_LUA_STUDIO_BACKEND_CALL	lua_pushstring				(lua_State *L, const char *s) override;
+	void			CS_LUA_STUDIO_BACKEND_CALL	lua_pushvalue				(lua_State *L, int idx) override;
+	void			CS_LUA_STUDIO_BACKEND_CALL	lua_pushnumber				(lua_State *L, lua_Number idx) override;
 
-	virtual	void			CS_LUA_STUDIO_BACKEND_CALL	lua_remove					(lua_State *L, int idx);
-	virtual	void			CS_LUA_STUDIO_BACKEND_CALL	lua_replace					(lua_State *L, int idx);
+	void			CS_LUA_STUDIO_BACKEND_CALL	lua_remove					(lua_State *L, int idx) override;
+	void			CS_LUA_STUDIO_BACKEND_CALL	lua_replace					(lua_State *L, int idx) override;
 
-	virtual	int				CS_LUA_STUDIO_BACKEND_CALL	lua_setfenv					(lua_State *L, int idx);
-	virtual	int				CS_LUA_STUDIO_BACKEND_CALL	lua_setmetatable			(lua_State *L, int objindex);
-	virtual	void			CS_LUA_STUDIO_BACKEND_CALL	lua_settable				(lua_State *L, int idx);
-	virtual	void			CS_LUA_STUDIO_BACKEND_CALL	lua_settop					(lua_State *L, int idx);
+	int				CS_LUA_STUDIO_BACKEND_CALL	lua_setfenv					(lua_State *L, int idx) override;
+	int				CS_LUA_STUDIO_BACKEND_CALL	lua_setmetatable			(lua_State *L, int objindex) override;
+	void			CS_LUA_STUDIO_BACKEND_CALL	lua_settable				(lua_State *L, int idx) override;
+	void			CS_LUA_STUDIO_BACKEND_CALL	lua_settop					(lua_State *L, int idx) override;
 
-	virtual	int				CS_LUA_STUDIO_BACKEND_CALL	lua_toboolean				(lua_State *L, int idx);
-	virtual	lua_Integer		CS_LUA_STUDIO_BACKEND_CALL	lua_tointeger				(lua_State *L, int idx);
-	virtual	char const*		CS_LUA_STUDIO_BACKEND_CALL	lua_tolstring				(lua_State *L, int idx, size_t *len);
-	virtual	lua_Number		CS_LUA_STUDIO_BACKEND_CALL	lua_tonumber				(lua_State *L, int idx);
-	virtual	const void*		CS_LUA_STUDIO_BACKEND_CALL	lua_topointer				(lua_State *L, int idx);
+	int				CS_LUA_STUDIO_BACKEND_CALL	lua_toboolean				(lua_State *L, int idx) override;
+	lua_Integer		CS_LUA_STUDIO_BACKEND_CALL	lua_tointeger				(lua_State *L, int idx) override;
+	char const*		CS_LUA_STUDIO_BACKEND_CALL	lua_tolstring				(lua_State *L, int idx, size_t *len) override;
+	lua_Number		CS_LUA_STUDIO_BACKEND_CALL	lua_tonumber				(lua_State *L, int idx) override;
+	const void*		CS_LUA_STUDIO_BACKEND_CALL	lua_topointer				(lua_State *L, int idx) override;
 
-	virtual	bool			CS_LUA_STUDIO_BACKEND_CALL	lua_isnumber				(lua_State *L, int idx);
+	bool			CS_LUA_STUDIO_BACKEND_CALL	lua_isnumber				(lua_State *L, int idx) override;
 
-	virtual	int				CS_LUA_STUDIO_BACKEND_CALL	lua_type					(lua_State *L, int idx);
-	virtual	char const*		CS_LUA_STUDIO_BACKEND_CALL	lua_typename				(lua_State *L, int t);
-
-public:
-	virtual	lua_Debug*		CS_LUA_STUDIO_BACKEND_CALL	lua_debug_create			();
-	virtual	void			CS_LUA_STUDIO_BACKEND_CALL	lua_debug_destroy			(lua_Debug*& instance);
-	virtual	char const*		CS_LUA_STUDIO_BACKEND_CALL	lua_debug_get_name			(lua_Debug& instance);
-	virtual	char const*		CS_LUA_STUDIO_BACKEND_CALL	lua_debug_get_source		(lua_Debug& instance);
-	virtual	char const*		CS_LUA_STUDIO_BACKEND_CALL	lua_debug_get_short_source	(lua_Debug& instance);
-	virtual	int				CS_LUA_STUDIO_BACKEND_CALL	lua_debug_get_current_line	(lua_Debug& instance);
+	int				CS_LUA_STUDIO_BACKEND_CALL	lua_type					(lua_State *L, int idx) override;
+	char const*		CS_LUA_STUDIO_BACKEND_CALL	lua_typename				(lua_State *L, int t) override;
 
 public:
-	virtual	void			CS_LUA_STUDIO_BACKEND_CALL	log							(log_message_types message_type, char const* message);
-	virtual	bool			CS_LUA_STUDIO_BACKEND_CALL	type_to_string				(char* buffer, unsigned int size, lua_State* state, int index, bool& use_in_description);
-	virtual	bool			CS_LUA_STUDIO_BACKEND_CALL	value_to_string				(cs::lua_studio::backend& backend, char* buffer, unsigned int size, lua_State* state, int index, cs::lua_studio::icon_type& icon_type, bool full_description);
-	virtual	bool			CS_LUA_STUDIO_BACKEND_CALL	expand_value				(cs::lua_studio::backend& backend, cs::lua_studio::value_to_expand& value, lua_State* state);
-	virtual	bool			CS_LUA_STUDIO_BACKEND_CALL	push_value					(lua_State* state, char const* id, cs::lua_studio::icon_type icon_type);
+	lua_Debug*		CS_LUA_STUDIO_BACKEND_CALL	lua_debug_create			() override;
+	void			CS_LUA_STUDIO_BACKEND_CALL	lua_debug_destroy			(lua_Debug*& instance) override;
+	char const*		CS_LUA_STUDIO_BACKEND_CALL	lua_debug_get_name			(lua_Debug& instance) override;
+	char const*		CS_LUA_STUDIO_BACKEND_CALL	lua_debug_get_source		(lua_Debug& instance) override;
+	char const*		CS_LUA_STUDIO_BACKEND_CALL	lua_debug_get_short_source	(lua_Debug& instance) override;
+	int				CS_LUA_STUDIO_BACKEND_CALL	lua_debug_get_current_line	(lua_Debug& instance) override;
+
+public:
+	void			CS_LUA_STUDIO_BACKEND_CALL	log							(log_message_types message_type, char const* message) override;
+	bool			CS_LUA_STUDIO_BACKEND_CALL	type_to_string				(char* buffer, unsigned int size, lua_State* state, int index, bool& use_in_description) override;
+	bool			CS_LUA_STUDIO_BACKEND_CALL	value_to_string				(cs::lua_studio::backend& backend, char* buffer, unsigned int size, lua_State* state, int index, cs::lua_studio::icon_type& icon_type, bool full_description) override;
+	bool			CS_LUA_STUDIO_BACKEND_CALL	expand_value				(cs::lua_studio::backend& backend, cs::lua_studio::value_to_expand& value, lua_State* state) override;
+	bool			CS_LUA_STUDIO_BACKEND_CALL	push_value					(lua_State* state, char const* id, cs::lua_studio::icon_type icon_type) override;
 
 public:
 													lua_studio_engine			();

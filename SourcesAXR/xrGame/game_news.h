@@ -16,8 +16,8 @@ struct GAME_NEWS_DATA : public IPureSerializeObject<IReader,IWriter>
 	} m_type;
 						GAME_NEWS_DATA		();
 
-	virtual void		load				(IReader&);
-	virtual void		save				(IWriter&);
+	void		load				(IReader&) override;
+	void		save				(IWriter&) override;
 
 
 	shared_str			news_caption;

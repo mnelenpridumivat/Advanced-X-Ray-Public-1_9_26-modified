@@ -72,7 +72,7 @@ protected:
 	_Graph::CVertex		*best_node;
 
 public:
-	virtual				~CPathManager	();
+	~CPathManager	() override;
 	IC		void		setup			(const _Graph *graph, _DataStorage *_data_storage, xr_vector<_index_type> *_path, const _index_type	&_start_node_index, const _index_type &_goal_node_index, const _Parameters &params);
 	IC		void		init			();
 	IC		_dist_type	evaluate		(const _index_type &node_index1, const _index_type &node_index2, const _Graph::const_iterator &i);

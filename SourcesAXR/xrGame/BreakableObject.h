@@ -37,21 +37,21 @@ static	u32					m_remove_time;
 //		Fbox				m_saved_box;
 public:
 					CBreakableObject	();
-	virtual			~CBreakableObject	();
+	~CBreakableObject	() override;
 
-	virtual void	Load				( LPCSTR section);
-	virtual BOOL	net_Spawn			( CSE_Abstract* DC);
-	virtual	void	net_Destroy			();
-	virtual void	shedule_Update		( u32 dt);							// Called by sheduler
-	virtual	void	UpdateCL			();
-	virtual BOOL	renderable_ShadowGenerate	( ) { return FALSE;	}
-	virtual BOOL	renderable_ShadowReceive	( ) { return TRUE;	}
-	
-	virtual	void	Hit					(SHit* pHDS);
+	void	Load				( LPCSTR section) override;
+	BOOL	net_Spawn			( CSE_Abstract* DC) override;
+	void	net_Destroy			() override;
+	void	shedule_Update		( u32 dt) override;							// Called by sheduler
+	void	UpdateCL			() override;
+	BOOL	renderable_ShadowGenerate	( ) override { return FALSE;	}
+	BOOL	renderable_ShadowReceive	( ) override { return TRUE;	}
 
-	virtual void	net_Export			(NET_Packet& P);
-	virtual void	net_Import			(NET_Packet& P);
-	virtual BOOL	UsedAI_Locations	();
+	void	Hit					(SHit* pHDS) override;
+
+	void	net_Export			(NET_Packet& P) override;
+	void	net_Import			(NET_Packet& P) override;
+	BOOL	UsedAI_Locations	() override;
 private:
 	void			Init				();
 	void			CreateUnbroken		();
@@ -64,11 +64,11 @@ private:
 	void			CheckHitBreak		(float power,ALife::EHitType hit_type);
 	void			ProcessDamage		();
 	void			SendDestroy			();
-	void	_BCL		enable_notificate	();
+	void	_BCL		enable_notificate	() override;
 //	static 	void	ObjectContactCallback(bool& /**do_colide/**/,bool bo1,dContact& c,SGameMtl * /*material_1*/,SGameMtl * /*material_2*/);
 private:
-	virtual ICollisionDamageReceiver	*PHCollisionDamageReceiver	()								{return (this);}
-	virtual		void					CollisionHit				( u16 source_id, u16 bone_id, float power, const Fvector &dir, Fvector &pos );
+	ICollisionDamageReceiver	*PHCollisionDamageReceiver	() override {return (this);}
+	void					CollisionHit				( u16 source_id, u16 bone_id, float power, const Fvector &dir, Fvector &pos ) override;
 };
 
 #endif //BreakableObjectH

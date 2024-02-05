@@ -21,10 +21,10 @@ private:
 
 public:
 						CUIAchievements		(CUIScrollView* parent);
-	virtual				~CUIAchievements	();
+	~CUIAchievements	() override;
 
 			void		init_from_xml		(CUIXml& xml);
-			void		Update				();
+			void		Update				() override;
 
 			void		SetName				(LPCSTR name);
 			void		SetDescription		(LPCSTR desc);
@@ -34,7 +34,7 @@ public:
 			void		SetRepeatable		(bool repeat);
 
 	virtual void		DrawHint			();
-	virtual void		Reset				();
+	void		Reset				() override;
 
 protected:
 			bool		ParentHasMe			();

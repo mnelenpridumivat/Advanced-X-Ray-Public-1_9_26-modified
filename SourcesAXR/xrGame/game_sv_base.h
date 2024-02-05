@@ -103,7 +103,7 @@ public:
 
 public:
 									game_sv_GameState		();
-	virtual							~game_sv_GameState		();
+	~game_sv_GameState		() override;
 	// Main accessors
 	virtual		game_PlayerState*	get_eid					(u16 id);
 	virtual		void*				get_client				(u16 id); //if exist
@@ -128,8 +128,8 @@ public:
 #ifdef DEBUG
 	virtual		void				OnRender				();
 #endif
-	
-	virtual		void				OnSwitchPhase			(u32 old_phase, u32 new_phase);	
+
+	void				OnSwitchPhase			(u32 old_phase, u32 new_phase) override;	
 				CSE_Abstract*		spawn_begin				(LPCSTR N);
 				CSE_Abstract*		spawn_end				(CSE_Abstract* E, ClientID id);
 
@@ -154,7 +154,7 @@ public:
 	virtual		void				OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_Packet& P){}; //игрок получил Hit
 
 	// Main
-	virtual		void				Create					(shared_str& options);
+	void				Create					(shared_str& options) override;
 	virtual		void				Update					();
 	virtual		void				net_Export_State		(NET_Packet& P, ClientID id_to);				// full state
 	virtual		void				net_Export_Update		(NET_Packet& P, ClientID id_to, ClientID id);		// just incremental update for specific client

@@ -21,20 +21,20 @@ class CPda :
 	typedef CHudItemObject inherited;
 public:
 	CPda();
-	virtual ~CPda();
+	~CPda() override;
 
-	virtual BOOL net_Spawn(CSE_Abstract* DC);
-	virtual void Load(LPCSTR section);
-	virtual void net_Destroy();
+	BOOL net_Spawn(CSE_Abstract* DC) override;
+	void Load(LPCSTR section) override;
+	void net_Destroy() override;
 
-	virtual void OnH_A_Chield();
-	virtual void OnH_B_Independent(bool just_before_destroy);
+	void OnH_A_Chield() override;
+	void OnH_B_Independent(bool just_before_destroy) override;
 
-	virtual void shedule_Update(u32 dt);
+	void shedule_Update(u32 dt) override;
 
-	virtual void feel_touch_new(CObject* O);
-	virtual void feel_touch_delete(CObject* O);
-	virtual BOOL feel_touch_contact(CObject* O);
+	void feel_touch_new(CObject* O) override;
+	void feel_touch_delete(CObject* O) override;
+	BOOL feel_touch_contact(CObject* O) override;
 
 
 	virtual u16 GetOriginalOwnerID() { return m_idOriginalOwner; }
@@ -62,8 +62,8 @@ public:
 	};
 
 
-	virtual void save(NET_Packet& output_packet);
-	virtual void load(IReader& input_packet);
+	void save(NET_Packet& output_packet) override;
+	void load(IReader& input_packet) override;
 
 protected:
 	void UpdateActiveContacts();
@@ -107,7 +107,7 @@ protected:
 	ref_glow	pda_glow;
 	CLAItem*	light_lanim;
 
-	virtual void processing_deactivate() override
+	void processing_deactivate() override
 	{
 		UpdateLights();
 		inherited::processing_deactivate();
@@ -116,14 +116,14 @@ protected:
 	void	UpdateLights();
 
 public:
-	virtual void OnStateSwitch(u32 S);
-	virtual void OnAnimationEnd(u32 state);
-	virtual void UpdateHudAdditional(Fmatrix& trans);
-	virtual void OnMoveToRuck(const SInvItemPlace& prev);
-	virtual void UpdateCL();
-	virtual void UpdateXForm();
-	virtual void OnActiveItem();
-	virtual void OnHiddenItem();
+	void OnStateSwitch(u32 S) override;
+	void OnAnimationEnd(u32 state) override;
+	void UpdateHudAdditional(Fmatrix& trans) override;
+	void OnMoveToRuck(const SInvItemPlace& prev) override;
+	void UpdateCL() override;
+	void UpdateXForm() override;
+	void OnActiveItem() override;
+	void OnHiddenItem() override;
 
 
 	enum ePDAState

@@ -19,13 +19,13 @@ private:
 	bool					b_online;
 public:
 							CHUDManager			();
-	virtual					~CHUDManager		();
-	virtual		void		OnEvent				(EVENT E, u64 P1, u64 P2);
+	~CHUDManager		() override;
+	void		OnEvent				(EVENT E, u64 P1, u64 P2) override;
 
-	virtual		void		Render_First		();
-	virtual		void		Render_Last			();
-	virtual		void		Render_Actor_Shadow (); // added by KD   
-	virtual		void		OnFrame				();
+	void		Render_First		() override;
+	void		Render_Last			() override;
+	void		Render_Actor_Shadow () override; // added by KD   
+	void		OnFrame				() override;
 
 	virtual		void		RenderUI			();
 
@@ -35,7 +35,7 @@ public:
 				void		HitMarked			(int idx, float power, const Fvector& dir);
 				bool		AddGrenade_ForMark	( CGrenade* grn );
 				void		Update_GrenadeView	( Fvector& pos_actor );
-				void		net_Relcase			( CObject* obj );
+				void		net_Relcase			( CObject* obj ) override;
 
 	//текущий предмет на который смотрит HUD
 	collide::rq_result&		GetCurrentRayQuery	();
@@ -51,13 +51,13 @@ public:
 	void					SetHitmarkType		( LPCSTR tex_name );
 	void					SetGrenadeMarkType	( LPCSTR tex_name );
 
-	virtual void			OnScreenResolutionChanged();
-	virtual	void			Load				();
-	virtual void			OnDisconnected		();
-	virtual void			OnConnected			();
+	void			OnScreenResolutionChanged() override;
+	void			Load				() override;
+	void			OnDisconnected		() override;
+	void			OnConnected			() override;
 
-	virtual	void			RenderActiveItemUI	();
-	virtual	bool			RenderActiveItemUIQuery();
+	void			RenderActiveItemUI	() override;
+	bool			RenderActiveItemUIQuery() override;
 
 	//Lain: added
 				void		SetRenderable       (bool renderable) { psHUD_Flags.set(HUD_DRAW_RT2,renderable); }

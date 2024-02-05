@@ -8,8 +8,8 @@ struct INFO_DATA : public IPureSerializeObject<IReader,IWriter>
 	INFO_DATA			():info_id(NULL),receive_time(0)			{};
 	INFO_DATA			(shared_str id, ALife::_TIME_ID time):info_id(id),receive_time(time){};
 
-	virtual void		load			(IReader& stream);
-	virtual void		save			(IWriter&);
+	void		load			(IReader& stream) override;
+	void		save			(IWriter&) override;
 
 	shared_str			info_id;
 	//время получения нужно порции информации

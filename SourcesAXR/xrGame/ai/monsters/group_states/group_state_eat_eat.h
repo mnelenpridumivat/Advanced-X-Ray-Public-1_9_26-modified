@@ -11,14 +11,14 @@ protected:
 
 public:
 	CStateGroupEating		(_Object *obj);
-	virtual				~CStateGroupEating	();
+	~CStateGroupEating	() override;
 
-	virtual void		initialize				();
-	virtual	void		execute					();
+	void		initialize				() override;
+	void		execute					() override;
 
-	virtual bool		check_start_conditions	();
-	virtual bool		check_completion		();
-	virtual void		remove_links			(CObject* object);
+	bool		check_start_conditions	() override;
+	bool		check_completion		() override;
+	void		remove_links			(CObject* object) override;
 };
 
 #include "group_state_eat_eat_inline.h"

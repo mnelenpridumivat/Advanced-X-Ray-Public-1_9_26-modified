@@ -12,16 +12,16 @@ class player_blitzkrieg : public player_state_param
 	typedef player_state_param inherited;
 public:
 					player_blitzkrieg	(game_state_accumulator* owner);
-	virtual 		~player_blitzkrieg	() {};
+	~player_blitzkrieg	() override {};
 
-	virtual void		update						() {};
-	virtual	u32 const	get_u32_param				();
-	virtual float const get_float_param				() { return -1.0f; };
-	virtual void		reset_game					();
+	void		update						() override {};
+	u32 const	get_u32_param				() override;
+	float const get_float_param				() override { return -1.0f; };
+	void		reset_game					() override;
 
-	virtual void		OnPlayerTakeArtefact		(game_PlayerState const * ps);
-	virtual void		OnPlayerDropArtefact		(game_PlayerState const * ps);
-	virtual void		OnPlayerBringArtefact		(game_PlayerState const * ps);
+	void		OnPlayerTakeArtefact		(game_PlayerState const * ps) override;
+	void		OnPlayerDropArtefact		(game_PlayerState const * ps) override;
+	void		OnPlayerBringArtefact		(game_PlayerState const * ps) override;
 protected:
 	u32					m_deliver_time;
 	u32					m_take_time;

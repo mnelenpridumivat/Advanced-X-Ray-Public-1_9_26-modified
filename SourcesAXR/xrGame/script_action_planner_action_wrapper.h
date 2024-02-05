@@ -16,15 +16,15 @@ class CScriptActionPlannerActionWrapper : public CScriptActionPlannerAction, pub
 	typedef CScriptActionPlannerAction inherited;
 public:
 	IC			 CScriptActionPlannerActionWrapper	(CScriptGameObject *object = 0, LPCSTR action_name = "");
-	virtual void				setup				(CScriptGameObject *object, CPropertyStorage *storage);
+	void				setup				(CScriptGameObject *object, CPropertyStorage *storage) override;
 	static	void				setup_static		(CScriptActionPlannerAction *action, CScriptGameObject *object, CPropertyStorage *storage);
-	virtual void				initialize			();
+	void				initialize			() override;
 	static	void				initialize_static	(CScriptActionPlannerAction *action);
-	virtual void				execute				();
+	void				execute				() override;
 	static	void				execute_static		(CScriptActionPlannerAction *action);
-	virtual void				finalize			();
+	void				finalize			() override;
 	static	void				finalize_static		(CScriptActionPlannerAction *action);
-	virtual _edge_value_type	weight				(const CSConditionState &condition0, const CSConditionState &condition1) const;
+	_edge_value_type	weight				(const CSConditionState &condition0, const CSConditionState &condition1) const override;
 	static	_edge_value_type	weight_static		(CScriptActionPlannerAction *action, const CSConditionState &condition0, const CSConditionState &condition1);
 };
 

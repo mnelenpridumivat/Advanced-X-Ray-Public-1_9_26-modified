@@ -50,12 +50,12 @@ private:
 
 public:
 						change_loophole				(CAI_Stalker *object, LPCSTR action_name);
-	virtual void		initialize					();
-	virtual	void		execute						();
-	virtual void		finalize					();
-	virtual void		select_animation			(shared_str &result);
-	virtual	void		on_animation_end			();
-	virtual				~change_loophole() {};
+	void		initialize					() override;
+	void		execute						() override;
+	void		finalize					() override;
+	void		select_animation			(shared_str &result) override;
+	void		on_animation_end			() override;
+	~change_loophole() override {};
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -69,13 +69,13 @@ private:
 
 public:
 						non_animated_change_loophole(CAI_Stalker *object, LPCSTR action_name);
-	virtual void		initialize					();
-	virtual void		execute						();
-	virtual void		finalize					();
-	virtual bool		is_animated_action			();
-	virtual void		select_animation			(shared_str &result);
-	virtual	void		on_animation_end			();
-	virtual				~non_animated_change_loophole() {};
+	void		initialize					() override;
+	void		execute						() override;
+	void		finalize					() override;
+	bool		is_animated_action			() override;
+	void		select_animation			(shared_str &result) override;
+	void		on_animation_end			() override;
+	~non_animated_change_loophole() override {};
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -89,13 +89,13 @@ private:
 
 public:
 						exit						(CAI_Stalker *object, LPCSTR action_name);
-	virtual void		initialize					();
-	virtual void		execute						();
-	virtual void		finalize					();
-	virtual bool		is_animated_action			();
-	virtual void		select_animation			(shared_str &result);
-	virtual	void		on_animation_end			();
-	virtual				~exit() {};
+	void		initialize					() override;
+	void		execute						() override;
+	void		finalize					() override;
+	bool		is_animated_action			() override;
+	void		select_animation			(shared_str &result) override;
+	void		on_animation_end			() override;
+	~exit() override {};
 };
 
 } // namespace smart_cover

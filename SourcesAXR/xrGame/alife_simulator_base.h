@@ -77,7 +77,7 @@ public:
 public:
 												CALifeSimulatorBase			(xrServer *server, LPCSTR section);
 	virtual										~CALifeSimulatorBase		();
-	virtual	void								destroy						();
+	void								destroy						() override;
 	IC		bool								initialized					() const;
 	IC		const CALifeSimulatorHeader			&header						() const;
 	IC		const CALifeTimeManager				&time						() const;

@@ -81,8 +81,8 @@ template <
 >
 class CGraphAbstractSerialize : public CGraphAbstract<_data_type,_edge_weight_type,_vertex_id_type>, public IPureSerializeObject<IReader,IWriter> {
 public:
-	virtual void						save			(IWriter &stream);
-	virtual void						load			(IReader &stream);
+	void						save			(IWriter &stream) override;
+	void						load			(IReader &stream) override;
 };
 
 #include "graph_abstract_inline.h"

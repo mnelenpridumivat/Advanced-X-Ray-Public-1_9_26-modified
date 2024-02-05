@@ -19,7 +19,7 @@ private:
 	typedef	CEntity			inherited;	
 	u32						m_used_time;
 public:
-	virtual CEntityAlive*				cast_entity_alive		()						{return this;}
+	CEntityAlive*				cast_entity_alive		() override {return this;}
 public:
 
 	bool					m_bMobility;
@@ -61,30 +61,30 @@ private:
 public:
 	// General
 							CEntityAlive			();
-	virtual					~CEntityAlive			();
+	~CEntityAlive			() override;
 
 	// Core events
-	virtual DLL_Pure		*_construct				();
-	virtual void			Load					(LPCSTR section);
-	virtual void			reinit					();
-	virtual void			reload					(LPCSTR section);
+	DLL_Pure		*_construct				() override;
+	void			Load					(LPCSTR section) override;
+	void			reinit					() override;
+	void			reload					(LPCSTR section) override;
 
 	//object serialization
-	virtual void			save					(NET_Packet &output_packet);
-	virtual void			load					(IReader &input_packet);
+	void			save					(NET_Packet &output_packet) override;
+	void			load					(IReader &input_packet) override;
 
 
-	virtual BOOL			net_Spawn				(CSE_Abstract* DC);
-	virtual void			net_Destroy				();
-	virtual	BOOL			net_SaveRelevant		();
+	BOOL			net_Spawn				(CSE_Abstract* DC) override;
+	void			net_Destroy				() override;
+	BOOL			net_SaveRelevant		() override;
 
-	virtual void			shedule_Update			(u32 dt);
-	virtual	void			create_anim_mov_ctrl	( CBlend *b, Fmatrix *start_pose, bool local_animation );
-	virtual	void			destroy_anim_mov_ctrl	( );
+	void			shedule_Update			(u32 dt) override;
+	void			create_anim_mov_ctrl	( CBlend *b, Fmatrix *start_pose, bool local_animation ) override;
+	void			destroy_anim_mov_ctrl	( ) override;
 
-	virtual void			HitImpulse				(float amount, Fvector& vWorldDir, Fvector& vLocalDir);
-	virtual	void			Hit						(SHit* pHDS);
-	virtual void			Die						(CObject* who);
+	void			HitImpulse				(float amount, Fvector& vWorldDir, Fvector& vLocalDir) override;
+	void			Hit						(SHit* pHDS) override;
+	void			Die						(CObject* who) override;
 	virtual void			g_WeaponBones			(int &L, int &R1, int &R2)										= 0;
 			void			set_lock_corpse			(bool b_l_corpse);
 			bool			is_locked_corpse		();
@@ -97,7 +97,7 @@ public:
 	virtual float			g_Radiation				()	const;
 	virtual	float			SetfRadiation			(float value);
 
-	virtual float			CalcCondition			(float hit);
+	float			CalcCondition			(float hit) override;
 
 	// Visibility related
 	virtual	float			ffGetFov				()	const			= 0;	
@@ -107,16 +107,16 @@ public:
 public:
 	//IC	CPHMovementControl*					PMovement					()						{return m_PhysicMovementControl;}
 
-	virtual u16								PHGetSyncItemsNumber		()						;
-	virtual CPHSynchronize*					PHGetSyncItem				(u16 item)				;
-	virtual void							PHUnFreeze					()						;
-	virtual void							PHFreeze					()						;
+	u16								PHGetSyncItemsNumber		() override;
+	CPHSynchronize*					PHGetSyncItem				(u16 item) override;
+	void							PHUnFreeze					() override;
+	void							PHFreeze					() override;
 
-	virtual void							PHGetLinearVell				(Fvector& velocity)		;
-	virtual CPHSoundPlayer*					ph_sound_player				()						;
-	virtual	CIKLimbsController				*character_ik_controller	()						;
-	virtual ICollisionHitCallback			*get_collision_hit_callback	()						;
-	virtual void							set_collision_hit_callback	(ICollisionHitCallback *cc);
+	void							PHGetLinearVell				(Fvector& velocity) override;
+	CPHSoundPlayer*					ph_sound_player				() override;
+	CIKLimbsController				*character_ik_controller	() override;
+	ICollisionHitCallback			*get_collision_hit_callback	() override;
+	void							set_collision_hit_callback	(ICollisionHitCallback *cc) override;
 protected:
 	DEFINE_VECTOR				(CWound*, WOUND_VECTOR, WOUND_VECTOR_IT);
 	WOUND_VECTOR				m_ParticleWounds;
@@ -182,7 +182,7 @@ private:
 	bool						b_eating;
 
 protected:
-	virtual	CEntityConditionSimple	*create_entity_condition	(CEntityConditionSimple* ec);
+	CEntityConditionSimple	*create_entity_condition	(CEntityConditionSimple* ec) override;
 
 public:
 	IC		CEntityCondition	&conditions					() const;
@@ -195,9 +195,9 @@ protected:
 	u32							m_ef_detector_type;
 
 public:
-	virtual u32					ef_creature_type			() const;
-	virtual u32					ef_weapon_type				() const;
-	virtual u32					ef_detector_type			() const;
+	u32					ef_creature_type			() const override;
+	u32					ef_weapon_type				() const override;
+	u32					ef_detector_type			() const override;
 
 public:
 	virtual	void				OnHitHealthLoss				(float NewHealth) {};	//вызывается если entity теряет здоровье
@@ -206,7 +206,7 @@ public:
 	virtual void				OnCriticalRadiationHealthLoss() {};	//вызывается если entity умрет от радиации 
 
 	virtual	CVisualMemoryManager*visual_memory				() const {return(0);}
-	virtual	void				net_Relcase					(CObject *O);
+	void				net_Relcase					(CObject *O) override;
 
 public:
 	virtual	Fvector				predict_position			(const float &time_to_check) const;
@@ -218,9 +218,9 @@ public:
 
 
 public:
-	virtual	Fvector				get_new_local_point_on_mesh	( u16& bone_id ) const;
-	virtual	Fvector				get_last_local_point_on_mesh( Fvector const& last_point, u16 bone_id ) const;
-	virtual void				OnChangeVisual				( );
+	Fvector				get_new_local_point_on_mesh	( u16& bone_id ) const override;
+	Fvector				get_last_local_point_on_mesh( Fvector const& last_point, u16 bone_id ) const override;
+	void				OnChangeVisual				( ) override;
 
 private:
 			void				fill_hit_bone_surface_areas	( ) const;

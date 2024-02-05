@@ -13,14 +13,14 @@ class CStateControlCamp : public CState<_Object> {
 public:
 
 					CStateControlCamp	(_Object *obj) : inherited(obj) {}
-	virtual			~CStateControlCamp	() {}
+	~CStateControlCamp	() override {}
 
-	virtual void	initialize				();
-	virtual void	execute					();
-	virtual bool	check_completion		();
-	virtual bool	check_start_conditions	();
+	void	initialize				() override;
+	void	execute					() override;
+	bool	check_completion		() override;
+	bool	check_start_conditions	() override;
 
-	virtual void	remove_links			(CObject* object) {}
+	void	remove_links			(CObject* object) override {}
 
 private:
 

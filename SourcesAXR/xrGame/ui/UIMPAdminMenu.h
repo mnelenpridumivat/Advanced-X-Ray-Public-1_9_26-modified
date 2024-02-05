@@ -34,10 +34,10 @@ private:
 
 public:
 							CUIMpAdminMenu();
-		virtual				~CUIMpAdminMenu();
+		~CUIMpAdminMenu() override;
 				void		Init();
-		virtual void 		SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL);
-		virtual bool		OnKeyboardAction(int dik, EUIMessages keyboard_action);
+		void 		SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
+		bool		OnKeyboardAction(int dik, EUIMessages keyboard_action) override;
 				void		SetActiveSubdialog	(const shared_str& section);
 		void	xr_stdcall	RemoteAdminLogin(CUIWindow*, void*);
 				void		ShowMessageBox(CUIMessageBox::E_MESSAGEBOX_STYLE style, LPCSTR reason="");

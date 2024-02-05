@@ -27,17 +27,17 @@ class profile_store :
 {
 public:
 	explicit		profile_store			(CGameSpy_Full* fullgs_obj);
-					~profile_store			();
+					~profile_store			() override;
 	
 	void			set_current_profile			(int profileId, char const * loginTicket);
 	void			load_current_profile		(store_operation_cb progress_indicator_cb,
 												 store_operation_cb complete_cb);
 	void			stop_loading				();
 
-	virtual void			shedule_Update	(u32 dt);
-	virtual	shared_str		shedule_Name	() const	{ return shared_str("gamespy_sake_updator"); };
-	virtual bool			shedule_Needed	()			{ return true; };
-	virtual float			shedule_Scale	()			{ return 1.0f; };
+	void			shedule_Update	(u32 dt) override;
+	shared_str		shedule_Name	() const override { return shared_str("gamespy_sake_updator"); };
+	bool			shedule_Needed	() override { return true; };
+	float			shedule_Scale	() override { return 1.0f; };
 	
 	all_awards_t const &		get_awards		();
 	all_best_scores_t const &	get_best_scores	();

@@ -11,19 +11,19 @@ protected:
 
 	void					SetBoneCallbacks	();
 	void					ResetBoneCallbacks	();
-	virtual	void			FireStart			();
-	virtual	void			FireEnd				();
+	void			FireStart			() override;
+	void			FireEnd				() override;
 	virtual	void			UpdateFire			();
 	virtual	void			OnShot				();
 	void					UpdateBarrelDir		();
-	virtual const Fvector&	get_CurrentFirePoint();
-	virtual const Fmatrix&	get_ParticlesXFORM	();
+	const Fvector&	get_CurrentFirePoint() override;
+	const Fmatrix&	get_ParticlesXFORM	() override;
 	
 	CPhysicsShellHolder*	m_object;
 	bool					m_bActive;
 	bool					m_bAutoFire;
 	float					m_weapon_h;
-	virtual bool			IsHudModeNow		(){return false;};
+	bool			IsHudModeNow		() override {return false;};
 
 public:
 	enum{
@@ -35,7 +35,7 @@ public:
 			eWpnToDefaultDir,
 	};	
 							CCarWeapon			(CPhysicsShellHolder* obj);
-				virtual		~CCarWeapon			();
+	~CCarWeapon			() override;
 	static void _BCL		BoneCallbackX		(CBoneInstance *B);
 	static void	_BCL		BoneCallbackY		(CBoneInstance *B);
 				void		Load				(LPCSTR section);

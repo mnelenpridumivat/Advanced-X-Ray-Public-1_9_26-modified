@@ -29,8 +29,8 @@ struct RELATION_DATA : public IPureSerializeObject<IReader,IWriter>
 {
 	virtual void clear();
 
-	virtual void load (IReader&);
-	virtual void save (IWriter&);
+	void load (IReader&) override;
+	void save (IWriter&) override;
 
 	//личные отношения
 	PERSONAL_RELATION_MAP personal; 

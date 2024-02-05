@@ -10,12 +10,12 @@ protected:
 
 public:
 	CStateCustomGroup		(_Object *obj);
-	virtual				~CStateCustomGroup		();
+	~CStateCustomGroup		() override;
 
-	virtual	void		execute					();
-	virtual void		setup_substates			();
-	virtual bool 		check_completion		() {return (object->b_state_end);}
-	virtual void		remove_links			(CObject* object) { inherited::remove_links(object);}
+	void		execute					() override;
+	void		setup_substates			() override;
+	bool 		check_completion		() override {return (object->b_state_end);}
+	void		remove_links			(CObject* object) override { inherited::remove_links(object);}
 };
 
 #include "group_state_custom_inline.h"

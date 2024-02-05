@@ -38,12 +38,12 @@ public:
 			
 					CUIScrollView		();
 					CUIScrollView		(CUIFixedScrollBar* scroll_bar);
-	virtual			~CUIScrollView		();
+~CUIScrollView		() override;
 			void	InitScrollView		();// need parent to be initialized
-	virtual void	SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
-	virtual bool	OnMouseAction				(float x, float y, EUIMessages mouse_action);
-	virtual void	Draw				();
-	virtual void	Update				();
+void	SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
+bool	OnMouseAction				(float x, float y, EUIMessages mouse_action) override;
+void	Draw				() override;
+void	Update				() override;
 			void	AddWindow			(CUIWindow* pWnd, bool auto_delete);
 			void	RemoveWindow		(CUIWindow* pWnd);
 			void	Clear				();

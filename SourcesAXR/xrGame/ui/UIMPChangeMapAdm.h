@@ -19,9 +19,9 @@ class CUIMpChangeMapAdm :	public CUIWindow, public CUIWndCallback
 		CUI3tButton*		btn_ok;
 public:
 							CUIMpChangeMapAdm();
-							~CUIMpChangeMapAdm();
+							~CUIMpChangeMapAdm() override;
 				void		Init(CUIXml& xml_doc);
-		virtual void		SendMessage(CUIWindow* pWnd, s16 msg, void* pData = 0);
+		void		SendMessage(CUIWindow* pWnd, s16 msg, void* pData = 0) override;
 				void 		OnBtnOk();
 				void 		OnItemSelect();
 				void		FillUpList();

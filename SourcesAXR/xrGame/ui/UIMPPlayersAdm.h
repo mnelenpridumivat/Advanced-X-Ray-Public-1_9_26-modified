@@ -29,10 +29,10 @@ class CUIMpPlayersAdm :	public CUIWindow, public CUIWndCallback
 		//CUITextWnd*			m_pBanTimeText;
 public:
 							CUIMpPlayersAdm();
-							~CUIMpPlayersAdm();
+							~CUIMpPlayersAdm() override;
 				void		Init(CUIXml& xml_doc);
 				void		RefreshPlayersList();
-		virtual void 		SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+		void 		SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 		void	xr_stdcall	FillPlayersList(u32 const);
 				void		SetMaxPingLimit();
 				void		SetMaxPingLimitText();

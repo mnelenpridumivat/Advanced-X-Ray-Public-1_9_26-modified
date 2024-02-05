@@ -7,10 +7,10 @@ class CMPPlayersBag :
 {
 public:
 					CMPPlayersBag(void);
-	virtual			~CMPPlayersBag(void);
-	virtual bool	NeedToDestroyObject	() const; 
+					~CMPPlayersBag(void) override;
+					bool	NeedToDestroyObject	() const override;
 
-	virtual void OnEvent(NET_Packet& P, u16 type);
+					void OnEvent(NET_Packet& P, u16 type) override;
 protected:
 private:
 };

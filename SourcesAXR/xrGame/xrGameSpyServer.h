@@ -15,8 +15,8 @@ public:
 	bool				m_bCDKeyAuth;
 
 	xrGameSpyClientData			();
-	virtual void				Clear();
-	virtual ~xrGameSpyClientData	();
+	void				Clear() override;
+	~xrGameSpyClientData	() override;
 };
 
 class xrGameSpyServer	: public xrServer
@@ -54,8 +54,8 @@ private:
 	int							iGameSpyBasePort;
 
 protected:
-	virtual bool					NeedToCheckClient_GameSpy_CDKey	(IClient* CL);
-	virtual bool				Check_ServerAccess( IClient* CL, string512& reason );
+	bool					NeedToCheckClient_GameSpy_CDKey	(IClient* CL) override;
+	bool				Check_ServerAccess( IClient* CL, string512& reason ) override;
 
 public:
 	shared_str						HostName;
@@ -73,26 +73,26 @@ public:
 	CGameSpy_QR2*					QR2() {return &m_QR2;} ;
 
 	CGameSpy_GCD_Server*		GCD_Server()					{ return &m_GCDServer; }
-	
-	virtual bool				HasPassword();
-	virtual bool				HasProtected();
 
-	virtual void				Assign_ServerType( string512& res );
-	virtual void				GetServerInfo( CServerInfo* si );
+	bool				HasPassword() override;
+	bool				HasProtected() override;
+
+	void				Assign_ServerType( string512& res ) override;
+	void				GetServerInfo( CServerInfo* si ) override;
 			bool				IsPublicServer() const { return m_iReportToMasterServer != 0; };
 
 public:
 	xrGameSpyServer					();
-	virtual ~xrGameSpyServer		();
+	~xrGameSpyServer		() override;
 
-	virtual EConnect		Connect				(shared_str& session_name, GameDescriptionData & game_descr);
-	virtual void			Update				();
+	EConnect		Connect				(shared_str& session_name, GameDescriptionData & game_descr) override;
+	void			Update				() override;
 
 //	virtual void			OnCL_Connected		(IClient* C);
-	virtual void			OnCL_Disconnected	(IClient* C);
-	virtual IClient*		client_Create		();
+	void			OnCL_Disconnected	(IClient* C) override;
+	IClient*		client_Create		() override;
 
-	virtual u32				OnMessage			(NET_Packet& P, ClientID/*DPNID*/ sender);	// Non-Zero means broadcasting with "flags" as returned
+	u32				OnMessage			(NET_Packet& P, ClientID/*DPNID*/ sender) override;	// Non-Zero means broadcasting with "flags" as returned
 	virtual void			OnError_Add			(qr2_error_t error) {};
 };
 

@@ -22,17 +22,17 @@ private:
 	void			DrawActiveBackFrame		(const Frect& rect, CUIListItem * itm);
 public:
 					CUIListWnd				();
-	virtual			~CUIListWnd				();
+	~CUIListWnd				() override;
 
 	void			InitListWnd				(Fvector2 pos, Fvector2 size, float item_height);
 
-	virtual bool	 OnMouseAction				(float x, float y, EUIMessages mouse_action);
-	virtual bool	 OnKeyboardAction				(int dik, EUIMessages keyboard_action);
+	bool	 OnMouseAction				(float x, float y, EUIMessages mouse_action) override;
+	bool	 OnKeyboardAction				(int dik, EUIMessages keyboard_action) override;
 
-	virtual void	 SendMessage			(CUIWindow *pWnd, s16 msg, void* pData);
-	virtual void	 Draw					();
-	virtual void	 Update					();
-	virtual void	 DetachChild			(CUIWindow* pChild);
+	void	 SendMessage			(CUIWindow *pWnd, s16 msg, void* pData) override;
+	void	 Draw					() override;
+	void	 Update					() override;
+	void	 DetachChild			(CUIWindow* pChild) override;
 			void	SetScrollBarProfile		(LPCSTR profile)		{m_scrollbar_profile=profile;};
 
 	// Добавление элементов в листбокс
@@ -59,7 +59,7 @@ public:
 
 	void			SetItemHeight			(float iItemHeight); 
 	float			GetItemHeight			()							{return m_iItemHeight;}
-    virtual void	SetHeight				(float height);
+	void	SetHeight				(float height) override;
 
 	void			SetAlwaysShowScroll		(bool flag = true)			{m_bAlwaysShowScroll = flag;}
 	void			EnableAlwaysShowScroll	(bool flag)					{m_bAlwaysShowScroll_enable = flag;}
@@ -68,7 +68,7 @@ public:
 	int				GetItemsCount			()							{return m_ItemList.size();}
 
 	//подготовить все элементы заново
-	void 			Reset					();
+	void 			Reset					() override;
 
 	void 			EnableScrollBar			(bool enable);
 	bool 			IsScrollBarEnabled		();
@@ -81,7 +81,7 @@ public:
 	IC bool			IsActiveBackgroundEnabled()								{return m_bActiveBackground;}
 	void			EnableActiveBackground	(bool enable);
 
-	virtual void	SetWidth				(float width);
+	void	SetWidth				(float width) override;
 
 	void			SetTextColor			(u32 color)						{m_dwFontColor = color;} 
 	u32				GetTextColor			()								{return m_dwFontColor;}

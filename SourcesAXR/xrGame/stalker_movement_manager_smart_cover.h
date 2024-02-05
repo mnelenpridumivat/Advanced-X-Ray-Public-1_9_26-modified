@@ -46,11 +46,11 @@ private:
 
 public:
 				 stalker_movement_manager_smart_cover	(CAI_Stalker *object);
-	virtual		 ~stalker_movement_manager_smart_cover	();
-	virtual	void				reinit					();
-	virtual	void				update					(u32 time_delta);
-	virtual	void				on_frame				(CPHMovementControl *movement_control, Fvector &dest_position);
-	virtual	void				remove_links			(CObject *object);
+	~stalker_movement_manager_smart_cover	() override;
+	void				reinit					() override;
+	void				update					(u32 time_delta) override;
+	void				on_frame				(CPHMovementControl *movement_control, Fvector &dest_position) override;
+	void				remove_links			(CObject *object) override;
 			void		cleanup_after_animation_selector();
 			bool				in_smart_cover			() const;
 	inline	bool				check_can_kill_enemy	() const;

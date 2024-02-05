@@ -13,8 +13,8 @@ private:
 
 public:
 					CMapActionPlanner	();
-	virtual			~CMapActionPlanner	();
-	virtual	void	setup				(CUIMapWnd *object);
-	virtual	LPCSTR	object_name			() const;
+	~CMapActionPlanner	() override;
+	void	setup				(CUIMapWnd *object) override;
+	LPCSTR	object_name			() const override;
 };
 

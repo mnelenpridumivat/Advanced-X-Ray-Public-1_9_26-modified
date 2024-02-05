@@ -27,10 +27,10 @@ private:
 		float						cur_pos;
 
 public:
-	virtual					~CUIMotionIcon		();
+	~CUIMotionIcon		() override;
 							CUIMotionIcon		();
-	virtual	void			Update				();
-	virtual void			Draw				();
+	void			Update				() override;
+	void			Draw				() override;
 			void			Init				(Frect const& rect);
 			void			SetNoise			(float Pos);
 			void			SetLuminosity		(float Pos);

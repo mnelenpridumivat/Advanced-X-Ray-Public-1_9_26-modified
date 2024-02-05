@@ -6,7 +6,7 @@
 class CPHShellSimpleCreator: public IPhysicShellCreator
 {
 public:
-	virtual void CreatePhysicsShell();
+	void CreatePhysicsShell() override;
 protected:
 private:
 };

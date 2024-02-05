@@ -106,10 +106,10 @@ IC	bool isAlive( )
 		return !m_pPhysicsShell;
 	}
 protected:
-virtual void							SpawnInitPhysics				( CSE_Abstract	*D )																									;
-virtual CPhysicsShellHolder*			PPhysicsShellHolder				( )	{ return m_EntityAlife.PhysicsShellHolder( ); }	
+void							SpawnInitPhysics				( CSE_Abstract	*D ) override;
+CPhysicsShellHolder*			PPhysicsShellHolder				( ) override { return m_EntityAlife.PhysicsShellHolder( ); }
 
-virtual bool							CanRemoveObject					( );
+bool							CanRemoveObject					( ) override;
 public:
 IC		CPHMovementControl				*movement						( )	{ return m_PhysicMovementControl; }
 IC	const	CPHMovementControl			*movement						( ) const{ return m_PhysicMovementControl; }
@@ -163,7 +163,7 @@ public:
 /////////////////////////////////////////////////////////////////
 		CCharacterPhysicsSupport& operator = ( CCharacterPhysicsSupport& /**asup/**/ ){ R_ASSERT2( false, "Can not assign it" ); }
 										CCharacterPhysicsSupport		( EType atype, CEntityAlive* aentity )																				;
-virtual									~CCharacterPhysicsSupport		( )																													;
+~CCharacterPhysicsSupport		( ) override;
 private:
 		void 							CreateSkeleton					( CPhysicsShell* &pShell )																							;
 

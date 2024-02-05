@@ -9,7 +9,7 @@ class CRGD5 :
 	typedef CGrenade inherited;
 public:
 	CRGD5(void);
-	virtual ~CRGD5(void);
+	~CRGD5(void) override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

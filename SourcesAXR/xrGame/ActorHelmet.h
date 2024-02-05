@@ -9,12 +9,12 @@ private:
     typedef	CInventoryItemObject inherited;
 public:
 							CHelmet					();
-	virtual					~CHelmet				();
+    ~CHelmet				() override;
 
-	virtual void			Load					(LPCSTR section);
+    void			Load					(LPCSTR section) override;
 	
 	virtual void			Hit						(float P, ALife::EHitType hit_type);
-	virtual void			UpdateCL				();
+    void			UpdateCL				() override;
 
 	shared_str				m_BonesProtectionSect;
 	shared_str				m_NightVisionSect;
@@ -23,14 +23,14 @@ public:
 	xr_vector<shared_str>	m_SuitableRepairKits;
 	xr_vector<std::pair<shared_str, int>> m_ItemsForRepair;
 
-	virtual void			OnMoveToSlot			(const SInvItemPlace& previous_place);
-	virtual void			OnMoveToRuck			(const SInvItemPlace& previous_place);
-	virtual BOOL			net_Spawn				(CSE_Abstract* DC);
-	virtual void			net_Export				(NET_Packet& P);
-	virtual void			net_Import				(NET_Packet& P);
-	virtual void			OnH_A_Chield			();
-	virtual void			save					(NET_Packet& output_packet);
-	virtual void			load					(IReader& input_packet);
+    void			OnMoveToSlot			(const SInvItemPlace& previous_place) override;
+    void			OnMoveToRuck			(const SInvItemPlace& previous_place) override;
+    BOOL			net_Spawn				(CSE_Abstract* DC) override;
+    void			net_Export				(NET_Packet& P) override;
+    void			net_Import				(NET_Packet& P) override;
+    void			OnH_A_Chield			() override;
+    void			save					(NET_Packet& output_packet) override;
+    void			load					(IReader& input_packet) override;
 			void			UpdateFilterCondition	(void);
 			float			GetFilterCondition		(void) const;
 			void			SetFilterCondition		(float val);
@@ -74,5 +74,5 @@ protected:
 	SBoneProtections*		m_boneProtection;	
 
 protected:
-	virtual bool			install_upgrade_impl	( LPCSTR section, bool test );
+    bool			install_upgrade_impl	( LPCSTR section, bool test ) override;
 };

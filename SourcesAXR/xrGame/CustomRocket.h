@@ -34,33 +34,33 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 
 	CCustomRocket(void);
-	virtual ~CCustomRocket(void);
+	~CCustomRocket(void) override;
 
-	virtual void Load(LPCSTR section);
-	virtual BOOL net_Spawn(CSE_Abstract* DC);
-	virtual void net_Destroy();
-	virtual BOOL						AlwaysTheCrow				()				{ return TRUE; }
+	void Load(LPCSTR section) override;
+	BOOL net_Spawn(CSE_Abstract* DC) override;
+	void net_Destroy() override;
+	BOOL						AlwaysTheCrow				() override { return TRUE; }
 
-	virtual void reinit		();
-	virtual void reload		(LPCSTR section);
+	void reinit		() override;
+	void reload		(LPCSTR section) override;
 
-	virtual void OnH_A_Independent	();
-	virtual void OnH_B_Independent	(bool just_before_destroy);
-	virtual void OnH_B_Chield		();
-	virtual void OnH_A_Chield		();
-	virtual void UpdateCL();
+	void OnH_A_Independent	() override;
+	void OnH_B_Independent	(bool just_before_destroy) override;
+	void OnH_B_Chield		() override;
+	void OnH_A_Chield		() override;
+	void UpdateCL() override;
 
-	virtual BOOL UsedAI_Locations	()			{return	(FALSE);}
+	BOOL UsedAI_Locations	() override {return	(FALSE);}
 	virtual bool Useful				() const	{return (m_eState == eInactive);	}
 
-	virtual void renderable_Render() {inherited::renderable_Render();}
+	void renderable_Render() override {inherited::renderable_Render();}
 
 	//создание физической оболочки
-	virtual void			activate_physic_shell	();
-	virtual void			create_physic_shell		();
+	void			activate_physic_shell	() override;
+	void			create_physic_shell		() override;
 
-	virtual void			PhDataUpdate			(float step);
-	virtual void			PhTune					(float step);
+	void			PhDataUpdate			(float step) override;
+	void			PhTune					(float step) override;
 
 	//////////////////////////////////////////////////////////////////////////
 	//	Rocket Properties
@@ -81,7 +81,7 @@ public:
 													 const Fvector& vel,
 													 const Fvector& angular_vel);
 
-	virtual void			OnEvent					(NET_Packet& P, u16 type);
+	void			OnEvent					(NET_Packet& P, u16 type) override;
 	bool					m_bLaunched;
 protected:
 	//указатель на владельца RocketLauncher - который стреляет ракету
@@ -165,6 +165,6 @@ protected:
 
 	virtual void		UpdateParticles();
 #ifdef DEBUG
-	virtual void		deactivate_physics_shell ();
+	void		deactivate_physics_shell () override;
 #endif
 };

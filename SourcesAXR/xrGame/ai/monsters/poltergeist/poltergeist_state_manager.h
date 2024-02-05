@@ -9,11 +9,11 @@ class CStateManagerPoltergeist : public CMonsterStateManager<CPoltergeist> {
 
 public:
 						CStateManagerPoltergeist		(CPoltergeist *obj);
-	virtual				~CStateManagerPoltergeist	();
+	~CStateManagerPoltergeist	() override;
 
-	virtual void		reinit						();
-	virtual	void		execute						();
-	virtual void		remove_links				(CObject* object) { inherited::remove_links(object);}
+	void		reinit						() override;
+	void		execute						() override;
+	void		remove_links				(CObject* object) override { inherited::remove_links(object);}
 
 private:
 

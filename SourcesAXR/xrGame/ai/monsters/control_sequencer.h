@@ -10,14 +10,14 @@ struct SAnimationSequencerData : public ControlCom::IComData {
 class CAnimationSequencer : public CControl_ComCustom<SAnimationSequencerData> {
 	u32						m_index;
 public:
-	virtual void	reset_data				();
-	virtual	void	on_capture				();
-	virtual void	on_release				();
-	virtual void	on_event				(ControlCom::EEventType, ControlCom::IEventData*);
+	void	reset_data				() override;
+	void	on_capture				() override;
+	void	on_release				() override;
+	void	on_event				(ControlCom::EEventType, ControlCom::IEventData*) override;
 
-	virtual bool	check_start_conditions	();
+	bool	check_start_conditions	() override;
 
-	virtual void	activate				();
+	void	activate				() override;
 private:
 			void	play_selected			();
 };

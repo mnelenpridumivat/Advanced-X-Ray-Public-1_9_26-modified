@@ -8,7 +8,7 @@ class CSleepingBag : public CInventoryItemObject
 
 public:
 	CSleepingBag();
-	~CSleepingBag();
+	~CSleepingBag() override;
 
 	void StartSleep();
 };

@@ -69,16 +69,16 @@ private:
 
 public:
 						CUILogsWnd			();
-	virtual				~CUILogsWnd			();
+	~CUILogsWnd			() override;
 
 			void		Init				();
 
-	virtual void 		Show				( bool status );
-	virtual void		Update				();
-	virtual void		SendMessage			( CUIWindow* pWnd, s16 msg, void* pData );
+	void 		Show				( bool status ) override;
+	void		Update				() override;
+	void		SendMessage			( CUIWindow* pWnd, s16 msg, void* pData ) override;
 
-	virtual bool		OnKeyboardAction			(int dik, EUIMessages keyboard_action);
-	virtual bool		OnKeyboardHold		(int dik);
+	bool		OnKeyboardAction			(int dik, EUIMessages keyboard_action) override;
+	bool		OnKeyboardHold		(int dik) override;
 
 	IC		void		UpdateNews			()	{ m_need_reload = true; }
 	void	xr_stdcall	PerformWork			();

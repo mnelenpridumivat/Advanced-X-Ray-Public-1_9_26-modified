@@ -12,8 +12,8 @@ class rewarding_state_events : public event_conditions_collection
 public:
 					rewarding_state_events	(game_state_accumulator* pstate_accum,
 											 event_action_delegate_t ea_delegate);
-	virtual			~rewarding_state_events	();
-	virtual void	init					();
+	~rewarding_state_events	() override;
+	void	init					() override;
 }; //class rewarding_state_events
 
 } //namespace award_system

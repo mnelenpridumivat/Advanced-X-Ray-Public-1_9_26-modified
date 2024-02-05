@@ -24,7 +24,7 @@ private:
 
 public:
 								CExplosive(void);
-	virtual						~CExplosive(void);
+	~CExplosive(void) override;
 
 	virtual void 				Load(LPCSTR section);
 	virtual void				Load(CInifile const * ini,LPCSTR section);
@@ -47,8 +47,8 @@ public:
 	virtual void 				SetCurrentParentID	(u16 parent_id) {m_iCurrentParentID = parent_id; }
 	IC		u16 				CurrentParentID		() const {return m_iCurrentParentID;}
 
-	virtual	void				SetInitiator(u16 id){SetCurrentParentID(id);}
-	virtual	u16					Initiator();
+	void				SetInitiator(u16 id) override {SetCurrentParentID(id);}
+	u16					Initiator() override;
 
 	virtual void				UpdateExplosionPos(){}
 	virtual void				GetExplVelocity(Fvector	&v);
@@ -58,7 +58,7 @@ public:
 	virtual void 				FindNormal(Fvector& normal);
 	virtual CGameObject			*cast_game_object()=0;
 	virtual CExplosive*			cast_explosive(){return this;}
-	virtual IDamageSource*		cast_IDamageSource()	{return this;}
+	IDamageSource*		cast_IDamageSource() override {return this;}
 	virtual void				GetRayExplosionSourcePos(Fvector &pos);
 	virtual	void				GetExplosionBox			(Fvector &size);
 	virtual void				ActivateExplosionBox	(const Fvector &size,Fvector &in_out_pos);

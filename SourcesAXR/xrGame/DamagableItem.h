@@ -23,10 +23,10 @@ class CDamagableHealthItem :
 	typedef		CDamagableItem		inherited											;
 	float							m_health											;
 public:
-virtual		void					Init			(float max_health,u16 level_num)	;
+	void					Init			(float max_health,u16 level_num) override;
 			void					Hit				(float P)							;
 			void					SetHealth		(float health)						{m_health=health;}
 protected:
-	virtual		float				Health			()									{return m_health;}
+	float				Health			() override {return m_health;}
 
 };

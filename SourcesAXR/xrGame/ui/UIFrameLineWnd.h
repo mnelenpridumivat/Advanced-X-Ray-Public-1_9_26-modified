@@ -10,7 +10,7 @@ public:
 			void InitFrameLineWnd	(LPCSTR base_name, Fvector2 pos, Fvector2 size, bool horizontal = true);
 			void InitFrameLineWnd	(Fvector2 pos, Fvector2 size, bool horizontal = true);
 			void InitTexture		(LPCSTR tex_name,LPCSTR sh_name="hud\\default");
-	virtual void Draw				();
+	void Draw				() override;
 
 			float GetTextureHeight	() const						{return m_tex_rect[0].height();}
 			float GetTextureWidth	() const						{return m_tex_rect[0].width();}

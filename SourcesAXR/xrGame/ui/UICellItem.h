@@ -48,12 +48,12 @@ protected:
 			void			init					();
 public:
 							CUICellItem				();
-	virtual					~CUICellItem			();
+	~CUICellItem			() override;
 
-	virtual		bool		OnKeyboardAction				(int dik, EUIMessages keyboard_action);
-	virtual		bool		OnMouseAction					(float x, float y, EUIMessages mouse_action);
-	virtual		void		Draw					();
-	virtual		void		Update					();
+	bool		OnKeyboardAction				(int dik, EUIMessages keyboard_action) override;
+	bool		OnMouseAction					(float x, float y, EUIMessages mouse_action) override;
+	void		Draw					() override;
+	void		Update					() override;
 	virtual		void		OnAfterChild			(CUIDragDropListEx* parent_list)						{};
 
 				u32			ChildsCount				();
@@ -107,15 +107,15 @@ class CUIDragItem: public CUIWindow, public pureRender, public pureFrame
 public:
 							CUIDragItem(CUICellItem* parent);
 	virtual		void		Init(const ui_shader& sh, const Frect& rect, const Frect& text_rect);
-	virtual					~CUIDragItem();
+	~CUIDragItem() override;
 				void		SetCustomDraw			(ICustomDrawDragItem* c);
 
 			CUIStatic*		wnd						() {return &m_static;}
-	virtual		bool		OnMouseAction					(float x, float y, EUIMessages mouse_action);
-	virtual		void		Draw					();
+	bool		OnMouseAction					(float x, float y, EUIMessages mouse_action) override;
+	void		Draw					() override;
 
-	virtual		void			OnRender				();
-	virtual		void	_BCL	OnFrame					();
+	void			OnRender				() override;
+	void	_BCL	OnFrame					() override;
 
 		CUICellItem*		ParentItem				()							{return m_pParent;}
 				void		SetBackList				(CUIDragDropListEx*l);

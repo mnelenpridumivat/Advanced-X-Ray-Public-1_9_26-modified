@@ -8,12 +8,12 @@ class CUIProgressShape : public CUIStatic {
 friend class CUIXmlInit;
 public:
 						CUIProgressShape		();
-	virtual				~CUIProgressShape		();
+~CUIProgressShape		() override;
 	void				SetPos					(int pos, int max);
 	void				SetPos					(float pos);
 	void				SetTextVisible			(bool b);
 
-	virtual void		Draw					();
+void		Draw					() override;
 
 protected:
 	bool				m_bClockwise;

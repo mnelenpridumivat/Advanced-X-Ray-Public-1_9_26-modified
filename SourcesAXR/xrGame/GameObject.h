@@ -65,7 +65,7 @@ protected:
 	bool					m_bObjectRemoved;
 public:
 	CGameObject();
-	virtual ~CGameObject();
+	~CGameObject() override;
 public:
 	//functions used for avoiding most of the smart_cast
 	virtual CAttachmentOwner*			cast_attachment_owner		()						{return NULL;}
@@ -93,7 +93,7 @@ public:
 
 public:
 	virtual BOOL						feel_touch_on_contact	(CObject *)					{return TRUE;}
-	virtual bool						use						(CGameObject* who_use)		{return CUsableScriptObject::use(who_use);};
+	bool						use						(CGameObject* who_use) override {return CUsableScriptObject::use(who_use);};
 
 public:
 	CInifile				*m_ini_file;
@@ -103,28 +103,28 @@ public:
 	static void				u_EventSend			(NET_Packet& P, u32 dwFlags = DPNSEND_GUARANTEED	);
 	
 	// Methods
-	virtual void			Load				(LPCSTR section);
-	virtual BOOL			net_Spawn			(CSE_Abstract* DC);
-	virtual void			net_Destroy			();
-	virtual	void			net_Relcase			( CObject* O );	
-	virtual void			UpdateCL			( );
-	virtual void			OnChangeVisual		( );
+	void			Load				(LPCSTR section) override;
+	BOOL			net_Spawn			(CSE_Abstract* DC) override;
+	void			net_Destroy			() override;
+	void			net_Relcase			( CObject* O ) override;
+	void			UpdateCL			( ) override;
+	void			OnChangeVisual		( ) override;
 	//object serialization
 	virtual void			net_Save			(NET_Packet &net_packet);
 	virtual void			net_Load			(IReader	&ireader);
-	virtual BOOL			net_SaveRelevant	();
-	virtual void			save				(NET_Packet &output_packet);
-	virtual void			load				(IReader &input_packet);
+	BOOL			net_SaveRelevant	() override;
+	void			save				(NET_Packet &output_packet) override;
+	void			load				(IReader &input_packet) override;
 
-	virtual BOOL			net_Relevant		()	{ return getLocal();	}	// send messages only if active and local
-	virtual void			spatial_move		();
-	virtual BOOL			Ready				()	{ return getReady();	}	// update only if active and fully initialized by/for network
+	BOOL			net_Relevant		() override { return getLocal();	}	// send messages only if active and local
+	void			spatial_move		() override;
+	BOOL			Ready				() override { return getReady();	}	// update only if active and fully initialized by/for network
 //	virtual float			renderable_Ambient	();
 
-	virtual void			shedule_Update		(u32 dt);	
-	virtual bool			shedule_Needed		();
+	void			shedule_Update		(u32 dt) override;
+	bool			shedule_Needed		() override;
 
-	virtual void			renderable_Render	();
+	void			renderable_Render	() override;
 	virtual void			OnEvent				(NET_Packet& P, u16 type);
 	virtual	void			Hit					(SHit* pHDS) {};
 	virtual void			SetHitInfo				(CObject* who, CObject* weapon, s16 element, Fvector Pos, Fvector Dir)	{};
@@ -135,8 +135,8 @@ public:
 	virtual LPCSTR			Name                () const;
 	
 	//virtual void			OnH_A_Independent	();
-	virtual void			OnH_B_Chield		();
-	virtual void			OnH_B_Independent	(bool just_before_destroy);
+	void			OnH_B_Chield		() override;
+	void			OnH_B_Independent	(bool just_before_destroy) override;
 
 	virtual bool			IsVisibleForZones	() { return true; }
 ///////////////////////////////////////////////////////////////////////
@@ -145,7 +145,7 @@ public:
 ///////////////////////////////////////////////////////////////////////
 
 	// Position stack
-	virtual	SavedPosition	ps_Element			(u32 ID) const;
+	SavedPosition	ps_Element			(u32 ID) const override;
 
 			void			setup_parent_ai_locations(bool assign_position = true);
 			void			validate_ai_locations(bool decrement_reference = true);
@@ -167,8 +167,8 @@ const animation_movement_controller* animation_movement		( ) const	{ return	m_an
 #endif
 
 			void			init				();
-	virtual	void			reinit				();
-	virtual	void			reload				(LPCSTR section);
+	void			reinit				() override;
+	void			reload				(LPCSTR section) override;
 	///////////////////// network /////////////////////////////////////////
 	bool					object_removed		() const { return m_bObjectRemoved; };
 private:

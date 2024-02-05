@@ -70,7 +70,7 @@ struct SPHObjDBGDraw:public SPHDBGDrawAbsract
 		AABB.set(obj->AABB);
 		AABB_center.set(obj->spatial.sphere.P);
 	}
-	void render		( )
+	void render		( ) override
 	{
 			Level().debug_renderer().draw_aabb(AABB_center,AABB.x,AABB.y,AABB.z,color_xrgb(255,0,0));
 	}
@@ -106,7 +106,7 @@ struct SPHContactDBGDraw :public SPHDBGDrawAbsract
 		pos.set(cast_fv(c.geom.pos));
 		depth=c.geom.depth;
 	}
-	void render		( )
+	void render		( ) override
 	{
 			//bool is_cyl= (geomClass==dCylinderClassUser);
 			Level().debug_renderer().draw_aabb			(pos,.01f,.01f,.01f,color_xrgb(255*is_cyl,0,255*!is_cyl));
@@ -151,7 +151,8 @@ struct SPHDBGDrawTri :public SPHDBGDrawAbsract
 		c = ac;
 		solid = solid_;
 	}
-	virtual void render()
+
+	void render() override
 	{
 		if(solid)
 		{
@@ -196,7 +197,8 @@ struct SPHDBGDrawLine : public SPHDBGDrawAbsract
 	{
 		p[0].set(p0);p[1].set(p1);c=ca;
 	}
-	virtual void render()
+
+	void render() override
 	{
 		Level().debug_renderer().draw_line(Fidentity,p[0],p[1],c);
 	}
@@ -283,7 +285,8 @@ struct SPHDBGDrawAABB :public SPHDBGDrawAbsract
 		p[0].set(center);p[1].set(AABB);
 		c=ac;
 	}
-	virtual void render()
+
+	void render() override
 	{
 		Level().debug_renderer().draw_aabb			(p[0],p[1].x,p[1].y,p[1].z,c);
 	}
@@ -301,7 +304,8 @@ struct SPHDBGDrawOBB: public SPHDBGDrawAbsract
 	{
 		m.set(am);h.set(ah);c=ac;
 	}
-	virtual void render()
+
+	void render() override
 	{
 		Level().debug_renderer().draw_obb(m,h,c);
 	}
@@ -324,7 +328,8 @@ struct SPHDBGDrawPoint :public SPHDBGDrawAbsract
 	{
 		p.set(ap),size=s;c=ac;
 	}
-	virtual void render()
+
+	void render() override
 	{
 		//Level().debug_renderer().draw_aabb(p,size,size,size,c);
 		Fmatrix m;m.identity();m.scale(size,size,size);m.c.set(p);
@@ -345,8 +350,9 @@ bool	 rendered;
 		xr_strcpy(s,t);
 		rendered=false;
 	}
-	virtual void render()
-	{
+
+void render() override
+{
 		//if(rendered) return;
 		if(!fsimilar (dbg_text_current_height_scale,dbg_text_height_scale ) )
 		{
@@ -375,8 +381,9 @@ u32 color;
 	{
 		
 	}
-	virtual void render()
-	{
+
+void render() override
+{
 		UI().Font().pFontStat->SetColor( color );
 	}
 };
@@ -394,7 +401,8 @@ struct SPHDBGTextOutSet : public SPHDBGDrawAbsract
 	{
 		
 	}
-	virtual void render()
+
+	void render() override
 	{
 		UI().Font().pFontStat->OutSet( x, y );
 	}
@@ -941,15 +949,15 @@ void	DBG_DrawBind( CObject &O )
 
 class cphdebug_impl: public IPhDebugRender
 {
-	 void	open_cashed_draw	()
-	{
+	 void	open_cashed_draw	() override
+	 {
 		DBG_OpenCashedDraw();
 	}
-	void	close_cashed_draw	( u32 remove_time)
+	void	close_cashed_draw	( u32 remove_time) override
 	{
 		DBG_ClosedCashedDraw	( remove_time );
 	}
-	void	draw_tri			( const Fvector &v0, const Fvector &v1, const Fvector &v2, u32 c, bool solid )	
+	void	draw_tri			( const Fvector &v0, const Fvector &v1, const Fvector &v2, u32 c, bool solid ) override
 	{
 		DBG_DrawTri( v0, v1, v2, c, solid );
 	}
@@ -1047,75 +1055,85 @@ void DBG_ObjAfterPhDataUpdate	( CPHObject *obj )
 class CPHDebugOutput:
 	public IDebugOutput
 {
-	
-virtual	const	Flags32		&ph_dbg_draw_mask()const
-{
+	const	Flags32		&ph_dbg_draw_mask()const override
+	{
 	return ::ph_dbg_draw_mask;
 }
-virtual	const	Flags32		&ph_dbg_draw_mask1()const
-{
+
+	const	Flags32		&ph_dbg_draw_mask1()const override
+	{
 	return ::ph_dbg_draw_mask1;
 }
 
-virtual	void DBG_DrawStatBeforeFrameStep( )
-{
+	void DBG_DrawStatBeforeFrameStep( ) override
+	{
 	::DBG_DrawStatBeforeFrameStep();
 }
-virtual	void DBG_DrawStatAfterFrameStep( )
-{
+
+	void DBG_DrawStatAfterFrameStep( ) override
+	{
 	::DBG_DrawStatAfterFrameStep( );
 }
 //virtual	void DBG_RenderUpdate( )												=0; 
-virtual	void DBG_OpenCashedDraw( )
-{
+	void DBG_OpenCashedDraw( ) override
+	{
 	::DBG_OpenCashedDraw( );
 }
-virtual	void DBG_ClosedCashedDraw( u32 remove_time )
-{
+
+	void DBG_ClosedCashedDraw( u32 remove_time ) override
+	{
 	::DBG_ClosedCashedDraw( remove_time );
 }
 //virtual	void DBG_DrawPHAbstruct( SPHDBGDrawAbsract*	a )							=0;
-virtual	void DBG_DrawPHObject( const CPHObject *obj )
-{
+	void DBG_DrawPHObject( const CPHObject *obj ) override
+	{
 	::DBG_DrawPHObject( obj );
 }
-virtual	void DBG_DrawContact ( const dContact &c )
-{
+
+	void DBG_DrawContact ( const dContact &c ) override
+	{
 	::DBG_DrawContact( c );
 }
-virtual	void DBG_DrawTri( CDB::RESULT *T, u32 c )
-{
+
+	void DBG_DrawTri( CDB::RESULT *T, u32 c ) override
+	{
 	::DBG_DrawTri( T, c );
 }
-virtual	void DBG_DrawTri(CDB::TRI *T, const Fvector *V_verts, u32 c )
-{
+
+	void DBG_DrawTri(CDB::TRI *T, const Fvector *V_verts, u32 c ) override
+	{
 	::DBG_DrawTri( T, V_verts, c );
 }
-virtual	void DBG_DrawLine( const Fvector &p0, const Fvector &p1, u32 c )
-{
+
+	void DBG_DrawLine( const Fvector &p0, const Fvector &p1, u32 c ) override
+	{
 	::DBG_DrawLine( p0, p1, c );
 }
-virtual	void DBG_DrawAABB( const Fvector &center, const Fvector& AABB, u32 c )
-{
+
+	void DBG_DrawAABB( const Fvector &center, const Fvector& AABB, u32 c ) override
+	{
 	::DBG_DrawAABB( center, AABB, c );
 }
-virtual	void DBG_DrawOBB( const Fmatrix &m, const Fvector h, u32 c )
-{
+
+	void DBG_DrawOBB( const Fmatrix &m, const Fvector h, u32 c ) override
+	{
 	::DBG_DrawOBB( m, h, c );
 }
-virtual	void DBG_DrawPoint( const Fvector& p, float size, u32 c )
-{
+
+	void DBG_DrawPoint( const Fvector& p, float size, u32 c ) override
+	{
 	::DBG_DrawPoint( p, size, c );
 }
-virtual	void DBG_DrawMatrix( const Fmatrix &m, float size, u8 a=255 )
-{	
+
+	void DBG_DrawMatrix( const Fmatrix &m, float size, u8 a=255 ) override
+	{	
 	::DBG_DrawMatrix( m, size, a );
 }
 //virtual	void DBG_DrawRotationX( const Fmatrix &m, float ang0, float ang1, float size, u32 ac, bool solid = false, u32 tessel = 7 ) = 0;
 //virtual	void DBG_DrawRotationY( const Fmatrix &m, float ang0, float ang1, float size, u32 ac, bool solid = false, u32 tessel = 7 ) = 0;
 //virtual	void DBG_DrawRotationZ( const Fmatrix &m, float ang0, float ang1, float size, u32 ac, bool solid = false, u32 tessel = 7 ) = 0;
-virtual	void _cdecl DBG_OutText( LPCSTR s,... )
-{
+	void _cdecl DBG_OutText( LPCSTR s,... ) override
+	{
 	string1024 t;
 	va_list   marker;
 	va_start  (marker,s);
@@ -1128,67 +1146,78 @@ virtual	void _cdecl DBG_OutText( LPCSTR s,... )
 //virtual	void DBG_DrawBind( CObject &O )											=0;
 //virtual	void DBG_PhysBones( CObject &O )										=0;
 //virtual	void DBG_DrawBones( CObject &O )										=0;
-virtual	void DBG_DrawFrameStart( )
-{
+	void DBG_DrawFrameStart( ) override
+	{
 	::DBG_DrawFrameStart( );
 }
-virtual	void PH_DBG_Render( )
-{
+
+	void PH_DBG_Render( ) override
+	{
 	::PH_DBG_Render( );
 }
-virtual	void PH_DBG_Clear( )
-{
+
+	void PH_DBG_Clear( ) override
+	{
 	::PH_DBG_Clear( );
 }
-virtual	LPCSTR PH_DBG_ObjectTrackName( )
-{
+
+	LPCSTR PH_DBG_ObjectTrackName( ) override
+	{
 	return ::PH_DBG_ObjectTrackName( );
 }
 
 //virtual	bool			draw_frame								()=0;
-virtual	u32				&dbg_tries_num							()
-{
+	u32				&dbg_tries_num							() override
+	{
 	return ::dbg_tries_num;
 //	make_string( "%s, _14_=%f \n", dump_string( make_string( "%s.i, ", name ).c_str(), form.i ).c_str( ) , form._14_ )	+ 
 //	make_string( "%s, _24_=%f \n", dump_string( make_string( "%s.j, ", name ).c_str(), form.j ).c_str( ) , form._24_ )	+  
 //	make_string( "%s, _34_=%f \n", dump_string( make_string( "%s.k, ", name ).c_str(), form.k ).c_str( ) , form._34_  ) +  
 //	make_string( "%s, _44_=%f \n", dump_string( make_string( "%s.c, ", name ).c_str(), form.c ).c_str( ) , form._44_ );  
 }
-virtual	u32				&dbg_saved_tries_for_active_objects		()
-{
+
+	u32				&dbg_saved_tries_for_active_objects		() override
+	{
 	return ::dbg_saved_tries_for_active_objects;
 }
-virtual	u32				&dbg_total_saved_tries					()
-{
+
+	u32				&dbg_total_saved_tries					() override
+	{
 		return ::dbg_total_saved_tries;
 }
-virtual	u32 			&dbg_reused_queries_per_step			()
-{
+
+	u32 			&dbg_reused_queries_per_step			() override
+	{
 	return ::dbg_reused_queries_per_step;
 }
-virtual	u32 			&dbg_new_queries_per_step				()
-{
+
+	u32 			&dbg_new_queries_per_step				() override
+	{
 	return ::dbg_new_queries_per_step;
 }
-virtual	u32 			&dbg_bodies_num							()
-{
+
+	u32 			&dbg_bodies_num							() override
+	{
 	return ::dbg_bodies_num;
 }
-virtual	u32 			&dbg_joints_num							()
-{
+
+	u32 			&dbg_joints_num							() override
+	{
 	return ::dbg_joints_num;
 }
-virtual	u32 			&dbg_islands_num						()
-{
+
+	u32 			&dbg_islands_num						() override
+	{
 	return ::dbg_islands_num;
 }
-virtual	u32 			&dbg_contacts_num						()
-{
+
+	u32 			&dbg_contacts_num						() override
+	{
 	return ::dbg_contacts_num;
 }
 
-virtual		float		dbg_vel_collid_damage_to_display()
-{
+	float		dbg_vel_collid_damage_to_display() override
+	{
 	return ::dbg_vel_collid_damage_to_display;
 	//Msg( "%s, _14_=%f ", dump_string( make_string( "%s.i, ", name ).c_str(), form.i ).c_str( ) , form._14_ );  
 	//Msg( "%s, _24_=%f ", dump_string( make_string( "%s.j, ", name ).c_str(), form.j ).c_str( ) , form._24_ );  
@@ -1196,36 +1225,43 @@ virtual		float		dbg_vel_collid_damage_to_display()
 	//Msg( "%s, _44_=%f ", dump_string( make_string( "%s.c, ", name ).c_str(), form.c ).c_str( ) , form._44_ );  
 }
 
-virtual		void DBG_ObjAfterPhDataUpdate	( CPHObject *obj )
-{
+	void DBG_ObjAfterPhDataUpdate	( CPHObject *obj ) override
+	{
 	::DBG_ObjAfterPhDataUpdate( obj );
 }
-virtual		void DBG_ObjBeforePhDataUpdate	( CPHObject *obj )
-{
+
+	void DBG_ObjBeforePhDataUpdate	( CPHObject *obj ) override
+	{
 	::DBG_ObjBeforePhDataUpdate( obj );
 }
-virtual		void DBG_ObjAfterStep			( CPHObject *obj )
-{
+
+	void DBG_ObjAfterStep			( CPHObject *obj ) override
+	{
 	::DBG_ObjAfterStep( obj );
 }
-virtual		void DBG_ObjBeforeStep			( CPHObject *obj )
-{
+
+	void DBG_ObjBeforeStep			( CPHObject *obj ) override
+	{
 	::DBG_ObjBeforeStep( obj );
 }
-virtual		void DBG_ObjeAfterPhTune		( CPHObject *obj )
-{
+
+	void DBG_ObjeAfterPhTune		( CPHObject *obj ) override
+	{
 	::DBG_ObjeAfterPhTune( obj );
 }
-virtual		void DBG_ObjBeforePhTune		( CPHObject *obj )
-{
+
+	void DBG_ObjBeforePhTune		( CPHObject *obj ) override
+	{
 	::DBG_ObjBeforePhTune( obj );
 }
-virtual		void DBG_ObjAfterCollision		( CPHObject *obj )
-{
+
+	void DBG_ObjAfterCollision		( CPHObject *obj ) override
+	{
 	::DBG_ObjAfterCollision( obj );
 }
-virtual		void DBG_ObjBeforeCollision		( CPHObject *obj )
-{
+
+	void DBG_ObjBeforeCollision		( CPHObject *obj ) override
+	{
 	::DBG_ObjBeforeCollision( obj );
 }
 

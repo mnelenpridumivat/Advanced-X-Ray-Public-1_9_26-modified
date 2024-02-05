@@ -24,15 +24,15 @@ protected:
 	u32					mt_dt;
 
 protected:
-	virtual				~CParticlesObject	();
+	~CParticlesObject	() override;
 
 public:
 						CParticlesObject	(LPCSTR p_name, BOOL bAutoRemove, bool destroy_on_game_load);
 
-	virtual bool		shedule_Needed		()	{return true;};
-	virtual float		shedule_Scale		()	;
-	virtual void		shedule_Update		(u32 dt);
-	virtual void		renderable_Render	();
+	bool		shedule_Needed		() override {return true;};
+	float		shedule_Scale		() override;
+	void		shedule_Update		(u32 dt) override;
+	void		renderable_Render	() override;
 	void				PerformAllTheWork	(u32 dt);
 	void	__stdcall	PerformAllTheWork_mt();
 
@@ -44,9 +44,9 @@ public:
 	void				UpdateParent		(const Fmatrix& m, const Fvector& vel);
 
 	void				play_at_pos			(const Fvector& pos, BOOL xform=FALSE);
-	virtual void		Play				(bool bHudMode);
+	void		Play				(bool bHudMode) override;
 	void				Stop				(BOOL bDefferedStop=TRUE);
-	virtual BOOL		Locked				()				{ return mt_dt; }
+	BOOL		Locked				() override { return mt_dt; }
 	
 	bool				IsLooped			() {return m_bLooped;}
 	bool				IsAutoRemove		();

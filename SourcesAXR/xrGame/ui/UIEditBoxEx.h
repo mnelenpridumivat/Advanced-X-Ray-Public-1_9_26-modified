@@ -8,13 +8,13 @@ class CUIEditBoxEx : /*public CUIMultiTextureOwner, */public CUICustomEdit
 {
 public:
 					CUIEditBoxEx	();
-	virtual			~CUIEditBoxEx	();
+					~CUIEditBoxEx	() override;
 
-	virtual void	InitCustomEdit	(Fvector2 pos, Fvector2 size);
+					void	InitCustomEdit	(Fvector2 pos, Fvector2 size) override;
 
 	// CUIMultiTextureOwner
-	virtual void	InitTexture		(LPCSTR texture);
-	virtual void	InitTextureEx	(LPCSTR texture,LPCSTR shader);
+					void	InitTexture		(LPCSTR texture) override;
+					void	InitTextureEx	(LPCSTR texture,LPCSTR shader) override;
 protected:
 	CUIFrameWindow*	m_pFrameWindow;
 };

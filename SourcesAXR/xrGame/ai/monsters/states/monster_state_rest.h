@@ -14,13 +14,13 @@ protected:
 
 public:
 						CStateMonsterRest		(_Object *obj);
-	virtual				~CStateMonsterRest		();
+	~CStateMonsterRest		() override;
 
-	virtual	void		initialize				();
-	virtual	void		execute					();
-	virtual	void		finalize				();
-	virtual	void		critical_finalize		();
-	virtual void		remove_links			(CObject* object) { inherited::remove_links(object);}
+	void		initialize				() override;
+	void		execute					() override;
+	void		finalize				() override;
+	void		critical_finalize		() override;
+	void		remove_links			(CObject* object) override { inherited::remove_links(object);}
 };
 
 #include "monster_state_rest_inline.h"

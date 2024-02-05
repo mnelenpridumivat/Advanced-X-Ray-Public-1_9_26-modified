@@ -8,31 +8,31 @@ class CWeaponShotgun :	public CWeaponCustomPistol
 	typedef CWeaponCustomPistol inherited;
 public:
 					CWeaponShotgun		();
-	virtual			~CWeaponShotgun		();
+	~CWeaponShotgun		() override;
 
-	virtual void	Load				(LPCSTR section);
-	
-	virtual void	net_Destroy			();
-	virtual void	net_Export			(NET_Packet& P);
-	virtual void	net_Import			(NET_Packet& P);
+	void	Load				(LPCSTR section) override;
 
-	virtual void	Reload				();
-	virtual void	switch2_Fire		();
+	void	net_Destroy			() override;
+	void	net_Export			(NET_Packet& P) override;
+	void	net_Import			(NET_Packet& P) override;
+
+	void	Reload				() override;
+	void	switch2_Fire		() override;
 	void			switch2_StartReload ();
 	void			switch2_AddCartgidge();
 	void			switch2_EndReload	();
 
 	virtual void	PlayAnimOpenWeapon	();
 	virtual void	PlayAnimAddOneCartridgeWeapon();
-	virtual void	PlayAnimAim			();
+	void	PlayAnimAim			() override;
 	void			PlayAnimCloseWeapon	();
 
-	virtual bool	Action(u16 cmd, u32 flags);
+	bool	Action(u16 cmd, u32 flags) override;
 
 protected:
-	virtual void	OnAnimationEnd		(u32 state);
+	void	OnAnimationEnd		(u32 state) override;
 	void			TriStateReload		();
-	virtual void	OnStateSwitch		(u32 S);
+	void	OnStateSwitch		(u32 S) override;
 
 	bool			HaveCartridgeInInventory(u8 cnt);
 	virtual u8		AddCartridge		(u8 cnt);

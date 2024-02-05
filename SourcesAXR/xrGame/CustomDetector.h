@@ -49,7 +49,7 @@ public:
 	ItemsMap								m_ItemInfos;
 
 protected:
-	virtual void 	feel_touch_new		(CObject* O)
+	void 	feel_touch_new		(CObject* O) override
 	{
 		K* pK							= smart_cast<K*>(O);
 		R_ASSERT						(pK);
@@ -58,7 +58,8 @@ protected:
 		m_ItemInfos[pK].snd_time		= 0.0f;
 		m_ItemInfos[pK].curr_ref		= &(it->second);
 	}
-	virtual void 	feel_touch_delete	(CObject* O)
+
+	void 	feel_touch_delete	(CObject* O) override
 	{
 		K* pK							= smart_cast<K*>(O);
 		R_ASSERT						(pK);
@@ -107,7 +108,7 @@ template <typename T>
 class CAfList  :public CDetectList<T>
 {
 protected:
-	virtual BOOL 	feel_touch_contact	(CObject* O);
+	BOOL 	feel_touch_contact	(CObject* O) override;
 public:
 					CAfList		():m_af_rank(0){}
 	int				m_af_rank;
@@ -125,39 +126,39 @@ protected:
 
 public:
 					CCustomDetector		();
-	virtual			~CCustomDetector	();
+	~CCustomDetector	() override;
 
-	virtual BOOL 	net_Spawn			(CSE_Abstract* DC);
-	virtual void 	Load				(LPCSTR section);
+	BOOL 	net_Spawn			(CSE_Abstract* DC) override;
+	void 	Load				(LPCSTR section) override;
 
-	virtual void 	OnH_A_Chield		();
-	virtual void 	OnH_B_Independent	(bool just_before_destroy);
+	void 	OnH_A_Chield		() override;
+	void 	OnH_B_Independent	(bool just_before_destroy) override;
 
-	virtual void 	shedule_Update		(u32 dt);
-	virtual void 	UpdateCL			();
+	void 	shedule_Update		(u32 dt) override;
+	void 	UpdateCL			() override;
 
 
 			bool 	IsWorking			();
 
-	virtual void 	OnMoveToSlot		(const SInvItemPlace& prev);
-	virtual void 	OnMoveToRuck		(const SInvItemPlace& prev);
+	void 	OnMoveToSlot		(const SInvItemPlace& prev) override;
+	void 	OnMoveToRuck		(const SInvItemPlace& prev) override;
 
-	virtual void	OnActiveItem		();
-	virtual void	OnHiddenItem		();
-	virtual void	OnStateSwitch		(u32 S);
-	virtual void	OnAnimationEnd		(u32 state);
-	virtual	void	UpdateXForm			();
+	void	OnActiveItem		() override;
+	void	OnHiddenItem		() override;
+	void	OnStateSwitch		(u32 S) override;
+	void	OnAnimationEnd		(u32 state) override;
+	void	UpdateXForm			() override;
 
 	void			ToggleDetector		(bool bFastMode);
 	void			HideDetector		(bool bFastMode);
 	void			ShowDetector		(bool bFastMode);
-	virtual bool	CheckCompatibility	(CHudItem* itm);
+	bool	CheckCompatibility	(CHudItem* itm) override;
 
-	virtual u32		ef_detector_type	() const	{return 1;};
+	u32		ef_detector_type	() const override {return 1;};
 
 			void	UpdateChargeLevel	(void);
-	virtual void	save				(NET_Packet &output_packet);
-	virtual void	load				(IReader &input_packet);
+	void	save				(NET_Packet &output_packet) override;
+	void	load				(IReader &input_packet) override;
 			float	GetCurrentChargeLevel(void) const;
 			void	SetCurrentChargeLevel(float val);
 			float	GetAfDetectRadius	() { return m_fAfDetectRadius;};
@@ -190,7 +191,7 @@ public:
 			CLAItem*	light_lanim;
 
 
-			virtual void processing_deactivate() override
+	void processing_deactivate() override
 			{
 				UpdateLights();
 				inherited::processing_deactivate();
@@ -214,14 +215,14 @@ protected:
 
 	CAfList<CObject>m_artefacts;
 
-	virtual bool			install_upgrade_impl(LPCSTR section, bool test);
+	bool			install_upgrade_impl(LPCSTR section, bool test) override;
 };
 
 class CZoneList : public CDetectList<CCustomZone>
 {
 protected:
-	virtual BOOL	feel_touch_contact( CObject* O );
+	BOOL	feel_touch_contact( CObject* O ) override;
 public:
 					CZoneList();
-	virtual			~CZoneList();
+	~CZoneList() override;
 }; // class CZoneList

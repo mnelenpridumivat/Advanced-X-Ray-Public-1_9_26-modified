@@ -23,13 +23,13 @@ class CAlienEffectorPP : public CEffectorPP {
 
 public:
 					CAlienEffectorPP	(const SPPInfo &ppi, EEffectorPPType type);
-	virtual			~CAlienEffectorPP	();
+	~CAlienEffectorPP	() override;
 
 	void	Update			(float new_factor) {factor = new_factor;}
 	void	Destroy			();
 
 private:
-	virtual	BOOL	Process			(SPPInfo& pp);
+	BOOL	Process			(SPPInfo& pp) override;
 };
 
 
@@ -89,7 +89,7 @@ class CAlienEffector : public CEffectorCam {
 
 public:
 					CAlienEffector	(ECamEffectorType type, CAI_Bloodsucker *obj);
-	virtual BOOL	ProcessCam		(SCamEffectorInfo& info);
+	BOOL	ProcessCam		(SCamEffectorInfo& info) override;
 };
 
 

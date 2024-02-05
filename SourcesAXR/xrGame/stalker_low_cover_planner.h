@@ -24,10 +24,10 @@ private:
 public:
 					stalker_low_cover_planner	(CAI_Stalker *object = 0, LPCSTR action_name = "");
 	virtual	void	setup						(CAI_Stalker *object, CPropertyStorage *storage);
-	virtual void	update						();
-	virtual void	initialize					();
-	virtual void	execute						();
-	virtual void	finalize					();
+	void	update						() override;
+	void	initialize					() override;
+	void	execute						() override;
+	void	finalize					() override;
 };
 
 #endif // STALKER_LOW_COVER_PLANNER_H_INCLUDED

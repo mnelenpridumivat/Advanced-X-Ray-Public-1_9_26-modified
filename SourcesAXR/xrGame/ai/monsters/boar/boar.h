@@ -12,16 +12,16 @@ class CAI_Boar : public CBaseMonster,
 
 public:
 					CAI_Boar			();
-	virtual			~CAI_Boar			();	
+	~CAI_Boar			() override;
 
-	virtual void	Load				(LPCSTR section);
-	virtual BOOL	net_Spawn			(CSE_Abstract* DC);
-	virtual void	reinit				();
+	void	Load				(LPCSTR section) override;
+	BOOL	net_Spawn			(CSE_Abstract* DC) override;
+	void	reinit				() override;
 
-	virtual void	UpdateCL			();
+	void	UpdateCL			() override;
 
 	virtual bool	CanExecRotationJump	() {return true;}
-	virtual void	CheckSpecParams		(u32 spec_params);
+	void	CheckSpecParams		(u32 spec_params) override;
 
 	// look at enemy
 	static void	_BCL	BoneCallback	(CBoneInstance *B);
@@ -29,10 +29,10 @@ public:
 			float	_velocity;
 			float	_cur_delta, _target_delta;
 			bool	look_at_enemy;
-	
-	virtual bool	ability_can_drag	() {return true;}
 
-	virtual	char*	get_monster_class_name () { return "boar"; }
+	bool	ability_can_drag	() override {return true;}
+
+	char*	get_monster_class_name () override { return "boar"; }
 	
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 

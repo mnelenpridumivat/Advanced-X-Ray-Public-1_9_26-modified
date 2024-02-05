@@ -12,9 +12,9 @@ private:
 	typedef CArtefact inherited;
 public:
 	CZudaArtefact(void);
-	virtual ~CZudaArtefact(void);
+	~CZudaArtefact(void) override;
 
-	virtual void Load				(LPCSTR section);
+	void Load				(LPCSTR section) override;
 
 protected:
 };

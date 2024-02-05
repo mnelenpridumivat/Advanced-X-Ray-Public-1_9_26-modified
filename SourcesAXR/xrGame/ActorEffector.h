@@ -13,12 +13,12 @@ class CActorCameraManager	:public CCameraManager
 	SCamEffectorInfo		m_cam_info_hud;
 
 protected:
-	virtual void			UpdateCamEffectors		();
-	virtual bool			ProcessCameraEffector	(CEffectorCam* eff);
+	void			UpdateCamEffectors		() override;
+	bool			ProcessCameraEffector	(CEffectorCam* eff) override;
 
 public:
 							CActorCameraManager():inherited(false){}
-	virtual					~CActorCameraManager() {}
+	~CActorCameraManager() override {}
 
 	IC void					hud_camera_Matrix		(Fmatrix& M){M.set(m_cam_info_hud.r, m_cam_info_hud.n, m_cam_info_hud.d, m_cam_info_hud.p);}
 };
@@ -58,14 +58,14 @@ public:
 	float				m_fov;
 
 						CAnimatorCamEffector	();
-	virtual				~CAnimatorCamEffector	();
+	~CAnimatorCamEffector	() override;
 			void		Start					(LPCSTR fn);
-	virtual BOOL		ProcessCam				(SCamEffectorInfo& info);
+	BOOL		ProcessCam				(SCamEffectorInfo& info) override;
 			void		SetCyclic				(bool b)				{m_bCyclic=b;}
-	virtual	BOOL		Valid					();
+	BOOL		Valid					() override;
 			float		GetAnimatorLength		()						{return fLifeTime;};
 
-	virtual bool		AbsolutePositioning		()						{return m_bAbsolutePositioning;}
+	bool		AbsolutePositioning		() override {return m_bAbsolutePositioning;}
 };
 
 class CAnimatorCamEffectorScriptCB :public CAnimatorCamEffector 
@@ -75,9 +75,9 @@ class CAnimatorCamEffectorScriptCB :public CAnimatorCamEffector
 	shared_str			cb_name;
 public:
 	CAnimatorCamEffectorScriptCB	(LPCSTR _cb){cb_name =_cb;};
-	virtual	BOOL		Valid					();
-	virtual BOOL		AllowProcessingIfInvalid()							{return m_bAbsolutePositioning;}
-	virtual	void		ProcessIfInvalid		(SCamEffectorInfo& info);
+	BOOL		Valid					() override;
+	BOOL		AllowProcessingIfInvalid() override {return m_bAbsolutePositioning;}
+	void		ProcessIfInvalid		(SCamEffectorInfo& info) override;
 };
 
 class CAnimatorCamLerpEffector :public CAnimatorCamEffector
@@ -87,7 +87,7 @@ protected:
 	GET_KOEFF_FUNC									m_func;
 public:
 			void		SetFactorFunc				(GET_KOEFF_FUNC f)	{m_func=f;}
-	virtual BOOL		ProcessCam					(SCamEffectorInfo& info);
+	BOOL		ProcessCam					(SCamEffectorInfo& info) override;
 };
 
 class CAnimatorCamLerpEffectorConst :public CAnimatorCamLerpEffector
@@ -105,8 +105,8 @@ class CCameraEffectorControlled :public CAnimatorCamLerpEffector
 	CEffectorController*		m_controller;
 public:
 						CCameraEffectorControlled		(CEffectorController* c);
-	virtual				~CCameraEffectorControlled		();
-	virtual BOOL		Valid							();
+	~CCameraEffectorControlled		() override;
+	BOOL		Valid							() override;
 };
 
 class SndShockEffector:public CEffectorController
@@ -121,13 +121,13 @@ public:
 	CActor*						m_actor;
 public:
 								SndShockEffector	();
-	virtual						~SndShockEffector	();
+	~SndShockEffector	() override;
 	void						Start				(CActor* A, float snd_length, float power);
 	void						Update				();
 
-	virtual		BOOL			Valid				();
+	BOOL			Valid				() override;
 				BOOL			InWork				();
-	virtual	float xr_stdcall	GetFactor			();
+	float xr_stdcall	GetFactor			() override;
 };
 
 
@@ -148,6 +148,6 @@ class CControllerPsyHitCamEffector :public CEffectorCam {
 public:
 						CControllerPsyHitCamEffector	(ECamEffectorType type, const Fvector &src_pos, const Fvector &target_pos, 
 														float time, float base_fov, float dest_fov);
-	virtual BOOL		ProcessCam						(SCamEffectorInfo& info);
+	BOOL		ProcessCam						(SCamEffectorInfo& info) override;
 };
 //////////////////////////////////////////////////////////////////////////

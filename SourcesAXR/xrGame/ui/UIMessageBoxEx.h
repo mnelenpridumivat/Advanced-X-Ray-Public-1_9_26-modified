@@ -8,11 +8,11 @@ class CUIMessageBoxEx : public CUIDialogWnd, public CUIWndCallback
 {
 public:
 					CUIMessageBoxEx		();
-	virtual			~CUIMessageBoxEx	();
+					~CUIMessageBoxEx	() override;
 			void	 SetText			(LPCSTR text);
 			LPCSTR	GetText				();
 	virtual void	InitMessageBox		(LPCSTR xml_template);
-	virtual void	SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+					void	SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 
 	LPCSTR			GetHost				();
 	LPCSTR			GetPassword			();
@@ -25,8 +25,8 @@ public:
 	void xr_stdcall	OnOKClicked			(CUIWindow*, void*);
 	void xr_stdcall	OnNOClicked			(CUIWindow*, void*);
 
-	virtual bool	OnKeyboardAction			(int dik, EUIMessages keyboard_action);
-	virtual bool	NeedCenterCursor	()const	 {return false;}
+					bool	OnKeyboardAction			(int dik, EUIMessages keyboard_action) override;
+					bool	NeedCenterCursor	()const override {return false;}
 
     CUIMessageBox*						m_pMessageBox;
 };

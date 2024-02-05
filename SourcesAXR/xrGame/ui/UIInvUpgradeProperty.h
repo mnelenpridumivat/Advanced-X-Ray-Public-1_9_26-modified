@@ -36,7 +36,7 @@ protected:
 
 public:
 					UIProperty();
-	virtual			~UIProperty();
+	~UIProperty() override;
 		void		init_from_xml( CUIXml& ui_xml );
 		bool		init_property( shared_str const& property_id );
 	Property_type*	get_property();
@@ -64,7 +64,7 @@ protected:
 
 public:
 					UIInvUpgPropertiesWnd();
-	virtual			~UIInvUpgPropertiesWnd();
+	~UIInvUpgPropertiesWnd() override;
 		void		init_from_xml( LPCSTR xml_name );
 		
 		void		set_upgrade_info( Upgrade_type& upgrade );

@@ -11,17 +11,17 @@ private:
 	typedef CInventoryItemObject inherited;
 public:
 	CGrenadeLauncher (void);
-	virtual ~CGrenadeLauncher(void);
+	~CGrenadeLauncher(void) override;
 
-	virtual BOOL net_Spawn			(CSE_Abstract* DC);
-	virtual void Load				(LPCSTR section);
-	virtual void net_Destroy		();
+	BOOL net_Spawn			(CSE_Abstract* DC) override;
+	void Load				(LPCSTR section) override;
+	void net_Destroy		() override;
 
-	virtual void OnH_A_Chield		();
-	virtual void OnH_B_Independent	(bool just_before_destroy);
+	void OnH_A_Chield		() override;
+	void OnH_B_Independent	(bool just_before_destroy) override;
 
-	virtual void UpdateCL			();
-	virtual void renderable_Render	();
+	void UpdateCL			() override;
+	void renderable_Render	() override;
 
 	float	GetGrenadeVel() {return m_fGrenadeVel;}
 

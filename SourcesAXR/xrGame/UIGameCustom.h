@@ -30,7 +30,7 @@ class CUIMessagesWindow;
 struct SDrawStaticStruct :public IPureDestroyableObject
 {
 	SDrawStaticStruct	();
-	virtual	void	destroy			();
+	void	destroy			() override;
 	CUIStatic*		m_static;
 	float			m_endTime;
 	shared_str		m_name;
@@ -117,12 +117,12 @@ public:
 
 	
 						CUIGameCustom			();
-	virtual				~CUIGameCustom			();
+	~CUIGameCustom			() override;
 
 	virtual	void		Init					(int stage)	{};
 	
 	virtual void		Render					();
-	virtual void _BCL	OnFrame					();
+	void _BCL	OnFrame					() override;
 	
 	IC CUIActorMenu&	ActorMenu				() const { return *m_ActorMenu; }
 	IC CUIPdaWnd&		PdaMenu				() const { return *m_PdaMenu;   }

@@ -92,7 +92,7 @@ public:
 
 public:
 								CActionPlanner			();
-	virtual						~CActionPlanner			();
+	~CActionPlanner			() override;
 	virtual	void				setup					(_object_type *object);
 	virtual	void				update					();
 	virtual void				finalize				();
@@ -103,10 +103,10 @@ public:
 	IC		bool				initialized				() const;
 	IC		void				add_condition			(_world_operator *action, _condition_type condition_id, _value_type condition_value);
 	IC		void				add_effect				(_world_operator *action, _condition_type condition_id, _value_type condition_value);
-	IC		virtual void		add_operator			(const _edge_type &operator_id,	_operator_ptr _operator);
-	IC		virtual void		remove_operator			(const _edge_type	&operator_id);
-	IC		virtual void		add_evaluator			(const _condition_type &condition_id, _condition_evaluator_ptr evaluator);
-	IC		virtual void		remove_evaluator		(const _condition_type &condition_id);
+	IC void		add_operator			(const _edge_type &operator_id,	_operator_ptr _operator) override;
+	IC void		remove_operator			(const _edge_type	&operator_id) override;
+	IC void		add_evaluator			(const _condition_type &condition_id, _condition_evaluator_ptr evaluator) override;
+	IC void		remove_evaluator		(const _condition_type &condition_id) override;
 	IC		_object_type		&object					() const;
 	virtual	void				save					(NET_Packet &packet);
 	virtual	void				load					(IReader &packet);

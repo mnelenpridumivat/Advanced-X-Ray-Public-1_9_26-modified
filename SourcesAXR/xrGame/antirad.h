@@ -12,5 +12,5 @@ class CAntirad: public CEatableItemObject {
 
 public:
 				 CAntirad			();
-	virtual		 ~CAntirad			();
+				 ~CAntirad			() override;
 };

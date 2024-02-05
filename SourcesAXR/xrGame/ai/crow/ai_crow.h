@@ -105,36 +105,36 @@ public:
 	u32				o_workload_rframe	;
 public:
 					CAI_Crow();
-	virtual			~CAI_Crow();
-	virtual void	Load						( LPCSTR section );
+	~CAI_Crow() override;
+	void	Load						( LPCSTR section ) override;
 			void	init						();
-	virtual BOOL	net_Spawn					( CSE_Abstract* DC );
-	virtual void	net_Destroy					();
-	virtual BOOL	renderable_ShadowGenerate	()			{ return FALSE;	}
-	virtual BOOL	renderable_ShadowReceive	()			{ return FALSE;	}
-	virtual void	renderable_Render			();
-	virtual void	shedule_Update				(u32 DT);
-	virtual void	UpdateCL					();
+	BOOL	net_Spawn					( CSE_Abstract* DC ) override;
+	void	net_Destroy					() override;
+	BOOL	renderable_ShadowGenerate	() override { return FALSE;	}
+	BOOL	renderable_ShadowReceive	() override { return FALSE;	}
+	void	renderable_Render			() override;
+	void	shedule_Update				(u32 DT) override;
+	void	UpdateCL					() override;
 
-	virtual CEntity*cast_entity					()			{return this;}
+	CEntity*cast_entity					() override {return this;}
 
-	virtual void	net_Export					(NET_Packet& P);
-	virtual void	net_Import					(NET_Packet& P);
+	void	net_Export					(NET_Packet& P) override;
+	void	net_Import					(NET_Packet& P) override;
 
-	virtual void	g_fireParams				(CHudItem* /**pHudItem/**/, Fvector& /**P/**/, Fvector& /**D/**/) override {};
+	void	g_fireParams				(CHudItem* /**pHudItem/**/, Fvector& /**P/**/, Fvector& /**D/**/) override {};
 	virtual void	g_WeaponBones				(int &/**L/**/, int &/**R1/**/, int &/**R2/**/)	{};
 
-	virtual void	HitSignal					(float	HitAmount,	Fvector& local_dir, CObject* who, s16 element);
-	virtual void	HitImpulse					(float	amount,		Fvector& vWorldDir, Fvector& vLocalDir);
-	virtual	void	Hit							(SHit* pHDS);
-	virtual void	Die							(CObject* who);
+	void	HitSignal					(float	HitAmount,	Fvector& local_dir, CObject* who, s16 element) override;
+	void	HitImpulse					(float	amount,		Fvector& vWorldDir, Fvector& vLocalDir) override;
+	void	Hit							(SHit* pHDS) override;
+	void	Die							(CObject* who) override;
 	virtual	float	ffGetFov					() const {return 150.f;	}
 	virtual	float	ffGetRange					() const {return 30.f;	}
 
-	virtual BOOL	IsVisibleForHUD	()			{ return FALSE;		}
-	virtual bool	IsVisibleForZones()			{ return false;		}
-	virtual BOOL	UsedAI_Locations()			;
-	virtual void	create_physic_shell	()		;
+	BOOL	IsVisibleForHUD	() override { return FALSE;		}
+	bool	IsVisibleForZones() override { return false;		}
+	BOOL	UsedAI_Locations() override;
+	void	create_physic_shell	() override;
 
 public:
 	DECLARE_SCRIPT_REGISTER_FUNCTION

@@ -10,7 +10,7 @@ class CUIBuyWeaponTab : public CUITabControl
 typedef		 CUITabControl		inherited;
 
 public:
-	virtual void SendMessage		(CUIWindow *pWnd, s16 msg, void *pData);
+void SendMessage		(CUIWindow *pWnd, s16 msg, void *pData) override;
 
 // public:
 // 				CUIBuyWeaponTab				();

@@ -11,12 +11,12 @@ class CStateMonsterMoveAroundPoint : public CState<_Object> {
 
 public:
 						CStateMonsterMoveAroundPoint	(_Object *obj) : inherited(obj, &data) {}
-	virtual				~CStateMonsterMoveAroundPoint	() {}
+	~CStateMonsterMoveAroundPoint	() override {}
 
-	virtual void		initialize						();
-	virtual	void		execute							();
+	void		initialize						() override;
+	void		execute							() override;
 
-	virtual bool		check_completion				();
+	bool		check_completion				() override;
 };
 
 #include "state_move_to_point_inline.h"

@@ -18,15 +18,15 @@ class CUIComboBox : public CUIWindow, public CUIOptionsItem, public pureRender
 	xr_vector<int>		m_disabled;
 public:
 						CUIComboBox				();
-	virtual				~CUIComboBox			();
+	~CUIComboBox			() override;
 	// CUIOptionsItem
-	virtual void	SetCurrentOptValue	();	// opt->current
-	virtual void	SaveBackUpOptValue	();	// current->backup
-	virtual void	SaveOptValue		();	// current->opt
-	virtual void	UndoOptValue		();	// backup->current
-	virtual bool	IsChangedOptValue	() const;	// backup!=current
+	void	SetCurrentOptValue	() override;	// opt->current
+	void	SaveBackUpOptValue	() override;	// current->backup
+	void	SaveOptValue		() override;	// current->opt
+	void	UndoOptValue		() override;	// backup->current
+	bool	IsChangedOptValue	() const override;	// backup!=current
 
-	virtual void	OnRender					(); // only for list-box
+	void	OnRender					() override; // only for list-box
 
 			LPCSTR		GetText					();
 			LPCSTR		GetTextOf				(int index);
@@ -39,19 +39,19 @@ public:
 			void		SetItemIDX				(int idx);
 			void		SetItemToken			(int tok);
 
-	virtual void		SendMessage				(CUIWindow *pWnd, s16 msg, void* pData = 0);
-	virtual void		OnFocusLost				();
-	virtual void		OnFocusReceive			();
+	void		SendMessage				(CUIWindow *pWnd, s16 msg, void* pData = 0) override;
+	void		OnFocusLost				() override;
+	void		OnFocusReceive			() override;
 			int			CurrentID				()	{return m_itoken_id;}
 			void		disable_id				(int id);
 			void		enable_id				(int id);
 protected:
-	virtual bool		OnMouseAction					(float x, float y, EUIMessages mouse_action);
+	bool		OnMouseAction					(float x, float y, EUIMessages mouse_action) override;
 	virtual void		OnBtnClicked			();
 			void		ShowList				(bool bShow);
 			void		OnListItemSelect		();
-	virtual void		Update					();
-	virtual void		Draw					();
+	void		Update					() override;
+	void		Draw					() override;
 			void		ClearList				();
 
 			u32			GetSize					();

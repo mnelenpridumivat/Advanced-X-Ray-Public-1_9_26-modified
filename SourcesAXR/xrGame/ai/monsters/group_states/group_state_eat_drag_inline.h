@@ -59,7 +59,8 @@ void CStateGroupDragAbstract::initialize()
 		{
 		}
 
-		bool	operator()	( u16 bone ) { 
+		bool	operator()	( u16 bone ) override
+		{ 
 			u16 bi = bone;
 			for( ;m_K->LL_GetBoneRoot() != bi ;)
 			{

@@ -12,19 +12,19 @@ class CUITrackBar : public CUI_IB_FrameLineWnd, public CUIOptionsItem
 public:
 					CUITrackBar				();
 	// CUIOptionsItem
-	virtual void	SetCurrentOptValue		();	// opt->current
-	virtual void	SaveBackUpOptValue		();	// current->backup
-	virtual void	SaveOptValue			();	// current->opt
-	virtual void	UndoOptValue			();	// backup->current
-	virtual bool	IsChangedOptValue		() const;	// backup!=current
-	
-	virtual void	Draw					();
-	virtual void	Update					();
-	virtual bool	OnMouseAction			(float x, float y, EUIMessages mouse_action);
-	virtual	void 	OnMessage				(LPCSTR message);
+	void	SetCurrentOptValue		() override;	// opt->current
+	void	SaveBackUpOptValue		() override;	// current->backup
+	void	SaveOptValue			() override;	// current->opt
+	void	UndoOptValue			() override;	// backup->current
+	bool	IsChangedOptValue		() const override;	// backup!=current
+
+	void	Draw					() override;
+	void	Update					() override;
+	bool	OnMouseAction			(float x, float y, EUIMessages mouse_action) override;
+	void 	OnMessage				(LPCSTR message) override;
 	// CUIWindow
 			void	InitTrackBar			(Fvector2 pos, Fvector2 size);
-	virtual void	Enable					(bool status);
+	void	Enable					(bool status) override;
 			void	SetInvert				(bool v){m_b_invert=v;}
 			bool	GetInvert				() const	{return m_b_invert;};
 			void	SetStep					(float step);

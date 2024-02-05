@@ -71,11 +71,11 @@ public:
 	bool				m_b_force_update;
 
 					CUIHudStatesWnd		();
-	virtual			~CUIHudStatesWnd	();
+	~CUIHudStatesWnd	() override;
 
 			void	InitFromXml			( CUIXml& xml, LPCSTR path );
 			void	Load_section		();
-	virtual void	Update				();
+	void	Update				() override;
 //	virtual void	Draw				();
 
 			void	on_connected		();

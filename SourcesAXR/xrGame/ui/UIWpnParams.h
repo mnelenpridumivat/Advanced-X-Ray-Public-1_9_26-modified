@@ -14,7 +14,7 @@ class CUIWpnParams : public CUIWindow
 {
 public:
 							CUIWpnParams		();
-	virtual					~CUIWpnParams		();
+							~CUIWpnParams		() override;
 
 	void 					InitFromXml			(CUIXml& xml_doc);
 	void					SetInfo				(CInventoryItem* slot_wpn, CInventoryItem& cur_wpn);
@@ -59,7 +59,7 @@ class CUIConditionParams : public CUIWindow
 {
 public:
 							CUIConditionParams	();
-	virtual					~CUIConditionParams	();
+							~CUIConditionParams	() override;
 
 	void 					InitFromXml			(CUIXml& xml_doc);
 	void					SetInfo				(CInventoryItem const* slot_wpn, CInventoryItem const& cur_wpn);

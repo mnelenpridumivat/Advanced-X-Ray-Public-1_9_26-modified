@@ -39,8 +39,8 @@ class CSE_ALifeItemPDA;
 
 SERVER_ENTITY_DECLARE_BEGIN(CPureServerObject,IPureServerObject)
 	virtual							~CPureServerObject(){}
-	virtual void					load(IReader	&tFileStream);
-	virtual void					save(IWriter	&tMemoryStream);
+void					load(IReader	&tFileStream) override;
+void					save(IWriter	&tMemoryStream) override;
 	virtual void					load(NET_Packet	&tNetPacket);
 	virtual void					save(NET_Packet	&tNetPacket);
 };
@@ -100,12 +100,12 @@ public:
 
 	//client object custom data serialization
 	xr_vector<u8>					client_data;
-	virtual void					load					(NET_Packet	&tNetPacket);
+void					load					(NET_Packet	&tNetPacket) override;
 
 	//////////////////////////////////////////////////////////////////////////
 	
 									CSE_Abstract			(LPCSTR caSection);
-	virtual							~CSE_Abstract			();
+~CSE_Abstract			() override;
 	virtual void					OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender ){};
 #ifndef XRGAME_EXPORTS
 	virtual void					FillProps				(LPCSTR pref, PropItemVec &items);
@@ -117,22 +117,24 @@ public:
 #endif // #ifndef XRGAME_EXPORTS
 	virtual BOOL					Net_Relevant			(){return FALSE;}; // !!!! WARNING!!!
 	//
-	virtual void		__stdcall	Spawn_Write				(NET_Packet &tNetPacket, BOOL bLocal);
-	virtual BOOL		__stdcall	Spawn_Read				(NET_Packet &tNetPacket);
-	virtual LPCSTR		__stdcall	name					() const;
-	virtual LPCSTR		__stdcall	name_replace			() const;
-	virtual void		__stdcall	set_name				(LPCSTR s)
-	{
+void		__stdcall	Spawn_Write				(NET_Packet &tNetPacket, BOOL bLocal) override;
+BOOL		__stdcall	Spawn_Read				(NET_Packet &tNetPacket) override;
+LPCSTR		__stdcall	name					() const override;
+LPCSTR		__stdcall	name_replace			() const override;
+
+void		__stdcall	set_name				(LPCSTR s) override
+{
 		s_name		= s;
 	};
-	virtual void		__stdcall	set_name_replace		(LPCSTR s) {xr_free(s_name_replace); s_name_replace = xr_strdup(s);};
-	virtual Fvector&	__stdcall	position				();
-	virtual Fvector&	__stdcall	angle					();
-	virtual Flags16&	__stdcall	flags					();
-	virtual CSE_Visual* __stdcall	visual					();
-	virtual ISE_Shape*  __stdcall	shape					();
-	virtual CSE_Motion* __stdcall	motion					();
-	virtual bool		__stdcall	validate				();
+void		__stdcall	set_name_replace		(LPCSTR s) override
+{xr_free(s_name_replace); s_name_replace = xr_strdup(s);};
+Fvector&	__stdcall	position				() override;
+Fvector&	__stdcall	angle					() override;
+Flags16&	__stdcall	flags					() override;
+CSE_Visual* __stdcall	visual					() override;
+ISE_Shape*  __stdcall	shape					() override;
+CSE_Motion* __stdcall	motion					() override;
+bool		__stdcall	validate				() override;
 	//
 
 	IC		const Fvector			&Position				() const					{return o_Position;};

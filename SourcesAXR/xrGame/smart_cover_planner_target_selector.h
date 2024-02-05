@@ -37,10 +37,10 @@ private:
 
 public:
 	target_selector() {}
-	virtual ~target_selector() {}
-	virtual	void	setup			(animation_planner *object, CPropertyStorage *storage);
-	virtual void	update			();
-	virtual LPCSTR	object_name		() const;
+	~target_selector() override {}
+	void	setup			(animation_planner *object, CPropertyStorage *storage) override;
+	void	update			() override;
+	LPCSTR	object_name		() const override;
 			void	callback		(callback_type const &callback);
 	IC callback_type const& callback() const;
 };

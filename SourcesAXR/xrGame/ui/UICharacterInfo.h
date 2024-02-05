@@ -59,7 +59,7 @@ protected:
 
 public:
 						CUICharacterInfo();
-	virtual				~CUICharacterInfo();
+	~CUICharacterInfo() override;
 
 	void				InitCharacterInfo		(Fvector2 pos, Fvector2 size, CUIXml* xml_doc);
 	void				InitCharacterInfo		(Fvector2 pos, Fvector2 size, LPCSTR xml_name);
@@ -71,7 +71,7 @@ public:
 	void				ClearInfo				();
 	void				InitCharacterMP			(LPCSTR player_name, LPCSTR player_icon );
 
-	virtual void		Update					();
+	void		Update					() override;
 
 	u16					OwnerID					()	const	{	return m_ownerID;	}
 	CUIStatic&			UIIcon					()	const	{	VERIFY(m_icons[eIcon]);			return *m_icons[eIcon];	}

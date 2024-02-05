@@ -84,23 +84,23 @@ public:
 	Frect m_cursor_box;
 	CMapSpot* pSelectedMapSpot;
 
-	virtual void Reset();
+	void Reset() override;
 public:
 	CUIPdaWnd();
-	virtual ~CUIPdaWnd();
+	~CUIPdaWnd() override;
 
 	virtual void Init();
 
-	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 
-	virtual void Draw();
-	virtual void Update();
-	virtual void Show(bool status);
+	void Draw() override;
+	void Update() override;
+	void Show(bool status) override;
 
-	virtual bool OnMouseAction(float x, float y, EUIMessages mouse_action);
+	bool OnMouseAction(float x, float y, EUIMessages mouse_action) override;
 	void MouseMovement(float x, float y);
-	virtual void Enable(bool status);
-	virtual bool OnKeyboardAction(int dik, EUIMessages keyboard_action);
+	void Enable(bool status) override;
+	bool OnKeyboardAction(int dik, EUIMessages keyboard_action) override;
 
 	UIHint* get_hint_wnd() const { return m_hint_wnd; }
 	void DrawHint();
@@ -117,7 +117,7 @@ public:
 
 	void SetActiveSubdialog(const shared_str& section);
 	void SetActiveSubdialog_script(LPCSTR section) { SetActiveSubdialog((const shared_str&)section); };
-	virtual bool StopAnyMove() { return false; }
+	bool StopAnyMove() override { return false; }
 
 	void UpdatePda();
 	void PdaContentsChanged(pda_section::part type);

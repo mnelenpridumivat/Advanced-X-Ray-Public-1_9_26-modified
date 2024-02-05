@@ -13,7 +13,7 @@ class UIGameMP : public CUIGameCustom
 	typedef CUIGameCustom inherited;
 public:
 					UIGameMP			();
-	virtual			~UIGameMP			();
+	~UIGameMP			() override;
 	
 	void			ShowDemoPlayControl		();
 	
@@ -27,9 +27,9 @@ public:
 	bool			IsServerInfoShown		();
 	bool			ShowServerInfo			(); //shows only if it has some info ...
 
-	virtual bool 	IR_UIOnKeyboardPress	(int dik);
-	virtual bool 	IR_UIOnKeyboardRelease	(int dik);
-	virtual void	SetClGame				(game_cl_GameState* g);
+	bool 	IR_UIOnKeyboardPress	(int dik) override;
+	bool 	IR_UIOnKeyboardRelease	(int dik) override;
+	void	SetClGame				(game_cl_GameState* g) override;
 protected:
 	CUIDemoPlayControl*			m_pDemoPlayControl;
 	CUIServerInfo*				m_pServerInfo;

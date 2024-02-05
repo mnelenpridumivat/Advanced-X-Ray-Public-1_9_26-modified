@@ -22,27 +22,27 @@ private:
 	typedef CArtefact inherited;
 public:
 	CBastArtefact(void);
-	virtual ~CBastArtefact(void);
+	~CBastArtefact(void) override;
 
-	virtual void Load				(LPCSTR section);
-	virtual void shedule_Update		(u32 dt);
-	
-	virtual BOOL net_Spawn			(CSE_Abstract* DC);
-	virtual void net_Destroy		();
+	void Load				(LPCSTR section) override;
+	void shedule_Update		(u32 dt) override;
 
-	virtual	void Hit				(SHit* pHDS);
+	BOOL net_Spawn			(CSE_Abstract* DC) override;
+	void net_Destroy		() override;
 
-	virtual bool Useful() const;
+	void Hit				(SHit* pHDS) override;
+
+	bool Useful() const override;
 
 
-	virtual void feel_touch_new	(CObject* O);
-	virtual void feel_touch_delete	(CObject* O);
-	virtual BOOL feel_touch_contact	(CObject* O);
+	void feel_touch_new	(CObject* O) override;
+	void feel_touch_delete	(CObject* O) override;
+	BOOL feel_touch_contact	(CObject* O) override;
 
 	bool IsAttacking() {return NULL!=m_AttakingEntity;}
 
 protected:
-	virtual void	UpdateCLChild	();
+	void	UpdateCLChild	() override;
 
 	static	void	ObjectContactCallback(bool& do_colide,bool bo1,dContact& c,SGameMtl * /*material_1*/,SGameMtl * /*material_2*/);
 	//столкновение мочалки с сущностью
@@ -76,5 +76,5 @@ protected:
 	CEntityAlive* m_AttakingEntity;
 
 public:
-	virtual	void setup_physic_shell	();
+	void setup_physic_shell	() override;
 };

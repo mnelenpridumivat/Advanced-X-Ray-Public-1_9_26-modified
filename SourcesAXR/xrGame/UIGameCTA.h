@@ -101,15 +101,15 @@ public:
 	typedef				xr_vector<BuyMenuItemPair>	BuyMenuItemsCollection;
 
 						CUIGameCTA				();
-	virtual				~CUIGameCTA				();
-	virtual void		SetClGame				(game_cl_GameState* g);
-	virtual	void		Init					(int stage);
-	virtual	void		UnLoad					();
-	virtual void _BCL	OnFrame					();
-	virtual void		Render					();
-	
-	virtual bool		IR_UIOnKeyboardPress	(int dik);
-	virtual bool		IR_UIOnKeyboardRelease	(int dik);
+	~CUIGameCTA				() override;
+	void		SetClGame				(game_cl_GameState* g) override;
+	void		Init					(int stage) override;
+	void		UnLoad					() override;
+	void _BCL	OnFrame					() override;
+	void		Render					() override;
+
+	bool		IR_UIOnKeyboardPress	(int dik) override;
+	bool		IR_UIOnKeyboardRelease	(int dik) override;
 
 			bool		IsTeamPanelsShown		();
 			void		ShowTeamPanels			(bool bShow);
@@ -146,9 +146,9 @@ public:
 
 			void		SetReinforcementTimes	(u32 curTime, u32 maxTime);
 
-	virtual void		ChangeTotalMoneyIndicator	(LPCSTR newMoneyString);
-	virtual void		DisplayMoneyChange			(LPCSTR deltaMoney);
-	virtual void		DisplayMoneyBonus			(KillMessageStruct* bonus);
+	void		ChangeTotalMoneyIndicator	(LPCSTR newMoneyString) override;
+	void		DisplayMoneyChange			(LPCSTR deltaMoney) override;
+	void		DisplayMoneyBonus			(KillMessageStruct* bonus) override;
 			
 			void		SetRank(ETeam team, u8 rank);
 			void		SetScore(s32 max_score, s32 greenTeamScore, s32 blueTeamScore);

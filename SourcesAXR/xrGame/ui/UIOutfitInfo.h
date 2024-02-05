@@ -17,7 +17,7 @@ class CUIOutfitItem : public CUIWindow
 {
 public:
 	CUIOutfitItem();
-	virtual				~CUIOutfitItem();
+	~CUIOutfitItem() override;
 	void				InitFromXml(CUIXml& xml);
 	void				SetInfo(CCustomOutfit* cur_outfit, CCustomOutfit* slot_outfit);
 	void				SetInfo(CHelmet* cur_helmet, CHelmet* slot_helmet);
@@ -47,7 +47,7 @@ class CUIOutfitItemInfo : public CUIWindow
 {
 public:
 	CUIOutfitItemInfo();
-	virtual		~CUIOutfitItemInfo();
+	~CUIOutfitItemInfo() override;
 
 	void	Init(CUIXml& xml, LPCSTR section);
 	void	Init(CUIXml& xml, LPCSTR section, int mode);

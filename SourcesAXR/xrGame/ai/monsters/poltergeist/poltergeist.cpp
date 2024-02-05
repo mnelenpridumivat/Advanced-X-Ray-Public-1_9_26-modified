@@ -30,6 +30,7 @@ CPoltergeist::CPoltergeist()
 	
 	m_flame						= 0;
 	m_tele						= 0;
+	m_chem						= 0;
 	m_actor_ignore				= false;
 }
 
@@ -40,6 +41,7 @@ CPoltergeist::~CPoltergeist()
 	xr_delete		(StateMan);
 	xr_delete		(m_flame);
 	xr_delete		(m_tele);
+	xr_delete		(m_chem);
 }
 
 void CPoltergeist::Load(LPCSTR section)
@@ -113,14 +115,19 @@ void CPoltergeist::Load(LPCSTR section)
 	m_fly_around_change_direction_time	 
 							 = READ_IF_EXISTS(pSettings,r_float,section,"detection_fly_around_change_direction_time", 7);
 
-	LPCSTR polter_type = pSettings->r_string(section,"type");
-	
-	if (xr_strcmp(polter_type,"flamer") == 0) {
-		m_flame			= xr_new<CPolterFlame>(this);
-		m_flame->load	(section);
-	} else {
-		m_tele			= xr_new<CPolterTele>(this);
-		m_tele->load	(section);
+	if (READ_IF_EXISTS(pSettings, r_bool, section, "use_flame", false)) {
+		m_flame = xr_new<CPolterFlame>(this);
+		m_flame->load(section);
+	}
+
+	if (READ_IF_EXISTS(pSettings, r_bool, section, "use_tele", false)) {
+		m_tele = xr_new<CPolterTele>(this);
+		m_tele->load(section);
+	}
+
+	if (READ_IF_EXISTS(pSettings, r_bool, section, "use_chem", false)) {
+		m_chem = xr_new<CPolterChem>(this);
+		m_chem->load(section);
 	}
 
 	m_dead_always_visible				= READ_IF_EXISTS(pSettings,r_bool,section, 	"dead_always_visible",			  false);
@@ -277,7 +284,15 @@ void CPoltergeist::Hide()
 	m_current_position	= Position		();
 	character_physics_support()->movement()->DestroyCharacter();
 
-	ability()->on_hide	();
+	if (m_tele) {
+		m_tele->on_hide();
+	}
+	if (m_flame) {
+		m_flame->on_hide();
+	}
+	if(m_chem) {
+		m_chem->on_hide();
+	}
 }
 
 void CPoltergeist::Show()
@@ -293,8 +308,16 @@ void CPoltergeist::Show()
 	Position() = m_current_position;
 	character_physics_support()->movement()->SetPosition(Position());
 	character_physics_support()->movement()->CreateCharacter();
-	
-	ability()->on_show	();
+
+	if (m_tele) {
+		m_tele->on_show();
+	}
+	if (m_flame) {
+		m_flame->on_show();
+	}
+	if (m_chem) {
+		m_chem->on_show();
+	}
 }
 
 void CPoltergeist::renderable_Render()
@@ -309,8 +332,16 @@ void CPoltergeist::UpdateCL()
 	inherited::UpdateCL();
 
 	def_lerp(m_height, target_height, m_height_change_velocity, client_update_fdelta());
-	
-	ability()->update_frame	();
+
+	if (m_tele) {
+		m_tele->update_frame();
+	}
+	if (m_flame) {
+		m_flame->update_frame();
+	}
+	if (m_chem) {
+		m_chem->update_frame();
+	}
 
 	if ( Actor()->memory().visual().visible_now(this) && 
 		 Actor()->Position().distance_to(Position()) < 85.f )
@@ -341,7 +372,15 @@ void CPoltergeist::shedule_Update(u32 dt)
 
 	UpdateHeight();
 
-	ability()->update_schedule();
+	if (m_tele) {
+		m_tele->update_schedule();
+	}
+	if (m_flame) {
+		m_flame->update_schedule();
+	}
+	if (m_chem) {
+		m_chem->update_schedule();
+	}
 }
 
 
@@ -354,7 +393,16 @@ BOOL CPoltergeist::net_Spawn (CSE_Abstract* DC)
 	character_physics_support()->movement()->DestroyCharacter();
 	// спаунится нивидимым
 	setVisible		(false);
-	ability()->on_hide();
+
+	if (m_tele) {
+		m_tele->on_hide();
+	}
+	if (m_flame) {
+		m_flame->on_hide();
+	}
+	if (m_chem) {
+		m_chem->on_hide();
+	}
 	
 	return			(TRUE);
 }
@@ -365,7 +413,15 @@ void CPoltergeist::net_Destroy()
 	CTelekinesis::deactivate();
 	Energy::disable();
 
-	ability()->on_destroy();
+	if (m_tele) {
+		m_tele->on_destroy();
+	}
+	if (m_flame) {
+		m_flame->on_destroy();
+	}
+	if (m_chem) {
+		m_chem->on_destroy();
+	}
 }
 
 void CPoltergeist::Die(CObject* who)
@@ -392,12 +448,28 @@ void CPoltergeist::Die(CObject* who)
 	CTelekinesis::deactivate();
 	Energy::disable				();
 
-	ability()->on_die			();
+	if (m_tele) {
+		m_tele->on_die();
+	}
+	if (m_flame) {
+		m_flame->on_die();
+	}
+	if (m_chem) {
+		m_chem->on_die();
+	}
 }
 
 void CPoltergeist::Hit(SHit* pHDS)
 {
-	ability()->on_hit(pHDS);
+	if (m_tele) {
+		m_tele->on_hit(pHDS);
+	}
+	if (m_flame) {
+		m_flame->on_hit(pHDS);
+	}
+	if (m_chem) {
+		m_chem->on_hit(pHDS);
+	}
 	
 	if ( pHDS->who == Actor() )
 	{

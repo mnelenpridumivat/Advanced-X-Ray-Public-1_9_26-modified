@@ -30,7 +30,7 @@ class CUIInteractiveBackground : public CUIWindow
 {
 public:
 	CUIInteractiveBackground();
-	virtual ~CUIInteractiveBackground() {};
+	~CUIInteractiveBackground() override {};
 
 			void InitIB				(Fvector2 pos, Fvector2 size);
 			void InitIB				(LPCSTR texture_e, Fvector2 pos, Fvector2 size);
@@ -39,9 +39,9 @@ public:
 			void InitState			(IBState state, LPCSTR texture);
 			void SetCurrentState	(IBState state);
 
-	virtual void Draw				();
-	virtual void SetWidth			(float width);
-	virtual void SetHeight			(float heigth);
+	void Draw				() override;
+	void SetWidth			(float width) override;
+	void SetHeight			(float heigth) override;
 
 protected:
 	T*			m_states [S_Total];

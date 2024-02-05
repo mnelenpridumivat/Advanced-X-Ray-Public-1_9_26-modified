@@ -33,7 +33,7 @@ private:
 
 public:
 	CHARACTER_RANK			():m_current_value(NO_RANK){};
-	~CHARACTER_RANK			(){};
+	~CHARACTER_RANK			() override {};
 
 	void						set				(CHARACTER_RANK_VALUE);
 

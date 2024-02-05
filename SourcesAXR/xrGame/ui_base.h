@@ -12,7 +12,7 @@ class CDeviceResetNotifier :public pureDeviceReset
 public:
 						CDeviceResetNotifier					()	{Device.seqDeviceReset.Add(this,REG_PRIORITY_NORMAL);};
 	virtual				~CDeviceResetNotifier					()	{Device.seqDeviceReset.Remove(this);};
-	virtual void		OnDeviceReset							()	{};
+						void		OnDeviceReset							() override {};
 
 };
 
@@ -41,9 +41,9 @@ struct CFontManager :public pureDeviceReset			{
 
 	void					InitializeFonts			();
 	void					InitializeFont			(CGameFont*& F, LPCSTR section, u32 flags = 0);
-	LPCSTR					GetFontTexName			(LPCSTR section);				
+	LPCSTR					GetFontTexName			(LPCSTR section);
 
-	virtual void			OnDeviceReset			();
+							void			OnDeviceReset			() override;
 };
 
 
@@ -66,7 +66,7 @@ public:
 	xr_stack<Frect> m_Scissors;
 	
 					ui_core							();
-					~ui_core						();
+					~ui_core						() override;
 	CFontManager&	Font							()								{return *m_pFontManager;}
 	CUICursor&		GetUICursor						()								{return *m_pUICursor;}
 
@@ -87,7 +87,7 @@ public:
 	void			pp_stop							();
 	void			RenderFont						();
 
-	virtual void	OnDeviceReset					();
+	void	OnDeviceReset					() override;
 	static	bool	is_widescreen					();
 	static	float	get_current_kx					();
 	shared_str		get_xml_name					(LPCSTR fn);

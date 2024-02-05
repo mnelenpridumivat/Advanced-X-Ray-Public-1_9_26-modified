@@ -29,25 +29,25 @@ public:
 
 	void					Destroy				();				//be careful
 
-	virtual void	_BCL	OnFrame				();
-	virtual void			OnRender			();
+	void	_BCL	OnFrame				() override;
+	void			OnRender			() override;
 	CUIWindow*				MainWnd				()				{return m_UIWindow;}
 	bool					IsActive			()				{return !!m_flags.test(etsActive);}
 
 
 	//IInputReceiver
-	virtual void			IR_OnMousePress		(int btn);
-	virtual void			IR_OnMouseRelease	(int btn);
-	virtual void			IR_OnMouseHold		(int btn);
-	virtual void			IR_OnMouseMove		(int x, int y);
-	virtual void			IR_OnMouseStop		(int x, int y);
+	void			IR_OnMousePress		(int btn) override;
+	void			IR_OnMouseRelease	(int btn) override;
+	void			IR_OnMouseHold		(int btn) override;
+	void			IR_OnMouseMove		(int x, int y) override;
+	void			IR_OnMouseStop		(int x, int y) override;
 
-	virtual void			IR_OnKeyboardPress	(int dik);
-	virtual void			IR_OnKeyboardRelease(int dik);
-	virtual void			IR_OnKeyboardHold	(int dik);
+	void			IR_OnKeyboardPress	(int dik) override;
+	void			IR_OnKeyboardRelease(int dik) override;
+	void			IR_OnKeyboardHold	(int dik) override;
 
-	virtual void			IR_OnMouseWheel		(int direction)	;
-	virtual void			IR_OnActivate		(void);
+	void			IR_OnMouseWheel		(int direction) override;
+	void			IR_OnActivate		(void) override;
 			bool			Persistent			() {return !!m_flags.test(etsPersistent);}
 			pcstr			GetTutorName		() { return m_name; }
 
@@ -140,20 +140,20 @@ public:
 	xr_vector<SActionItem>	m_actions;
 public:
 							CUISequenceSimpleItem(CUISequencer* owner):CUISequenceItem(owner){}
-	virtual					~CUISequenceSimpleItem();
-	virtual void			Load				(CUIXml* xml,int idx);
-	
-	virtual void			Start				();
-	virtual bool			Stop				(bool bForce=false);
+	~CUISequenceSimpleItem() override;
+	void			Load				(CUIXml* xml,int idx) override;
 
-	virtual void			Update				();
-	virtual void			OnRender			();
-	virtual void			OnKeyboardPress		(int dik);
-	virtual void			OnMousePress		(int btn);
+	void			Start				() override;
+	bool			Stop				(bool bForce=false) override;
 
-	virtual bool			IsPlaying			();
+	void			Update				() override;
+	void			OnRender			() override;
+	void			OnKeyboardPress		(int dik) override;
+	void			OnMousePress		(int btn) override;
+
+	bool			IsPlaying			() override;
 protected:
-	virtual float			current_factor		();
+	float			current_factor		() override;
 };
 
 class CUISequenceVideoItem: public CUISequenceItem
@@ -174,16 +174,16 @@ class CUISequenceVideoItem: public CUISequenceItem
 	u32						m_sync_time;
 public:
 							CUISequenceVideoItem(CUISequencer* owner);
-	virtual					~CUISequenceVideoItem();
-	virtual void			Load				(CUIXml* xml,int idx);
+	~CUISequenceVideoItem() override;
+	void			Load				(CUIXml* xml,int idx) override;
 
-	virtual void			Start				();
-	virtual bool			Stop				(bool bForce=false);
+	void			Start				() override;
+	bool			Stop				(bool bForce=false) override;
 
-	virtual void			Update				();
-	virtual void			OnRender			();
-	virtual void			OnKeyboardPress		(int dik){}
-	virtual void			OnMousePress		(int btn){};
+	void			Update				() override;
+	void			OnRender			() override;
+	void			OnKeyboardPress		(int dik) override {}
+	void			OnMousePress		(int btn) override {};
 
-	virtual bool			IsPlaying			();
+	bool			IsPlaying			() override;
 };

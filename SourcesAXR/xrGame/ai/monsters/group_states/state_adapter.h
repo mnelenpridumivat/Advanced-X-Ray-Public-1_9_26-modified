@@ -41,13 +41,13 @@ public:
 		                  :
 	                      m_impl(p_impl), inherited(obj, p_impl->get_data()) {}
 
-	virtual ~CMonsterStateAdapter () { xr_delete(m_impl); }
+	~CMonsterStateAdapter () override { xr_delete(m_impl); }
 
-	virtual void	initialize		 () { m_impl->initialize(); }
-	virtual	void	execute			 () { m_impl->execute(); }
-	virtual bool	check_completion () { return m_impl->check_completion(); }
+	void	initialize		 () override { m_impl->initialize(); }
+	void	execute			 () override { m_impl->execute(); }
+	bool	check_completion () override { return m_impl->check_completion(); }
 
-	virtual void	remove_links	 (CObject* object) { inherited::remove_links(object);}
+	void	remove_links	 (CObject* object) override { inherited::remove_links(object);}
 
 private:
 	CMonsterStateInterface* m_impl;

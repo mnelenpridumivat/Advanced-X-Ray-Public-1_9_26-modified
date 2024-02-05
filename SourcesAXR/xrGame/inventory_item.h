@@ -89,7 +89,7 @@ protected:
 	bool						m_bCanUse;
 public:
 								CInventoryItem		();
-	virtual						~CInventoryItem		();
+	~CInventoryItem		() override;
 
 public:
 	virtual void				Load				(LPCSTR section);
@@ -118,9 +118,9 @@ public:
 	virtual void				DiscardState		() {};
 
 	virtual void				OnH_B_Chield		();
-	virtual void				OnH_A_Chield		();
+	void				OnH_A_Chield		() override;
     virtual void				OnH_B_Independent	(bool just_before_destroy);
-	virtual void				OnH_A_Independent	();
+	void				OnH_A_Independent	() override;
 
 	virtual void				save				(NET_Packet &output_packet);
 	virtual void				load				(IReader &input_packet);
@@ -246,7 +246,7 @@ protected:
 public:
 	virtual BOOL				net_Spawn				(CSE_Abstract* DC);
 	virtual void				net_Destroy				();
-	virtual void				reload					(LPCSTR section);
+	void				reload					(LPCSTR section) override;
 	virtual void				reinit					();
 	virtual bool				can_kill				() const;
 	virtual CInventoryItem*		can_kill				(CInventory *inventory) const;
@@ -255,11 +255,11 @@ public:
 	virtual bool				ready_to_kill			() const;
 	IC		bool				useful_for_NPC			() const;
 #ifdef DEBUG
-	virtual void				OnRender					();
+	void				OnRender					() override;
 #endif
 
 public:
-	virtual DLL_Pure*			_construct					();
+	DLL_Pure*			_construct					() override;
 	IC	CPhysicsShellHolder&	object						() const{ VERIFY		(m_object); return		(*m_object);}
 	u16							object_id					() const;
 	u16							parent_id					() const;
@@ -279,7 +279,7 @@ private:
 
 public:
 	virtual CInventoryItem		*cast_inventory_item		()	{return this;}
-	virtual CAttachableItem		*cast_attachable_item		()	{return this;}
+	CAttachableItem		*cast_attachable_item		() override {return this;}
 	virtual CPhysicsShellHolder	*cast_physics_shell_holder	()	{return 0;}
 	virtual CEatableItem		*cast_eatable_item			()	{return 0;}
 	virtual CAntigasFilter		*cast_filter				()	{return 0;}

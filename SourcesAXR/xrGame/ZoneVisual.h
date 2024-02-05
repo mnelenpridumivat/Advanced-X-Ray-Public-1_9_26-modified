@@ -10,10 +10,10 @@ class CVisualZone :
 	u32					m_dwAttackAnimaionEnd		;
 public:
 	CVisualZone				()						;
-	virtual			~CVisualZone					()						;
-	virtual BOOL	net_Spawn						(CSE_Abstract* DC)				;
-	virtual void	SwitchZoneState					(EZoneState new_state)	;
-	virtual void	Load							(LPCSTR section)		;
+	~CVisualZone					() override;
+	BOOL	net_Spawn						(CSE_Abstract* DC) override;
+	void	SwitchZoneState					(EZoneState new_state) override;
+	void	Load							(LPCSTR section) override;
 	virtual void	UpdateBlowout					()						;
 protected:
 private:

@@ -30,25 +30,25 @@ private:
 	bool					get_reject_pos(Fvector& p, Fvector& r);
 
 public:
-	virtual				~CLevelChanger		();
-	virtual BOOL		net_Spawn			(CSE_Abstract* DC);
-	virtual void		net_Destroy			();
-	virtual void		Center				(Fvector& C) const;
-	virtual float		Radius				() const;
-	virtual void		shedule_Update		(u32 dt);
-	virtual void		feel_touch_new		(CObject* O);
-	virtual BOOL		feel_touch_contact	(CObject* O);
+	~CLevelChanger		() override;
+	BOOL		net_Spawn			(CSE_Abstract* DC) override;
+	void		net_Destroy			() override;
+	void		Center				(Fvector& C) const override;
+	float		Radius				() const override;
+	void		shedule_Update		(u32 dt) override;
+	void		feel_touch_new		(CObject* O) override;
+	BOOL		feel_touch_contact	(CObject* O) override;
 
-	virtual bool		IsVisibleForZones() { return false;}
+	bool		IsVisibleForZones() override { return false;}
 	void				EnableLevelChanger	(bool b)				{m_b_enabled=b;}
 	bool				IsLevelChangerEnabled() const				{return m_b_enabled;}
 	void				SetLEvelChangerInvitationStr(LPCSTR str)	{m_invite_str = str;}
 	//serialization
-	virtual BOOL	net_SaveRelevant		();
-	virtual void	save					(NET_Packet &output_packet);
-	virtual void	load					(IReader &input_packet);
+	BOOL	net_SaveRelevant		() override;
+	void	save					(NET_Packet &output_packet) override;
+	void	load					(IReader &input_packet) override;
 
 #ifdef DEBUG
-	virtual void				OnRender();
+	void				OnRender() override;
 #endif
 };

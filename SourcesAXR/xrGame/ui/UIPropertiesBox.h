@@ -14,13 +14,13 @@ private:
 	typedef CUIFrameWindow inherited; 
 public:
 						CUIPropertiesBox					(CUIPropertiesBox* sub_property_box = NULL);
-	virtual				~CUIPropertiesBox					();
+	~CUIPropertiesBox					() override;
 
 			void		InitPropertiesBox					(Fvector2 pos, Fvector2 size);
 
-	virtual void		SendMessage							(CUIWindow *pWnd, s16 msg, void *pData);
-	virtual bool		OnMouseAction								(float x, float y, EUIMessages mouse_action);
-	virtual bool		OnKeyboardAction							(int dik, EUIMessages keyboard_action);
+	void		SendMessage							(CUIWindow *pWnd, s16 msg, void *pData) override;
+	bool		OnMouseAction								(float x, float y, EUIMessages mouse_action) override;
+	bool		OnKeyboardAction							(int dik, EUIMessages keyboard_action) override;
 
 	bool				AddItem								(LPCSTR  str, void* pData = NULL, u32 tag_value = 0);
 	bool				AddItem_script						(LPCSTR  str){return AddItem(str);};
@@ -31,8 +31,8 @@ public:
 	virtual void		Show								(const Frect& parent_rect, const Fvector2& point);
 	virtual void		Hide								();
 
-	virtual void		Update								();
-	virtual void		Draw								();
+	void		Update								() override;
+	void		Draw								() override;
 
 	CUIListBoxItem*		GetClickedItem						();
 

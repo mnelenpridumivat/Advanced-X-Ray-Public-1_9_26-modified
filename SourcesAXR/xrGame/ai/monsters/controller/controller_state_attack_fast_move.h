@@ -8,11 +8,11 @@ protected:
 	typedef CState<_Object>		inherited;
 public:
 						CStateControllerFastMove	(_Object *obj) : inherited(obj) {}
-	virtual void		initialize					();	
-	virtual void		finalize					();	
-	virtual void		critical_finalize			();
+	void		initialize					() override;
+	void		finalize					() override;
+	void		critical_finalize			() override;
 
-	virtual void		execute						();
+	void		execute						() override;
 };
 
 #include "controller_state_attack_fast_move_inline.h"

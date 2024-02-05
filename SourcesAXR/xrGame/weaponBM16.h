@@ -8,24 +8,24 @@ class CWeaponBM16 :public CWeaponShotgun
 	typedef CWeaponShotgun inherited;
 
 public:
-	virtual			~CWeaponBM16					();
-	virtual void	Load							(LPCSTR section);
+	~CWeaponBM16					() override;
+	void	Load							(LPCSTR section) override;
 
 protected:
-	virtual void	PlayAnimShoot					();
-	virtual void	PlayAnimReload					();
-	virtual void	PlayReloadSound					();
-	virtual void	PlayAnimIdle					();
-	virtual void	PlayAnimIdleMoving				();
-	virtual void	PlayAnimIdleSprint				();
-	virtual void	PlayAnimShow					();
-	virtual void	PlayAnimHide					();
-	virtual void	PlayAnimBore					();
-	virtual void	PlayAnimIdleMovingSlow			() override;
-	virtual void	PlayAnimIdleMovingCrouch		() override;
-	virtual void	PlayAnimIdleMovingCrouchSlow	() override;
-	virtual void	PlayAnimSprintStart				() override;
-	virtual void	PlayAnimSprintEnd				() override;
+	void	PlayAnimShoot					() override;
+	void	PlayAnimReload					() override;
+	void	PlayReloadSound					() override;
+	void	PlayAnimIdle					() override;
+	void	PlayAnimIdleMoving				() override;
+	void	PlayAnimIdleSprint				() override;
+	void	PlayAnimShow					() override;
+	void	PlayAnimHide					() override;
+	void	PlayAnimBore					() override;
+	void	PlayAnimIdleMovingSlow			() override;
+	void	PlayAnimIdleMovingCrouch		() override;
+	void	PlayAnimIdleMovingCrouchSlow	() override;
+	void	PlayAnimSprintStart				() override;
+	void	PlayAnimSprintEnd				() override;
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CWeaponBM16)

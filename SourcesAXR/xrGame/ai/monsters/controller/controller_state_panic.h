@@ -15,9 +15,9 @@ protected:
 
 public:
 						CStateControllerPanic	(_Object *obj);
-	virtual				~CStateControllerPanic	();
+	~CStateControllerPanic	() override;
 
-	virtual void		reselect_state			();
+	void		reselect_state			() override;
 };
 
 #include "controller_state_panic_inline.h"

@@ -27,9 +27,9 @@ protected:
 
 public:
 					CStalkerActionReachEnemyLocation(CAI_Stalker *object, CPropertyStorage *combat_storage, LPCSTR action_name = "");
-	virtual void	initialize						();
-	virtual void	execute							();
-	virtual void	finalize						();
+	void	initialize						() override;
+	void	execute							() override;
+	void	finalize						() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -46,9 +46,9 @@ protected:
 
 public:
 					CStalkerActionReachAmbushLocation	(CAI_Stalker *object, CPropertyStorage *combat_storage, LPCSTR action_name = "");
-	virtual void	initialize						();
-	virtual void	execute							();
-	virtual void	finalize						();
+	void	initialize						() override;
+	void	execute							() override;
+	void	finalize						() override;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -65,9 +65,9 @@ protected:
 
 public:
 					CStalkerActionHoldAmbushLocation(CAI_Stalker *object, CPropertyStorage *combat_storage, LPCSTR action_name = "");
-	virtual void	initialize						();
-	virtual void	execute							();
-	virtual void	finalize						();
+	void	initialize						() override;
+	void	execute							() override;
+	void	finalize						() override;
 };
 
 #endif // STALKER_SEARCH_ACTIONS_H_INCLUDED

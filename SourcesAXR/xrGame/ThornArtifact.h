@@ -12,9 +12,9 @@ private:
 	typedef CArtefact inherited;
 public:
 	CThornArtefact(void);
-	virtual ~CThornArtefact(void);
+	~CThornArtefact(void) override;
 
-	virtual void Load				(LPCSTR section);
+	void Load				(LPCSTR section) override;
 
 protected:
 };

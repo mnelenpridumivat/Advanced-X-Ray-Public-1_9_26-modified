@@ -18,9 +18,9 @@ private:
 
 public:
 	IC						CDangerObjectLocation	(const CGameObject *object, u32 level_time, u32 interval, float radius, const squad_mask_type &mask = static_cast<squad_mask_type>(-1));
-	virtual const Fvector	&position				() const;
-	virtual bool			useful					() const;
-	virtual	bool			operator==				(const CObject *object) const;
+	const Fvector	&position				() const override;
+	bool			useful					() const override;
+	bool			operator==				(const CObject *object) const override;
 };
 
 #include "danger_object_location_inline.h"

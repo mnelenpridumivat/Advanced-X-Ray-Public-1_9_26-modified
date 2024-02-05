@@ -10,47 +10,47 @@ class CGrenade :
 	typedef CMissile		inherited;
 public:
 							CGrenade							();
-	virtual					~CGrenade							();
+	~CGrenade							() override;
 
 
-	virtual void			Load								(LPCSTR section);
-	
-	virtual BOOL 			net_Spawn							(CSE_Abstract* DC);
-	virtual void 			net_Destroy							();
-	virtual void 			net_Relcase							(CObject* O );
+	void			Load								(LPCSTR section) override;
 
-	virtual void 			OnH_B_Independent					(bool just_before_destroy);
-	virtual void 			OnH_A_Independent					();
-	virtual void 			OnH_A_Chield						();
-	virtual void			DiscardState						();
-	
-	virtual void 			OnEvent								(NET_Packet& P, u16 type);
+	BOOL 			net_Spawn							(CSE_Abstract* DC) override;
+	void 			net_Destroy							() override;
+	void 			net_Relcase							(CObject* O ) override;
+
+	void 			OnH_B_Independent					(bool just_before_destroy) override;
+	void 			OnH_A_Independent					() override;
+	void 			OnH_A_Chield						() override;
+	void			DiscardState						() override;
+
+	void 			OnEvent								(NET_Packet& P, u16 type) override;
 	virtual bool			DropGrenade							();			//in this case if grenade state is eReady, it should Throw
-	
-	virtual void 			OnAnimationEnd						(u32 state);
-	virtual void 			UpdateCL							();
 
-	virtual void 			Throw();
-	virtual void 			Destroy();
+	void 			OnAnimationEnd						(u32 state) override;
+	void 			UpdateCL							() override;
 
-	
-	virtual bool			Action								(u16 cmd, u32 flags);
-	virtual bool			Useful								() const;
-	virtual void			State								(u32 state);
+	void 			Throw() override;
+	void 			Destroy() override;
 
-	virtual void			OnH_B_Chield						()				{inherited::OnH_B_Chield();}
 
-	virtual	void			Hit									(SHit* pHDS);
+	bool			Action								(u16 cmd, u32 flags) override;
+	bool			Useful								() const override;
+	void			State								(u32 state) override;
 
-	virtual bool			NeedToDestroyObject					() const; 
-	virtual ALife::_TIME_ID	TimePassedAfterIndependant			() const;
+	void			OnH_B_Chield						() override {inherited::OnH_B_Chield();}
+
+	void			Hit									(SHit* pHDS) override;
+
+	bool			NeedToDestroyObject					() const override;
+	ALife::_TIME_ID	TimePassedAfterIndependant			() const override;
 
 			void			PutNextToSlot						();
 
-	virtual void			DeactivateItem						();
-	virtual bool			GetBriefInfo						(II_BriefInfo& info);
+	void			DeactivateItem						() override;
+	bool			GetBriefInfo						(II_BriefInfo& info) override;
 
-	virtual void			SendHiddenItem						();	//same as OnHiddenItem but for client... (sends message to a server)...
+	void			SendHiddenItem						() override;	//same as OnHiddenItem but for client... (sends message to a server)...
 protected:
 	ALife::_TIME_ID			m_dwGrenadeRemoveTime;
 	ALife::_TIME_ID			m_dwGrenadeIndependencyTime;
@@ -61,15 +61,14 @@ private:
 	bool					m_thrown;
 
 protected:
-	virtual	void			UpdateXForm							()		{ CMissile::UpdateXForm(); };
+	void			UpdateXForm							() override { CMissile::UpdateXForm(); };
 public:
-
-	virtual BOOL			UsedAI_Locations					();
-	virtual CExplosive		*cast_explosive						()	{return this;}
-	virtual CMissile		*cast_missile						()	{return this;}
-	virtual CHudItem		*cast_hud_item						()	{return this;}
-	virtual CGameObject		*cast_game_object					()	{return this;}
-	virtual IDamageSource	*cast_IDamageSource					()	{return CExplosive::cast_IDamageSource();}
+	BOOL			UsedAI_Locations					() override;
+	CExplosive		*cast_explosive						() override {return this;}
+	CMissile		*cast_missile						() override {return this;}
+	CHudItem		*cast_hud_item						() override {return this;}
+	CGameObject		*cast_game_object					() override {return this;}
+	IDamageSource	*cast_IDamageSource					() override {return CExplosive::cast_IDamageSource();}
 
 	typedef					fastdelegate::FastDelegate< void (CGrenade*) >	destroy_callback;
 	void					set_destroy_callback				(destroy_callback callback) 

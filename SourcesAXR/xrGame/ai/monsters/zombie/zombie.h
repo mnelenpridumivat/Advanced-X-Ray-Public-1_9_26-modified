@@ -17,24 +17,24 @@ class CZombie :	public CBaseMonster,
 
 public:
 					CZombie		();
-	virtual			~CZombie	();	
+	~CZombie	() override;
 
-	virtual void	Load				(LPCSTR section);
-	virtual BOOL	net_Spawn			(CSE_Abstract* DC);
-	virtual void	reinit				();
-	virtual	void	reload				(LPCSTR section);
-	
-	virtual	void	Hit					(SHit* pHDS);
+	void	Load				(LPCSTR section) override;
+	BOOL	net_Spawn			(CSE_Abstract* DC) override;
+	void	reinit				() override;
+	void	reload				(LPCSTR section) override;
 
-	virtual bool	ability_pitch_correction () {return false;}
+	void	Hit					(SHit* pHDS) override;
 
-	virtual void	shedule_Update		(u32 dt);
+	bool	ability_pitch_correction () override {return false;}
+
+	void	shedule_Update		(u32 dt) override;
 	
 	static	void 	BoneCallback		(CBoneInstance *B);
 			void	vfAssignBones		();
 
-	virtual bool	use_center_to_aim				() const {return true;}
-	virtual	char*	get_monster_class_name () { return "zombie"; }
+	bool	use_center_to_aim				() const override {return true;}
+	char*	get_monster_class_name () override { return "zombie"; }
 
 
 	CBoneInstance			*bone_spine;

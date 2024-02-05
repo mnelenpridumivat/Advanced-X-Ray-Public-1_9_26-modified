@@ -12,17 +12,17 @@ class player_state_ambassador : public player_state_param
 	typedef player_state_param inherited;
 public:
 					player_state_ambassador		(game_state_accumulator* owner);
-	virtual 		~player_state_ambassador	() {};
+	~player_state_ambassador	() override {};
 
-	virtual void		update						() {};
-	virtual	u32 const	get_u32_param				();
-	virtual float const get_float_param				() { return -1.0f; };
-	virtual void		reset_game					();
+	void		update						() override {};
+	u32 const	get_u32_param				() override;
+	float const get_float_param				() override { return -1.0f; };
+	void		reset_game					() override;
 
-	virtual	void		OnWeapon_Fire				(u16 sender, u16 sender_weapon_id);
-	virtual void		OnPlayerTakeArtefact		(game_PlayerState const * ps);
-	virtual void		OnPlayerDropArtefact		(game_PlayerState const * ps);
-	virtual void		OnPlayerBringArtefact		(game_PlayerState const * ps);
+	void		OnWeapon_Fire				(u16 sender, u16 sender_weapon_id) override;
+	void		OnPlayerTakeArtefact		(game_PlayerState const * ps) override;
+	void		OnPlayerDropArtefact		(game_PlayerState const * ps) override;
+	void		OnPlayerBringArtefact		(game_PlayerState const * ps) override;
 protected:
 	u32					m_shots_count;
 	u32					m_art_drop_count;

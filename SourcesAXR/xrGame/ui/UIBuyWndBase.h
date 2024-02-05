@@ -32,7 +32,7 @@ class IBuyWnd:			public CUIDialogWnd
 {
 
 public:
-	virtual						~IBuyWnd					()	{};
+	~IBuyWnd					() override {};
 	virtual void 				Init						(const shared_str& sectionName, const shared_str& sectionPrice)	=0;
 	virtual void				BindDragDropListEvents		(CUIDragDropListEx* lst, bool bDrag)							=0;
 

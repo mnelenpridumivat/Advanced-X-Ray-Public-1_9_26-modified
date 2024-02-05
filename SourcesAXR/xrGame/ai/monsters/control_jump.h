@@ -87,12 +87,12 @@ class CControlJump : public CControl_ComCustom<SControlJumpData> {
 	u32				m_last_time_added_impulse;
 
 public:
-	virtual void	load					(LPCSTR section);
-	virtual void	reinit					();
-	virtual bool	check_start_conditions	();
-	virtual void	activate				();
-	virtual void	on_release				();
-	virtual void	on_event				(ControlCom::EEventType, ControlCom::IEventData*);
+	void	load					(LPCSTR section) override;
+	void	reinit					() override;
+	bool	check_start_conditions	() override;
+	void	activate				() override;
+	void	on_release				() override;
+	void	on_event				(ControlCom::EEventType, ControlCom::IEventData*) override;
 
 
 			float	relative_time			();
@@ -100,7 +100,7 @@ public:
 			float	get_auto_aim_factor		() const { return m_auto_aim_factor; }
 			Fvector get_jump_start_pos		() const { return m_jump_start_pos; }
 	// process jump
-	virtual void	update_frame			();
+	void	update_frame			() override;
 
 	// check for distance and angle difference
 	virtual	bool	can_jump				(CObject *target);

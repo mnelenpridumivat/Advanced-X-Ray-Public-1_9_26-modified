@@ -13,16 +13,16 @@ class CUITabControl: public CUIWindow , public CUIOptionsItem
 	typedef				CUIWindow inherited;
 public:
 						CUITabControl				();
-	virtual				~CUITabControl				();
+	~CUITabControl				() override;
 
 	// options item
-	virtual void		SetCurrentOptValue			();	// opt->current
-	virtual void		SaveBackUpOptValue			();	// current->backup
-	virtual void		SaveOptValue				();	// current->opt
-	virtual void		UndoOptValue				();	// backup->current
-	virtual bool		IsChangedOptValue			() const;	// backup!=current
+	void		SetCurrentOptValue			() override;	// opt->current
+	void		SaveBackUpOptValue			() override;	// current->backup
+	void		SaveOptValue				() override;	// current->opt
+	void		UndoOptValue				() override;	// backup->current
+	bool		IsChangedOptValue			() const override;	// backup!=current
 
-	virtual bool		OnKeyboardAction			(int dik, EUIMessages keyboard_action);
+	bool		OnKeyboardAction			(int dik, EUIMessages keyboard_action) override;
 	virtual void		OnTabChange					(const shared_str& sCur, const shared_str& sPrev);
 	virtual void		OnStaticFocusReceive		(CUIWindow* pWnd);
 	virtual void		OnStaticFocusLost			(CUIWindow* pWnd);
@@ -33,8 +33,8 @@ public:
 
 	void				RemoveAll					();
 
-	virtual void		SendMessage					(CUIWindow *pWnd, s16 msg, void *pData);
-	virtual void		Enable						(bool status);
+	void		SendMessage					(CUIWindow *pWnd, s16 msg, void *pData) override;
+	void		Enable						(bool status) override;
 
 	const shared_str&	GetActiveId					()	const						{ return m_sPushedId; }
 	LPCSTR				GetActiveId_script			();

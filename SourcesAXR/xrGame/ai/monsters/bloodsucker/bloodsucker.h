@@ -16,29 +16,29 @@ class CAI_Bloodsucker : public CBaseMonster,
 	
 public:
 							CAI_Bloodsucker	();
-	virtual					~CAI_Bloodsucker();	
+	~CAI_Bloodsucker() override;
 
-	virtual void			reinit					();
-	virtual	void			reload					(LPCSTR section);
+	void			reinit					() override;
+	void			reload					(LPCSTR section) override;
 
-	virtual void			UpdateCL				();
-	virtual void			shedule_Update			(u32 dt);
-	virtual void			Die						(CObject* who);
-	virtual BOOL			net_Spawn				(CSE_Abstract* DC);
-	virtual	void			Load					(LPCSTR section);
-	virtual	void			Hit						(SHit* pHDS);
+	void			UpdateCL				() override;
+	void			shedule_Update			(u32 dt) override;
+	void			Die						(CObject* who) override;
+	BOOL			net_Spawn				(CSE_Abstract* DC) override;
+	void			Load					(LPCSTR section) override;
+	void			Hit						(SHit* pHDS) override;
 
-	virtual	void			CheckSpecParams			(u32 spec_params);
-	virtual bool			ability_invisibility	() {return true;}
-	virtual bool			ability_pitch_correction() {return false;}
-	virtual bool			ability_can_drag		() {return true;}
+	void			CheckSpecParams			(u32 spec_params) override;
+	bool			ability_invisibility	() override {return true;}
+	bool			ability_pitch_correction() override {return false;}
+	bool			ability_can_drag		() override {return true;}
 
-	virtual	void			post_fsm_update			();
+	void			post_fsm_update			() override;
 
-	
-	virtual bool			use_center_to_aim		() const {return true;}
-	virtual bool			check_start_conditions	(ControlCom::EControlType);
-	virtual void			HitEntity				(const CEntity *pEntity, float fDamage, float impulse, Fvector &dir, ALife::EHitType hit_type, bool draw_hit_marks);
+
+	bool			use_center_to_aim		() const override {return true;}
+	bool			check_start_conditions	(ControlCom::EControlType) override;
+	void			HitEntity				(const CEntity *pEntity, float fDamage, float impulse, Fvector &dir, ALife::EHitType hit_type, bool draw_hit_marks) override;
 	
 	//--------------------------------------------------------------------
 	// Utils
@@ -75,7 +75,7 @@ public:
 			void			start_invisible_predator ();
 			void			stop_invisible_predator	 ();
 
-			virtual bool    in_solid_state           ();
+	bool    in_solid_state           () override;
 
 	//--------------------------------------------------------------------
 	// Vampire
@@ -142,7 +142,7 @@ public:
 			void			predator_unfreeze		();
 			void			set_vis					();
 			void			set_invis				();
-			void			jump					(const Fvector &position, float factor);
+			void			jump					(const Fvector &position, float factor) override;
 			void			start_drag				();
 			void			set_drag_jump			(CEntityAlive* e, LPCSTR s, const Fvector &position, float factor);
 			bool			is_drag_anim_jump		();
@@ -176,15 +176,15 @@ public:
 
 			float	get_vampire_distance () const { return m_vampire_distance; }
 
-			virtual	char* get_monster_class_name () { return "bloodsucker"; }
+	char* get_monster_class_name () override { return "bloodsucker"; }
 
-			virtual void  renderable_Render		 ();
+	void  renderable_Render		 () override;
 
 #ifdef DEBUG
-	virtual CBaseMonster::SDebugInfo show_debug_info();
+	CBaseMonster::SDebugInfo show_debug_info() override;
 
 	// Lain: added 
-	virtual void add_debug_info  (debug::text_tree& root_s);
+	void add_debug_info  (debug::text_tree& root_s) override;
 
 #ifdef _DEBUG
 			void debug_on_key						(int key);
@@ -218,7 +218,7 @@ public:
 	void			start_runaway_invisible () { m_runaway_invisible_time	=	Device.dwTimeGlobal; }
 	void			clear_runaway_invisible () { m_runaway_invisible_time	=	0; }
 
-	virtual bool	can_be_seen				() const { return get_visibility_state() == full_visibility; }
+	bool	can_be_seen				() const override { return get_visibility_state() == full_visibility; }
 	visibility_t	get_visibility_state	() const;
 	void			set_visibility_state	(visibility_t new_state);
 	void			force_visibility_state	(int state);
@@ -227,13 +227,13 @@ public:
 	void			force_stand_sleep_animation		(u32 index);
 	void			release_stand_sleep_animation	();
 
-	virtual bool    should_wait_to_use_corspe_visual () { return false; }
+	bool    should_wait_to_use_corspe_visual () override { return false; }
 
 public:
 	u32				m_hits_before_vampire;
 	u32				m_sufficient_hits_before_vampire;
 	int				m_sufficient_hits_before_vampire_random;
-	virtual void	on_attack_on_run_hit	();
+	void	on_attack_on_run_hit	() override;
 	bool			done_enough_hits_before_vampire ();
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION

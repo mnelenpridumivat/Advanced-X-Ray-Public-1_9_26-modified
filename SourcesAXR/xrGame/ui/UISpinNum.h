@@ -5,27 +5,27 @@ class CUISpinNum : public CUICustomSpin
 public:
 					CUISpinNum			();
 
-	virtual void	InitSpin			(Fvector2 pos, Fvector2 size);
+					void	InitSpin			(Fvector2 pos, Fvector2 size) override;
 
 	// CUIOptionsItem
-	virtual void	SetCurrentOptValue	();	// opt->current
-	virtual void	SaveBackUpOptValue	();	// current->backup
-	virtual void	SaveOptValue		();	// current->opt
-	virtual void	UndoOptValue		();	// backup->current
-	virtual bool	IsChangedOptValue	() const;	// backup!=current
+					void	SetCurrentOptValue	() override;	// opt->current
+					void	SaveBackUpOptValue	() override;	// current->backup
+					void	SaveOptValue		() override;	// current->opt
+					void	UndoOptValue		() override;	// backup->current
+					bool	IsChangedOptValue	() const override;	// backup!=current
 
-    virtual void	OnBtnUpClick		();
-	virtual void	OnBtnDownClick		();
+					void	OnBtnUpClick		() override;
+					void	OnBtnDownClick		() override;
 
 			void	SetMax				(int max)	{m_iMax=max;};
 			void	SetMin				(int min)	{m_iMin=min;};
 			int		Value				() const {return m_iVal;}
 protected:
 			void	SetValue			(int v);
-	virtual bool	CanPressUp			();
-	virtual bool	CanPressDown		();
-	virtual void	IncVal				();
-	virtual void	DecVal				();
+					bool	CanPressUp			() override;
+					bool	CanPressDown		() override;
+					void	IncVal				() override;
+					void	DecVal				() override;
 
 
 
@@ -41,26 +41,26 @@ class CUISpinFlt : public CUICustomSpin
 public:
 	CUISpinFlt();
 
-	virtual void	InitSpin			(Fvector2 pos, Fvector2 size);
+	void	InitSpin			(Fvector2 pos, Fvector2 size) override;
 
 	// CUIOptionsItem
-	virtual void	SetCurrentOptValue	();	// opt->current
-	virtual void	SaveBackUpOptValue	();	// current->backup
-	virtual void	SaveOptValue		();	// current->opt
-	virtual void	UndoOptValue		();	// backup->current
-	virtual bool	IsChangedOptValue	() const;	// backup!=current
+	void	SetCurrentOptValue	() override;	// opt->current
+	void	SaveBackUpOptValue	() override;	// current->backup
+	void	SaveOptValue		() override;	// current->opt
+	void	UndoOptValue		() override;	// backup->current
+	bool	IsChangedOptValue	() const override;	// backup!=current
 
-    virtual void	OnBtnUpClick		();
-	virtual void	OnBtnDownClick		();
+	void	OnBtnUpClick		() override;
+	void	OnBtnDownClick		() override;
 
 			void	SetMax				(float max);
 			void	SetMin				(float min);
 protected:
 			void	SetValue			(float v);
-	virtual bool	CanPressUp			();
-	virtual bool	CanPressDown		();
-	virtual void	IncVal				();
-	virtual void	DecVal				();
+	bool	CanPressUp			() override;
+	bool	CanPressDown		() override;
+	void	IncVal				() override;
+	void	DecVal				() override;
 
 
 

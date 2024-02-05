@@ -37,7 +37,7 @@ public:
 
 public:
 	IC				CALifeSwitchManager		(xrServer *server, LPCSTR section);
-	virtual			~CALifeSwitchManager	();
+	~CALifeSwitchManager	() override;
 			void	switch_object			(CSE_ALifeDynamicObject	*object);
 	IC		float	online_distance			() const;
 	IC		float	offline_distance		() const;

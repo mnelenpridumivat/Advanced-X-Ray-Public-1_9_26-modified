@@ -14,7 +14,7 @@ private:
 	typedef CInventoryItemObject inherited;
 public:
 	CTacticalTorch();
-	virtual ~CTacticalTorch();
+	~CTacticalTorch() override;
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CTacticalTorch)
