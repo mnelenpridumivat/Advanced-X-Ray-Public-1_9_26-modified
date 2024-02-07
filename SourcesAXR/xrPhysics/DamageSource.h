@@ -1,8 +1,10 @@
 #pragma once
  
 
-class IDamageSource
+class IDamageSource :
+	public IMetaClass
 {
+	DECLARE_METACLASS(IDamageSource)
 public:
 	virtual							~IDamageSource			()												{}				;
 	virtual			void			SetInitiator			(u16 id)										=0				;

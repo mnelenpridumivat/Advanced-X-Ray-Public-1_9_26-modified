@@ -13,8 +13,11 @@ class CMotionDef;
 struct attachable_hud_item;
 class motion_marks;
 
-class CHUDState
+class CHUDState:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CHUDState)
+
 public:
 enum EHudStates {
 		eIdle		= 0,
@@ -46,8 +49,11 @@ public:
 	virtual void			OnStateSwitch		(u32 S)				= 0;
 };
 
-class CHudItem :public CHUDState
+class CHudItem :
+	public CHUDState,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CHudItem, CHUDState)
 protected:
 							CHudItem			();
 	virtual					~CHudItem			();

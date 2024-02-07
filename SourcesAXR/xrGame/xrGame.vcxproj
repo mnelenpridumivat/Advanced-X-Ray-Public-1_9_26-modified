@@ -1673,6 +1673,7 @@
     <ClInclude Include="memory_space_impl.h" />
     <ClInclude Include="MercuryBall.h" />
     <ClInclude Include="Message_Filter.h" />
+    <ClInclude Include="Metaclass.h" />
     <ClInclude Include="MilitaryOutfit.h" />
     <ClInclude Include="Mincer.h" />
     <ClInclude Include="Missile.h" />
@@ -9764,6 +9765,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

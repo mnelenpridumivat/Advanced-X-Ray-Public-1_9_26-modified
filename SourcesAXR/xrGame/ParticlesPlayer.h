@@ -14,8 +14,10 @@ DEFINE_VECTOR(CParticlesObject*, PARTICLES_PTR_VECTOR, PARTICLES_PTR_VECTOR_IT);
 class CObject;
 class IKinematics;
 
-class CParticlesPlayer 
+class CParticlesPlayer :
+	public IMetaClass
 {
+	DECLARE_METACLASS(CParticlesPlayer)
 
 public:
 	//структура с внутренней информацией о партикле

@@ -6,6 +6,8 @@
 
 #include "xr_collide_defs.h"
 
+#include "../xrGame/Metaclass.h"
+
 #pragma pack(push,4)
 
 /*
@@ -71,8 +73,8 @@ class 				ISpatial_DB;
 namespace Feel { class Sound; }
 class 				IRenderable;
 class 				IRender_Light;
-class XRCDB_API				ISpatial
-{
+class XRCDB_API				ISpatial : public IMetaClass {
+	DECLARE_METACLASS(ISpatial)
 public:
 	struct	_spatial
 	{
@@ -111,8 +113,8 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 //class ISpatial_NODE;
-class 	ISpatial_NODE
-{
+class 	ISpatial_NODE : public IMetaClass {
+	DECLARE_METACLASS(ISpatial_NODE)
 public:
 	typedef	_W64 size_t		ptrt;
 public:
@@ -149,8 +151,8 @@ public:
 #endif // #ifndef	DLL_API
 
 //////////////////////////////////////////////////////////////////////////
-class XRCDB_API	ISpatial_DB
-{
+class XRCDB_API	ISpatial_DB : public IMetaClass {
+	DECLARE_METACLASS(ISpatial_DB)
 private:
 	xrCriticalSection				cs;
 

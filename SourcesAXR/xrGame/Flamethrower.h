@@ -4,8 +4,11 @@
 #include "weapon.h"
 
 
-class CFlamethrower : public CWeapon
+class CFlamethrower : 
+	public CWeapon,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CFlamethrower, CWeapon)
 private:
 	typedef CWeapon inherited;
 protected:

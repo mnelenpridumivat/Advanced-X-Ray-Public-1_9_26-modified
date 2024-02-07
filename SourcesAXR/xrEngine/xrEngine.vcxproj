@@ -753,6 +753,7 @@
     <ClInclude Include="line_editor.h" />
     <ClInclude Include="line_edit_control.h" />
     <ClInclude Include="MbHelpers.h" />
+    <ClInclude Include="Metaclass.h" />
     <ClInclude Include="motion.h" />
     <ClInclude Include="mp_logging.h" />
     <ClInclude Include="no_single.h" />
@@ -975,6 +976,7 @@
     <Image Include="stalker_cs.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cpp.hint" />
     <None Include="My Amplifier Results\r000hs\r000hs.ampl" />
     <None Include="My Amplifier Results\r001hs\r001hs.ampl" />
     <None Include="My Amplifier Results\r002cc\r002cc.ampl" />

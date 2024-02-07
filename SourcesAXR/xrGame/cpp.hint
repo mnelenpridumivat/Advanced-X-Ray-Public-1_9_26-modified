@@ -1,0 +1,8 @@
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define DECLARE_METACLASS_GETTER_BASE(Metaclass) public: static CMetaclassBase* StaticClass(){ return Metaclass::GetInstanceStatic(); } virtual CMetaclassBase* GetClass(){ return StaticClass(); } private:
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define DECLARE_METACLASS_GETTER(Metaclass) public: static FORMAT_METACLASS_NAME(CMetaclassBase)* StaticClass(){ return FORMAT_METACLASS_NAME(Metaclass)::GetInstanceStatic(); } virtual FORMAT_METACLASS_NAME(CMetaclassBase)* GetClass() override{ return StaticClass(); } private: \

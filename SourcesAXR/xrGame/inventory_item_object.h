@@ -13,8 +13,10 @@
 
 class CInventoryItemObject : 
 			public CInventoryItem, 
-			public CPhysicItem
+			public CPhysicItem,
+			public IMetaClass
 {
+	DECLARE_METACLASS2(CInventoryItemObject, CInventoryItem, CPhysicItem)
 public:
 							CInventoryItemObject	();
 							~CInventoryItemObject	() override;

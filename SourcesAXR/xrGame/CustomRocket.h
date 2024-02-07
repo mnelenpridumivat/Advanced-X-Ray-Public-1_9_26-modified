@@ -22,9 +22,12 @@ struct SRoketContact
 	}
 };
 
-class CCustomRocket : public CPhysicItem,
-					  public CPHUpdateObject
+class CCustomRocket : 
+	public CPhysicItem,  
+	public CPHUpdateObject,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CCustomRocket, CPhysicItem, CPHUpdateObject)
 private:
 	typedef CPhysicItem inherited;
 	friend CRocketLauncher;

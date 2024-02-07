@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\SourcesAXR"
   ],
-  "SelectedNode": "\\engine.sln",
+  "SelectedNode": "\\SourcesAXR\\engine.sln",
   "PreviewInSolutionExplorer": false
 }

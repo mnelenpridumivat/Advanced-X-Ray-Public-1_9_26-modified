@@ -31,8 +31,11 @@ class WeaponAttach;
 #define WEAPON_SND_REFLECTION_HUD_FACTOR 0.7f   // Коэфицент на который домножается громкость звука эха от выстрела, если он был сделат от 1-го лица
 
 class CWeapon : public CHudItemObject,
-				public CShootingObject
+				public CShootingObject,
+				public IMetaClass
 {
+	DECLARE_METACLASS2(CWeapon, CHudItemObject, CShootingObject)
+
 private:
 	typedef CHudItemObject inherited;
 

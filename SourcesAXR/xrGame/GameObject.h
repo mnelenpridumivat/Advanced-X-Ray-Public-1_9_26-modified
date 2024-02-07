@@ -52,8 +52,11 @@ class CScriptCallbackEx;
 class CGameObject : 
 	public CObject, 
 	public CUsableScriptObject,
-	public CScriptBinder
+	public CScriptBinder,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CGameObject, CObject, CUsableScriptObject, CScriptBinder)
+
 	typedef CObject inherited;
 	bool							m_spawned;
 	Flags32							m_server_flags;

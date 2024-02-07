@@ -17,8 +17,11 @@
 class IRender_Light;
 DEFINE_VECTOR(CPhysicsShellHolder*,BLASTED_OBJECTS_V,BLASTED_OBJECTS_I);
 class CExplosive : 
-	public IDamageSource
+	public IDamageSource,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CExplosive, IDamageSource)
+
 private:
 	collide::rq_results			rq_storage;
 

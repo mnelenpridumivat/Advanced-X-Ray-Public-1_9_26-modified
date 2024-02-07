@@ -7,8 +7,11 @@
 #include "alife_space.h"
 #include "hit_immunity_space.h"
 
-class CHitImmunity
+class CHitImmunity:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CHitImmunity)
+
 	//коэффициенты на которые домножается хит
 	//при соответствующем типе воздействия
 	//(для защитных костюмов и специфичных животных)

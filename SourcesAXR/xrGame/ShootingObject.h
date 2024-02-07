@@ -18,8 +18,12 @@ extern const Fvector zero_vel;
 
 #define WEAPON_MATERIAL_NAME "objects\\bullet"
 
-class CShootingObject : public IAnticheatDumpable
+class CShootingObject : 
+	public IAnticheatDumpable, 
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CShootingObject, IAnticheatDumpable)
+
 protected:
 			CShootingObject			();
 	virtual ~CShootingObject		();

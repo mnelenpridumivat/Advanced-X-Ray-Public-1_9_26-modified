@@ -2,8 +2,11 @@
 
 #include "WeaponMagazined.h"
 
-class CWeaponCustomPistol: public CWeaponMagazined
+class CWeaponCustomPistol: 
+	public CWeaponMagazined, 
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CWeaponCustomPistol, CWeaponMagazined)
 private:
 	typedef CWeaponMagazined inherited;
 public:

@@ -11,7 +11,11 @@
 class CPhysicsShellHolder;
 class CInventoryItem;
 
-class CAttachableItem {
+class CAttachableItem :
+	public IMetaClass
+{
+	DECLARE_METACLASS(CAttachableItem)
+
 private:
 	CInventoryItem				*m_item;
 	shared_str					m_bone_name;

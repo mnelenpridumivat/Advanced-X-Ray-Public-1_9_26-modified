@@ -1,0 +1,7 @@
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define FORMAT_METACLASS_NAME(ClassName)
+#define DECLARE_CLASS_METACLASS(ClassName) class FORMAT_METACLASS_NAME(ClassName) : public FORMAT_METACLASS_NAME(CMetaclassClass) { DECLARE_METACLASS_STATIC_ACCESS(ClassName) DECLARE_METACLASS_NONSTATIC_ACCESS() DECLARE_METACLASS_INIT(CMetaclassClass) };
+#define DECLARE_METACLASS_GETTER_BASE(Metaclass) public: static FORMAT_METACLASS_NAME(CMetaclassBase)* StaticClass(){ return FORMAT_METACLASS_NAME(Metaclass)::GetInstanceStatic(); } virtual FORMAT_METACLASS_NAME(CMetaclassBase)* GetClass(){ return StaticClass(); } private:
+#define DECLARE_METACLASS5(ClassName, Parent1, Parent2, Parent3, Parent4, Parent5) class FORMAT_METACLASS_NAME(ClassName) : public FORMAT_METACLASS_NAME(Parent1), public FORMAT_METACLASS_NAME(Parent2), public FORMAT_METACLASS_NAME(Parent3), public FORMAT_METACLASS_NAME(Parent4), public FORMAT_METACLASS_NAME(Parent5) { DECLARE_METACLASS_STATIC_ACCESS(ClassName) DECLARE_METACLASS_NONSTATIC_ACCESS() DECLARE_METACLASS_INIT5(Parent1, Parent2, Parent3, Parent4, Parent5) };

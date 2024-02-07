@@ -20,9 +20,11 @@ class CIKLimbsController;
 class CPhysicsShellHolder:  public CGameObject,
 							public CParticlesPlayer,
 							public IObjectPhysicsCollision,
-							public IPhysicsShellHolder
-	
+							public IPhysicsShellHolder,
+							public IMetaClass
 {
+	DECLARE_METACLASS4(CPhysicsShellHolder, CGameObject, CParticlesPlayer, IObjectPhysicsCollision, IPhysicsShellHolder)
+
 	bool				b_sheduled;
 public:
 	void	SheduleRegister		(){if(!IsSheduled())shedule_register();b_sheduled=true;}

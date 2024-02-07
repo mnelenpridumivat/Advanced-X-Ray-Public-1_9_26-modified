@@ -13,8 +13,10 @@
 #include "PhysicsShellHolder.h"
 class CPhysicItem : 
 			public CPhysicsShellHolder,
-			public CPHShellSimpleCreator
+			public CPHShellSimpleCreator,
+			public IMetaClass
 {
+	DECLARE_METACLASS2(CPhysicItem, CPhysicsShellHolder, CPHShellSimpleCreator)
 	typedef CPhysicsShellHolder inherited;
 public:
 	bool			m_ready_to_destroy;

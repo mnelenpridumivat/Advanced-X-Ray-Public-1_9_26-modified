@@ -4,8 +4,12 @@
 
 struct dContact;
 struct SGameMtl;
-class CMissile : public CHudItemObject
+class CMissile : 
+	public CHudItemObject,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CMissile, CHudItemObject)
+
 	typedef CHudItemObject inherited;
 public:
 	enum EMissileStates{

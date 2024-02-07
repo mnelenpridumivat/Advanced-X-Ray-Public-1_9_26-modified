@@ -2548,6 +2548,9 @@
     <Filter Include="Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Flamethrower">
       <UniqueIdentifier>{96d0cd8d-da4c-432c-85b2-e40e2a624b69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Common\Metaclass">
+      <UniqueIdentifier>{8b797cdd-db96-40fc-80a6-81a7ca4020ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">
@@ -7596,6 +7599,9 @@
     <ClInclude Include="FlamethrowerTraceCollision.h">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Flamethrower</Filter>
     </ClInclude>
+    <ClInclude Include="Metaclass.h">
+      <Filter>Core\Common\Metaclass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -11403,5 +11409,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

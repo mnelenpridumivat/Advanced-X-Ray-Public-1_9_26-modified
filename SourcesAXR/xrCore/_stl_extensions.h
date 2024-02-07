@@ -4,6 +4,7 @@
 #include <functional>
 
 #include "xalloc.h"
+#include <vector>
 
 using std::swap;
 
@@ -197,21 +198,21 @@ template <typename K, class V, class Hasher = std::hash<K>, class Traits = std::
 	using xr_unordered_map = std::unordered_map<K, V, Hasher, Traits, allocator>;
 
 // STL extensions
-#define DEF_VECTOR(N,T)				typedef xr_vector< T > N;		typedef N::iterator N##_it;
-#define DEF_LIST(N,T)				typedef xr_list< T > N;			typedef N::iterator N##_it;
-#define DEF_DEQUE(N,T)				typedef xr_deque< T > N;		typedef N::iterator N##_it;
-#define DEF_MAP(N,K,T)				typedef xr_map< K, T > N;		typedef N::iterator N##_it;
+#define DEF_VECTOR(N,T)					typedef xr_vector< T > N;		typedef N::iterator N##_it;
+#define DEF_LIST(N,T)					typedef xr_list< T > N;			typedef N::iterator N##_it;
+#define DEF_DEQUE(N,T)					typedef xr_deque< T > N;		typedef N::iterator N##_it;
+#define DEF_MAP(N,K,T)					typedef xr_map< K, T > N;		typedef N::iterator N##_it;
 
-#define DEFINE_DEQUE(T,N,I)			typedef xr_deque< T > N;		typedef N::iterator I;
-#define DEFINE_LIST(T,N,I)			typedef xr_list< T > N;			typedef N::iterator I;
-#define DEFINE_VECTOR(T,N,I)		typedef xr_vector< T > N;		typedef N::iterator I;
-#define DEFINE_MAP(K,T,N,I)			typedef xr_map< K , T > N;		typedef N::iterator I;
-#define DEFINE_MAP_PRED(K,T,N,I,P)	typedef xr_map< K, T, P > N;	typedef N::iterator I;
-#define DEFINE_MMAP(K,T,N,I)		typedef xr_multimap< K, T > N;	typedef N::iterator I;
-#define DEFINE_SVECTOR(T,C,N,I)		typedef svector< T, C > N;		typedef N::iterator I;
-#define DEFINE_SET(T,N,I)			typedef xr_set< T > N;			typedef N::iterator I;
-#define DEFINE_SET_PRED(T,N,I,P)	typedef xr_set< T, P > N;		typedef N::iterator I;
-#define DEFINE_STACK(T,N)			typedef xr_stack< T > N;
+#define DEFINE_DEQUE(T,N,I)				typedef xr_deque< T > N;		typedef N::iterator I;
+#define DEFINE_LIST(T,N,I)				typedef xr_list< T > N;			typedef N::iterator I;
+#define DEFINE_VECTOR(T,N,I)			typedef xr_vector< T > N;		typedef N::iterator I;
+#define DEFINE_MAP(K,T,N,I)				typedef xr_map< K , T > N;		typedef N::iterator I;
+#define DEFINE_MAP_PRED(K,T,N,I,P)		typedef xr_map< K, T, P > N;	typedef N::iterator I;
+#define DEFINE_MMAP(K,T,N,I)			typedef xr_multimap< K, T > N;	typedef N::iterator I;
+#define DEFINE_SVECTOR(T,C,N,I)			typedef svector< T, C > N;		typedef N::iterator I;
+#define DEFINE_SET(T,N,I)				typedef xr_set< T > N;			typedef N::iterator I;
+#define DEFINE_SET_PRED(T,N,I,P)		typedef xr_set< T, P > N;		typedef N::iterator I;
+#define DEFINE_STACK(T,N)				typedef xr_stack< T > N;
 
 #include "FixedVector.h"
 #include "buffer_vector.h"

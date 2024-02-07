@@ -67,7 +67,10 @@ class CInventoryItem :
 #ifdef DEBUG
 	, public pureRender
 #endif
+	, public IMetaClass
 {
+	DECLARE_METACLASS2(CInventoryItem, CAttachableItem, CHitImmunity)
+
 private:
 	typedef CAttachableItem inherited;
 protected:

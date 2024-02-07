@@ -29,8 +29,11 @@ public:
 	};
 #endif
 
-class IPhysicsShellHolder
+class IPhysicsShellHolder :
+	public IMetaClass
 {
+	DECLARE_METACLASS(IPhysicsShellHolder)
+
 	public:
 
 	virtual	Fmatrix&					_BCL	ObjectXFORM						()						=0;

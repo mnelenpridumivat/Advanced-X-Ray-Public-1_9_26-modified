@@ -5,8 +5,10 @@
 
 class CGrenade :
 	public CMissile,
-	public CExplosive
+	public CExplosive,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CGrenade, CMissile, CExplosive)
 	typedef CMissile		inherited;
 public:
 							CGrenade							();

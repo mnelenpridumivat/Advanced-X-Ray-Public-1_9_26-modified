@@ -1,8 +1,10 @@
 #ifndef XRENGINE_ISHEDULED_H_INCLUDED
 #define XRENGINE_ISHEDULED_H_INCLUDED
 
-class	ENGINE_API	ISheduled
-{
+#include "../xrGame/Metaclass.h"
+
+class	ENGINE_API	ISheduled : public IMetaClass {
+	DECLARE_METACLASS(ISheduled)
 public:
 	struct {
 		u32		t_min		:	14;		// minimal bound of update time (sample: 20ms)

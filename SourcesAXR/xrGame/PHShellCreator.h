@@ -3,8 +3,11 @@
 
 #include "ph_shell_interface.h"
 
-class CPHShellSimpleCreator: public IPhysicShellCreator
+class CPHShellSimpleCreator: 
+	public IPhysicShellCreator,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CPHShellSimpleCreator, IPhysicShellCreator)
 public:
 	void CreatePhysicsShell() override;
 protected:

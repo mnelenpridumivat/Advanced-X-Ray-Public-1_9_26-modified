@@ -5,8 +5,11 @@
 
 class CHudItemObject : 
 		public CInventoryItemObject,
-		public CHudItem
+		public CHudItem,
+		public IMetaClass
 {
+	DECLARE_METACLASS2(CHudItemObject, CInventoryItemObject, CHudItem)
+
 protected: //чтоб нельзя было вызвать на прямую
 						CHudItemObject		();
 						~CHudItemObject		() override;

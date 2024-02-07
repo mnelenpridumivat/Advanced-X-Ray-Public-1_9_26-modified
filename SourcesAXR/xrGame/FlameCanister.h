@@ -3,8 +3,13 @@
 #include "CartrigeParam.h"
 #include "inventory_item_object.h"
 
+#include "Metaclass.h"
+
 class CFlameCanister :
-	public CInventoryItemObject {
+	public CInventoryItemObject, 
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CFlameCanister, CInventoryItemObject)
 	typedef CInventoryItemObject		inherited;
 public:
 	CFlameCanister(void);

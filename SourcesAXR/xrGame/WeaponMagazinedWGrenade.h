@@ -6,9 +6,13 @@
 class CWeaponFakeGrenade;
 
 
-class CWeaponMagazinedWGrenade : public CWeaponMagazined,
-								 public CRocketLauncher
+class CWeaponMagazinedWGrenade : 
+	public CWeaponMagazined,				 
+	public CRocketLauncher,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CWeaponMagazinedWGrenade, CWeaponMagazined, CRocketLauncher)
+
 	typedef CWeaponMagazined inherited;
 public:
 					CWeaponMagazinedWGrenade	(ESoundTypes eSoundType=SOUND_TYPE_WEAPON_SUBMACHINEGUN);

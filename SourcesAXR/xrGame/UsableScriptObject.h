@@ -4,8 +4,10 @@
 
 class CGameObject;
 
-class CUsableScriptObject
+class CUsableScriptObject :
+	public IMetaClass
 {
+	DECLARE_METACLASS(CUsableScriptObject)
 public:
 							CUsableScriptObject		();
 							~CUsableScriptObject	();

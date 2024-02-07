@@ -12,7 +12,11 @@ class CSE_Abstract;
 class CScriptBinderObject;
 class NET_Packet;
 
-class CScriptBinder {
+class CScriptBinder :
+	public IMetaClass
+{
+	DECLARE_METACLASS(CScriptBinder)
+
 protected:
 	CScriptBinderObject			*m_object;
 

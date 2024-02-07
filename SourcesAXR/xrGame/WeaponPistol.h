@@ -2,8 +2,10 @@
 #include "weaponcustompistol.h"
 
 class CWeaponPistol :
-	public CWeaponCustomPistol
+	public CWeaponCustomPistol,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CWeaponPistol, CWeaponCustomPistol)
 	typedef CWeaponCustomPistol inherited;
 public:
 					CWeaponPistol	();

@@ -12,8 +12,11 @@ class ENGINE_API CMotionDef;
 #define WEAPON_ININITE_QUEUE -1
 
 
-class CWeaponMagazined: public CWeapon
+class CWeaponMagazined: 
+	public CWeapon, 
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CWeaponMagazined, CWeapon)
 private:
 	typedef CWeapon inherited;
 protected:

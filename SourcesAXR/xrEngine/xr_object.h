@@ -30,8 +30,10 @@ class	ENGINE_API						CObject :
 	public ISpatial,
 	public ISheduled,
 	public IRenderable,
-	public ICollidable
+	public ICollidable,
+	public IMetaClass
 {
+	DECLARE_METACLASS5(CObject, DLL_Pure, ISpatial, ISheduled, IRenderable, ICollidable)
 public:
 	struct	SavedPosition
 	{

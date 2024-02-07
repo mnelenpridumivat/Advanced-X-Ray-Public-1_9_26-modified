@@ -3,9 +3,12 @@
 
 #include "render.h"
 
+#include "../xrGame/Metaclass.h"
+
 //////////////////////////////////////////////////////////////////////////
 // definition ("Renderable")
-class	ENGINE_API	IRenderable			{
+class	ENGINE_API	IRenderable : public IMetaClass {
+	DECLARE_METACLASS(IRenderable)
 public:
 	struct 
 	{

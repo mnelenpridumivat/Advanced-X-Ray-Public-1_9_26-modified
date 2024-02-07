@@ -3,8 +3,10 @@
 class CCustomRocket;
 class CGameObject;
 
-class CRocketLauncher
+class CRocketLauncher: 
+	public IMetaClass
 {
+	DECLARE_METACLASS(CRocketLauncher)
 public:
 	CRocketLauncher		();
 	~CRocketLauncher	();

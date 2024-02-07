@@ -8,8 +8,11 @@
 #define AFX_ENGINEAPI_H__CF21372B_C8B8_4891_82FC_D872C84E1DD4__INCLUDED_
 #pragma once
 
+#include "../xrGame/Metaclass.h"
+
 // Abstract 'Pure' class for DLL interface
-class ENGINE_API DLL_Pure {
+class ENGINE_API DLL_Pure : public IMetaClass {
+	DECLARE_METACLASS(DLL_Pure)
 public:
 	CLASS_ID				CLS_ID;
 
@@ -31,8 +34,11 @@ extern "C" {
 	typedef void __cdecl VTResume	(void);
 };
 
+//DECLARE_CLASS_METACLASS(CEngineAPI)
+
 class ENGINE_API		CEngineAPI
 {
+	//DECLARE_METACLASS_GETTER_BASE(CEngineAPI)
 private:
 	HMODULE				hGame;
 	HMODULE				hRender;

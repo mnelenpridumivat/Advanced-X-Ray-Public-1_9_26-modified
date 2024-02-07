@@ -2,8 +2,10 @@
 #include "PHItemList.h"
 
 class CPhysicsShell;
-class XRPHYSICS_API CPHUpdateObject 
+class XRPHYSICS_API CPHUpdateObject :
+	public IMetaClass
 {
+	DECLARE_METACLASS(CPHUpdateObject)
 	DECLARE_PHLIST_ITEM(CPHUpdateObject)
 	bool				b_activated																	;
 
