@@ -2545,6 +2545,9 @@
     <Filter Include="AI\AMonsters\monsters\Abilities\Polter">
       <UniqueIdentifier>{2299a837-4dd8-4de3-8a50-2ab5a0125760}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Flamethrower">
+      <UniqueIdentifier>{96d0cd8d-da4c-432c-85b2-e40e2a624b69}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">
@@ -7581,6 +7584,18 @@
     <ClInclude Include="PolterInterface.h">
       <Filter>AI\AMonsters\monsters\Abilities\Polter</Filter>
     </ClInclude>
+    <ClInclude Include="Flamethrower.h">
+      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Flamethrower</Filter>
+    </ClInclude>
+    <ClInclude Include="FlameCanister.h">
+      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Flamethrower</Filter>
+    </ClInclude>
+    <ClInclude Include="CartrigeParam.h">
+      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Ammo</Filter>
+    </ClInclude>
+    <ClInclude Include="FlamethrowerTraceCollision.h">
+      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Flamethrower</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -11358,6 +11373,12 @@
     </ClCompile>
     <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_ability.cpp">
       <Filter>AI\AMonsters\monsters\Abilities\Polter</Filter>
+    </ClCompile>
+    <ClCompile Include="FlameCanister.cpp">
+      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Flamethrower</Filter>
+    </ClCompile>
+    <ClCompile Include="Flamethrower.cpp">
+      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Flamethrower</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

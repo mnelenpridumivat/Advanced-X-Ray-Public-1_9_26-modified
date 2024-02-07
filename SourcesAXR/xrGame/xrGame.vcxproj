@@ -1316,6 +1316,7 @@
     <ClInclude Include="Car.h" />
     <ClInclude Include="CarDamageParticles.h" />
     <ClInclude Include="CarLights.h" />
+    <ClInclude Include="CartrigeParam.h" />
     <ClInclude Include="CarWeapon.h" />
     <ClInclude Include="car_memory.h" />
     <ClInclude Include="cdkey_ban_list.h" />
@@ -1457,6 +1458,9 @@
     <ClInclude Include="file_transfer.h" />
     <ClInclude Include="fire_disp_controller.h" />
     <ClInclude Include="first_bullet_controller.h" />
+    <ClInclude Include="FlameCanister.h" />
+    <ClInclude Include="Flamethrower.h" />
+    <ClInclude Include="FlamethrowerTraceCollision.h" />
     <ClInclude Include="flare.h" />
     <ClInclude Include="FoodItem.h" />
     <ClInclude Include="FryupZone.h" />
@@ -4920,6 +4924,8 @@
     <ClCompile Include="file_transfer.cpp" />
     <ClCompile Include="fire_disp_controller.cpp" />
     <ClCompile Include="first_bullet_controller.cpp" />
+    <ClCompile Include="FlameCanister.cpp" />
+    <ClCompile Include="Flamethrower.cpp" />
     <ClCompile Include="flare.cpp" />
     <ClCompile Include="FoodItem.cpp" />
     <ClCompile Include="FryupZone.cpp" />
