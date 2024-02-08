@@ -4,7 +4,11 @@
 #include "script_export_space.h"
 #include "../xrEngine/xr_collide_form.h"
 
-class CWeaponKnife: public CWeapon {
+class CWeaponKnife:
+	public CWeapon,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CWeaponKnife, CWeapon)
 private:
 	typedef CWeapon inherited;
 

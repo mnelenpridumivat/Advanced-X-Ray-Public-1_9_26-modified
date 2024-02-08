@@ -6,8 +6,11 @@
 #pragma once
 #include "artefact.h"
 
-class CElectricBall : public CArtefact 
+class CElectricBall :
+	public CArtefact,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CElectricBall, CArtefact)
 private:
 	typedef CArtefact inherited;
 public:

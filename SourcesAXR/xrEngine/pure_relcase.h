@@ -1,7 +1,10 @@
 #ifndef pure_relcaseH
 #define pure_relcaseH
 
-class ENGINE_API pure_relcase{
+class ENGINE_API pure_relcase:
+	public IMetaClass
+{
+	DECLARE_METACLASS(pure_relcase)
 private:
 	int							m_ID;
 public:

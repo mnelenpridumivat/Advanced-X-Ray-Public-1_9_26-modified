@@ -5,8 +5,11 @@
 #include "WeaponMagazined.h"
 #include "script_export_space.h"
 
-class CWeaponLR300: public CWeaponMagazined
+class CWeaponLR300:
+	public CWeaponMagazined,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CWeaponLR300, CWeaponMagazined)
 private:
 	typedef CWeaponMagazined inherited;
 public:

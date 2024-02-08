@@ -4,9 +4,12 @@
 #include "rocketlauncher.h"
 #include "script_export_space.h"
 
-class CWeaponRPG7 :	public CWeaponCustomPistol,
-					public CRocketLauncher
+class CWeaponRPG7 :
+	public CWeaponCustomPistol,
+	public CRocketLauncher,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CWeaponRPG7, CWeaponCustomPistol, CRocketLauncher)
 private:
 	typedef CWeaponCustomPistol inherited;
 public:

@@ -1,4 +1,5 @@
 #pragma once 
+#include "../xrGame/Metaclass.h"
 class ICollisionDamageInfo;
 class IDamageSource;
 //class IKinematics;

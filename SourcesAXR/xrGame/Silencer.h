@@ -6,7 +6,11 @@
 #pragma once
 #include "inventory_item_object.h"
 
-class CSilencer : public CInventoryItemObject {
+class CSilencer :
+	public CInventoryItemObject,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CSilencer, CInventoryItemObject)
 private:
 	typedef CInventoryItemObject inherited;
 public:

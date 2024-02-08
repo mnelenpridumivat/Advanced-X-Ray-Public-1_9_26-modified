@@ -12,9 +12,11 @@
 #include "eatable_item.h"
 
 class CEatableItemObject : 
-			public CEatableItem, 
-			public CPhysicItem
+	public CEatableItem, 
+	public CPhysicItem,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CEatableItemObject, CEatableItem, CPhysicItem)
 public:
 							CEatableItemObject	();
 							~CEatableItemObject	() override;

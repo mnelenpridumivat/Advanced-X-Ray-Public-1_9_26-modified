@@ -9,8 +9,11 @@
 #define CAMERA_RECOIL_H_INCLUDED
 
 //מעהאקא ןנט סענוכüבו 
-struct CameraRecoil
+struct CameraRecoil: 
+	public IMetaClass
 {
+	DECLARE_METACLASS(CameraRecoil)
+public:
 	float		RelaxSpeed;
 	float		RelaxSpeed_AI;
 	float		Dispersion;

@@ -4,8 +4,10 @@
 #include "script_export_space.h"
 
 class CWeaponVintorez :
-	public CWeaponMagazined
+	public CWeaponMagazined,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CWeaponVintorez, CWeaponMagazined)
 	typedef CWeaponMagazined inherited;
 public:
 	CWeaponVintorez(void);

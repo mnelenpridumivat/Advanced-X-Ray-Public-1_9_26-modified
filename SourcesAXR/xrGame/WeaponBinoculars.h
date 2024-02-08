@@ -7,8 +7,11 @@ class CUIFrameWindow;
 class CUIStatic;
 class CBinocularsVision;
 
-class CWeaponBinoculars: public CWeaponCustomPistol
+class CWeaponBinoculars:
+	public CWeaponCustomPistol, 
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CWeaponBinoculars, CWeaponCustomPistol)
 private:
 	typedef CWeaponCustomPistol inherited;
 protected:

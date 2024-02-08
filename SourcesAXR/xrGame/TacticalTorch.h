@@ -8,8 +8,11 @@
 #include "inventory_item_object.h"
 #include "script_export_space.h"
 
-class CTacticalTorch : public CInventoryItemObject
+class CTacticalTorch :
+	public CInventoryItemObject, 
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CTacticalTorch, CInventoryItemObject)
 private:
 	typedef CInventoryItemObject inherited;
 public:

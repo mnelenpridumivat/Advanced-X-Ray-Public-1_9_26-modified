@@ -2,9 +2,11 @@
 #include "missile.h"
 #include "../xrphysics/DamageSource.h"
 class CBolt :
-					public CMissile,
-					public IDamageSource
+	public CMissile,
+	public IDamageSource,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CBolt, CMissile, IDamageSource)
 	typedef CMissile inherited;
 	u16			m_thrower_id;
 public:

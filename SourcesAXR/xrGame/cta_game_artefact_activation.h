@@ -11,8 +11,10 @@
 #include "artefact_activation.h"
 
 class	CtaArtefactActivation :
-		public SArtefactActivation
+	public SArtefactActivation,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CtaArtefactActivation, SArtefactActivation)
 public:
 							CtaArtefactActivation	(CArtefact* af, u32 owner_id);
 	virtual					~CtaArtefactActivation	();

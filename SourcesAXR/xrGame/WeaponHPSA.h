@@ -6,8 +6,11 @@
 #include "WeaponPistol.h"
 #include "script_export_space.h"
  
-class CWeaponHPSA: public CWeaponPistol
+class CWeaponHPSA:
+	public CWeaponPistol,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CWeaponHPSA, CWeaponPistol)
 private:
 	typedef CWeaponPistol inherited;
 protected:

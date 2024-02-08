@@ -10,9 +10,12 @@ class SArtefactActivation;
 class CInventoryItem;
 struct SArtefactDetectorsSupport;
 
-class CArtefact :	public CHudItemObject, 
-					public CPHUpdateObject 
+class CArtefact :
+	public CHudItemObject, 
+	public CPHUpdateObject,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CArtefact, CHudItemObject, CPHUpdateObject)
 	typedef			CHudItemObject	inherited;
 public:
 									CArtefact						();

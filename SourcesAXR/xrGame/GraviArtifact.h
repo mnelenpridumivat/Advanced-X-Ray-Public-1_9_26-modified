@@ -7,8 +7,11 @@
 #pragma once
 #include "artefact.h"
 
-class CGraviArtefact : public CArtefact 
+class CGraviArtefact :
+	public CArtefact,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CGraviArtefact, CArtefact)
 private:
 	typedef CArtefact inherited;
 public:

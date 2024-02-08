@@ -3,8 +3,10 @@
 #include "../Include/xrRender/KinematicsAnimated.h"
 #include "Weapon.h"
 
-class WeaponAttach
+class WeaponAttach:
+	public IMetaClass
 {
+	DECLARE_METACLASS(WeaponAttach)
 public:
 	WeaponAttach();
 	~WeaponAttach() {};

@@ -2,8 +2,11 @@
 
 #include "eatable_item_object.h"
 
-class CAntigasFilter : public CEatableItemObject
+class CAntigasFilter :
+	public CEatableItemObject,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CAntigasFilter, CEatableItemObject)
 	using inherited = CEatableItemObject;
 
 public:

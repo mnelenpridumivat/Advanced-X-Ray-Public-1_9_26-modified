@@ -8,7 +8,11 @@
 #include "inventory_item_object.h"
 #include "script_export_space.h"
 
-class CScope : public CInventoryItemObject {
+class CScope :
+	public CInventoryItemObject,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CScope, CInventoryItemObject)
 private:
 	typedef CInventoryItemObject inherited;
 public:

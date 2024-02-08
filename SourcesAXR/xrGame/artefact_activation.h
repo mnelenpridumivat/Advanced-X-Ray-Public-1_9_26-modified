@@ -10,8 +10,10 @@
 
 #include "Artefact.h"
 
-class SArtefactActivation
+class SArtefactActivation:
+	public IMetaClass
 {
+	DECLARE_METACLASS(SArtefactActivation)
 public:
 	enum	EActivationStates	
 	{

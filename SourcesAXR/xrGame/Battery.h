@@ -2,8 +2,11 @@
 
 #include "eatable_item_object.h"
 
-class CBattery : public CEatableItemObject
+class CBattery :
+	public CEatableItemObject,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CBattery, CEatableItemObject)
     using inherited = CEatableItemObject;
 
 public:

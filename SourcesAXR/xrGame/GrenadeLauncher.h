@@ -6,7 +6,11 @@
 #pragma once
 #include "inventory_item_object.h"
 
-class CGrenadeLauncher : public CInventoryItemObject {
+class CGrenadeLauncher :
+	public CInventoryItemObject,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CGrenadeLauncher, CInventoryItemObject)
 private:
 	typedef CInventoryItemObject inherited;
 public:

@@ -14,8 +14,10 @@
 
 class game_cl_CaptureTheArtefact;
 class	CtaGameArtefact :
-		public	CArtefact
+	public	CArtefact,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CtaGameArtefact, CArtefact)
 public:
 						CtaGameArtefact				();
 						~CtaGameArtefact			() override;

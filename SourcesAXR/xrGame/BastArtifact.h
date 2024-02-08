@@ -15,9 +15,12 @@ struct	dContact;
 DEFINE_VECTOR (CEntityAlive*, ALIVE_LIST, ALIVE_LIST_it);
 
 
-class CBastArtefact : public CArtefact,
-					  public Feel::Touch
+class CBastArtefact :
+	public CArtefact,
+	public Feel::Touch,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CBastArtefact, CArtefact, Feel::Touch)
 private:
 	typedef CArtefact inherited;
 public:

@@ -2,8 +2,11 @@
 
 #include "eatable_item_object.h"
 
-class CRepairKit : public CEatableItemObject
+class CRepairKit :
+	public CEatableItemObject,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CRepairKit, CEatableItemObject)
 	using inherited = CEatableItemObject;
 
 public:

@@ -3,8 +3,10 @@
 #include "anticheat_dumpable_object.h"
 #include "CartrigeParam.h"
 
-class CCartridge : public IAnticheatDumpable
+class CCartridge : public IAnticheatDumpable,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CCartridge, IAnticheatDumpable)
 public:
 	CCartridge();
 	void Load(LPCSTR section, u8 LocalAmmoType);
@@ -31,7 +33,10 @@ public:
 };
 
 class CWeaponAmmo :	
-	public CInventoryItemObject {
+	public CInventoryItemObject,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CWeaponAmmo, CInventoryItemObject)
 	typedef CInventoryItemObject		inherited;
 public:
 									CWeaponAmmo			(void);

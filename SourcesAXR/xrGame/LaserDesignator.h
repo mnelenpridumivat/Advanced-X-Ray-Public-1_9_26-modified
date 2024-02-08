@@ -8,8 +8,11 @@
 #include "inventory_item_object.h"
 #include "script_export_space.h"
 
-class CLaserDesignator : public CInventoryItemObject
+class CLaserDesignator :
+	public CInventoryItemObject,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CLaserDesignator, CInventoryItemObject)
 private:
 	typedef CInventoryItemObject inherited;
 public:

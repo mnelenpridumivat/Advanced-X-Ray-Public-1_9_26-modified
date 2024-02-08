@@ -1,5 +1,6 @@
 #pragma once
 #include "PHItemList.h"
+#include "../xrGame/Metaclass.h"
 
 class CPhysicsShell;
 class XRPHYSICS_API CPHUpdateObject :

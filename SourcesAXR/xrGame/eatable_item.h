@@ -6,7 +6,11 @@ class CPhysicItem;
 class CEntityAlive;
 class CActor;
 
-class CEatableItem : public CInventoryItem {
+class CEatableItem :
+	public CInventoryItem,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CEatableItem, CInventoryItem)
 private:
 	typedef CInventoryItem	inherited;
 

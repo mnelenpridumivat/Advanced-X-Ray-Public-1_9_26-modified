@@ -6,8 +6,11 @@
 #include "WeaponMagazined.h"
 #include "script_export_space.h"
 
-class CWeaponFN2000: public CWeaponMagazined
+class CWeaponFN2000:
+	public CWeaponMagazined,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CWeaponFN2000, CWeaponMagazined)
 private:
 	typedef CWeaponMagazined inherited;
 public:

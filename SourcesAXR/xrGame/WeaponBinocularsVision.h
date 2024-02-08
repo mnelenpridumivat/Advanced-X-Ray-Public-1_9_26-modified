@@ -9,8 +9,12 @@ enum{
 	flVisObjNotValid		=(1<<0),
 	flTargetLocked			=(1<<1),
 };
-struct SBinocVisibleObj{
-							SBinocVisibleObj		()					{};
+struct SBinocVisibleObj: 
+	public IMetaClass
+{
+	DECLARE_METACLASS(SBinocVisibleObj)
+public:
+	SBinocVisibleObj		()					{};
 	CObject*				m_object;
 	CUIStatic				m_lt;
 	CUIStatic				m_lb;
@@ -26,8 +30,10 @@ struct SBinocVisibleObj{
 	bool					operator <				(const SBinocVisibleObj& other) const{ return  m_flags.test(flVisObjNotValid) < other.m_flags.test(flVisObjNotValid);} //move non-actual to tail
 };
 
-class CBinocularsVision
+class CBinocularsVision:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CBinocularsVision)
 	typedef xr_vector<SBinocVisibleObj*>	VIS_OBJECTS;
 	typedef VIS_OBJECTS::iterator			VIS_OBJECTS_IT;
 	VIS_OBJECTS								m_active_objects;

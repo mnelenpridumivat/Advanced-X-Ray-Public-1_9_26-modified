@@ -9,10 +9,13 @@ class CCameraBase;
 
 #define DESIRED_DIR 1
 
-class CWeaponStatMgun:	public CPhysicsShellHolder, 
-						public CHolderCustom,
-						public CShootingObject
+class CWeaponStatMgun:
+	public CPhysicsShellHolder, 
+	public CHolderCustom,
+	public CShootingObject,
+	public IMetaClass
 {
+	DECLARE_METACLASS3(CWeaponStatMgun, CPhysicsShellHolder, CHolderCustom, CShootingObject)
 private:
 	typedef CPhysicsShellHolder inheritedPH;
 	typedef CHolderCustom		inheritedHolder;

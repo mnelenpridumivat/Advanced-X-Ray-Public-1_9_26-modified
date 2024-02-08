@@ -4,8 +4,10 @@
 #include "script_export_space.h"
 
 class CRGD5 :
-	public CGrenade
+	public CGrenade,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CRGD5, CGrenade)
 	typedef CGrenade inherited;
 public:
 	CRGD5(void);

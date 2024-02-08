@@ -10,9 +10,12 @@
 #include "PhysicsShellHolder.h"
 DEFINE_VECTOR (CPhysicsShellHolder*, GAME_OBJECT_LIST, GAME_OBJECT_LIST_it);
 
-class CBlackGraviArtefact: public CGraviArtefact,
-						   public Feel::Touch
+class CBlackGraviArtefact:
+	public CGraviArtefact,
+	public Feel::Touch,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CBlackGraviArtefact, CGraviArtefact, Feel::Touch)
 private:
 	collide::rq_results		rq_storage;
 

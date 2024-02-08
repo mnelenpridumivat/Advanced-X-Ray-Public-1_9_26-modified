@@ -1,8 +1,10 @@
 #ifndef FIRST_BULLET_CONTROLLER
 #define FIRST_BULLET_CONTROLLER
 
-class first_bullet_controller
+class first_bullet_controller:
+	public IMetaClass
 {
+	DECLARE_METACLASS(first_bullet_controller)
 private:
 	u32		m_last_short_time;
 	u32		m_shot_timeout;

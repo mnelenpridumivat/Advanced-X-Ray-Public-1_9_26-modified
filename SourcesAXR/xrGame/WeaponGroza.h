@@ -4,8 +4,10 @@
 #include "script_export_space.h"
 
 class CWeaponGroza :
-	public CWeaponMagazinedWGrenade
+	public CWeaponMagazinedWGrenade,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CWeaponGroza, CWeaponMagazinedWGrenade)
 	typedef CWeaponMagazinedWGrenade inherited;
 public:
 				CWeaponGroza();

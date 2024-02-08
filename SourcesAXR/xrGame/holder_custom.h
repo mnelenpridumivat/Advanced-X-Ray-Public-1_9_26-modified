@@ -9,8 +9,10 @@ class CGameObject;
 class CCameraBase;
 class CActor;
 
-class CHolderCustom
+class CHolderCustom:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CHolderCustom)
 private:
 	CGameObject*			m_owner;
 	CActor*					m_ownerActor;

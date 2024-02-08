@@ -4,8 +4,10 @@
 #include "script_export_space.h"
 
 class CWeaponSVU :
-	public CWeaponCustomPistol
+	public CWeaponCustomPistol,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CWeaponSVU, CWeaponCustomPistol)
 	typedef CWeaponCustomPistol inherited;
 public:
 	CWeaponSVU(void);

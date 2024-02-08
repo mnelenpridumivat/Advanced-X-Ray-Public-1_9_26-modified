@@ -3,8 +3,11 @@
 #include "WeaponMagazinedWGrenade.h"
 #include "script_export_space.h"
 
-class CWeaponAK74: public CWeaponMagazinedWGrenade
+class CWeaponAK74:
+	public CWeaponMagazinedWGrenade,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CWeaponAK74, CWeaponMagazinedWGrenade)
 private:
 	typedef CWeaponMagazinedWGrenade inherited;
 public:

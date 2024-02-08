@@ -3,8 +3,11 @@
 #include "WeaponShotgun.h"
 #include "script_export_space.h"
 
-class CWeaponAutomaticShotgun :	public CWeaponMagazined
+class CWeaponAutomaticShotgun :
+	public CWeaponMagazined,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CWeaponAutomaticShotgun, CWeaponMagazined)
 	typedef CWeaponMagazined inherited;
 public:
 					CWeaponAutomaticShotgun	();

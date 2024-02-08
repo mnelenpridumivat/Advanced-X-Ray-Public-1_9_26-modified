@@ -1,7 +1,10 @@
 #pragma once
 
-struct SCartridgeParam
+struct SCartridgeParam: 
+	public IMetaClass
 {
+	DECLARE_METACLASS(SCartridgeParam)
+public:
 	float	kDist, kDisp, kHit/*, kCritical*/, kImpulse, kAP, kAirRes;
 	int		buckShot;
 	float	impair;
