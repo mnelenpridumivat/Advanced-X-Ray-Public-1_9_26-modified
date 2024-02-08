@@ -1,8 +1,10 @@
 #pragma once
 #include "hudsound.h"
 
-class CNightVisionEffector
+class CNightVisionEffector:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CNightVisionEffector)
 	HUD_SOUND_COLLECTION	m_sounds;
 public:
 	enum EPlaySounds{

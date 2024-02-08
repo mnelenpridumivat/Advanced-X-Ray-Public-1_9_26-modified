@@ -5,8 +5,11 @@ class CParticlesObject;
 
 #include "hud_item_object.h"
 
-class CFlare :public CHudItemObject
+class CFlare :
+	public CHudItemObject,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CFlare, CHudItemObject)
 private:
 	typedef			CHudItemObject	inherited;
 	enum FlareStates{eFlareHidden,eFlareShowing,eFlareIdle,eFlareHiding,eFlareDropping};

@@ -3,8 +3,11 @@
 
 class CUIArtefactDetectorSimple;
 
-class CSimpleDetector :public CCustomDetector
+class CSimpleDetector :
+	public CCustomDetector,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CSimpleDetector, CCustomDetector)
 	typedef CCustomDetector	inherited;
 public:
 					CSimpleDetector				();

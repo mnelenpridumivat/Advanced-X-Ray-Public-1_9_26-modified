@@ -6,8 +6,11 @@
 
 class CCustomZone;
 //описание типа зоны
-struct ZONE_TYPE
+struct ZONE_TYPE :
+	public IMetaClass
 {
+	DECLARE_METACLASS(ZONE_TYPE)
+public:
 	//интервал частот отыгрывания звука
 	float		min_freq;
 	float		max_freq;
@@ -18,8 +21,11 @@ struct ZONE_TYPE
 };
 
 //описание зоны, обнаруженной детектором
-struct ZONE_INFO
+struct ZONE_INFO:
+	public IMetaClass
 {
+	DECLARE_METACLASS(ZONE_INFO)
+public:
 	u32								snd_time;
 	//текущая частота работы датчика
 	float							cur_freq;
@@ -34,8 +40,10 @@ class CInventoryOwner;
 
 class CDetectorAnomaly :
 	public CInventoryItemObject,
-	public Feel::Touch
+	public Feel::Touch,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CDetectorAnomaly, CInventoryItemObject, Feel::Touch)
 	//typedef	CInventoryItemObject	inherited;
 	using inherited = CInventoryItemObject;
 public:

@@ -2,8 +2,11 @@
 
 #include "UIWindow.h"
 
-class CUIFrameLineWnd: public CUIWindow
+class CUIFrameLineWnd:
+	public CUIWindow,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIFrameLineWnd, CUIWindow)
 	typedef CUIWindow inherited;
 public:
 				 CUIFrameLineWnd	();

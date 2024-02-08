@@ -2,8 +2,11 @@
 
 #include "hud_item_object.h"
 
-class CCustomBackpack : public CHudItemObject
+class CCustomBackpack :
+	public CHudItemObject,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CCustomBackpack, CHudItemObject)
 	typedef	CHudItemObject	inherited;
 public:
 	CCustomBackpack();

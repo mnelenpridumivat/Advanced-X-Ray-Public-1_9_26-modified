@@ -2,8 +2,11 @@
 
 #include "inventory_item_object.h"
 
-class CArtefactContainer : public CInventoryItemObject
+class CArtefactContainer :
+	public CInventoryItemObject,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CArtefactContainer, CInventoryItemObject)
 	typedef CInventoryItemObject inherited;
 
 protected:

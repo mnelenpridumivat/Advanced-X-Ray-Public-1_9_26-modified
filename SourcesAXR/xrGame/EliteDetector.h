@@ -4,8 +4,11 @@
 
 class CUIArtefactDetectorElite;
 
-class CEliteDetector :public CCustomDetector
+class CEliteDetector :
+	public CCustomDetector,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CEliteDetector, CCustomDetector)
 	typedef CCustomDetector	inherited;
 public:
 					CEliteDetector				();
@@ -21,8 +24,11 @@ protected:
 
 
 
-class CScientificDetector :public CEliteDetector
+class CScientificDetector :
+	public CEliteDetector,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CScientificDetector, CEliteDetector)
 	typedef CEliteDetector	inherited;
 public:
 					CScientificDetector			();

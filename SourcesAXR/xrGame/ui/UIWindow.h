@@ -69,8 +69,11 @@ template<class _Ty, class _Other>	inline	bool operator!=(const uialloc<_Ty>&, co
 #include "uiabstract.h"
 
 
-class CUIWindow  : public CUISimpleWindow
+class CUIWindow  :
+	public CUISimpleWindow,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIWindow, CUISimpleWindow)
 public:
 				CUIWindow						();
 	virtual		~CUIWindow						();

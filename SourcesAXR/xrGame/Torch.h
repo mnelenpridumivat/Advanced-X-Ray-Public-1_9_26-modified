@@ -7,7 +7,11 @@
 
 class CLAItem;
 
-class CTorch : public CInventoryItemObject {
+class CTorch :
+	public CInventoryItemObject, 
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CTorch, CInventoryItemObject)
 private:
     typedef	CInventoryItemObject	inherited;
 

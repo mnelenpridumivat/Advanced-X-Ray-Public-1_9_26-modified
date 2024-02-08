@@ -2,8 +2,11 @@
 #include "CustomDetector.h"
 class CUIArtefactDetectorAdv;
 
-class CAdvancedDetector :public CCustomDetector
+class CAdvancedDetector :
+	public CCustomDetector,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CAdvancedDetector, CCustomDetector)
 	typedef CCustomDetector	inherited;
 public:
 					CAdvancedDetector			();

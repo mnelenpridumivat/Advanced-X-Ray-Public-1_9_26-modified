@@ -10,15 +10,20 @@ class CEliteDetector;
 class CUIXml;
 class CLAItem;
 
-class CUIArtefactDetectorBase
+class CUIArtefactDetectorBase:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CUIArtefactDetectorBase)
 public:
 	virtual			~CUIArtefactDetectorBase	()	{};
 	virtual void	update						()	{};
 };
 
-class CUIDetectorWave :public CUIFrameLineWnd
+class CUIDetectorWave :
+	public CUIFrameLineWnd,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIDetectorWave, CUIFrameLineWnd)
 	typedef CUIFrameLineWnd inherited;
 protected:
 	float			m_curr_v;
@@ -30,8 +35,11 @@ public:
 	void	Update				() override;
 };
 
-class CUIArtefactDetectorSimple :public CUIArtefactDetectorBase
+class CUIArtefactDetectorSimple :
+	public CUIArtefactDetectorBase,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIArtefactDetectorSimple, CUIArtefactDetectorBase)
 	typedef CUIArtefactDetectorBase	inherited;
 
 	CSimpleDetector*	m_parent;
@@ -52,8 +60,12 @@ public:
 	void				construct					(CSimpleDetector* p);
 };
 
-class CUIArtefactDetectorElite :public CUIArtefactDetectorBase, public CUIWindow
+class CUIArtefactDetectorElite :
+	public CUIArtefactDetectorBase,
+	public CUIWindow,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUIArtefactDetectorElite, CUIArtefactDetectorBase, CUIWindow)
 	typedef CUIArtefactDetectorBase	inherited;
 
 	CUIWindow*			m_wrk_area;
@@ -80,8 +92,11 @@ public:
 };
 
 
-class CUIArtefactDetectorAdv :public CUIArtefactDetectorBase
+class CUIArtefactDetectorAdv :
+	public CUIArtefactDetectorBase,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIArtefactDetectorAdv, CUIArtefactDetectorBase)
 	typedef CUIArtefactDetectorBase	inherited;
 
 	CAdvancedDetector*		m_parent;

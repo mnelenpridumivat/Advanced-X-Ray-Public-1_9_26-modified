@@ -13,8 +13,11 @@ class CCustomZone;
 class CInventoryOwner;
 class CLAItem;
 
-struct ITEM_TYPE
+struct ITEM_TYPE :
+	public IMetaClass
 {
+	DECLARE_METACLASS(ITEM_TYPE)
+public:
 	Fvector2			freq; //min,max
 	HUD_SOUND_ITEM		detect_snds;
 
@@ -23,8 +26,11 @@ struct ITEM_TYPE
 };
 
 //описание зоны, обнаруженной детектором
-struct ITEM_INFO
+struct ITEM_INFO:
+	public IMetaClass
 {
+	DECLARE_METACLASS(ITEM_INFO)
+public:
 	ITEM_TYPE*						curr_ref;
 	float							snd_time;
 	//текущая частота работы датчика
@@ -37,8 +43,11 @@ struct ITEM_INFO
 };
 
 template <typename K> 
-class CDetectList : public Feel::Touch
+class CDetectList :
+	public Feel::Touch,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CDetectList, Feel::Touch)
 protected:
 	typedef xr_map<shared_str, ITEM_TYPE>	TypesMap;
 	typedef typename TypesMap::iterator		TypesMapIt;
@@ -105,8 +114,11 @@ public:
 };
 
 template <typename T>
-class CAfList  :public CDetectList<T>
+class CAfList  :
+	public CDetectList<T>,
+	public IMetaClass
 {
+	DECLARE_METACLASS(CAfList, CDetectList)
 protected:
 	BOOL 	feel_touch_contact	(CObject* O) override;
 public:
@@ -116,8 +128,11 @@ public:
 
 class CUIArtefactDetectorBase;
 
-class CCustomDetector :		public CHudItemObject
+class CCustomDetector :
+	public CHudItemObject,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CCustomDetector, CHudItemObject)
 	typedef	CHudItemObject	inherited;
 protected:
 	CUIArtefactDetectorBase*			m_ui;
@@ -218,8 +233,11 @@ protected:
 	bool			install_upgrade_impl(LPCSTR section, bool test) override;
 };
 
-class CZoneList : public CDetectList<CCustomZone>
+class CZoneList :
+	public CDetectList<CCustomZone>,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CZoneList, CDetectList)
 protected:
 	BOOL	feel_touch_contact( CObject* O ) override;
 public:
