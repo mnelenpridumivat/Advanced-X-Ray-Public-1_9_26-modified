@@ -7,7 +7,11 @@
 
 #include "script_export_space.h"
 
-class CHairsZone : public CVisualZone {
+class CHairsZone :
+	public CVisualZone,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CHairsZone, CVisualZone)
 typedef				CVisualZone		inherited;		
 public:
 void		Affect				(SZoneObjectInfo* O) override;

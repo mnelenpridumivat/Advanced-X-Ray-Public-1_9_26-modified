@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "pch_script.h"
 
 #include "Flamethrower.h"
@@ -34,6 +35,7 @@ ENGINE_API  extern float psHUD_FOV_def;
 
 CFlamethrower::CFlamethrower(ESoundTypes eSoundType) : CWeapon()
 {
+#if 0
 	m_eSoundShow = static_cast<ESoundTypes>(SOUND_TYPE_ITEM_TAKING | eSoundType);
 	m_eSoundHide = static_cast<ESoundTypes>(SOUND_TYPE_ITEM_HIDING | eSoundType);
 	m_eSoundShot = static_cast<ESoundTypes>(SOUND_TYPE_WEAPON_SHOOTING | eSoundType);
@@ -55,6 +57,7 @@ CFlamethrower::CFlamethrower(ESoundTypes eSoundType) : CWeapon()
 	bHasBulletsToHide = false;
 
 	m_sSndShotCurrent = nullptr;
+#endif
 }
 
 CFlamethrower::~CFlamethrower()
@@ -62,7 +65,7 @@ CFlamethrower::~CFlamethrower()
 	// sounds
 }
 
-
+#if 0
 void CFlamethrower::net_Destroy()
 {
 	inherited::net_Destroy();
@@ -1743,3 +1746,4 @@ void CFlamethrower::CheckMagazine()
 		m_bNeedBulletInGun = false;
 	}
 }
+#endif

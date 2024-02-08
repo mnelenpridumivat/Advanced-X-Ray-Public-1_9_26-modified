@@ -1,7 +1,12 @@
 #pragma once
 
-class ICollisionDamageReceiver
+#include "../xrCore/_types.h"
+#include "../xrGame/Metaclass.h"
+
+class ICollisionDamageReceiver:
+	public IMetaClass
 {
+	DECLARE_METACLASS(ICollisionDamageReceiver)
 public:
 
 	virtual		void	CollisionHit( u16 source_id, u16 bone_id, float power, const Fvector &dir, Fvector &pos )	=0;

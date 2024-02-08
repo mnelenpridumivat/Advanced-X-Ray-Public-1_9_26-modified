@@ -11,6 +11,7 @@ class CFlamethrower :
 	DECLARE_METACLASS1(CFlamethrower, CWeapon)
 private:
 	typedef CWeapon inherited;
+#if 0
 protected:
 	//звук текущего выстрела
 	shared_str		m_sSndShotCurrent;
@@ -63,11 +64,11 @@ protected:
 	virtual void	state_Idle(float dt);
 	virtual void	state_MagEmpty(float dt);
 	virtual void	state_Misfire(float dt);
-
+#endif
 public:
 	CFlamethrower(ESoundTypes eSoundType = SOUND_TYPE_WEAPON_SUBMACHINEGUN);
 	~CFlamethrower() override;
-
+#if 0
 	void	Load(LPCSTR section) override;
 	CFlamethrower* cast_flamethrower() override { return this; }
 
@@ -189,4 +190,5 @@ protected:
 		u16 parent_id,
 		u16 weapon_id,
 		bool send_hit) override;
+#endif
 };

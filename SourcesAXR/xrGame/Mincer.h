@@ -16,8 +16,10 @@
 
 class CMincer :	
 	public CBaseGraviZone,
-	public CPHDestroyableNotificator
+	public CPHDestroyableNotificator,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CMincer, CBaseGraviZone, CPHDestroyableNotificator)
 private:
 	typedef CBaseGraviZone inherited;
 	CTeleWhirlwind m_telekinetics;

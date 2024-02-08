@@ -2,8 +2,10 @@
 #include "CustomZone.h"
 
 class CNoGravityZone :
-	public CCustomZone
+	public CCustomZone,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CNoGravityZone, CCustomZone)
 typedef CCustomZone inherited;
 public:
 protected:

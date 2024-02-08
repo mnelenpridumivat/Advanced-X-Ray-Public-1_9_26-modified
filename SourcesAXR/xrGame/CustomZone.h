@@ -11,8 +11,11 @@ class CZoneEffector;
 #define SMALL_OBJECT_RADIUS 0.6f
 
 //информация о объекте, находящемся в зоне
-struct SZoneObjectInfo
+struct SZoneObjectInfo:
+	public IMetaClass
 {
+	DECLARE_METACLASS(SZoneObjectInfo)
+public:
 	SZoneObjectInfo():object(NULL),zone_ignore(false),dw_time_in_zone(0),f_time_affected(Device.fTimeGlobal),small_object(false),nonalive_object(false) {}
 	CGameObject*			object; 
 	bool					small_object;

@@ -6,8 +6,10 @@
 class CPhysicsShellHolder;
 class CSE_Abstract;
 class CPHDestroyableNotificate;
-class CPHDestroyableNotificator
+class CPHDestroyableNotificator:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CPHDestroyableNotificator)
 
 public:
 	virtual		void						NotificateDestroy			(CPHDestroyableNotificate *dn)=0;
@@ -15,9 +17,10 @@ public:
 
 
 class	CPHDestroyable :
-public  CPHDestroyableNotificator
-
+	public  CPHDestroyableNotificator,
+	public IMetaClass
 {
+	DECLARE_METACLASS(CPHDestroyable)
 public:			
 			xr_vector<shared_str>						m_destroyed_obj_visual_names																											;
 private:

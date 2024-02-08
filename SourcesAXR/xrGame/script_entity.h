@@ -21,7 +21,10 @@ class CCustomMonster;
 
 using namespace ScriptEntity;
 
-class CScriptEntity {
+class CScriptEntity :
+	public IMetaClass
+{
+	DECLARE_METACLASS(CScriptEntity)
 public:
 	struct CSavedSound {
 		u16					m_game_object_id;

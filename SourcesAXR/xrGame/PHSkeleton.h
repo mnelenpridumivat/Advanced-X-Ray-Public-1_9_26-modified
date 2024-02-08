@@ -9,8 +9,10 @@ class CSE_Abstract;
 class CSE_PHSkeleton;
 class NET_Packet;
 class CPHSkeleton :
- public CPHDestroyableNotificate
+	public CPHDestroyableNotificate,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CPHSkeleton, CPHDestroyableNotificate)
 	bool				b_removing;
 	static u32			existence_time;
 	u32					m_remove_time;

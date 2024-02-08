@@ -8,7 +8,10 @@
 
 #pragma once
 
-class CDamageManager {
+class CDamageManager:
+	public IMetaClass
+{
+	DECLARE_METACLASS(CDamageManager)
 protected:
 	float				m_default_hit_factor;
 	float				m_default_wound_factor;

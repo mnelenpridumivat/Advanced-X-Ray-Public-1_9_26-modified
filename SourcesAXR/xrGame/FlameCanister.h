@@ -14,7 +14,7 @@ class CFlameCanister :
 public:
 	CFlameCanister(void);
 	~CFlameCanister(void) override;
-
+#if 0
 	CFlameCanister* cast_flame_canister() override { return this; }
 
 	void					Load(LPCSTR section) override;
@@ -37,4 +37,5 @@ public:
 
 public:
 	CInventoryItem* can_make_killing(const CInventory* inventory) const override;
+#endif
 };

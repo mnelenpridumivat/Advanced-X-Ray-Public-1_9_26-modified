@@ -12,7 +12,12 @@
 #include "../xrEngine/feel_touch.h"
 #include "game_graph_space.h"
 
-class CLevelChanger : public CGameObject, public Feel::Touch {
+class CLevelChanger :
+	public CGameObject,
+	public Feel::Touch,
+	public IMetaClass
+{
+	DECLARE_METACLASS2(CLevelChanger, CGameObject, Feel::Touch)
 private:
 	typedef	CGameObject	inherited;
 

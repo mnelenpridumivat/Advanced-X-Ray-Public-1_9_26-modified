@@ -1,8 +1,11 @@
 #pragma once
 #include "MosquitoBald.h"
 
-class CZoneCampfire :public CMosquitoBald
+class CZoneCampfire :
+	public CMosquitoBald,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CZoneCampfire, CMosquitoBald)
 	typedef CMosquitoBald	inherited;
 protected:
 	CParticlesObject*		m_pEnablingParticles;

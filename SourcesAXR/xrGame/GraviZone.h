@@ -14,8 +14,11 @@
 
 
 
-class CBaseGraviZone : public CCustomZone
+class CBaseGraviZone :
+	public CCustomZone,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CBaseGraviZone, CCustomZone)
 private:
 	typedef		CCustomZone					inherited;
 

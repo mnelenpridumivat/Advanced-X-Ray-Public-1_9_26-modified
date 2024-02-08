@@ -7,8 +7,10 @@ class CPhysicsShellHolder;
 //struct SGameMtl;
 
 class CPHCollisionDamageReceiver:
-	public ICollisionDamageReceiver
+	public ICollisionDamageReceiver,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CPHCollisionDamageReceiver, ICollisionDamageReceiver)
 typedef std::pair<u16,float> SControledBone;
 DEFINE_VECTOR(SControledBone,DAMAGE_CONTROLED_BONES_V,DAMAGE_BONES_I);
 struct SFind{u16 id;SFind(u16 _id){id=_id;};bool operator () (const SControledBone& cb){return cb.first==id;}};

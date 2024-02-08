@@ -20,7 +20,11 @@ class CHelicopterMovManager;
 class CHelicopter;
 
 enum EHeliHuntState{eEnemyNone,eEnemyPoint,eEnemyEntity};
-struct SHeliEnemy{
+struct SHeliEnemy:
+	public IMetaClass
+{
+	DECLARE_METACLASS(SHeliEnemy)
+public:
 	EHeliHuntState					type;
 	Fvector							destEnemyPos;
 	u16								destEnemyID;
@@ -36,7 +40,11 @@ struct SHeliEnemy{
 };
 
 enum EHeliBodyState{eBodyByPath,eBodyToPoint};
-struct SHeliBodyState{
+struct SHeliBodyState :
+	public IMetaClass
+{
+	DECLARE_METACLASS(SHeliBodyState)
+public:
 	CHelicopter*					parent;
 	EHeliBodyState					type;
 	//settings, constants
@@ -60,8 +68,16 @@ struct SHeliBodyState{
 };
 
 enum EHeilMovementState{eMovNone,eMovToPoint,eMovPatrolPath,eMovRoundPath,eMovLanding,eMovTakeOff};
-struct SHeliMovementState{
-	struct STmpPt{
+struct SHeliMovementState :
+	public IMetaClass
+{
+	DECLARE_METACLASS(SHeliMovementState)
+public:
+	struct STmpPt :
+		public IMetaClass
+	{
+		DECLARE_METACLASS(SHeliMovementState::STmpPt)
+	public:
 		Fvector		point;
 		float		dir_h;
 		STmpPt		(const Fvector& p, const float h):point(p),dir_h(h){};
@@ -128,18 +144,20 @@ public:
 	void	net_Destroy					();
 };
 
-class CHelicopter : 	public CEntity,
-						public CShootingObject,
-						public CRocketLauncher,
-						public CPHSkeleton,
-						public CPHDestroyable,
-						public CHitImmunity,
-						public CExplosive
-					#ifdef DEBUG
-						,public pureRender
-					#endif
-
+class CHelicopter :
+	public CEntity,
+	public CShootingObject,
+	public CRocketLauncher,
+	public CPHSkeleton,
+	public CPHDestroyable,
+	public CHitImmunity,
+	public CExplosive
+#ifdef DEBUG
+	,public pureRender
+#endif,
+	,public IMetaClass
 {
+	DECLARE_METACLASS7(CHelicopter, CEntity, CShootingObject, CRocketLauncher, CPHSkeleton, CPHDestroyable, CHitImmunity, CExplosive)
 	typedef CEntity inherited;
 public:
 	enum EHeliState {

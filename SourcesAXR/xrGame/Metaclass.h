@@ -23,14 +23,17 @@ public: \
 	DECLARE_OBJECT_ISA() \
 private:\
 
+#define ADD_PARENT_CHECKED(ClassName, Parent) \
+	static_assert(std::is_base_of_v<Parent, ClassName> == true); \
+	Instance->AddParent(Parent::StaticClass()); \
+
 #define DECLARE_METACLASS1(ClassName, Parent1) \
 public: \
 	static CMetaclass* StaticClass(){ \
 		static CMetaclass* Instance = nullptr; \
 		if (!Instance) { \
 			Instance = new CMetaclass(#ClassName); \
-			static_assert(std::is_base_of_v<Parent1, ClassName> == true); \
-			Instance->AddParent(Parent1::StaticClass()); \
+			ADD_PARENT_CHECKED(ClassName, Parent1) \
 		} \
 		return Instance; \
 	} \
@@ -44,10 +47,8 @@ public: \
 		static CMetaclass* Instance = nullptr; \
 		if (!Instance) { \
 			Instance = new CMetaclass(#ClassName); \
-			static_assert(std::is_base_of_v<Parent1, ClassName> == true); \
-			Instance->AddParent(Parent1::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent2, ClassName> == true); \
-			Instance->AddParent(Parent2::StaticClass()); \
+			ADD_PARENT_CHECKED(ClassName, Parent1) \
+			ADD_PARENT_CHECKED(ClassName, Parent2) \
 		} \
 		return Instance; \
 	} \
@@ -61,12 +62,9 @@ public: \
 		static CMetaclass* Instance = nullptr; \
 		if (!Instance) { \
 			Instance = new CMetaclass(#ClassName); \
-			static_assert(std::is_base_of_v<Parent1, ClassName> == true); \
-			Instance->AddParent(Parent1::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent2, ClassName> == true); \
-			Instance->AddParent(Parent2::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent3, ClassName> == true); \
-			Instance->AddParent(Parent3::StaticClass()); \
+			ADD_PARENT_CHECKED(ClassName, Parent1) \
+			ADD_PARENT_CHECKED(ClassName, Parent2) \
+			ADD_PARENT_CHECKED(ClassName, Parent3) \
 		} \
 		return Instance; \
 	} \
@@ -80,14 +78,10 @@ public: \
 		static CMetaclass* Instance = nullptr; \
 		if (!Instance) { \
 			Instance = new CMetaclass(#ClassName); \
-			static_assert(std::is_base_of_v<Parent1, ClassName> == true); \
-			Instance->AddParent(Parent1::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent2, ClassName> == true); \
-			Instance->AddParent(Parent2::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent3, ClassName> == true); \
-			Instance->AddParent(Parent3::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent4, ClassName> == true); \
-			Instance->AddParent(Parent4::StaticClass()); \
+			ADD_PARENT_CHECKED(ClassName, Parent1) \
+			ADD_PARENT_CHECKED(ClassName, Parent2) \
+			ADD_PARENT_CHECKED(ClassName, Parent3) \
+			ADD_PARENT_CHECKED(ClassName, Parent4) \
 		} \
 		return Instance; \
 	} \
@@ -101,16 +95,11 @@ public: \
 		static CMetaclass* Instance = nullptr; \
 		if (!Instance) { \
 			Instance = new CMetaclass(#ClassName); \
-			static_assert(std::is_base_of_v<Parent1, ClassName> == true); \
-			Instance->AddParent(Parent1::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent2, ClassName> == true); \
-			Instance->AddParent(Parent2::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent3, ClassName> == true); \
-			Instance->AddParent(Parent3::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent4, ClassName> == true); \
-			Instance->AddParent(Parent4::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent5, ClassName> == true); \
-			Instance->AddParent(Parent5::StaticClass()); \
+			ADD_PARENT_CHECKED(ClassName, Parent1) \
+			ADD_PARENT_CHECKED(ClassName, Parent2) \
+			ADD_PARENT_CHECKED(ClassName, Parent3) \
+			ADD_PARENT_CHECKED(ClassName, Parent4) \
+			ADD_PARENT_CHECKED(ClassName, Parent5) \
 		} \
 		return Instance; \
 	} \
@@ -124,18 +113,12 @@ public: \
 		static CMetaclass* Instance = nullptr; \
 		if (!Instance) { \
 			Instance = new CMetaclass(#ClassName); \
-			static_assert(std::is_base_of_v<Parent1, ClassName> == true); \
-			Instance->AddParent(Parent1::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent2, ClassName> == true); \
-			Instance->AddParent(Parent2::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent3, ClassName> == true); \
-			Instance->AddParent(Parent3::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent4, ClassName> == true); \
-			Instance->AddParent(Parent4::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent5, ClassName> == true); \
-			Instance->AddParent(Parent5::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent6, ClassName> == true); \
-			Instance->AddParent(Parent6::StaticClass()); \
+			ADD_PARENT_CHECKED(ClassName, Parent1) \
+			ADD_PARENT_CHECKED(ClassName, Parent2) \
+			ADD_PARENT_CHECKED(ClassName, Parent3) \
+			ADD_PARENT_CHECKED(ClassName, Parent4) \
+			ADD_PARENT_CHECKED(ClassName, Parent5) \
+			ADD_PARENT_CHECKED(ClassName, Parent6) \
 		} \
 		return Instance; \
 	} \
@@ -149,20 +132,37 @@ public: \
 		static CMetaclass* Instance = nullptr; \
 		if (!Instance) { \
 			Instance = new CMetaclass(#ClassName); \
-			static_assert(std::is_base_of_v<Parent1, ClassName> == true); \
-			Instance->AddParent(Parent1::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent2, ClassName> == true); \
-			Instance->AddParent(Parent2::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent3, ClassName> == true); \
-			Instance->AddParent(Parent3::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent4, ClassName> == true); \
-			Instance->AddParent(Parent4::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent5, ClassName> == true); \
-			Instance->AddParent(Parent5::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent6, ClassName> == true); \
-			Instance->AddParent(Parent6::StaticClass()); \
-			static_assert(std::is_base_of_v<Parent7, ClassName> == true); \
-			Instance->AddParent(Parent7::StaticClass()); \
+			ADD_PARENT_CHECKED(ClassName, Parent1) \
+			ADD_PARENT_CHECKED(ClassName, Parent2) \
+			ADD_PARENT_CHECKED(ClassName, Parent3) \
+			ADD_PARENT_CHECKED(ClassName, Parent4) \
+			ADD_PARENT_CHECKED(ClassName, Parent5) \
+			ADD_PARENT_CHECKED(ClassName, Parent6) \
+			ADD_PARENT_CHECKED(ClassName, Parent7) \
+		} \
+		return Instance; \
+	} \
+	DECLARE_NONSTATIC_CLASS_GETTER() \
+	DECLARE_OBJECT_ISA() \
+private:\
+
+#define DECLARE_METACLASS11(ClassName, Parent1, Parent2, Parent3, Parent4, Parent5, Parent6, Parent7, Parent8, Parent9, Parent10, Parent11) \
+public: \
+	static CMetaclass* StaticClass(){ \
+		static CMetaclass* Instance = nullptr; \
+		if (!Instance) { \
+			Instance = new CMetaclass(#ClassName); \
+			ADD_PARENT_CHECKED(ClassName, Parent1) \
+			ADD_PARENT_CHECKED(ClassName, Parent2) \
+			ADD_PARENT_CHECKED(ClassName, Parent3) \
+			ADD_PARENT_CHECKED(ClassName, Parent4) \
+			ADD_PARENT_CHECKED(ClassName, Parent5) \
+			ADD_PARENT_CHECKED(ClassName, Parent6) \
+			ADD_PARENT_CHECKED(ClassName, Parent7) \
+			ADD_PARENT_CHECKED(ClassName, Parent8) \
+			ADD_PARENT_CHECKED(ClassName, Parent9) \
+			ADD_PARENT_CHECKED(ClassName, Parent10) \
+			ADD_PARENT_CHECKED(ClassName, Parent11) \
 		} \
 		return Instance; \
 	} \

@@ -2,8 +2,11 @@
 #include "customzone.h"
 #include "script_export_space.h"
 
-class CRadioactiveZone : public CCustomZone
+class CRadioactiveZone :
+	public CCustomZone,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CRadioactiveZone, CCustomZone)
 private:
 	typedef	CCustomZone	inherited;
 public:

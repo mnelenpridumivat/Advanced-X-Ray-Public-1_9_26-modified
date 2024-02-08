@@ -3,8 +3,10 @@
 #include "script_export_space.h"
 
 class CMagnetZone :
-    public CCustomZone
+    public CCustomZone,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CMagnetZone, CCustomZone)
 private:
 	typedef		CCustomZone					inherited;
 

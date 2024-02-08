@@ -3,8 +3,10 @@
 class CSE_Abstract;
 class CPhysicsShellHolder;
 
-class CPHDestroyableNotificate
+class CPHDestroyableNotificate:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CPHDestroyableNotificate)
 public:
 	virtual CPHDestroyableNotificate *		cast_phdestroyable_notificate			()						{return this;}
 	virtual CPhysicsShellHolder*			PPhysicsShellHolder						()						=0;

@@ -49,8 +49,10 @@ class CCar :
 	public CPHCollisionDamageReceiver,
 	public CHitImmunity,
 	public CExplosive,
-	public CDelayedActionFuse
+	public CDelayedActionFuse,
+	public IMetaClass
 {
+	DECLARE_METACLASS11(CCar, CEntity, CScriptEntity, CPHUpdateObject, CHolderCustom, CPHSkeleton, CDamagableItem, CPHDestroyable, CPHCollisionDamageReceiver, CHitImmunity, CExplosive, CDelayedActionFuse)
 private:
 	collide::rq_results		RQR;
 
@@ -149,8 +151,11 @@ public:
 	bool	b_exploded;
 
 	struct SWheel: 
-	public CDamagableHealthItem
+		public CDamagableHealthItem,
+		public IMetaClass
 	{
+		DECLARE_METACLASS1(CCar::SWheel, CDamagableHealthItem)
+	public:
 		typedef		CDamagableHealthItem inherited;
 		u16									bone_id				;
 		bool								inited				;
@@ -191,8 +196,11 @@ public:
 			inited=false;
 		}
 	};
-	struct SWheelDrive  
+	struct SWheelDrive:
+		public IMetaClass
 	{
+		DECLARE_METACLASS(CCar::SWheelDrive)
+	public:
 		SWheel* pwheel;
 		float	pos_fvd;
 		float	gear_factor;
@@ -203,8 +211,11 @@ public:
 		float	ASpeed		()						;
 		void	Load		(LPCSTR /*section*/){}	;
 	};
-	struct SWheelSteer 
+	struct SWheelSteer :
+		public IMetaClass
 	{
+		DECLARE_METACLASS(CCar::SWheelSteer)
+	public:
 		SWheel* pwheel;
 		float pos_right;
 		float lo_limit;
@@ -221,8 +232,11 @@ public:
 		void	 Limit		()						;
 		void	 Load		(LPCSTR /*section*/){}	;
 	};
-	struct SWheelBreak 
+	struct SWheelBreak :
+		public IMetaClass
 	{
+		DECLARE_METACLASS(CCar::SWheelBreak)
+	public:
 		SWheel			*pwheel							;
 		float			break_torque					;
 		float			hand_break_torque				;
@@ -233,8 +247,11 @@ public:
 		void		 Load			(LPCSTR section)	;
 	};
 
-	struct SExhaust
+	struct SExhaust :
+		public IMetaClass
 	{
+		DECLARE_METACLASS(CCar::SExhaust)
+	public:
 		u16					bone_id;
 		Fmatrix				transform;
 		//Fvector				velocity;
@@ -258,8 +275,11 @@ public:
 
 	struct SDoor;
 	struct SDoor :
-	public CDamagableHealthItem
+		public CDamagableHealthItem,
+		public IMetaClass
 	{
+		DECLARE_METACLASS1(CCar::SDoor, CDamagableHealthItem)
+	public:
 		typedef CDamagableHealthItem inherited;
 		u16 bone_id;
 		CCar* pcar;
@@ -271,8 +291,11 @@ public:
 		float			opened_angle;
 		float			closed_angle;
 		u32				open_time;
-		struct SDoorway
+		struct SDoorway :
+			public IMetaClass
 		{
+			DECLARE_METACLASS(CCar::SDoor::SDoorway)
+		public:
 		Fvector2		door_plane_ext;
 		_vector2<int>	door_plane_axes;
 			SDoor			*door;
@@ -332,8 +355,11 @@ public:
 		}
 	};
 
-	struct SCarSound
+	struct SCarSound:
+		public IMetaClass
 	{
+		DECLARE_METACLASS(CCar::SCarSound)
+	public:
 		ref_sound					snd_engine							;
 		ref_sound					snd_engine_start					;
 		ref_sound					snd_engine_stop						;

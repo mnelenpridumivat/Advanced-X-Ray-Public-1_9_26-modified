@@ -13,8 +13,10 @@
 
 class CScriptObject : 
 	public CGameObject,
-	public CScriptEntity
+	public CScriptEntity,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CScriptObject, CGameObject, CScriptEntity)
 public:
 								CScriptObject			();
 								~CScriptObject			() override;

@@ -1,5 +1,7 @@
-class CDamagableItem
+class CDamagableItem:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CDamagableItem)
 
 protected:
 	u16								m_levels_num										;
@@ -18,8 +20,10 @@ protected:
 };
 
 class CDamagableHealthItem : 
-	public CDamagableItem
+	public CDamagableItem,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CDamagableHealthItem, CDamagableItem)
 	typedef		CDamagableItem		inherited											;
 	float							m_health											;
 public:

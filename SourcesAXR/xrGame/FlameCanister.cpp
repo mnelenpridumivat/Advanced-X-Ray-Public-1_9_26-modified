@@ -9,6 +9,7 @@ CFlameCanister::~CFlameCanister(void)
 {
 }
 
+#if 0
 void CFlameCanister::Load(LPCSTR section)
 {
 	inherited::Load(section);
@@ -152,3 +153,4 @@ u32 CFlameCanister::Cost() const
 
 	return res;
 }
+#endif

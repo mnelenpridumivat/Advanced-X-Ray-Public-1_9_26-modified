@@ -15,9 +15,11 @@ class   CPHMovementControl;
 class	CHudItem;
 
 class CEntity : 
-		public CPhysicsShellHolder,
-		public CDamageManager
+	public CPhysicsShellHolder,
+	public CDamageManager,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CEntity, CPhysicsShellHolder, CDamageManager)
 	friend class CEntityCondition;
 private:
 	typedef	CPhysicsShellHolder		inherited;			
