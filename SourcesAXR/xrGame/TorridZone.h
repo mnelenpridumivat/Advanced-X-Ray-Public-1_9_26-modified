@@ -3,8 +3,11 @@
 
 class CObjectAnimator;
 
-class CTorridZone :public CMosquitoBald
+class CTorridZone :
+	public CMosquitoBald,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CTorridZone, CMosquitoBald)
 private:
 	typedef	CCustomZone	inherited;
 	CObjectAnimator		*m_animator;

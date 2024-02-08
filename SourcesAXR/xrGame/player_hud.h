@@ -9,14 +9,20 @@ class player_hud;
 class CHudItem;
 class CMotionDef;
 
-struct motion_descr
+struct motion_descr :
+	public IMetaClass
 {
+	DECLARE_METACLASS(motion_descr)
+public:
 	MotionID		mid;
 	shared_str		name;
 };
 
-struct player_hud_motion
+struct player_hud_motion :
+	public IMetaClass
 {
+	DECLARE_METACLASS(player_hud_motion)
+public:
 	shared_str				m_alias_name;
 	shared_str				m_base_name;
 	shared_str				m_additional_name;
@@ -24,21 +30,30 @@ struct player_hud_motion
 	xr_vector<motion_descr>	m_animations;
 };
 
-struct player_hud_motion_container
+struct player_hud_motion_container :
+	public IMetaClass
 {
+	DECLARE_METACLASS(player_hud_motion_container)
+public:
 	xr_vector<player_hud_motion>	m_anims;
 	player_hud_motion*				find_motion(const shared_str& name);
 	void		load				(IKinematicsAnimated* model, const shared_str& sect);
 };
 
-struct hand_motions
+struct hand_motions :
+	public IMetaClass
 {
+	DECLARE_METACLASS(hand_motions)
+public:
 	LPCSTR section;
 	player_hud_motion_container pm;
 };
 
-struct item_models
+struct item_models :
+	public IMetaClass
 {
+	DECLARE_METACLASS(item_models)
+public:
 	LPCSTR name;
 	IKinematicsAnimated* model;
 };
@@ -54,8 +69,11 @@ enum eMovementLayers
 	move_anms_end
 };
 
-struct movement_layer
+struct movement_layer :
+	public IMetaClass
 {
+	DECLARE_METACLASS(movement_layer)
+public:
 	CObjectAnimator* anm;
 	float blend_amount[2];
 	bool active;
@@ -124,8 +142,11 @@ struct movement_layer
 	}
 };
 
-struct script_layer
+struct script_layer :
+	public IMetaClass
 {
+	DECLARE_METACLASS(script_layer)
+public:
 	LPCSTR m_name;
 	CObjectAnimator* anm;
 	float blend_amount;
@@ -177,8 +198,11 @@ struct script_layer
 	}
 };
 
-struct hud_item_measures
+struct hud_item_measures :
+	public IMetaClass
 {
+	DECLARE_METACLASS(hud_item_measures)
+public:
 	enum{e_fire_point=(1<<0), e_fire_point2=(1<<1), e_shell_point=(1<<2), e_16x9_mode_now=(1<<3)};
 	Flags8							m_prop_flags;
 
@@ -220,8 +244,11 @@ struct hud_item_measures
 	inertion_params m_inertion_params; //--#SM+#--
 };
 
-struct attachable_hud_item
+struct attachable_hud_item :
+	public IMetaClass
 {
+	DECLARE_METACLASS(attachable_hud_item)
+public:
 	player_hud*						m_parent;
 	CHudItem*						m_parent_hud_item;
 	shared_str						m_sect_name;
@@ -263,8 +290,10 @@ struct attachable_hud_item
 
 };
 
-class player_hud
+class player_hud :
+	public IMetaClass
 {
+	DECLARE_METACLASS(player_hud)
 public: 
 					player_hud			();
 					~player_hud			();

@@ -9,7 +9,11 @@
 #include "customoutfit.h"
 #include "script_export_space.h"
 
-class CStalkerOutfit : public CCustomOutfit {
+class CStalkerOutfit :
+	public CCustomOutfit,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CStalkerOutfit, CCustomOutfit)
 private:
     typedef	CCustomOutfit inherited;
 public:

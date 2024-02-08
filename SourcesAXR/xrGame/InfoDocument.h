@@ -9,7 +9,11 @@
 #include "inventory_item_object.h"
 #include "InfoPortionDefs.h"
 
-class CInfoDocument: public CInventoryItemObject {
+class CInfoDocument:
+	public CInventoryItemObject,
+    public IMetaClass
+{
+    DECLARE_METACLASS1(CInfoDocument, CInventoryItemObject)
 private:
     typedef	CInventoryItemObject inherited;
 public:

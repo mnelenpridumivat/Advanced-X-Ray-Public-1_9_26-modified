@@ -11,7 +11,12 @@
 #include "GameObject.h"
 #include "../xrEngine/feel_touch.h"
 
-class CTeamBaseZone : public CGameObject, public Feel::Touch {
+class CTeamBaseZone :
+	public CGameObject,
+	public Feel::Touch,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CTeamBaseZone, CGameObject, Feel::Touch)
 protected:
 	u8		m_Team;
 public:

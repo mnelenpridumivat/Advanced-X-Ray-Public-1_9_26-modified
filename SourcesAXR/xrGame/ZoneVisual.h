@@ -1,8 +1,10 @@
 #pragma once
 
 class CVisualZone :
-	public CCustomZone
+	public CCustomZone,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CVisualZone, CCustomZone)
 	typedef				CCustomZone		inherited	;
 	MotionID			m_idle_animation			;
 	MotionID			m_attack_animation			;

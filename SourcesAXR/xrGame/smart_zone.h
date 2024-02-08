@@ -11,7 +11,11 @@
 #include "space_restrictor.h"
 #include "script_export_space.h"
 
-class CSmartZone : public CSpaceRestrictor {
+class CSmartZone :
+	public CSpaceRestrictor,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CSmartZone, CSpaceRestrictor)
 public:
 	bool	register_schedule	() const override {return true;}
 	DECLARE_SCRIPT_REGISTER_FUNCTION

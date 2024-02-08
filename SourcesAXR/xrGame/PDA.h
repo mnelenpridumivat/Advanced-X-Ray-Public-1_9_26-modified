@@ -16,8 +16,10 @@ DEF_VECTOR(PDA_LIST, CPda*);
 
 class CPda :
 	public CHudItemObject,
-	public Feel::Touch
+	public Feel::Touch,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CPda, CHudItemObject, Feel::Touch)
 	typedef CHudItemObject inherited;
 public:
 	CPda();

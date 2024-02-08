@@ -15,7 +15,12 @@
 
 class CScriptGameObject;
 
-class CScriptZone : public CSpaceRestrictor, public Feel::Touch {
+class CScriptZone :
+	public CSpaceRestrictor,
+	public Feel::Touch,
+	public IMetaClass
+{
+	DECLARE_METACLASS2(CScriptZone, CSpaceRestrictor, Feel::Touch)
 public:
 	typedef	CSpaceRestrictor inherited;
 

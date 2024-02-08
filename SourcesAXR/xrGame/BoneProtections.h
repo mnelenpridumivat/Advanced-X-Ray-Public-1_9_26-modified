@@ -2,8 +2,16 @@
 
 class IKinematics;
 
-struct SBoneProtections{
-	struct BoneProtection {
+struct SBoneProtections :
+	public IMetaClass
+{
+	DECLARE_METACLASS(SBoneProtections)
+public:
+	struct BoneProtection :
+		public IMetaClass
+	{
+		DECLARE_METACLASS(SBoneProtections::BoneProtection)
+	public:
 		float		koeff;
 		float		armor;
 		BOOL		BonePassBullet;

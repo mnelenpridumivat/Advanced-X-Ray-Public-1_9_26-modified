@@ -12,7 +12,11 @@
 #include "restriction_space.h"
 #include "script_export_space.h"
 
-class CSpaceRestrictor : public CGameObject {
+class CSpaceRestrictor :
+	public CGameObject,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CSpaceRestrictor, CGameObject)
 private:
 	typedef CGameObject			inherited;
 

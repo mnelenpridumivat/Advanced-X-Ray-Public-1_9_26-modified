@@ -4,7 +4,11 @@
 
 struct SBoneProtections;
 
-class CCustomOutfit: public CInventoryItemObject {
+class CCustomOutfit:
+	public CInventoryItemObject,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CCustomOutfit, CInventoryItemObject)
 private:
     typedef	CInventoryItemObject inherited;
 public:

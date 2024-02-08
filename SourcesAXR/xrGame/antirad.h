@@ -8,7 +8,11 @@
 
 #include "eatable_item_object.h"
 
-class CAntirad: public CEatableItemObject {
+class CAntirad:
+	public CEatableItemObject,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CAntirad, CEatableItemObject)
 
 public:
 				 CAntirad			();

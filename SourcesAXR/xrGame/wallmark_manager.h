@@ -3,8 +3,10 @@
 
 
 // Igor DEFINE_VECTOR(ref_shader, SHADER_VECTOR, SHADER_VECTOR_IT);
-class CWalmarkManager
+class CWalmarkManager :
+	public IMetaClass
 {
+	DECLARE_METACLASS(CWalmarkManager)
 private:
 	FactoryPtr<IWallMarkArray>		m_wallmarks;
 	Fvector							m_pos;

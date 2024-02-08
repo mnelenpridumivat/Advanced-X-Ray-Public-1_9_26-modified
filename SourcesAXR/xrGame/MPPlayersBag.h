@@ -3,8 +3,10 @@
 #include "inventory_item_object.h"
 
 class CMPPlayersBag :
-	public	CInventoryItemObject
+	public	CInventoryItemObject,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CMPPlayersBag, CInventoryItemObject)
 public:
 					CMPPlayersBag(void);
 					~CMPPlayersBag(void) override;

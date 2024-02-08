@@ -3,8 +3,11 @@
 #include "customzone.h"
 #include "script_export_space.h"
 
-class CMosquitoBald : public CCustomZone
+class CMosquitoBald :
+	public CCustomZone,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CMosquitoBald, CCustomZone)
 private:
 	typedef	CCustomZone	inherited;
 public:

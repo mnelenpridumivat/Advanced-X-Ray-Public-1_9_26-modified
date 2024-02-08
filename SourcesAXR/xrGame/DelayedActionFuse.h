@@ -1,7 +1,9 @@
 #pragma once
 
-class CDelayedActionFuse
+class CDelayedActionFuse:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CDelayedActionFuse)
 	enum{
 		flActive			=			1<<0,
 		flInitialized		=			1<<1,

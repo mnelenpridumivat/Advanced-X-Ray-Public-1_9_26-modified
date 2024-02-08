@@ -10,10 +10,12 @@
 #include "inventory_item_object.h"
 #include "DelayedActionFuse.h"
 class CExplosiveItem: 
-			public CInventoryItemObject	,
-			public CDelayedActionFuse	,
-			public CExplosive
+	public CInventoryItemObject	,
+	public CDelayedActionFuse	,
+	public CExplosive,
+	public IMetaClass
 {
+	DECLARE_METACLASS3(CExplosiveItem, CInventoryItemObject, CDelayedActionFuse, CExplosive)
 private:
 	typedef CInventoryItemObject inherited;
 

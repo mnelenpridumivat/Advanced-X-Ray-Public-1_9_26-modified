@@ -118,7 +118,7 @@ class CAfList  :
 	public CDetectList<T>,
 	public IMetaClass
 {
-	DECLARE_METACLASS(CAfList, CDetectList)
+	DECLARE_METACLASS1(CAfList, CDetectList)
 protected:
 	BOOL 	feel_touch_contact	(CObject* O) override;
 public:

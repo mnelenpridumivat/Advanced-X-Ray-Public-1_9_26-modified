@@ -2,6 +2,8 @@
 #include <unordered_set>
 #include <string>
 
+#pragma warning (disable : 4584)
+
 #define DECLARE_NONSTATIC_CLASS_GETTER() \
 	virtual CMetaclass* GetClass() override { return StaticClass();} \
 
@@ -27,6 +29,7 @@ public: \
 		static CMetaclass* Instance = nullptr; \
 		if (!Instance) { \
 			Instance = new CMetaclass(#ClassName); \
+			static_assert(std::is_base_of_v<Parent1, ClassName> == true); \
 			Instance->AddParent(Parent1::StaticClass()); \
 		} \
 		return Instance; \
@@ -41,7 +44,9 @@ public: \
 		static CMetaclass* Instance = nullptr; \
 		if (!Instance) { \
 			Instance = new CMetaclass(#ClassName); \
+			static_assert(std::is_base_of_v<Parent1, ClassName> == true); \
 			Instance->AddParent(Parent1::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent2, ClassName> == true); \
 			Instance->AddParent(Parent2::StaticClass()); \
 		} \
 		return Instance; \
@@ -56,8 +61,11 @@ public: \
 		static CMetaclass* Instance = nullptr; \
 		if (!Instance) { \
 			Instance = new CMetaclass(#ClassName); \
+			static_assert(std::is_base_of_v<Parent1, ClassName> == true); \
 			Instance->AddParent(Parent1::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent2, ClassName> == true); \
 			Instance->AddParent(Parent2::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent3, ClassName> == true); \
 			Instance->AddParent(Parent3::StaticClass()); \
 		} \
 		return Instance; \
@@ -72,9 +80,13 @@ public: \
 		static CMetaclass* Instance = nullptr; \
 		if (!Instance) { \
 			Instance = new CMetaclass(#ClassName); \
+			static_assert(std::is_base_of_v<Parent1, ClassName> == true); \
 			Instance->AddParent(Parent1::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent2, ClassName> == true); \
 			Instance->AddParent(Parent2::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent3, ClassName> == true); \
 			Instance->AddParent(Parent3::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent4, ClassName> == true); \
 			Instance->AddParent(Parent4::StaticClass()); \
 		} \
 		return Instance; \
@@ -89,10 +101,15 @@ public: \
 		static CMetaclass* Instance = nullptr; \
 		if (!Instance) { \
 			Instance = new CMetaclass(#ClassName); \
+			static_assert(std::is_base_of_v<Parent1, ClassName> == true); \
 			Instance->AddParent(Parent1::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent2, ClassName> == true); \
 			Instance->AddParent(Parent2::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent3, ClassName> == true); \
 			Instance->AddParent(Parent3::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent4, ClassName> == true); \
 			Instance->AddParent(Parent4::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent5, ClassName> == true); \
 			Instance->AddParent(Parent5::StaticClass()); \
 		} \
 		return Instance; \
@@ -107,11 +124,17 @@ public: \
 		static CMetaclass* Instance = nullptr; \
 		if (!Instance) { \
 			Instance = new CMetaclass(#ClassName); \
+			static_assert(std::is_base_of_v<Parent1, ClassName> == true); \
 			Instance->AddParent(Parent1::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent2, ClassName> == true); \
 			Instance->AddParent(Parent2::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent3, ClassName> == true); \
 			Instance->AddParent(Parent3::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent4, ClassName> == true); \
 			Instance->AddParent(Parent4::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent5, ClassName> == true); \
 			Instance->AddParent(Parent5::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent6, ClassName> == true); \
 			Instance->AddParent(Parent6::StaticClass()); \
 		} \
 		return Instance; \
@@ -126,12 +149,19 @@ public: \
 		static CMetaclass* Instance = nullptr; \
 		if (!Instance) { \
 			Instance = new CMetaclass(#ClassName); \
+			static_assert(std::is_base_of_v<Parent1, ClassName> == true); \
 			Instance->AddParent(Parent1::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent2, ClassName> == true); \
 			Instance->AddParent(Parent2::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent3, ClassName> == true); \
 			Instance->AddParent(Parent3::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent4, ClassName> == true); \
 			Instance->AddParent(Parent4::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent5, ClassName> == true); \
 			Instance->AddParent(Parent5::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent6, ClassName> == true); \
 			Instance->AddParent(Parent6::StaticClass()); \
+			static_assert(std::is_base_of_v<Parent7, ClassName> == true); \
 			Instance->AddParent(Parent7::StaticClass()); \
 		} \
 		return Instance; \

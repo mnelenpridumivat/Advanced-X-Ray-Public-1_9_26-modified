@@ -55,7 +55,7 @@ class CGameObject :
 	public CScriptBinder,
 	public IMetaClass
 {
-	DECLARE_METACLASS2(CGameObject, CObject, CUsableScriptObject, CScriptBinder)
+	DECLARE_METACLASS3(CGameObject, CObject, CUsableScriptObject, CScriptBinder)
 
 	typedef CObject inherited;
 	bool							m_spawned;

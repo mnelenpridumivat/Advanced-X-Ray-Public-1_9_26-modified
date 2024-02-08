@@ -4,7 +4,11 @@
 
 struct SBoneProtections;
 
-class CHelmet: public CInventoryItemObject {
+class CHelmet:
+	public CInventoryItemObject,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CHelmet, CInventoryItemObject)
 private:
     typedef	CInventoryItemObject inherited;
 public:

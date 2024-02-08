@@ -29,9 +29,12 @@ struct SZoneObjectInfo
 };
 
 
-class CCustomZone :		public CSpaceRestrictor,
-						public Feel::Touch
+class CCustomZone :
+	public CSpaceRestrictor,
+	public Feel::Touch,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CCustomZone, CSpaceRestrictor, Feel::Touch)
 private:
     typedef	CSpaceRestrictor inherited;
 

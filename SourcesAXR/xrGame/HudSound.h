@@ -1,8 +1,11 @@
 #pragma once
 #include "../xrSound/Sound.h"
 
-struct HUD_SOUND_ITEM
+struct HUD_SOUND_ITEM:
+	public IMetaClass
 {
+	DECLARE_METACLASS(HUD_SOUND_ITEM)
+public:
 	HUD_SOUND_ITEM():m_activeSnd(NULL),m_b_exclusive(false)		{}
 
 	static void		LoadSound		(	LPCSTR section, LPCSTR line,
@@ -74,8 +77,10 @@ struct HUD_SOUND_ITEM
 	bool operator == (LPCSTR alias) const{return 0==stricmp(m_alias.c_str(),alias);}
 };
 
-class HUD_SOUND_COLLECTION
+class HUD_SOUND_COLLECTION :
+	public IMetaClass
 {
+	DECLARE_METACLASS(HUD_SOUND_COLLECTION)
 public:
 								~HUD_SOUND_COLLECTION();
 
@@ -105,8 +110,10 @@ public:
 };
 
 //Alundaio:
-class HUD_SOUND_COLLECTION_LAYERED
+class HUD_SOUND_COLLECTION_LAYERED :
+	public IMetaClass
 {
+	DECLARE_METACLASS(HUD_SOUND_COLLECTION_LAYERED)
 	xr_vector<HUD_SOUND_COLLECTION> m_sound_items;
 public:
 	~HUD_SOUND_COLLECTION_LAYERED();

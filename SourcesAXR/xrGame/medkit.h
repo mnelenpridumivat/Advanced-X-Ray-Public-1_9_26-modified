@@ -8,7 +8,11 @@
 
 #include "eatable_item_object.h"
 
-class CMedkit: public CEatableItemObject {
+class CMedkit:
+	public CEatableItemObject,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CMedkit, CEatableItemObject)
 
 public:
 				 CMedkit			();

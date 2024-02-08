@@ -10,8 +10,11 @@
 
 //структура для описания сообщения PDA,
 //используется для ведения логов
-typedef struct tagSPdaMessage 
+typedef struct tagSPdaMessage :
+	public IMetaClass
 {
+	DECLARE_METACLASS(tagSPdaMessage)
+public:
 	EPdaMsg			msg;
 	
 	//true если мы получали сообщение 
@@ -32,8 +35,11 @@ typedef struct tagSPdaMessage
 
 
 //информация о контактах персонажей по PDA и во время диалога
-struct TALK_CONTACT_DATA
+struct TALK_CONTACT_DATA :
+	public IMetaClass
 {
+	DECLARE_METACLASS(TALK_CONTACT_DATA)
+public:
 	TALK_CONTACT_DATA():id(static_cast<u16>(-1)),time(0){};
 	TALK_CONTACT_DATA(u16 contact_id, ALife::_TIME_ID contact_time):id(contact_id),time(contact_time){};
 	//время контакта

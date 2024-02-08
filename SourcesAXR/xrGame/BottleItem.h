@@ -9,8 +9,11 @@
 #include "fooditem.h"
 
 
-class CBottleItem: public CFoodItem
+class CBottleItem:
+	public CFoodItem,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CBottleItem, CFoodItem)
 private:
     typedef	CFoodItem inherited;
 public:
