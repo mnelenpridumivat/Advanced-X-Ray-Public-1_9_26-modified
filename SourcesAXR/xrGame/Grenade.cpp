@@ -250,8 +250,8 @@ void CGrenade::PutNextToSlot()
 
 	if (smart_cast<CInventoryOwner*>(H_Parent()) && m_pInventory)
 	{
-		CGrenade *pNext						= smart_cast<CGrenade*>(	m_pInventory->Same(this,true)		);
-		if(!pNext) pNext					= smart_cast<CGrenade*>(	m_pInventory->SameSlot(GRENADE_SLOT, this, true)	);
+		CGrenade *pNext						= smart_cast<CGrenade>(	m_pInventory->Same(this,true)		);
+		if(!pNext) pNext					= smart_cast<CGrenade>(	m_pInventory->SameSlot(GRENADE_SLOT, this, true)	);
 
 		VERIFY								(pNext != this);
 
@@ -264,7 +264,7 @@ void CGrenade::PutNextToSlot()
 			m_pInventory->SetActiveSlot		(pNext->BaseSlot());
 		}else
 		{
-			CActor* pActor = smart_cast<CActor*>( m_pInventory->GetOwner());
+			CActor* pActor = smart_cast<CActor>( m_pInventory->GetOwner());
 			
 			if(pActor)
 				pActor->OnPrevWeaponSlot();

@@ -134,8 +134,8 @@ void CBolt::PutNextToSlot()
 
 	if (smart_cast<CInventoryOwner*>(H_Parent()) && m_pInventory)
 	{
-		CBolt *pNext = smart_cast<CBolt*>(m_pInventory->Same(this, true));
-		if (!pNext) pNext = smart_cast<CBolt*>(m_pInventory->SameSlot(BOLT_SLOT, this, true));
+		CBolt *pNext = smart_cast<CBolt>(m_pInventory->Same(this, true));
+		if (!pNext) pNext = smart_cast<CBolt>(m_pInventory->SameSlot(BOLT_SLOT, this, true));
 
 		VERIFY(pNext != this);
 

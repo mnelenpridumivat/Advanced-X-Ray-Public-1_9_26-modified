@@ -318,12 +318,12 @@ void CSpectator::FirstEye_ToPlayer(CObject* pObject)
 	CActor*		pOldActor = NULL;
 	if (pCurViewEntity)
 	{
-		pOldActor = smart_cast<CActor*>(pCurViewEntity);
+		pOldActor = smart_cast<CActor>(pCurViewEntity);
 		if (pOldActor)
 		{
 			pOldActor->inventory().Items_SetCurrentEntityHud(false);
 		};
-		if (smart_cast<CSpectator*>(pCurViewEntity))
+		if (smart_cast<CSpectator>(pCurViewEntity))
 		{
 			Engine.Sheduler.Unregister	(pCurViewEntity);
 			Engine.Sheduler.Register	(pCurViewEntity, TRUE);

@@ -223,7 +223,7 @@ void CUITalkDialogWnd::AddAnswer(LPCSTR SpeakerName, LPCSTR str, bool bActor)
 
 	CUICharacterInfo& ci			= bActor ? UICharacterInfoLeft : UICharacterInfoRight;
 
-	m_pOurInvOwner = smart_cast<CInventoryOwner*>(Actor());
+	m_pOurInvOwner = smart_cast<CInventoryOwner>(Actor());
 	m_pOthersInvOwner = Actor()->GetTalkPartner();
 
 	auto owner = bActor ? m_pOurInvOwner->IconName() : (m_pOthersInvOwner ? m_pOthersInvOwner->IconName() : m_pOurInvOwner->IconName());

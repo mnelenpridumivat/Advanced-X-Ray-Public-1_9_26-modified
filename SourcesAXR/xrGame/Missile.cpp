@@ -776,12 +776,12 @@ void	 CMissile::ExitContactCallback(bool& do_colide, bool bo1, dContact& c, SGam
 		do_colide=false;
 
 	SGameMtl* material = 0;
-	CMissile* l_this = gd1 ? smart_cast<CMissile*>(gd1->ph_ref_object) : NULL;
+	CMissile* l_this = gd1 ? smart_cast<CMissile>(gd1->ph_ref_object) : NULL;
 	Fvector vUp;
 
 	if (!l_this)
 	{
-		l_this = gd2 ? smart_cast<CMissile*>(gd2->ph_ref_object) : NULL;
+		l_this = gd2 ? smart_cast<CMissile>(gd2->ph_ref_object) : NULL;
 		material = material_1;
 
 	}
@@ -794,9 +794,9 @@ void	 CMissile::ExitContactCallback(bool& do_colide, bool bo1, dContact& c, SGam
 
 	if (!l_this || !l_this->m_bIsContactGrenade) return;
 
-	CGameObject* l_pOwner = gd1 ? smart_cast<CGameObject*>(gd1->ph_ref_object) : NULL;
+	CGameObject* l_pOwner = gd1 ? smart_cast<CGameObject>(gd1->ph_ref_object) : NULL;
 
-	if (!l_pOwner || l_pOwner == (CGameObject*)l_this) l_pOwner = gd2 ? smart_cast<CGameObject*>(gd2->ph_ref_object) : NULL;
+	if (!l_pOwner || l_pOwner == (CGameObject*)l_this) l_pOwner = gd2 ? smart_cast<CGameObject>(gd2->ph_ref_object) : NULL;
 
 	if (!l_pOwner || l_pOwner != l_this->m_pOwner)
 		l_this->set_destroy_time(5);

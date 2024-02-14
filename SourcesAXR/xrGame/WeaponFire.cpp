@@ -83,7 +83,7 @@ void CWeapon::FireTrace		(const Fvector& P, const Fvector& D)
 	CActor* tmp_actor = NULL;
 	if (!IsGameTypeSingle())
 	{
-		tmp_actor = smart_cast<CActor*>(Level().CurrentControlEntity());
+		tmp_actor = smart_cast<CActor>(Level().CurrentControlEntity());
 		if (tmp_actor)
 		{
 			CEntity::SEntityState state;
@@ -94,7 +94,7 @@ void CWeapon::FireTrace		(const Fvector& P, const Fvector& D)
 				m_first_bullet_controller.make_shot();
 			}
 		}
-		game_cl_mp*	tmp_mp_game = smart_cast<game_cl_mp*>(&Game());
+		game_cl_mp*	tmp_mp_game = smart_cast<game_cl_mp>(&Game());
 		VERIFY(tmp_mp_game);
 		if (tmp_mp_game->get_reward_generator())
 			tmp_mp_game->get_reward_generator()->OnWeapon_Fire(H_Parent()->ID(), ID());

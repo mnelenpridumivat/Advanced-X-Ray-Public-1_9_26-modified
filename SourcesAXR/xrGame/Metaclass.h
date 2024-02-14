@@ -216,3 +216,35 @@ To* meta_cast(void* ptr) {
 	}
 	return reinterpret_cast<To*>(ptr);
 }
+
+class MetacastClass {
+
+public:
+
+	template<typename To>
+	static To* meta_cast(void* ptr) {
+#ifdef DEBUG
+		static_assert(std::is_base_of_v<To, IMetaClass> == true);
+#endif
+		CMetaclass* FromClass = static_cast<IMetaClass*>(ptr)->GetClass();
+
+		if (!FromClass->IsA(To::StaticClass())) {
+			return nullptr;
+		}
+		return reinterpret_cast<To*>(ptr);
+	}
+
+	template<typename To>
+	static const To* meta_cast(const void* ptr) {
+#ifdef DEBUG
+		static_assert(std::is_base_of_v<To, IMetaClass> == true);
+#endif
+		CMetaclass* FromClass = static_cast<IMetaClass*>(ptr)->GetClass();
+
+		if (!FromClass->IsA(To::StaticClass())) {
+			return nullptr;
+		}
+		return reinterpret_cast<const To*>(ptr);
+	}
+
+};

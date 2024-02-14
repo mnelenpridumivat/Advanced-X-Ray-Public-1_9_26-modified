@@ -76,7 +76,7 @@ void CBaseMonster::Load(LPCSTR section)
 
 	SetfHealth						( static_cast<float>(pSettings->r_u32(section, "Health")));
 
-	m_controlled					= smart_cast<CControlledEntityBase*>(this);
+	m_controlled					= smart_cast<CControlledEntityBase>(this);
 
 	settings_load					(section);
 

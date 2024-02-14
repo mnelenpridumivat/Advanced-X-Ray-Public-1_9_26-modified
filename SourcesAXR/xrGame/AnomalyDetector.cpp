@@ -220,8 +220,8 @@ BOOL CDetectorAnomaly::feel_touch_contact(CObject* O)
 
 void CDetectorAnomaly::OnH_A_Chield()
 {
-	m_pCurrentActor				= smart_cast<CActor*>(H_Parent());
-	m_pCurrentInvOwner			= smart_cast<CInventoryOwner*>(H_Parent());
+	m_pCurrentActor				= smart_cast<CActor>(H_Parent());
+	m_pCurrentInvOwner			= smart_cast<CInventoryOwner>(H_Parent());
 	inherited::OnH_A_Chield		();
 }
 

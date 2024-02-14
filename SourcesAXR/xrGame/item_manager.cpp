@@ -25,7 +25,7 @@ CItemManager::CItemManager			(CCustomMonster *object)
 	VERIFY					(object);
 	m_object				= object;
 
-	m_stalker				= smart_cast<CAI_Stalker*>( m_object );
+	m_stalker				= smart_cast<CAI_Stalker>( m_object );
 }
 
 bool CItemManager::is_useful		(const CGameObject *object) const

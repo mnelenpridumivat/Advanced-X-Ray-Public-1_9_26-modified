@@ -309,7 +309,7 @@ u16 CParticlesPlayer::GetNearestBone	(IKinematics* K, u16 bone_id)
 void CParticlesPlayer::net_SpawnParticles	()
 {
 	VERIFY				(!m_self_object);
-	m_self_object		= smart_cast<CObject*>(this);
+	m_self_object		= smart_cast<CObject>(this);
 	VERIFY				(m_self_object);
 
 }

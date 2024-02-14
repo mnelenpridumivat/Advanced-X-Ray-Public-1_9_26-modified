@@ -32,10 +32,10 @@ CHudItem::CHudItem()
 
 DLL_Pure *CHudItem::_construct	()
 {
-	m_object			= smart_cast<CPhysicItem*>(this);
+	m_object			= smart_cast<CPhysicItem>(this);
 	VERIFY				(m_object);
 
-	m_item				= smart_cast<CInventoryItem*>(this);
+	m_item				= smart_cast<CInventoryItem>(this);
 	VERIFY				(m_item);
 
 	return				(m_object);

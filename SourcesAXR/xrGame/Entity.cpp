@@ -40,7 +40,7 @@ CEntityConditionSimple *CEntity::create_entity_condition(CEntityConditionSimple*
 	if(!ec)
 		m_entity_condition		= xr_new<CEntityConditionSimple>();
 	else
-		m_entity_condition		= smart_cast<CEntityCondition*>(ec);
+		m_entity_condition		= smart_cast<CEntityCondition>(ec);
 	
 	return		m_entity_condition;
 }

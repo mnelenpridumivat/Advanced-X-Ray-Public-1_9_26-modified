@@ -263,10 +263,10 @@ void CCustomOutfit::ReloadBonesProtection()
 {
 	CObject* parent = H_Parent();
 	if(IsGameTypeSingle())
-		parent = smart_cast<CObject*>(Level().CurrentViewEntity());
+		parent = smart_cast<CObject>(Level().CurrentViewEntity());
 
 	if(parent && parent->Visual() && m_BonesProtectionSect.size())
-		m_boneProtection->reload( m_BonesProtectionSect, smart_cast<IKinematics*>(parent->Visual()));
+		m_boneProtection->reload( m_BonesProtectionSect, smart_cast<IKinematics>(parent->Visual()));
 }
 
 void CCustomOutfit::Hit(float hit_power, ALife::EHitType hit_type)
@@ -540,10 +540,10 @@ void CCustomOutfit::AddBonesProtection(LPCSTR bones_section)
 {
 	CObject* parent = H_Parent();
 	if(IsGameTypeSingle())
-		parent = smart_cast<CObject*>(Level().CurrentViewEntity());
+		parent = smart_cast<CObject>(Level().CurrentViewEntity());
 
 	if ( parent && parent->Visual() && m_BonesProtectionSect.size() )
-		m_boneProtection->add(bones_section, smart_cast<IKinematics*>( parent->Visual() ) );
+		m_boneProtection->add(bones_section, smart_cast<IKinematics>( parent->Visual() ) );
 }
 
 float CCustomOutfit::GetDegradationSpeed() const

@@ -51,7 +51,7 @@ void CPsyDogAura::reinit()
 	m_time_actor_saw_phantom	= 0;
 	m_time_phantom_saw_actor	= 0;
 
-	m_actor						= smart_cast<CActor *>(Level().CurrentEntity());
+	m_actor						= smart_cast<CActor>(Level().CurrentEntity());
 	VERIFY						(m_actor);
 }
 

@@ -57,11 +57,11 @@ void CUITalkWnd::InitTalkDialog()
 	m_pActor = Actor();
 	if (m_pActor && !m_pActor->IsTalking()) return;
 
-	m_pOurInvOwner = smart_cast<CInventoryOwner*>(m_pActor);
+	m_pOurInvOwner = smart_cast<CInventoryOwner>(m_pActor);
 	m_pOthersInvOwner = m_pActor->GetTalkPartner();
 
-	m_pOurDialogManager = smart_cast<CPhraseDialogManager*>(m_pOurInvOwner);
-	m_pOthersDialogManager = smart_cast<CPhraseDialogManager*>(m_pOthersInvOwner);
+	m_pOurDialogManager = smart_cast<CPhraseDialogManager>(m_pOurInvOwner);
+	m_pOthersDialogManager = smart_cast<CPhraseDialogManager>(m_pOthersInvOwner);
 
 	//имена собеседников
 	UITalkDialogWnd->UICharacterInfoLeft.InitCharacter		(m_pOurInvOwner);

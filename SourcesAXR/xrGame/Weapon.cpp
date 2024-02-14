@@ -3788,7 +3788,7 @@ void CWeapon::SwitchFlashlight(bool on)
 void CWeapon::UpdateAddonsTransform(bool for_hud)
 {
 	Fmatrix base_model_trans = for_hud ? HudItemData()->m_item_transform : XFORM();
-	IRenderVisual* model = for_hud ? HudItemData()->m_model->dcast_RenderVisual() : smart_cast<IRenderVisual*>(Visual());
+	IRenderVisual* model = for_hud ? HudItemData()->m_model->dcast_RenderVisual() : smart_cast<IRenderVisual>(Visual());
 
 	if (!for_hud)
 	{

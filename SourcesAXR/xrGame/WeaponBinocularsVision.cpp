@@ -144,7 +144,7 @@ void SBinocVisibleObj::Update()
 			{
 				if (Level().CurrentViewEntity())
 				{
-					pActor = smart_cast<CActor*> (Level().CurrentViewEntity());
+					pActor = smart_cast<CActor> (Level().CurrentViewEntity());
 				}
 			}
 			if (pActor) 
@@ -220,7 +220,7 @@ void CBinocularsVision::Update()
 	{
 		if (Level().CurrentViewEntity())
 		{
-			pActor = smart_cast<const CActor*> (Level().CurrentViewEntity());
+			pActor = smart_cast<const CActor> (Level().CurrentViewEntity());
 		}
 	}
 	if (!pActor) return;
@@ -236,13 +236,13 @@ void CBinocularsVision::Update()
 	for (; v_it!=vVisibles.end(); ++v_it)
 	{
 		const CObject*	_object_			= v_it->m_object;
-		if (!pActor->memory().visual().visible_right_now(smart_cast<const CGameObject*>(_object_)))
+		if (!pActor->memory().visual().visible_right_now(smart_cast<CGameObject>(_object_)))
 			continue;
 
 		CObject* object_ = const_cast<CObject*>(_object_);
 		
 
-		CEntityAlive*	EA = smart_cast<CEntityAlive*>(object_);
+		CEntityAlive*	EA = smart_cast<CEntityAlive>(object_);
 		if(!EA || !EA->g_Alive())						continue;
 		
 

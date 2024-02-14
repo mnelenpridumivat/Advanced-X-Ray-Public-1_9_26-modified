@@ -28,7 +28,7 @@ CStepManager::~CStepManager()
 
 DLL_Pure *CStepManager::_construct	()
 {
-	m_object			= smart_cast<CEntityAlive*>(this);
+	m_object			= smart_cast<CEntityAlive>(this);
 	VERIFY				(m_object);
 	return				(m_object);
 }

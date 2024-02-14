@@ -24,7 +24,7 @@ CPhysicsShellHolder &CAttachableItem::object	() const
 DLL_Pure *CAttachableItem::_construct	()
 {
 	VERIFY				(!m_item);
-	m_item				= smart_cast<CInventoryItem*>(this);
+	m_item				= smart_cast<CInventoryItem>(this);
 	VERIFY				(m_item);
 	return				(&item().object());
 }

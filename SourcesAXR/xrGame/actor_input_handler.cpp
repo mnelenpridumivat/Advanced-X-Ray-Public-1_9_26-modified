@@ -11,7 +11,7 @@ void CActorInputHandler::reinit()
 
 void CActorInputHandler::install()
 {
-	m_actor = smart_cast<CActor*>	(Level().CurrentEntity());
+	m_actor = smart_cast<CActor>	(Level().CurrentEntity());
 	if ( !m_actor )
 	{
 		m_actor					=	Actor();

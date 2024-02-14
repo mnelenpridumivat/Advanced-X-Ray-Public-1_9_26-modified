@@ -67,11 +67,11 @@ void CPHSkeleton::Init()
 bool CPHSkeleton::Spawn(CSE_Abstract *D)
 {
 	
-	CSE_PHSkeleton *po		= smart_cast<CSE_PHSkeleton*>(D);
+	CSE_PHSkeleton *po		= smart_cast<CSE_PHSkeleton>(D);
 	VERIFY					(po);
 
 	m_flags					= po->_flags;
-	CSE_Visual				*visual = smart_cast<CSE_Visual*>(D);
+	CSE_Visual				*visual = smart_cast<CSE_Visual>(D);
 	VERIFY					(visual);
 	m_startup_anim			= visual->startup_animation;
 	CPHSkeleton* source		= 0;

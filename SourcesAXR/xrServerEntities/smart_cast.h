@@ -17,6 +17,11 @@
 #undef   STATIC_CHECK
 #include <loki/typelist.h>
 
+#ifdef USE_META_CAST_AS_DYNAMIC
+#	define smart_cast MetacastClass::meta_cast
+#else
+
+
 #ifdef PURE_DYNAMIC_CAST
 #	define smart_cast dynamic_cast
 #else
@@ -328,5 +333,7 @@
 #		include "smart_cast_impl1.h"
 #	endif
 #endif
+
+#endif // USE_META_CAST_AS_DYNAMIC
 
 #endif //SMART_CAST_H
