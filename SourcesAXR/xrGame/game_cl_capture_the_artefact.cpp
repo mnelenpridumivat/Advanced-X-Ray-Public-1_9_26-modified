@@ -655,7 +655,7 @@ CUIGameCustom* game_cl_CaptureTheArtefact::createGameUI()
 	if (g_dedicated_server)
 		return NULL;
 
-	m_game_ui				= smart_cast<CUIGameCTA*> (NEW_INSTANCE(CLSID_GAME_UI_CAPTURETHEARTEFACT));
+	m_game_ui				= smart_cast<CUIGameCTA> (NEW_INSTANCE(CLSID_GAME_UI_CAPTURETHEARTEFACT));
 	VERIFY2					(m_game_ui, "failed to create Capture The Artefact game UI");
 	m_game_ui->Load			();
 	//m_game_ui->Init		(0);
@@ -693,7 +693,7 @@ void game_cl_CaptureTheArtefact::OnGameMenuRespond_ChangeSkin(NET_Packet& P)
 
 void game_cl_CaptureTheArtefact::SpawnMe()
 {
-	CActor*			currActor	= smart_cast<CActor*>(Level().CurrentControlEntity());
+	CActor*			currActor	= smart_cast<CActor>(Level().CurrentControlEntity());
 	if (!currActor)
 		return;
 
@@ -823,7 +823,7 @@ void game_cl_CaptureTheArtefact::OnSpawn(CObject* pObj)
 	if (g_dedicated_server)
 		return;
 
-	CArtefact *pArtefact = smart_cast<CArtefact*>(pObj);
+	CArtefact *pArtefact = smart_cast<CArtefact>(pObj);
 	if (pArtefact)
 	{
 		Level().MapManager().AddMapLocation(ARTEFACT_NEUTRAL, pObj->ID())->EnablePointer();
@@ -842,7 +842,7 @@ void game_cl_CaptureTheArtefact::OnSpawn(CObject* pObj)
 		}*/
 		return;
 	}
-	CActor *pActor = smart_cast<CActor*>(pObj);
+	CActor *pActor = smart_cast<CActor>(pObj);
 	if (pActor && local_player)
 	{
 		game_PlayerState *ps = GetPlayerByGameID(pActor->ID());
@@ -1113,7 +1113,7 @@ void game_cl_CaptureTheArtefact::OnBuySpawnMenu_Ok		()
 	if (!curr)
 		return;
 
-	CGameObject*	go = smart_cast<CGameObject*>(curr);
+	CGameObject*	go = smart_cast<CGameObject>(curr);
 	NET_Packet		packet;
 	go->u_EventGen	(packet, GE_GAME_EVENT, go->ID());
 	packet.w_u16	(GAME_EVENT_PLAYER_BUY_SPAWN);
@@ -1575,11 +1575,11 @@ void game_cl_CaptureTheArtefact::OnRender()
 			if (!pObject)
 				continue;
 
-			if (!pObject || !smart_cast<CActor*>(pObject))
+			if (!pObject || !smart_cast<CActor>(pObject))
 				continue;
 
 			VERIFY(pObject);
-			CActor* pActor = smart_cast<CActor*>(pObject);
+			CActor* pActor = smart_cast<CActor>(pObject);
 			VERIFY(pActor); 
 			Fvector IPos = pTS->IndicatorPos;
 
@@ -1668,7 +1668,7 @@ void game_cl_CaptureTheArtefact::OnConnected()
 	if (m_game_ui)
 	{
 		VERIFY(!g_dedicated_server);
-		m_game_ui				= smart_cast<CUIGameCTA*>	(CurrentGameUI());
+		m_game_ui				= smart_cast<CUIGameCTA>	(CurrentGameUI());
 		m_game_ui->SetClGame	(this);
 	}
 }

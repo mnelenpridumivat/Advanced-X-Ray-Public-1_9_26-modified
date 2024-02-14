@@ -61,7 +61,7 @@ bool CCustomDetector::CheckCompatibilityInt(CHudItem* itm, u16* slot_to_activate
 
 	if (bres)
 	{
-		CWeapon* W = smart_cast<CWeapon*>(itm);
+		CWeapon* W = smart_cast<CWeapon>(itm);
 		if (W)
 			bres = bres &&
 			(W->GetState() != CHUDState::eBore) &&
@@ -382,7 +382,7 @@ void CCustomDetector::UpdateLights()
 
 		if (Actor())
 		{
-			CCustomDetector* detector = smart_cast<CCustomDetector*>(Actor()->inventory().ItemFromSlot(DETECTOR_SLOT));
+			CCustomDetector* detector = smart_cast<CCustomDetector>(Actor()->inventory().ItemFromSlot(DETECTOR_SLOT));
 
 			if (detector)
 				percent = detector->m_fCurrentChargeLevel * 100;
@@ -463,7 +463,7 @@ void CCustomDetector::UpdateVisibility()
 		}
 		else
 		{
-			CWeapon* wpn = smart_cast<CWeapon*>(i0->m_parent_hud_item);
+			CWeapon* wpn = smart_cast<CWeapon>(i0->m_parent_hud_item);
 			if (wpn)
 			{
 				u32 state = wpn->GetState();
@@ -611,7 +611,7 @@ BOOL CAfList<CObject>::feel_touch_contact	(CObject* O)
 	bool res					 = (it!=m_TypesMap.end());
 	if(res)
 	{
-		CArtefact*	pAf				= smart_cast<CArtefact*>(O);
+		CArtefact*	pAf				= smart_cast<CArtefact>(O);
 		
 		if (pAf && pAf->GetAfRank()>m_af_rank)
 			res = false;

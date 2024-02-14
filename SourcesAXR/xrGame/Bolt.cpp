@@ -156,7 +156,7 @@ void CBolt::OnAnimationEnd(u32 state)
 	{
 		case eThrowEnd:
 		{
-			if (smart_cast<CActor*>(this->H_Parent()) && (Level().CurrentViewEntity() == H_Parent()))
+			if (smart_cast<CActor>(this->H_Parent()) && (Level().CurrentViewEntity() == H_Parent()))
 				SwitchState(eHidden);
 		}break;
 	}

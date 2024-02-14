@@ -1460,7 +1460,7 @@ void		CCharacterPhysicsSupport::in_Die(bool hit)
 		bool is_actor_holder = false;
 		if (m_eType == etActor)
 		{
-			CActor* A = smart_cast<CActor*>(&m_EntityAlife);
+			CActor* A = smart_cast<CActor>(&m_EntityAlife);
 			if (A->Holder()) is_actor_holder = true;
 		};
 		if (!is_actor_holder)
