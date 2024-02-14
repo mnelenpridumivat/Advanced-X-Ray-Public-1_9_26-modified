@@ -4,7 +4,10 @@
 class CEntityAlive;
 class CBlend;
 struct SGameMtlPair;
-class CStepManager {
+class CStepManager :
+	public IMetaClass
+{
+	DECLARE_METACLASS(CStepManager)
 	u8					m_legs_count;
 
 	STEPS_MAP			m_steps_map;

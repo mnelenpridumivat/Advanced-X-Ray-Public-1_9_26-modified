@@ -1787,7 +1787,7 @@ void CSE_ALifeMonsterRat::FillProps			(LPCSTR pref, PropItemVec& items)
 
 bool CSE_ALifeMonsterRat::bfUseful		()
 {
-	return						(!smart_cast<CSE_ALifeGroupAbstract*>(this) && (get_health() <= EPS_L));
+	return						(!smart_cast<CSE_ALifeGroupAbstract>(this) && (get_health() <= EPS_L));
 }
 
 ////////////////////////////////////////////////////////////////////////////

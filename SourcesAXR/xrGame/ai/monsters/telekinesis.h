@@ -6,7 +6,11 @@
 
 
 
-class CTelekinesis : public CPHUpdateObject {
+class CTelekinesis :
+	public CPHUpdateObject,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CTelekinesis, CPHUpdateObject)
 
 protected:
 	DEFINE_VECTOR(CTelekineticObject*,TELE_OBJECTS,TELE_OBJECTS_IT);

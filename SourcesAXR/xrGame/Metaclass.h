@@ -224,7 +224,7 @@ public:
 	template<typename To>
 	static To* meta_cast(void* ptr) {
 #ifdef DEBUG
-		static_assert(std::is_base_of_v<To, IMetaClass> == true);
+		static_assert(std::is_base_of_v<IMetaClass, To> == true);
 #endif
 		CMetaclass* FromClass = static_cast<IMetaClass*>(ptr)->GetClass();
 
@@ -237,7 +237,7 @@ public:
 	template<typename To>
 	static const To* meta_cast(const void* ptr) {
 #ifdef DEBUG
-		static_assert(std::is_base_of_v<To, IMetaClass> == true);
+		static_assert(std::is_base_of_v<IMetaClass, To> == true);
 #endif
 		CMetaclass* FromClass = static_cast<const IMetaClass*>(ptr)->GetClass();
 

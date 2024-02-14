@@ -2,7 +2,11 @@
 
 #include "PolterAbility.h"
 
-class CPolterChem : public CPolterSpecialAbility {
+class CPolterChem :
+	public CPolterSpecialAbility,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CPolterChem, CPolterSpecialAbility)
 
 	typedef CPolterSpecialAbility inherited;
 

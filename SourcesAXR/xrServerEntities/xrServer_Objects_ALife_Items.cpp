@@ -71,7 +71,7 @@ CSE_ALifeInventoryItem::CSE_ALifeInventoryItem(LPCSTR caSection)
 
 CSE_Abstract *CSE_ALifeInventoryItem::init	()
 {
-	m_self						= smart_cast<CSE_ALifeObject>(this);
+	m_self						= reinterpret_cast<CSE_ALifeObject*>(this);
 	R_ASSERT					(m_self);
 //	m_self->m_flags.set			(CSE_ALifeObject::flSwitchOffline,TRUE);
 	return						(base());

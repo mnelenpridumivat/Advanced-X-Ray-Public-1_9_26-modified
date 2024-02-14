@@ -4,7 +4,12 @@
 #include "../../../ai_debug.h"
 
 template<typename _Object>
-class	CStateMonsterAttack : public CState<_Object> {
+class	CStateMonsterAttack :
+	public CState<_Object>,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CStateMonsterAttack, CState<_Object>)
+
 protected:
 	typedef CState<_Object>		inherited;
 	typedef CState<_Object>*	state_ptr;

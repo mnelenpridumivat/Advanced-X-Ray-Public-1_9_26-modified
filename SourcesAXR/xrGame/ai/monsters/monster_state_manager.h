@@ -8,7 +8,13 @@
 #endif
 
 template <typename _Object>
-class CMonsterStateManager : public IStateManagerBase, public CState<_Object> {
+class CMonsterStateManager :
+	public IStateManagerBase,
+	public CState<_Object>,
+	public IMetaClass
+{
+	DECLARE_METACLASS2(CMonsterStateManager, IStateManagerBase, CState<_Object>)
+
 	typedef CState<_Object> inherited;
 
 public:

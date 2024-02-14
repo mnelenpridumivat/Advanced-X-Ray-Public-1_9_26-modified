@@ -7,7 +7,10 @@
 namespace debug { class text_tree; }
 #endif
 
-class IStateManagerBase {
+class IStateManagerBase:
+	public IMetaClass
+{
+	DECLARE_METACLASS(IStateManagerBase)
 public:
 	virtual					~IStateManagerBase		()						{};
 	virtual void			reinit					()						= 0;

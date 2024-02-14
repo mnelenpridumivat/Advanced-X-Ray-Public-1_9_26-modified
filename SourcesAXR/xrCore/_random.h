@@ -18,8 +18,12 @@ IC u32 dwfRandom(u32 dwRange)
 }
 */
 
-class CRandom
+#include "../xrGame/Metaclass.h"
+
+class CRandom:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CRandom)
 private:
 	volatile	s32		holdrand;
 public:

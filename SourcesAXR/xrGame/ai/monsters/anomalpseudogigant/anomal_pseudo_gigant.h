@@ -10,9 +10,13 @@
 
 class CPolterSpecialAbility;
 
-class CAnomalPseudoGigant : public CPseudoGigant,
-							public CTelekinesis,
-							public IPolterInterface {
+class CAnomalPseudoGigant :
+	public CPseudoGigant,
+	public CTelekinesis,
+	public IPolterInterface,
+	public IMetaClass
+{
+	DECLARE_METACLASS3(CAnomalPseudoGigant, CPseudoGigant, CTelekinesis, IPolterInterface)
 							//	{
 
 	typedef		CPseudoGigant						inherited;

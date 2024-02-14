@@ -55,8 +55,12 @@ namespace debug { class text_tree; }
 
 class anti_aim_ability;
 
-class CBaseMonster : public CCustomMonster, public CStepManager
+class CBaseMonster :
+	public CCustomMonster,
+	public CStepManager,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CBaseMonster, CCustomMonster, CStepManager)
 	typedef	CCustomMonster								inherited;
 	
 public:

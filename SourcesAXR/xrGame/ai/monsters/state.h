@@ -9,7 +9,10 @@
 #endif
 
 template<typename _Object>
-class CState {
+class CState :
+	public IMetaClass
+{
+	DECLARE_METACLASS(CState)
 	typedef CState<_Object> CSState;
 public:
 						CState					(_Object *obj, void *data = 0);

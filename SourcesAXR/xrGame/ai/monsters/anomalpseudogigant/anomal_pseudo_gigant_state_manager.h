@@ -3,7 +3,12 @@
 
 class CAnomalPseudoGigant;
 
-class CStateManagerAnomalPseudoGigant : public CMonsterStateManager<CAnomalPseudoGigant> {
+class CStateManagerAnomalPseudoGigant :
+	public CMonsterStateManager<CAnomalPseudoGigant>,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CStateManagerAnomalPseudoGigant, CMonsterStateManager<CAnomalPseudoGigant>)
+
 	typedef CMonsterStateManager<CAnomalPseudoGigant> inherited;
 public:
 					CStateManagerAnomalPseudoGigant(CAnomalPseudoGigant* monster);

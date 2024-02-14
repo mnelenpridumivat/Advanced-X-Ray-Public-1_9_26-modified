@@ -2,8 +2,12 @@
 #include "../state.h"
 
 template<typename Object>
-class	CStateAnomalPseudoGigantAttack : public CState<Object>
+class	CStateAnomalPseudoGigantAttack :
+	public CState<Object>,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CStateAnomalPseudoGigantAttack, CState<Object>)
+
 	typedef CState<Object> inherited;
 	typedef CState<Object> *state_ptr;
 

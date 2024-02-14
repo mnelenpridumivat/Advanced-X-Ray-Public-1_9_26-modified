@@ -74,11 +74,13 @@ class	CActor:
 	public CInventoryOwner,
 	public CPhraseDialogManager,
 	public CStepManager,
-	public Feel::Sound
+	public Feel::Sound,
+	public IMetaClass
 #ifdef DEBUG
 	,public pureRender
 #endif
 {
+	DECLARE_METACLASS7(CActor, CEntityAlive, IInputReceiver, Feel::Touch, CInventoryOwner, CPhraseDialogManager, CStepManager, Feel::Sound)
 	friend class CActorCondition;
 private:
 	typedef CEntityAlive	inherited;

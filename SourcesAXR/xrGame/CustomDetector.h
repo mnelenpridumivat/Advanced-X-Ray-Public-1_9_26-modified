@@ -60,7 +60,7 @@ public:
 protected:
 	void 	feel_touch_new		(CObject* O) override
 	{
-		K* pK							= smart_cast<K*>(O);
+		K* pK							= smart_cast<K>(O);
 		R_ASSERT						(pK);
 		TypesMapIt it					= m_TypesMap.find(O->cNameSect());
 		R_ASSERT						(it!=m_TypesMap.end());
@@ -70,7 +70,7 @@ protected:
 
 	void 	feel_touch_delete	(CObject* O) override
 	{
-		K* pK							= smart_cast<K*>(O);
+		K* pK							= smart_cast<K>(O);
 		R_ASSERT						(pK);
 		m_ItemInfos.erase				(pK);
 	}
@@ -118,7 +118,7 @@ class CAfList  :
 	public CDetectList<T>,
 	public IMetaClass
 {
-	DECLARE_METACLASS1(CAfList, CDetectList)
+	DECLARE_METACLASS1(CAfList, CDetectList<T>)
 protected:
 	BOOL 	feel_touch_contact	(CObject* O) override;
 public:

@@ -7,8 +7,10 @@ class IKinematicsAnimated;
 class IParticleCustom;
 struct vis_data;
 
-class IRenderVisual
+class IRenderVisual:
+	public IMetaClass
 {
+	DECLARE_METACLASS(IRenderVisual)
 public:
 	IRenderVisual() { _ignore_optimization = false; }
 

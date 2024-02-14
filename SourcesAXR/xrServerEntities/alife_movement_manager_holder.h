@@ -7,7 +7,10 @@
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-class CMovementManagerHolder {
+class CMovementManagerHolder:
+	public IMetaClass
+{
+	DECLARE_METACLASS(CMovementManagerHolder)
 public:
 	GameGraph::_GRAPH_ID				m_tNextGraphID;
 	GameGraph::_GRAPH_ID				m_tPrevGraphID;

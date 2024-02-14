@@ -2,7 +2,12 @@
 #include "../state.h"
 
 template<typename _Object>
-class	CStateBloodsuckerPredatorLite : public CState<_Object> {
+class	CStateBloodsuckerPredatorLite :
+	public CState<_Object>,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CStateBloodsuckerPredatorLite, CState<_Object>)
+
 	typedef CState<_Object>		inherited;
 	typedef CState<_Object>*	state_ptr;
 

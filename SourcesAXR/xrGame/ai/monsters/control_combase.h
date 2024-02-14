@@ -9,7 +9,11 @@ class CControl_ComControlling;
 
 //////////////////////////////////////////////////////////////////////////
 // Base
-class CControl_Com {
+class CControl_Com:
+	public IMetaClass
+{
+	DECLARE_METACLASS(CControl_Com)
+
 public:
 					CControl_Com			()											{m_inited = false;}
 	virtual			~CControl_Com			()											{}
@@ -47,7 +51,11 @@ private:
 
 //////////////////////////////////////////////////////////////////////////
 // Controlled with data
-class CControl_ComControlled {
+class CControl_ComControlled:
+	public IMetaClass
+{
+	DECLARE_METACLASS(CControl_ComControlled)
+
 public:
 	virtual	void					reinit		() {m_locked = false; m_capturer = 0; reset_data();}
 	virtual void					reset_data	(){}
@@ -69,7 +77,10 @@ private:
 
 //////////////////////////////////////////////////////////////////////////
 // Controlling
-class CControl_ComControlling {
+class CControl_ComControlling :
+	public IMetaClass
+{
+	DECLARE_METACLASS(CControl_ComControlling)
 public:
 	virtual ~CControl_ComControlling		() {}
 	virtual	void	reinit					() {}
@@ -89,7 +100,12 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 // Data Storage
 template<class T>
-class CControl_ComControlledStorage : public CControl_ComControlled {
+class CControl_ComControlledStorage :
+	public CControl_ComControlled,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CControl_ComControlledStorage, CControl_ComControlled)
+
 public:
 	ControlCom::IComData *data		() override {return &m_data;}
 protected:
@@ -135,8 +151,11 @@ template<class T = ControlCom::IComData>
 class CControl_ComCustom : 
 	public CControl_Com,
 	public CControl_ComControlledStorage<T>,
-	public CControl_ComControlling
+	public CControl_ComControlling,
+	public IMetaClass
 {
+	DECLARE_METACLASS3(CControl_ComCustom, CControl_Com, CControl_ComControlledStorage<T>, CControl_ComControlling)
+
 public:
 	CControl_ComControlled	*ced	() override {return this;}
 	CControl_ComControlling *cing	() override {return this;}

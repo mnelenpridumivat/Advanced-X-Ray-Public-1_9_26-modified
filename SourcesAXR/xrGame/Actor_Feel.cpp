@@ -197,7 +197,7 @@ void	CActor::PickupModeUpdate_COD	()
 		if (0 == pIItem)											continue;
 		if (pIItem->object().H_Parent() != NULL)					continue;
 		if (!pIItem->CanTake())										continue;
-		if ( smart_cast<CExplosiveRocket*>( &pIItem->object() ) )	continue;
+		if(pIItem->object().IsA(CExplosiveRocket::StaticClass()))	continue;
 
 		CGrenade*	pGrenade	= smart_cast<CGrenade> (spatial->dcast_CObject        ());
 		if (pGrenade && !pGrenade->Useful())						continue;

@@ -670,7 +670,7 @@ void CAI_Bloodsucker::start_drag()
 {
 	if(m_animated){
 		com_man().script_capture(ControlCom::eControlAnimation);
-		smart_cast<IKinematicsAnimated*>(Visual())->PlayCycle("boloto_attack_link_bone",TRUE,animation_end_jump,this);
+		smart_cast<IKinematicsAnimated>(Visual())->PlayCycle("boloto_attack_link_bone",TRUE,animation_end_jump,this);
 		m_animated = false;
 	}
 }

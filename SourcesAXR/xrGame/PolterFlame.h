@@ -3,7 +3,11 @@
 #include "../xrEngine/CameraManager.h"
 #include "PolterAbility.h"
 
-class CPolterFlame : public CPolterSpecialAbility {
+class CPolterFlame :
+	public CPolterSpecialAbility,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CPolterFlame, CPolterSpecialAbility)
 
 	typedef CPolterSpecialAbility inherited;
 

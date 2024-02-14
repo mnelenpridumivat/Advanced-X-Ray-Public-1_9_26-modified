@@ -2,7 +2,10 @@
 
 class CActor;
 
-class CActorInputHandler {
+class CActorInputHandler:
+	public IMetaClass
+{
+	DECLARE_METACLASS(CActorInputHandler)
 public:
 	virtual void	reinit				();
 	

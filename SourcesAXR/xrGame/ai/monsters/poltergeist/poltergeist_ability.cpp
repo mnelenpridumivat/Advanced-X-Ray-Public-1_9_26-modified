@@ -87,7 +87,7 @@ void CPolterSpecialAbility::on_hit(SHit* pHDS)
 		if(BI_NONE != pHDS->bone()) {
 
 			//вычислить координаты попадания
-			IKinematics* V = smart_cast<IKinematics*>(m_object->GetMonster()->Visual());
+			IKinematics* V = smart_cast<IKinematics>(m_object->GetMonster()->Visual());
 
 			Fvector start_pos = pHDS->bone_space_position();
 			Fmatrix& m_bone = V->LL_GetBoneInstance(pHDS->bone()).mTransform;

@@ -3,8 +3,11 @@
 
 #pragma once
 
-struct ENGINE_API SBaseEffector
+struct ENGINE_API SBaseEffector:
+	public IMetaClass
 {
+	DECLARE_METACLASS(SBaseEffector)
+public:
 	typedef fastdelegate::FastDelegate0<>		CB_ON_B_REMOVE;
 	CB_ON_B_REMOVE				m_on_b_remove_callback;
 	virtual ~SBaseEffector(){}

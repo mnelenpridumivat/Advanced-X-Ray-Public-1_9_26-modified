@@ -29,7 +29,11 @@ class CWeapon;
 class CCustomOutfit;
 class CHelmet;
 
-class CInventoryOwner : public CAttachmentOwner {
+class CInventoryOwner :
+	public CAttachmentOwner,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CInventoryOwner, CAttachmentOwner)
 public:
 					CInventoryOwner				();
 					~CInventoryOwner			() override;

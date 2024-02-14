@@ -4,8 +4,11 @@
 #include "CameraDefs.h"
 
 
-class ENGINE_API CEffectorCam :public SBaseEffector
+class ENGINE_API CEffectorCam :
+	public SBaseEffector,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CEffectorCam, SBaseEffector)
 protected:
 	ECamEffectorType	eType;
 	

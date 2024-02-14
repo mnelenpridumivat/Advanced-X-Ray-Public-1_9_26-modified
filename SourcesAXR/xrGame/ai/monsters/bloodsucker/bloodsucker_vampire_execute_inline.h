@@ -184,7 +184,7 @@ bool CStateBloodsuckerVampireExecuteAbstract::check_start_conditions()
 	if ( object->CControlledActor::is_controlling() )	
 		return false;
 
-	const CActor *actor = smart_cast<const CActor *>(enemy);
+	const CActor *actor = smart_cast<const CActor>(enemy);
 	
 	VERIFY(actor);
 

@@ -12,8 +12,10 @@
 class CExplosiveRocket : 
 			public CCustomRocket,
 			public CInventoryItem,
-			public CExplosive
+			public CExplosive,
+			public IMetaClass
 {
+	DECLARE_METACLASS3(CExplosiveRocket, CCustomRocket, CInventoryItem, CExplosive)
 private:
 	typedef CCustomRocket inherited;
 	friend CRocketLauncher;

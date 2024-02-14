@@ -16,8 +16,10 @@ struct	SEnumVerticesCallback;
 // 10 fps
 #define UCalc_Interval		(u32(100))
 
-class IKinematics
+class IKinematics:
+	public IMetaClass
 {
+	DECLARE_METACLASS(IKinematics)
 public:
 	typedef xr_vector<std::pair<shared_str,u16> >	accel;
 	struct	pick_result

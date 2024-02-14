@@ -3,8 +3,10 @@
 class CTelekinesis;
 class CBaseMonster;
 
-class IPolterInterface
+class IPolterInterface:
+	public IMetaClass
 {
+	DECLARE_METACLASS(IPolterInterface)
 public:
 	virtual CBaseMonster* GetMonster() = 0;
 	virtual CTelekinesis* GetTelekinesis() = 0;

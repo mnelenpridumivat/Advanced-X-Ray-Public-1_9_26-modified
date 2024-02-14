@@ -2,7 +2,12 @@
 
 #include "PolterAbility.h"
 
-class CPolterTele : public CPolterSpecialAbility {
+class CPolterTele :
+	public CPolterSpecialAbility,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CPolterTele, CPolterSpecialAbility)
+
 	typedef CPolterSpecialAbility inherited;
 
 	xr_vector<CObject*>	m_nearest;

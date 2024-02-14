@@ -2,7 +2,12 @@
 #include "../states/monster_state_attack.h"
 
 template<typename _Object>
-class	CBloodsuckerStateAttack : public CStateMonsterAttack<_Object> {
+class	CBloodsuckerStateAttack :
+	public CStateMonsterAttack<_Object>,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CBloodsuckerStateAttack, CStateMonsterAttack<_Object>)
+
 	typedef CStateMonsterAttack<_Object> inherited_attack;
 
 	u32				m_time_stop_invis;

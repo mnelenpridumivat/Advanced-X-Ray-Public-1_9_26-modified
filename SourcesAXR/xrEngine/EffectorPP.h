@@ -4,8 +4,12 @@
 struct SPPInfo;
 
 // постпроцесс
-class ENGINE_API CEffectorPP :public SBaseEffector
+class ENGINE_API CEffectorPP :
+	public SBaseEffector,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CEffectorPP, SBaseEffector)
+
 	EEffectorPPType		eType;
 	bool				bFreeOnRemove;
 protected:

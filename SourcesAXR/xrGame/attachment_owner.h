@@ -12,7 +12,10 @@ class CGameObject;
 class CAttachableItem;
 class CInventoryItem;
 
-class CAttachmentOwner {
+class CAttachmentOwner:
+	public IMetaClass
+{
+	DECLARE_METACLASS(CAttachmentOwner)
 protected:
 	xr_vector<shared_str>			m_attach_item_sections;
 	xr_vector<CAttachableItem*>		m_attached_objects;

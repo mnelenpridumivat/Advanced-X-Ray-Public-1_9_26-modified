@@ -1,8 +1,11 @@
 #ifndef ShapeDataH
 #define ShapeDataH
 
-struct CShapeData
+struct CShapeData:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CShapeData)
+public:
 	enum{
     	cfSphere=0,
         cfBox

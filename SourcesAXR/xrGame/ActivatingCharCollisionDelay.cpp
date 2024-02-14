@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "entity_alive.h"
 #include "activatingcharcollisiondelay.h"
 #include "characterphysicssupport.h"
 #include "phmovementcontrol.h"

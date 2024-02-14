@@ -2,8 +2,11 @@
 #include "../state.h"
 
 template<typename Object>
-class CStateAnomalGigBurerShield : public CState<Object>
+class CStateAnomalGigBurerShield :
+	public CState<Object>,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CStateAnomalGigBurerShield, CState<Object>)
 private:
 	typedef				CState<Object>	inherited;
 

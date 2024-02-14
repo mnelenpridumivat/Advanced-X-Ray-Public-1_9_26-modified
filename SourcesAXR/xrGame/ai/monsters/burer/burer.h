@@ -8,9 +8,12 @@
 class CCharacterPhysicsSupport;
 class CBurerFastGravi;
 
-class CBurer :	public CBaseMonster,
-				public CTelekinesis 
+class CBurer :
+	public CBaseMonster,
+	public CTelekinesis,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CBurer, CBaseMonster, CTelekinesis)
 
 	typedef		CBaseMonster				inherited;
 

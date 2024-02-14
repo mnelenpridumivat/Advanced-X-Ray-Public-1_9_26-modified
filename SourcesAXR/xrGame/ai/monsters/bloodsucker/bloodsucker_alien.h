@@ -4,7 +4,10 @@ class CAI_Bloodsucker;
 class CAlienEffector;
 class CAlienEffectorPP;
 
-class CBloodsuckerAlien {
+class CBloodsuckerAlien:
+	public IMetaClass
+{
+	DECLARE_METACLASS(CBloodsuckerAlien)
 	
 	CAI_Bloodsucker				*m_object;
 	

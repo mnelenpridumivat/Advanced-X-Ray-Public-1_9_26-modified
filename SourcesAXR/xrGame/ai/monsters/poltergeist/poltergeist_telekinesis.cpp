@@ -186,8 +186,8 @@ void CPolterTele::tele_find_objects(xr_vector<CObject*> &objects, const Fvector 
 	Level().ObjectSpace.GetNearest	(m_nearest, pos, m_pmt_radius, NULL);
 
 	for (u32 i=0;i<m_nearest.size();i++) {
-		CPhysicsShellHolder *obj			= smart_cast<CPhysicsShellHolder *>(m_nearest[i]);
-		CCustomMonster		*custom_monster	= smart_cast<CCustomMonster *>(m_nearest[i]);
+		CPhysicsShellHolder *obj			= smart_cast<CPhysicsShellHolder>(m_nearest[i]);
+		CCustomMonster		*custom_monster	= smart_cast<CCustomMonster>(m_nearest[i]);
 		if (!obj || 
 			!obj->PPhysicsShell() || 
 			!obj->PPhysicsShell()->isActive()|| 
@@ -257,7 +257,7 @@ bool CPolterTele::tele_raise_objects()
 	//}
 
 	if (!tele_objects.empty()) {
-		CPhysicsShellHolder *obj = smart_cast<CPhysicsShellHolder *>(tele_objects[0]);
+		CPhysicsShellHolder *obj = smart_cast<CPhysicsShellHolder>(tele_objects[0]);
 
 		// применить телекинез на объект
 		bool	rotate = false;

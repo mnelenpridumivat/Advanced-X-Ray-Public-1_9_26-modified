@@ -4,7 +4,12 @@
 //#include "../../../entitycondition.h"
 
 template<typename _Object>
-class	CStateCaptureJumpBloodsucker : public CState<_Object> {
+class	CStateCaptureJumpBloodsucker :
+	public CState<_Object>,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CStateCaptureJumpBloodsucker, CState<_Object>)
+
 protected:
 	typedef CState<_Object>		inherited;
 	typedef CState<_Object>*	state_ptr;

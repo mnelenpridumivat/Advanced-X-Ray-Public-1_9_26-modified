@@ -2,8 +2,11 @@
 #include "../state.h"
 
 template<typename Object>
-class	CStateBurerAttack : public CState<Object> 
+class	CStateBurerAttack :
+	public CState<Object>,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CStateBurerAttack, CState<Object>)
 	typedef CState<Object> inherited;
 	typedef CState<Object> *state_ptr;
 

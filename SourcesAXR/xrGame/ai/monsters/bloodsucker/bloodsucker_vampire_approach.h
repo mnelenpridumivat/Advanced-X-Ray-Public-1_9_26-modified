@@ -2,7 +2,12 @@
 #include "../state.h"
 
 template<typename _Object>
-class CStateBloodsuckerVampireApproach : public CState<_Object> {
+class CStateBloodsuckerVampireApproach :
+	public CState<_Object>,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CStateBloodsuckerVampireApproach, CState<_Object>)
+
 	typedef CState<_Object> inherited;
 
 public:

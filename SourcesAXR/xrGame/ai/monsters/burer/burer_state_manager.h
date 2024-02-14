@@ -3,7 +3,12 @@
 
 class CBurer;
 
-class CStateManagerBurer : public CMonsterStateManager<CBurer> {
+class CStateManagerBurer :
+	public CMonsterStateManager<CBurer>,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CStateManagerBurer, CMonsterStateManager<CBurer>)
+
 	typedef CMonsterStateManager<CBurer> inherited;
 public:
 					CStateManagerBurer		(CBurer *monster);

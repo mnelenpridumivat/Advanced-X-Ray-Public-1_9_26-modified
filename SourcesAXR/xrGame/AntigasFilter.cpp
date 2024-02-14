@@ -53,9 +53,9 @@ bool CAntigasFilter::Useful() const
 
 bool CAntigasFilter::UseAllowed()
 {
-	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
-	CHelmet* helmet = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
-	CHelmet* helmet2 = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
+	CCustomOutfit* outfit = smart_cast<CCustomOutfit>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
+	CHelmet* helmet = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
+	CHelmet* helmet2 = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
 
 	if (outfit || helmet || helmet2)
 	{
@@ -76,9 +76,9 @@ bool CAntigasFilter::UseBy(CEntityAlive* entity_alive)
 {
 	if (!inherited::Useful()) return false;
 
-	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
-	CHelmet* helmet = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
-	CHelmet* helmet2 = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
+	CCustomOutfit* outfit = smart_cast<CCustomOutfit>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
+	CHelmet* helmet = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
+	CHelmet* helmet2 = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
 
 	if (m_iUseFor == 0)
 	{
@@ -121,7 +121,7 @@ bool CAntigasFilter::UseBy(CEntityAlive* entity_alive)
 
 void CAntigasFilter::ChangeInOutfit()
 {
-	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
+	CCustomOutfit* outfit = smart_cast<CCustomOutfit>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
 
 	if (outfit)
 		outfit->FilterReplace(m_fCondition);
@@ -129,7 +129,7 @@ void CAntigasFilter::ChangeInOutfit()
 
 void CAntigasFilter::ChangeInHelmet()
 {
-	CHelmet* helmet = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
+	CHelmet* helmet = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
 
 	if (helmet)
 		helmet->FilterReplace(m_fCondition);
@@ -137,7 +137,7 @@ void CAntigasFilter::ChangeInHelmet()
 
 void CAntigasFilter::ChangeInSecondHelmet()
 {
-	CHelmet* helmet2 = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
+	CHelmet* helmet2 = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
 
 	if (helmet2)
 		helmet2->FilterReplace(m_fCondition);

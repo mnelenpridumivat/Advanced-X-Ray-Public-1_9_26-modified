@@ -4,7 +4,10 @@
 class IPolterInterface;
 class CParticlesObject;
 
-class CPolterSpecialAbility {
+class CPolterSpecialAbility:
+	public IMetaClass
+{
+	DECLARE_METACLASS(CPolterSpecialAbility)
 
 	CParticlesObject* m_particles_object;
 	CParticlesObject* m_particles_object_electro;

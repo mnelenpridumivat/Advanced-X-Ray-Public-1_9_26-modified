@@ -9,8 +9,12 @@
 #include "bloodsucker_alien.h"
 
 
-class CAI_Bloodsucker : public CBaseMonster, 
-						public CControlledActor {
+class CAI_Bloodsucker :
+	public CBaseMonster, 
+	public CControlledActor,
+	public IMetaClass
+{
+	DECLARE_METACLASS2(CAI_Bloodsucker, CBaseMonster, CControlledActor)
 
 	typedef		CBaseMonster	inherited;
 	

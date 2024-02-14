@@ -4,7 +4,12 @@
 #include "../../../CameraEffector.h"
 #include "../../../../xrEngine/cameramanager.h"
 
-class CVampirePPEffector : public CEffectorPP {
+class CVampirePPEffector :
+	public CEffectorPP,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CVampirePPEffector, CEffectorPP)
+
 	typedef CEffectorPP inherited;	
 
 	SPPInfo state;			//current state
@@ -18,7 +23,12 @@ public:
 //////////////////////////////////////////////////////////////////////////
 // Vampire Camera Effector
 //////////////////////////////////////////////////////////////////////////
-class CVampireCameraEffector : public CEffectorCam {
+class CVampireCameraEffector :
+	public CEffectorCam,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CVampireCameraEffector, CEffectorCam)
+
 	typedef CEffectorCam inherited;	
 
 	float	m_time_total;

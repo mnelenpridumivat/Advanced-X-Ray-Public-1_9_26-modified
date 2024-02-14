@@ -11,7 +11,10 @@ struct SIKCrlCalcData;
 
 
 
-class CIKLimbsController {
+class CIKLimbsController :
+	public IMetaClass
+{
+	DECLARE_METACLASS(CIKLimbsController)
 private:
 	static	const u16	max_size	=				4;
 

@@ -412,7 +412,7 @@ void CAI_Rat::CreateSkeleton(){
 	//sphere.R=0.25;
 	//element->add_Sphere(sphere);
 	element->setDensity(m_phMass);
-	element->SetMaterial(smart_cast<IKinematics*>(Visual())->LL_GetData(smart_cast<IKinematics*>(Visual())->LL_GetBoneRoot()).game_mtl_idx);
+	element->SetMaterial(smart_cast<IKinematics>(Visual())->LL_GetData(smart_cast<IKinematics>(Visual())->LL_GetBoneRoot()).game_mtl_idx);
 	m_pPhysicsShell=P_create_Shell();
 	m_pPhysicsShell->add_Element(element);
 	m_pPhysicsShell->Activate(XFORM(),0,XFORM());

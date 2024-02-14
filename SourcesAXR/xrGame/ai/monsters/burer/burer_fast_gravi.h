@@ -1,7 +1,12 @@
 #pragma once
 #include "../control_combase.h"
 
-class CBurerFastGravi : public CControl_ComCustom<> {
+class CBurerFastGravi :
+	public CControl_ComCustom<>,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CBurerFastGravi, CControl_ComCustom<>)
+
 	typedef CControl_ComCustom<> inherited;
 
 public:

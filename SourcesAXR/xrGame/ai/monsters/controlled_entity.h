@@ -17,7 +17,10 @@ struct SControlledInfo {
 	float			m_radius;
 };
 
-class CControlledEntityBase {
+class CControlledEntityBase:
+	public IMetaClass
+{
+	DECLARE_METACLASS(CControlledEntityBase)
 public:
 	virtual bool			is_under_control	()								= 0;
 

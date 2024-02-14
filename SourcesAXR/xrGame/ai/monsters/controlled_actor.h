@@ -2,7 +2,12 @@
 
 #include "../../actor_input_handler.h"
 
-class CControlledActor : public CActorInputHandler {
+class CControlledActor :
+	public CActorInputHandler,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CControlledActor, CActorInputHandler)
+
 	typedef CActorInputHandler inherited;
 	
 	Fvector m_target_point;

@@ -3,8 +3,11 @@
 #include "Actor.h"
 
 template<typename Object>
-class CStateAnomalPseudoGigantShield : public CState<Object>
+class CStateAnomalPseudoGigantShield :
+	public CState<Object>,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CStateAnomalPseudoGigantShield, CState<Object>)
 private:
 	typedef				CState<Object>	inherited;
 

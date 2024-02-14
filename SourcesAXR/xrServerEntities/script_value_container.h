@@ -14,7 +14,10 @@
 	class CScriptValue {public: virtual ~CScriptValue(){}};
 #endif
 
-class CScriptValueContainer {
+class CScriptValueContainer:
+	public IMetaClass
+{
+	DECLARE_METACLASS(CScriptValueContainer)
 protected:
 	xr_vector<CScriptValue*>				m_values;
 

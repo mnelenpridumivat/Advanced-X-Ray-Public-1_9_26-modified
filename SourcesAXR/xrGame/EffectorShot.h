@@ -11,8 +11,10 @@
 
 class CWeapon;
 
-class CWeaponShotEffector
+class CWeaponShotEffector:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CWeaponShotEffector)
 protected:
 	CameraRecoil	m_cam_recoil;
 	
@@ -63,8 +65,12 @@ protected:
 		void	Relax				();
 };
 
-class CCameraShotEffector : public CWeaponShotEffector, public CEffectorCam
+class CCameraShotEffector :
+	public CWeaponShotEffector,
+	public CEffectorCam,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CCameraShotEffector, CWeaponShotEffector, CEffectorCam)
 protected:
 	CActor*			m_pActor;
 public:

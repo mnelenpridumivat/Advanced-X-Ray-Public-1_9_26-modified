@@ -6,8 +6,10 @@
 #define IINPUTRECEIVERH
 #pragma once
 
-class ENGINE_API	IInputReceiver
+class ENGINE_API	IInputReceiver:
+	public IMetaClass
 {
+	DECLARE_METACLASS(IInputReceiver)
 public:
 	static void		IR_GetLastMouseDelta			(Ivector2& p);
 	static void		IR_GetMousePosScreen			(Ivector2& p);

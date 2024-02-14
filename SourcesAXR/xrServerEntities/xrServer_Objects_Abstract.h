@@ -36,7 +36,10 @@ class CDUInterface;
 
 
 
-class ISE_Shape{
+class ISE_Shape:
+	public IMetaClass
+{
+	DECLARE_METACLASS(ISE_Shape)
 public:
 	virtual void __stdcall			assign_shapes			(CShapeData::shape_def* shapes, u32 cnt)=0;
 };
@@ -104,7 +107,10 @@ struct visual_data {
 }; // struct visual_data
 #pragma pack(pop)
 
-struct ISE_Abstract {
+struct ISE_Abstract:
+	public IMetaClass
+{
+	DECLARE_METACLASS(ISE_Abstract)
 public:
 	enum {
 		flUpdateProperties			= static_cast<u32>(1 << 0),

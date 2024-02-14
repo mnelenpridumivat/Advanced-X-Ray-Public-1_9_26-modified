@@ -491,7 +491,7 @@ bool CActor::use_Holder				(CHolderCustom* holder)
 		bool b = false;
 		CGameObject* holderGO			= smart_cast<CGameObject>(m_holder);
 		
-		if(smart_cast<CCar*>(holderGO))
+		if(holderGO->IsA(CCar::StaticClass()))
 			b = use_Vehicle(0);
 		else
 			if (holderGO->CLS_ID==CLSID_OBJECT_W_STATMGUN)
@@ -506,7 +506,7 @@ bool CActor::use_Holder				(CHolderCustom* holder)
 	}else{
 		bool b = false;
 		CGameObject* holderGO			= smart_cast<CGameObject>(holder);
-		if(smart_cast<CCar*>(holder))
+		if(holder->IsA(CCar::StaticClass()))
 			b = use_Vehicle(holder);
 
 		if (holderGO->CLS_ID==CLSID_OBJECT_W_STATMGUN)
@@ -619,7 +619,7 @@ void CActor::ActorUse()
 		}
 		else
 		{
-			if (object && smart_cast<CHolderCustom*>(object))
+			if (object && smart_cast<CHolderCustom>(object))
 			{
 					NET_Packet		P;
 					CGameObject::u_EventGen		(P, GEG_PLAYER_ATTACH_HOLDER, ID());

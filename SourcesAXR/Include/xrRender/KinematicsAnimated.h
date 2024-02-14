@@ -5,6 +5,7 @@
 #include "../../xrEngine/SkeletonMotions.h"
 #include "animation_blend.h"
 #include "../../layers/xrrender/KinematicAnimatedDefs.h"
+#include "../../xrGame/Metaclass.h"
 
 class	 IKinematics;
 class    CBlend;
@@ -31,8 +32,10 @@ struct SKeyTable
 	SKeyTable			()							{ std::fill_n( chanel_blend_conts, MAX_CHANNELS, 0 ); }
 };
 
-class IKinematicsAnimated
+class IKinematicsAnimated:
+	public IMetaClass
 {
+	DECLARE_METACLASS(IKinematicsAnimated)
 public:
 	virtual ~IKinematicsAnimated() {;}
 

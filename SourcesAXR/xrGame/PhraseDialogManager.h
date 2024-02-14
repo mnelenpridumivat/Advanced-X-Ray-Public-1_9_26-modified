@@ -2,8 +2,10 @@
 
 #include "PhraseDialogDefs.h"
 
-class CPhraseDialogManager
+class CPhraseDialogManager:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CPhraseDialogManager)
 public:
 									CPhraseDialogManager			(void);
 	virtual							~CPhraseDialogManager			(void);
