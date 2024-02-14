@@ -14,7 +14,11 @@ class CCharacterPhysicsSupport;
 class CMaterialManager;
 class CVisualMemoryManager;
 class CBlend;
-class CEntityAlive : public CEntity {
+class CEntityAlive : 
+	public CEntity,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CEntityAlive, CEntity)
 private:
 	typedef	CEntity			inherited;	
 	u32						m_used_time;

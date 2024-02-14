@@ -1,15 +1,16 @@
 #pragma once
 
 #include "pure_relcase.h"
+#include "../xrGame/Metaclass.h"
 
 class ENGINE_API CObject;
 namespace Feel
 {
 	class ENGINE_API Touch:
-		private pure_relcase,
-		public IMetaClass
+		public IMetaClass,
+		private pure_relcase
 	{
-		DECLARE_METACLASS1(Touch, pure_relcase)
+		DECLARE_METACLASS1(Feel::Touch, pure_relcase)
 	public:
 		struct DenyTouch
 		{
@@ -29,11 +30,11 @@ namespace Feel
 	public:
 								Touch						();
 		virtual					~Touch						();
-
 		virtual BOOL			feel_touch_contact			(CObject* O);
 		virtual void			feel_touch_update			(Fvector& P, float	R);
 		virtual void			feel_touch_deny				(CObject* O, DWORD	T);
 		virtual void			feel_touch_new				(CObject* O)			{	};
 		virtual void			feel_touch_delete			(CObject* O)			{	};
+
 	};
 };

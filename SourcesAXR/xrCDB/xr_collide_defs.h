@@ -78,6 +78,14 @@ namespace collide
 			flags	= _flags;
 			tgt		= _tgt;
 		}
+		ray_defs(Fvector _start, Fvector _end, u32 _flags, rq_target _tgt) 
+		{
+			start = _start;
+			dir = _end.sub(_start).normalize();
+			range = _end.distance_to(_start);
+			flags = _flags;
+			tgt = _tgt;
+		}
 	};
 	struct			rq_result 
 	{

@@ -4,6 +4,7 @@
 #include "render.h"
 #include "pure_relcase.h"
 
+
 class IRender_Sector;
 class CObject;
 class ISpatial;
@@ -15,8 +16,10 @@ namespace Feel
 	const float fuzzy_guaranteed	= 0.001f;		// distance which is supposed 100% visible
 	const float lr_granularity		= 0.1f;			// assume similar positions
 
-	class ENGINE_API Vision: public pure_relcase
+	class ENGINE_API Vision: 
+		public pure_relcase
 	{
+		DECLARE_METACLASS1(Feel::Vision, pure_relcase)
 	private:
 		xr_vector<CObject*>			seen;
 		xr_vector<CObject*>			query;

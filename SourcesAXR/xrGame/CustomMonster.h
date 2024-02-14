@@ -35,8 +35,10 @@ class CCustomMonster :
 	public CScriptEntity,
 	public Feel::Vision,
 	public Feel::Sound,
-	public Feel::Touch
+	public Feel::Touch,
+	public IMetaClass
 {
+	DECLARE_METACLASS5(CCustomMonster, CEntityAlive, CScriptEntity, Feel::Vision, Feel::Sound, Feel::Touch)
 private:
 	typedef	CEntityAlive	inherited;
 

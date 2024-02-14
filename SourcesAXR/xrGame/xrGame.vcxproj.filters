@@ -11386,6 +11386,9 @@
     <ClCompile Include="Flamethrower.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Flamethrower</Filter>
     </ClCompile>
+    <ClCompile Include="FlamethrowerTraceCollision.cpp">
+      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Flamethrower</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ai\monsters\chimera\chimera_attack_state.h">
