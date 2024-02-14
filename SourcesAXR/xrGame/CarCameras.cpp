@@ -56,7 +56,7 @@ void	CCar::OnCameraChange		(int type)
 	{
 		Owner()->setVisible(TRUE);
 
-		IKinematics* pKinematics = smart_cast<IKinematics*>(Owner()->Visual());
+		IKinematics* pKinematics = reinterpret_cast<IKinematics*>(Owner()->Visual());
 		u16 		head_bone = pKinematics->LL_BoneID("bip01_head");
 
 		if (type == ectFirst)

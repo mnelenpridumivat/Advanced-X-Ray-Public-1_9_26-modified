@@ -176,13 +176,13 @@ ALife::EMeetActionType	CSE_ALifeMonsterAbstract::tfGetActionType(CSE_ALifeSchedu
 
 bool CSE_ALifeMonsterAbstract::bfActive()
 {
-	CSE_ALifeGroupAbstract		*l_tpALifeGroupAbstract = smart_cast<CSE_ALifeGroupAbstract*>(this);
+	CSE_ALifeGroupAbstract		*l_tpALifeGroupAbstract = smart_cast<CSE_ALifeGroupAbstract>(this);
 	return						(/**/interactive() && /**/((l_tpALifeGroupAbstract && (l_tpALifeGroupAbstract->m_wCount > 0)) || (!l_tpALifeGroupAbstract && (get_health() > EPS_L))));
 }
 
 CSE_ALifeDynamicObject *CSE_ALifeMonsterAbstract::tpfGetBestDetector()
 {
-	CSE_ALifeGroupAbstract		*l_tpALifeGroupAbstract = smart_cast<CSE_ALifeGroupAbstract*>(this);
+	CSE_ALifeGroupAbstract		*l_tpALifeGroupAbstract = smart_cast<CSE_ALifeGroupAbstract>(this);
 	if (!l_tpALifeGroupAbstract)
 		return					(this);
 	else {
@@ -195,7 +195,7 @@ CSE_ALifeDynamicObject *CSE_ALifeMonsterAbstract::tpfGetBestDetector()
 
 void CSE_ALifeMonsterAbstract::vfCheckForPopulationChanges	()
 {
-	CSE_ALifeGroupAbstract		*l_tpALifeGroupAbstract = smart_cast<CSE_ALifeGroupAbstract*>(this);
+	CSE_ALifeGroupAbstract		*l_tpALifeGroupAbstract = smart_cast<CSE_ALifeGroupAbstract>(this);
 	if (!l_tpALifeGroupAbstract || !bfActive() || m_bOnline)
 		return;
 

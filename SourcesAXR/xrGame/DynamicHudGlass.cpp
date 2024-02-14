@@ -21,9 +21,9 @@ namespace DynamicHudGlass
 
 	void UpdateDynamicHudGlass()
 	{
-		CHelmet* helmet = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
-		CHelmet* helmet2 = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
-		CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
+		CHelmet* helmet = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
+		CHelmet* helmet2 = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
+		CCustomOutfit* outfit = smart_cast<CCustomOutfit>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
 
 		if (helmet)
 		{

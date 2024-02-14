@@ -86,7 +86,7 @@ void CSE_ALifeOnlineOfflineGroup::register_member						(ALife::_OBJECT_ID member
 {
 	VERIFY						(m_members.find(member_id) == m_members.end());
 	CSE_ALifeDynamicObject		*object = ai().alife().objects().object(member_id);
-	CSE_ALifeMonsterAbstract	*monster = smart_cast<CSE_ALifeMonsterAbstract*>(object);
+	CSE_ALifeMonsterAbstract	*monster = smart_cast<CSE_ALifeMonsterAbstract>(object);
 	VERIFY						(monster);
 	VERIFY						(monster->g_Alive());
 

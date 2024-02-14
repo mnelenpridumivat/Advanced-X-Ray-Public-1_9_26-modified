@@ -29,9 +29,9 @@ void game_cl_Deathmatch::OnBuyMenu_Ok	()
 	if (!m_bBuyEnabled) return;
 	CObject *l_pObj = Level().CurrentEntity();
 
-	CGameObject *l_pPlayer = smart_cast<CGameObject*>(l_pObj);
+	CGameObject *l_pPlayer = smart_cast<CGameObject>(l_pObj);
 	if(!l_pPlayer) return;
-	CActor* pActor = smart_cast<CActor*>(l_pObj);
+	CActor* pActor = smart_cast<CActor>(l_pObj);
 
 	game_PlayerState* Pl = local_player;
 	if (!Pl) return;
@@ -138,7 +138,7 @@ void game_cl_Deathmatch::SetBuyMenuItems		(PRESET_ITEMS* pItems, BOOL OnlyPreset
 	//---------------------------------------------------------
 	pCurBuyMenu->SetupPlayerItemsBegin();
 	//---------------------------------------------------------
-	CActor* pCurActor = smart_cast<CActor*> (Level().Objects.net_Find	(P->GameID));
+	CActor* pCurActor = smart_cast<CActor> (Level().Objects.net_Find	(P->GameID));
 	if (pCurActor)
 	{
 		//defusing all weapons
@@ -160,7 +160,7 @@ void game_cl_Deathmatch::SetBuyMenuItems		(PRESET_ITEMS* pItems, BOOL OnlyPreset
 			PIItem pItem = pCurActor->inventory().ItemFromSlot(ISlot);
 			if(!pItem)																	continue;
 			//if (pItem->IsInvalid() || pItem->object().CLS_ID == CLSID_OBJECT_W_KNIFE)	continue;
-			if ( pItem->IsInvalid() || smart_cast<CWeaponKnife*>( &pItem->object() ) )	continue;
+			if ( pItem->IsInvalid() || smart_cast<CWeaponKnife>( &pItem->object() ) )	continue;
 			if (!pItem->CanTrade())
 			{
 				continue;
@@ -169,11 +169,11 @@ void game_cl_Deathmatch::SetBuyMenuItems		(PRESET_ITEMS* pItems, BOOL OnlyPreset
 			if(pSettings->line_exist(GetBaseCostSect(), pItem->object().cNameSect()))
 			{
 				u8 Addons = 0;
-				CWeapon* pWeapon = smart_cast<CWeapon*> (pItem);
+				CWeapon* pWeapon = smart_cast<CWeapon> (pItem);
 				{
 					if (pWeapon) Addons = pWeapon->GetAddonsState();
 				}
-				CWeaponAmmo* pAmmo = smart_cast<CWeaponAmmo*> (pItem);
+				CWeaponAmmo* pAmmo = smart_cast<CWeaponAmmo> (pItem);
 				if (pAmmo)
 				{
 					if (pAmmo->m_boxCurr != pAmmo->m_boxSize) continue;
@@ -190,7 +190,7 @@ void game_cl_Deathmatch::SetBuyMenuItems		(PRESET_ITEMS* pItems, BOOL OnlyPreset
 		{
 			PIItem pItem = (*IBelt);
 			//if (pItem->IsInvalid() || pItem->object().CLS_ID == CLSID_OBJECT_W_KNIFE) continue;
-			if ( pItem->IsInvalid() || smart_cast<CWeaponKnife*>( &pItem->object() ) )	continue;
+			if ( pItem->IsInvalid() || smart_cast<CWeaponKnife>( &pItem->object() ) )	continue;
 			if (!pItem->CanTrade())
 			{
 				continue;
@@ -198,7 +198,7 @@ void game_cl_Deathmatch::SetBuyMenuItems		(PRESET_ITEMS* pItems, BOOL OnlyPreset
 
 			if(pSettings->line_exist(GetBaseCostSect(), pItem->object().cNameSect()))
 			{
-				CWeaponAmmo* pAmmo = smart_cast<CWeaponAmmo*> (pItem);
+				CWeaponAmmo* pAmmo = smart_cast<CWeaponAmmo> (pItem);
 				if (pAmmo)
 				{
 					if (pAmmo->m_boxCurr != pAmmo->m_boxSize) continue;
@@ -224,11 +224,11 @@ void game_cl_Deathmatch::SetBuyMenuItems		(PRESET_ITEMS* pItems, BOOL OnlyPreset
 			if(pSettings->line_exist(GetBaseCostSect(), pItem->object().cNameSect()))
 			{
 				u8 Addons = 0;
-				CWeapon* pWeapon = smart_cast<CWeapon*> (pItem);
+				CWeapon* pWeapon = smart_cast<CWeapon> (pItem);
 				{
 					if (pWeapon) Addons = pWeapon->GetAddonsState();
 				}
-				CWeaponAmmo* pAmmo = smart_cast<CWeaponAmmo*> (pItem);
+				CWeaponAmmo* pAmmo = smart_cast<CWeaponAmmo> (pItem);
 				if (pAmmo)
 				{
 					if (pAmmo->m_boxCurr != pAmmo->m_boxSize) continue;
@@ -273,7 +273,7 @@ void game_cl_Deathmatch::CheckItem			(PIItem pItem, PRESET_ITEMS* pPresetItems, 
 	pCurBuyMenu->GetWeaponIndexByName(*pItem->object().cNameSect(), SlotID, ItemID);
 	if (SlotID == 0xff || ItemID == 0xff) return;
 	s16 BigID = GetBuyMenuItemIndex(SlotID, ItemID);
-	CWeaponAmmo* pAmmo = smart_cast<CWeaponAmmo*> (pItem);
+	CWeaponAmmo* pAmmo = smart_cast<CWeaponAmmo> (pItem);
 	if (pAmmo)
 	{
 		if (pAmmo->m_boxCurr != pAmmo->m_boxSize) return;
@@ -300,7 +300,7 @@ void game_cl_Deathmatch::CheckItem			(PIItem pItem, PRESET_ITEMS* pPresetItems, 
 		pPresetItems->erase(PresetItemIt);
 	}
 	//-----------------------------------------------------
-	CWeapon* pWeapon = smart_cast<CWeapon*> (pItem);
+	CWeapon* pWeapon = smart_cast<CWeapon> (pItem);
 	if (pWeapon)
 	{
 		if (pWeapon->ScopeAttachable())
@@ -491,7 +491,7 @@ void game_cl_Deathmatch::TryToDefuseAllWeapons	(aditional_ammo_t & dest_ammo)
 {
 	game_PlayerState* ps = Game().local_player;
 	VERIFY2(ps, "local player not initialized");
-	CActor* actor = smart_cast<CActor*> (Level().Objects.net_Find(ps->GameID));
+	CActor* actor = smart_cast<CActor> (Level().Objects.net_Find(ps->GameID));
 	R_ASSERT2(actor || ps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD),
 		make_string("bad actor: not found in game (GameID = %d)", ps->GameID).c_str());
 
@@ -500,7 +500,7 @@ void game_cl_Deathmatch::TryToDefuseAllWeapons	(aditional_ammo_t & dest_ammo)
 	for (TIItemContainer::const_iterator i = all_items.begin(),
 		ie = all_items.end(); i != ie; ++i)
 	{
-		CWeapon* tmp_weapon = smart_cast<CWeapon*>(*i);
+		CWeapon* tmp_weapon = smart_cast<CWeapon>(*i);
 		if (tmp_weapon)
 			TryToDefuseWeapon(tmp_weapon, all_items, dest_ammo);
 	}
@@ -519,7 +519,7 @@ struct AmmoSearcherPredicate
 
 	bool operator()(PIItem const & item)
 	{
-		CWeaponAmmo* temp_ammo = smart_cast<CWeaponAmmo*>(item);
+		CWeaponAmmo* temp_ammo = smart_cast<CWeaponAmmo>(item);
 		if (!temp_ammo)
 			return false;
 		
@@ -552,7 +552,7 @@ bool game_cl_Deathmatch::LocalPlayerCanBuyItem(shared_str const & name_sect)
 {
 	if (name_sect == "mp_wpn_knife")
 		return true;
-	CUIMpTradeWnd* buy_menu = smart_cast<CUIMpTradeWnd*>(pCurBuyMenu);
+	CUIMpTradeWnd* buy_menu = smart_cast<CUIMpTradeWnd>(pCurBuyMenu);
 	R_ASSERT(buy_menu);
 	return buy_menu->HasItemInGroup(name_sect);
 }

@@ -67,7 +67,8 @@ void CPsyDogAura::update_schedule()
 	CVisualMemoryManager::VISIBLES::const_iterator	E = m_actor->memory().visual().objects().end();
 	for ( ; I != E; ++I) {
 		const CGameObject *obj = I->m_object;
-		if (smart_cast<const CPsyDogPhantom *>(obj)) {
+		//if (smart_cast<const CPsyDogPhantom*>(obj)) {
+		if (obj->IsA(CPsyDogPhantom::StaticCast())) {
 			if (m_actor->memory().visual().visible_now(obj))
 				m_time_actor_saw_phantom = time();
 		}

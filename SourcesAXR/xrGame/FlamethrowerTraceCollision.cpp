@@ -24,7 +24,7 @@ BOOL CFlamethrowerTraceCollision::test_callback(const collide::ray_defs& rd, COb
 
 	bool bRes = TRUE;
 	if (object) {
-		CEntity* entity = smart_cast<CEntity*>(object);
+		CEntity* entity = smart_cast<CEntity>(object);
 		if (entity && entity->g_Alive() && (entity->ID() != pData->TracedObj->GetParentWeapon()->H_Parent()->ID())) {
 			ICollisionForm* cform = entity->collidable.model;
 			if ((NULL != cform) && (cftObject == cform->Type())) {
@@ -32,8 +32,8 @@ BOOL CFlamethrowerTraceCollision::test_callback(const collide::ray_defs& rd, COb
 				// TODO: add check for big enemies (like pseudogiant)
 				return false;
 
-				CActor* actor = smart_cast<CActor*>(entity);
-				CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(entity);
+				CActor* actor = smart_cast<CActor>(entity);
+				CAI_Stalker* stalker = smart_cast<CAI_Stalker>(entity);
 				// в кого попали?
 				if (actor && IsGameTypeSingle()/**/ || stalker/**/) {
 					// попали в актера или сталкера
@@ -52,7 +52,7 @@ BOOL CFlamethrowerTraceCollision::test_callback(const collide::ray_defs& rd, COb
 							float ahp = actor->HitProbability();
 
 							float					game_difficulty_hit_probability = actor->HitProbability();
-							CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(initiator);
+							CAI_Stalker* stalker = smart_cast<CAI_Stalker>(initiator);
 							if (stalker)
 							{
 								hpf = stalker->SpecificCharacter().hit_probability_factor();
@@ -137,14 +137,14 @@ float CFlamethrowerTraceCollision::GetCurrentRadius()
 void CFlamethrowerTraceCollision::feel_touch_new(CObject* O)
 {
 	if (m_IsActive && O->IsA(CCustomMonster::StaticClass())) {
-		m_flamethrower->RegisterOverlapped(meta_cast<CCustomMonster>(O));
+		m_flamethrower->RegisterOverlapped(smart_cast<CCustomMonster>(O));
 	}
 }
 
 void CFlamethrowerTraceCollision::feel_touch_delete(CObject* O)
 {
 	if (O->IsA(CCustomMonster::StaticClass())) {
-		m_flamethrower->UnregisterOverlapped(meta_cast<CCustomMonster>(O));
+		m_flamethrower->UnregisterOverlapped(smart_cast<CCustomMonster>(O));
 	}
 }
 

@@ -359,7 +359,7 @@ void CBurer::UpdateGraviObject()
 	//xr_vector<CObject*> &m_nearest = Level().ObjectSpace.q_nearest;
 
 	for (u32 i=0;i<m_nearest.size();i++) {
-		CPhysicsShellHolder  *obj = smart_cast<CPhysicsShellHolder *>(m_nearest[i]);
+		CPhysicsShellHolder  *obj = smart_cast<CPhysicsShellHolder>(m_nearest[i]);
 		if (!obj || !obj->m_pPhysicsShell) continue;
 		
 		Fvector dir;

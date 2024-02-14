@@ -188,7 +188,7 @@ ICF static BOOL grenade_hit_callback(collide::rq_result& result, LPVOID params)
 	u16 mtl_idx			= GAMEMTL_NONE_IDX;
 	if(result.O){
 		IKinematics* V  = 0;
-		if (0!=(V=smart_cast<IKinematics*>(result.O->Visual()))){
+		if (0!=(V= reinterpret_cast<IKinematics*>(result.O->Visual()))){
 			CBoneData& B= V->LL_GetData(static_cast<u16>(result.element));
 			mtl_idx		= B.game_mtl_idx;
 		}
@@ -345,14 +345,14 @@ void CExplosive::Explode()
 	if (Initiator() != static_cast<ALife::_OBJECT_ID>(-1))
 		who = Level().Objects.net_Find(Initiator());
 
-	m_layered_sounds.PlaySound("sndExplode", pos, smart_cast<CObject*>(this), false, false, static_cast<u8>(-1));
+	m_layered_sounds.PlaySound("sndExplode", pos, smart_cast<CObject>(this), false, false, static_cast<u8>(-1));
 	
 	//показываем эффекты
 
 	m_wallmark_manager.PlaceWallmarks		(pos);
 
 	Fvector									vel;
-	smart_cast<CPhysicsShellHolder*>(cast_game_object())->PHGetLinearVell(vel);
+	smart_cast<CPhysicsShellHolder>(cast_game_object())->PHGetLinearVell(vel);
 
 	Fmatrix explode_matrix;
 	explode_matrix.identity();
@@ -416,7 +416,7 @@ void CExplosive::Explode()
 		ISpatial*		spatial	= ISpatialResult[o_it];
 		//		feel_touch_new(spatial->dcast_CObject());
 
-		CPhysicsShellHolder	*pGameObject = smart_cast<CPhysicsShellHolder*>(spatial->dcast_CObject());
+		CPhysicsShellHolder	*pGameObject = smart_cast<CPhysicsShellHolder>(spatial->dcast_CObject());
 		if(pGameObject && cast_game_object()->ID() != pGameObject->ID()) 
 			m_blasted_objects.push_back(pGameObject);
 	}
@@ -435,8 +435,8 @@ STOP_PROFILE
 #endif
 	//////////////////////////////////////////////////////////////////////////
 	// Explode Effector	//////////////
-	CGameObject* GO = smart_cast<CGameObject*>(Level().CurrentEntity());
-	CActor* pActor = smart_cast<CActor*>(GO);
+	CGameObject* GO = smart_cast<CGameObject>(Level().CurrentEntity());
+	CActor* pActor = smart_cast<CActor>(GO);
 	if(pActor)
 	{
 		float dist_to_actor = pActor->Position().distance_to(pos);
@@ -472,7 +472,7 @@ void CExplosive::GetExplDirection(Fvector &d)
 }
 void CExplosive::GetExplVelocity(Fvector &v)
 {
-	smart_cast<CPhysicsShellHolder*>(cast_game_object())->PHGetLinearVell(v);
+	smart_cast<CPhysicsShellHolder>(cast_game_object())->PHGetLinearVell(v);
 }
 
 void CExplosive::UpdateCL() 
@@ -557,7 +557,7 @@ void CExplosive::HideExplosive()
 	CGameObject	*GO=cast_game_object();
 	GO->setVisible(FALSE);
 	GO->setEnabled(FALSE);
-	CPhysicsShell* phshell=(smart_cast<CPhysicsShellHolder*>(GO))->PPhysicsShell();
+	CPhysicsShell* phshell=(smart_cast<CPhysicsShellHolder>(GO))->PPhysicsShell();
 	if(phshell)
 	{
 		phshell->Disable();
@@ -759,7 +759,7 @@ void CExplosive::SetExplosionSize(const Fvector	&new_size)
 
 void CExplosive::ActivateExplosionBox(const Fvector &size,Fvector &in_out_pos)
 {
-	CPhysicsShellHolder		*self_obj=smart_cast<CPhysicsShellHolder*>(cast_game_object());
+	CPhysicsShellHolder		*self_obj=smart_cast<CPhysicsShellHolder>(cast_game_object());
 	CPhysicsShell* self_shell=self_obj->PPhysicsShell();
 	if(self_shell&&self_shell->isActive())self_shell->DisableCollision();
 	ActivateShapeExplosive( self_obj, size, m_vExplodeSize, in_out_pos );
@@ -773,7 +773,7 @@ void CExplosive::net_Relcase(CObject* O)
 			m_iCurrentParentID=static_cast<u16>(-1);
 	}
 	
-	BLASTED_OBJECTS_I I=std::find(m_blasted_objects.begin(),m_blasted_objects.end(),smart_cast<CPhysicsShellHolder*>(O));
+	BLASTED_OBJECTS_I I=std::find(m_blasted_objects.begin(),m_blasted_objects.end(),smart_cast<CPhysicsShellHolder>(O));
 	if(m_blasted_objects.end()!=I)
 	{
 		m_blasted_objects.erase(I);

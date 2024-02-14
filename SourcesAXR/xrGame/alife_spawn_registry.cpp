@@ -222,7 +222,7 @@ void CALifeSpawnRegistry::build_story_spawns()
 	SPAWN_GRAPH::const_vertex_iterator	I = m_spawns.vertices().begin();
 	SPAWN_GRAPH::const_vertex_iterator	E = m_spawns.vertices().end();
 	for ( ; I != E; ++I) {
-		CSE_ALifeObject					*object = smart_cast<CSE_ALifeObject*>(&I->second->data()->object());
+		CSE_ALifeObject					*object = smart_cast<CSE_ALifeObject>(&I->second->data()->object());
 		VERIFY							(object);
 		m_spawn_ids_by_name.emplace(object->name_replace(), I->first);
 		if (object->m_spawn_story_id == INVALID_SPAWN_STORY_ID)

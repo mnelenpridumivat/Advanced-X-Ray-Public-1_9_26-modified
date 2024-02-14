@@ -136,8 +136,8 @@ void	CBlackGraviArtefact::Hit					(SHit* pHDS)
 
 void CBlackGraviArtefact::feel_touch_new(CObject* O) 
 {
-	CPhysicsShellHolder* pGameObject = smart_cast<CPhysicsShellHolder*>(O);
-	CArtefact* pArtefact = smart_cast<CArtefact*>(O);
+	CPhysicsShellHolder* pGameObject = smart_cast<CPhysicsShellHolder>(O);
+	CArtefact* pArtefact = smart_cast<CArtefact>(O);
 
 	if(pGameObject && !pArtefact) 
 	{
@@ -148,7 +148,7 @@ void CBlackGraviArtefact::feel_touch_new(CObject* O)
 void CBlackGraviArtefact::feel_touch_delete(CObject* O) 
 {
 	CGameObject* pGameObject = static_cast<CGameObject*>(O);
-	CArtefact* pArtefact = smart_cast<CArtefact*>(O);
+	CArtefact* pArtefact = smart_cast<CArtefact>(O);
 
 	if(pGameObject && !pArtefact)
 	{
@@ -204,7 +204,7 @@ void CBlackGraviArtefact::GraviStrike()
 		}
 
 		float hit_power		;
-		CEntityAlive* pEntityAlive = smart_cast<CEntityAlive*>(pGameObject);
+		CEntityAlive* pEntityAlive = smart_cast<CEntityAlive>(pGameObject);
 		if(pGameObject->m_pPhysicsShell)	hit_power = 0;
 		else if(pEntityAlive && pEntityAlive->g_Alive() && 
 				pEntityAlive->character_physics_support()->movement()->CharacterExist())

@@ -94,7 +94,7 @@ void character_shell_control:: apply_start_velocity_factor	( CObject* who, Fvect
 	velocity.mul( 1.3f );
 	velocity.mul( 1.25f*m_after_death_velocity_factor );
 	//set shell params
-	if( !smart_cast<CCustomZone*>( who ) )
+	if( !smart_cast<CCustomZone>( who ) )
 	{
 		velocity.mul(1.25f*m_after_death_velocity_factor);
 	}

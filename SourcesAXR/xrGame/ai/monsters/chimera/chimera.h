@@ -2,8 +2,12 @@
 #include "../BaseMonster/base_monster.h"
 #include "../../../../xrServerEntities/script_export_space.h"
 
-class CChimera : public CBaseMonster 
+class CChimera :
+	public CBaseMonster,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CChimera, CBaseMonster)
+
 public:
 							CChimera					();
 							~CChimera					() override;

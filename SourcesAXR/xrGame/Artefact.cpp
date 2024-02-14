@@ -183,7 +183,7 @@ BOOL CArtefact::net_Spawn(CSE_Abstract* DC)
 
 	StartLights();
 	m_CarringBoneID					= static_cast<u16>(-1);
-	IKinematicsAnimated	*K			= smart_cast<IKinematicsAnimated*>(Visual());
+	IKinematicsAnimated	*K			= reinterpret_cast<IKinematicsAnimated*>(Visual());
 	if(K)
 		K->PlayCycle("idle");
 	
@@ -218,7 +218,7 @@ void CArtefact::OnH_A_Chield()
 	}
 	else
 	{
-		IKinematics* K	= smart_cast<IKinematics*>(H_Parent()->Visual());
+		IKinematics* K	= reinterpret_cast<IKinematics*>(H_Parent()->Visual());
 		if (K)
 			m_CarringBoneID			= K->LL_BoneID("bip01_head");
 		else
@@ -420,7 +420,7 @@ void CArtefact::UpdateWorkload		(u32 dt)
 	Fvector vel = {0, 0, 0};
 	if (H_Parent()) 
 	{
-		CPhysicsShellHolder* pPhysicsShellHolder = smart_cast<CPhysicsShellHolder*>(H_Parent());
+		CPhysicsShellHolder* pPhysicsShellHolder = smart_cast<CPhysicsShellHolder>(H_Parent());
 		if(pPhysicsShellHolder) pPhysicsShellHolder->PHGetLinearVell(vel);
 	}
 	CParticlesPlayer::SetParentVel	(vel);
@@ -752,7 +752,7 @@ void SArtefactDetectorsSupport::SetVisible(bool b)
 		
 		if (curr)
 		{
-			IKinematics* K = smart_cast<IKinematics*>(m_parent->Visual());
+			IKinematics* K = reinterpret_cast<IKinematics*>(m_parent->Visual());
 			R_ASSERT2(K, m_parent->cNameSect().c_str());
 			LPCSTR bone = pSettings->r_string(m_parent->cNameSect().c_str(), "particles_bone");
 			u16 bone_id = K->LL_BoneID(bone);
@@ -780,7 +780,7 @@ void SArtefactDetectorsSupport::Blink()
 	if (!curr)
 		return;
 
-	IKinematics* K			= smart_cast<IKinematics*>(m_parent->Visual());
+	IKinematics* K			= reinterpret_cast<IKinematics*>(m_parent->Visual());
 	R_ASSERT2				(K, m_parent->cNameSect().c_str());
 	LPCSTR bone				= pSettings->r_string(m_parent->cNameSect().c_str(), "particles_bone");
 	u16 bone_id				= K->LL_BoneID(bone);

@@ -1,10 +1,16 @@
 #pragma once
 #include "pseudodog.h"
 #include "../../../../xrServerEntities/script_export_space.h"
+#include "../../../Metaclass.h"
 
 class CPsyDogPhantom;
 
-class CPsyDog : public CAI_PseudoDog {
+class CPsyDog :
+	public CAI_PseudoDog,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CPsyDog, CAI_PseudoDog)
+
 	typedef CAI_PseudoDog inherited;
 
 	friend class CPsyDogPhantom;
@@ -66,7 +72,12 @@ add_to_type_list(CPsyDog)
 // Phantom Psy Dog
 //////////////////////////////////////////////////////////////////////////
 
-class CPsyDogPhantom : public CAI_PseudoDog {
+class CPsyDogPhantom :
+	public CAI_PseudoDog,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CPsyDogPhantom, CAI_PseudoDog)
+
 	typedef CAI_PseudoDog inherited;
 	
 	CPsyDog			*m_parent;

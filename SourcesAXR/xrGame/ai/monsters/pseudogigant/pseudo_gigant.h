@@ -4,8 +4,12 @@
 #include "../../../../xrServerEntities/script_export_space.h"
 
 
-class CPseudoGigant : public CBaseMonster,
-					  public CControlledEntity<CPseudoGigant> {
+class CPseudoGigant :
+	public CBaseMonster,
+	public CControlledEntity<CPseudoGigant>,
+	public IMetaClass
+{
+	DECLARE_METACLASS2(CPseudoGigant, CBaseMonster, CControlledEntity<CPseudoGigant>)
 	
 	typedef		CBaseMonster						inherited;
 	typedef		CControlledEntity<CPseudoGigant>	CControlled;

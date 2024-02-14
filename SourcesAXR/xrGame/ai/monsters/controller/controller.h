@@ -10,9 +10,13 @@ class SndShockEffector;
 class CControllerPsyHit;
 class CControllerAura;
 
-class CController : public CBaseMonster,
-					public CControlledActor 
+class CController :
+	public CBaseMonster,
+	public CControlledActor,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CController, CBaseMonster, CControlledActor)
+
 	typedef		CBaseMonster	inherited;
 
 	u8					m_max_controlled_number;

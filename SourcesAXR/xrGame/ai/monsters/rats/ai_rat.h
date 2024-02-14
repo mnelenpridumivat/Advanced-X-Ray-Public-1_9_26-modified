@@ -24,8 +24,12 @@ class rat_state_manager;
 namespace steering_behaviour {
 	class manager;
 } // namespace steering_behaviour
-class CAI_Rat : public CCustomMonster, public CEatableItem
+class CAI_Rat :
+	public CCustomMonster,
+	public CEatableItem,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CAI_Rat, CCustomMonster, CEatableItem)
 private:
 	typedef	CCustomMonster	inherited;
 	const CPatrolPath	*m_path;

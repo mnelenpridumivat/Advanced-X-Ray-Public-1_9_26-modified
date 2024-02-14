@@ -240,7 +240,7 @@ bool CBastArtefact::Useful() const
 
 void CBastArtefact::feel_touch_new(CObject* O) 
 {
-	CEntityAlive* pEntityAlive = smart_cast<CEntityAlive*>(O);
+	CEntityAlive* pEntityAlive = smart_cast<CEntityAlive>(O);
 
 	if(pEntityAlive && pEntityAlive->g_Alive()) 
 	{
@@ -250,7 +250,7 @@ void CBastArtefact::feel_touch_new(CObject* O)
 
 void CBastArtefact::feel_touch_delete(CObject* O) 
 {
-	CEntityAlive* pEntityAlive = smart_cast<CEntityAlive*>(O);
+	CEntityAlive* pEntityAlive = smart_cast<CEntityAlive>(O);
 
 	if(pEntityAlive)
 	{
@@ -262,7 +262,7 @@ void CBastArtefact::feel_touch_delete(CObject* O)
 
 BOOL CBastArtefact::feel_touch_contact(CObject* O) 
 {
-	CEntityAlive* pEntityAlive = smart_cast<CEntityAlive*>(O);
+	CEntityAlive* pEntityAlive = smart_cast<CEntityAlive>(O);
 
 	if(pEntityAlive && pEntityAlive->g_Alive()) 
 		return TRUE;

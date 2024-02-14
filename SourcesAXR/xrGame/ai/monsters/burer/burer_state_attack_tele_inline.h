@@ -110,7 +110,7 @@ void CStateBurerAttackTele<Object>::deactivate()
 			{
 				continue;
 			}
-			if ( CGrenade* grenade = smart_cast<CGrenade*>(cur_object) )
+			if ( CGrenade* grenade = smart_cast<CGrenade>(cur_object) )
 			{
 				grenade->set_destroy_callback		(NULL);
 			}
@@ -194,9 +194,9 @@ void CStateBurerAttackTele<Object>::FindFreeObjects(xr_vector<CObject*> &tpObjec
 	Level().ObjectSpace.GetNearest	(tpObjects, pos, object->m_tele_find_radius, NULL);
 
 	for (u32 i=0;i<tpObjects.size();i++) {
-		CPhysicsShellHolder *obj			=	smart_cast<CPhysicsShellHolder *>(tpObjects[i]);
-		CCustomMonster		*custom_monster	=	smart_cast<CCustomMonster *>(tpObjects[i]);
-		CGrenade			*grenade		=	smart_cast<CGrenade *>(tpObjects[i]);
+		CPhysicsShellHolder *obj			=	smart_cast<CPhysicsShellHolder>(tpObjects[i]);
+		CCustomMonster		*custom_monster	=	smart_cast<CCustomMonster>(tpObjects[i]);
+		CGrenade			*grenade		=	smart_cast<CGrenade>(tpObjects[i]);
 		
 		if (grenade || // grenades are handled by HandleGrenades function
 			!obj || 
@@ -463,7 +463,7 @@ void CStateBurerAttackTele<Object>::HandleGrenades ()
 
 	for ( u32 i=0; i<m_nearest.size(); ++i )
 	{
-		CGrenade*		grenade		=	smart_cast<CGrenade *>(m_nearest[i]);
+		CGrenade*		grenade		=	smart_cast<CGrenade>(m_nearest[i]);
 
 		if ( !grenade ||
 			 !grenade->PPhysicsShell() || 

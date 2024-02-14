@@ -178,7 +178,7 @@ bool CStateBloodsuckerVampireExecuteAbstract::check_start_conditions()
 		return false;
 	
 	// является ли враг актером
-	if ( !smart_cast<CActor const*>(enemy) )
+	if ( !smart_cast<CActor const>(enemy) )
 		return false;
 
 	if ( object->CControlledActor::is_controlling() )	
@@ -244,7 +244,7 @@ void CStateBloodsuckerVampireExecuteAbstract::execute_vampire_hit()
 TEMPLATE_SPECIALIZATION
 void CStateBloodsuckerVampireExecuteAbstract::look_head()
 {
-	IKinematics *pK = smart_cast<IKinematics*>(object->Visual());
+	IKinematics *pK = reinterpret_cast<IKinematics*>(object->Visual());
 	Fmatrix bone_transform;
 	bone_transform = pK->LL_GetTransform(pK->LL_BoneID("bip01_head"));	
 

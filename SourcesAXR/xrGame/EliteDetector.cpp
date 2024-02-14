@@ -43,7 +43,7 @@ void CEliteDetector::UpdateAf()
 
 	for(;it_b!=it_e;++it_b)//only nearest
 	{
-		CArtefact*	pAf		= smart_cast<CArtefact*>(it_b->first);
+		CArtefact*	pAf		= smart_cast<CArtefact>(it_b->first);
 		CObject*	pObj	= it_b->first;
 
 		if ((pAf && pAf->H_Parent()) || (pObj && pObj->H_Parent()))
@@ -257,7 +257,7 @@ void CScientificDetector::UpfateWork()
 	Fvector						detector_pos = Position();
 	for(;ait_b!=ait_e;++ait_b)
 	{
-		CArtefact* pAf = smart_cast<CArtefact*>(ait_b->first);
+		CArtefact* pAf = smart_cast<CArtefact>(ait_b->first);
 		CObject* pObj = ait_b->first;
 
 		if((pAf && pAf->H_Parent()) || (pObj && pObj->H_Parent()))

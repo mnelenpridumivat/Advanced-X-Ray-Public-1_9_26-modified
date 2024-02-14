@@ -5,8 +5,11 @@
 #include "../../../../xrServerEntities/script_export_space.h"
 
 class CAI_Dog : public CBaseMonster, 
-				public CControlledEntity<CAI_Dog> {
-	
+				public CControlledEntity<CAI_Dog>,
+				public IMetaClass
+{
+	DECLARE_METACLASS2(CAI_Dog, CBaseMonster, CControlledEntity<CAI_Dog>)
+
 	typedef		CBaseMonster				inherited;
 	typedef		CControlledEntity<CAI_Dog>	CControlled;
 

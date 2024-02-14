@@ -40,7 +40,11 @@ public:
 
 
 template<typename _Object>
-class CControlledEntity : public CControlledEntityBase {
+class CControlledEntity :
+	public CControlledEntityBase,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CControlledEntity, CControlledEntityBase)
 	
 	SControlledInfo		m_data;
 	

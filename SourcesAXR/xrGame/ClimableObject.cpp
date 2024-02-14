@@ -65,7 +65,7 @@ void CClimableObject::	Load				( LPCSTR section)
 BOOL CClimableObject::	net_Spawn			( CSE_Abstract* DC)
 {
 	CSE_Abstract				*e = (CSE_Abstract*)(DC);
-	CSE_ALifeObjectClimable	*CLB=smart_cast<CSE_ALifeObjectClimable*>(e);
+	CSE_ALifeObjectClimable	*CLB=smart_cast<CSE_ALifeObjectClimable>(e);
 	R_ASSERT( CLB );
 	m_material = GMLib.GetMaterialIdx( CLB->material.c_str() );
 	const Fmatrix& b=CLB->shapes[0].data.box;

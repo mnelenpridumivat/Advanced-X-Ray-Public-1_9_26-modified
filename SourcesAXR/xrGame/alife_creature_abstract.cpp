@@ -20,8 +20,11 @@ void CSE_ALifeCreatureAbstract::on_spawn	()
 	m_dynamic_out_restrictions.clear	();
 	m_dynamic_in_restrictions.clear		();
 
-	if (smart_cast<CSE_ALifeGroupAbstract*>(this))
+	if (IsA(CSE_ALifeGroupAbstract::StaticClass()))
 		return;
+
+	/*if (smart_cast<CSE_ALifeGroupAbstract*>(this))
+		return;*/
 
 	MONSTER_COMMUNITY					monster_community;
 	monster_community.set				(pSettings->r_string(s_name, "species"));

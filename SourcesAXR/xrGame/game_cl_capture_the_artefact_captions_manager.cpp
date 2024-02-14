@@ -61,7 +61,7 @@ void CTAGameClCaptionsManager::ShowInProgressCaptions()
 	{
 		VERIFY(smart_cast<CSpectator*>(control_entity));
 		parent_game_ui->SetPressJumpMsgCaption("mp_press_jump2select_team");
-		CSpectator* pSpectator = smart_cast<CSpectator*>(control_entity);
+		CSpectator* pSpectator = smart_cast<CSpectator>(control_entity);
 		if (pSpectator)
 		{
 			string1024 SpectatorStr;
@@ -72,7 +72,7 @@ void CTAGameClCaptionsManager::ShowInProgressCaptions()
 	}
 	if (Level().IsDemoPlayStarted())
 	{
-		CSpectator* pSpectator = smart_cast<CSpectator*>(control_entity);
+		CSpectator* pSpectator = smart_cast<CSpectator>(control_entity);
 		if (pSpectator)
 		{
 			string1024 SpectatorStr;

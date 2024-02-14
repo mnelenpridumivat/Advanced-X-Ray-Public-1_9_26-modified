@@ -197,7 +197,7 @@ void CDetectorAnomaly::UpdateCL()
 
 void CDetectorAnomaly::feel_touch_new(CObject* O)
 {
-	CCustomZone *pZone = smart_cast<CCustomZone*>(O);
+	CCustomZone *pZone = smart_cast<CCustomZone>(O);
 	if(pZone && pZone->IsEnabled()) 
 	{
 		m_ZoneInfoMap[pZone].snd_time = 0;
@@ -206,7 +206,7 @@ void CDetectorAnomaly::feel_touch_new(CObject* O)
 
 void CDetectorAnomaly::feel_touch_delete(CObject* O)
 {
-	CCustomZone *pZone = smart_cast<CCustomZone*>(O);
+	CCustomZone *pZone = smart_cast<CCustomZone>(O);
 	if(pZone)
 	{
 		m_ZoneInfoMap.erase(pZone);
@@ -215,7 +215,7 @@ void CDetectorAnomaly::feel_touch_delete(CObject* O)
 
 BOOL CDetectorAnomaly::feel_touch_contact(CObject* O)
 {
-	return (NULL != smart_cast<CCustomZone*>(O));
+	return (NULL != smart_cast<CCustomZone>(O));
 }
 
 void CDetectorAnomaly::OnH_A_Chield()

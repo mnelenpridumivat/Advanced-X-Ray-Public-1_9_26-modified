@@ -11,7 +11,7 @@ void CEmiZone::Load(LPCSTR section)
 void CEmiZone::enter_Zone(SZoneObjectInfo& io)
 {
 	inherited::enter_Zone(io);
-	auto Object = smart_cast<CEntityAlive*>(io.object);
+	auto Object = smart_cast<CEntityAlive>(io.object);
 	if (!Object)
 	{
 		return;
@@ -22,7 +22,7 @@ void CEmiZone::enter_Zone(SZoneObjectInfo& io)
 void CEmiZone::exit_Zone(SZoneObjectInfo& io)
 {
 	inherited::exit_Zone(io);
-	auto Object = smart_cast<CEntityAlive*>(io.object);
+	auto Object = smart_cast<CEntityAlive>(io.object);
 	if (!Object)
 	{
 		return;

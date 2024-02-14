@@ -3,7 +3,12 @@
 #include "../BaseMonster/base_monster.h"
 #include "../../../../xrServerEntities/script_export_space.h"
 
-class CAI_PseudoDog : public CBaseMonster {
+class CAI_PseudoDog :
+	public CBaseMonster,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CAI_PseudoDog, CBaseMonster)
+
 	typedef		CBaseMonster	inherited;
 
 public:

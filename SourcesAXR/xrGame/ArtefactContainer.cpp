@@ -93,7 +93,7 @@ void CArtefactContainer::TakeArtefactFromContainer(CArtefact* artefact)
     {
         if (*it == artefact)
         {
-            CArtefact* item_to_spawn = smart_cast<CArtefact*>(*it);
+            CArtefact* item_to_spawn = smart_cast<CArtefact>(*it);
             it = m_sArtefactsInside.erase(it);
 
             Level().spawn_item(item_to_spawn->cNameSect().c_str(), Actor()->Position(), false, Actor()->ID());

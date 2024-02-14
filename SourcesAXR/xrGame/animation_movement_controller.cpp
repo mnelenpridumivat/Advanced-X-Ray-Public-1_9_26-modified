@@ -18,7 +18,7 @@ animation_movement_controller::animation_movement_controller( Fmatrix *_pObjXFor
 m_startObjXForm( inital_pose ), 
 m_pObjXForm( *_pObjXForm ),
 m_pKinematicsC( _pKinematicsC ),
-m_pKinematicsA( smart_cast<IKinematicsAnimated*>( _pKinematicsC ) ),
+m_pKinematicsA( reinterpret_cast<IKinematicsAnimated*>( _pKinematicsC ) ),
 inital_position_blending(true),
 stopped(false),
 blend_linear_speed(0),
@@ -179,7 +179,7 @@ static void get_animation_root_position( Fmatrix &pos, IKinematics* K, IKinemati
 {
 	VERIFY( KA );
 	VERIFY( K );
-	VERIFY( smart_cast<IKinematics*>(KA) == K );
+	VERIFY( reinterpret_cast<IKinematics*>(KA) == K );
 
 	SKeyTable	keys;
 	KA->LL_BuldBoneMatrixDequatize( &K->LL_GetData( 0 ), static_cast<u8>(1 << 0), keys );

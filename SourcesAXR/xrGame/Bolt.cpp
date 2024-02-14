@@ -34,7 +34,7 @@ void CBolt::OnH_A_Chield()
 
 void CBolt::State(u32 state)
 {
-	auto actor = smart_cast<CActor*>(this->H_Parent());
+	auto actor = smart_cast<CActor>(this->H_Parent());
 
 	switch (GetState())
 	{
@@ -68,13 +68,13 @@ void CBolt::State(u32 state)
 
 void CBolt::Throw() 
 {
-	CMissile					*l_pBolt = smart_cast<CMissile*>(m_fake_missile);
+	CMissile					*l_pBolt = smart_cast<CMissile>(m_fake_missile);
 	if(!l_pBolt)				return;
 	l_pBolt->set_destroy_time	(static_cast<u32>(m_dwDestroyTimeMax / phTimefactor));
 	inherited::Throw			();
 	spawn_fake_missile			();
 
-	auto actor = smart_cast<CActor*>(this->H_Parent());
+	auto actor = smart_cast<CActor>(this->H_Parent());
 	if (!m_sounds.FindSoundItem("sndThrow", false) && !actor)
 		return;
 
@@ -132,7 +132,7 @@ void CBolt::PutNextToSlot()
 	else
 		Msg("! Bolt PutNextToSlot : m_pInventory = NULL [%d][%d]", ID(), Device.dwFrame);
 
-	if (smart_cast<CInventoryOwner*>(H_Parent()) && m_pInventory)
+	if (smart_cast<CInventoryOwner>(H_Parent()) && m_pInventory)
 	{
 		CBolt *pNext = smart_cast<CBolt>(m_pInventory->Same(this, true));
 		if (!pNext) pNext = smart_cast<CBolt>(m_pInventory->SameSlot(BOLT_SLOT, this, true));

@@ -89,7 +89,7 @@ void CCustomOutfit::OnH_A_Chield()
 
 void CCustomOutfit::UpdateFilterCondition(void)
 {
-	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
+	CCustomOutfit* outfit = smart_cast<CCustomOutfit>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
 
 	if (outfit && m_bUseFilter)
 	{
@@ -355,7 +355,7 @@ void	CCustomOutfit::OnMoveToSlot		(const SInvItemPlace& prev)
 {
 	if ( m_pInventory )
 	{
-		CActor* pActor = smart_cast<CActor*>( H_Parent() );
+		CActor* pActor = smart_cast<CActor>( H_Parent() );
 		if ( pActor )
 		{
 			ApplySkinModel(pActor, true, false);
@@ -364,14 +364,14 @@ void	CCustomOutfit::OnMoveToSlot		(const SInvItemPlace& prev)
 				if (pActor->GetNightVisionStatus())
 					pActor->SwitchNightVision(true, false);
 
-				CHelmet* pHelmet1 = smart_cast<CHelmet*>(pActor->inventory().ItemFromSlot(HELMET_SLOT));
+				CHelmet* pHelmet1 = smart_cast<CHelmet>(pActor->inventory().ItemFromSlot(HELMET_SLOT));
 
 				if (pHelmet1)
 				{
 					pActor->inventory().Ruck(pHelmet1, false);
 				}
 
-				CHelmet* pHelmet2 = smart_cast<CHelmet*>(pActor->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
+				CHelmet* pHelmet2 = smart_cast<CHelmet>(pActor->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
 
 				if (pHelmet2)
 				{
@@ -436,7 +436,7 @@ void	CCustomOutfit::OnMoveToRuck		(const SInvItemPlace& prev)
 {
 	if(m_pInventory && prev.type==eItemPlaceSlot && !Level().is_removing_objects())
 	{
-		CActor* pActor = smart_cast<CActor*> (H_Parent());
+		CActor* pActor = smart_cast<CActor> (H_Parent());
 		if (pActor)
 		{
 			ApplySkinModel(pActor, false, false);
@@ -497,7 +497,7 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 	{
 		m_PlayerHudSection = str;
 
-		if (this == smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT)))
+		if (this == smart_cast<CCustomOutfit>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT)))
 			ApplySkinModel(Actor(), true, false);
 	}
 

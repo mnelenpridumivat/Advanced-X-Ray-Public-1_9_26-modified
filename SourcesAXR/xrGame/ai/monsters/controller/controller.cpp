@@ -329,7 +329,7 @@ void CController::set_controlled_task(u32 task)
 	const CEntity *object = ((static_cast<ETask>(task) == eTaskNone) ? 0 : ((static_cast<ETask>(task) == eTaskFollow) ? this : EnemyMan.get_enemy()));
 	
 	for	(u32 i=0; i<m_controlled_objects.size(); i++) {
-		CControlledEntityBase *entity = smart_cast<CControlledEntityBase *>(m_controlled_objects[i]);		
+		CControlledEntityBase *entity = smart_cast<CControlledEntityBase>(m_controlled_objects[i]);		
 		entity->get_data().m_object = object;
 		entity->get_data().m_task	= static_cast<ETask>(task);
 	}
@@ -345,7 +345,7 @@ void CController::CheckSpecParams(u32 spec_params)
 void CController::InitThink()
 {
 	for	(u32 i=0; i<m_controlled_objects.size(); i++) {	
-		CBaseMonster *base = smart_cast<CBaseMonster*>(m_controlled_objects[i]);
+		CBaseMonster *base = smart_cast<CBaseMonster>(m_controlled_objects[i]);
 		if (!base) continue;
 		if (base->EnemyMan.get_enemy()) 
 			EnemyMemory.add_enemy  (base->EnemyMan.get_enemy(), 
@@ -498,7 +498,7 @@ void CController::net_Relcase(CObject *O)
 
 void CController::FreeFromControl()
 {
-	for	(u32 i=0; i<m_controlled_objects.size(); i++) smart_cast<CControlledEntityBase *>(m_controlled_objects[i])->free_from_control();
+	for	(u32 i=0; i<m_controlled_objects.size(); i++) smart_cast<CControlledEntityBase>(m_controlled_objects[i])->free_from_control();
 	m_controlled_objects.clear();
 }
 

@@ -165,7 +165,7 @@ public:
 										return;
 		
 		CObject *l_pObj					= Level().CurrentControlEntity();
-		CActor *l_pPlayer				= smart_cast<CActor*>(l_pObj);
+		CActor *l_pPlayer				= smart_cast<CActor>(l_pObj);
 		if(l_pPlayer) 
 		{
 			NET_Packet					P;
@@ -234,7 +234,7 @@ public:
 
 		u32 CLObjNum	= Level().Objects.o_count();
 		xr_vector<u16>	CObjID;
-		for (i=0; i<CLObjNum; i++)
+		for (int i=0; i<CLObjNum; i++)
 		{
 			CObjID.push_back(Level().Objects.o_get_by_iterator(i)->ID());
 		};
@@ -339,7 +339,7 @@ struct SearcherClientByName
 	}
 	bool operator()(IClient* client)
 	{
-		xrClientData*	temp_client = smart_cast<xrClientData*>(client);
+		xrClientData*	temp_client = smart_cast<xrClientData>(client);
 		LPSTR tmp_player = NULL;
 		if (!temp_client->ps)
 			return false;
@@ -922,7 +922,7 @@ public:
 	void	Execute		(LPCSTR args_) override
 	{
 		if (!g_pGameLevel || !Level().Server || !Level().Server->game) return;
-		game_sv_mp*	tmp_sv_game = smart_cast<game_sv_mp*>(Level().Server->game);
+		game_sv_mp*	tmp_sv_game = smart_cast<game_sv_mp>(Level().Server->game);
 		if (!tmp_sv_game) return;
 
 		u32 len	= xr_strlen(args_);
@@ -989,7 +989,7 @@ public:
 	void	Execute		(LPCSTR args_) override
 	{
 		if (!g_pGameLevel || !Level().Server || !Level().Server->game) return;
-		game_sv_mp*	tmp_sv_game = smart_cast<game_sv_mp*>(Level().Server->game);
+		game_sv_mp*	tmp_sv_game = smart_cast<game_sv_mp>(Level().Server->game);
 		if (!tmp_sv_game) return;
 
 		u32 len	= xr_strlen(args_);
@@ -1027,7 +1027,7 @@ public:
 	void	Execute		(LPCSTR args_) override
 	{
 		if (!g_pGameLevel || !Level().Server || !Level().Server->game) return;
-		game_sv_mp*	tmp_sv_game = smart_cast<game_sv_mp*>(Level().Server->game);
+		game_sv_mp*	tmp_sv_game = smart_cast<game_sv_mp>(Level().Server->game);
 		if (!tmp_sv_game) return;
 		u32 len	= xr_strlen(args_);
 		if ((len == 0) || (len >= 64))		//one digit and raid:%u
@@ -1334,7 +1334,7 @@ public:
 					void	Execute					(LPCSTR args) override
 					{
 		if (!g_pGameLevel || !Level().Server || !Level().Server->game) return;
-		game_sv_mp*	tmp_sv_game = smart_cast<game_sv_mp*>(Level().Server->game);
+		game_sv_mp*	tmp_sv_game = smart_cast<game_sv_mp>(Level().Server->game);
 		if (!tmp_sv_game) return;
 		string512 tmp_dest;
 		string512 filter_dest = "";
@@ -1562,7 +1562,7 @@ public:
 	{
 		if (!OnServer())		return;
 
-		game_sv_Deathmatch* gameDM = smart_cast<game_sv_Deathmatch *>(Level().Server->game);
+		game_sv_Deathmatch* gameDM = smart_cast<game_sv_Deathmatch>(Level().Server->game);
 		if (!gameDM) return;
 
 		gameDM->StartAnomalies( atol(args) );
@@ -1768,7 +1768,7 @@ public:
 					{
 		if (!Level().Server)
 			return;
-		game_sv_mp* sv_game = smart_cast<game_sv_mp*>(Level().Server->game);
+		game_sv_mp* sv_game = smart_cast<game_sv_mp>(Level().Server->game);
 		if (!sv_game)
 		{
 			Msg("! Server multiplayer game instance not present");
@@ -1796,7 +1796,7 @@ public:
 		if (!OnServer())						return;
 		if (GameID() != eGameIDArtefactHunt)		return;
 
-		game_sv_ArtefactHunt* g = smart_cast<game_sv_ArtefactHunt*>(Level().Server->game);
+		game_sv_ArtefactHunt* g = smart_cast<game_sv_ArtefactHunt>(Level().Server->game);
 		g->MoveAllAlivePlayers();
 	}
 };
@@ -1826,7 +1826,7 @@ public:
 					{
 		if (!OnServer())	return;
 
-		game_sv_mp* pGameMP		= smart_cast<game_sv_Deathmatch *>(Level().Server->game);
+		game_sv_mp* pGameMP		= smart_cast<game_sv_Deathmatch>(Level().Server->game);
 		if (!pGameMP)		return;
 
 		string512			Team = "";
@@ -1942,8 +1942,8 @@ public:
 		if (!OnServer()) return;
 		if(Level().Server && Level().Server->game) 
 		{
-			game_sv_TeamDeathmatch* tdmGame = smart_cast<game_sv_TeamDeathmatch*>(Level().Server->game);
-			game_sv_CaptureTheArtefact* ctaGame = smart_cast<game_sv_CaptureTheArtefact*>(Level().Server->game);
+			game_sv_TeamDeathmatch* tdmGame = smart_cast<game_sv_TeamDeathmatch>(Level().Server->game);
+			game_sv_CaptureTheArtefact* ctaGame = smart_cast<game_sv_CaptureTheArtefact>(Level().Server->game);
 			if (tdmGame)
 			{
 				BOOL old_team_swap = g_sv_tdm_bAutoTeamSwap;
@@ -1991,7 +1991,7 @@ public:
 		if (!OnServer())	return;
 		if(Level().Server && Level().Server->game) 
 		{
-			game_sv_mp* game = smart_cast<game_sv_mp*>(Level().Server->game);
+			game_sv_mp* game = smart_cast<game_sv_mp>(Level().Server->game);
 			if ( game )
 			{
 				LPSTR msg;

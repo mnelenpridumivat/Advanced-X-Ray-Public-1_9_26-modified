@@ -161,7 +161,7 @@ BOOL CEntity::net_Spawn		(CSE_Abstract* DC)
 	m_killer_id				= static_cast<ALife::_OBJECT_ID>(-1);
 
 	CSE_Abstract				*e	= (CSE_Abstract*)(DC);
-	CSE_ALifeCreatureAbstract	*E	= smart_cast<CSE_ALifeCreatureAbstract*>(e);
+	CSE_ALifeCreatureAbstract	*E	= smart_cast<CSE_ALifeCreatureAbstract>(e);
 
 	// Initialize variables
 	if (E) {
@@ -180,9 +180,9 @@ BOOL CEntity::net_Spawn		(CSE_Abstract* DC)
 	// load damage params
 	if (!E) {
 		// Car or trader only!!!!
-		CSE_ALifeCar		*C	= smart_cast<CSE_ALifeCar*>(e);
-		CSE_ALifeTrader		*T	= smart_cast<CSE_ALifeTrader*>(e);
-		CSE_ALifeHelicopter	*H	= smart_cast<CSE_ALifeHelicopter*>(e);
+		CSE_ALifeCar		*C	= smart_cast<CSE_ALifeCar>(e);
+		CSE_ALifeTrader		*T	= smart_cast<CSE_ALifeTrader>(e);
+		CSE_ALifeHelicopter	*H	= smart_cast<CSE_ALifeHelicopter>(e);
 
 		R_ASSERT2			(C||T||H,"Invalid entity (no inheritance from CSE_CreatureAbstract, CSE_ALifeItemCar and CSE_ALifeTrader and CSE_ALifeHelicopter)!");
 		id_Team				= id_Squad = id_Group = 0;
@@ -192,7 +192,7 @@ BOOL CEntity::net_Spawn		(CSE_Abstract* DC)
 		id_Squad			= E->g_squad();
 		id_Group			= E->g_group();
 
-		CSE_ALifeMonsterBase	*monster	= smart_cast<CSE_ALifeMonsterBase*>(E);
+		CSE_ALifeMonsterBase	*monster	= smart_cast<CSE_ALifeMonsterBase>(E);
 		if (monster) {
 			MONSTER_COMMUNITY		monster_community;
 			monster_community.set	(pSettings->r_string(*cNameSect(), "species"));
@@ -218,7 +218,7 @@ BOOL CEntity::net_Spawn		(CSE_Abstract* DC)
 		return				(FALSE);
 
 //	SetfHealth			(E->fHealth);
-	IKinematics* pKinematics=smart_cast<IKinematics*>(Visual());
+	IKinematics* pKinematics= reinterpret_cast<IKinematics*>(Visual());
 	CInifile* ini = NULL;
 
 	if(pKinematics) ini = pKinematics->LL_UserData();
@@ -305,8 +305,8 @@ void CEntity::set_death_time	()
 	m_game_death_time	= ai().get_alife() ? ai().alife().time_manager().game_time() : Level().GetGameTime();
 }
 
-bool CEntity::IsFocused			()const	{ return (smart_cast<const CEntity*>(g_pGameLevel->CurrentEntity())==this);		}
-bool CEntity::IsMyCamera		()const	{ return (smart_cast<const CEntity*>(g_pGameLevel->CurrentViewEntity())==this);	}
+bool CEntity::IsFocused			()const	{ return (smart_cast<const CEntity>(g_pGameLevel->CurrentEntity())==this);		}
+bool CEntity::IsMyCamera		()const	{ return (smart_cast<const CEntity>(g_pGameLevel->CurrentViewEntity())==this);	}
 
 void CEntity::set_ready_to_save	()
 {

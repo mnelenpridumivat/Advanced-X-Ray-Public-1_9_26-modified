@@ -25,7 +25,7 @@ void ShowHudEditor(bool& show)
     //ImGuizmo::OPERATION mode = io.KeyCtrl ? ImGuizmo::ROTATE : ImGuizmo::TRANSLATE;
     bool showSeparator = true;
     auto item = g_player_hud->attached_item(0);
-	auto Wpn = smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
+	auto Wpn = smart_cast<CWeapon>(Actor()->inventory().ActiveItem());
 
 	if (item)
 	{

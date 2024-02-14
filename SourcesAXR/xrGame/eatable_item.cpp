@@ -180,7 +180,7 @@ void CEatableItem::UpdateInRuck(CActor* actor)
 void CEatableItem::HideWeapon()
 {
 	CEffectorCam* effector = Actor()->Cameras().GetCamEffector(static_cast<ECamEffectorType>(effUseItem));
-	CCustomDetector* pDet = smart_cast<CCustomDetector*>(Actor()->inventory().ItemFromSlot(DETECTOR_SLOT));
+	CCustomDetector* pDet = smart_cast<CCustomDetector>(Actor()->inventory().ItemFromSlot(DETECTOR_SLOT));
 
 	Actor()->SetWeaponHideState(INV_STATE_BLOCK_ALL, true);
 
@@ -264,7 +264,7 @@ void CEatableItem::UpdateUseAnim(CActor* actor)
 {
 	if (!m_bHasAnimation) return;
 
-	CCustomDetector* pDet = smart_cast<CCustomDetector*>(actor->inventory().ItemFromSlot(DETECTOR_SLOT));
+	CCustomDetector* pDet = smart_cast<CCustomDetector>(actor->inventory().ItemFromSlot(DETECTOR_SLOT));
 	CEffectorCam* effector = actor->Cameras().GetCamEffector(static_cast<ECamEffectorType>(effUseItem));
 	bool IsActorAlive = g_pGamePersistent->GetActorAliveStatus();
 
@@ -311,7 +311,7 @@ bool CEatableItem::UseBy (CEntityAlive* entity_alive)
 	SMedicineInfluenceValues	V;
 	V.Load(m_physic_item->cNameSect());
 
-	CInventoryOwner* IO		= smart_cast<CInventoryOwner*>(entity_alive);
+	CInventoryOwner* IO		= smart_cast<CInventoryOwner>(entity_alive);
 	R_ASSERT				(IO);
 	R_ASSERT				(m_pInventory==IO->m_inventory);
 	R_ASSERT				(object().H_Parent()->ID()==entity_alive->ID());
