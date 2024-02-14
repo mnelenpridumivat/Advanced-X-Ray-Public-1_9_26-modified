@@ -296,8 +296,8 @@ void CActor::cam_Update(float dt, float fFOV)
 	// HUD FOV Update
 	if (this == Level().CurrentControlEntity())
 	{
-		auto pItem = smart_cast<CHudItem*>(inventory().ActiveItem());
-		auto pDet = smart_cast<CHudItem*>(inventory().ItemFromSlot(DETECTOR_SLOT));
+		auto pItem = smart_cast<CHudItem>(inventory().ActiveItem());
+		auto pDet = smart_cast<CHudItem>(inventory().ItemFromSlot(DETECTOR_SLOT));
 
 		if (eacFirstEye == cam_active)
 		{

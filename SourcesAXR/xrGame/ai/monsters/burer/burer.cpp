@@ -234,7 +234,7 @@ void xr_stdcall CBurer::StaminaHit ()
 		return;
 	}
 
-	CWeapon* const active_weapon	=	smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
+	CWeapon* const active_weapon	=	smart_cast<CWeapon>(Actor()->inventory().ActiveItem());
 	if ( !active_weapon )
 	{
 		return;
@@ -306,7 +306,7 @@ void CBurer::UpdateGraviObject()
 
 	collide::rq_result	l_rq;
 	if (Level().ObjectSpace.RayPick(new_pos, dir, trace_dist, collide::rqtBoth, l_rq, NULL)) {
-		const CObject *enemy = smart_cast<const CObject *>(m_gravi_object.enemy);
+		const CObject *enemy = smart_cast<const CObject>(m_gravi_object.enemy);
 		if ((l_rq.O == enemy) && (l_rq.range < trace_dist)) {
 			
 			// check for visibility
@@ -390,7 +390,7 @@ void CBurer::StartGraviPrepare()
 	const CEntityAlive *enemy = EnemyMan.get_enemy();
 	if (!enemy) return;
 	
-	CActor *pA									=	const_cast<CActor *>(smart_cast<const CActor*>(enemy));
+	CActor *pA									=	const_cast<CActor *>(smart_cast<const CActor>(enemy));
 	if (!pA) return;
 
 	pA->CParticlesPlayer::StartParticles			(particle_gravi_prepare,
@@ -406,7 +406,7 @@ void CBurer::StopGraviPrepare()
 
 void CBurer::StartTeleObjectParticle(CGameObject *pO) 
 {
-	CParticlesPlayer* PP						=	smart_cast<CParticlesPlayer*>(pO);
+	CParticlesPlayer* PP						=	smart_cast<CParticlesPlayer>(pO);
 	if(!PP) return;
 	PP->StartParticles								(particle_tele_object,
 													 Fvector().set(0.0f, 0.1f, 0.0f),
@@ -414,7 +414,7 @@ void CBurer::StartTeleObjectParticle(CGameObject *pO)
 }
 void CBurer::StopTeleObjectParticle(CGameObject *pO) 
 {
-	CParticlesPlayer* PP						=	smart_cast<CParticlesPlayer*>(pO);
+	CParticlesPlayer* PP						=	smart_cast<CParticlesPlayer>(pO);
 	if(!PP) return;
 	PP->StopParticles								(particle_tele_object, BI_NONE, true);
 }
@@ -507,7 +507,7 @@ bool   actor_is_reloading_weapon ()
 		return								false;
 	}
 	
-	CWeapon* const active_weapon	=	smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
+	CWeapon* const active_weapon	=	smart_cast<CWeapon>(Actor()->inventory().ActiveItem());
 	if ( active_weapon && active_weapon->GetState() == CWeapon::eReload )
 	{
 		return							true;

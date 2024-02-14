@@ -488,7 +488,7 @@ void CBaseMonster::PHHit(SHit &H)
 
 CPHDestroyable*	CBaseMonster::ph_destroyable()
 {
-	return smart_cast<CPHDestroyable*>(character_physics_support());
+	return smart_cast<CPHDestroyable>(character_physics_support());
 }
 
 bool CBaseMonster::useful(const CItemManager *manager, const CGameObject *object) const
@@ -518,7 +518,7 @@ bool CBaseMonster::useful(const CItemManager *manager, const CGameObject *object
 		return false;
 	}
 
-	const CEntityAlive *pCorpse = smart_cast<const CEntityAlive *>(object); 
+	const CEntityAlive *pCorpse = smart_cast<const CEntityAlive>(object); 
 	if ( !pCorpse ) 
 	{
 		return false;
@@ -731,7 +731,7 @@ u32 CBaseMonster::get_attack_rebuild_time()
 
 void CBaseMonster::on_kill_enemy(const CEntity *obj)
 {
-	const CEntityAlive *entity	= smart_cast<const CEntityAlive *>(obj);
+	const CEntityAlive *entity	= smart_cast<const CEntityAlive>(obj);
 	
 	// добавить в список трупов	
 	CorpseMemory.add_corpse		(entity);
@@ -905,7 +905,7 @@ void CBaseMonster::OnEvent(NET_Packet& P, u16 type)
 		CObject* O	= Level().Objects.net_Find	(id);
 
 		if (O)  {
-			CEntity *pEntity = smart_cast<CEntity*>(O);
+			CEntity *pEntity = smart_cast<CEntity>(O);
 			if (pEntity) on_kill_enemy(pEntity);
 		}
 			
@@ -1028,7 +1028,7 @@ void CBaseMonster::update_eyes_visibility ()
 		return;
 	}
 
-	IKinematics* const skeleton	=	smart_cast<IKinematics*>(Visual());
+	IKinematics* const skeleton	=	smart_cast<IKinematics>(Visual());
 	if ( !skeleton )
 	{
 		return;

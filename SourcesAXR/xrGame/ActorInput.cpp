@@ -116,7 +116,7 @@ void CActor::IR_OnKeyboardPress(int cmd)
 		}break;
 	case kSPRINT_TOGGLE:	
 		{
-			CWeapon* W = smart_cast<CWeapon*>(inventory().ActiveItem());
+			CWeapon* W = smart_cast<CWeapon>(inventory().ActiveItem());
 
 			if (IsReloadingWeapon() && !GameConstants::GetReloadIfSprint())
 			{
@@ -184,7 +184,7 @@ void CActor::IR_OnKeyboardPress(int cmd)
 			if (!GameConstants::GetQuickThrowGrenadesEnabled() || hud_adj_mode)
 				return;
 
-			CGrenade* grenade = smart_cast<CGrenade*>(inventory().ItemFromSlot(GRENADE_SLOT));
+			CGrenade* grenade = smart_cast<CGrenade>(inventory().ItemFromSlot(GRENADE_SLOT));
 			
 			if (grenade)
 			{
@@ -206,7 +206,7 @@ void CActor::IR_OnKeyboardPress(int cmd)
 			PIItem det_active					= inventory().ItemFromSlot(DETECTOR_SLOT);
 			if(det_active)
 			{
-				CCustomDetector* det			= smart_cast<CCustomDetector*>(det_active);
+				CCustomDetector* det			= smart_cast<CCustomDetector>(det_active);
 				det->ToggleDetector				(g_player_hud->attached_item(0)!=NULL);
 				return;
 			}
@@ -255,7 +255,7 @@ void CActor::IR_OnKeyboardPress(int cmd)
 			if(item_name.size())
 			{
 				PIItem itm = inventory().GetAny(item_name.c_str());
-				CEatableItem* pItemToEat = smart_cast<CEatableItem*>(itm);
+				CEatableItem* pItemToEat = smart_cast<CEatableItem>(itm);
 
 				if(itm)
 				{
@@ -281,19 +281,19 @@ void CActor::IR_OnKeyboardPress(int cmd)
 		}break;
 	case kLASER_ON:
 		{
-		auto wpn = smart_cast<CWeapon*>(inventory().ActiveItem());
+		auto wpn = smart_cast<CWeapon>(inventory().ActiveItem());
 			if (wpn)
 				wpn->SwitchLaser(!wpn->IsLaserOn());
 		}break;
 	case kFLASHLIGHT:
 		{
-			auto wpn = smart_cast<CWeapon*>(inventory().ActiveItem());
+			auto wpn = smart_cast<CWeapon>(inventory().ActiveItem());
 			if (wpn)
 				wpn->SwitchFlashlight(!wpn->IsFlashlightOn());
 		}break;
 	case kWPN_ALT_AIM:
 		{
-			auto wpn = smart_cast<CWeapon*>(inventory().ActiveItem());
+			auto wpn = smart_cast<CWeapon>(inventory().ActiveItem());
 
 			if (wpn && wpn->IsScopeAttached())
 			{
@@ -471,7 +471,7 @@ void CActor::IR_OnMouseMove(int dx, int dy)
 
 	CCameraBase* C	= cameras	[cam_active];
 
-	auto wpn = smart_cast<CWeapon*>(inventory().ActiveItem());
+	auto wpn = smart_cast<CWeapon>(inventory().ActiveItem());
 
 	float scale		= (C->f_fov/g_fov)* ((wpn && wpn->IsZoomed() && wpn->bIsSecondVPZoomPresent()) ? psSVP_MouseSens : psMouseSens) * psMouseSensScale/50.f  / LookFactor;
 	if (dx){
@@ -489,7 +489,7 @@ bool CActor::use_Holder				(CHolderCustom* holder)
 
 	if(m_holder){
 		bool b = false;
-		CGameObject* holderGO			= smart_cast<CGameObject*>(m_holder);
+		CGameObject* holderGO			= smart_cast<CGameObject>(m_holder);
 		
 		if(smart_cast<CCar*>(holderGO))
 			b = use_Vehicle(0);
@@ -498,14 +498,14 @@ bool CActor::use_Holder				(CHolderCustom* holder)
 				b = use_MountedWeapon(0);
 
 		if(inventory().ActiveItem()){
-			CHudItem* hi = smart_cast<CHudItem*>(inventory().ActiveItem());
+			CHudItem* hi = smart_cast<CHudItem>(inventory().ActiveItem());
 			if(hi) hi->OnAnimationEnd(hi->GetState());
 		}
 
 		return b;
 	}else{
 		bool b = false;
-		CGameObject* holderGO			= smart_cast<CGameObject*>(holder);
+		CGameObject* holderGO			= smart_cast<CGameObject>(holder);
 		if(smart_cast<CCar*>(holder))
 			b = use_Vehicle(holder);
 
@@ -516,13 +516,13 @@ bool CActor::use_Holder				(CHolderCustom* holder)
 			// switch off torch...
 			CAttachableItem *I = CAttachmentOwner::attachedItem(CLSID_DEVICE_TORCH);
 			if (I){
-				CTorch* torch = smart_cast<CTorch*>(I);
+				CTorch* torch = smart_cast<CTorch>(I);
 				if (torch) torch->Switch(false);
 			}
 		}
 
 		if(inventory().ActiveItem()){
-			CHudItem* hi = smart_cast<CHudItem*>(inventory().ActiveItem());
+			CHudItem* hi = smart_cast<CHudItem>(inventory().ActiveItem());
 			if(hi) hi->OnAnimationEnd(hi->GetState());
 		}
 
@@ -534,7 +534,7 @@ void CActor::ActorUse()
 {
 	if (m_holder)
 	{
-		CGameObject*	GO			= smart_cast<CGameObject*>(m_holder);
+		CGameObject*	GO			= smart_cast<CGameObject>(m_holder);
 		NET_Packet		P;
 		CGameObject::u_EventGen		(P, GEG_PLAYER_DETACH_HOLDER, ID());
 		P.w_u16						(GO->ID());
@@ -557,7 +557,7 @@ void CActor::ActorUse()
 	
 	if ( m_pInvBoxWeLookingAt && m_pInvBoxWeLookingAt->nonscript_usable() )
 	{
-		CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+		CUIGameSP* pGameSP = smart_cast<CUIGameSP>(CurrentGameUI());
 		if ( pGameSP ) //single
 		{
 			if ( !m_pInvBoxWeLookingAt->closed() )
@@ -573,7 +573,7 @@ void CActor::ActorUse()
 		if(m_pPersonWeLookingAt)
 		{
 			CEntityAlive* pEntityAliveWeLookingAt = 
-				smart_cast<CEntityAlive*>(m_pPersonWeLookingAt);
+				smart_cast<CEntityAlive>(m_pPersonWeLookingAt);
 
 			VERIFY(pEntityAliveWeLookingAt);
 
@@ -586,7 +586,7 @@ void CActor::ActorUse()
 				}else
 				{
 					//только если находимся в режиме single
-					CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+					CUIGameSP* pGameSP = smart_cast<CUIGameSP>(CurrentGameUI());
 					if ( pGameSP )
 					{
 						if ( !m_pPersonWeLookingAt->deadbody_closed_status() )
@@ -602,7 +602,7 @@ void CActor::ActorUse()
 		}
 
 		collide::rq_result& RQ = HUD().GetCurrentRayQuery();
-		CPhysicsShellHolder* object = smart_cast<CPhysicsShellHolder*>(RQ.O);
+		CPhysicsShellHolder* object = smart_cast<CPhysicsShellHolder>(RQ.O);
 		u16 element = BI_NONE;
 		if(object) 
 			element = static_cast<u16>(RQ.element);
@@ -767,7 +767,7 @@ void CActor::SwitchNightVision()
 
 void CActor::SwitchTorch()
 { 
-	CTorch* pTorch = smart_cast<CTorch*>(inventory().ItemFromSlot(TORCH_SLOT));
+	CTorch* pTorch = smart_cast<CTorch>(inventory().ItemFromSlot(TORCH_SLOT));
 
 	if (pTorch && !Actor()->m_bActionAnimInProcess)
 		pTorch->Switch();
@@ -824,7 +824,7 @@ void CActor::NoClipFly(int cmd)
 			PIItem det_active = inventory().ItemFromSlot(DETECTOR_SLOT);
 			if(det_active)
 			{
-				CCustomDetector* det = smart_cast<CCustomDetector*>(det_active);
+				CCustomDetector* det = smart_cast<CCustomDetector>(det_active);
 				det->ToggleDetector(g_player_hud->attached_item(0)!=NULL);
 				return;
 			}

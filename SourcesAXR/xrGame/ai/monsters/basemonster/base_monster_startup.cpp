@@ -525,7 +525,7 @@ void CBaseMonster::on_before_sell	(CInventoryItem *item)
 	// since there can be only single item in the monster inventory
 	CSE_Abstract					*object	= Level().Server->game->get_entity_from_eid(item->object().ID()); 
 	VERIFY							(object);
-	CSE_ALifeObject					*alife_object = smart_cast<CSE_ALifeObject*>(object);
+	CSE_ALifeObject					*alife_object = smart_cast<CSE_ALifeObject>(object);
 	if (alife_object)
 		alife_object->m_flags.set	(CSE_ALifeObject::flCanSave,TRUE);
 }
@@ -554,7 +554,7 @@ void CBaseMonster::fill_bones_body_parts	(LPCSTR body_part, CriticalWoundType wo
 {
 	LPCSTR					body_parts_section = pSettings->r_string(cNameSect(),body_part);
 
-	IKinematics				*kinematics	= smart_cast<IKinematics*>(Visual());
+	IKinematics				*kinematics	= smart_cast<IKinematics>(Visual());
 	VERIFY					(kinematics);
 
 	CInifile::Sect			&body_part_section = pSettings->r_section(body_parts_section);

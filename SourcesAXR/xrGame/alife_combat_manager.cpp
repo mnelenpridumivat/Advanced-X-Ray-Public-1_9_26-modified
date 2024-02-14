@@ -468,7 +468,7 @@ void CALifeCombatManager::kill_entity	(CSE_ALifeMonsterAbstract *l_tpALifeMonste
 		graph().remove						(l_tpALifeMonsterAbstract,l_tGraphID1);
 		graph().add							(l_tpALifeMonsterAbstract,l_tpALifeMonsterAbstract->m_tGraphID);
 	}
-	CSE_ALifeInventoryItem *l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem*>(l_tpALifeMonsterAbstract);
+	CSE_ALifeInventoryItem *l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem>(l_tpALifeMonsterAbstract);
 	if (l_tpALifeInventoryItem)
 		m_temp_item_vector.push_back		(l_tpALifeInventoryItem);
 }

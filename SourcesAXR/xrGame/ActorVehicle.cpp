@@ -29,7 +29,7 @@ void CActor::attach_Vehicle(CHolderCustom* vehicle)
 	if (m_holder)
 		return;
 
-	CCar* car = smart_cast<CCar*>(vehicle);
+	CCar* car = smart_cast<CCar>(vehicle);
 	if (!car)
 		return;
 
@@ -37,8 +37,8 @@ void CActor::attach_Vehicle(CHolderCustom* vehicle)
 		return;
 
 	IRenderVisual *pVis = Visual();
-	IKinematicsAnimated* V = smart_cast<IKinematicsAnimated*>(pVis); R_ASSERT(V);
-	IKinematics* pK = smart_cast<IKinematics*>(pVis);
+	IKinematicsAnimated* V = smart_cast<IKinematicsAnimated>(pVis); R_ASSERT(V);
+	IKinematics* pK = smart_cast<IKinematics>(pVis);
 
 	// temp play animation
 	u16 anim_type = car->DriverAnimationType();
@@ -62,10 +62,10 @@ void CActor::attach_Vehicle(CHolderCustom* vehicle)
 void CActor::detach_Vehicle()
 {
 	if(!m_holder) return;
-	CCar* car=smart_cast<CCar*>(m_holder);
+	CCar* car=smart_cast<CCar>(m_holder);
 	if(!car)return;
 
-	IKinematics* pKinematics = smart_cast<IKinematics*>(Visual()); R_ASSERT(pKinematics);
+	IKinematics* pKinematics = smart_cast<IKinematics>(Visual()); R_ASSERT(pKinematics);
 	u16	head_bone = pKinematics->LL_BoneID("bip01_head");
 	pKinematics->LL_SetBoneVisible(head_bone, true, true);
 
@@ -87,7 +87,7 @@ void CActor::detach_Vehicle()
 	r_model_yaw_dest=r_model_yaw;
 	m_holder=NULL;
 	SetCallbacks		();
-	IKinematicsAnimated* V= smart_cast<IKinematicsAnimated*>(Visual()); R_ASSERT(V);
+	IKinematicsAnimated* V= smart_cast<IKinematicsAnimated>(Visual()); R_ASSERT(V);
 	V->PlayCycle		(m_anims->m_normal.legs_idle);
 	V->PlayCycle		(m_anims->m_normal.m_torso_idle);
 	m_holderID=static_cast<u16>(-1);
@@ -133,6 +133,6 @@ bool CActor::use_Vehicle(CHolderCustom* object)
 
 void CActor::on_requested_spawn(CObject *object)
 {
-	CCar * car= smart_cast<CCar*>(object);
+	CCar * car= smart_cast<CCar>(object);
 	attach_Vehicle(car);
 }

@@ -34,7 +34,7 @@ void CNightVisionEffector::Start(const shared_str& sect, CActor* pA, bool play_s
 
 void CNightVisionEffector::Stop(const float factor, bool play_sound)
 {
-	CActor* pActor = smart_cast<CActor*>(Level().CurrentControlEntity());
+	CActor* pActor = smart_cast<CActor>(Level().CurrentControlEntity());
 	if (!pActor)		return;
 	CEffectorPP* pp = pActor->Cameras().GetPPEffector(static_cast<EEffectorPPType>(effNightvision));
 	if (pp)
@@ -64,7 +64,7 @@ void CNightVisionEffector::StartForScope(const shared_str& sect, CActor* pA, boo
 
 void CNightVisionEffector::StopForScope(const float factor, bool play_sound)
 {
-	CActor* pActor = smart_cast<CActor*>(Level().CurrentControlEntity());
+	CActor* pActor = smart_cast<CActor>(Level().CurrentControlEntity());
 	if (!pActor)		return;
 	CEffectorPP* pp = pActor->Cameras().GetPPEffector(static_cast<EEffectorPPType>(effNightvision));
 	if (pp)
@@ -77,7 +77,7 @@ void CNightVisionEffector::StopForScope(const float factor, bool play_sound)
 
 void CNightVisionEffector::StopOnlyEffector(const float factor)
 {
-	CActor* pActor = smart_cast<CActor*>(Level().CurrentControlEntity());
+	CActor* pActor = smart_cast<CActor>(Level().CurrentControlEntity());
 	if (!pActor)		return;
 	CEffectorPP* pp = pActor->Cameras().GetPPEffector(static_cast<EEffectorPPType>(effNightvision));
 	if (pp)
@@ -86,7 +86,7 @@ void CNightVisionEffector::StopOnlyEffector(const float factor)
 
 bool CNightVisionEffector::IsActive()
 {
-	CActor* pActor = smart_cast<CActor*>(Level().CurrentControlEntity());
+	CActor* pActor = smart_cast<CActor>(Level().CurrentControlEntity());
 	if (!pActor)		return false;
 	CEffectorPP* pp = pActor->Cameras().GetPPEffector(static_cast<EEffectorPPType>(effNightvision));
 	return (pp != NULL);
@@ -100,7 +100,7 @@ void CNightVisionEffector::OnDisabled(CActor* pA, bool play_sound)
 
 void CNightVisionEffector::PlaySounds(EPlaySounds which)
 {
-	CActor* pActor = smart_cast<CActor*>(Level().CurrentControlEntity());
+	CActor* pActor = smart_cast<CActor>(Level().CurrentControlEntity());
 	if (!pActor)
 		return;
 

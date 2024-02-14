@@ -33,11 +33,11 @@ void CAI_PhraseDialogManager::ReceivePhrase (DIALOG_SHARED_PTR& phrase_dialog)
 
 void CAI_PhraseDialogManager::AnswerPhrase (DIALOG_SHARED_PTR& phrase_dialog)
 {
-	CInventoryOwner* pInvOwner = smart_cast<CInventoryOwner*>(this);
+	CInventoryOwner* pInvOwner = smart_cast<CInventoryOwner>(this);
 	THROW							(pInvOwner);
-	CGameObject* pOthersGO = smart_cast<CGameObject*>(phrase_dialog->OurPartner(this));
+	CGameObject* pOthersGO = smart_cast<CGameObject>(phrase_dialog->OurPartner(this));
 	THROW							(pOthersGO);
-	CInventoryOwner* pOthersIO = smart_cast<CInventoryOwner*>(pOthersGO);
+	CInventoryOwner* pOthersIO = smart_cast<CInventoryOwner>(pOthersGO);
 	THROW							(pOthersIO);
 
 	if(!phrase_dialog->IsFinished())
@@ -59,7 +59,7 @@ void CAI_PhraseDialogManager::AnswerPhrase (DIALOG_SHARED_PTR& phrase_dialog)
 			}
 		}
 
-		for(i=0; i<phrase_dialog->PhraseList().size(); i++)
+		for(int i=0; i<phrase_dialog->PhraseList().size(); i++)
 		{
 			if(phrase_goodwill == phrase_dialog->PhraseList()[phrase_num]->GoodwillLevel())
 				phrases.push_back(i);
@@ -69,7 +69,7 @@ void CAI_PhraseDialogManager::AnswerPhrase (DIALOG_SHARED_PTR& phrase_dialog)
 
 		shared_str phrase_id = phrase_dialog->PhraseList()[phrase_num]->GetID();
 		
-		CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+		CUIGameSP* pGameSP = smart_cast<CUIGameSP>(CurrentGameUI());
 		auto SpeakerName = phrase_dialog->GetPhrase(phrase_id)->GetSpeakerNameOverride();
 		if (!strcmp(SpeakerName, "")) {
 			SpeakerName = pInvOwner->Name();

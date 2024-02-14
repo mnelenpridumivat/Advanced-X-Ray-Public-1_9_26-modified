@@ -116,7 +116,7 @@ bool CSE_ALifeDynamicObject::synchronize_location	()
 
 void CSE_ALifeDynamicObject::try_switch_online		()
 {
-	CSE_ALifeSchedulable						*schedulable = smart_cast<CSE_ALifeSchedulable*>(this);
+	CSE_ALifeSchedulable						*schedulable = smart_cast<CSE_ALifeSchedulable>(this);
 	// checking if the abstract monster has just died
 	if (schedulable) {
 		if (!schedulable->need_update(this)) {
@@ -181,10 +181,10 @@ void CSE_ALifeInventoryBox::add_online	(const bool &update_registries)
 	ALife::OBJECT_IT			E = object->children.end();
 	for ( ; I != E; ++I) {
 		CSE_ALifeDynamicObject	*l_tpALifeDynamicObject = ai().alife().objects().object(*I);
-		CSE_ALifeInventoryItem	*l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem*>(l_tpALifeDynamicObject);
+		CSE_ALifeInventoryItem	*l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem>(l_tpALifeDynamicObject);
 		R_ASSERT2				(l_tpALifeInventoryItem,"Non inventory item object has parent?!");
 		l_tpALifeInventoryItem->base()->s_flags.or(M_SPAWN_UPDATE);
-		CSE_Abstract			*l_tpAbstract = smart_cast<CSE_Abstract*>(l_tpALifeInventoryItem);
+		CSE_Abstract			*l_tpAbstract = smart_cast<CSE_Abstract>(l_tpALifeInventoryItem);
 		object->alife().server().entity_Destroy(l_tpAbstract);
 
 #ifdef DEBUG
@@ -217,11 +217,11 @@ void CSE_ALifeInventoryBox::add_offline	(const xr_vector<ALife::_OBJECT_ID> &sav
 	CSE_ALifeDynamicObjectVisual		*object = (this);
 
 	for (u32 i=0, n=saved_children.size(); i<n; ++i) {
-		CSE_ALifeDynamicObject	*child = smart_cast<CSE_ALifeDynamicObject*>(ai().alife().objects().object(saved_children[i],true));
+		CSE_ALifeDynamicObject	*child = smart_cast<CSE_ALifeDynamicObject>(ai().alife().objects().object(saved_children[i],true));
 		R_ASSERT				(child);
 		child->m_bOnline		= false;
 
-		CSE_ALifeInventoryItem	*inventory_item = smart_cast<CSE_ALifeInventoryItem*>(child);
+		CSE_ALifeInventoryItem	*inventory_item = smart_cast<CSE_ALifeInventoryItem>(child);
 		VERIFY2					(inventory_item,"Non inventory item object has parent?!");
 #ifdef DEBUG
 //		if (psAI_Flags.test(aiALife))
@@ -288,10 +288,10 @@ void CSE_ALifeCar::add_online(const bool& update_registries)
 	ALife::OBJECT_IT			E = object->children.end();
 	for (; I != E; ++I) {
 		CSE_ALifeDynamicObject* l_tpALifeDynamicObject = ai().alife().objects().object(*I);
-		CSE_ALifeInventoryItem* l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem*>(l_tpALifeDynamicObject);
+		CSE_ALifeInventoryItem* l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem>(l_tpALifeDynamicObject);
 		R_ASSERT2(l_tpALifeInventoryItem, "Non inventory item object has parent?!");
-		l_tpALifeInventoryItem->base()->s_flags. or (M_SPAWN_UPDATE);
-		CSE_Abstract* l_tpAbstract = smart_cast<CSE_Abstract*>(l_tpALifeInventoryItem);
+		l_tpALifeInventoryItem->base()->s_flags.or(M_SPAWN_UPDATE);
+		CSE_Abstract* l_tpAbstract = smart_cast<CSE_Abstract>(l_tpALifeInventoryItem);
 		object->alife().server().entity_Destroy(l_tpAbstract);
 
 #ifdef DEBUG
@@ -312,7 +312,7 @@ void CSE_ALifeCar::add_online(const bool& update_registries)
 		l_tpALifeDynamicObject->o_Position = object->o_Position;
 		l_tpALifeDynamicObject->m_tNodeID = object->m_tNodeID;
 		object->alife().server().Process_spawn(tNetPacket, clientID, FALSE, l_tpALifeInventoryItem->base());
-		l_tpALifeDynamicObject->s_flags. and (static_cast<u16>(-1) ^ M_SPAWN_UPDATE);
+		l_tpALifeDynamicObject->s_flags.and(static_cast<u16>(-1) ^ M_SPAWN_UPDATE);
 		l_tpALifeDynamicObject->m_bOnline = true;
 	}
 
@@ -324,11 +324,11 @@ void CSE_ALifeCar::add_offline(const xr_vector<ALife::_OBJECT_ID>& saved_childre
 	CSE_ALifeDynamicObjectVisual* object = (this);
 
 	for (u32 i = 0, n = saved_children.size(); i < n; ++i) {
-		CSE_ALifeDynamicObject* child = smart_cast<CSE_ALifeDynamicObject*>(ai().alife().objects().object(saved_children[i], true));
+		CSE_ALifeDynamicObject* child = smart_cast<CSE_ALifeDynamicObject>(ai().alife().objects().object(saved_children[i], true));
 		R_ASSERT(child);
 		child->m_bOnline = false;
 
-		CSE_ALifeInventoryItem* inventory_item = smart_cast<CSE_ALifeInventoryItem*>(child);
+		CSE_ALifeInventoryItem* inventory_item = smart_cast<CSE_ALifeInventoryItem>(child);
 		VERIFY2(inventory_item, "Non inventory item object has parent?!");
 #ifdef DEBUG
 		//		if (psAI_Flags.test(aiALife))

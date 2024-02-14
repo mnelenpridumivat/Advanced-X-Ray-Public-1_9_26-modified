@@ -196,7 +196,7 @@ void CPseudoGigant::event_on_step()
 {
 	//////////////////////////////////////////////////////////////////////////
 	// Earthquake Effector	//////////////
-	CActor* pActor =  smart_cast<CActor*>(Level().CurrentEntity());
+	CActor* pActor =  smart_cast<CActor>(Level().CurrentEntity());
 	if(pActor)
 	{
 		float dist_to_actor = pActor->Position().distance_to(Position());
@@ -254,7 +254,7 @@ void CPseudoGigant::on_threaten_execute()
 	Level().ObjectSpace.GetNearest(m_nearest_pseudogig_kick, position, 15.f, NULL);
 	for (u32 i=0;i<m_nearest_pseudogig_kick.size();i++)
 	{
-		CPhysicsShellHolder  *obj = smart_cast<CPhysicsShellHolder *>(m_nearest_pseudogig_kick[i]);
+		CPhysicsShellHolder  *obj = smart_cast<CPhysicsShellHolder>(m_nearest_pseudogig_kick[i]);
 		if (!obj || !obj->m_pPhysicsShell || 
 			(obj->spawn_ini() && obj->spawn_ini()->section_exist("ph_heavy")) || 
 			(pSettings->line_exist(obj->cNameSect().c_str(), "ph_heavy") && pSettings->r_bool(obj->cNameSect().c_str(), "ph_heavy")) ||
@@ -281,7 +281,7 @@ void CPseudoGigant::on_threaten_execute()
 	// играть партиклы
 	PlayParticles(m_kick_particles, pos, Direction());
 	
-	CActor *pA = const_cast<CActor *>(smart_cast<const CActor *>(EnemyMan.get_enemy()));
+	CActor *pA = const_cast<CActor *>(smart_cast<const CActor>(EnemyMan.get_enemy()));
 	if (!pA) return;
 	//GC: returning SoC hit conditions
 	if (pA->is_jump()) return;

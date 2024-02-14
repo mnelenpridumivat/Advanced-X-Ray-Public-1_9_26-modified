@@ -103,7 +103,7 @@ bool CPsyDog::spawn_phantom()
 	pcstr phantomSection	= READ_IF_EXISTS(pSettings, r_string, this->get_section(), "phantom_section", "psy_dog_phantom");
 	CSE_Abstract	*phantom = Level().spawn_item(phantomSection, ai().level_graph().vertex_position(node), node, 0xffff, true);
 	//Alundaio: END
-	CSE_ALifeMonsterBase	*pSE_Monster = smart_cast<CSE_ALifeMonsterBase*>(phantom);
+	CSE_ALifeMonsterBase	*pSE_Monster = smart_cast<CSE_ALifeMonsterBase>(phantom);
 	VERIFY(pSE_Monster);
 
 	pSE_Monster->m_spec_object_id = ID();
@@ -193,7 +193,7 @@ BOOL CPsyDogPhantom::net_Spawn(CSE_Abstract *dc)
 {
 	if (!inherited::net_Spawn(dc)) return FALSE;
 
-	CSE_ALifeMonsterBase *se_monster	= smart_cast<CSE_ALifeMonsterBase*>(dc);
+	CSE_ALifeMonsterBase *se_monster	= smart_cast<CSE_ALifeMonsterBase>(dc);
 	m_parent_id = se_monster->m_spec_object_id;
 	m_parent	= 0;
 	VERIFY		(m_parent_id != 0xffff);
@@ -314,7 +314,7 @@ void CPsyDogPhantom::try_to_register_to_parent()
 	
 	CObject	*obj = Level().Objects.net_Find(m_parent_id);
 	if (obj) {
-		CPsyDog *dog = smart_cast<CPsyDog *>(obj);
+		CPsyDog *dog = smart_cast<CPsyDog>(obj);
 		VERIFY(dog);
 		
 		m_parent = dog;

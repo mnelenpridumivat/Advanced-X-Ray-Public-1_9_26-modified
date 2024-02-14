@@ -286,7 +286,7 @@ void CActor::steer_Vehicle(float angle)
 	if (!m_holder)
 		return;
 
-	CCar* car = smart_cast<CCar*>(m_holder);
+	CCar* car = smart_cast<CCar>(m_holder);
 	if (!car)
 		return;
 
@@ -294,11 +294,11 @@ void CActor::steer_Vehicle(float angle)
 	SVehicleAnimCollection& anims = m_vehicle_anims->m_vehicles_type_collections[anim_type];
 
 	if (angle == 0.f)
-		smart_cast<IKinematicsAnimated*>(Visual())->PlayCycle(anims.idles[0]);
+		smart_cast<IKinematicsAnimated>(Visual())->PlayCycle(anims.idles[0]);
 	else if (angle > 0.f)
-		smart_cast<IKinematicsAnimated*>(Visual())->PlayCycle(anims.steer_right);
+		smart_cast<IKinematicsAnimated>(Visual())->PlayCycle(anims.steer_right);
 	else
-		smart_cast<IKinematicsAnimated*>(Visual())->PlayCycle(anims.steer_left);
+		smart_cast<IKinematicsAnimated>(Visual())->PlayCycle(anims.steer_left);
 }
 
 void legs_play_callback		(CBlend *blend)
@@ -325,7 +325,7 @@ void CActor::g_SetSprintAnimation( u32 mstate_rl,MotionID &head,MotionID &torso,
 
 CMotion*        FindMotionKeys(MotionID motion_ID,IRenderVisual* V)
 {
-	IKinematicsAnimated* VA = smart_cast<IKinematicsAnimated*>(V);
+	IKinematicsAnimated* VA = smart_cast<IKinematicsAnimated>(V);
 	return (VA && motion_ID.valid())?VA->LL_GetRootMotion(motion_ID):0;
 }
 
@@ -398,7 +398,7 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 	{
 		if (!_i & !(mstate_rl&mcCrouch))
 		{
-			M_legs = smart_cast<IKinematicsAnimated*>(Visual())->ID_Cycle("norm_turn_right_1");
+			M_legs = smart_cast<IKinematicsAnimated>(Visual())->ID_Cycle("norm_turn_right_1");
 		}
 		else
 		{
@@ -414,11 +414,11 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 		{
 			if (bAccelerated)
 			{
-				M_legs = smart_cast<IKinematicsAnimated*>(Visual())->ID_Cycle("norm_run_fwd_1");
+				M_legs = smart_cast<IKinematicsAnimated>(Visual())->ID_Cycle("norm_run_fwd_1");
 			}
 			else
 			{
-				M_legs = smart_cast<IKinematicsAnimated*>(Visual())->ID_Cycle("norm_walk_fwd_1");
+				M_legs = smart_cast<IKinematicsAnimated>(Visual())->ID_Cycle("norm_walk_fwd_1");
 			}
 		}
 		else
@@ -452,7 +452,7 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 		else if (mstate_rl&mcRStrafe)	M_torso	= AS->legs_rs;
 	}
 
-	CHudItem		*H = smart_cast<CHudItem*>(_i);
+	CHudItem		*H = smart_cast<CHudItem>(_i);
 	
 	if (!M_torso)
 	{
@@ -473,10 +473,10 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 				else {
 					if (!m_bAnimTorsoPlayed) 
 					{
-						CWeapon			*W = smart_cast<CWeapon*>(_i);
-						CMissile		*M = smart_cast<CMissile*>(_i);
-						CArtefact		*A = smart_cast<CArtefact*>(_i);
-						CPda			*P = smart_cast<CPda*>(_i);
+						CWeapon			*W = smart_cast<CWeapon>(_i);
+						CMissile		*M = smart_cast<CMissile>(_i);
+						CArtefact		*A = smart_cast<CArtefact>(_i);
+						CPda			*P = smart_cast<CPda>(_i);
 						if (W) 
 						{
 							bool K = inventory().GetActiveSlot() == KNIFE_SLOT;
@@ -607,10 +607,10 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 	{
 		if((mstate_rl&mcCrouch)&&!isActorAccelerated(mstate_rl, IsZoomAimingMode()))//!(mstate_rl&mcAccel))
 		{
-			M_legs=smart_cast<IKinematicsAnimated*>(Visual())->ID_Cycle("cr_idle_1");
+			M_legs=smart_cast<IKinematicsAnimated>(Visual())->ID_Cycle("cr_idle_1");
 		}
 		else if (!_i & !(mstate_rl&mcCrouch) & !(mstate_rl&mcClimb))
-			M_legs = smart_cast<IKinematicsAnimated*>(Visual())->ID_Cycle("norm_idle_1");
+			M_legs = smart_cast<IKinematicsAnimated>(Visual())->ID_Cycle("norm_idle_1");
 		else
 			M_legs = ST->legs_idle; //norm_idle_0/ cl_idle_1
 	}
@@ -630,9 +630,9 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 	if (m_current_torso!=M_torso)
 	{
 		if (m_bAnimTorsoPlayed)		
-			m_current_torso_blend = smart_cast<IKinematicsAnimated*>(Visual())->PlayCycle(M_torso,TRUE,AnimTorsoPlayCallBack,this);
+			m_current_torso_blend = smart_cast<IKinematicsAnimated>(Visual())->PlayCycle(M_torso,TRUE,AnimTorsoPlayCallBack,this);
 		else						
-			m_current_torso_blend = smart_cast<IKinematicsAnimated*>(Visual())->PlayCycle(M_torso);
+			m_current_torso_blend = smart_cast<IKinematicsAnimated>(Visual())->PlayCycle(M_torso);
 
 		m_current_torso=M_torso;
 	}
@@ -640,7 +640,7 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 	if(m_current_head!=M_head)
 	{
 		if(M_head)
-			smart_cast<IKinematicsAnimated*>(Visual())->PlayCycle(M_head);
+			smart_cast<IKinematicsAnimated>(Visual())->PlayCycle(M_head);
 
 		m_current_head=M_head;
 	}
@@ -653,7 +653,7 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 			pos						= fmod(m_current_legs_blend->timeCurrent,m_current_legs_blend->timeTotal)/m_current_legs_blend->timeTotal;
 
 
-		IKinematicsAnimated* ka		= smart_cast<IKinematicsAnimated*>(Visual());
+		IKinematicsAnimated* ka		= smart_cast<IKinematicsAnimated>(Visual());
 		m_current_legs_blend		= PlayMotionByParts(ka, M_legs, TRUE, legs_play_callback, this);
 //		m_current_legs_blend		= smart_cast<IKinematicsAnimated*>(Visual())->PlayCycle(M_legs,TRUE,legs_play_callback,this);
 
@@ -677,7 +677,7 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 	{
 		UI().Font().pFontStat->OutSetI	(0,0);
 		UI().Font().pFontStat->OutNext("[%s]",mov_state[moving_idx]);
-		IKinematicsAnimated* KA = smart_cast<IKinematicsAnimated*>(Visual());
+		IKinematicsAnimated* KA = smart_cast<IKinematicsAnimated>(Visual());
 		if(M_torso)
 			UI().Font().pFontStat->OutNext("torso [%s]",KA->LL_MotionDefName_dbg(M_torso).first);
 		if(M_head)
@@ -725,7 +725,7 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 	if (!m_current_torso_blend)
 		return;
 
-	IKinematicsAnimated		*skeleton_animated = smart_cast<IKinematicsAnimated*>(Visual());
+	IKinematicsAnimated		*skeleton_animated = smart_cast<IKinematicsAnimated>(Visual());
 
 	CMotionDef				*motion0 = skeleton_animated->LL_GetMotionDef(m_current_torso);
 	VERIFY					(motion0);

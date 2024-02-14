@@ -5,10 +5,10 @@
 #pragma warning (disable : 4584)
 
 #define DECLARE_NONSTATIC_CLASS_GETTER() \
-	virtual CMetaclass* GetClass() override { return StaticClass();} \
+	virtual CMetaclass* GetClass() const override { return StaticClass();} \
 
 #define DECLARE_OBJECT_ISA() \
-	virtual bool IsA(CMetaclass* Class) override {return StaticClass()->IsA(Class);} \
+	virtual bool IsA(CMetaclass* Class) const override {return StaticClass()->IsA(Class);} \
 
 #define DECLARE_METACLASS(ClassName) \
 public: \
@@ -203,8 +203,8 @@ public:
 
 class IMetaClass {
 public:
-	virtual CMetaclass* GetClass() = 0;
-	virtual bool IsA(CMetaclass* Class) = 0;
+	virtual CMetaclass* GetClass() const = 0;
+	virtual bool IsA(CMetaclass* Class) const = 0;
 };
 
 template<typename To>
@@ -239,7 +239,7 @@ public:
 #ifdef DEBUG
 		static_assert(std::is_base_of_v<To, IMetaClass> == true);
 #endif
-		CMetaclass* FromClass = static_cast<IMetaClass*>(ptr)->GetClass();
+		CMetaclass* FromClass = static_cast<const IMetaClass*>(ptr)->GetClass();
 
 		if (!FromClass->IsA(To::StaticClass())) {
 			return nullptr;

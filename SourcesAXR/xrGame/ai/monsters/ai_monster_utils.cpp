@@ -32,8 +32,8 @@ bool object_position_valid(const CEntity *entity)
 
 Fvector get_bone_position	(CObject *object, LPCSTR bone_name)
 {
-	u16 bone_id			= smart_cast<IKinematics*>(object->Visual())->LL_BoneID				(bone_name);
-	CBoneInstance &bone = smart_cast<IKinematics*>(object->Visual())->LL_GetBoneInstance	(bone_id);
+	u16 bone_id			= smart_cast<IKinematics>(object->Visual())->LL_BoneID				(bone_name);
+	CBoneInstance &bone = smart_cast<IKinematics>(object->Visual())->LL_GetBoneInstance	(bone_id);
 
 	Fmatrix	global_transform;
 	global_transform.mul	(object->XFORM(),bone.mTransform);
@@ -44,7 +44,7 @@ Fvector get_bone_position	(CObject *object, LPCSTR bone_name)
 Fvector get_head_position(CObject *object) 
 {
 	pcstr bone_name		=	"bip01_head";
-	if ( CBaseMonster* monster = smart_cast<CBaseMonster*>(object) )
+	if ( CBaseMonster* monster = smart_cast<CBaseMonster>(object) )
 	{
 		bone_name		=	monster->get_head_bone_name();
 	}

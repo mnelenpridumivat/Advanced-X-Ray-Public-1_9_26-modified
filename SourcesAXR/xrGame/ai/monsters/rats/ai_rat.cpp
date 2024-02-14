@@ -214,7 +214,7 @@ BOOL CAI_Rat::net_Spawn	(CSE_Abstract* DC)
 {
 	//////////////////////////////////////////////////////////////////////////
 	CSE_Abstract					*e	= (CSE_Abstract*)(DC);
-	CSE_ALifeMonsterRat				*tpSE_Rat = smart_cast<CSE_ALifeMonsterRat*>(e);
+	CSE_ALifeMonsterRat				*tpSE_Rat = smart_cast<CSE_ALifeMonsterRat>(e);
 
 	// model
 	if (!inherited::net_Spawn(DC))
@@ -658,7 +658,7 @@ void CAI_Rat::activate_physic_shell	()
 
 void CAI_Rat::on_activate_physic_shell	()
 {
-	CObject						*object = smart_cast<CObject*>(H_Parent());
+	CObject						*object = smart_cast<CObject>(H_Parent());
 	R_ASSERT					(object);
 	XFORM().set					(object->XFORM());
 	inherited::activate_physic_shell();

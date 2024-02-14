@@ -191,8 +191,8 @@ void CHelmet::OnH_A_Chield()
 
 void CHelmet::UpdateFilterCondition(void)
 {
-	CHelmet* helmet = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
-	CHelmet* helmet2 = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
+	CHelmet* helmet = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
+	CHelmet* helmet2 = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
 
 	if ((helmet && helmet->m_bUseFilter) || (helmet2 && helmet2->m_bUseFilter))
 	{
@@ -266,7 +266,7 @@ void CHelmet::OnMoveToSlot(const SInvItemPlace& previous_place)
 	inherited::OnMoveToSlot		(previous_place);
 	if (m_pInventory)
 	{
-		CActor* pActor = smart_cast<CActor*> (H_Parent());
+		CActor* pActor = smart_cast<CActor> (H_Parent());
 		if (!pActor)
 			return;
 
@@ -276,8 +276,8 @@ void CHelmet::OnMoveToSlot(const SInvItemPlace& previous_place)
 				pActor->SwitchNightVision(true, false);
 		}
 
-		CHelmet* pHelmet1 = smart_cast<CHelmet*>(pActor->inventory().ItemFromSlot(HELMET_SLOT));
-		CHelmet* pHelmet2 = smart_cast<CHelmet*>(pActor->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
+		CHelmet* pHelmet1 = smart_cast<CHelmet>(pActor->inventory().ItemFromSlot(HELMET_SLOT));
+		CHelmet* pHelmet2 = smart_cast<CHelmet>(pActor->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
 
 		if (this == pHelmet1 && !pHelmet1->m_bSecondHelmetEnabled)
 		{
@@ -301,7 +301,7 @@ void CHelmet::OnMoveToRuck(const SInvItemPlace& previous_place)
 	inherited::OnMoveToRuck		(previous_place);
 	if (m_pInventory && (previous_place.type==eItemPlaceSlot))
 	{
-		CActor* pActor = smart_cast<CActor*> (H_Parent());
+		CActor* pActor = smart_cast<CActor> (H_Parent());
 		if (pActor)
 		{
 			pActor->SwitchNightVision(false);

@@ -27,7 +27,7 @@
 
 void CActor::feel_touch_new				(CObject* O)
 {
-	CPhysicsShellHolder* sh=smart_cast<CPhysicsShellHolder*>(O);
+	CPhysicsShellHolder* sh=smart_cast<CPhysicsShellHolder>(O);
 	if(sh&&sh->character_physics_support()) m_feel_touch_characters++;
 
 }
@@ -58,7 +58,7 @@ BOOL CActor::feel_touch_contact		(CObject *O)
 
 BOOL CActor::feel_touch_on_contact	(CObject *O)
 {
-	CCustomZone	*custom_zone = smart_cast<CCustomZone*>(O);
+	CCustomZone	*custom_zone = smart_cast<CCustomZone>(O);
 	if (!custom_zone)
 		return	(TRUE);
 
@@ -139,7 +139,7 @@ void CActor::PickupModeUpdate()
 		!Level().m_feel_deny.is_object_denied(m_pObjectWeLookingAt))
 	{
 
-		CInventoryItem* inv_item = smart_cast<CInventoryItem*>(m_pUsableObject);
+		CInventoryItem* inv_item = smart_cast<CInventoryItem>(m_pUsableObject);
 		if (GameConstants::GetLimitedInventory() && !inv_item->IsQuestItem() && MaxCarryInvCapacity() < (GetInventoryFullness() + inv_item->GetOccupiedInvSpace()))
 		{
 			SDrawStaticStruct* _s = CurrentGameUI()->AddCustomStatic("backpack_full", true);
@@ -192,17 +192,17 @@ void	CActor::PickupModeUpdate_COD	()
 	for (u32 o_it=0; o_it<ISpatialResult.size(); o_it++)
 	{
 		ISpatial*		spatial	= ISpatialResult[o_it];
-		CInventoryItem*	pIItem	= smart_cast<CInventoryItem*> (spatial->dcast_CObject        ());
+		CInventoryItem*	pIItem	= smart_cast<CInventoryItem> (spatial->dcast_CObject        ());
 
 		if (0 == pIItem)											continue;
 		if (pIItem->object().H_Parent() != NULL)					continue;
 		if (!pIItem->CanTake())										continue;
 		if ( smart_cast<CExplosiveRocket*>( &pIItem->object() ) )	continue;
 
-		CGrenade*	pGrenade	= smart_cast<CGrenade*> (spatial->dcast_CObject        ());
+		CGrenade*	pGrenade	= smart_cast<CGrenade> (spatial->dcast_CObject        ());
 		if (pGrenade && !pGrenade->Useful())						continue;
 
-		CMissile*	pMissile	= smart_cast<CMissile*> (spatial->dcast_CObject        ());
+		CMissile*	pMissile	= smart_cast<CMissile> (spatial->dcast_CObject        ());
 		if (pMissile && !pMissile->Useful())						continue;
 		
 		Fvector A, B, tmp; 
@@ -251,7 +251,7 @@ void	CActor::PickupModeUpdate_COD	()
 			return;
 		}
 
-		CUsableScriptObject*	pUsableObject = smart_cast<CUsableScriptObject*>(pNearestItem);
+		CUsableScriptObject*	pUsableObject = smart_cast<CUsableScriptObject>(pNearestItem);
 		if(pUsableObject && (!m_pUsableObject))
 			pUsableObject->use(this);
 
@@ -283,14 +283,14 @@ void	CActor::Check_for_AutoPickUp()
 	for (u32 o_it=0; o_it<ISpatialResult.size(); o_it++)
 	{
 		ISpatial*		spatial	= ISpatialResult[o_it];
-		CInventoryItem*	pIItem	= smart_cast<CInventoryItem*> (spatial->dcast_CObject());
+		CInventoryItem*	pIItem	= smart_cast<CInventoryItem> (spatial->dcast_CObject());
 
 		if (0 == pIItem)														continue;
 		if (!pIItem->CanTake())													continue;
 		if (Level().m_feel_deny.is_object_denied(spatial->dcast_CObject()) )	continue;
 
 
-		CGrenade*	pGrenade	= smart_cast<CGrenade*> (pIItem);
+		CGrenade*	pGrenade	= smart_cast<CGrenade> (pIItem);
 		if (pGrenade) continue;
 
 		if (APU_Box.Pick(pIItem->object().Position(), pIItem->object().Position()))
@@ -314,7 +314,7 @@ void CActor::PickupInfoDraw(CObject* object)
 {
 	LPCSTR draw_str = NULL;
 	
-	CInventoryItem* item = smart_cast<CInventoryItem*>(object);
+	CInventoryItem* item = smart_cast<CInventoryItem>(object);
 	if(!item)		return;
 
 	Fmatrix			res;
@@ -365,7 +365,7 @@ void CActor::Feel_Grenade_Update( float rad )
 	{
 		if ( (*it_b)->getDestroy() ) continue;					// Don't touch candidates for destroy
 
-		CGrenade* grn = smart_cast<CGrenade*>( *it_b );
+		CGrenade* grn = smart_cast<CGrenade>( *it_b );
 		if( !grn || grn->Initiator() == ID() || grn->Useful() )
 		{
 			continue;

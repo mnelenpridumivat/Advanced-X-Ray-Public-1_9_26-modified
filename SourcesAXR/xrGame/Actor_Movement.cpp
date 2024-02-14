@@ -221,7 +221,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 			TIItemContainer::iterator ite = inventory().m_belt.end();
 			for (; it != ite; ++it)
 			{
-				CArtefact* artefact = smart_cast<CArtefact*>(*it);
+				CArtefact* artefact = smart_cast<CArtefact>(*it);
 				if (artefact)
 				{
 					jump_k *= (artefact->m_fJumpSpeed * artefact->GetCondition());
@@ -232,7 +232,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 			if (outfit)
 				jump_k *= outfit->m_fJumpSpeed;
 
-			CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+			CCustomBackpack* backpack = smart_cast<CCustomBackpack>(inventory().ItemFromSlot(BACKPACK_SLOT));
 
 			if (backpack)
 				jump_k *= backpack->m_fJumpSpeed;
@@ -314,7 +314,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 				TIItemContainer::iterator ite = inventory().m_belt.end();
 				for (; it != ite; ++it)
 				{
-					CArtefact* artefact = smart_cast<CArtefact*>(*it);
+					CArtefact* artefact = smart_cast<CArtefact>(*it);
 					if (artefact)
 					{
 						accel_k *= (artefact->m_fWalkAccel * artefact->GetCondition());
@@ -329,7 +329,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 						accel_k *= outfit->m_fOverweightWalkK;
 				}
 
-				CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+				CCustomBackpack* backpack = smart_cast<CCustomBackpack>(inventory().ItemFromSlot(BACKPACK_SLOT));
 
 				if (backpack)
 				{
@@ -565,7 +565,7 @@ void CActor::g_cl_Orientate	(u32 mstate_rl, float dt)
 	unaffected_r_torso.pitch	= r_torso.pitch;
 	unaffected_r_torso.roll		= r_torso.roll;
 
-	CWeaponMagazined *pWM = smart_cast<CWeaponMagazined*>(inventory().GetActiveSlot() != NO_ACTIVE_SLOT ? 
+	CWeaponMagazined *pWM = smart_cast<CWeaponMagazined>(inventory().GetActiveSlot() != NO_ACTIVE_SLOT ? 
 		inventory().ItemFromSlot(inventory().GetActiveSlot()) : NULL);
 	if (pWM && pWM->GetCurrentFireMode() == 1 && eacFirstEye != cam_active)
 	{
@@ -635,7 +635,7 @@ void CActor::g_sv_Orientate(u32 /**mstate_rl/**/, float /**dt/**/)
 	r_torso.pitch	=	unaffected_r_torso.pitch;
 	r_torso.roll	=	unaffected_r_torso.roll;
 
-	CWeaponMagazined *pWM = smart_cast<CWeaponMagazined*>(inventory().GetActiveSlot() != NO_ACTIVE_SLOT ? 
+	CWeaponMagazined *pWM = smart_cast<CWeaponMagazined>(inventory().GetActiveSlot() != NO_ACTIVE_SLOT ? 
 		inventory().ItemFromSlot(inventory().GetActiveSlot()) : NULL);
 	if (pWM && pWM->GetCurrentFireMode() == 1/* && eacFirstEye != cam_active*/)
 	{
@@ -770,18 +770,18 @@ float CActor::get_additional_weight() const
 	for(TIItemContainer::const_iterator it = inventory().m_belt.begin(); 
 		inventory().m_belt.end() != it; ++it) 
 	{
-		CArtefact*	artefact = smart_cast<CArtefact*>(*it);
+		CArtefact*	artefact = smart_cast<CArtefact>(*it);
 		if(artefact)
 			res			+= artefact->AdditionalInventoryWeight();
 	}
 
-	CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(inventory().ItemFromSlot(BACKPACK_SLOT));
+	CCustomBackpack* backpack = smart_cast<CCustomBackpack>(inventory().ItemFromSlot(BACKPACK_SLOT));
 	if (backpack)
 	{
 		res += backpack->m_additional_weight;
 	}
 
-	CCustomOutfit* pants = smart_cast<CCustomOutfit*>(inventory().ItemFromSlot(PANTS_SLOT));
+	CCustomOutfit* pants = smart_cast<CCustomOutfit>(inventory().ItemFromSlot(PANTS_SLOT));
 	if (pants)
 	{
 		res += pants->m_additional_weight;

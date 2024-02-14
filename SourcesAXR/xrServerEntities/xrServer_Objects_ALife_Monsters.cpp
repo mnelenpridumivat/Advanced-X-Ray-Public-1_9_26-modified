@@ -396,7 +396,7 @@ void CSE_ALifeTraderAbstract::set_specific_character	(shared_str new_spec_char)
 	selected_char.Load(m_SpecificCharacter);
 	if(selected_char.Visual())
 	{
-		CSE_Visual* visual = smart_cast<CSE_Visual*>(base()); VERIFY(visual);
+		CSE_Visual* visual = smart_cast<CSE_Visual>(base()); VERIFY(visual);
 		if(xr_strlen(selected_char.Visual())>0)
 			visual->set_visual(selected_char.Visual());
 	}
@@ -406,7 +406,7 @@ void CSE_ALifeTraderAbstract::set_specific_character	(shared_str new_spec_char)
 	if(NO_COMMUNITY_INDEX == m_community_index)
 	{
 		m_community_index = selected_char.Community().index();
-		CSE_ALifeCreatureAbstract* creature = smart_cast<CSE_ALifeCreatureAbstract*>(base());
+		CSE_ALifeCreatureAbstract* creature = smart_cast<CSE_ALifeCreatureAbstract>(base());
 		if (creature)
 			creature->s_team = selected_char.Community().team();
 	}
@@ -414,7 +414,7 @@ void CSE_ALifeTraderAbstract::set_specific_character	(shared_str new_spec_char)
 
 
 //----
-	CSE_ALifeMonsterAbstract* monster = smart_cast<CSE_ALifeMonsterAbstract*>(base());
+	CSE_ALifeMonsterAbstract* monster = smart_cast<CSE_ALifeMonsterAbstract>(base());
 	if(monster&&selected_char.terrain_sect().size()){
 		setup_location_types_section	(monster->m_tpaTerrain, pSettings, *(selected_char.terrain_sect()));
 	}
@@ -1332,7 +1332,7 @@ bool CSE_ALifeMonsterAbstract::has_detector	()
 	OBJECT_IT			I = this->children.begin();
 	OBJECT_IT			E = this->children.end();
 	for ( ; I != E; ++I){
-		CSE_ALifeItemDetector* detector = smart_cast<CSE_ALifeItemDetector*>(ai().alife().objects().object(*I));
+		CSE_ALifeItemDetector* detector = smart_cast<CSE_ALifeItemDetector>(ai().alife().objects().object(*I));
 		if (detector) return true;
 	};
 	return false;

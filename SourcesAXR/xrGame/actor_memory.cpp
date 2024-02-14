@@ -24,7 +24,7 @@ CActorMemory::CActorMemory					(CActor *actor) :
 
 BOOL CActorMemory::feel_vision_isRelevant	(CObject* O)
 {
-	CEntityAlive	*entity_alive = smart_cast<CEntityAlive*>(O);
+	CEntityAlive	*entity_alive = smart_cast<CEntityAlive>(O);
 	if (!entity_alive)
 		return		(FALSE);
 

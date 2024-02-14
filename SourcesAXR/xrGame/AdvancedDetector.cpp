@@ -39,7 +39,7 @@ void CAdvancedDetector::UpdateAf()
 
 	Fvector						detector_pos = Position();
 
-	CArtefact*	pAf		= smart_cast<CArtefact*>(it_b->first);
+	CArtefact*	pAf		= smart_cast<CArtefact>(it_b->first);
 	CObject*	pObj	= it_b->first;
 
 	for(;it_b!=it_e;++it_b)//only nearest
