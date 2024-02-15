@@ -495,7 +495,7 @@ void CAI_Stalker::Die				(CObject* who)
 	if (!active_item)
 		return;
 
-	CWeapon							*weapon = smart_cast<CWeapon*>(active_item);
+	CWeapon							*weapon = smart_cast<CWeapon>(active_item);
 	if (!weapon)
 		return;
 
@@ -534,7 +534,7 @@ BOOL CAI_Stalker::net_Spawn			(CSE_Abstract* DC)
 #endif // DEBUG_MEMORY_MANAGER
 
 	CSE_Abstract					*e	= (CSE_Abstract*)(DC);
-	CSE_ALifeHumanStalker			*tpHuman = smart_cast<CSE_ALifeHumanStalker*>(e);
+	CSE_ALifeHumanStalker			*tpHuman = smart_cast<CSE_ALifeHumanStalker>(e);
 	R_ASSERT						(tpHuman);
 
 
@@ -591,7 +591,7 @@ BOOL CAI_Stalker::net_Spawn			(CSE_Abstract* DC)
 		sound().set_sound_mask(static_cast<u32>(eStalkerSoundMaskDie));
 
 	//загрузить иммунитеты из модельки сталкера
-	IKinematics* pKinematics = smart_cast<IKinematics*>(Visual()); VERIFY(pKinematics);
+	IKinematics* pKinematics = reinterpret_cast<IKinematics*>(Visual()); VERIFY(pKinematics);
 	CInifile* ini = pKinematics->LL_UserData();
 	if(ini)
 	{
@@ -932,7 +932,7 @@ void CAI_Stalker ::PHHit				(SHit &H )
 
 CPHDestroyable*		CAI_Stalker::		ph_destroyable	()						
 {
-	return smart_cast<CPHDestroyable*>(character_physics_support());
+	return smart_cast<CPHDestroyable>(character_physics_support());
 }
 
 #include "../../enemy_manager.h"
@@ -1071,7 +1071,7 @@ void CAI_Stalker::shedule_Update		( u32 DT )
 float CAI_Stalker::Radius() const
 { 
 	float R		= inherited::Radius();
-	CWeapon* W	= smart_cast<CWeapon*>(inventory().ActiveItem());
+	CWeapon* W	= smart_cast<CWeapon>(inventory().ActiveItem());
 	if (W) R	+= W->Radius();
 	return R;
 }
@@ -1279,7 +1279,7 @@ void CAI_Stalker::fill_bones_body_parts	(LPCSTR bone_id, const ECriticalWoundTyp
 	LPCSTR					body_part_section_id = pSettings->r_string(body_parts_section_id,bone_id);
 	VERIFY					(body_part_section_id);
 
-	IKinematics				*kinematics	= smart_cast<IKinematics*>(Visual());
+	IKinematics				*kinematics	= reinterpret_cast<IKinematics*>(Visual());
 	VERIFY					(kinematics);
 
 	CInifile::Sect			&body_part_section = pSettings->r_section(body_part_section_id);
@@ -1329,7 +1329,7 @@ shared_str const &CAI_Stalker::aim_bone_id		() const
 
 void aim_target							(shared_str const& aim_bone_id, Fvector &result, const CGameObject *object)
 {
-	IKinematics				*kinematics = smart_cast<IKinematics*>(object->Visual());
+	IKinematics				*kinematics = reinterpret_cast<IKinematics*>(object->Visual());
 	VERIFY					(kinematics);
 
 	u16						bone_id = kinematics->LL_BoneID(aim_bone_id);
@@ -1379,7 +1379,7 @@ bool CAI_Stalker::can_fire_right_now							( )
 		return				(false);
 
 	VERIFY					(best_weapon());
-	CWeapon&				best_weapon = smart_cast<CWeapon&>(*this->best_weapon());
+	CWeapon&				best_weapon = *smart_cast<CWeapon>(this->best_weapon());
 	return					best_weapon.GetAmmoElapsed() > 0;
 }
 
@@ -1390,7 +1390,7 @@ bool CAI_Stalker::unlimited_ammo()
 
 void CAI_Stalker::ResetBoneProtections(pcstr imm_sect, pcstr bone_sect)
 {
-	IKinematics* pKinematics = smart_cast<IKinematics*>(Visual());
+	IKinematics* pKinematics = reinterpret_cast<IKinematics*>(Visual());
 	CInifile* ini = pKinematics->LL_UserData();
 	if (ini)
 	{

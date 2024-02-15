@@ -110,9 +110,9 @@ void CAI_Stalker::g_fireParams(CHudItem* pHudItem, Fvector& P, Fvector& D)
 		return;
 	}
 
-	CWeapon				*weapon = smart_cast<CWeapon*>(inventory().ActiveItem());
+	CWeapon				*weapon = smart_cast<CWeapon>(inventory().ActiveItem());
 	if (!weapon) {
-		CMissile		*missile = smart_cast<CMissile*>(inventory().ActiveItem());
+		CMissile		*missile = smart_cast<CMissile>(inventory().ActiveItem());
 		if (missile) {
 			update_throw_params	();
 			P			= m_throw_position;
@@ -260,8 +260,8 @@ void CAI_Stalker::Hit(SHit* pHDS)
 			}
 		}
 
-		const CEntityAlive* entity_alive = smart_cast<const CEntityAlive*>(HDS.initiator());
-		IKinematics* tpKinematics = smart_cast<IKinematics*>(Visual());
+		const CEntityAlive* entity_alive = smart_cast<const CEntityAlive>(HDS.initiator());
+		IKinematics* tpKinematics = reinterpret_cast<IKinematics*>(Visual());
 		m_bLastHittedInHead = HDS.bone() == tpKinematics->LL_BoneID("bip01_head") ? true : false;
 
 		if (entity_alive && !wounded() && !m_bLastHittedInHead)
@@ -309,7 +309,7 @@ void CAI_Stalker::Hit(SHit* pHDS)
 			else {
 				if (!already_critically_wounded && became_critically_wounded) {
 					if (HDS.who) {
-						CAI_Stalker		*stalker = smart_cast<CAI_Stalker*>(HDS.who);
+						CAI_Stalker		*stalker = smart_cast<CAI_Stalker>(HDS.who);
 						if ( stalker && stalker->g_Alive() )
 							stalker->on_critical_wound_initiator	(this);
 					}
@@ -446,7 +446,7 @@ void CAI_Stalker::update_best_item_info_impl()
 		xr_vector<const CGameObject*>::const_iterator	I = memory().item().objects().begin();
 		xr_vector<const CGameObject*>::const_iterator	E = memory().item().objects().end();
 		for ( ; I != E; ++I) {
-			const CInventoryItem	*inventory_item = smart_cast<const CInventoryItem*>(*I);
+			const CInventoryItem	*inventory_item = smart_cast<const CInventoryItem>(*I);
 			if (!inventory_item || !memory().item().useful(&inventory_item->object()))
 				continue;
 			CInventoryItem			*item			= inventory_item->can_kill(&inventory());
@@ -486,7 +486,7 @@ void CAI_Stalker::update_best_item_info_impl()
 	xr_vector<const CGameObject*>::const_iterator	I = memory().item().objects().begin();
 	xr_vector<const CGameObject*>::const_iterator	E = memory().item().objects().end();
 	for ( ; I != E; ++I) {
-		const CInventoryItem	*inventory_item = smart_cast<const CInventoryItem*>(*I);
+		const CInventoryItem	*inventory_item = smart_cast<const CInventoryItem>(*I);
 		if (!inventory_item || !memory().item().useful(&inventory_item->object()))
 			continue;
 		const CInventoryItem	*item = inventory_item->can_kill(memory().item().objects());
@@ -541,7 +541,7 @@ bool CAI_Stalker::ready_to_detour		()
 	if (!ready_to_kill())
 		return			(false);
 
-	CWeapon				*weapon = smart_cast<CWeapon*>(m_best_item_to_kill);
+	CWeapon				*weapon = smart_cast<CWeapon>(m_best_item_to_kill);
 	if (!weapon)
 		return			(false);
 
@@ -588,7 +588,7 @@ IC BOOL ray_query_callback	(collide::rq_result& result, LPVOID params)
 		return							(false);
 	}
 
-	CEntityAlive						*entity_alive = smart_cast<CEntityAlive*>(result.O);
+	CEntityAlive						*entity_alive = smart_cast<CEntityAlive>(result.O);
 	if (!entity_alive) {
 		if (param->m_power > param->m_power_threshold)
 			return						(true);
@@ -704,7 +704,7 @@ bool CAI_Stalker::inside_anomaly		()
 	xr_vector<CObject*>::const_iterator	I = feel_touch.begin();
 	xr_vector<CObject*>::const_iterator	E = feel_touch.end();
 	for ( ; I != E; ++I) {
-		CCustomZone			*zone = smart_cast<CCustomZone*>(*I);
+		CCustomZone			*zone = smart_cast<CCustomZone>(*I);
 		if ( zone && (zone->restrictor_type() != RestrictionSpace::eRestrictorTypeNone) ) {
 			if (smart_cast<CRadioactiveZone*>(zone))
 				continue;
@@ -824,7 +824,7 @@ void CAI_Stalker::on_weapon_hide			(CWeapon *weapon)
 
 void CAI_Stalker::notify_on_wounded_or_killed	(CObject *object)
 {
-	CAI_Stalker							*stalker = smart_cast<CAI_Stalker*>(object);
+	CAI_Stalker							*stalker = smart_cast<CAI_Stalker>(object);
 	if (!stalker)
 		return;
 
@@ -1084,7 +1084,7 @@ bool CAI_Stalker::critical_wound_external_conditions_suitable()
 	if (animation().non_script_need_update())
 		return						(false);
 
-	CWeapon							*active_weapon = smart_cast<CWeapon*>(inventory().ActiveItem());
+	CWeapon							*active_weapon = smart_cast<CWeapon>(inventory().ActiveItem());
 	if (!active_weapon)
 		return						(false);
 
@@ -1150,7 +1150,7 @@ bool CAI_Stalker::can_cry_enemy_is_wounded		() const
 		return						(false);
 
 	typedef CActionPlannerActionScript<CAI_Stalker>	planner_type;
-	planner_type					*planner = smart_cast<planner_type*>(&brain().current_action());
+	planner_type					*planner = smart_cast<planner_type>(&brain().current_action());
 	VERIFY							(planner);
 
 	switch (planner->current_action_id()) {

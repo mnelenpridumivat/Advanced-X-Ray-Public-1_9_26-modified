@@ -311,13 +311,13 @@ public:
 		collide::rq_result RQ = Level().GetPickResult(Device.vCameraPosition, Device.vCameraDirection, 1000.0f, Level().CurrentControlEntity());
 		Fvector pos = Fvector(Device.vCameraPosition).add(Fvector(Device.vCameraDirection).mul(RQ.range));
 
-		if (auto tpGame = smart_cast<game_sv_Single*>(Level().Server->game))
+		if (auto tpGame = smart_cast<game_sv_Single>(Level().Server->game))
 		{
 			for (int i = 0; i < count; ++i)
 			{
 				CSE_Abstract* entity = tpGame->alife().spawn_item(Name, pos, Actor()->ai_location().level_vertex_id(), Actor()->ai_location().game_vertex_id(), static_cast<ALife::_OBJECT_ID>(-1));
 
-				if (CSE_ALifeAnomalousZone* anom = smart_cast<CSE_ALifeAnomalousZone*>(entity))
+				if (CSE_ALifeAnomalousZone* anom = smart_cast<CSE_ALifeAnomalousZone>(entity))
 				{
 					CShapeData::shape_def _shape;
 					_shape.data.sphere.P.set(0.0f, 0.0f, 0.0f);
@@ -356,7 +356,7 @@ public:
 		if (!g_pGameLevel) return;
 
 		char	Name[128];	Name[0] = 0;
-		CActor* actor = smart_cast<CActor*>(Level().CurrentEntity());
+		CActor* actor = smart_cast<CActor>(Level().CurrentEntity());
 
 		if (actor)
 			actor->OnReceiveInfo(info_id);
@@ -398,7 +398,7 @@ public:
 		if (!g_pGameLevel) return;
 
 		char	Name[128];	Name[0] = 0;
-		CActor* actor = smart_cast<CActor*>(Level().CurrentEntity());
+		CActor* actor = smart_cast<CActor>(Level().CurrentEntity());
 
 		if (actor)
 			actor->OnDisableInfo(info_id);
@@ -507,7 +507,7 @@ public:
 			return;
 		}
 
-		CActor* actor = smart_cast<CActor*>(Level().CurrentEntity());
+		CActor* actor = smart_cast<CActor>(Level().CurrentEntity());
 		if (actor)
 			Level().GameTaskManager().GiveTaskScript(task);
 		else
@@ -550,7 +550,7 @@ public:
 			return;
 		}
 
-		CActor* actor = smart_cast<CActor*>(Level().CurrentEntity());
+		CActor* actor = smart_cast<CActor>(Level().CurrentEntity());
 		int	m_iMoney = (int)atoi(money);
 		if (actor)
 		{
@@ -599,7 +599,7 @@ public:
 				return;
 			}
 
-			CEntityAlive* entity_to_kill = smart_cast<CEntityAlive*>(Level().Objects.net_Find(id_to_kill));
+			CEntityAlive* entity_to_kill = smart_cast<CEntityAlive>(Level().Objects.net_Find(id_to_kill));
 
 			if (entity_to_kill)
 			{
@@ -616,7 +616,7 @@ public:
 		}
 		else if (RQ.O && story_id_to_kill[0] == 0)
 		{
-			CEntityAlive* entity_to_kill = smart_cast<CEntityAlive*>(RQ.O);
+			CEntityAlive* entity_to_kill = smart_cast<CEntityAlive>(RQ.O);
 
 			if (entity_to_kill)
 			{
@@ -665,7 +665,7 @@ public:
 			};
 //#endif
 
-			game_cl_Single* game		= smart_cast<game_cl_Single*>(Level().game); VERIFY(game);
+			game_cl_Single* game		= smart_cast<game_cl_Single>(Level().game); VERIFY(game);
 			game->OnDifficultyChanged	();
 		}
 	}
@@ -790,7 +790,7 @@ public:
 	void Execute(LPCSTR args) override
 	{
 		if ((GameID() == eGameIDSingle)  &&ai().get_alife()) {
-			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
+			game_sv_Single	*tpGame = smart_cast<game_sv_Single>(Level().Server->game);
 			VERIFY			(tpGame);
 			int id1 = 0;
 			sscanf(args ,"%d",&id1);
@@ -813,7 +813,7 @@ public:
 	void Execute(LPCSTR args) override
 	{
 		if ((GameID() == eGameIDSingle)  &&ai().get_alife()) {
-			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
+			game_sv_Single	*tpGame = smart_cast<game_sv_Single>(Level().Server->game);
 			VERIFY			(tpGame);
 			int id1 = 0;
 			sscanf(args ,"%d",&id1);
@@ -831,7 +831,7 @@ public:
 	void Execute(LPCSTR args) override
 	{
 		if ((GameID() == eGameIDSingle)  &&ai().get_alife()) {
-			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
+			game_sv_Single	*tpGame = smart_cast<game_sv_Single>(Level().Server->game);
 			VERIFY			(tpGame);
 			float id1 = 0;
 			sscanf(args ,"%f",&id1);
@@ -1439,7 +1439,7 @@ public:
 
 	void	Execute				(LPCSTR args) override
 	{
-		CActor* A =smart_cast<CActor*>(Level().CurrentEntity());
+		CActor* A =smart_cast<CActor>(Level().CurrentEntity());
 		if(A)
 			A->DumpInfo();
 	}
@@ -1455,7 +1455,7 @@ public:
 
 	void	Execute				(LPCSTR args) override
 	{
-		CActor* A =smart_cast<CActor*>(Level().CurrentEntity());
+		CActor* A =smart_cast<CActor>(Level().CurrentEntity());
 		if(A)
 			A->DumpTasks();
 	}
@@ -1495,7 +1495,7 @@ public:
 		const_iterator I = ai().alife().graph().level().objects().begin();
 		const_iterator E = ai().alife().graph().level().objects().end();
 		for ( ; I != E; ++I) {
-			CSE_ALifeCreatureAbstract *obj = smart_cast<CSE_ALifeCreatureAbstract *>(I->second);
+			CSE_ALifeCreatureAbstract *obj = smart_cast<CSE_ALifeCreatureAbstract>(I->second);
 			if (obj) {
 				Msg("\"%s\",",obj->name_replace());
 			}
@@ -1565,7 +1565,7 @@ public:
 		_GetItem(args,1,param2,' ');
 
 		CObject			*obj = Level().Objects.FindObjectByName(param1);
-		CBaseMonster	*monster = smart_cast<CBaseMonster *>(obj);
+		CBaseMonster	*monster = smart_cast<CBaseMonster>(obj);
 		if (!monster)	return;
 		
 		u32				value2;
@@ -2054,14 +2054,14 @@ public		:
 		CObject* obj			= Level().CurrentViewEntity();	VERIFY(obj);
 		shared_str ssss			= args;
 
-		CAttachmentOwner* owner = smart_cast<CAttachmentOwner*>(obj);
+		CAttachmentOwner* owner = smart_cast<CAttachmentOwner>(obj);
 		CAttachableItem* itm	= owner->attachedItem(ssss);
 		if(itm)
 		{
 			CAttachableItem::m_dbgItem = itm;
 		}else
 		{
-			CInventoryOwner* iowner = smart_cast<CInventoryOwner*>(obj);
+			CInventoryOwner* iowner = smart_cast<CInventoryOwner>(obj);
 			PIItem active_item = iowner->m_inventory->ActiveItem();
 			if(active_item && active_item->object().cNameSect()==ssss )
 				CAttachableItem::m_dbgItem = active_item->cast_attachable_item();
@@ -2139,7 +2139,7 @@ public:
 		}
 
 		IRenderVisual			*visual = Render->model_Create(arguments);
-		IKinematics				*kinematics = smart_cast<IKinematics*>(visual);
+		IKinematics				*kinematics = reinterpret_cast<IKinematics*>(visual);
 		if (!kinematics) {
 			Render->model_Delete(visual);
 			Msg					("! Invalid visual type \"%s\" (not a IKinematics)",arguments);
@@ -2192,7 +2192,7 @@ public:
 		{
 			return;
 		}
-		CUIGameSP* ui_game_sp = smart_cast<CUIGameSP*>( CurrentGameUI() );
+		CUIGameSP* ui_game_sp = smart_cast<CUIGameSP>( CurrentGameUI() );
 		if ( !ui_game_sp )
 		{
 			return;
@@ -2220,7 +2220,7 @@ public:
 		{
 			return;
 		}
-		CUIGameSP* ui_game_sp = smart_cast<CUIGameSP*>( CurrentGameUI() );
+		CUIGameSP* ui_game_sp = smart_cast<CUIGameSP>( CurrentGameUI() );
 		if ( !ui_game_sp )
 		{
 			return;

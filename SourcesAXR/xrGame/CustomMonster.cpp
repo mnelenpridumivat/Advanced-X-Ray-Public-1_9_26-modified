@@ -569,7 +569,7 @@ void CCustomMonster::UpdatePositionAnimation()
 
 BOOL CCustomMonster::feel_visible_isRelevant (CObject* O)
 {
-	CEntityAlive* E = smart_cast<CEntityAlive*>		(O);
+	CEntityAlive* E = smart_cast<CEntityAlive>		(O);
 	if (0==E)								return FALSE;
 	if (E->g_Team() == g_Team())			return FALSE;
 	return TRUE;
@@ -578,7 +578,7 @@ BOOL CCustomMonster::feel_visible_isRelevant (CObject* O)
 void CCustomMonster::eye_pp_s0			( )
 {
 	// Eye matrix
-	IKinematics* V							= smart_cast<IKinematics*>(Visual());
+	IKinematics* V							= reinterpret_cast<IKinematics*>(Visual());
 	V->CalculateBones						();
 	Fmatrix&	mEye						= V->LL_GetTransform(static_cast<u16>(eye_bone));
 	Fmatrix		X;							X.mul_43	(XFORM(),mEye);
@@ -686,7 +686,7 @@ BOOL CCustomMonster::net_Spawn	(CSE_Abstract* DC)
 	if (!movement().net_Spawn(DC) || !inherited::net_Spawn(DC) || !CScriptEntity::net_Spawn(DC))
 		return					(FALSE);
 
-	ISpatial					*self = smart_cast<ISpatial*> (this);
+	ISpatial					*self = smart_cast<ISpatial> (this);
 	if (self) {
 		self->spatial.type		|= STYPE_VISIBLEFORAI;
 		// enable react to sound only if alive
@@ -695,7 +695,7 @@ BOOL CCustomMonster::net_Spawn	(CSE_Abstract* DC)
 	}
 
 	CSE_Abstract				*e	= (CSE_Abstract*)(DC);
-	CSE_ALifeMonsterAbstract	*E	= smart_cast<CSE_ALifeMonsterAbstract*>(e);
+	CSE_ALifeMonsterAbstract	*E	= smart_cast<CSE_ALifeMonsterAbstract>(e);
 
 	eye_matrix.identity			();
 	movement().m_body.current.yaw		= movement().m_body.target.yaw		= -E->o_torso.yaw;
@@ -848,7 +848,7 @@ void CCustomMonster::PitchCorrection()
 
 BOOL CCustomMonster::feel_touch_on_contact	(CObject *O)
 {
-	CCustomZone	*custom_zone = smart_cast<CCustomZone*>(O);
+	CCustomZone	*custom_zone = smart_cast<CCustomZone>(O);
 	if (!custom_zone)
 		return	(TRUE);
 
@@ -863,7 +863,7 @@ BOOL CCustomMonster::feel_touch_on_contact	(CObject *O)
 
 BOOL CCustomMonster::feel_touch_contact		(CObject *O)
 {
-	CCustomZone	*custom_zone = smart_cast<CCustomZone*>(O);
+	CCustomZone	*custom_zone = smart_cast<CCustomZone>(O);
 	if (!custom_zone)
 		return	(TRUE);
 

@@ -96,7 +96,7 @@ void CGameObject::init			()
 void CGameObject::Load(LPCSTR section)
 {
 	inherited::Load			(section);
-	ISpatial*		self				= smart_cast<ISpatial*> (this);
+	ISpatial*		self				= smart_cast<ISpatial> (this);
 	if (self)	{
 		// #pragma todo("to Dima: All objects are visible for AI ???")
 		// self->spatial.type	|=	STYPE_VISIBLEFORAI;	
@@ -133,8 +133,8 @@ void CGameObject::net_Destroy	()
 	xr_delete				(m_ini_file);
 
 	m_script_clsid			= -1;
-	if (Visual() && smart_cast<IKinematics*>(Visual()))
-		smart_cast<IKinematics*>(Visual())->Callback	(0,0);
+	if (Visual() && reinterpret_cast<IKinematics*>(Visual()))
+		reinterpret_cast<IKinematics*>(Visual())->Callback	(0,0);
 
 	inherited::net_Destroy						();
 	setReady									(FALSE);
@@ -229,7 +229,7 @@ void CGameObject::OnEvent		(NET_Packet& P, u16 type)
 			if (GameID() != eGameIDSingle)
 			{
 				Game().m_WeaponUsageStatistic->OnBullet_Check_Result(false);
-				game_cl_mp*	mp_game = smart_cast<game_cl_mp*>(&Game());
+				game_cl_mp*	mp_game = smart_cast<game_cl_mp>(&Game());
 				if (mp_game->get_reward_generator())
 					mp_game->get_reward_generator()->OnBullet_Hit(Hitter, this, Weapon, HDS.boneID);
 			}
@@ -272,11 +272,11 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 	CSE_Abstract					*E = (CSE_Abstract*)DC;
 	VERIFY							(E);
 
-	const CSE_Visual				*visual	= smart_cast<const CSE_Visual*>(E);
+	const CSE_Visual				*visual	= smart_cast<const CSE_Visual>(E);
 	if (visual) {
 		cNameVisual_set				(visual_name(E));
 		if (visual->flags.test(CSE_Visual::flObstacle)) {
-			ISpatial				*self = smart_cast<ISpatial*>(this);
+			ISpatial				*self = smart_cast<ISpatial>(this);
 			self->spatial.type		|=	STYPE_OBSTACLE;
 		}
 	}
@@ -312,7 +312,7 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 #endif
 	VERIFY							(_valid(renderable.xform));
 	VERIFY							(!fis_zero(DET(renderable.xform)));
-	CSE_ALifeObject					*O = smart_cast<CSE_ALifeObject*>(E);
+	CSE_ALifeObject					*O = smart_cast<CSE_ALifeObject>(E);
 	if (O && xr_strlen(O->m_ini_string)) {
 #pragma warning(push)
 #pragma warning(disable:4238)
@@ -380,11 +380,11 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 	// if we have a parent
 	if ( ai().get_level_graph() ) {
 		if ( E->ID_Parent == 0xffff ) {
-			CSE_ALifeObject* l_tpALifeObject	= smart_cast<CSE_ALifeObject*>(E);
+			CSE_ALifeObject* l_tpALifeObject	= smart_cast<CSE_ALifeObject>(E);
 			if (l_tpALifeObject && ai().level_graph().valid_vertex_id(l_tpALifeObject->m_tNodeID))
 				ai_location().level_vertex		(l_tpALifeObject->m_tNodeID);
 			else {
-				CSE_Temporary* l_tpTemporary	= smart_cast<CSE_Temporary*>	(E);
+				CSE_Temporary* l_tpTemporary	= smart_cast<CSE_Temporary>	(E);
 				if (l_tpTemporary && ai().level_graph().valid_vertex_id(l_tpTemporary->m_tNodeID))
 					ai_location().level_vertex	(l_tpTemporary->m_tNodeID);
 			}
@@ -421,7 +421,7 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 				Position().y					= EPS_L + ai().level_graph().vertex_plane_y(*ai_location().level_vertex(),Position().x,Position().z);
 		}
 		else {
-			CSE_ALifeObject* const alife_object	= smart_cast<CSE_ALifeObject*>(E);
+			CSE_ALifeObject* const alife_object	= smart_cast<CSE_ALifeObject>(E);
 			if ( alife_object && ai().level_graph().valid_vertex_id(alife_object->m_tNodeID) ) {
 				ai_location().level_vertex		(alife_object->m_tNodeID);
 				ai_location().game_vertex		(alife_object->m_tGraphID);
@@ -567,11 +567,11 @@ void CGameObject::spawn_supplies()
 			if (::Random.randF(1.f) < p){
 				CSE_Abstract* A=Level().spawn_item	(N,Position(),ai_location().level_vertex_id(),ID(),true);
 
-				CSE_ALifeInventoryItem*	pSE_InventoryItem = smart_cast<CSE_ALifeInventoryItem*>(A);
+				CSE_ALifeInventoryItem*	pSE_InventoryItem = smart_cast<CSE_ALifeInventoryItem>(A);
 				if(pSE_InventoryItem)
 						pSE_InventoryItem->m_fCondition = f_cond;
 
-				CSE_ALifeItemWeapon* W =  smart_cast<CSE_ALifeItemWeapon*>(A);
+				CSE_ALifeItemWeapon* W =  smart_cast<CSE_ALifeItemWeapon>(A);
 				if (W) {
 					if (W->m_scope_status			== ALife::eAddonAttachable)
 						W->m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonScope, bScope);
@@ -684,7 +684,7 @@ void CGameObject::spatial_move	()
 #ifdef DEBUG
 void			CGameObject::dbg_DrawSkeleton	()
 {
-	CCF_Skeleton* Skeleton = smart_cast<CCF_Skeleton*>(collidable.model);
+	CCF_Skeleton* Skeleton = smart_cast<CCF_Skeleton>(collidable.model);
 	if (!Skeleton) return;
 	Skeleton->_dbg_refresh();
 
@@ -767,7 +767,7 @@ void CGameObject::OnH_B_Independent(bool just_before_destroy)
 
 	setup_parent_ai_locations	(false);
 
-	CGameObject					*parent = smart_cast<CGameObject*>(H_Parent());
+	CGameObject					*parent = smart_cast<CGameObject>(H_Parent());
 	VERIFY						(parent);
 	if (ai().get_level_graph() && ai().level_graph().valid_vertex_id(parent->ai_location().level_vertex_id()))
 		validate_ai_locations	(false);
@@ -807,9 +807,9 @@ void CGameObject::SetKinematicsCallback		(bool set)
 {
 	if(!Visual())	return;
 	if (set)
-		smart_cast<IKinematics*>(Visual())->Callback(VisualCallback,this);
+		reinterpret_cast<IKinematics*>(Visual())->Callback(VisualCallback,this);
 	else
-		smart_cast<IKinematics*>(Visual())->Callback(0,0);
+		reinterpret_cast<IKinematics*>(Visual())->Callback(0,0);
 };
 
 void VisualCallback	(IKinematics *tpKinematics)
@@ -943,7 +943,7 @@ CGameObject::CScriptCallbackExVoid &CGameObject::callback(GameObject::ECallbackT
 
 LPCSTR CGameObject::visual_name		(CSE_Abstract *server_entity)
 {
-	const CSE_Visual			*visual	= smart_cast<const CSE_Visual*>(server_entity);
+	const CSE_Visual			*visual	= smart_cast<const CSE_Visual>(server_entity);
 	VERIFY						(visual);
 	return						(visual->get_visual());
 }		
@@ -1003,8 +1003,8 @@ void CGameObject::create_anim_mov_ctrl	( CBlend *b, Fmatrix *start_pose, bool lo
 			start_pose,
 			make_string(
 				"start pose hasn't been specified for animation [%s][%s]",
-				smart_cast<IKinematicsAnimated&>(*Visual()).LL_MotionDefName_dbg(b->motionID).first,
-				smart_cast<IKinematicsAnimated&>(*Visual()).LL_MotionDefName_dbg(b->motionID).second
+				reinterpret_cast<IKinematicsAnimated*>(Visual())->LL_MotionDefName_dbg(b->motionID).first,
+				reinterpret_cast<IKinematicsAnimated*>(Visual())->LL_MotionDefName_dbg(b->motionID).second
 			)
 		);
 
@@ -1012,8 +1012,8 @@ void CGameObject::create_anim_mov_ctrl	( CBlend *b, Fmatrix *start_pose, bool lo
 			!animation_movement(),
 			make_string(
 				"start pose hasn't been specified for animation [%s][%s]",
-				smart_cast<IKinematicsAnimated&>(*Visual()).LL_MotionDefName_dbg(b->motionID).first,
-				smart_cast<IKinematicsAnimated&>(*Visual()).LL_MotionDefName_dbg(b->motionID).second
+				reinterpret_cast<IKinematicsAnimated*>(Visual())->LL_MotionDefName_dbg(b->motionID).first,
+				reinterpret_cast<IKinematicsAnimated*>(Visual())->LL_MotionDefName_dbg(b->motionID).second
 			)
 		);
 		
@@ -1075,7 +1075,7 @@ void CGameObject::on_matrix_change	(const Fmatrix &previous)
 void render_box						(IRenderVisual *visual, const Fmatrix &xform, const Fvector &additional, bool draw_child_boxes, const u32 &color)
 {
 	CDebugRenderer			&renderer = Level().debug_renderer();
-	IKinematics				*kinematics = smart_cast<IKinematics*>(visual);
+	IKinematics				*kinematics = reinterpret_cast<IKinematics*>(visual);
 	VERIFY					(kinematics);
 	u16						bone_count = kinematics->LL_BoneCount();
 	VERIFY					(bone_count);

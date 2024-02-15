@@ -51,7 +51,7 @@ void CDestroyablePhysicsObject::net_Destroy()
 BOOL CDestroyablePhysicsObject::net_Spawn(CSE_Abstract* DC)
 {
 	CSE_Abstract* E = (CSE_Abstract*)DC;
-	const CSE_Visual* visual = smart_cast<const CSE_Visual*>(E);
+	const CSE_Visual* visual = smart_cast<const CSE_Visual>(E);
 	if (visual) {
 		shared_str N = visual_name(E);
 		if (!(N.c_str() && N[0])) {
@@ -62,7 +62,7 @@ BOOL CDestroyablePhysicsObject::net_Spawn(CSE_Abstract* DC)
 	}
 
 	BOOL res=inherited::net_Spawn(DC);
-	IKinematics		*K=smart_cast<IKinematics*>(Visual());
+	IKinematics		*K= reinterpret_cast<IKinematics*>(Visual());
 	CInifile* ini=K->LL_UserData();
 	//R_ASSERT2(ini->section_exist("destroyed"),"destroyable_object must have -destroyed- section in model user data");
 	CPHDestroyable::Init();
@@ -89,7 +89,7 @@ void	CDestroyablePhysicsObject::Hit					(SHit* pHDS)
 		lua_game_object(), 
 		HDS.power,
 		HDS.dir,
-		smart_cast<const CGameObject*>(HDS.who)->lua_game_object(),
+		smart_cast<const CGameObject>(HDS.who)->lua_game_object(),
 		HDS.bone()
 		);
 	HDS.power=CHitImmunity::AffectHit(HDS.power,HDS.hit_type);
@@ -109,7 +109,7 @@ void	CDestroyablePhysicsObject::Hit					(SHit* pHDS)
 void CDestroyablePhysicsObject::Destroy()
 {
 	VERIFY(!physics_world()->Processing());
-	const CGameObject *who_object = smart_cast<const CGameObject*>(FatalHit().initiator());
+	const CGameObject *who_object = smart_cast<const CGameObject>(FatalHit().initiator());
 	callback(GameObject::eDeath)(lua_game_object(), who_object ? who_object->lua_game_object() : 0);
 	CPHDestroyable::Destroy(ID(),"physic_destroyable_object");
 	if(m_destroy_sound._handle())
@@ -140,14 +140,14 @@ void CDestroyablePhysicsObject::Destroy()
 }
 void CDestroyablePhysicsObject::InitServerObject(CSE_Abstract* D)
 {
-	CSE_PHSkeleton					*ps = smart_cast<CSE_PHSkeleton*>(D);
+	CSE_PHSkeleton					*ps = smart_cast<CSE_PHSkeleton>(D);
 	R_ASSERT						(ps);
 	if(ps->_flags.test(CSE_PHSkeleton::flSpawnCopy)) 
 									inherited::InitServerObject(D);
 	else					
 									CPHDestroyable::InitServerObject(D);
 
-	CSE_ALifeObjectPhysic			*PO = smart_cast<CSE_ALifeObjectPhysic*>(D);
+	CSE_ALifeObjectPhysic			*PO = smart_cast<CSE_ALifeObjectPhysic>(D);
 	if(PO)PO->type=epotSkeleton;
 }
 void CDestroyablePhysicsObject::shedule_Update(u32 dt)
