@@ -133,8 +133,11 @@ enum ETeam
 
 #pragma pack(pop)
 
-class	game_GameState : public DLL_Pure
+class	game_GameState : 
+	public DLL_Pure,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(game_GameState, DLL_Pure)
 protected:
 	EGameIDs						m_type;
 	u16								m_phase;

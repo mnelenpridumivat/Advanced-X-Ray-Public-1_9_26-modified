@@ -18,8 +18,10 @@ typedef void CollideCallback(CPHObject* obj1,CPHObject* obj2, dGeomID o1, dGeomI
 class IPhysicsShellHolder;
 #endif
 class CPHObject :
-	public ISpatial 
+	public ISpatial,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CPHObject, ISpatial)
 #ifdef DEBUG
 	friend struct SPHObjDBGDraw;
 #endif

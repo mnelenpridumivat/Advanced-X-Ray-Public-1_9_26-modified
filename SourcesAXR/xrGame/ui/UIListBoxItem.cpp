@@ -54,7 +54,7 @@ bool CUIListBoxItem::OnMouseDown(int mouse_btn)
 {
 	if (mouse_btn==MOUSE_1)
 	{
-		smart_cast<CUIScrollView*>(GetParent()->GetParent())->SetSelected(this);
+		smart_cast<CUIScrollView>(GetParent()->GetParent())->SetSelected(this);
 		GetMessageTarget()->SendMessage(this, LIST_ITEM_SELECT, &tag);
 		GetMessageTarget()->SendMessage(this, LIST_ITEM_CLICKED, &tag);
 		return true;

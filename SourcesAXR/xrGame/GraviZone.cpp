@@ -85,7 +85,7 @@ bool CBaseGraviZone ::IdleState()
 		{
 			for(OBJECT_INFO_VEC_IT it = m_ObjectInfoMap.begin(); m_ObjectInfoMap.end() != it; ++it) 
 			{
-				CPhysicsShellHolder * GO = smart_cast<CPhysicsShellHolder *>( it->object );
+				CPhysicsShellHolder * GO = smart_cast<CPhysicsShellHolder>( it->object );
 
 				if(GO && GO->PPhysicsShell() && Telekinesis().is_active_object(GO))
 				{
@@ -100,7 +100,7 @@ bool CBaseGraviZone ::IdleState()
 
 			for(OBJECT_INFO_VEC_IT it = m_ObjectInfoMap.begin(); m_ObjectInfoMap.end() != it; ++it) 
 			{
-				CPhysicsShellHolder * GO = smart_cast<CPhysicsShellHolder *>( it->object );
+				CPhysicsShellHolder * GO = smart_cast<CPhysicsShellHolder>( it->object );
 
 				if(GO && GO->PPhysicsShell() && !Telekinesis().is_active_object(GO))
 				{
@@ -123,7 +123,7 @@ bool CBaseGraviZone::CheckAffectField(CPhysicsShellHolder* GO,float dist_to_radi
 
 void CBaseGraviZone ::Affect(SZoneObjectInfo* O) 
 {
-	CPhysicsShellHolder* GO = smart_cast<CPhysicsShellHolder*>(O->object);
+	CPhysicsShellHolder* GO = smart_cast<CPhysicsShellHolder>(O->object);
 	if(!GO) return;
 
 
@@ -176,7 +176,7 @@ void CBaseGraviZone::ThrowInCenter(Fvector& C)
 
 void CBaseGraviZone::AffectPull(CPhysicsShellHolder* GO,const Fvector& throw_in_dir,float dist)
 {
-	CEntityAlive* EA = smart_cast<CEntityAlive*>(GO);	
+	CEntityAlive* EA = smart_cast<CEntityAlive>(GO);	
 	if(EA && EA->g_Alive())
 	{
 		AffectPullAlife(EA,throw_in_dir,dist);
@@ -221,7 +221,7 @@ void CBaseGraviZone::AffectThrow(SZoneObjectInfo* O, CPhysicsShellHolder* GO,con
 
 void CBaseGraviZone::PlayTeleParticles(CGameObject* pObject)
 {
-	CParticlesPlayer* PP = smart_cast<CParticlesPlayer*>(pObject);
+	CParticlesPlayer* PP = smart_cast<CParticlesPlayer>(pObject);
 	if(!PP) return;
 
 	shared_str particle_str = NULL;
@@ -243,7 +243,7 @@ void CBaseGraviZone::PlayTeleParticles(CGameObject* pObject)
 
 void CBaseGraviZone::StopTeleParticles(CGameObject* pObject)
 {
-	CParticlesPlayer* PP = smart_cast<CParticlesPlayer*>(pObject);
+	CParticlesPlayer* PP = smart_cast<CParticlesPlayer>(pObject);
 	if(!PP) return;
 	shared_str particle_str = NULL;
 
@@ -272,7 +272,7 @@ void CBaseGraviZone::net_Relcase(CObject* O)
 
 void CBaseGraviZone::exit_Zone(SZoneObjectInfo& io)
 {
-	CPhysicsShellHolder* GO = smart_cast<CPhysicsShellHolder*>(io.object);
+	CPhysicsShellHolder* GO = smart_cast<CPhysicsShellHolder>(io.object);
 
 	if (GO && GO->PPhysicsShell() && Telekinesis().is_active_object(GO))
 	{

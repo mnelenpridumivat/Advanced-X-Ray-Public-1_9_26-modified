@@ -118,8 +118,11 @@ class reward_event_generator;
 }
 
 
-class game_cl_mp :public game_cl_GameState
+class game_cl_mp :
+	public game_cl_GameState,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(game_cl_mp, game_cl_GameState)
 	typedef game_cl_GameState	inherited;
 protected:
 

@@ -4,8 +4,10 @@ class CPHReqBase;
 class CPHReqComparerV;
 #include "../xrphysics/iphworld.h"
 class CPhysicsShell;
-class CPHReqBase
+class CPHReqBase:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CPHReqBase)
 public:
 	virtual						~CPHReqBase						()									{}
 	virtual bool 				obsolete						()							const	=0					;
@@ -16,22 +18,28 @@ public:
 
 
 class CPHCondition :
-	public CPHReqBase
+	public CPHReqBase,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CPHCondition, CPHReqBase)
 public:
 	virtual bool 			is_true							()						=0					;
 };
 
 class CPHAction:
-	public CPHReqBase
+	public CPHReqBase,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CPHAction, CPHReqBase)
 public:
 	virtual void 			run								()						=0					;
 };
 
 class CPHOnesCondition:
-	public CPHCondition
+	public CPHCondition,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CPHOnesCondition, CPHCondition)
 	bool b_called;
 public:
 							CPHOnesCondition				(){b_called=false;}
@@ -42,15 +50,19 @@ public:
 };
 
 class CPHDummiAction:
-	public CPHAction
+	public CPHAction,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CPHDummiAction, CPHAction)
 public:
 	void 			run								() override {;}
 	bool 			obsolete						()const override {return false;}
 };
 
-class CPHCall
+class CPHCall:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CPHCall)
 	CPHAction*		m_action			;
 	CPHCondition*	m_condition			;
 public:
@@ -68,8 +80,11 @@ const CPHCondition	*condition						()const{	return m_condition;	}
 
 DEFINE_VECTOR(CPHCall*,PHCALL_STORAGE,PHCALL_I);
 class CPHCommander:
-	public IPHWorldUpdateCallbck
+	public IPHWorldUpdateCallbck,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CPHCommander, IPHWorldUpdateCallbck)
+
 	xrCriticalSection	lock;
 	PHCALL_STORAGE	m_calls;
 	PHCALL_STORAGE	m_calls_as_add_buffer;

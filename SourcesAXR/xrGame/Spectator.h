@@ -14,8 +14,10 @@ class CActor;
 
 class CSpectator: 
 	public CGameObject,
-	public IInputReceiver
+	public IInputReceiver,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CSpectator, CGameObject, IInputReceiver)
 private:
 	typedef CGameObject		inherited;
 	CTimer			m_timer;			//for pause case (in demo mode)

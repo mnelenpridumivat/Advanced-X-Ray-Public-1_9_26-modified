@@ -15,8 +15,11 @@ class CUITextWnd;
 class CUIFrameWindow;
 class CUIXml;
 
-class UIHint : public CUIWindow
+class UIHint : 
+	public CUIWindow,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(UIHint, CUIWindow)
 private:
 	typedef CUIWindow	inherited;
 

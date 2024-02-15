@@ -6,8 +6,12 @@
 class CUIScrollBar;
 class CUIFixedScrollBar;
 
-class CUIScrollView :public CUIWindow, public CUIWndCallback
+class CUIScrollView :
+	public CUIWindow, 
+	public CUIWndCallback,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUIScrollView, CUIWindow, CUIWndCallback)
 typedef CUIWindow	inherited;
 friend class CUIXmlInit; //for init
 protected:

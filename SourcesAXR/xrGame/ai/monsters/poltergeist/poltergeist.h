@@ -14,10 +14,14 @@ class CPolterTele;
 //////////////////////////////////////////////////////////////////////////
 
 
-class CPoltergeist :	public CBaseMonster ,
-						public CTelekinesis,
-						public CEnergyHolder,
-						public IPolterInterface {
+class CPoltergeist :	
+	public CBaseMonster,
+	public CTelekinesis,
+	public CEnergyHolder,
+	public IPolterInterface,
+	public IMetaClass
+{
+	DECLARE_METACLASS4(CPoltergeist, CBaseMonster, CTelekinesis, CEnergyHolder, IPolterInterface)
 	
 	typedef		CBaseMonster	inherited;
 	typedef		CEnergyHolder	Energy;

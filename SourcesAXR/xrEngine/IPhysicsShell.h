@@ -2,9 +2,13 @@
 #define __IPHYSICSSHELL_H__
 #pragma once
 
+#include "../xrGame/Metaclass.h"
+
 class IPhysicsGeometry;
-class	IPhysicsElement
+class	IPhysicsElement:
+	public IMetaClass
 {
+	DECLARE_METACLASS(IPhysicsElement)
 public:
 	virtual	const	Fmatrix			&XFORM				()							const			= 0;
 	virtual			void			get_LinearVel		( Fvector& velocity )		const			= 0;

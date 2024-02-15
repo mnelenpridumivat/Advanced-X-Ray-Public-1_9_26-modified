@@ -3,8 +3,11 @@
 
 class CUITextWnd;
 
-class CUIButtonHint :public CUIFrameWindow
+class CUIButtonHint :
+	public CUIFrameWindow,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIButtonHint, CUIFrameWindow)
 	CUIWindow*			m_ownerWnd;
 
 	CUITextWnd*			m_text;

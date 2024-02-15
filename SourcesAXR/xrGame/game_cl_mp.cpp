@@ -186,8 +186,8 @@ bool game_cl_mp::OnKeyboardPress(int key)
 		CObject* curr = Level().CurrentControlEntity();
 		if (!curr) return(false);
 
-		bool is_actor		= !!smart_cast<CActor*>(curr);
-		bool is_spectator	= !!smart_cast<CSpectator*>(curr);
+		bool is_actor		= curr->IsA(CActor::StaticClass());
+		bool is_spectator	= curr->IsA(CSpectator::StaticClass());
 		
 		game_PlayerState* ps	= local_player;
 
@@ -201,7 +201,7 @@ bool game_cl_mp::OnKeyboardPress(int key)
 		};
 		if(b_need_to_send_ready)
 		{
-				CGameObject* GO = smart_cast<CGameObject*>(curr);
+				CGameObject* GO = smart_cast<CGameObject>(curr);
 #ifdef DEBUG
 				Msg("---I'm ready (ID = %d) sending player ready packet !!!", GO->ID());
 #endif // #ifdef DEBUG
@@ -521,7 +521,7 @@ void game_cl_mp::OnWarnMessage(NET_Packet* P)
 			if(w)
 			{
 				xr_sprintf			(_buff,"%d/%d", _cnt, _total);
-				CUIStatic* s		= smart_cast<CUIStatic*>(w);
+				CUIStatic* s		= smart_cast<CUIStatic>(w);
 				s->TextItemControl()->SetText(_buff);
 			}
 		}
@@ -853,11 +853,11 @@ void game_cl_mp::OnPlayerKilled			(NET_Packet& P)
 			string1024	sWeapon = "", sSpecial = "";
 			if (pWeapon)
 			{
-				CInventoryItem* pIItem = smart_cast<CInventoryItem*>(pWeapon);
+				CInventoryItem* pIItem = smart_cast<CInventoryItem>(pWeapon);
 				if (pIItem)
 				{
 					KMS.m_initiator.m_shader = GetEquipmentIconsShader();
-					if (smart_cast<CExplosiveItem*>(pIItem))
+					if (pIItem->IsA(CExplosiveItem::StaticClass()))
 					{
 						KMS.m_initiator.m_shader = GetKillEventIconsShader();
 						KMS.m_initiator.m_rect.x1 = 1;
@@ -873,7 +873,7 @@ void game_cl_mp::OnPlayerKilled			(NET_Packet& P)
 					}
 				} else
 				{
-					CCustomZone* pAnomaly = smart_cast<CCustomZone*>(pWeapon);
+					CCustomZone* pAnomaly = smart_cast<CCustomZone>(pWeapon);
 					if (pAnomaly)
 					{
 						KMS.m_initiator.m_shader = GetKillEventIconsShader();
@@ -890,7 +890,7 @@ void game_cl_mp::OnPlayerKilled			(NET_Packet& P)
 			{
 				if (!pKiller)
 				{
-					CCustomZone* pAnomaly = smart_cast<CCustomZone*>(pOKiller);
+					CCustomZone* pAnomaly = smart_cast<CCustomZone>(pOKiller);
 					if (pAnomaly)
 					{
 						KMS.m_initiator.m_shader = GetKillEventIconsShader();
@@ -917,7 +917,7 @@ void game_cl_mp::OnPlayerKilled			(NET_Packet& P)
 					if (pOKiller && pOKiller==Level().CurrentViewEntity())
 					{
 						//if (pWeapon && pWeapon->CLS_ID == CLSID_OBJECT_W_KNIFE)
-						if ( smart_cast<CWeaponKnife*>( pWeapon ) )
+						if ( pWeapon->IsA(CWeaponKnife::StaticClass()) )
 						{
 							PlaySndMessage(ID_BUTCHER);
 						}
@@ -1008,7 +1008,7 @@ void game_cl_mp::OnPlayerKilled			(NET_Packet& P)
 
 			if (!pKiller)
 			{
-				CCustomZone* pAnomaly = smart_cast<CCustomZone*>(pOKiller);
+				CCustomZone* pAnomaly = smart_cast<CCustomZone>(pOKiller);
 				if (pAnomaly)
 				{
 					KMS.m_ext_info.m_shader = GetKillEventIconsShader();
@@ -1268,7 +1268,7 @@ void	game_cl_mp::OnSpectatorSelect		()
 {
 	CObject *l_pObj = Level().CurrentEntity();
 
-	CGameObject *l_pPlayer = smart_cast<CGameObject*>(l_pObj);
+	CGameObject *l_pPlayer = smart_cast<CGameObject>(l_pObj);
 	if(!l_pPlayer) return;
 
 	NET_Packet		P;
@@ -1896,7 +1896,7 @@ void game_cl_mp::draw_downloads(bool draw)
 
 void game_cl_mp::extract_server_info(u8* data_ptr, u32 data_size)
 {
-	UIGameMP*	tmp_ui_mp_game		= smart_cast<UIGameMP*>(m_game_ui_custom);
+	UIGameMP*	tmp_ui_mp_game		= smart_cast<UIGameMP>(m_game_ui_custom);
 	if (!data_ptr)
 	{
 		tmp_ui_mp_game->SetServerLogo(NULL, 0);

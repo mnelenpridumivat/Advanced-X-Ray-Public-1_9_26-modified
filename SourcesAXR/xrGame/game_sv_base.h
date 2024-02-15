@@ -30,8 +30,11 @@ class xrServer;
 // eid_*	- means entity-id
 class GameEventQueue;
 
-class	game_sv_GameState	: public game_GameState
+class	game_sv_GameState	: 
+	public game_GameState,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(game_sv_GameState, game_GameState)
 	typedef game_GameState inherited;
 protected:
 	xrServer*						m_server;

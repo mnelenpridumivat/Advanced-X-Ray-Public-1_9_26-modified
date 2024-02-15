@@ -12,8 +12,11 @@ DEF_LIST (LIST_ITEM_LIST, CUIListItem*);
 class CUIScrollBar;
 class CUIFrameLineWnd;
 
-class CUIListWnd :public CUIWindow
+class CUIListWnd :
+	public CUIWindow,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIListWnd, CUIWindow)
 private:
 	typedef			CUIWindow inherited;
 	friend class	CUIGameLog;

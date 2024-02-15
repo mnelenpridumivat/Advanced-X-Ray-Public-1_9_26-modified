@@ -275,7 +275,7 @@ Fvector CSightManager::object_position				() const
 	Fvector				look_pos;
 	object->Center		(look_pos);
 
-	const CEntityAlive	*entity_alive = smart_cast<const CEntityAlive*>(object);
+	const CEntityAlive	*entity_alive = smart_cast<const CEntityAlive>(object);
 	if (!entity_alive || entity_alive->g_Alive()) {
 		look_pos.x		= object->Position().x;
 		look_pos.z		= object->Position().z;
@@ -665,7 +665,8 @@ void CSightManager::compute_aiming					(float const time_delta, float const angu
 			bool backward_blend_callbacks	= object().animation().backward_blend_callbacks();
 			object().animation().remove_bone_callbacks();
 			VERIFY				(object().best_weapon());
-			VERIFY				(smart_cast<CWeapon const*>(object().best_weapon()));
+			VERIFY				(object().best_weapon()->IsA(CWeapon::StaticClass()));
+			//VERIFY				(smart_cast<CWeapon const*>(object().best_weapon()));
 			VERIFY			( _valid(aiming_position()) );
 			aimers::weapon		aimer(
 				&object(),
@@ -676,7 +677,7 @@ void CSightManager::compute_aiming					(float const time_delta, float const angu
 				pSettings->r_string(object().cNameSect().c_str(),"bone_shoulder"),
 				pSettings->r_string(object().cNameSect().c_str(),"weapon_bone0"),
 				pSettings->r_string(object().cNameSect().c_str(),"weapon_bone2"),
-				*smart_cast<CWeapon const*>(object().best_weapon())
+				*smart_cast<CWeapon const>(object().best_weapon())
 			);
 			if (forward_blend_callbacks)
 				object().animation().assign_bone_blend_callbacks(true);

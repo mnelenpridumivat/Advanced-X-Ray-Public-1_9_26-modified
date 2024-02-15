@@ -4,8 +4,11 @@
 #include "../../../ai_debug.h"
 
 template<typename _Object>
-class	CStateGroupAttack : public CState<_Object> 
+class	CStateGroupAttack : 
+	public CState<_Object>,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CStateGroupAttack, CState<_Object>)
 public:
 	CStateGroupAttack (_Object *obj);
 	~CStateGroupAttack	() override;

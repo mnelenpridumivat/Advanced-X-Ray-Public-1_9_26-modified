@@ -4,8 +4,11 @@
 #include "UIWindow.h"
 #include "UIProgressBar.h"
 
-class CUIDoubleProgressBar : public CUIWindow
+class CUIDoubleProgressBar : 
+	public CUIWindow,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIDoubleProgressBar, CUIWindow)
 public: // func
 						CUIDoubleProgressBar	();
 						~CUIDoubleProgressBar	() override;

@@ -150,7 +150,7 @@ void CHUDTarget::Render()
 
 	VERIFY				(g_bRendering);
 
-	CActor* Actor = smart_cast<CActor*>(Level().CurrentEntity());
+	CActor* Actor = smart_cast<CActor>(Level().CurrentEntity());
 
 	if (!Actor)	return;
 
@@ -158,9 +158,12 @@ void CHUDTarget::Render()
 	Fvector dir = Device.vCameraDirection;
 
 
-	if (auto Wpn = smart_cast<CHudItem*>(Actor->inventory().ActiveItem()))
-	{	
-		bool AllowedForThis = (Wpn != smart_cast<CHudItem*>(Actor->inventory().ItemFromSlot(BOLT_SLOT)) && Wpn != smart_cast<CHudItem*>(Actor->inventory().ItemFromSlot(GRENADE_SLOT)) && Wpn != smart_cast<CHudItem*>(Actor->inventory().ItemFromSlot(BINOCULAR_SLOT)));
+	if (auto Wpn = smart_cast<CHudItem>(Actor->inventory().ActiveItem()))
+	{
+		bool AllowedForThis = (
+			Wpn != smart_cast<CHudItem>(Actor->inventory().ItemFromSlot(BOLT_SLOT)) 
+			&& Wpn != smart_cast<CHudItem>(Actor->inventory().ItemFromSlot(GRENADE_SLOT)) 
+			&& Wpn != smart_cast<CHudItem>(Actor->inventory().ItemFromSlot(BINOCULAR_SLOT)));
 		
 		if (AllowedForThis)
 			Actor->g_fireParams(Wpn, p1, dir);
@@ -208,17 +211,17 @@ void CHUDTarget::Render()
 
 	if (psHUD_Flags.test(HUD_INFO))
 	{ 
-		bool const is_poltergeist	= PP.RQ.O && !!smart_cast<CPoltergeist*> (PP.RQ.O);
+		bool const is_poltergeist	= PP.RQ.O && PP.RQ.O->IsA(CPoltergeist::StaticClass());
 
 		if( (PP.RQ.O && PP.RQ.O->getVisible()) || is_poltergeist )
 		{
-			CEntityAlive*	E		= smart_cast<CEntityAlive*>	(PP.RQ.O);
-			CEntityAlive*	pCurEnt = smart_cast<CEntityAlive*>	(Level().CurrentEntity());
-			PIItem			l_pI	= smart_cast<PIItem>		(PP.RQ.O);
+			CEntityAlive*	E		= smart_cast<CEntityAlive>	(PP.RQ.O);
+			CEntityAlive*	pCurEnt = smart_cast<CEntityAlive>	(Level().CurrentEntity());
+			PIItem			l_pI	= smart_cast<CInventoryItem>		(PP.RQ.O);
 
 			if (IsGameTypeSingle())
 			{
-				const auto our_inv_owner = smart_cast<CInventoryOwner*>(pCurEnt);
+				const auto our_inv_owner = smart_cast<CInventoryOwner>(pCurEnt);
 				const auto pda = Actor->GetPDA(); 
 				
 				if(!(pda && pda->m_bZoomed))
@@ -227,7 +230,7 @@ void CHUDTarget::Render()
 						C				= C_ON_ENEMY;
 					else if (E && E->g_Alive() && !E->cast_base_monster())
 					{
-						CInventoryOwner* others_inv_owner	= smart_cast<CInventoryOwner*>(E);
+						CInventoryOwner* others_inv_owner	= smart_cast<CInventoryOwner>(E);
 
 						if(our_inv_owner && others_inv_owner){
 
@@ -341,12 +344,12 @@ void CHUDTarget::Render()
 	float cx = (pt.x + 1) * w_2;
 	float cy = (pt.y + 1) * h_2;
 
-	auto Wpn = smart_cast<CWeapon*>(Actor->inventory().ActiveItem());
+	auto Wpn = smart_cast<CWeapon>(Actor->inventory().ActiveItem());
 
 	if (Wpn && Wpn->IsLaserOn())
 		return;
 
-	auto pda = smart_cast<CPda*>(Actor->inventory().ActiveItem());
+	auto pda = smart_cast<CPda>(Actor->inventory().ActiveItem());
 	if ((pda && pda->m_bZoomed) || GameConstants::GetHideHudOnMaster())
 		return;
 

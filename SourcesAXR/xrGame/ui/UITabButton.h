@@ -1,8 +1,11 @@
 #pragma once
 #include "UI3tButton.h"
 
-class CUITabButton : public CUI3tButton 
+class CUITabButton : 
+	public CUI3tButton,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUITabButton, CUI3tButton)
 	typedef CUI3tButton inherited;
 public:
 	shared_str						m_btn_id;

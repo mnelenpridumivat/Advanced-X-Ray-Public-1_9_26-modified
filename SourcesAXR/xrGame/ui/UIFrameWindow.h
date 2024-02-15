@@ -2,9 +2,12 @@
 #include "uiwindow.h"
 
 
-class CUIFrameWindow: public CUIWindow,
-					  public ITextureOwner
+class CUIFrameWindow: 
+	public CUIWindow,
+	public ITextureOwner,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUIFrameWindow, CUIWindow, ITextureOwner)
 	typedef CUIWindow inherited;
 public:
 					CUIFrameWindow				();

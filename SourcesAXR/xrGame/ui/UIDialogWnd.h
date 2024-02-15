@@ -4,8 +4,11 @@
 #include "../UIDialogHolder.h"
 class CDialogHolder;
 
-class CUIDialogWnd : public CUIWindow  
+class CUIDialogWnd : 
+	public CUIWindow,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIDialogWnd, CUIWindow)
 private:
 	typedef CUIWindow inherited;
 	CDialogHolder*					m_pParentHolder;

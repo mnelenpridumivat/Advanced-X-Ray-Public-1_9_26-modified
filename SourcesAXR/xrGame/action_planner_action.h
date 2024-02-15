@@ -17,8 +17,10 @@ class CScriptGameObject;
 template <typename _object_type>
 class CActionPlannerAction : 
 	public CActionPlanner<_object_type>,
-	public CActionBase<_object_type>
+	public CActionBase<_object_type>,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CActionPlannerAction, CActionPlanner<_object_type>, CActionBase<_object_type>)
 protected:
 	typedef	CActionPlanner<_object_type>					inherited_planner;
 	typedef	CActionBase<_object_type>						inherited_action;

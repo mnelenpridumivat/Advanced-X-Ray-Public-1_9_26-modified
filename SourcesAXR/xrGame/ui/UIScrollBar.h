@@ -5,8 +5,11 @@ class CUI3tButton;
 class CUIScrollBox;
 class CUIFrameLineWnd;
 
-class CUIScrollBar :public CUIWindow
+class CUIScrollBar :
+	public CUIWindow,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIScrollBar, CUIWindow)
 private:
 	typedef CUIWindow inherited;
 protected:

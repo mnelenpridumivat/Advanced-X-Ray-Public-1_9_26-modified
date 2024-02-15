@@ -19,8 +19,10 @@ const LPCSTR UI_PATH				= "ui";
 typedef TiXmlNode		XML_NODE;
 typedef TiXmlAttribute	XML_ATTRIBUTE;
 
-class XRXMLPARSER_API	CXml  
+class XRXMLPARSER_API	CXml:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CXml)
 	void 				Load					(LPCSTR path_alias, LPCSTR xml_filename);
 public:
 	string_path			m_xml_file_name;

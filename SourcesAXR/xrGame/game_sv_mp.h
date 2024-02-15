@@ -28,8 +28,11 @@ struct Rank_Struct
 	};
 };
 
-class game_sv_mp :public game_sv_GameState
+class game_sv_mp :
+	public game_sv_GameState,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(game_sv_mp, game_sv_GameState)
 	typedef game_sv_GameState inherited;
 
 protected:

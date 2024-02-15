@@ -57,13 +57,13 @@ bool CRepairKit::UseAllowed()
 {
 	if (Actor()->ActorSkills && Actor()->ActorSkills->repairSkillLevel < 1) return false;
 
-	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
-	CHelmet* helmet = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
-	CHelmet* helmet2 = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
-	CWeapon* knife = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(KNIFE_SLOT));
-	CWeapon* wpn1 = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(INV_SLOT_2));
-	CWeapon* wpn2 = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(INV_SLOT_3));
-	CWeapon* wpn3 = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(PISTOL_SLOT));
+	CCustomOutfit* outfit = smart_cast<CCustomOutfit>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
+	CHelmet* helmet = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
+	CHelmet* helmet2 = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
+	CWeapon* knife = smart_cast<CWeapon>(Actor()->inventory().ItemFromSlot(KNIFE_SLOT));
+	CWeapon* wpn1 = smart_cast<CWeapon>(Actor()->inventory().ItemFromSlot(INV_SLOT_2));
+	CWeapon* wpn2 = smart_cast<CWeapon>(Actor()->inventory().ItemFromSlot(INV_SLOT_3));
+	CWeapon* wpn3 = smart_cast<CWeapon>(Actor()->inventory().ItemFromSlot(PISTOL_SLOT));
 
 	if (outfit || helmet || helmet2 || knife || wpn1 || wpn2 || wpn3)
 	{
@@ -141,7 +141,7 @@ bool CRepairKit::UseBy(CEntityAlive* entity_alive)
 
 void CRepairKit::ChangeInOutfit()
 {
-	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
+	CCustomOutfit* outfit = smart_cast<CCustomOutfit>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
 
 	float rnd_cond = ::Random.randF(0.1f, m_fRestoreCondition);
 	int repair_skill_level_inverted = 5;
@@ -163,7 +163,7 @@ void CRepairKit::ChangeInOutfit()
 
 void CRepairKit::ChangeInHelmet()
 {
-	CHelmet* helmet = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
+	CHelmet* helmet = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
 	float rnd_cond = ::Random.randF(0.1f, m_fRestoreCondition);
 	int repair_skill_level_inverted = 5;
 
@@ -184,7 +184,7 @@ void CRepairKit::ChangeInHelmet()
 
 void CRepairKit::ChangeInSecondHelmet()
 {
-	CHelmet* helmet = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
+	CHelmet* helmet = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
 	float rnd_cond = ::Random.randF(0.1f, m_fRestoreCondition);
 	int repair_skill_level_inverted = 5;
 
@@ -205,7 +205,7 @@ void CRepairKit::ChangeInSecondHelmet()
 
 void CRepairKit::ChangeInKnife()
 {
-	CWeapon* knife = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(KNIFE_SLOT));
+	CWeapon* knife = smart_cast<CWeapon>(Actor()->inventory().ItemFromSlot(KNIFE_SLOT));
 	float rnd_cond = ::Random.randF(0.1f, m_fRestoreCondition);
 	int repair_skill_level_inverted = 5;
 
@@ -226,7 +226,7 @@ void CRepairKit::ChangeInKnife()
 
 void CRepairKit::ChangeInWpn1()
 {
-	CWeapon* wpn = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(INV_SLOT_2));
+	CWeapon* wpn = smart_cast<CWeapon>(Actor()->inventory().ItemFromSlot(INV_SLOT_2));
 	float rnd_cond = ::Random.randF(0.1f, m_fRestoreCondition);
 	int repair_skill_level_inverted = 5;
 
@@ -247,7 +247,7 @@ void CRepairKit::ChangeInWpn1()
 
 void CRepairKit::ChangeInWpn2()
 {
-	CWeapon* wpn = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(INV_SLOT_3));
+	CWeapon* wpn = smart_cast<CWeapon>(Actor()->inventory().ItemFromSlot(INV_SLOT_3));
 	float rnd_cond = ::Random.randF(0.1f, m_fRestoreCondition);
 	int repair_skill_level_inverted = 5;
 
@@ -268,7 +268,7 @@ void CRepairKit::ChangeInWpn2()
 
 void CRepairKit::ChangeInWpn3()
 {
-	CWeapon* wpn = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(PISTOL_SLOT));
+	CWeapon* wpn = smart_cast<CWeapon>(Actor()->inventory().ItemFromSlot(PISTOL_SLOT));
 	float rnd_cond = ::Random.randF(0.1f, m_fRestoreCondition);
 	int repair_skill_level_inverted = 5;
 

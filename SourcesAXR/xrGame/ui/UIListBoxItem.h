@@ -4,8 +4,12 @@
 class CUITextWnd;
 class CUIStatic;
 
-class CUIListBoxItem : public CUIFrameLineWnd, public CUISelectable
+class CUIListBoxItem : 
+	public CUIFrameLineWnd, 
+	public CUISelectable,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUIListBoxItem, CUIFrameLineWnd, CUISelectable)
 	typedef				CUIFrameLineWnd inherited;
 public:
 						CUIListBoxItem			(float height);

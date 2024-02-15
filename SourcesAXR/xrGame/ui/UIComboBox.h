@@ -7,8 +7,13 @@
 
 class CUIListBoxItem;
 
-class CUIComboBox : public CUIWindow, public CUIOptionsItem, public pureRender
+class CUIComboBox : 
+	public CUIWindow, 
+	public CUIOptionsItem, 
+	public pureRender,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUIComboBox, CUIWindow, CUIOptionsItem)
 	friend class CUIXmlInit;
 	typedef enum{
 		LIST_EXPANDED, 

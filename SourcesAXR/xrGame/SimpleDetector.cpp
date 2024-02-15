@@ -41,7 +41,7 @@ void CSimpleDetector::UpdateAf()
 
 	for(;it_b!=it_e;++it_b)//only nearest
 	{
-		CArtefact*	pAf		= smart_cast<CArtefact*>(it_b->first);
+		CArtefact*	pAf		= smart_cast<CArtefact>(it_b->first);
 		CObject*	pObj	= it_b->first;
 
 		if ((pAf && pAf->H_Parent()) || (pObj && pObj->H_Parent()))
@@ -176,7 +176,7 @@ void CUIArtefactDetectorSimple::update()
 		if(m_flash_bone==BI_NONE)
 			setup_internals();
 
-		CCustomDetector* pCustomDetector = smart_cast<CCustomDetector*>(Actor()->inventory().ItemFromSlot(DETECTOR_SLOT));
+		CCustomDetector* pCustomDetector = smart_cast<CCustomDetector>(Actor()->inventory().ItemFromSlot(DETECTOR_SLOT));
 
 		if (pCustomDetector)
 		{

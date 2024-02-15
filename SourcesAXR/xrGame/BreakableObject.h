@@ -16,8 +16,10 @@ class	IPHStaticGeomShell;
 
 class CBreakableObject: 
 	public CPhysicsShellHolder,
-	public ICollisionDamageReceiver
+	public ICollisionDamageReceiver,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CBreakableObject, CPhysicsShellHolder, ICollisionDamageReceiver)
 	typedef	CPhysicsShellHolder		inherited;
 private:
 		bool				b_resived_damage;

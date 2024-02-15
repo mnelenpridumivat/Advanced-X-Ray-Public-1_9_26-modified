@@ -227,7 +227,7 @@ SBullet& CBulletManager::AddBullet(const Fvector& position,
 	{
 		if (SendHit)
 			Game().m_WeaponUsageStatistic->OnBullet_Fire(&bullet, cartridge);
-		game_cl_mp*	tmp_cl_game = smart_cast<game_cl_mp*>(&Game());
+		game_cl_mp*	tmp_cl_game = smart_cast<game_cl_mp>(&Game());
 		if (tmp_cl_game->get_reward_generator())
 			tmp_cl_game->get_reward_generator()->OnBullet_Fire(sender_id, sendersweapon_id, position, direction); 
 	}
@@ -733,7 +733,7 @@ BOOL CBulletManager::firetrace_callback	(collide::rq_result& result, LPVOID para
 
 	//динамический объект
 	VERIFY							( !(result.O->ID() == bullet.parent_id &&  bullet.fly_dist < parent_ignore_distance) );
-	IKinematics* const kinematics	= smart_cast<IKinematics*>(result.O->Visual());
+	IKinematics* const kinematics	= reinterpret_cast<IKinematics*>(result.O->Visual());
 	if (!kinematics)
 		return						(FALSE);
 
@@ -1052,7 +1052,7 @@ void CBulletManager::CommitEvents			()	// @ the start of frame
 				if (E.bullet.isOnBulletHit()) {
 					CObject* O = Level().Objects.net_Find(E.bullet.weapon_id);
 					if (O) {
-						CWeapon* W = smart_cast<CWeapon*>(O);
+						CWeapon* W = smart_cast<CWeapon>(O);
 						if (W) W->OnBulletHit();
 					}
 				}
@@ -1109,7 +1109,7 @@ void CBulletManager::RegisterEvent			(EventType Type, BOOL _dynamic, SBullet* bu
 				{
 					if (bullet->targetID != R.O->ID())
 					{
-						CGameObject* pGO = smart_cast<CGameObject*>(R.O);
+						CGameObject* pGO = smart_cast<CGameObject>(R.O);
 						if (!pGO || !pGO->BonePassBullet(R.element))
 							bullet->targetID = R.O->ID();						
 					}

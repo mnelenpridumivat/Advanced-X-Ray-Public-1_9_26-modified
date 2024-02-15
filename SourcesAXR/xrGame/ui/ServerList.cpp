@@ -144,7 +144,7 @@ void CServerList::SendMessage(CUIWindow* pWnd, s16 msg, void* pData){
 	}
 	else if ( MESSAGE_BOX_YES_CLICKED == msg )
 	{
-		CUIListItemServer* item		= smart_cast<CUIListItemServer*>(m_list[LST_SERVER].GetSelectedItem());
+		CUIListItemServer* item		= smart_cast<CUIListItemServer>(m_list[LST_SERVER].GetSelectedItem());
 		if(!item)
 			return;
 		xr_string					command;
@@ -481,7 +481,7 @@ void CServerList::ConnectToSelected()
 	}
 
 
-	CUIListItemServer* item = smart_cast<CUIListItemServer*>(m_list[LST_SERVER].GetSelectedItem());
+	CUIListItemServer* item = smart_cast<CUIListItemServer>(m_list[LST_SERVER].GetSelectedItem());
 	if(!item)
 		return;
 	if (!browser().CheckDirectConnection(item->GetInfo()->info.Index))

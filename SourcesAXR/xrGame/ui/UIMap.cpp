@@ -299,7 +299,7 @@ void CUIGlobalMap::Init_internal(const shared_str& name, CInifile& pLtx, const s
 void CUIGlobalMap::Update()
 {
 	for(WINDOW_LIST_it it = m_ChildWndList.begin(); m_ChildWndList.end()!=it; ++it){
-		CUICustomMap* m = smart_cast<CUICustomMap*>(*it);
+		CUICustomMap* m = smart_cast<CUICustomMap>(*it);
 		if (!m)					continue;
 		m->DetachAll			();
 	}
@@ -392,7 +392,7 @@ void CUILevelMap::Draw()
 		float gmz			= MapWnd()->GlobalMap()->GetCurrentZoom().x;
 		for(WINDOW_LIST_it it = m_ChildWndList.begin(); m_ChildWndList.end() != it; ++it)
 		{
-			CMapSpot* sp			= smart_cast<CMapSpot*>((*it));
+			CMapSpot* sp			= smart_cast<CMapSpot>((*it));
 			if(sp)
 			{
 				if(sp->m_bScale)
@@ -533,7 +533,7 @@ void CUILevelMap::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 
 	if(msg==MAP_SHOW_HINT)
 	{
-		CMapSpot* sp			= smart_cast<CMapSpot*>(pWnd);
+		CMapSpot* sp			= smart_cast<CMapSpot>(pWnd);
 		VERIFY					(sp);
 		if ( sp )
 		{

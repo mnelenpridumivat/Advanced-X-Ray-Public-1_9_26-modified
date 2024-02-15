@@ -4,8 +4,12 @@
 #include "UICustomEdit.h"
 class CUIFrameLineWnd;
 
-class CUIEditBox : public CUIOptionsItem, public CUICustomEdit
+class CUIEditBox : 
+	public CUIOptionsItem, 
+	public CUICustomEdit,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUIEditBox, CUIOptionsItem, CUICustomEdit)
 public:
 					CUIEditBox				();
 

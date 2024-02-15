@@ -47,9 +47,11 @@ struct XRNETSERVER_API ip_address
 	}
 };
 
-class XRNETSERVER_API 
-IClient		: public MultipacketSender
+class XRNETSERVER_API IClient : 
+	public MultipacketSender,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(IClient, MultipacketSender)
 public:
 	struct Flags
 	{
@@ -144,10 +146,11 @@ struct ClientIdSearchPredicate
 
 class CServerInfo;
 
-class XRNETSERVER_API 
-IPureServer
-  : private MultipacketReciever
+class XRNETSERVER_API IPureServer: 
+	private MultipacketReciever,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(IPureServer, MultipacketReciever)
 public:
 	enum EConnect
 	{

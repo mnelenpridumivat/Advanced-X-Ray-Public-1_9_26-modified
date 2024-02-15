@@ -159,8 +159,8 @@ void RELATION_REGISTRY::ForceSetGoodwill 	(u16 from, u16 to, CHARACTER_GOODWILL 
 {
 	RELATION_DATA& relation_data = relation_registry().registry().objects(from);
 
-	CSE_ALifeTraderAbstract* from_obj	= smart_cast<CSE_ALifeTraderAbstract*>(ai().alife().objects().object(from));
-	CSE_ALifeTraderAbstract* to_obj		= smart_cast<CSE_ALifeTraderAbstract*>(ai().alife().objects().object(to));
+	CSE_ALifeTraderAbstract* from_obj	= smart_cast<CSE_ALifeTraderAbstract>(ai().alife().objects().object(from));
+	CSE_ALifeTraderAbstract* to_obj		= smart_cast<CSE_ALifeTraderAbstract>(ai().alife().objects().object(to));
 	
 	if (!from_obj||!to_obj){
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"RELATION_REGISTRY::ForceSetGoodwill  : cannot convert obj to CSE_ALifeTraderAbstract!");

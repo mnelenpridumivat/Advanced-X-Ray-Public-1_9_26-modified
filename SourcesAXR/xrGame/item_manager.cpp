@@ -54,7 +54,7 @@ bool CItemManager::useful			(const CGameObject *object) const
 	if (!m_object->movement().restrictions().accessible(object->ai_location().level_vertex_id()))
 		return				(false);
 
-	const CInventoryItem	*inventory_item = smart_cast<const CInventoryItem*>(object);
+	const CInventoryItem	*inventory_item = smart_cast<const CInventoryItem>(object);
 	if (inventory_item && !inventory_item->useful_for_NPC())
 		return				(false);
 
@@ -87,7 +87,7 @@ float CItemManager::do_evaluate		(const CGameObject *object) const
 
 float CItemManager::evaluate		(const CGameObject *object) const
 {
-	const CInventoryItem	*inventory_item = smart_cast<const CInventoryItem*>(object);
+	const CInventoryItem	*inventory_item = smart_cast<const CInventoryItem>(object);
 	VERIFY					(inventory_item);
 	VERIFY					(inventory_item->useful_for_NPC());
 	return					(1000000.f - static_cast<float>(inventory_item->Cost()));

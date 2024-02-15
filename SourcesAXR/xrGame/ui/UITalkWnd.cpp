@@ -203,8 +203,8 @@ void CUITalkWnd::Update()
 	{
 		StopTalk();
 	}else{
-		CGameObject* pOurGO = smart_cast<CGameObject*>(m_pOurInvOwner);
-		CGameObject* pOtherGO = smart_cast<CGameObject*>(m_pOthersInvOwner);
+		CGameObject* pOurGO = smart_cast<CGameObject>(m_pOurInvOwner);
+		CGameObject* pOtherGO = smart_cast<CGameObject>(m_pOthersInvOwner);
 	
 		if(	NULL==pOurGO || NULL==pOtherGO )
 			HideDialog();
@@ -215,13 +215,13 @@ void CUITalkWnd::Update()
 		UpdateQuestions			();
 	}
 	inherited::Update			();
-	UpdateCameraDirection		(smart_cast<CGameObject*>(m_pOthersInvOwner));
+	UpdateCameraDirection		(smart_cast<CGameObject>(m_pOthersInvOwner));
 
 	UITalkDialogWnd->UpdateButtonsLayout(b_disable_break, m_pOthersInvOwner->IsTradeEnabled());
 
 	if(playing_sound())
 	{
-		CGameObject* pOtherGO	= smart_cast<CGameObject*>(m_pOthersInvOwner);
+		CGameObject* pOtherGO	= smart_cast<CGameObject>(m_pOthersInvOwner);
 		Fvector P				= pOtherGO->Position();
 		P.y						+= 1.8f;
 		m_sound.set_position	(P);
@@ -333,7 +333,7 @@ void CUITalkWnd::SwitchToTrade()
 {
 	if ( m_pOurInvOwner->IsTradeEnabled() && m_pOthersInvOwner->IsTradeEnabled() )
 	{
-		CUIGameSP* pGameSP = smart_cast<CUIGameSP*>( CurrentGameUI() );
+		CUIGameSP* pGameSP = smart_cast<CUIGameSP>( CurrentGameUI() );
 		if ( pGameSP )
 		{
 /*			if ( pGameSP->MainInputReceiver() )
@@ -349,7 +349,7 @@ void CUITalkWnd::SwitchToUpgrade()
 {
 	//if ( m_pOurInvOwner->IsInvUpgradeEnabled() && m_pOthersInvOwner->IsInvUpgradeEnabled() )
 	{
-		CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+		CUIGameSP* pGameSP = smart_cast<CUIGameSP>(CurrentGameUI());
 		if ( pGameSP )
 		{
 /*			if ( pGameSP->MainInputReceiver() )
@@ -416,7 +416,7 @@ void CUITalkWnd::PlaySnd(LPCSTR text)
 		VERIFY( m_pActor );
 		if ( !m_pActor->OnDialogSoundHandlerStart(m_pOthersInvOwner, fn) )
 		{
-			CGameObject* pOtherGO = smart_cast<CGameObject*>(m_pOthersInvOwner);
+			CGameObject* pOtherGO = smart_cast<CGameObject>(m_pOthersInvOwner);
 			Fvector P = pOtherGO->Position();
 			P.y			+= 1.8f;
 			m_sound.create( fn, st_Effect, sg_SourceType );

@@ -54,7 +54,7 @@ bool CSightManager::aim_target	(Fvector &my_position, Fvector &aim_target, const
 		return					(true);
 	}
 
-	if ( CAI_Stalker const* stalker = smart_cast<CAI_Stalker const*>(object) ) {
+	if ( CAI_Stalker const* stalker = smart_cast<CAI_Stalker const>(object) ) {
 		if ( stalker->g_Alive() ) {
 			::aim_target		( "bip01_head", aim_target, object);
 			return				(true);

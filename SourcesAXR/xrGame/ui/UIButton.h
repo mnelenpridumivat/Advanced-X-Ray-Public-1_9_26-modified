@@ -4,8 +4,11 @@
 #include "../../xrServerEntities/script_export_space.h"
 
 
-class CUIButton : public CUIStatic
+class CUIButton : 
+	public CUIStatic,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIButton, CUIStatic)
 private:
 	typedef			CUIStatic				inherited;
 public:

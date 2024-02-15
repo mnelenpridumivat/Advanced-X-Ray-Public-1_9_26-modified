@@ -1,8 +1,10 @@
 #pragma once
 #include "UIOptionsManager.h"
 
-class CUIOptionsItem
+class CUIOptionsItem:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CUIOptionsItem)
 public:
 	enum ESystemDepends		{sdNothing, sdVidRestart, sdSndRestart, sdSystemRestart, sdApplyOnChange};
 

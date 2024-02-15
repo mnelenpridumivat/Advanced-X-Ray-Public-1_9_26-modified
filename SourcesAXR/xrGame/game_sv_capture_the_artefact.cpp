@@ -178,14 +178,14 @@ void game_sv_CaptureTheArtefact::Update()
 
 void game_sv_CaptureTheArtefact::SM_CheckViewSwitching()
 {
-	if (!m_pSM_CurViewEntity || !smart_cast<CActor*>(m_pSM_CurViewEntity) || m_dwSM_LastSwitchTime<Level().timeServer())
+	if (!m_pSM_CurViewEntity || !smart_cast<CActor>(m_pSM_CurViewEntity) || m_dwSM_LastSwitchTime<Level().timeServer())
 		SM_SwitchOnNextActivePlayer();
 	
-	CUIGameCTA* gameCTA = smart_cast<CUIGameCTA*>(CurrentGameUI());
+	CUIGameCTA* gameCTA = smart_cast<CUIGameCTA>(CurrentGameUI());
 	if (gameCTA)
 	{
 		CObject* pObject				= Level().CurrentViewEntity();
-		if (pObject && smart_cast<CActor*>(pObject))
+		if (pObject && smart_cast<CActor>(pObject))
 		{
 			string1024						Text;
 			xr_sprintf						(Text, "Following %s", pObject->cName().c_str());
@@ -204,13 +204,13 @@ void game_sv_CaptureTheArtefact::SM_SwitchOnPlayer(CObject* pNewObject)
 
 	if (pNewObject != m_pSM_CurViewEntity)
 	{
-		CActor* pActor					= smart_cast<CActor*>(m_pSM_CurViewEntity);
+		CActor* pActor					= smart_cast<CActor>(m_pSM_CurViewEntity);
 		
 		if (pActor)
 			pActor->inventory().Items_SetCurrentEntityHud(false);
 	}
 
-	CActor* pActor = smart_cast<CActor*> (pNewObject);
+	CActor* pActor = smart_cast<CActor> (pNewObject);
 	if (pActor)
 	{
 		pActor->inventory().Items_SetCurrentEntityHud(true);
@@ -258,7 +258,7 @@ void game_sv_CaptureTheArtefact::SM_SwitchOnNextActivePlayer()
 				::Random.randI(static_cast<int>(tmp_functor.PPlayersCount)) ];
 
 		pNewObject					=  Level().Objects.net_Find(C->ps->GameID);
-		CActor* pActor				= smart_cast<CActor*>(pNewObject);
+		CActor* pActor				= smart_cast<CActor>(pNewObject);
 
 		if (!pActor || !pActor->g_Alive() || !pActor->inventory().ActiveItem()) return;
 	};
@@ -510,7 +510,7 @@ void game_sv_CaptureTheArtefact::OnPlayerReady(ClientID id_who)
 #endif // #ifndef MASTER_GOLD
 		RespawnPlayer(id_who, false);
 		pOwner = xrCData->owner;
-		CSE_ALifeCreatureActor	*pA	=	smart_cast<CSE_ALifeCreatureActor*>(pOwner);
+		CSE_ALifeCreatureActor	*pA	=	smart_cast<CSE_ALifeCreatureActor>(pOwner);
 		if(pA)
 		{
 			TGameIDToBoughtFlag::const_iterator buyer_iter = m_dead_buyers.find(id_who);
@@ -802,8 +802,7 @@ void game_sv_CaptureTheArtefact::OnRoundEnd()
 			game_PlayerState* ps	= l_pC->ps;
 			if (!ps)				return;
 			if (ps->IsSkip())		return;
-			if (l_pC->owner &&
-				smart_cast<CActor*>(Level().Objects.net_Find(l_pC->owner->ID)))
+			if (l_pC->owner && Level().Objects.net_Find(l_pC->owner->ID)->IsA(CActor::StaticClass()))
 			{
 				m_server->Perform_destroy(l_pC->owner, net_flags(TRUE, TRUE));
 			}
@@ -1267,7 +1266,7 @@ void game_sv_CaptureTheArtefact::LoadDefItemsForTeam(const shared_str& caSection
 
 void game_sv_CaptureTheArtefact::SpawnWeaponsForActor(CSE_Abstract* pE, game_PlayerState*	ps)
 {
-	CSE_ALifeCreatureActor* pA	=	smart_cast<CSE_ALifeCreatureActor*>(pE);
+	CSE_ALifeCreatureActor* pA	=	smart_cast<CSE_ALifeCreatureActor>(pE);
 	VERIFY2(pA, "owner not an Actor");
 	if (!pA) return;
 
@@ -1472,7 +1471,7 @@ void	game_sv_CaptureTheArtefact::OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitte
 	CSE_Abstract*		e_hitted		= get_entity_from_eid	(id_hitted	);
 
 	if (!e_hitter || !e_hitted) return;
-	if (!smart_cast<CSE_ALifeCreatureActor*>(e_hitted)) return;
+	if (!e_hitted->IsA(CSE_ALifeCreatureActor::StaticClass())) return;
 
 	game_PlayerState*	ps_hitter = get_eid(id_hitter);
 	game_PlayerState*	ps_hitted = get_eid(id_hitted);
@@ -1608,11 +1607,11 @@ void game_sv_CaptureTheArtefact::ReSpawnArtefacts()
 	{
 		VERIFY2(!!ti->second.artefactName,
 			make_string("not found artefact class name for team %d", ti->first).c_str());
-		CSE_ALifeItemArtefact *tempSvEntity = smart_cast<CSE_ALifeItemArtefact*>(spawn_begin(ti->second.artefactName.c_str()));
+		CSE_ALifeItemArtefact *tempSvEntity = smart_cast<CSE_ALifeItemArtefact>(spawn_begin(ti->second.artefactName.c_str()));
 		tempSvEntity->s_flags.assign(M_SPAWN_OBJECT_LOCAL);
 		//MoveArtefactToPoint(tempSvEntity, ti->second.artefactRPoint);
 		tempSvEntity->o_Position.set(ti->second.artefactRPoint.P);
-		ti->second.artefact = smart_cast<CSE_ALifeItemArtefact*>(spawn_end(tempSvEntity, m_server->GetServerClient()->ID));
+		ti->second.artefact = smart_cast<CSE_ALifeItemArtefact>(spawn_end(tempSvEntity, m_server->GetServerClient()->ID));
 		VERIFY(ti->second.artefact);
 		ti->second.freeArtefactTimeStart = 0;
 	}
@@ -1622,7 +1621,7 @@ void game_sv_CaptureTheArtefact::ReSpawnArtefacts()
 // TRUE=allow ownership, FALSE=denied
 BOOL game_sv_CaptureTheArtefact::OnTouch(u16 eid_who, u16 eid_target, BOOL bForced)
 {
-	CSE_ActorMP *e_who = smart_cast<CSE_ActorMP*>(m_server->ID_to_entity(eid_who));
+	CSE_ActorMP *e_who = smart_cast<CSE_ActorMP>(m_server->ID_to_entity(eid_who));
 	
 	if (!e_who)
 	{
@@ -1788,7 +1787,7 @@ void game_sv_CaptureTheArtefact::OnDetach(u16 eid_who, u16 eid_target)
 	TeamsMap::iterator artefactOfTeam = std::find_if(teams.begin(), te, 
 		[eid_target](const TeamPair & tr) { return SearchArtefactIdFunctor()(tr, eid_target); });
 	
-	CSE_ActorMP *e_who = smart_cast<CSE_ActorMP*>(m_server->ID_to_entity(eid_who));
+	CSE_ActorMP *e_who = smart_cast<CSE_ActorMP>(m_server->ID_to_entity(eid_who));
 	CSE_Abstract *e_item = m_server->ID_to_entity(eid_target);
 	
 	if (!e_who)
@@ -1825,7 +1824,7 @@ BOOL game_sv_CaptureTheArtefact::OnActivate(u16 eid_who, u16 eid_target)
 	TeamsMap::iterator artefactOfTeam = std::find_if(teams.begin(), te, 
 		[eid_target](const TeamPair & tr) { return SearchArtefactIdFunctor()(tr, eid_target); });
 	
-	CSE_ActorMP *e_who = smart_cast<CSE_ActorMP*>(m_server->ID_to_entity(eid_who));
+	CSE_ActorMP *e_who = smart_cast<CSE_ActorMP>(m_server->ID_to_entity(eid_who));
 	CSE_Abstract *e_item = m_server->ID_to_entity(eid_target);
 	
 	VERIFY2(e_who,
@@ -1854,7 +1853,7 @@ void game_sv_CaptureTheArtefact::FillDeathActorRejectItems(CSE_ActorMP *actor, x
 {
 	R_ASSERT	(actor);
 	
-	CActor*		pActor = smart_cast<CActor*>(Level().Objects.net_Find(actor->ID));
+	CActor*		pActor = smart_cast<CActor>(Level().Objects.net_Find(actor->ID));
 	R_ASSERT	(pActor);
 
 	u16			active_slot = pActor->inventory().GetActiveSlot();
@@ -1881,7 +1880,7 @@ void game_sv_CaptureTheArtefact::FillDeathActorRejectItems(CSE_ActorMP *actor, x
 			return;
 		}
 
-		if (smart_cast<CSE_ALifeItemArtefact*>(server_item))
+		if (smart_cast<CSE_ALifeItemArtefact>(server_item))
 		{
 			return;
 		}
@@ -1926,7 +1925,7 @@ void game_sv_CaptureTheArtefact::OnDetachItem(CSE_ActorMP *actor, CSE_Abstract *
 				to_destroy.push_back	(e_item);
 			} else if (m_strWeaponsData->GetItemIdx(e_item->s_name) != static_cast<u32>(-1))
 			{
-				if (!smart_cast<CSE_ALifeItemCustomOutfit*>(e_item))
+				if (!e_item->IsA(CSE_ALifeItemCustomOutfit::StaticClass()))
 				{
 					to_transfer.push_back(e_item);
 				}
@@ -1970,7 +1969,7 @@ void game_sv_CaptureTheArtefact::MoveArtefactToPoint(CSE_ALifeItemArtefact *arte
 	VERIFY(artefact->cast_inventory_item());
 	artefact->cast_inventory_item()->State.position.set(toPoint.P);		//settings position to server object
 
-	CArtefact * OArtefact = smart_cast<CArtefact*>(Level().Objects.net_Find(artefact->ID));
+	CArtefact * OArtefact = smart_cast<CArtefact>(Level().Objects.net_Find(artefact->ID));
 
 	R_ASSERT2( OArtefact, make_string("artefact not found. artefact_id = [%d]. CTA:MoveArtefactToPoint()", artefact->ID).c_str() );
 
@@ -2088,7 +2087,7 @@ void game_sv_CaptureTheArtefact::OnObjectEnterTeamBase(u16 id, u16 zone_team)
 {
 	CSE_Abstract*			e_who	= m_server->ID_to_entity(id);
 	VERIFY(e_who);
-	CSE_ALifeCreatureActor* eActor	= smart_cast<CSE_ALifeCreatureActor*>(e_who);
+	CSE_ALifeCreatureActor* eActor	= smart_cast<CSE_ALifeCreatureActor>(e_who);
 	if (eActor)
 	{
 		game_PlayerState* ps = eActor->owner->ps;
@@ -2104,7 +2103,7 @@ void game_sv_CaptureTheArtefact::OnObjectLeaveTeamBase(u16 id, u16 zone_team)
 	if (!e_who)
 		return;
 	
-	CSE_ALifeCreatureActor* eActor	= smart_cast<CSE_ALifeCreatureActor*>(e_who);
+	CSE_ALifeCreatureActor* eActor	= smart_cast<CSE_ALifeCreatureActor>(e_who);
 	if (eActor)
 	{
 		game_PlayerState* ps = eActor->owner->ps;
@@ -2252,7 +2251,7 @@ void game_sv_CaptureTheArtefact::CheckForArtefactReturning(u32 currentTime)
 				Get_ActivatedArtefactRetTime_msec())
 			{*/
 				MoveArtefactToPoint(artefact, ti->second.artefactRPoint);
-				CSE_ActorMP *e_who = smart_cast<CSE_ActorMP*>(m_server->ID_to_entity(ti->second.last_activator_id));
+				CSE_ActorMP *e_who = smart_cast<CSE_ActorMP>(m_server->ID_to_entity(ti->second.last_activator_id));
 				ti->second.DeactivateArtefact();
 				if (e_who)
 				{
@@ -2398,7 +2397,7 @@ void game_sv_CaptureTheArtefact::RespawnPlayer(ClientID id_who, bool NoSpectator
 	VERIFY(xrCData->ps);
 	game_PlayerState*	ps	=	xrCData->ps;
 	CSE_Abstract*	pOwner = xrCData->owner;
-	CSE_ALifeCreatureActor	*pA	=	smart_cast<CSE_ALifeCreatureActor*>(pOwner);
+	CSE_ALifeCreatureActor	*pA	=	smart_cast<CSE_ALifeCreatureActor>(pOwner);
 	
 	if (pA)
 	{
@@ -2448,7 +2447,7 @@ void game_sv_CaptureTheArtefact::OnPostCreate(u16 id_who)
 	if (!entity)
 		return;
 
-	CSE_ALifeCustomZone*	custom_zone = smart_cast<CSE_ALifeCustomZone*>(entity);
+	CSE_ALifeCustomZone*	custom_zone = smart_cast<CSE_ALifeCustomZone>(entity);
 	if (!custom_zone)
 		return;
 	

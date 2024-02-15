@@ -8,8 +8,10 @@
 
 class CUIPropertiesBox:
 	public CUIFrameWindow,
-	public CUIWndCallback
+	public CUIWndCallback,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUIPropertiesBox, CUIFrameWindow, CUIWndCallback)
 private:
 	typedef CUIFrameWindow inherited; 
 public:

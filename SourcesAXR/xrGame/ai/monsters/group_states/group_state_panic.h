@@ -3,7 +3,11 @@
 #include "../state.h"
 
 template<typename _Object>
-class	CStateGroupPanic : public CState<_Object> {
+class	CStateGroupPanic : 
+	public CState<_Object>,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CStateGroupPanic, CState<_Object>)
 	typedef CState<_Object>		inherited;
 	typedef CState<_Object>*	state_ptr;
 	

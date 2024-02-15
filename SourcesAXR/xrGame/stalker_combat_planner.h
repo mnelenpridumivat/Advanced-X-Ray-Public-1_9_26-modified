@@ -12,7 +12,11 @@
 
 class CAI_Stalker;
 
-class CStalkerCombatPlanner : public CActionPlannerActionScript<CAI_Stalker> {
+class CStalkerCombatPlanner : 
+	public CActionPlannerActionScript<CAI_Stalker>,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CStalkerCombatPlanner, CActionPlannerActionScript<CAI_Stalker>)
 public:
 	enum {
 		POST_COMBAT_WAIT_INTERVAL = 3000,

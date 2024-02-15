@@ -8,8 +8,12 @@
 
 class IClient;
 
-class	game_sv_Deathmatch			: public game_sv_mp,private pure_relcase
+class	game_sv_Deathmatch			: 
+	public game_sv_mp,
+	private pure_relcase,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(game_sv_Deathmatch, game_sv_mp, pure_relcase)
 	typedef game_sv_mp inherited;
 protected:
 	struct		RPointData

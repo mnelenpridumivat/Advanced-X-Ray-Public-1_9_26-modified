@@ -26,8 +26,11 @@ enum IBState{
 };
 
 template <class T>
-class CUIInteractiveBackground : public CUIWindow
+class CUIInteractiveBackground : 
+	public CUIWindow,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIInteractiveBackground, CUIWindow)
 public:
 	CUIInteractiveBackground();
 	~CUIInteractiveBackground() override {};

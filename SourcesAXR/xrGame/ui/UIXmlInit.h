@@ -34,8 +34,10 @@ class UIHintWindow;
 class CUILines;
 class CUITextWnd;
 
-class CUIXmlInit
+class CUIXmlInit :
+	public IMetaClass
 {
+	DECLARE_METACLASS(CUIXmlInit)
 public:
 					CUIXmlInit				();
 	virtual			~CUIXmlInit				();

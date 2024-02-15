@@ -82,8 +82,8 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
 	{
 		CUICellItem* cell_item				= new_owner->GetCellItemUnderCursor();
 		PIItem item_in_cell					= cell_item ? (PIItem)cell_item->m_pData : NULL;
-		CArtefactContainer* pAfContainer	= smart_cast<CArtefactContainer*>(item_in_cell);
-		CArtefact*	pArtefact				= smart_cast<CArtefact*>	(CurrentIItem());
+		CArtefactContainer* pAfContainer	= smart_cast<CArtefactContainer>(item_in_cell);
+		CArtefact*	pArtefact				= smart_cast<CArtefact>	(CurrentIItem());
 
 		if (old_owner == new_owner && item_in_cell && item_in_cell->CanAttach(CurrentIItem()))
 		{
@@ -370,7 +370,7 @@ bool CUIActorMenu::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 	{
 		if ( WINDOW_KEY_PRESSED == keyboard_action )
 		{
-			CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(Actor()->inventory().ItemFromSlot(BACKPACK_SLOT));
+			CCustomBackpack* backpack = smart_cast<CCustomBackpack>(Actor()->inventory().ItemFromSlot(BACKPACK_SLOT));
 
 			if (GameConstants::GetBackpackAnimsEnabled() && backpack)
 			{
@@ -393,7 +393,7 @@ bool CUIActorMenu::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 
 	if (WINDOW_KEY_PRESSED == keyboard_action && bDeveloperMode)
 	{
-		CAntigasFilter* pFilter = smart_cast<CAntigasFilter*>(CurrentIItem());
+		CAntigasFilter* pFilter = smart_cast<CAntigasFilter>(CurrentIItem());
 		{
 			if (DIK_NUMPAD7 == dik && CurrentIItem() && CurrentIItem()->IsUsingCondition() && !pFilter)
 			{

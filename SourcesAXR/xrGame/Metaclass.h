@@ -196,7 +196,7 @@ public:
 	}
 
 	bool IsA(CMetaclass* Class) {
-		return Parents.find(Class) != Parents.end();
+		return Class == this || Parents.find(Class) != Parents.end();
 	}
 
 };

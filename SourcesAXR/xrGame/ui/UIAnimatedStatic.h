@@ -6,8 +6,11 @@
 
 #include "UIStatic.h"
 
-class CUIAnimatedStatic: public CUIStatic
+class CUIAnimatedStatic: 
+	public CUIStatic,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIAnimatedStatic, CUIStatic)
 	typedef CUIStatic inherited;
 	// Количекство кадров анимации
 	u32		m_uFrameCount;
@@ -53,8 +56,11 @@ public:
 	void Update() override;
 };
 
-class CUISleepStatic: public CUIStatic
+class CUISleepStatic: 
+	public CUIStatic,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUISleepStatic, CUIStatic)
 private:
 	typedef			CUIStatic inherited;
 

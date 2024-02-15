@@ -2,8 +2,11 @@
 
 #include "../../xrXMLParser/xrXMLParser.h"
 
-class CUIXml :public CXml
+class CUIXml :
+	public CXml,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIXml, CXml)
 	int						m_dbg_id;
 public:
 			CUIXml			();

@@ -45,7 +45,7 @@ CPHSkeleton::~CPHSkeleton()
 
 void CPHSkeleton::RespawnInit()
 {
-	IKinematics*	K	=	smart_cast<IKinematics*>(PPhysicsShellHolder()->Visual());
+	IKinematics*	K	=	smart_cast<IKinematics>(PPhysicsShellHolder()->Visual());
 	if(K)
 	{
 		K->LL_SetBoneRoot(0);
@@ -77,7 +77,7 @@ bool CPHSkeleton::Spawn(CSE_Abstract *D)
 	CPHSkeleton* source		= 0;
 	if(po->_flags.test(CSE_PHSkeleton::flSpawnCopy))
 	{
-		source=smart_cast<CPHSkeleton*>(Level().Objects.net_Find(po->source_id));
+		source=smart_cast<CPHSkeleton>(Level().Objects.net_Find(po->source_id));
 		VERIFY(source);
 	}
 	if(source)
@@ -96,7 +96,7 @@ bool CPHSkeleton::Spawn(CSE_Abstract *D)
 		IKinematics			*K		=	NULL;
 		if (obj->Visual())
 		{
-			K= smart_cast<IKinematics*>(obj->Visual());
+			K= reinterpret_cast<IKinematics*>(obj->Visual());
 			if(K)
 			{
 				K->LL_SetBoneRoot(po->saved_bones.root_bone);
@@ -174,7 +174,7 @@ void CPHSkeleton::SaveNetState(NET_Packet& P)
 
 	CPhysicsShellHolder* obj=PPhysicsShellHolder();
 	CPhysicsShell* pPhysicsShell=obj->PPhysicsShell();
-	IKinematics* K	=smart_cast<IKinematics*>(obj->Visual());
+	IKinematics* K	=smart_cast<IKinematics>(obj->Visual());
 	if(pPhysicsShell&&pPhysicsShell->isActive())			m_flags.set(CSE_PHSkeleton::flActive,pPhysicsShell->isEnabled());
 
 	P.w_u8 (m_flags.get());
@@ -229,7 +229,7 @@ void CPHSkeleton::SaveNetState(NET_Packet& P)
 void CPHSkeleton::LoadNetState(NET_Packet& P)
 {
 	CPhysicsShellHolder* obj=PPhysicsShellHolder();
-	IKinematics* K=smart_cast<IKinematics*>(obj->Visual());
+	IKinematics* K=smart_cast<IKinematics>(obj->Visual());
 	P.r_u8 (m_flags.flags);
 	if(K)
 	{
@@ -289,7 +289,7 @@ void CPHSkeleton::SpawnCopy()
 		CSE_Abstract*				D	= F_entity_Create("ph_skeleton_object");//*cNameSect()
 		R_ASSERT					(D);
 		/////////////////////////////////////////////////////////////////////////////////////////////
-		CSE_ALifePHSkeletonObject	*l_tpALifePhysicObject = smart_cast<CSE_ALifePHSkeletonObject*>(D);
+		CSE_ALifePHSkeletonObject	*l_tpALifePhysicObject = smart_cast<CSE_ALifePHSkeletonObject>(D);
 		R_ASSERT					(l_tpALifePhysicObject);
 		l_tpALifePhysicObject->_flags.set	(CSE_PHSkeleton::flSpawnCopy,1);
 		//SetNotNeedSave()
@@ -331,8 +331,8 @@ void CPHSkeleton::UnsplitSingle(CPHSkeleton* SO)
 	CPhysicsShell* newPhysicsShell=m_unsplited_shels.front().first;
 	O->m_pPhysicsShell=newPhysicsShell;
 	VERIFY(_valid(newPhysicsShell->mXFORM));
-	IKinematics *newKinematics=smart_cast<IKinematics*>(O->Visual());
-	IKinematics *pKinematics  =smart_cast<IKinematics*>(obj->Visual());
+	IKinematics *newKinematics= reinterpret_cast<IKinematics*>(O->Visual());
+	IKinematics *pKinematics  = reinterpret_cast<IKinematics*>(obj->Visual());
 
 	Flags64 mask0,mask1;
 	u16 split_bone=m_unsplited_shels.front().second;
@@ -399,7 +399,7 @@ void CPHSkeleton::RecursiveBonesCheck(u16 id)
 {
 	if(!removable) return;
 	CPhysicsShellHolder* obj=PPhysicsShellHolder();
-	IKinematics* K		= smart_cast<IKinematics*>(obj->Visual());
+	IKinematics* K		= reinterpret_cast<IKinematics*>(obj->Visual());
 	CBoneData& BD		= K->LL_GetData(static_cast<u16>(id));
 	//////////////////////////////////////////
 	Flags64 mask;
@@ -421,16 +421,16 @@ bool CPHSkeleton::ReadyForRemove()
 {
 	removable=true;
 	CPhysicsShellHolder* obj=PPhysicsShellHolder();
-	RecursiveBonesCheck(smart_cast<IKinematics*>(obj->Visual())->LL_GetBoneRoot());
+	RecursiveBonesCheck(reinterpret_cast<IKinematics*>(obj->Visual())->LL_GetBoneRoot());
 	return removable;
 }
 void CPHSkeleton::InitServerObject(CSE_Abstract * D)
 {
 
 	CPhysicsShellHolder* obj=PPhysicsShellHolder();
-	CSE_ALifeDynamicObject		*l_tpALifeDynamicObject = smart_cast<CSE_ALifeDynamicObject*>(D);
+	CSE_ALifeDynamicObject		*l_tpALifeDynamicObject = smart_cast<CSE_ALifeDynamicObject>(D);
 	R_ASSERT					(l_tpALifeDynamicObject);
-	CSE_ALifePHSkeletonObject		*l_tpALifePhysicObject = smart_cast<CSE_ALifePHSkeletonObject*>(D);
+	CSE_ALifePHSkeletonObject		*l_tpALifePhysicObject = smart_cast<CSE_ALifePHSkeletonObject>(D);
 	R_ASSERT					(l_tpALifePhysicObject);
 
 	l_tpALifePhysicObject->m_tGraphID	=obj->ai_location().game_vertex_id();

@@ -1,6 +1,9 @@
 #pragma once
 
-class CEnergyHolder {
+class CEnergyHolder:
+	public IMetaClass
+{
+	DECLARE_METACLASS(CEnergyHolder)
 
 	// энергия
 	float		m_value;			// текущее значение энергии

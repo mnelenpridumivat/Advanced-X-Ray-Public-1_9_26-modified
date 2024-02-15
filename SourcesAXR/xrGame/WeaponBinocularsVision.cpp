@@ -151,9 +151,9 @@ void SBinocVisibleObj::Update()
 			{
 				//-----------------------------------------------------
 
-				CInventoryOwner* our_inv_owner		= smart_cast<CInventoryOwner*>(pActor);
-				CInventoryOwner* others_inv_owner	= smart_cast<CInventoryOwner*>(m_object);
-				CBaseMonster	*monster			= smart_cast<CBaseMonster*>(m_object);
+				CInventoryOwner* our_inv_owner		= smart_cast<CInventoryOwner>(pActor);
+				CInventoryOwner* others_inv_owner	= smart_cast<CInventoryOwner>(m_object);
+				CBaseMonster	*monster			= smart_cast<CBaseMonster>(m_object);
 
 				if(our_inv_owner && others_inv_owner && !monster){
 					if (IsGameTypeSingle())
@@ -170,8 +170,8 @@ void SBinocVisibleObj::Update()
 					}
 					else
 					{
-						CEntityAlive* our_ealive		= smart_cast<CEntityAlive*>(pActor);
-						CEntityAlive* others_ealive		= smart_cast<CEntityAlive*>(m_object);
+						CEntityAlive* our_ealive		= smart_cast<CEntityAlive>(pActor);
+						CEntityAlive* others_ealive		= smart_cast<CEntityAlive>(m_object);
 						if (our_ealive && others_ealive)
 						{
 							if (Game().IsEnemy(our_ealive, others_ealive))

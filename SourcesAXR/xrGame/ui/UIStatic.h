@@ -22,8 +22,13 @@ struct lanim_cont_xf :public lanim_cont{
 	void					set_defaults		();
 };
 
-class CUIStatic : public CUIWindow, public ITextureOwner, public CUILightAnimColorConrollerImpl
+class CUIStatic : 
+	public CUIWindow, 
+	public ITextureOwner, 
+	public CUILightAnimColorConrollerImpl,
+	public IMetaClass
 {
+	DECLARE_METACLASS3(CUIStatic, CUIWindow, ITextureOwner, CUILightAnimColorConrollerImpl)
 	friend class CUIXmlInit;
 private:
 	typedef CUIWindow inherited;

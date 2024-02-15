@@ -149,7 +149,7 @@ void CUISkinSelectorWnd::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
 	//game_cl_Deathmatch * dm = NULL;
 	switch (msg){
 		case BUTTON_CLICKED:
-			game = smart_cast<game_cl_mp*>(&(Game()));
+			game = smart_cast<game_cl_mp>(&(Game()));
 			//dm = smart_cast<game_cl_Deathmatch *>(&(Game()));
 /*
 			if (pWnd == m_pButtons[0])
@@ -199,14 +199,14 @@ void CUISkinSelectorWnd::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
 void CUISkinSelectorWnd::OnBtnCancel()
 {
     HideDialog();
-	game_cl_mp* mp = smart_cast<game_cl_mp*>(&(Game()));
+	game_cl_mp* mp = smart_cast<game_cl_mp>(&(Game()));
 	mp->OnSkinMenu_Cancel();
 }
 
 void CUISkinSelectorWnd::OnBtnOK()
 {
 	HideDialog();
-	game_cl_mp *game = smart_cast<game_cl_mp*>(&(Game()));
+	game_cl_mp *game = smart_cast<game_cl_mp>(&(Game()));
 	VERIFY(game);
 	//game_cl_Deathmatch * dm = smart_cast<game_cl_Deathmatch *>(&(Game()));
 	
@@ -230,7 +230,7 @@ bool CUISkinSelectorWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 		if (dik == DIK_TAB)
 		{
 			ShowChildren(true);
-			game_cl_mp* game = smart_cast<game_cl_mp*>(&Game());
+			game_cl_mp* game = smart_cast<game_cl_mp>(&Game());
 			game->OnKeyboardRelease(kSCORES);
 			UI().GetUICursor().Show();
 		}
@@ -241,7 +241,7 @@ bool CUISkinSelectorWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 	if (dik == DIK_TAB)
 	{
         ShowChildren(false);
-		game_cl_mp* game = smart_cast<game_cl_mp*>(&Game());
+		game_cl_mp* game = smart_cast<game_cl_mp>(&Game());
 		game->OnKeyboardPress(kSCORES);
 		UI().GetUICursor().Hide();
 		return false;

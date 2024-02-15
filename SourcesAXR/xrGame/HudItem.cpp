@@ -87,9 +87,9 @@ void CHudItem::renderable_Render()
 		}else
 		if (object().H_Parent()) 
 		{
-			CInventoryOwner	*owner = smart_cast<CInventoryOwner*>(object().H_Parent());
+			CInventoryOwner	*owner = smart_cast<CInventoryOwner>(object().H_Parent());
 			VERIFY			(owner);
-			CInventoryItem	*self = smart_cast<CInventoryItem*>(this);
+			CInventoryItem	*self = smart_cast<CInventoryItem>(this);
 			if (owner->attached(self) || item().BaseSlot() == INV_SLOT_3)
 				on_renderable_Render();
 		}
@@ -165,10 +165,10 @@ void CHudItem::OnStateSwitch(u32 S)
 
 void CHudItem::OnAnimationEnd(u32 state)
 {
-	CActor* actor = smart_cast<CActor*>(object().H_Parent());
+	CActor* actor = smart_cast<CActor>(object().H_Parent());
 	if (actor)
 	{
-		actor->callback(GameObject::eActorHudAnimationEnd)(smart_cast<CGameObject*>(this)->lua_game_object(),
+		actor->callback(GameObject::eActorHudAnimationEnd)(smart_cast<CGameObject>(this)->lua_game_object(),
 			this->hud_sect.c_str(), this->m_current_motion.c_str(), state,
 			this->animation_slot());
 	}
@@ -456,7 +456,7 @@ BOOL CHudItem::GetHUDmode()
 {
 	if(object().H_Parent())
 	{
-		CActor* A = smart_cast<CActor*>(object().H_Parent());
+		CActor* A = smart_cast<CActor>(object().H_Parent());
 		return (A && A->HUDview() && HudItemData());
 	}
 	else
@@ -479,7 +479,7 @@ bool CHudItem::TryPlayAnimIdle()
 {
 	if (MovingAnimAllowedNow())
 	{
-		CActor* pActor = smart_cast<CActor*>(object().H_Parent());
+		CActor* pActor = smart_cast<CActor>(object().H_Parent());
 		if (pActor)
 		{
 			const u32 State = pActor->get_state();
@@ -582,7 +582,7 @@ void CHudItem::PlayAnimIdleSprint()
 
 void CHudItem::PlayAnimSprintStart()
 {
-	CWeapon* wpn = smart_cast<CWeapon*>(this);
+	CWeapon* wpn = smart_cast<CWeapon>(this);
 
 	string_path guns_sprint_start_anm{};
 	strconcat(sizeof(guns_sprint_start_anm), guns_sprint_start_anm, "anm_idle_sprint_start", (wpn && wpn->IsGrenadeLauncherAttached()) ? (wpn && wpn->IsGrenadeMode() ? "_g" : "_w_gl") : "", (IsMisfireNow() ? "_jammed" : (IsMagazineEmpty()) ? "_empty" : ""));
@@ -632,7 +632,7 @@ void CHudItem::PlayAnimSprintStart()
 
 void CHudItem::PlayAnimSprintEnd()
 {
-	CWeapon* wpn = smart_cast<CWeapon*>(this);
+	CWeapon* wpn = smart_cast<CWeapon>(this);
 
 	string_path guns_sprint_end_anm{};
 	strconcat(sizeof(guns_sprint_end_anm), guns_sprint_end_anm, "anm_idle_sprint_end", (wpn && wpn->IsGrenadeLauncherAttached()) ? (wpn && wpn->IsGrenadeMode() ? "_g" : "_w_gl") : "", (IsMisfireNow() ? "_jammed" : (IsMagazineEmpty()) ? "_empty" : ""));
@@ -712,7 +712,7 @@ BOOL CHudItem::ParentIsActor()
 	if (!O)
 		return false;
 
-	CEntityAlive* EA = smart_cast<CEntityAlive*>(O);
+	CEntityAlive* EA = smart_cast<CEntityAlive>(O);
 	if (!EA)
 		return false;
 

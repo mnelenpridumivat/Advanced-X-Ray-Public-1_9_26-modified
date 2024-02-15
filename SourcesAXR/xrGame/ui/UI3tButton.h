@@ -2,8 +2,11 @@
 #include "UIButton.h"
 #include "UI_IB_Static.h"
 
-class CUI3tButton : public CUIButton 
+class CUI3tButton : 
+	public CUIButton,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUI3tButton, CUIButton)
 	typedef CUIButton	inherited;
 	friend class CUIXmlInit;
 //.	using CUIButton::SetTextColor;

@@ -177,7 +177,7 @@ void CUIHudStatesWnd::Load_section_type( ALife::EInfluenceType type, LPCSTR sect
 
 void CUIHudStatesWnd::Update()
 {
-	CActor* actor = smart_cast<CActor*>( Level().CurrentViewEntity() );
+	CActor* actor = smart_cast<CActor>( Level().CurrentViewEntity() );
 	if ( !actor )
 	{
 		return;
@@ -291,7 +291,7 @@ void CUIHudStatesWnd::UpdateActiveItemInfo( CActor* actor )
 		
 		m_ui_grenade->SetText	( m_item_info.grenade.c_str() );
 
-		CWeaponMagazinedWGrenade* wpn = smart_cast<CWeaponMagazinedWGrenade*>(item);
+		CWeaponMagazinedWGrenade* wpn = smart_cast<CWeaponMagazinedWGrenade>(item);
 		if(wpn && wpn->m_bGrenadeMode)
 		{
 			m_ui_weapon_fmj_ammo->SetTextColor(color_rgba(238,155,23,150));
@@ -399,7 +399,7 @@ void CUIHudStatesWnd::UpdateIndicatorType( CActor* actor, ALife::EInfluenceType 
 		return;
 	
 	CCustomOutfit* outfit = actor->GetOutfit();
-	CHelmet* helmet = smart_cast<CHelmet*>(actor->inventory().ItemFromSlot(HELMET_SLOT));
+	CHelmet* helmet = smart_cast<CHelmet>(actor->inventory().ItemFromSlot(HELMET_SLOT));
 	float protect = (outfit) ? outfit->GetDefHitTypeProtection( hit_type ) : 0.0f;
 	protect += (helmet) ? helmet->GetDefHitTypeProtection(hit_type) : 0.0f;
 	protect += actor->GetProtection_ArtefactsOnBelt( hit_type );
@@ -489,7 +489,7 @@ void CUIHudStatesWnd::SwitchLA( bool state, ALife::EInfluenceType type )
 
 void CUIHudStatesWnd::DrawZoneIndicators()
 {
-	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
+	CActor* actor = smart_cast<CActor>(Level().CurrentViewEntity());
 	if(!actor)
 		return;
 
@@ -517,7 +517,7 @@ void CUIHudStatesWnd::FakeUpdateIndicatorType(u8 t, float power)
 		return;
 	}
 
-	CActor* actor = smart_cast<CActor*>( Level().CurrentViewEntity() );
+	CActor* actor = smart_cast<CActor>( Level().CurrentViewEntity() );
 	if(!actor)
 		return;
 
@@ -535,7 +535,7 @@ void CUIHudStatesWnd::FakeUpdateIndicatorType(u8 t, float power)
 	ALife::EHitType hit_type  = CurrentGameUI()->m_zone_hit_type[type];
 	
 	CCustomOutfit* outfit = actor->GetOutfit();
-	CHelmet* helmet = smart_cast<CHelmet*>(actor->inventory().ItemFromSlot(HELMET_SLOT));
+	CHelmet* helmet = smart_cast<CHelmet>(actor->inventory().ItemFromSlot(HELMET_SLOT));
 	float protect = (outfit) ? outfit->GetDefHitTypeProtection( hit_type ) : 0.0f;
 	protect += (helmet) ? helmet->GetDefHitTypeProtection(hit_type) : 0.0f;
 	protect += actor->GetProtection_ArtefactsOnBelt( hit_type );

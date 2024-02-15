@@ -154,7 +154,7 @@ void reward_event_generator::OnRoundStart()
 
 void __stdcall reward_event_generator::AddRewardTask(u32 award_id)
 {
-	game_cl_mp*	tmp_cl_game = smart_cast<game_cl_mp*>(&Game());
+	game_cl_mp*	tmp_cl_game = smart_cast<game_cl_mp>(&Game());
 	VERIFY(tmp_cl_game);
 	if (!tmp_cl_game->Is_Rewarding_Allowed())
 		return;
@@ -180,7 +180,7 @@ void __stdcall reward_event_generator::AddRewardTask(u32 award_id)
 		return;
 	}
 
-	game_cl_mp*	tmp_mp_game		= smart_cast<game_cl_mp*>(&Game());
+	game_cl_mp*	tmp_mp_game		= smart_cast<game_cl_mp>(&Game());
 	VERIFY(tmp_mp_game);
 	tmp_mp_game->AddRewardTask	(award_id);
 	++m_rewarded;

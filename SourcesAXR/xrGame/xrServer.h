@@ -27,8 +27,11 @@ const u32	NET_Latency		= 50;		// time in (ms)
 // t-defs
 typedef xr_hash_map<u16, CSE_Abstract*>	xrS_entities;
 
-class xrClientData	: public IClient
+class xrClientData	: 
+	public IClient,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(xrClientData, IClient)
 public:
 	CSE_Abstract*			owner;
 	BOOL					net_Ready;
@@ -80,8 +83,11 @@ namespace file_transfer
 class clientdata_proxy;
 class server_info_uploader;
 
-class xrServer	: public IPureServer  
+class xrServer	: 
+	public IPureServer,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(xrServer, IPureServer)
 private:
 	xrS_entities				entities;
 	xr_multiset<svs_respawn>	q_respawn;

@@ -6,8 +6,12 @@
 
 struct SCallbackInfo;
 
-class CUIDialogWndEx :public CUIDialogWnd, public DLL_Pure
+class CUIDialogWndEx :
+	public CUIDialogWnd, 
+	public DLL_Pure,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUIDialogWndEx, CUIDialogWnd, DLL_Pure)
 typedef CUIDialogWnd				inherited;
 typedef xr_vector<SCallbackInfo*>	CALLBACKS;
 typedef CALLBACKS::iterator			CALLBACK_IT;

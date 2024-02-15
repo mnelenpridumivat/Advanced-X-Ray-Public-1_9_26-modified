@@ -97,7 +97,7 @@ void CUIActorMenu::InitDeadBodySearchMode()
 		m_pDeadBodyBagList->SetItem	(itm);
 	}
 
-	CBaseMonster* monster = smart_cast<CBaseMonster*>( m_pPartnerInvOwner );
+	CBaseMonster* monster = smart_cast<CBaseMonster>( m_pPartnerInvOwner );
 	
 	//only for partner, box = no, monster = no
 	if ( m_pPartnerInvOwner && !monster )

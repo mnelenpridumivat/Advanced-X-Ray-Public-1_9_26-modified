@@ -330,7 +330,7 @@ bool CUIWindow::OnMouseAction(float x, float y, EUIMessages mouse_action)
 	{
 		CUIWindow* w	= (*it);
 
-		auto sw = smart_cast<CUISimpleWindow*>(w);
+		auto sw = smart_cast<CUISimpleWindow>(w);
 
 		if (sw)	// Dance Maniac: Костыль от вылета при открытии статей в энциклопедии
 		{

@@ -3,7 +3,11 @@
 #include "../state.h"
 
 template<typename _Object>
-class	CStateGroupHearDangerousSound : public CState<_Object> {
+class	CStateGroupHearDangerousSound : 
+	public CState<_Object>,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CStateGroupHearDangerousSound, CState<_Object>)
 protected:
 	typedef CState<_Object>		inherited;
 	typedef CState<_Object>*	state_ptr;

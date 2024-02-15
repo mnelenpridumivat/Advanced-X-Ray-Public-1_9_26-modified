@@ -3,8 +3,10 @@
 struct SCallbackInfo;
 class CUIWindow;
 
-class CUIWndCallback
+class CUIWndCallback:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CUIWndCallback)
 public:
 	typedef fastdelegate::FastDelegate2<CUIWindow*,void*,void>				void_function;
 private:

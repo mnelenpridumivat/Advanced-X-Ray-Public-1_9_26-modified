@@ -205,7 +205,7 @@ void attachable_hud_item::setup_firedeps(firedeps& fd)
 		fd.vLastFD.set									(0.f,0.f,1.f);
 		m_item_transform.transform_dir					(fd.vLastFD);
 
-		auto Wpn = smart_cast<CWeapon*>(m_parent_hud_item);
+		auto Wpn = smart_cast<CWeapon>(m_parent_hud_item);
 
 		if (Wpn)
 			Wpn->CorrectDirFromWorldToHud(fd.vLastFD);
@@ -381,7 +381,7 @@ void attachable_hud_item::load(const shared_str& sect_name)
 
 	::Render->hud_loading = true;
 
-	m_model						 = smart_cast<IKinematics*>(::Render->model_Create(visual_name.c_str()));
+	m_model						 = reinterpret_cast<IKinematics*>(::Render->model_Create(visual_name.c_str()));
 
 	::Render->hud_loading = false;
 
@@ -450,7 +450,8 @@ u32 attachable_hud_item::anim_play(const shared_str& anm_name_b, BOOL bMixIn, co
 
 	if (IsGameTypeSingle() && parent_object.H_Parent() == Level().CurrentControlEntity())
 	{
-		CActor* current_actor = static_cast_checked<CActor*>(Level().CurrentControlEntity());
+		//CActor* current_actor = static_cast_checked<CActor*>(Level().CurrentControlEntity());
+		CActor* current_actor = smart_cast<CActor>(Level().CurrentControlEntity());
 		VERIFY(current_actor);
 
 		string_path ce_path;
@@ -662,8 +663,8 @@ void player_hud::load(const shared_str& player_hud_sect)
 
 	::Render->hud_loading = true;
 
-	m_model = smart_cast<IKinematicsAnimated*>(::Render->model_Create(model_name.c_str()));
-	m_model_2 = smart_cast<IKinematicsAnimated*>(::Render->model_Create(pSettings->line_exist(player_hud_sect, "visual_2") ? pSettings->r_string(player_hud_sect, "visual_2") : model_name.c_str()));
+	m_model = reinterpret_cast<IKinematicsAnimated*>(::Render->model_Create(model_name.c_str()));
+	m_model_2 = reinterpret_cast<IKinematicsAnimated*>(::Render->model_Create(pSettings->line_exist(player_hud_sect, "visual_2") ? pSettings->r_string(player_hud_sect, "visual_2") : model_name.c_str()));
 
 	::Render->hud_loading = false;
 

@@ -29,7 +29,7 @@ void CRocketLauncher::SpawnRocket(const shared_str& rocket_section, CGameObject*
 
 	CSE_Abstract*		D	= F_entity_Create(rocket_section.c_str());
 	R_ASSERT			(D);
-	CSE_Temporary		*l_tpTemporary = smart_cast<CSE_Temporary*>(D);
+	CSE_Temporary		*l_tpTemporary = smart_cast<CSE_Temporary>(D);
 	R_ASSERT			(l_tpTemporary);
 	l_tpTemporary->m_tNodeID= (g_dedicated_server)?static_cast<u32>(-1) : parent_rocket_launcher->ai_location().level_vertex_id();
 	D->s_name			= rocket_section;

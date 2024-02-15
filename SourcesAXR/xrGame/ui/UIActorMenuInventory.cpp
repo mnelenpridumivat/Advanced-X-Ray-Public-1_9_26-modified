@@ -257,7 +257,7 @@ bool FindItemInList(CUIDragDropListEx* lst, PIItem pItem, CUICellItem*& ci_res)
 		CUICellItem* ci				= lst->GetItemIdx(i);
 		for(u32 j=0; j<ci->ChildsCount(); ++j)
 		{
-			CUIInventoryCellItem* ici = smart_cast<CUIInventoryCellItem*>(ci->Child(j));
+			CUIInventoryCellItem* ici = smart_cast<CUIInventoryCellItem>(ci->Child(j));
 			if(ici->object()==pItem)
 			{
 				ci_res = ici;
@@ -266,7 +266,7 @@ bool FindItemInList(CUIDragDropListEx* lst, PIItem pItem, CUICellItem*& ci_res)
 			}
 		}
 
-		CUIInventoryCellItem* ici = smart_cast<CUIInventoryCellItem*>(ci);
+		CUIInventoryCellItem* ici = smart_cast<CUIInventoryCellItem>(ci);
 		if(ici->object()==pItem)
 		{
 			ci_res = ci;
@@ -387,7 +387,7 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 	{
 		if (CUIDragDropListEx::m_drag_item)
 		{
-			CUIInventoryCellItem* ici = smart_cast<CUIInventoryCellItem*>(CUIDragDropListEx::m_drag_item->ParentItem());
+			CUIInventoryCellItem* ici = smart_cast<CUIInventoryCellItem>(CUIDragDropListEx::m_drag_item->ParentItem());
 			R_ASSERT(ici);
 			if (ici->object() == pItem)
 			{
@@ -558,7 +558,7 @@ void CUIActorMenu::InitInventoryContents(CUIDragDropListEx* pBagList)
 	ite = ruck_list.end();
 	for ( ; itb != ite; ++itb )
 	{
-		CMPPlayersBag* bag = smart_cast<CMPPlayersBag*>( &(*itb)->object() );
+		CMPPlayersBag* bag = smart_cast<CMPPlayersBag>( &(*itb)->object() );
 		if ( bag )
 		{
 			continue;
@@ -608,12 +608,12 @@ bool CUIActorMenu::ToSlot(CUICellItem* itm, bool force_place, u16 slot_id)
 		if(pOutfit && !pOutfit->bIsHelmetAvaliable)
 			return false;
 
-		CHelmet* helmet = smart_cast<CHelmet*>(iitem);
+		CHelmet* helmet = smart_cast<CHelmet>(iitem);
 
 		if (helmet)
 		{
-			CHelmet* pHelmet1 = smart_cast<CHelmet*>(m_pActorInvOwner->inventory().ItemFromSlot(HELMET_SLOT));
-			CHelmet* pHelmet2 = smart_cast<CHelmet*>(m_pActorInvOwner->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
+			CHelmet* pHelmet1 = smart_cast<CHelmet>(m_pActorInvOwner->inventory().ItemFromSlot(HELMET_SLOT));
+			CHelmet* pHelmet2 = smart_cast<CHelmet>(m_pActorInvOwner->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
 
 			CUIDragDropListEx* currentHelmetList = nullptr;
 			CUICellItem* currentHelmetCell = nullptr;
@@ -656,7 +656,7 @@ bool CUIActorMenu::ToSlot(CUICellItem* itm, bool force_place, u16 slot_id)
 
 		if(slot_id==OUTFIT_SLOT)
 		{
-			CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>(iitem);
+			CCustomOutfit* pOutfit = smart_cast<CCustomOutfit>(iitem);
 			if(pOutfit && !pOutfit->bIsHelmetAvaliable)
 			{
 				CUIDragDropListEx* helmet_list		= GetSlotList(HELMET_SLOT);
@@ -714,7 +714,7 @@ bool CUIActorMenu::ToSlot(CUICellItem* itm, bool force_place, u16 slot_id)
 		result								= ToSlot(itm, false, slot_id);
 		if(b_own_item && result && slot_id==DETECTOR_SLOT)
 		{
-			CCustomDetector* det			= smart_cast<CCustomDetector*>(iitem);
+			CCustomDetector* det			= smart_cast<CCustomDetector>(iitem);
 			det->ToggleDetector				(g_player_hud->attached_item(0)!=NULL);
 		}
 
@@ -932,14 +932,14 @@ bool CUIActorMenu::TryUseItem( CUICellItem* cell_itm )
 	}
 	PIItem item	= static_cast<PIItem>(cell_itm->m_pData);
 
-	CBottleItem*	pBottleItem		= smart_cast<CBottleItem*>	(item);
-	CMedkit*		pMedkit			= smart_cast<CMedkit*>		(item);
-	CAntirad*		pAntirad		= smart_cast<CAntirad*>		(item);
-	CEatableItem*	pEatableItem	= smart_cast<CEatableItem*>	(item);
-	CBattery*		pBattery		= smart_cast<CBattery*>		(item);
-	CAntigasFilter* pFilter			= smart_cast<CAntigasFilter*>(item);
-	CRepairKit*		pRepairKit		= smart_cast<CRepairKit*>	(item);
-	CSleepingBag*	pSleepingBag	= smart_cast<CSleepingBag*>	(item);
+	CBottleItem*	pBottleItem		= smart_cast<CBottleItem>	(item);
+	CMedkit*		pMedkit			= smart_cast<CMedkit>		(item);
+	CAntirad*		pAntirad		= smart_cast<CAntirad>		(item);
+	CEatableItem*	pEatableItem	= smart_cast<CEatableItem>	(item);
+	CBattery*		pBattery		= smart_cast<CBattery>		(item);
+	CAntigasFilter* pFilter			= smart_cast<CAntigasFilter>(item);
+	CRepairKit*		pRepairKit		= smart_cast<CRepairKit>	(item);
+	CSleepingBag*	pSleepingBag	= smart_cast<CSleepingBag>	(item);
 
 	if (pSleepingBag)
 	{
@@ -979,7 +979,7 @@ bool CUIActorMenu::TryUseItem( CUICellItem* cell_itm )
 bool CUIActorMenu::ToQuickSlot(CUICellItem* itm)
 {
 	PIItem iitem = static_cast<PIItem>(itm->m_pData);
-	CEatableItemObject* eat_item = smart_cast<CEatableItemObject*>(iitem);
+	CEatableItemObject* eat_item = smart_cast<CEatableItemObject>(iitem);
 	if(!eat_item)
 		return false;
 
@@ -1071,8 +1071,8 @@ void CUIActorMenu::ActivatePropertiesBox()
 
 void CUIActorMenu::PropertiesBoxForSlots( PIItem item, bool& b_show )
 {
-	CCustomOutfit* pOutfit	= smart_cast<CCustomOutfit*>( item );
-	CHelmet* pHelmet		= smart_cast<CHelmet*>		( item );
+	CCustomOutfit* pOutfit	= smart_cast<CCustomOutfit>( item );
+	CHelmet* pHelmet		= smart_cast<CHelmet>		( item );
 	CInventory&  inv		= m_pActorInvOwner->inventory();
 
 	// Флаг-признак для невлючения пункта контекстного меню: Dreess Outfit, если костюм уже надет
@@ -1128,7 +1128,7 @@ void CUIActorMenu::PropertiesBoxForSlots( PIItem item, bool& b_show )
 void CUIActorMenu::PropertiesBoxForWeapon( CUICellItem* cell_item, PIItem item, bool& b_show )
 {
 	//отсоединение аддонов от вещи
-	CWeapon*	pWeapon = smart_cast<CWeapon*>( item );
+	CWeapon*	pWeapon = smart_cast<CWeapon>( item );
 	if ( !pWeapon )
 	{
 		return;
@@ -1175,14 +1175,14 @@ void CUIActorMenu::PropertiesBoxForWeapon( CUICellItem* cell_item, PIItem item, 
 		}
 	}
 
-	if ( smart_cast<CWeaponMagazined*>(pWeapon) && IsGameTypeSingle() )
+	if ( pWeapon->IsA(CWeaponMagazined::StaticClass()) && IsGameTypeSingle() )
 	{
 		bool b = ( pWeapon->GetAmmoElapsed() !=0 );
 		if ( !b )
 		{
 			for ( u32 i = 0; i < cell_item->ChildsCount(); ++i )
 			{
-				CWeaponMagazined* weap_mag = smart_cast<CWeaponMagazined*>( static_cast<CWeapon*>(cell_item->Child(i)->m_pData) );
+				CWeaponMagazined* weap_mag = smart_cast<CWeaponMagazined>( static_cast<CWeapon*>(cell_item->Child(i)->m_pData) );
 				if ( weap_mag && weap_mag->GetAmmoElapsed() )
 				{
 					b = true;
@@ -1202,11 +1202,11 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 {
 	//присоединение аддонов к активному слоту (2 или 3)
 
-	CScope*				pScope				= smart_cast<CScope*>			(item);
-	CSilencer*			pSilencer			= smart_cast<CSilencer*>		(item);
-	CGrenadeLauncher*	pGrenadeLauncher	= smart_cast<CGrenadeLauncher*>	(item);
-	CLaserDesignator*	pLaser				= smart_cast<CLaserDesignator*>	(item);
-	CTacticalTorch*		pTacticalTorch		= smart_cast<CTacticalTorch*>	(item);
+	CScope*				pScope				= smart_cast<CScope>			(item);
+	CSilencer*			pSilencer			= smart_cast<CSilencer>		(item);
+	CGrenadeLauncher*	pGrenadeLauncher	= smart_cast<CGrenadeLauncher>	(item);
+	CLaserDesignator*	pLaser				= smart_cast<CLaserDesignator>	(item);
+	CTacticalTorch*		pTacticalTorch		= smart_cast<CTacticalTorch>	(item);
 	CInventory*			inv					= &m_pActorInvOwner->inventory();
 
 	PIItem	item_in_slot_2 = inv->ItemFromSlot(INV_SLOT_2);
@@ -1356,16 +1356,16 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 
 void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 {
-	CMedkit*		pMedkit			= smart_cast<CMedkit*>		(item);
-	CAntirad*		pAntirad		= smart_cast<CAntirad*>		(item);
-	CEatableItem*	pEatableItem	= smart_cast<CEatableItem*>	(item);
-	CBottleItem*	pBottleItem		= smart_cast<CBottleItem*>	(item);
-	CBattery*		pBattery		= smart_cast<CBattery*>		(item);
-	CAntigasFilter* pFilter			= smart_cast<CAntigasFilter*>(item);
-	CRepairKit*		pRepairKit		= smart_cast<CRepairKit*>	(item);
-	CArtefactContainer* pAfContainer= smart_cast<CArtefactContainer*>(item);
-	CArtefact*		pArtefact		= smart_cast<CArtefact*>	(item);
-	CSleepingBag*	pSleepingBag	= smart_cast<CSleepingBag*>	(item);
+	CMedkit*		pMedkit			= smart_cast<CMedkit>		(item);
+	CAntirad*		pAntirad		= smart_cast<CAntirad>		(item);
+	CEatableItem*	pEatableItem	= smart_cast<CEatableItem>	(item);
+	CBottleItem*	pBottleItem		= smart_cast<CBottleItem>	(item);
+	CBattery*		pBattery		= smart_cast<CBattery>		(item);
+	CAntigasFilter* pFilter			= smart_cast<CAntigasFilter>(item);
+	CRepairKit*		pRepairKit		= smart_cast<CRepairKit>	(item);
+	CArtefactContainer* pAfContainer= smart_cast<CArtefactContainer>(item);
+	CArtefact*		pArtefact		= smart_cast<CArtefact>	(item);
+	CSleepingBag*	pSleepingBag	= smart_cast<CSleepingBag>	(item);
 
 	CInventory*	inv = &m_pActorInvOwner->inventory();
 	PIItem	item_in_torch_slot = inv->ItemFromSlot(TORCH_SLOT);
@@ -1379,13 +1379,13 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 	PIItem	item_in_wpn2_slot = inv->ItemFromSlot(INV_SLOT_3);
 	PIItem	item_in_wpn3_slot = inv->ItemFromSlot(PISTOL_SLOT);
 
-	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
-	CHelmet* helmet = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
-	CHelmet* helmet2 = smart_cast<CHelmet*>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
-	CWeapon* knife = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(KNIFE_SLOT));
-	CWeapon* wpn1 = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(INV_SLOT_2));
-	CWeapon* wpn2 = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(INV_SLOT_3));
-	CWeapon* wpn3 = smart_cast<CWeapon*>(Actor()->inventory().ItemFromSlot(PISTOL_SLOT));
+	CCustomOutfit* outfit = smart_cast<CCustomOutfit>(Actor()->inventory().ItemFromSlot(OUTFIT_SLOT));
+	CHelmet* helmet = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(HELMET_SLOT));
+	CHelmet* helmet2 = smart_cast<CHelmet>(Actor()->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
+	CWeapon* knife = smart_cast<CWeapon>(Actor()->inventory().ItemFromSlot(KNIFE_SLOT));
+	CWeapon* wpn1 = smart_cast<CWeapon>(Actor()->inventory().ItemFromSlot(INV_SLOT_2));
+	CWeapon* wpn2 = smart_cast<CWeapon>(Actor()->inventory().ItemFromSlot(INV_SLOT_3));
+	CWeapon* wpn3 = smart_cast<CWeapon>(Actor()->inventory().ItemFromSlot(PISTOL_SLOT));
 
 	bool outfit_use_filter = false;
 	bool helmet_use_filter = false;
@@ -1554,7 +1554,7 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 
 		for (it; ite != it; ++it)
 		{
-			CArtefactContainer* container = smart_cast<CArtefactContainer*>(*it);
+			CArtefactContainer* container = smart_cast<CArtefactContainer>(*it);
 
 			if (container && !container->IsFull())
 			{
@@ -1569,7 +1569,7 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 	{
 		for (auto af_in_container : pAfContainer->GetArtefactsInside())
 		{
-			CArtefact* af_in_container_casted = smart_cast<CArtefact*>(af_in_container);
+			CArtefact* af_in_container_casted = smart_cast<CArtefact>(af_in_container);
 
 			if (af_in_container_casted)
 			{
@@ -1587,7 +1587,7 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 	}
 	else if ( pEatableItem )
 	{
-		CObject*	pObj			= smart_cast<CObject*>		(item);
+		CObject*	pObj			= smart_cast<CObject>		(item);
 		shared_str	section_name	= pObj->cNameSect();
 		if ( !xr_strcmp(section_name,"vodka") || !(xr_strcmp(section_name,"energy_drink")) )
 		{
@@ -1612,7 +1612,7 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 
 void CUIActorMenu::PropertiesBoxForPlaying(PIItem item, bool& b_show)
 {
-	CPda* pPda = smart_cast<CPda*>(item);
+	CPda* pPda = smart_cast<CPda>(item);
 	if(!pPda || !pPda->CanPlayScriptFunction())
 		return;
 
@@ -1637,9 +1637,9 @@ void CUIActorMenu::PropertiesBoxForDrop( CUICellItem* cell_item, PIItem item, bo
 
 void CUIActorMenu::PropertiesBoxForRepair( PIItem item, bool& b_show )
 {
-	CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>( item );
-	CWeapon*       pWeapon = smart_cast<CWeapon*>( item );
-	CHelmet*       pHelmet = smart_cast<CHelmet*>( item );
+	CCustomOutfit* pOutfit = smart_cast<CCustomOutfit>( item );
+	CWeapon*       pWeapon = smart_cast<CWeapon>( item );
+	CHelmet*       pHelmet = smart_cast<CHelmet>( item );
 
 	if ( (pOutfit || pWeapon || pHelmet) && item->GetCondition() < 0.99f )
 	{
@@ -1656,7 +1656,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 	{
 		return;
 	}
-	CWeapon* weapon = smart_cast<CWeapon*>( item );
+	CWeapon* weapon = smart_cast<CWeapon>( item );
 
 	switch ( m_UIPropertiesBox->GetClickedItem()->GetTAG() )
 	{
@@ -1699,7 +1699,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 			{
 				CUICellItem*	child_itm	= cell_item->Child(i);
 				PIItem			child_iitm	= static_cast<PIItem>(child_itm->m_pData);
-				CWeapon* wpn = smart_cast<CWeapon*>( child_iitm );
+				CWeapon* wpn = smart_cast<CWeapon>( child_iitm );
 				if ( child_iitm && wpn )
 				{
 					DetachAddon(wpn->GetScopeName().c_str(), child_iitm);
@@ -1715,7 +1715,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 			{
 				CUICellItem*	child_itm	= cell_item->Child(i);
 				PIItem			child_iitm	= static_cast<PIItem>(child_itm->m_pData);
-				CWeapon* wpn = smart_cast<CWeapon*>( child_iitm );
+				CWeapon* wpn = smart_cast<CWeapon>( child_iitm );
 				if ( child_iitm && wpn )
 				{
 					DetachAddon(wpn->GetSilencerName().c_str(), child_iitm);
@@ -1731,7 +1731,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 			{
 				CUICellItem*	child_itm	= cell_item->Child(i);
 				PIItem			child_iitm	= static_cast<PIItem>(child_itm->m_pData);
-				CWeapon* wpn = smart_cast<CWeapon*>( child_iitm );
+				CWeapon* wpn = smart_cast<CWeapon>( child_iitm );
 				if ( child_iitm && wpn )
 				{
 					DetachAddon(wpn->GetGrenadeLauncherName().c_str(), child_iitm);
@@ -1747,7 +1747,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 			{
 				CUICellItem* child_itm = cell_item->Child(i);
 				PIItem			child_iitm = (PIItem)(child_itm->m_pData);
-				CWeapon* wpn = smart_cast<CWeapon*>(child_iitm);
+				CWeapon* wpn = smart_cast<CWeapon>(child_iitm);
 				if (child_iitm && wpn)
 				{
 					DetachAddon(wpn->GetLaserName().c_str(), child_iitm);
@@ -1763,7 +1763,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 			{
 				CUICellItem* child_itm = cell_item->Child(i);
 				PIItem			child_iitm = (PIItem)(child_itm->m_pData);
-				CWeapon* wpn = smart_cast<CWeapon*>(child_iitm);
+				CWeapon* wpn = smart_cast<CWeapon>(child_iitm);
 				if (child_iitm && wpn)
 				{
 					DetachAddon(wpn->GetTacticalTorchName().c_str(), child_iitm);
@@ -1779,7 +1779,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		break;
 	case INVENTORY_UNLOAD_MAGAZINE:
 		{
-			CWeaponMagazined* weap_mag = smart_cast<CWeaponMagazined*>( static_cast<CWeapon*>(cell_item->m_pData) );
+			CWeaponMagazined* weap_mag = smart_cast<CWeaponMagazined>( static_cast<CWeapon*>(cell_item->m_pData) );
 			if ( !weap_mag )
 			{
 				break;
@@ -1788,7 +1788,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 			for ( u32 i = 0; i < cell_item->ChildsCount(); ++i )
 			{
 				CUICellItem*		child_itm		= cell_item->Child(i);
-				CWeaponMagazined*	child_weap_mag	= smart_cast<CWeaponMagazined*>( static_cast<CWeapon*>(child_itm->m_pData) );
+				CWeaponMagazined*	child_weap_mag	= smart_cast<CWeaponMagazined>( static_cast<CWeapon*>(child_itm->m_pData) );
 				if ( child_weap_mag )
 				{
 					child_weap_mag->UnloadMagazine();
@@ -1804,7 +1804,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case INVENTORY_PLAY_ACTION:
 		{
-			CPda* pPda = smart_cast<CPda*>(item);
+			CPda* pPda = smart_cast<CPda>(item);
 			if(!pPda)
 				break;
 			pPda->PlayScriptFunction();
@@ -1812,7 +1812,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case BATTERY_CHARGE_TORCH:
 		{
-			CBattery* battery = smart_cast<CBattery*>(item);
+			CBattery* battery = smart_cast<CBattery>(item);
 			if (!battery)
 				break;
 			battery->m_iUseFor = 1;
@@ -1821,7 +1821,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case BATTERY_CHARGE_DETECTOR:
 		{
-			CBattery* battery = smart_cast<CBattery*>(item);
+			CBattery* battery = smart_cast<CBattery>(item);
 			if (!battery)
 				break;
 			battery->m_iUseFor = 2;
@@ -1830,7 +1830,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case BATTERY_CHARGE_DOSIMETER:
 		{
-			CBattery* battery = smart_cast<CBattery*>(item);
+			CBattery* battery = smart_cast<CBattery>(item);
 			if (!battery)
 				break;
 			battery->m_iUseFor = 3;
@@ -1839,7 +1839,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case FILTER_CHANGE_OUTFIT:
 		{
-			CAntigasFilter* filter = smart_cast<CAntigasFilter*>(item);
+			CAntigasFilter* filter = smart_cast<CAntigasFilter>(item);
 			if (!filter)
 				break;
 			filter->m_iUseFor = 1;
@@ -1848,7 +1848,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case FILTER_CHANGE_HELMET:
 		{
-			CAntigasFilter* filter = smart_cast<CAntigasFilter*>(item);
+			CAntigasFilter* filter = smart_cast<CAntigasFilter>(item);
 			if (!filter)
 				break;
 			filter->m_iUseFor = 2;
@@ -1857,7 +1857,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case FILTER_CHANGE_SECOND_HELMET:
 	{
-		CAntigasFilter* filter = smart_cast<CAntigasFilter*>(item);
+		CAntigasFilter* filter = smart_cast<CAntigasFilter>(item);
 		if (!filter)
 			break;
 		filter->m_iUseFor = 3;
@@ -1866,7 +1866,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 	}
 	case REPAIR_KIT_OUTFIT:
 		{
-			CRepairKit* repair_kit = smart_cast<CRepairKit*>(item);
+			CRepairKit* repair_kit = smart_cast<CRepairKit>(item);
 			if (!repair_kit)
 				break;
 			repair_kit->m_iUseFor = 1;
@@ -1875,7 +1875,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case REPAIR_KIT_HELMET:
 		{
-		CRepairKit* repair_kit = smart_cast<CRepairKit*>(item);
+		CRepairKit* repair_kit = smart_cast<CRepairKit>(item);
 			if (!repair_kit)
 				break;
 			repair_kit->m_iUseFor = 2;
@@ -1884,7 +1884,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case REPAIR_KIT_SECOND_HELMET:
 		{
-			CRepairKit* repair_kit = smart_cast<CRepairKit*>(item);
+			CRepairKit* repair_kit = smart_cast<CRepairKit>(item);
 			if (!repair_kit)
 				break;
 			repair_kit->m_iUseFor = 3;
@@ -1893,7 +1893,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case REPAIR_KIT_KNIFE:
 		{
-			CRepairKit* repair_kit = smart_cast<CRepairKit*>(item);
+			CRepairKit* repair_kit = smart_cast<CRepairKit>(item);
 			if (!repair_kit)
 				break;
 			repair_kit->m_iUseFor = 4;
@@ -1902,7 +1902,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case REPAIR_KIT_WPN1:
 		{
-			CRepairKit* repair_kit = smart_cast<CRepairKit*>(item);
+			CRepairKit* repair_kit = smart_cast<CRepairKit>(item);
 			if (!repair_kit)
 				break;
 			repair_kit->m_iUseFor = 5;
@@ -1911,7 +1911,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case REPAIR_KIT_WPN2:
 		{
-			CRepairKit* repair_kit = smart_cast<CRepairKit*>(item);
+			CRepairKit* repair_kit = smart_cast<CRepairKit>(item);
 			if (!repair_kit)
 				break;
 			repair_kit->m_iUseFor = 6;
@@ -1920,7 +1920,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case REPAIR_KIT_WPN3:
 		{
-			CRepairKit* repair_kit = smart_cast<CRepairKit*>(item);
+			CRepairKit* repair_kit = smart_cast<CRepairKit>(item);
 			if (!repair_kit)
 				break;
 			repair_kit->m_iUseFor = 7;
@@ -1929,8 +1929,8 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case ARTEFACT_TO_CONTAINER:
 		{
-			CArtefact* artefact = smart_cast<CArtefact*>(item);
-			CArtefactContainer* af_container = smart_cast<CArtefactContainer*>((PIItem)m_UIPropertiesBox->GetClickedItem()->GetData());
+			CArtefact* artefact = smart_cast<CArtefact>(item);
+			CArtefactContainer* af_container = smart_cast<CArtefactContainer>((PIItem)m_UIPropertiesBox->GetClickedItem()->GetData());
 
 			if (!artefact || !af_container)
 				break;
@@ -1943,8 +1943,8 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case ARTEFACT_FROM_CONTAINER:
 		{
-			CArtefactContainer* af_container = smart_cast<CArtefactContainer*>(item);
-			CArtefact* artefact = smart_cast<CArtefact*>((PIItem)m_UIPropertiesBox->GetClickedItem()->GetData());
+			CArtefactContainer* af_container = smart_cast<CArtefactContainer>(item);
+			CArtefact* artefact = smart_cast<CArtefact>((PIItem)m_UIPropertiesBox->GetClickedItem()->GetData());
 
 			if (!af_container)
 				break;
@@ -1957,7 +1957,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case INVENTORY_SLEEP_ACTION:
 		{
-			CSleepingBag* sleeping_bag = smart_cast<CSleepingBag*>(item);
+			CSleepingBag* sleeping_bag = smart_cast<CSleepingBag>(item);
 
 			if (!sleeping_bag)
 				break;
@@ -2059,7 +2059,7 @@ void CUIActorMenu::RefreshConsumableCells()
 	CUICellItem* ci = GetCurrentConsumable();
 	if (ci)
 	{
-		CEatableItem* eitm = smart_cast<CEatableItem*>(static_cast<CEatableItem*>(ci->m_pData));
+		CEatableItem* eitm = smart_cast<CEatableItem>(static_cast<CEatableItem*>(ci->m_pData));
 		if (eitm)
 		{
 			Fvector2 cp = GetUICursor().GetCursorPosition(); // XXX: This is unused

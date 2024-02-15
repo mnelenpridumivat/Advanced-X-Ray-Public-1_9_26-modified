@@ -5,8 +5,10 @@
 
 class NET_Packet;
 
-class CPHSynchronize
+class CPHSynchronize:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CPHSynchronize)
 public:
 	virtual void						net_Export			(		NET_Packet&		P)							{};					// export to server
 	virtual void						net_Import			(		NET_Packet&		P)							{};

@@ -1,7 +1,10 @@
 #include "UICustomSpin.h"
 
-class CUISpinText : public CUICustomSpin
+class CUISpinText : 
+	public CUICustomSpin,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUISpinText, CUICustomSpin)
 public:
 					CUISpinText			();
 	// CUIOptionsItem

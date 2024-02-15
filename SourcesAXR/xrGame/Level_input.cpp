@@ -69,7 +69,7 @@ void CLevel::IR_OnMouseWheel( int direction )
 
 	if (CURRENT_ENTITY())		
 	{
-		IInputReceiver*		IR	= smart_cast<IInputReceiver*>	(smart_cast<CGameObject*>(CURRENT_ENTITY()));
+		IInputReceiver*		IR	= smart_cast<IInputReceiver>	(smart_cast<CGameObject>(CURRENT_ENTITY()));
 		if (IR)				IR->IR_OnMouseWheel(direction);
 	}
 }
@@ -106,7 +106,7 @@ void CLevel::IR_OnMouseMove( int dx, int dy )
 		)	return;
 	if (CURRENT_ENTITY())		
 	{
-		IInputReceiver*		IR	= smart_cast<IInputReceiver*>	(smart_cast<CGameObject*>(CURRENT_ENTITY()));
+		IInputReceiver*		IR	= smart_cast<IInputReceiver>	(smart_cast<CGameObject>(CURRENT_ENTITY()));
 		if (IR)				IR->IR_OnMouseMove					(dx,dy);
 	}
 }
@@ -489,7 +489,7 @@ void CLevel::IR_OnKeyboardPress	(int key)
 
 	if (CURRENT_ENTITY())		
 	{
-		IInputReceiver*		IR	= smart_cast<IInputReceiver*>	(smart_cast<CGameObject*>(CURRENT_ENTITY()));
+		IInputReceiver*		IR	= smart_cast<IInputReceiver>	(smart_cast<CGameObject>(CURRENT_ENTITY()));
 		if (IR)				IR->IR_OnKeyboardPress(get_binded_action(key));
 	}
 
@@ -531,7 +531,7 @@ void CLevel::IR_OnKeyboardRelease(int key)
 
 	if (CURRENT_ENTITY())		
 	{
-		IInputReceiver*		IR	= smart_cast<IInputReceiver*>	(smart_cast<CGameObject*>(CURRENT_ENTITY()));
+		IInputReceiver*		IR	= smart_cast<IInputReceiver>	(smart_cast<CGameObject>(CURRENT_ENTITY()));
 		if (IR)				IR->IR_OnKeyboardRelease			(get_binded_action(key));
 	}
 }
@@ -556,7 +556,7 @@ void CLevel::IR_OnKeyboardHold(int key)
 		static u32 time = Device.dwTimeGlobal;
 		if ( Device.dwTimeGlobal - time > 20 )
 		{
-			if ( CBaseMonster* pBM = smart_cast<CBaseMonster*>(CurrentEntity()) )
+			if ( CBaseMonster* pBM = smart_cast<CBaseMonster>(CurrentEntity()) )
 			{
 				DBG().debug_info_up();
 				time = Device.dwTimeGlobal;
@@ -568,7 +568,7 @@ void CLevel::IR_OnKeyboardHold(int key)
 		static u32 time = Device.dwTimeGlobal;
 		if ( Device.dwTimeGlobal - time > 20 )
 		{
-			if ( CBaseMonster* pBM = smart_cast<CBaseMonster*>(CurrentEntity()) )
+			if ( CBaseMonster* pBM = smart_cast<CBaseMonster>(CurrentEntity()) )
 			{
 				DBG().debug_info_down();
 				time = Device.dwTimeGlobal;
@@ -585,7 +585,7 @@ void CLevel::IR_OnKeyboardHold(int key)
 #endif //DEBUG
 		) return;
 	if (CURRENT_ENTITY())		{
-		IInputReceiver*		IR	= smart_cast<IInputReceiver*>	(smart_cast<CGameObject*>(CURRENT_ENTITY()));
+		IInputReceiver*		IR	= smart_cast<IInputReceiver>	(smart_cast<CGameObject>(CURRENT_ENTITY()));
 		if (IR)				IR->IR_OnKeyboardHold				(get_binded_action(key));
 	}
 }

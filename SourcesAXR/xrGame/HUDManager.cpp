@@ -172,7 +172,7 @@ void CHUDManager::Render_First()
 	if (0==pUIGame)					return;
 	CObject*	O					= g_pGameLevel->CurrentViewEntity();
 	if (0==O)						return;
-	CActor*		A					= smart_cast<CActor*> (O);
+	CActor*		A					= smart_cast<CActor> (O);
 	if (!A)							return;
 	if (A && !A->HUDview())			return;
 
@@ -190,11 +190,11 @@ bool need_render_hud()
 	if (0==O)						
 		return false;
 
-	CActor*		A					= smart_cast<CActor*> (O);
+	CActor*		A					= smart_cast<CActor> (O);
 	if (A && (!A->HUDview() || !A->g_Alive()) ) 
 		return false;
 
-	if( smart_cast<CCar*>(O) || smart_cast<CSpectator*>(O) )
+	if( O->IsA(CCar::StaticClass()) || O->IsA(CSpectator::StaticClass()) )
 		return false;
 
 	return true;
@@ -220,7 +220,7 @@ void CHUDManager::Render_Actor_Shadow() // added by KD
 	if (0 == pUIGame) return;
 	CObject* O = g_pGameLevel->CurrentViewEntity();
 	if (0 == O) return;
-	CActor* A = smart_cast<CActor*> (O);
+	CActor* A = smart_cast<CActor> (O);
 	if (!A) return;
 	if (A->active_cam() != eacFirstEye) return; // KD: we need to render actor shadow only in first eye cam mode because
 	// in other modes actor model already in scene graph and renders well
@@ -367,7 +367,7 @@ void CHUDManager::OnScreenResolutionChanged()
 
 	if (IsGameTypeSingle() && Level().CurrentViewEntity() && CurrentGameUI()->UIMainIngameWnd->UIArtefactsPanel)
 	{
-		CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
+		CActor* actor = smart_cast<CActor>(Level().CurrentViewEntity());
 
 		if (actor)
 			CurrentGameUI()->UIMainIngameWnd->UIArtefactsPanel->InitIcons(actor->ArtefactsOnBelt());

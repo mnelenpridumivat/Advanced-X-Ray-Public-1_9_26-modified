@@ -3,7 +3,11 @@
 #include "../state.h"
 
 template<typename _Object>
-class	CStateMonsterControlled : public CState<_Object> {
+class	CStateMonsterControlled : 
+	public CState<_Object>,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CStateMonsterControlled, CState<_Object>)
 	typedef CState<_Object>		inherited;
 
 public:

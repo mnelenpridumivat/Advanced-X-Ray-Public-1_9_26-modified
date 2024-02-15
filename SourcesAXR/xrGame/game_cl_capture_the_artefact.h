@@ -4,8 +4,11 @@
 #include "UIGameCTA.h"
 #include "game_cl_capture_the_artefact_captions_manager.h"
 /// This class describes the client part of "Capture The Artefact" game mode.
-class game_cl_CaptureTheArtefact	: public game_cl_mp
+class game_cl_CaptureTheArtefact	: 
+	public game_cl_mp,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(game_cl_CaptureTheArtefact, game_cl_mp)
 private:
 	typedef game_cl_mp inherited;
 	

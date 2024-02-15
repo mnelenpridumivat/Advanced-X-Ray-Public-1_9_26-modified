@@ -13,7 +13,10 @@ class CPhysicsShellHolder;
 class CTelekineticObject;
 class CPHUpdateObject;
 class CTelekinesis;
-class CTelekineticObject {
+class CTelekineticObject:
+	public IMetaClass
+{
+	DECLARE_METACLASS(CTelekineticObject)
 
 	ETelekineticState	state;
 public:

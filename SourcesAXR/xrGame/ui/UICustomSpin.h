@@ -15,8 +15,12 @@ class CUIFrameLineWnd;
 class CUILines;
 
 
-class CUICustomSpin : public CUIWindow, public CUIOptionsItem 
+class CUICustomSpin : 
+	public CUIWindow, 
+	public CUIOptionsItem,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUICustomSpin, CUIWindow, CUIOptionsItem)
 public:
 					CUICustomSpin		();
 					~CUICustomSpin		() override;

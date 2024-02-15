@@ -31,7 +31,10 @@ struct sh_pair{
 	}
 };
 
-class CUITextureMaster{
+class CUITextureMaster:
+	public IMetaClass
+{
+	DECLARE_METACLASS(CUITextureMaster)
 public:
 
 	static void ParseShTexInfo			(LPCSTR xml_file);

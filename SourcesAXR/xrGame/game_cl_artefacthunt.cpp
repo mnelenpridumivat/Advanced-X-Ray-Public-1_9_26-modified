@@ -384,7 +384,7 @@ void game_cl_ArtefactHunt::shedule_Update			(u32 dt)
 
 			if (local_player && Level().CurrentControlEntity())
 			{
-				if (smart_cast<CActor*>(Level().CurrentControlEntity()))
+				if (smart_cast<CActor>(Level().CurrentControlEntity()))
 				{
 					if(m_game_ui) m_game_ui->SetBuyMsgCaption("");
 					if (m_bBuyEnabled)

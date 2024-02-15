@@ -7,8 +7,11 @@ class CUIGameCustom;
 
 
 
-class CDeviceResetNotifier :public pureDeviceReset
+class CDeviceResetNotifier :
+	public pureDeviceReset,
+	public IMetaClass
 {
+	DECLARE_METACLASS(CDeviceResetNotifier)
 public:
 						CDeviceResetNotifier					()	{Device.seqDeviceReset.Add(this,REG_PRIORITY_NORMAL);};
 	virtual				~CDeviceResetNotifier					()	{Device.seqDeviceReset.Remove(this);};

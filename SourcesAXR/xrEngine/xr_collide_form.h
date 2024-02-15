@@ -80,8 +80,10 @@ enum /*ENGINE_API*/	ECollisionFormType{
 	cftShape
 };
 
-class ENGINE_API	ICollisionForm
+class ENGINE_API	ICollisionForm:
+	public IMetaClass
 {
+	DECLARE_METACLASS(ICollisionForm)
 	friend class	CObjectSpace;
 protected:
 	CObject*		owner;			// владелец
@@ -105,8 +107,11 @@ public:
 	const ECollisionFormType Type	( ) const				{ return m_type;		}
 };
 
-class ENGINE_API	CCF_Skeleton : public ICollisionForm
+class ENGINE_API	CCF_Skeleton : 
+	public ICollisionForm,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CCF_Skeleton, ICollisionForm)
 public:
 	struct ENGINE_API SElement {
 		union{
@@ -150,8 +155,11 @@ public:
 #endif
 };
 
-class ENGINE_API	CCF_EventBox : public ICollisionForm
+class ENGINE_API	CCF_EventBox : 
+	public ICollisionForm,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CCF_EventBox, ICollisionForm)
 private:
 	Fplane			Planes[6];
 public:
@@ -163,8 +171,11 @@ public:
 	BOOL			Contact			( CObject* O );
 };
 
-class ENGINE_API	CCF_Shape	: public ICollisionForm
+class ENGINE_API	CCF_Shape	: 
+	public ICollisionForm,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CCF_Shape, ICollisionForm)
 public:
 	union shape_data
 	{

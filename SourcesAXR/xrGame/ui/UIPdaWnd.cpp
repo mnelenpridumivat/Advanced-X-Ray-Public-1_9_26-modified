@@ -541,7 +541,7 @@ bool CUIPdaWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 				{
 					CObject* obj = (GameID() == eGameIDSingle) ? Level().CurrentEntity() : Level().CurrentControlEntity();
 					{
-						IInputReceiver* IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(obj));
+						IInputReceiver* IR = smart_cast<IInputReceiver>(smart_cast<CGameObject>(obj));
 						if (IR) IR->IR_OnKeyboardPress(action);
 					}
 					return true;

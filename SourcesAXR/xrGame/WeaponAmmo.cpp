@@ -125,7 +125,7 @@ BOOL CWeaponAmmo::net_Spawn(CSE_Abstract* DC)
 {
 	BOOL bResult			= inherited::net_Spawn	(DC);
 	CSE_Abstract	*e		= (CSE_Abstract*)(DC);
-	CSE_ALifeItemAmmo* l_pW	= smart_cast<CSE_ALifeItemAmmo*>(e);
+	CSE_ALifeItemAmmo* l_pW	= smart_cast<CSE_ALifeItemAmmo>(e);
 	m_boxCurr				= l_pW->a_elapsed;
 	
 	if(m_boxCurr > m_boxSize)
@@ -229,7 +229,7 @@ CInventoryItem *CWeaponAmmo::can_make_killing	(const CInventory *inventory) cons
 	TIItemContainer::const_iterator	I = inventory->m_all.begin();
 	TIItemContainer::const_iterator	E = inventory->m_all.end();
 	for ( ; I != E; ++I) {
-		CWeapon		*weapon = smart_cast<CWeapon*>(*I);
+		CWeapon		*weapon = smart_cast<CWeapon>(*I);
 		if (!weapon)
 			continue;
 		xr_vector<shared_str>::const_iterator	i = std::find(weapon->m_ammoTypes.begin(),weapon->m_ammoTypes.end(),cNameSect());

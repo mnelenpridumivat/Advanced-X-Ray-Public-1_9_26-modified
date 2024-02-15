@@ -4,8 +4,11 @@
 
 class CUIListBoxItem;
 
-class CUIListBox : 	public CUIScrollView
+class CUIListBox : 	
+	public CUIScrollView,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIListBox, CUIScrollView)
 public:
 					CUIListBox						();
 	CUIListBoxItem* AddItem							();

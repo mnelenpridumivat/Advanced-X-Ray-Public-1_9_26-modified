@@ -49,7 +49,7 @@ void CDialogHolder::StartMenu(CUIDialogWnd* pDialog, bool bDoHideIndicators)
 {
 	R_ASSERT						( !pDialog->IsShown() );
 
-	if (psActorFlags.test(AF_3D_PDA) &&IsGameTypeSingle() && !smart_cast<CUIPdaWnd*>(pDialog) && Actor())
+	if (psActorFlags.test(AF_3D_PDA) &&IsGameTypeSingle() && !pDialog->IsA(CUIPdaWnd::StaticClass()) && Actor())
 	{
 		if (const auto pda = smart_cast<CPda*>(Actor()->inventory().ActiveItem()))
 		{
@@ -81,7 +81,7 @@ void CDialogHolder::StartMenu(CUIDialogWnd* pDialog, bool bDoHideIndicators)
 
 	if(g_pGameLevel)
 	{
-		CActor* A	= smart_cast<CActor*>( Level().CurrentViewEntity() );
+		CActor* A	= smart_cast<CActor>( Level().CurrentViewEntity() );
 		if ( A && pDialog->StopAnyMove() )
 		{
 			A->StopAnyMove				();
@@ -284,7 +284,7 @@ bool CDialogHolder::IR_UIOnKeyboardPress(int dik)
 	{
 		CObject* O = Level().CurrentEntity();
 		if( O ){
-			IInputReceiver*		IR	= smart_cast<IInputReceiver*>( smart_cast<CGameObject*>(O) );
+			IInputReceiver*		IR	= smart_cast<IInputReceiver>( smart_cast<CGameObject>(O) );
 			if (IR)
 //				IR->IR_OnKeyboardPress(get_binded_action(dik));
 			{
@@ -321,7 +321,7 @@ bool CDialogHolder::IR_UIOnKeyboardRelease(int dik)
 		CObject* O = Level().CurrentEntity();
 		if( O )
 		{
-			IInputReceiver*		IR	= smart_cast<IInputReceiver*>( smart_cast<CGameObject*>(O) );
+			IInputReceiver*		IR	= smart_cast<IInputReceiver>( smart_cast<CGameObject*>(O) );
 			if (IR)
 				IR->IR_OnKeyboardRelease(get_binded_action(dik));
 			return			(false);
@@ -344,7 +344,7 @@ bool CDialogHolder::IR_UIOnKeyboardHold(int dik)
 		CObject* O = Level().CurrentEntity();
 		if(O)
 		{
-			IInputReceiver*	IR	= smart_cast<IInputReceiver*>( smart_cast<CGameObject*>(O) );
+			IInputReceiver*	IR	= smart_cast<IInputReceiver>( smart_cast<CGameObject*>(O) );
 			if(IR)
 				IR->IR_OnKeyboardHold(get_binded_action(dik));
 			return		false;
@@ -381,7 +381,7 @@ bool CDialogHolder::IR_UIOnMouseMove(int dx, int dy)
 		CObject* O				= Level().CurrentEntity();
 		if(O)
 		{
-			IInputReceiver*	IR	= smart_cast<IInputReceiver*>( smart_cast<CGameObject*>(O) );
+			IInputReceiver*	IR	= smart_cast<IInputReceiver>( smart_cast<CGameObject*>(O) );
 			if (IR)
 				IR->IR_OnMouseMove	(dx,dy);
 			return			false;

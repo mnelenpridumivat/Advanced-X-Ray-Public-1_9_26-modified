@@ -26,8 +26,10 @@ struct xform_animation :public color_animation
 	void					set_defaults		();
 };
 
-class CUILightAnimColorConroller
+class CUILightAnimColorConroller:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CUILightAnimColorConroller)
 public:
 	virtual bool	IsColorAnimationPresent			()											= 0;
 	virtual void	ResetColorAnimation				()											= 0;
@@ -36,8 +38,11 @@ public:
 	virtual void	ColorAnimationSetTextColor		(u32 color, bool only_alpha)				{};
 };
 
-class CUILightAnimColorConrollerImpl :public CUILightAnimColorConroller
+class CUILightAnimColorConrollerImpl :
+	public CUILightAnimColorConroller,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUILightAnimColorConrollerImpl, CUILightAnimColorConroller)
 	color_animation			m_lanim_clr;
 public:
 	void	SetColorAnimation(LPCSTR lanim, u8 const& flags, float delay=0.0f) override
@@ -109,9 +114,12 @@ public:
 	}
 };
 
-class CUIColorAnimConrollerContainer :	public CUIWindow, 
-										public CUILightAnimColorConrollerImpl
+class CUIColorAnimConrollerContainer :	
+	public CUIWindow, 
+	public CUILightAnimColorConrollerImpl,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUIColorAnimConrollerContainer, CUIWindow, CUILightAnimColorConrollerImpl)
 	typedef CUIWindow		inherited;
 public:
 	void			Update							() override;

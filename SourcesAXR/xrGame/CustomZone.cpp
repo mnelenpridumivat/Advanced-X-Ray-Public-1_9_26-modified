@@ -702,9 +702,9 @@ void CCustomZone::feel_touch_delete(CObject* O)
 
 BOOL CCustomZone::feel_touch_contact(CObject* O) 
 {
-	if (smart_cast<CCustomZone*>(O))				return FALSE;
-	if (smart_cast<CBreakableObject*>(O))			return FALSE;
-	if (0==smart_cast<IKinematics*>(O->Visual()))	return FALSE;
+	if (smart_cast<CCustomZone>(O))				return FALSE;
+	if (smart_cast<CBreakableObject>(O))			return FALSE;
+	if (0==reinterpret_cast<IKinematics*>(O->Visual()))	return FALSE;
 
 	if (O->ID() == ID())
 		return		(FALSE);
@@ -903,7 +903,7 @@ void CCustomZone::PlayEntranceParticles(CGameObject* pObject)
 			pParticles->Play		(false);
 		}
 	}
-	if(m_zone_flags.test(eBoltEntranceParticles) && smart_cast<CBolt*>(pObject))
+	if(m_zone_flags.test(eBoltEntranceParticles) && smart_cast<CBolt>(pObject))
 		PlayBoltEntranceParticles();
 }
 

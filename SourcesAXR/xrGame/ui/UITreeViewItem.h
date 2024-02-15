@@ -15,8 +15,11 @@
 
 class CUIListWnd;
 
-class CUITreeViewItem: public CUIListItem
+class CUITreeViewItem: 
+	public CUIListItem,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUITreeViewItem, CUIListItem)
 	typedef CUIListItem inherited;
 	// явл€емс€ ли мы началом подыерархии
 	bool			isRoot;

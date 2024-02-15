@@ -136,12 +136,12 @@ void CUIDragDropReferenceList::ReloadReferences(CInventoryOwner* pActor)
 
 void CUIDragDropReferenceList::OnItemDBClick(CUIWindow* w, void* pData)
 {
-	CUIStatic* ref = smart_cast<CUIStatic*>(w);
+	CUIStatic* ref = smart_cast<CUIStatic>(w);
 	ITEMS_REFERENCES_VEC_IT it = std::find(m_references.begin(), m_references.end(), ref);
 	if(it != m_references.end())
 	{
 		u8 index = static_cast<u8>(it - m_references.begin());
-		CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
+		CActor* actor = smart_cast<CActor>(Level().CurrentViewEntity());
 		if(actor)
 		{
 			PIItem itm = actor->inventory().GetAny(ACTOR_DEFS::g_quick_use_slots[index]);
@@ -156,7 +156,7 @@ void CUIDragDropReferenceList::OnItemDBClick(CUIWindow* w, void* pData)
 void CUIDragDropReferenceList::OnItemDrop(CUIWindow* w, void* pData)
 {
 	OnItemSelected(w, pData);
-	CUICellItem* itm = smart_cast<CUICellItem*>(w);
+	CUICellItem* itm = smart_cast<CUICellItem>(w);
 	VERIFY(itm->OwnerList() == itm->OwnerList());
 
 	if(m_f_item_drop && m_f_item_drop(itm))
@@ -173,7 +173,7 @@ void CUIDragDropReferenceList::OnItemDrop(CUIWindow* w, void* pData)
 		return;
 	}
 
-	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
+	CActor* actor = smart_cast<CActor>(Level().CurrentViewEntity());
 	if(actor)
 	{
 		Ivector2 vec = PickCell(GetUICursor().GetCursorPosition());

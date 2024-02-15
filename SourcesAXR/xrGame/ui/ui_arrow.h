@@ -3,8 +3,11 @@
 
 #include "UIStatic.h"
 
-class UI_Arrow: public CUIStatic
+class UI_Arrow: 
+	public CUIStatic,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(UI_Arrow, CUIStatic)
 private:
 	typedef CUIStatic	inherited;
 

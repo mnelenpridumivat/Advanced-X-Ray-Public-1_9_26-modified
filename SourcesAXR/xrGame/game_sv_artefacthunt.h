@@ -2,8 +2,11 @@
 
 #include "game_sv_teamdeathmatch.h"
 
-class	game_sv_ArtefactHunt			: public game_sv_TeamDeathmatch
+class	game_sv_ArtefactHunt			: 
+	public game_sv_TeamDeathmatch,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(game_sv_ArtefactHunt, game_sv_TeamDeathmatch)
 private:
 	typedef game_sv_TeamDeathmatch inherited;
 

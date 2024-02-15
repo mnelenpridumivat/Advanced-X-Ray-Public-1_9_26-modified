@@ -52,7 +52,7 @@ void dump_collision_hit(CPHMovementControl *movement_control)
 
 	IPhysicsShellHolder  *iobj = movement_control->PhysicsRefObject();
 	VERIFY( iobj );
-	VERIFY( smart_cast<CPhysicsShellHolder*>(iobj) );
+	VERIFY( iobj->IsA(CPhysicsShellHolder::StaticClass()) );
 	CPhysicsShellHolder	*obj = static_cast<CPhysicsShellHolder	*>(iobj);
 	Msg( "ai unit: %s hited by collision; power: %f, spawn frame %d, current frame %d ", obj->cName().c_str(), movement_control->gcontact_HealthLost, obj->spawn_time(), Device.dwFrame ); 
 	//CPhysicsShellHolder* object =static_cast<CPhysicsShellHolder*>(Level().Objects.net_Find(m_collision_damage_info.m_obj_id));

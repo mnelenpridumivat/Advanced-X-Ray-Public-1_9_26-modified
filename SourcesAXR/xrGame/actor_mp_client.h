@@ -7,7 +7,10 @@
 
 class CActorMP :
 	public IAnticheatDumpable,
-	public CActor {
+	public CActor,
+	public IMetaClass
+{
+	DECLARE_METACLASS2(CActorMP, CActor, IAnticheatDumpable)
 private:
 	typedef CActor			inherited;
 

@@ -6,6 +6,8 @@
 #define IINPUTRECEIVERH
 #pragma once
 
+#include "../xrGame/Metaclass.h"
+
 class ENGINE_API	IInputReceiver:
 	public IMetaClass
 {

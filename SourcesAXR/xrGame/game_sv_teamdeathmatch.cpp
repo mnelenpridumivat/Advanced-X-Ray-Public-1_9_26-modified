@@ -471,7 +471,7 @@ bool game_sv_TeamDeathmatch::checkForFragLimit()
 
 u32 game_sv_TeamDeathmatch::RP_2_Use(CSE_Abstract* E)
 {
-	CSE_ALifeCreatureActor	*pA	=	smart_cast<CSE_ALifeCreatureActor*>(E);
+	CSE_ALifeCreatureActor	*pA	=	smart_cast<CSE_ALifeCreatureActor>(E);
 	if (!pA) return 0;
 
 
@@ -704,7 +704,7 @@ void game_sv_TeamDeathmatch::OnDetachItem(CSE_ActorMP *actor, CSE_Abstract *item
 				to_destroy.push_back	(e_item);
 			} else if (m_strWeaponsData->GetItemIdx(e_item->s_name) != static_cast<u32>(-1))
 			{
-				if (!smart_cast<CSE_ALifeItemCustomOutfit*>(e_item))
+				if (!smart_cast<CSE_ALifeItemCustomOutfit>(e_item))
 				{
 					to_transfer.push_back(e_item);
 				}
@@ -743,7 +743,7 @@ void game_sv_TeamDeathmatch::OnDetachItem(CSE_ActorMP *actor, CSE_Abstract *item
 
 BOOL game_sv_TeamDeathmatch::OnTouch(u16 eid_who, u16 eid_what, BOOL bForced)
 {
-	CSE_ActorMP *e_who = smart_cast<CSE_ActorMP*>(m_server->ID_to_entity(eid_who));
+	CSE_ActorMP *e_who = smart_cast<CSE_ActorMP>(m_server->ID_to_entity(eid_who));
 	if (!e_who)
 		return FALSE;
 	
@@ -756,7 +756,7 @@ BOOL game_sv_TeamDeathmatch::OnTouch(u16 eid_who, u16 eid_what, BOOL bForced)
 
 void game_sv_TeamDeathmatch::OnDetach(u16 eid_who, u16 eid_what)
 {
-	CSE_ActorMP *e_who = smart_cast<CSE_ActorMP*>(m_server->ID_to_entity(eid_who));
+	CSE_ActorMP *e_who = smart_cast<CSE_ActorMP>(m_server->ID_to_entity(eid_who));
 	if (!e_who)
 		return;
 	
@@ -771,10 +771,10 @@ void game_sv_TeamDeathmatch::OnObjectEnterTeamBase(u16 id, u16 zone_team)
 {
 	CSE_Abstract*			e_who	= m_server->ID_to_entity(id);
 	VERIFY(e_who);
-	CSE_ALifeCreatureActor* eActor	= smart_cast<CSE_ALifeCreatureActor*>(e_who);
+	CSE_ALifeCreatureActor* eActor	= smart_cast<CSE_ALifeCreatureActor>(e_who);
 	if (eActor)
 	{
-		game_cl_mp*	tmp_cl_game = smart_cast<game_cl_mp*>(&Game());
+		game_cl_mp*	tmp_cl_game = smart_cast<game_cl_mp>(&Game());
 		s16 mteam				= tmp_cl_game->ModifyTeam(static_cast<s16>(zone_team));
 		game_PlayerState* ps = eActor->owner->ps;
 		if (ps && (ps->team == mteam))
@@ -791,10 +791,10 @@ void game_sv_TeamDeathmatch::OnObjectLeaveTeamBase(u16 id, u16 zone_team)
 	if (!e_who)
 		return;
 	
-	CSE_ALifeCreatureActor* eActor	= smart_cast<CSE_ALifeCreatureActor*>(e_who);
+	CSE_ALifeCreatureActor* eActor	= smart_cast<CSE_ALifeCreatureActor>(e_who);
 	if (eActor)
 	{
-		game_cl_mp*	tmp_cl_game = smart_cast<game_cl_mp*>(&Game());
+		game_cl_mp*	tmp_cl_game = smart_cast<game_cl_mp>(&Game());
 		s16 mteam				= tmp_cl_game->ModifyTeam(static_cast<s16>(zone_team));
 		game_PlayerState* ps = eActor->owner->ps;
 		if (ps && (ps->team == mteam))

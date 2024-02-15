@@ -372,7 +372,7 @@ void CUIMainIngameWnd::Init()
 float UIStaticDiskIO_start_time = 0.0f;
 void CUIMainIngameWnd::Draw()
 {
-	CActor* pActor		= smart_cast<CActor*>(Level().CurrentViewEntity());
+	CActor* pActor		= smart_cast<CActor>(Level().CurrentViewEntity());
 
 	// show IO icon
 	bool IOActive	= (FS.dwOpenCounter>0);
@@ -388,7 +388,7 @@ void CUIMainIngameWnd::Draw()
 
 	if(!IsGameTypeSingle())
 	{
-		float		luminocity = smart_cast<CGameObject*>(Level().CurrentEntity())->ROS()->get_luminocity();
+		float		luminocity = smart_cast<CGameObject>(Level().CurrentEntity())->ROS()->get_luminocity();
 		float		power = log(luminocity > .001f ? luminocity : .001f)*(1.f/*luminocity_factor*/);
 		luminocity	= exp(power);
 
@@ -428,7 +428,7 @@ void CUIMainIngameWnd::SetMPChatLog(CUIWindow* pChat, CUIWindow* pLog){
 void CUIMainIngameWnd::Update()
 {
 	CUIWindow::Update();
-	CActor* pActor = smart_cast<CActor*>(Level().CurrentViewEntity());
+	CActor* pActor = smart_cast<CActor>(Level().CurrentViewEntity());
 
 	if ( m_pMPChatWnd )
 		m_pMPChatWnd->Update();
@@ -514,7 +514,7 @@ void CUIMainIngameWnd::Update()
 
 void CUIMainIngameWnd::RenderQuickInfos()
 {
-	CActor* pActor		= smart_cast<CActor*>(Level().CurrentViewEntity());
+	CActor* pActor		= smart_cast<CActor>(Level().CurrentViewEntity());
 	if (!pActor)
 		return;
 
@@ -782,7 +782,7 @@ void CUIMainIngameWnd::UpdateZoneMap()
 
 void CUIMainIngameWnd::UpdateMainIndicators()
 {
-	CActor* pActor = smart_cast<CActor*>(Level().CurrentViewEntity());
+	CActor* pActor = smart_cast<CActor>(Level().CurrentViewEntity());
 	if(!pActor)
 		return;
 
@@ -1041,7 +1041,7 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 	}
 
 // Armor broken icon
-	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(pActor->inventory().ItemFromSlot(OUTFIT_SLOT));
+	CCustomOutfit* outfit = smart_cast<CCustomOutfit>(pActor->inventory().ItemFromSlot(OUTFIT_SLOT));
 	m_ind_outfit_broken->Show(false);
 	m_ind_filter_dirty->Show(false);
 
@@ -1074,8 +1074,8 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 		}
 	}
 // Helmet broken icon
-	CHelmet* helmet = smart_cast<CHelmet*>(pActor->inventory().ItemFromSlot(HELMET_SLOT));
-	CHelmet* helmet2 = smart_cast<CHelmet*>(pActor->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
+	CHelmet* helmet = smart_cast<CHelmet>(pActor->inventory().ItemFromSlot(HELMET_SLOT));
+	CHelmet* helmet2 = smart_cast<CHelmet>(pActor->inventory().ItemFromSlot(SECOND_HELMET_SLOT));
 	m_ind_helmet_broken->Show(false);
 
 	if(helmet)
@@ -1141,7 +1141,7 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 	m_ind_weapon_broken->Show(false);
 	if(slot==INV_SLOT_2 || slot==INV_SLOT_3 || slot==PISTOL_SLOT)
 	{
-		CWeapon* weapon = smart_cast<CWeapon*>(pActor->inventory().ItemFromSlot(slot));
+		CWeapon* weapon = smart_cast<CWeapon>(pActor->inventory().ItemFromSlot(slot));
 		if(weapon)
 		{
 			float condition = weapon->GetCondition();
@@ -1176,9 +1176,9 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 
 
 	// M.F.S. Team Torch Battery icon
-	CTorch* torch = smart_cast<CTorch*>(pActor->inventory().ItemFromSlot(TORCH_SLOT));
-	CCustomDetector* artefact_detector = smart_cast<CCustomDetector*>(pActor->inventory().ItemFromSlot(DETECTOR_SLOT));
-	CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly*>(pActor->inventory().ItemFromSlot(DOSIMETER_SLOT));
+	CTorch* torch = smart_cast<CTorch>(pActor->inventory().ItemFromSlot(TORCH_SLOT));
+	CCustomDetector* artefact_detector = smart_cast<CCustomDetector>(pActor->inventory().ItemFromSlot(DETECTOR_SLOT));
+	CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly>(pActor->inventory().ItemFromSlot(DOSIMETER_SLOT));
 	m_ind_battery->Show(false);
 	if (torch)
 	{
@@ -1239,13 +1239,13 @@ void CUIMainIngameWnd::UpdateQuickSlots()
 	m_QuickSlotText4->SetTextST(tmp);
 
 
-	CActor* pActor = smart_cast<CActor*>(Level().CurrentViewEntity());
+	CActor* pActor = smart_cast<CActor>(Level().CurrentViewEntity());
 	if(!pActor)
 		return;
 
 	for(u8 i=0;i<4;i++)
 	{
-		CUIStatic* wnd = smart_cast<CUIStatic* >(m_quick_slots_icons[i]->FindChild("counter"));
+		CUIStatic* wnd = smart_cast<CUIStatic>(m_quick_slots_icons[i]->FindChild("counter"));
 		if(wnd)
 		{
 			shared_str item_name = g_quick_use_slots[i];
@@ -1293,7 +1293,7 @@ void CUIMainIngameWnd::UpdateQuickSlots()
 
 void CUIMainIngameWnd::DrawMainIndicatorsForInventory()
 {
-	CActor* pActor = smart_cast<CActor*>(Level().CurrentViewEntity());
+	CActor* pActor = smart_cast<CActor>(Level().CurrentViewEntity());
 	if(!pActor)
 		return;
 

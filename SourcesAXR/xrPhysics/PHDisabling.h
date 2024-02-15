@@ -26,8 +26,11 @@ struct SDisableUpdateState
 								SDisableUpdateState			()												;
 };
 
-struct CBaseDisableData
+struct CBaseDisableData:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CBaseDisableData)
+public:
 								CBaseDisableData			()												;
 protected:
 				u16							m_count															;
@@ -54,8 +57,10 @@ protected:
 };
 
 class CPHDisablingBase :
-	public virtual CBaseDisableData
+	public virtual CBaseDisableData,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CPHDisablingBase, CBaseDisableData)
 public:
 
 				void			UpdateValues				(const Fvector &new_pos,const Fvector &new_vel)	;
@@ -80,8 +85,10 @@ protected:
 };
 
 class CPHDisablingRotational : 
-	public CPHDisablingBase
+	public CPHDisablingBase,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CPHDisablingRotational, CPHDisablingBase)
 public:
 								CPHDisablingRotational		()												;
 				void			Reinit						()												;
@@ -90,8 +97,10 @@ public:
 };
 
 class CPHDisablingTranslational :
-	public CPHDisablingBase
+	public CPHDisablingBase,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CPHDisablingTranslational, CPHDisablingBase)
 public:
 								CPHDisablingTranslational	()												;
 				void			Reinit						()												;
@@ -101,8 +110,10 @@ public:
 
 class CPHDisablingFull	:
 	public		CPHDisablingTranslational,
-	public		CPHDisablingRotational
+	public		CPHDisablingRotational,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CPHDisablingFull, CPHDisablingTranslational, CPHDisablingRotational)
 public:
 				void			Reinit						()												;
 	virtual		void			UpdateL1					()												;

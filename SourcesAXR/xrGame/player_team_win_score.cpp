@@ -42,7 +42,7 @@ void player_team_win_score::save_round_scores()
 	{
 	case eGameIDCaptureTheArtefact:
 		{
-			game_cl_CaptureTheArtefact*	tmp_game	= smart_cast<game_cl_CaptureTheArtefact*>(Level().game);
+			game_cl_CaptureTheArtefact*	tmp_game	= smart_cast<game_cl_CaptureTheArtefact>(Level().game);
 			m_green_team_score						= tmp_game->GetGreenTeamScore();
 			m_blue_team_score						= tmp_game->GetBlueTeamScore();
 			m_player_team							= tmp_local_player->team;
@@ -50,7 +50,7 @@ void player_team_win_score::save_round_scores()
 	case eGameIDArtefactHunt:
 	case eGameIDTeamDeathmatch:
 		{
-			game_cl_TeamDeathmatch* tmp_game	= smart_cast<game_cl_TeamDeathmatch*>(Level().game);
+			game_cl_TeamDeathmatch* tmp_game	= smart_cast<game_cl_TeamDeathmatch>(Level().game);
 			m_green_team_score					= tmp_game->GetGreenTeamScore();
 			m_blue_team_score					= tmp_game->GetBlueTeamScore();
 			if (tmp_local_player->team > 0)
@@ -60,7 +60,7 @@ void player_team_win_score::save_round_scores()
 		}break;
 	case eGameIDDeathmatch:
 		{
-			game_cl_Deathmatch* tmp_game		= smart_cast<game_cl_Deathmatch*>(Level().game);
+			game_cl_Deathmatch* tmp_game		= smart_cast<game_cl_Deathmatch>(Level().game);
 			if (!xr_strcmp(tmp_local_player->getName(), tmp_game->WinnerName))
 			{
 				m_win_score = tmp_local_player->m_iRivalKills;

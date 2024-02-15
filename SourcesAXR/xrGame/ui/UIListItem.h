@@ -1,8 +1,11 @@
 #pragma once
 #include "UIbutton.h"
 
-class CUIListItem :	public CUIButton
+class CUIListItem :	
+	public CUIButton,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIListItem, CUIButton)
 private:
 	typedef CUIButton inherited;
 public:

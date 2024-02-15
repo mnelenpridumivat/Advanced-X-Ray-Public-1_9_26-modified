@@ -48,7 +48,7 @@ public:
 		if (!m_prior_group.is_item_in_group(tmp_obj->cNameSect()))
 			return;
 
-		CWeapon* tmp_weapon = smart_cast<CWeapon*>(tmp_obj);
+		CWeapon* tmp_weapon = smart_cast<CWeapon>(tmp_obj);
 		if (!tmp_weapon)
 			return;
 
@@ -131,7 +131,7 @@ bool CInventory::ActivateNextItemInActiveSlot()
 		return false;
 	}
 	
-	CObject* pActor_owner = smart_cast<CObject*>(m_pOwner);
+	CObject* pActor_owner = smart_cast<CObject>(m_pOwner);
 	if ( Level().CurrentViewEntity() != pActor_owner )
 	{
 		return false;

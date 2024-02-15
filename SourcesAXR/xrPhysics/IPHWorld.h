@@ -2,8 +2,10 @@
 #include "physicsexternalcommon.h"
 #include "iphysics_scripted.h"
 class CPhysicsShell;
-class IPHWorldUpdateCallbck
+class IPHWorldUpdateCallbck:
+	public IMetaClass
 {
+	DECLARE_METACLASS(IPHWorldUpdateCallbck)
 public:
 	virtual	void		update_step			()					= 0;
 	virtual	void		phys_shell_relcase	(CPhysicsShell* sh)	= 0;

@@ -112,7 +112,7 @@ CUIListBoxItem* CUIListBox::GetSelectedItem()
 	CUIWindow* w	=	GetSelected();
 
 	if(w)
-		return smart_cast<CUIListBoxItem*>(w);
+		return smart_cast<CUIListBoxItem>(w);
 	else
 		return NULL;
 
@@ -124,7 +124,7 @@ LPCSTR CUIListBox::GetSelectedText()
 
 	if(w)
 	{
-		CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(w);
+		CUIListBoxItem* item = smart_cast<CUIListBoxItem>(w);
 		return item->GetText();
 	}else
 		return NULL;
@@ -137,7 +137,7 @@ u32 CUIListBox::GetSelectedIDX()
 
 	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end()!=it; ++it)
 	{
-		CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(*it);
+		CUIListBoxItem* item = smart_cast<CUIListBoxItem>(*it);
 		if (item)
 		{
 			if(*it==w)
@@ -153,7 +153,7 @@ LPCSTR CUIListBox::GetText(int idx)
 {
 	if(idx==-1) return NULL;
 
-	CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(GetItem(idx));
+	CUIListBoxItem* item = smart_cast<CUIListBoxItem>(GetItem(idx));
 	return item->GetText();
 }
 
@@ -226,7 +226,7 @@ int CUIListBox::GetIdxByTAG(u32 tag_val)
 
 	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end()!=it; ++it)
 	{
-		CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(*it);
+		CUIListBoxItem* item = smart_cast<CUIListBoxItem>(*it);
 		if (item)
 		{
 			if(result==-1)	result=0;
@@ -243,7 +243,7 @@ CUIListBoxItem* CUIListBox::GetItemByTAG(u32 tag_val)
 {
 	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end()!=it; ++it)
 	{
-		CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(*it);
+		CUIListBoxItem* item = smart_cast<CUIListBoxItem>(*it);
 		if (item)
 		{
 			if (item->GetTAG() == tag_val)
@@ -259,7 +259,7 @@ CUIListBoxItem* CUIListBox::GetItemByIDX(int idx)
 	int _idx = 0;
 	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end()!=it; ++it)
 	{
-		CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(*it);
+		CUIListBoxItem* item = smart_cast<CUIListBoxItem>(*it);
 		if (item)
 		{
 			if(_idx == idx)
@@ -274,7 +274,7 @@ CUIListBoxItem* CUIListBox::GetItemByText(LPCSTR txt)
 {
 	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end()!=it; ++it)
 	{
-		CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(*it);
+		CUIListBoxItem* item = smart_cast<CUIListBoxItem>(*it);
 		if (item)
 		{
 			if (0 == xr_strcmp(item->GetText(), txt))
@@ -322,7 +322,7 @@ float CUIListBox::GetLongestLength()
 	float len = 0;
 	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end()!=it; ++it)
 	{
-		CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(*it);
+		CUIListBoxItem* item = smart_cast<CUIListBoxItem>(*it);
 		if (item)
 		{
 			float tmp_len = item->GetFont()->SizeOf_(item->GetText()); //all ok

@@ -68,7 +68,7 @@ void CPsyDogAura::update_schedule()
 	for ( ; I != E; ++I) {
 		const CGameObject *obj = I->m_object;
 		//if (smart_cast<const CPsyDogPhantom*>(obj)) {
-		if (obj->IsA(CPsyDogPhantom::StaticCast())) {
+		if (obj->IsA(CPsyDogPhantom::StaticClass())) {
 			if (m_actor->memory().visual().visible_now(obj))
 				m_time_actor_saw_phantom = time();
 		}

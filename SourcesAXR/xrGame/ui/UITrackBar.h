@@ -6,8 +6,12 @@
 class CUI3tButton;
 class CUITrackButton;
 
-class CUITrackBar : public CUI_IB_FrameLineWnd, public CUIOptionsItem 
+class CUITrackBar : 
+	public CUI_IB_FrameLineWnd, 
+	public CUIOptionsItem,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUITrackBar, CUI_IB_FrameLineWnd, CUIOptionsItem)
 	friend class CUITrackButton;
 public:
 					CUITrackBar				();

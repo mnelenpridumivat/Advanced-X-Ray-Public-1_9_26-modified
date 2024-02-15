@@ -6,8 +6,10 @@
 #include "script_export_space.h"
 class CPhysicsShell;
 class CPHCallOnStepCondition:
-	public CPHCondition
+	public CPHCondition,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CPHCallOnStepCondition, CPHCondition)
 						u64					m_step																	;
 public:
 											CPHCallOnStepCondition		()											;

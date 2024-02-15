@@ -19,7 +19,7 @@ void CMagnetZone::Load(LPCSTR section)
 void CMagnetZone::Affect(SZoneObjectInfo* O)
 {
 	//Msg("CMagnetZone: Try affect [%s]", O->object->Name());
-	CPhysicsShellHolder* GO = smart_cast<CPhysicsShellHolder*>(O->object);
+	CPhysicsShellHolder* GO = smart_cast<CPhysicsShellHolder>(O->object);
 	if (!GO) return;
 
 
@@ -48,7 +48,7 @@ void CMagnetZone::Affect(SZoneObjectInfo* O)
 
 void CMagnetZone::AffectPull(CPhysicsShellHolder* GO, const Fvector& throw_in_dir, float dist)
 {
-	CEntityAlive* EA = smart_cast<CEntityAlive*>(GO);
+	CEntityAlive* EA = smart_cast<CEntityAlive>(GO);
 	if (EA && EA->g_Alive())
 	{
 		AffectPullAlife(EA, throw_in_dir, dist);

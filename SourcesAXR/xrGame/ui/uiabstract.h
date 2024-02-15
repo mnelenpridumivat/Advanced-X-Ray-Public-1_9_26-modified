@@ -14,8 +14,10 @@ typedef enum {
 	valBotton
 } EVTextAlignment;
 
-class ITextureOwner
+class ITextureOwner:
+	public IMetaClass
 {
+	DECLARE_METACLASS(ITextureOwner)
 public:
 	virtual				~ITextureOwner			()												{}	
 	virtual void		InitTexture				(LPCSTR texture)								= 0;
@@ -114,8 +116,10 @@ protected:
 	EWindowAlignment		m_alignment;
 };
 
-class CUISelectable
+class CUISelectable:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CUISelectable)
 protected:
 	bool m_bSelected;
 public:

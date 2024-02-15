@@ -4,7 +4,11 @@
 
 class CUIStatic;
 
-class CUIProgressShape : public CUIStatic {
+class CUIProgressShape : 
+	public CUIStatic,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CUIProgressShape, CUIStatic)
 friend class CUIXmlInit;
 public:
 						CUIProgressShape		();

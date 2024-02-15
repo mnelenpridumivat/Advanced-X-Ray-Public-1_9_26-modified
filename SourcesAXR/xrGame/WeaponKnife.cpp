@@ -241,7 +241,7 @@ void CWeaponKnife::MakeShot(Fvector const & pos, Fvector const & dir, float cons
 
 	PlaySound						("sndShot",pos);
 
-	CActor*	actor = smart_cast<CActor*>(H_Parent());
+	CActor*	actor = smart_cast<CActor>(H_Parent());
 	if (actor->active_cam() != eacFirstEye) 
 	{
 		if (ParentIsActor() && !fis_zero(conditionDecreasePerShotOnHit) && GetCondition() < 0.95f)
@@ -311,7 +311,7 @@ void CWeaponKnife::OnMotionMark(u32 state, const motion_marks& M)
 
 	if(H_Parent())
 	{
-		smart_cast<CEntity*>(H_Parent())->g_fireParams(this, p1,d);
+		smart_cast<CEntity>(H_Parent())->g_fireParams(this, p1,d);
 		KnifeStrike(p1,d);
 	}
 }
@@ -618,7 +618,7 @@ u32 CWeaponKnife::get_entity_bones_count(CEntityAlive const * entity)
 	VERIFY(entity);
 	if (!entity)
 		return 0;
-	IKinematics*	tmp_kinem	= smart_cast<IKinematics*>(entity->Visual());
+	IKinematics*	tmp_kinem	= reinterpret_cast<IKinematics*>(entity->Visual());
 	if (!tmp_kinem)
 		return 0;
 
@@ -637,7 +637,7 @@ void CWeaponKnife::fill_shapes_list(CEntityAlive const * entity,
 	if (!entity)
 		return;
 
-	CCF_Skeleton*	tmp_skeleton = smart_cast<CCF_Skeleton*>(entity->CFORM());
+	CCF_Skeleton*	tmp_skeleton = smart_cast<CCF_Skeleton>(entity->CFORM());
 	if (!tmp_skeleton)
 		return;
 
@@ -744,7 +744,7 @@ void CWeaponKnife::create_victims_list(spartial_base_t spartial_result,
 		VERIFY(tmp_obj);
 		if (!tmp_obj)
 			continue;
-		CEntityAlive*	tmp_entity = smart_cast<CEntityAlive*>(tmp_obj);
+		CEntityAlive*	tmp_entity = smart_cast<CEntityAlive>(tmp_obj);
 		if (!tmp_entity)
 			continue;
 		VERIFY(victims_dest.capacity() > victims_dest.size());
@@ -828,7 +828,7 @@ bool CWeaponKnife::SelectBestHitVictim(Fvector const & f_pos,
 									   Fvector & fendpos_dest,
 									   Fsphere & query_sphere)
 {
-	CActor* tmp_parent = smart_cast<CActor*>(H_Parent());
+	CActor* tmp_parent = smart_cast<CActor>(H_Parent());
 	VERIFY(tmp_parent);
 	if (!tmp_parent)
 		return false;
@@ -940,7 +940,7 @@ bool CWeaponKnife::victim_filter::operator()(spartial_base_t::value_type const &
 	if (tmp_obj->ID() == m_except_id)
 		return true;
 	
-	CEntityAlive*	const tmp_actor = smart_cast<CEntityAlive*>(tmp_obj);
+	CEntityAlive*	const tmp_actor = smart_cast<CEntityAlive>(tmp_obj);
 	if (!tmp_actor)
 		return true;
 
@@ -990,7 +990,7 @@ void CWeaponKnife::best_victim_selector::operator()(
 	if (tmp_obj->ID() == m_except_id)
 		return;
 	
-	CEntityAlive*	const tmp_actor = smart_cast<CEntityAlive*>(tmp_obj);
+	CEntityAlive*	const tmp_actor = smart_cast<CEntityAlive>(tmp_obj);
 	if (!tmp_actor)
 		return;
 

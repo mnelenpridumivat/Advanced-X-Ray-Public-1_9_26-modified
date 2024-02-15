@@ -1,8 +1,11 @@
 #pragma once
 #include "uiFrameLineWnd.h"
 
-class CUIScrollBox :public CUIFrameLineWnd
+class CUIScrollBox :
+	public CUIFrameLineWnd,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIScrollBox, CUIFrameLineWnd)
 	typedef	CUIFrameLineWnd		inherited;
 public:
 								CUIScrollBox			();

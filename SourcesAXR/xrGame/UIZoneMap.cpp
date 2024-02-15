@@ -124,7 +124,7 @@ void CUIZoneMap::Render			()
 
 void CUIZoneMap::Update()
 {
-	CActor* pActor = smart_cast<CActor*>( Level().CurrentViewEntity() );
+	CActor* pActor = smart_cast<CActor>( Level().CurrentViewEntity() );
 	if ( !pActor ) return;
 
 	if ( !( Device.dwFrame % 20 ) && IsGameTypeSingle() )

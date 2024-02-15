@@ -41,7 +41,7 @@ float CWeapon::GetFireDispersion	(float cartridge_k, bool for_crosshair)
 	//вычислить дисперсию, вносимую самим стрелком
 	if(H_Parent())
 	{
-		const CInventoryOwner* pOwner	=	smart_cast<const CInventoryOwner*>(H_Parent());
+		const CInventoryOwner* pOwner	=	smart_cast<const CInventoryOwner>(H_Parent());
 
 		float parent_disp				= pOwner->GetWeaponAccuracy();
 		fire_disp						+= parent_disp;
@@ -60,21 +60,21 @@ void CWeapon::AddShotEffector		()
 
 void  CWeapon::RemoveShotEffector	()
 {
-	CInventoryOwner* pInventoryOwner = smart_cast<CInventoryOwner*>(H_Parent());
+	CInventoryOwner* pInventoryOwner = smart_cast<CInventoryOwner>(H_Parent());
 	if (pInventoryOwner)
 		pInventoryOwner->on_weapon_shot_remove	(this);
 }
 
 void	CWeapon::ClearShotEffector	()
 {
-	CInventoryOwner* pInventoryOwner = smart_cast<CInventoryOwner*>(H_Parent());
+	CInventoryOwner* pInventoryOwner = smart_cast<CInventoryOwner>(H_Parent());
 	if (pInventoryOwner)
 		pInventoryOwner->on_weapon_hide	(this);
 }
 
 void	CWeapon::StopShotEffector	()
 {
-	CInventoryOwner* pInventoryOwner = smart_cast<CInventoryOwner*>(H_Parent());
+	CInventoryOwner* pInventoryOwner = smart_cast<CInventoryOwner>(H_Parent());
 	if (pInventoryOwner)
 		pInventoryOwner->on_weapon_shot_stop();
 }

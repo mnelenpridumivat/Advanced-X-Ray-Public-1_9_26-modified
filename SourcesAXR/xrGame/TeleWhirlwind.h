@@ -6,8 +6,11 @@
 
 class CTeleWhirlwind;
 class CGameObject;
-class CTeleWhirlwindObject : public CTelekineticObject
+class CTeleWhirlwindObject : 
+	public CTelekineticObject,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CTeleWhirlwindObject, CTelekineticObject)
 	typedef			CTelekineticObject	inherited;
 	CTeleWhirlwind		*m_telekinesis;
 	bool				b_destroyable;

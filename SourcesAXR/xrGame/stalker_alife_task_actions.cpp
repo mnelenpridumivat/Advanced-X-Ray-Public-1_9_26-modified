@@ -203,7 +203,7 @@ void CStalkerActionSmartTerrain::initialize				()
 
 	object().CObjectHandler::set_goal			(eObjectActionIdle);
 
-	CWeapon										*best_weapon = smart_cast<CWeapon*>(object().best_weapon());
+	CWeapon										*best_weapon = smart_cast<CWeapon>(object().best_weapon());
 	if (object().CObjectHandler::weapon_strapped(best_weapon))
 		return;
 
@@ -227,7 +227,7 @@ void CStalkerActionSmartTerrain::execute				()
 
 	object().sound().play						(eStalkerSoundHumming,60000,10000);
 
-	CSE_ALifeHumanAbstract						*stalker = smart_cast<CSE_ALifeHumanAbstract*>(ai().alife().objects().object(m_object->ID()));
+	CSE_ALifeHumanAbstract						*stalker = smart_cast<CSE_ALifeHumanAbstract>(ai().alife().objects().object(m_object->ID()));
 	VERIFY										(stalker);
 	VERIFY										(stalker->m_smart_terrain_id != 0xffff);
 

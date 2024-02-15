@@ -24,8 +24,9 @@ const Fmatrix&	CWeaponStatMgun::get_ParticlesXFORM	()
 
 void CWeaponStatMgun::FireStart()
 {
-	if (Owner())
+	if (Owner()) {
 		Owner()->callback(GameObject::eActionTypeWeaponFire)(Owner()->lua_game_object(), lua_game_object());
+	}
 
 	m_dAngle.set(0.0f,0.0f);
 	inheritedShooting::FireStart();
@@ -80,7 +81,7 @@ void CWeaponStatMgun::OnShot()
 	StartSmokeParticles		(m_fire_pos, zero_vel);
 	OnShellDrop				(m_fire_pos, zero_vel);
 
-	bool b_hud_mode =		(Level().CurrentEntity() == smart_cast<CObject*>(Owner()));
+	bool b_hud_mode =		(Level().CurrentEntity() == smart_cast<CObject>(Owner()));
 	m_sounds.PlaySound		("sndShot", m_fire_pos, Owner(), b_hud_mode);
 
 	AddShotEffector			();
@@ -92,7 +93,7 @@ void CWeaponStatMgun::AddShotEffector				()
 {
 	if(OwnerActor())
 	{
-		CCameraShotEffector* S	= smart_cast<CCameraShotEffector*>(OwnerActor()->Cameras().GetCamEffector(eCEShot)); 
+		CCameraShotEffector* S	= smart_cast<CCameraShotEffector>(OwnerActor()->Cameras().GetCamEffector(eCEShot)); 
 		CameraRecoil		camera_recoil;
 		//( camMaxAngle,camRelaxSpeed, 0.25f, 0.01f, 0.7f )
 		camera_recoil.MaxAngleVert		= camMaxAngle;

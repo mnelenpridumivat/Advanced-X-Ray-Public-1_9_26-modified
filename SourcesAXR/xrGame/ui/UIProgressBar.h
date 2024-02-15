@@ -4,8 +4,11 @@
 #include "uibutton.h"
 #include "../../xrServerEntities/script_export_space.h"
 
-class CUIProgressBar : public CUIWindow
+class CUIProgressBar : 
+	public CUIWindow,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIProgressBar, CUIWindow)
 	friend class		CUIXmlInit;
 	typedef CUIWindow	inherited;
 protected:

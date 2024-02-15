@@ -4,8 +4,11 @@
 
 class CUIFrameWindow;
 
-class CUIEditBoxEx : /*public CUIMultiTextureOwner, */public CUICustomEdit 
+class CUIEditBoxEx : /*public CUIMultiTextureOwner, */
+	public CUICustomEdit,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUIEditBoxEx, CUICustomEdit)
 public:
 					CUIEditBoxEx	();
 					~CUIEditBoxEx	() override;

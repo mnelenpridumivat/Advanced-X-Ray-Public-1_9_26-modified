@@ -7,8 +7,11 @@
 class CUI3tButton;
 class CUIEditBox;
 
-class CUIMessageBox: public CUIStatic
+class CUIMessageBox: 
+	public CUIStatic,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIMessageBox, CUIStatic)
 private:
 	typedef CUIStatic inherited;
 public:

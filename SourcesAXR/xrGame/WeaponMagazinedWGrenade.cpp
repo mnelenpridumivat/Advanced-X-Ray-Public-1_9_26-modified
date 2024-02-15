@@ -84,7 +84,7 @@ void CWeaponMagazinedWGrenade::UpdateSecondVP(bool bInGrenade)
 
 BOOL CWeaponMagazinedWGrenade::net_Spawn(CSE_Abstract* DC) 
 {
-	CSE_ALifeItemWeapon* const weapon		= smart_cast<CSE_ALifeItemWeapon*>(DC);
+	CSE_ALifeItemWeapon* const weapon		= smart_cast<CSE_ALifeItemWeapon>(DC);
 	R_ASSERT								(weapon);
 	if ( IsGameTypeSingle() )
 	{
@@ -164,7 +164,7 @@ void CWeaponMagazinedWGrenade::OnShot		()
 		AddShotEffector		();
 		StartFlameParticles2();
 
-		CGameObject* object = smart_cast<CGameObject*>(H_Parent());
+		CGameObject* object = smart_cast<CGameObject>(H_Parent());
 		if (object)
 			object->callback(GameObject::eOnWeaponFired)(object->lua_game_object(), this->lua_game_object(), iAmmoElapsed);
 	} 
@@ -340,10 +340,10 @@ void  CWeaponMagazinedWGrenade::LaunchGrenade()
 		Fvector						p1, d; 
 		p1.set						(get_LastFP2());
 		d.set						(get_LastFD());
-		CEntity*					E = smart_cast<CEntity*>(H_Parent());
+		CEntity*					E = smart_cast<CEntity>(H_Parent());
 
 		if (E){
-			CInventoryOwner* io		= smart_cast<CInventoryOwner*>(H_Parent());
+			CInventoryOwner* io		= smart_cast<CInventoryOwner>(H_Parent());
 			if(NULL == io->inventory().ActiveItem())
 			{
 				Log("current_state", GetState() );
@@ -365,7 +365,7 @@ void  CWeaponMagazinedWGrenade::LaunchGrenade()
 
 		launch_matrix.c.set				(p1);
 
-		if(IsZoomed() && smart_cast<CActor*>(H_Parent()))
+		if(IsZoomed() && H_Parent()->IsA(CActor::StaticClass()))
 		{
 			H_Parent()->setEnabled		(FALSE);
 			setEnabled					(FALSE);
@@ -407,7 +407,7 @@ void  CWeaponMagazinedWGrenade::LaunchGrenade()
 		VERIFY2							(_valid(launch_matrix),"CWeaponMagazinedWGrenade::SwitchState. Invalid launch_matrix!");
 		CRocketLauncher::LaunchRocket	(launch_matrix, d, zero_vel);
 
-		CExplosiveRocket* pGrenade		= smart_cast<CExplosiveRocket*>(getCurrentRocket());
+		CExplosiveRocket* pGrenade		= smart_cast<CExplosiveRocket>(getCurrentRocket());
 		VERIFY							(pGrenade);
 		pGrenade->SetInitiator			(H_Parent()->ID());
 
@@ -510,7 +510,7 @@ void CWeaponMagazinedWGrenade::OnH_B_Independent(bool just_before_destroy)
 
 bool CWeaponMagazinedWGrenade::CanAttach(PIItem pIItem)
 {
-	CGrenadeLauncher* pGrenadeLauncher = smart_cast<CGrenadeLauncher*>(pIItem);
+	CGrenadeLauncher* pGrenadeLauncher = smart_cast<CGrenadeLauncher>(pIItem);
 	
 	if(pGrenadeLauncher &&
 	   ALife::eAddonAttachable == m_eGrenadeLauncherStatus &&
@@ -533,7 +533,7 @@ bool CWeaponMagazinedWGrenade::CanDetach(LPCSTR item_section_name)
 
 bool CWeaponMagazinedWGrenade::Attach(PIItem pIItem, bool b_send_event)
 {
-	CGrenadeLauncher* pGrenadeLauncher = smart_cast<CGrenadeLauncher*>(pIItem);
+	CGrenadeLauncher* pGrenadeLauncher = smart_cast<CGrenadeLauncher>(pIItem);
 	
 	if(pGrenadeLauncher &&
 	   ALife::eAddonAttachable == m_eGrenadeLauncherStatus &&
@@ -786,7 +786,7 @@ void CWeaponMagazinedWGrenade::PlayAnimIdle()
 			}
 
 			int act_state = 0;
-			CActor* pActor = smart_cast<CActor*>(H_Parent());
+			CActor* pActor = smart_cast<CActor>(H_Parent());
 
 			if(pActor)
 			{

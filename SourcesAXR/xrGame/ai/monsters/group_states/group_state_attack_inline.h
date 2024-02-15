@@ -111,7 +111,7 @@ void CStateGroupAttackAbstract::execute()
 	CEntityAlive* enemy	= const_cast<CEntityAlive*>(object->EnemyMan.get_enemy());
 
 	//bool const enemy_is_actor	=	!!smart_cast<CActor*>(enemy);
-	bool const enemy_is_actor = enemy->IsA(CActor::StaticCast());
+	bool const enemy_is_actor = enemy->IsA(CActor::StaticClass());
 
 	const Fvector3 enemy_pos = enemy->Position();
 

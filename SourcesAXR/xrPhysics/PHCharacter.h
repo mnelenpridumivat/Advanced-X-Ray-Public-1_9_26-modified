@@ -32,13 +32,15 @@ class CPHCharacter :
 	public CPHObject,
 	public CPHSynchronize,
 	public CPHDisablingTranslational,
-	public IPhysicsElement
+	public IPhysicsElement,
+	public IMetaClass
 #if 0
 #ifdef DEBUG
 	,public pureRender
 #endif
 #endif
 {
+	DECLARE_METACLASS4(CPHCharacter, CPHObject, CPHSynchronize, CPHDisablingTranslational, IPhysicsElement)
 public:
 
 u64						m_creation_step				;

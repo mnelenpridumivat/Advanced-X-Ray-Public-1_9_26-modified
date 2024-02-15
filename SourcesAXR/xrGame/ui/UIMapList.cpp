@@ -157,8 +157,8 @@ void CUIMapList::OnModeChange()
 EGameIDs CUIMapList::GetCurGameType()
 {
 	LPCSTR text = "";
-	CUIComboBox* combo_ms = smart_cast<CUIComboBox*>(m_pModeSelector);
-	CUISpinText* spin_ms = smart_cast<CUISpinText*>(m_pModeSelector);
+	CUIComboBox* combo_ms = smart_cast<CUIComboBox>(m_pModeSelector);
+	CUISpinText* spin_ms = smart_cast<CUISpinText>(m_pModeSelector);
 	if(combo_ms)
 	{
 		text = combo_ms->GetText();
@@ -387,7 +387,7 @@ CUIListBoxItem* CUIMapList::GetMapItem_fromList1( shared_str const& map_name )
 		map_name1._set( m_pList1->GetText( i ) );
 		if ( map_name1 == map_name )
 		{
-			return smart_cast<CUIListBoxItem*>( m_pList1->GetItem(i) );
+			return smart_cast<CUIListBoxItem>( m_pList1->GetItem(i) );
 		}
 	}
 	return NULL;

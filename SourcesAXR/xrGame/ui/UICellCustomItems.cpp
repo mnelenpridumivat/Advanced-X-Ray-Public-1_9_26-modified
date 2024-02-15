@@ -52,7 +52,7 @@ CUIInventoryCellItem::CUIInventoryCellItem(CInventoryItem* itm)
 
 bool CUIInventoryCellItem::EqualTo(CUICellItem* itm)
 {
-	CUIInventoryCellItem* ci = smart_cast<CUIInventoryCellItem*>( itm );
+	CUIInventoryCellItem* ci = smart_cast<CUIInventoryCellItem>( itm );
 	if ( !itm )
 	{
 		return false;
@@ -69,47 +69,47 @@ bool CUIInventoryCellItem::EqualTo(CUICellItem* itm)
 	{
 		return false;
 	}
-	auto eatable = smart_cast<CEatableItem*>(object());
-	if (eatable && eatable->GetPortionsNum() != smart_cast<CEatableItem*>(ci->object())->GetPortionsNum())
+	auto eatable = smart_cast<CEatableItem>(object());
+	if (eatable && eatable->GetPortionsNum() != smart_cast<CEatableItem>(ci->object())->GetPortionsNum())
 	{
 		return false;
 	}
-	auto artefact = smart_cast<CArtefact*>(object());
-	if (artefact && artefact->GetCurrentChargeLevel() != smart_cast<CArtefact*>(ci->object())->GetCurrentChargeLevel())
+	auto artefact = smart_cast<CArtefact>(object());
+	if (artefact && artefact->GetCurrentChargeLevel() != smart_cast<CArtefact>(ci->object())->GetCurrentChargeLevel())
 	{
 		return false;
 	}
-	if (artefact && artefact->GetCurrentAfRank() != smart_cast<CArtefact*>(ci->object())->GetCurrentAfRank())
+	if (artefact && artefact->GetCurrentAfRank() != smart_cast<CArtefact>(ci->object())->GetCurrentAfRank())
 	{
 		return false;
 	}
-	auto outfit = smart_cast<CCustomOutfit*>(object());
-	if (outfit && outfit->GetFilterCondition() != smart_cast<CCustomOutfit*>(ci->object())->GetFilterCondition())
+	auto outfit = smart_cast<CCustomOutfit>(object());
+	if (outfit && outfit->GetFilterCondition() != smart_cast<CCustomOutfit>(ci->object())->GetFilterCondition())
 	{
 		return false;
 	}
-	auto helmet = smart_cast<CHelmet*>(object());
-	if (helmet && helmet->GetFilterCondition() != smart_cast<CHelmet*>(ci->object())->GetFilterCondition())
+	auto helmet = smart_cast<CHelmet>(object());
+	if (helmet && helmet->GetFilterCondition() != smart_cast<CHelmet>(ci->object())->GetFilterCondition())
 	{
 		return false;
 	}
-	auto filter = smart_cast<CAntigasFilter*>(object());
-	if (filter && filter->GetFilterCondition() != smart_cast<CAntigasFilter*>(ci->object())->GetFilterCondition())
+	auto filter = smart_cast<CAntigasFilter>(object());
+	if (filter && filter->GetFilterCondition() != smart_cast<CAntigasFilter>(ci->object())->GetFilterCondition())
 	{
 		return false;
 	}
-	auto torch = smart_cast<CTorch*>(object());
-	if (torch && torch->GetCurrentChargeLevel() != smart_cast<CTorch*>(ci->object())->GetCurrentChargeLevel())
+	auto torch = smart_cast<CTorch>(object());
+	if (torch && torch->GetCurrentChargeLevel() != smart_cast<CTorch>(ci->object())->GetCurrentChargeLevel())
 	{
 		return false;
 	}
-	auto art_det = smart_cast<CCustomDetector*>(object());
-	if (art_det && art_det->GetCurrentChargeLevel() != smart_cast<CCustomDetector*>(ci->object())->GetCurrentChargeLevel())
+	auto art_det = smart_cast<CCustomDetector>(object());
+	if (art_det && art_det->GetCurrentChargeLevel() != smart_cast<CCustomDetector>(ci->object())->GetCurrentChargeLevel())
 	{
 		return false;
 	}
-	auto ano_det = smart_cast<CDetectorAnomaly*>(object());
-	if (ano_det && ano_det->GetCurrentChargeLevel() != smart_cast<CDetectorAnomaly*>(ci->object())->GetCurrentChargeLevel())
+	auto ano_det = smart_cast<CDetectorAnomaly>(object());
+	if (ano_det && ano_det->GetCurrentChargeLevel() != smart_cast<CDetectorAnomaly>(ci->object())->GetCurrentChargeLevel())
 	{
 		return false;
 	}
@@ -185,7 +185,7 @@ bool CUIAmmoCellItem::EqualTo(CUICellItem* itm)
 {
 	if(!inherited::EqualTo(itm))	return false;
 
-	CUIAmmoCellItem* ci				= smart_cast<CUIAmmoCellItem*>(itm);
+	CUIAmmoCellItem* ci				= smart_cast<CUIAmmoCellItem>(itm);
 	if(!ci)							return false;
 
 	return					( (object()->cNameSect() == ci->object()->cNameSect()) );
@@ -625,7 +625,7 @@ bool CUIWeaponCellItem::EqualTo(CUICellItem* itm)
 {
 	if(!inherited::EqualTo(itm))	return false;
 
-	CUIWeaponCellItem* ci			= smart_cast<CUIWeaponCellItem*>(itm);
+	CUIWeaponCellItem* ci			= smart_cast<CUIWeaponCellItem>(itm);
 	if(!ci)							return false;
 
 //	bool b_addons					= ( (object()->GetAddonsState() == ci->object()->GetAddonsState()) );

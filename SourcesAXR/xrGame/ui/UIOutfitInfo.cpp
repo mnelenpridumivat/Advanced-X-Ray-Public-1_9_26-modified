@@ -384,7 +384,7 @@ void CUIOutfitItem::SetInfo(CCustomOutfit* cur_outfit, CCustomOutfit* slot_outfi
 	DetachAll();
 	AttachChild(m_Prop_line);
 
-	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
+	CActor* actor = smart_cast<CActor>(Level().CurrentViewEntity());
 	shared_str section = cur_outfit->cNameSect();
 	if (!actor)
 	{
@@ -426,7 +426,7 @@ void CUIOutfitItem::SetInfo(CCustomOutfit* cur_outfit, CCustomOutfit* slot_outfi
 
 	if (m_items[ALife::eHitTypeFireWound])
 	{
-		IKinematics* ikv = smart_cast<IKinematics*>(actor->Visual());
+		IKinematics* ikv = reinterpret_cast<IKinematics*>(actor->Visual());
 		VERIFY(ikv);
 		u16 spine_bone = ikv->LL_BoneID("bip01_spine");
 
@@ -511,7 +511,7 @@ void CUIOutfitItem::SetInfo(CHelmet* cur_helmet, CHelmet* slot_helmet)
 	DetachAll();
 	AttachChild(m_Prop_line);
 
-	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
+	CActor* actor = smart_cast<CActor>(Level().CurrentViewEntity());
 	if (!actor )
 	{
 		return;
@@ -551,7 +551,7 @@ void CUIOutfitItem::SetInfo(CHelmet* cur_helmet, CHelmet* slot_helmet)
 
 	if (m_items[ALife::eHitTypeFireWound])
 	{
-		IKinematics* ikv = smart_cast<IKinematics*>(actor->Visual());
+		IKinematics* ikv = reinterpret_cast<IKinematics*>(actor->Visual());
 		VERIFY(ikv);
 		u16 spine_bone = ikv->LL_BoneID("bip01_head");
 

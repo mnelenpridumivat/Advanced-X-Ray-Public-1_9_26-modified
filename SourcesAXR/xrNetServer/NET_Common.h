@@ -38,9 +38,10 @@ void PrintParsedPacket(const char* message, u16 message_type, const void* packet
 
 //==============================================================================
 
-class XRNETSERVER_API
-MultipacketSender
+class XRNETSERVER_API MultipacketSender:
+public IMetaClass
 {
+    DECLARE_METACLASS(MultipacketSender)
 public:
                     MultipacketSender();
     virtual         ~MultipacketSender() {}
@@ -78,9 +79,10 @@ private:
 
 //==============================================================================
 
-class XRNETSERVER_API
-MultipacketReciever
+class XRNETSERVER_API MultipacketReciever:
+    public IMetaClass
 {
+    DECLARE_METACLASS(MultipacketReciever)
 public:
 
     virtual         ~MultipacketReciever() {}

@@ -5,8 +5,11 @@
 #include "GameSpy/GameSpy_QR2.h"
 
 
-class xrGameSpyClientData	: public xrClientData
+class xrGameSpyClientData	: 
+	public xrClientData,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(xrGameSpyClientData, xrClientData)
 private:
 	typedef xrClientData inherited;
 public:
@@ -19,8 +22,11 @@ public:
 	~xrGameSpyClientData	() override;
 };
 
-class xrGameSpyServer	: public xrServer
+class xrGameSpyServer: 
+	public xrServer,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(xrGameSpyServer, xrServer)
 private:
 	typedef xrServer inherited;
 

@@ -302,7 +302,7 @@ u8 CWeaponShotgun::AddCartridge		(u8 cnt)
 	if( !HaveCartridgeInInventory(1) )
 		return 0;
 
-	m_pCurrentAmmo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny( m_ammoTypes[m_ammoType].c_str() ));
+	m_pCurrentAmmo = smart_cast<CWeaponAmmo>(m_pInventory->GetAny( m_ammoTypes[m_ammoType].c_str() ));
 	VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
 
 

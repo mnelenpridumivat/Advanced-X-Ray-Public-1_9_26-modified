@@ -152,7 +152,7 @@ void CWeapon::FireStart()
 {
 	if (H_Parent())
 	{
-		CGameObject* game_object = smart_cast<CGameObject*>(H_Parent());
+		CGameObject* game_object = smart_cast<CGameObject>(H_Parent());
 
 		if (game_object)
 			game_object->callback(GameObject::eActionTypeWeaponFire)(game_object->lua_game_object(), lua_game_object());

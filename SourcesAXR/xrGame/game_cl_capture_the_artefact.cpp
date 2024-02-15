@@ -869,7 +869,7 @@ void game_cl_CaptureTheArtefact::OnSpawn(CObject* pObj)
 			}
 		}
 	}
-	if (smart_cast<CWeapon*>(pObj))
+	if (smart_cast<CWeapon>(pObj))
 	{
 		if (pObj->H_Parent())
 		{
@@ -889,7 +889,7 @@ void game_cl_CaptureTheArtefact::SetInvinciblePlayer(u16 const gameId, bool cons
 	if (!pObject)
 		return;
 
-	if (!smart_cast<CActor*>(pObject))
+	if (!pObject->IsA(CActor::StaticClass()))
 		return;
 
 	CActor* pActor		= static_cast<CActor*>		(pObject);

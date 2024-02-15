@@ -9,8 +9,11 @@ namespace text_editor
 	enum init_mode;
 };
 
-class CUICustomEdit : public CUIStatic
+class CUICustomEdit : 
+	public CUIStatic,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUICustomEdit, CUIStatic)
 private:
 	typedef			CUIStatic		inherited;
 

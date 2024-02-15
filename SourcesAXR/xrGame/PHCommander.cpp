@@ -117,8 +117,8 @@ void CPHCommander::add_call(CPHCondition* condition,CPHAction* action)
 void CPHCommander::remove_call(PHCALL_I i,PHCALL_STORAGE& cs)
 {
 #ifdef DEBUG
-	const CPHCallOnStepCondition	* esc  = smart_cast<const CPHCallOnStepCondition*>((*i)->condition());
-	const CPHConstForceAction		* cfa = smart_cast<const CPHConstForceAction*>((*i)->action());
+	const CPHCallOnStepCondition	* esc  = smart_cast<const CPHCallOnStepCondition>((*i)->condition());
+	const CPHConstForceAction		* cfa = smart_cast<const CPHConstForceAction>((*i)->action());
 	if(esc&&cfa)
 	{
 		Fvector f = cfa->force();

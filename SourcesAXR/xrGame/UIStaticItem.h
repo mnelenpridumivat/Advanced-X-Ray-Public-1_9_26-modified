@@ -2,8 +2,10 @@
 #include "ui_defs.h"
 
 
-class CUIStaticItem
+class CUIStaticItem:
+	public IMetaClass
 {
+	DECLARE_METACLASS(CUIStaticItem)
 protected:
 public:
 	enum {

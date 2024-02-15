@@ -83,7 +83,7 @@ CTorch::~CTorch()
 
 void CTorch::OnMoveToSlot(const SInvItemPlace& prev)
 {
-	CInventoryOwner* owner = smart_cast<CInventoryOwner*>(H_Parent());
+	CInventoryOwner* owner = smart_cast<CInventoryOwner>(H_Parent());
 	if (owner && !owner->attached(this))
 	{
 		owner->attach(this->cast_inventory_item());
@@ -103,7 +103,7 @@ inline bool CTorch::can_use_dynamic_lights	()
 	if (!H_Parent())
 		return				(true);
 
-	CInventoryOwner			*owner = smart_cast<CInventoryOwner*>(H_Parent());
+	CInventoryOwner			*owner = smart_cast<CInventoryOwner>(H_Parent());
 	if (!owner)
 		return				(true);
 
@@ -167,7 +167,7 @@ void CTorch::Switch()
 	if (isHidingInProgressTorch.load())
 		return;
 
-	CCustomDetector* pDet = smart_cast<CCustomDetector*>(Actor()->inventory().ItemFromSlot(DETECTOR_SLOT));
+	CCustomDetector* pDet = smart_cast<CCustomDetector>(Actor()->inventory().ItemFromSlot(DETECTOR_SLOT));
 	bool AnimEnabled = pAdvancedSettings->line_exist("actions_animations", "switch_torch_section");
 
 	if (!pDet || pDet->IsHidden() || !AnimEnabled)
@@ -205,7 +205,7 @@ void CTorch::ProcessSwitch()
 		return;
 	}
 
-	CWeapon* Wpn = smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
+	CWeapon* Wpn = smart_cast<CWeapon>(Actor()->inventory().ActiveItem());
 
 	if (Wpn && !(Wpn->GetState() == CWeapon::eIdle))
 		return;
@@ -279,7 +279,7 @@ void CTorch::UpdateUseAnim()
 
 void CTorch::Switch(bool light_on)
 {
-	CActor* pActor = smart_cast<CActor*>(H_Parent());
+	CActor* pActor = smart_cast<CActor>(H_Parent());
 	if (pActor)
 	{
 		if (light_on && !m_switched_on)
@@ -312,7 +312,7 @@ void CTorch::Switch(bool light_on)
 
 	if (*light_trace_bone) 
 	{
-		IKinematics* pVisual				= smart_cast<IKinematics*>(Visual()); VERIFY(pVisual);
+		IKinematics* pVisual				= reinterpret_cast<IKinematics*>(Visual()); VERIFY(pVisual);
 		u16 bi								= pVisual->LL_BoneID(light_trace_bone);
 
 		pVisual->LL_SetBoneVisible			(bi,	light_on,	TRUE);
@@ -328,12 +328,12 @@ bool CTorch::torch_active() const
 BOOL CTorch::net_Spawn(CSE_Abstract* DC) 
 {
 	CSE_Abstract			*e	= (CSE_Abstract*)(DC);
-	CSE_ALifeItemTorch		*torch	= smart_cast<CSE_ALifeItemTorch*>(e);
+	CSE_ALifeItemTorch		*torch	= smart_cast<CSE_ALifeItemTorch>(e);
 	R_ASSERT				(torch);
 	cNameVisual_set			(torch->get_visual());
 
 	R_ASSERT				(!CFORM());
-	R_ASSERT				(smart_cast<IKinematics*>(Visual()));
+	R_ASSERT				(reinterpret_cast<IKinematics*>(Visual()));
 	collidable.model		= xr_new<CCF_Skeleton>	(this);
 
 	if (!inherited::net_Spawn(DC))
@@ -342,7 +342,7 @@ BOOL CTorch::net_Spawn(CSE_Abstract* DC)
 	bool b_r2				= !!psDeviceFlags.test(rsR2);
 	b_r2					|= !!psDeviceFlags.test(rsR4);
 
-	IKinematics* K			= smart_cast<IKinematics*>(Visual());
+	IKinematics* K			= reinterpret_cast<IKinematics*>(Visual());
 	CInifile* pUserData		= K->LL_UserData(); 
 	R_ASSERT3				(pUserData,"Empty Torch user data!",torch->get_visual());
 
@@ -458,17 +458,17 @@ void CTorch::UpdateCL()
 
 	UpdateChargeLevel();
 
-	CBoneInstance			&BI = smart_cast<IKinematics*>(Visual())->LL_GetBoneInstance(guid_bone);
+	CBoneInstance			&BI = reinterpret_cast<IKinematics*>(Visual())->LL_GetBoneInstance(guid_bone);
 	Fmatrix					M;
 
 	if (H_Parent()) 
 	{
-		CActor*			actor = smart_cast<CActor*>(H_Parent());
-		if (actor)		smart_cast<IKinematics*>(H_Parent()->Visual())->CalculateBones_Invalidate	();
+		CActor*			actor = smart_cast<CActor>(H_Parent());
+		if (actor)		reinterpret_cast<IKinematics*>(H_Parent()->Visual())->CalculateBones_Invalidate	();
 
 		if (H_Parent()->XFORM().c.distance_to_sqr(Device.vCameraPosition)<_sqr(OPTIMIZATION_DISTANCE) || GameID() != eGameIDSingle) {
 			// near camera
-			smart_cast<IKinematics*>(H_Parent()->Visual())->CalculateBones	();
+			reinterpret_cast<IKinematics*>(H_Parent()->Visual())->CalculateBones	();
 			M.mul_43				(XFORM(),BI.mTransform);
 		} else {
 			// approximately the same
@@ -601,7 +601,7 @@ void CTorch::net_Export			(NET_Packet& P)
 
 	BYTE F = 0;
 	F |= (m_switched_on ? eTorchActive : 0);
-	const CActor *pA = smart_cast<const CActor *>(H_Parent());
+	const CActor *pA = smart_cast<const CActor>(H_Parent());
 	if (pA)
 	{
 		if (pA->attached(this))
@@ -633,10 +633,10 @@ void CTorch::load(IReader &input_packet)
 
 bool  CTorch::can_be_attached		() const
 {
-	const CActor *pA = smart_cast<const CActor *>(H_Parent());
+	const CActor *pA = smart_cast<const CActor>(H_Parent());
 	if (pA)
 	{
-		return (this == smart_cast<CTorch*>(pA->inventory().ItemFromSlot(TORCH_SLOT)));
+		return (this == smart_cast<CTorch>(pA->inventory().ItemFromSlot(TORCH_SLOT)));
 	}
 	return true;
 }
@@ -728,7 +728,7 @@ void CTorch::ReloadLights()
 	bool b_r2 = !!psDeviceFlags.test(rsR2);
 	b_r2 |= !!psDeviceFlags.test(rsR4);
 
-	IKinematics* K = smart_cast<IKinematics*>(Visual());
+	IKinematics* K = reinterpret_cast<IKinematics*>(Visual());
 	CInifile* pUserData = K->LL_UserData();
 
 	R_ASSERT2(pUserData->section_exist(m_light_section), "Section not found in torch user data! Check 'light_section' field in config");

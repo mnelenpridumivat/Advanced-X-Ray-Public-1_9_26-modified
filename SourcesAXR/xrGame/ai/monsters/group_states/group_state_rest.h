@@ -4,7 +4,11 @@
 #include "../../../entitycondition.h"
 #include "../states/state_data.h"
 template<typename _Object>
-class	CStateGroupRest : public CState<_Object> {
+class	CStateGroupRest : 
+	public CState<_Object>,
+	public IMetaClass
+{
+	DECLARE_METACLASS1(CStateGroupRest, CState<_Object>)
 protected:
 	typedef CState<_Object>		inherited;
 	typedef CState<_Object>*	state_ptr;

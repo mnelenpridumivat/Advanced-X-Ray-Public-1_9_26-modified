@@ -5,8 +5,12 @@
 
 class UIHint;
 
-class CUICheckButton : public CUI3tButton, public CUIOptionsItem
+class CUICheckButton : 
+	public CUI3tButton, 
+	public CUIOptionsItem,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUICheckButton, CUI3tButton, CUIOptionsItem)
 	typedef CUI3tButton			inherited;
 
 public:

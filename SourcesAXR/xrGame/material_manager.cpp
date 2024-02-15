@@ -41,7 +41,7 @@ void CMaterialManager::Load			(LPCSTR section)
 #ifdef	DEBUG
 		if( debug_character_material_load )
 		{
-			CEntityAlive			*entity_alive = smart_cast<CEntityAlive*>(m_object);
+			CEntityAlive			*entity_alive = smart_cast<CEntityAlive>(m_object);
 			if( entity_alive )
 				{	
 				VERIFY( GAMEMTL_NONE_IDX != m_my_material_idx );
@@ -60,7 +60,7 @@ void CMaterialManager::reinit		()
 	m_step_id				= 0;
 	m_run_mode				= false;
 
-	CEntityAlive			*entity_alive = smart_cast<CEntityAlive*>(m_object);
+	CEntityAlive			*entity_alive = smart_cast<CEntityAlive>(m_object);
 	if (entity_alive) {
 		//VERIFY( entity_alive->character_physics_support()->movement()->CharacterExist() );
 		entity_alive->character_physics_support()->movement()->SetPLastMaterialIDX	(&m_last_material_idx);

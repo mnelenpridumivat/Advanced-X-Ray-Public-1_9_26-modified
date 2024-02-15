@@ -3,8 +3,11 @@
 #include "UILine.h"
 #include "uiabstract.h"
 
-class CUILines : public CDeviceResetNotifier 
+class CUILines : 
+	public CDeviceResetNotifier,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUILines, CDeviceResetNotifier)
 	 friend class CUICustomEdit;
 	 friend class CUICDkey;
 public:

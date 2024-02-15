@@ -179,13 +179,13 @@ void CUIInventoryItem::SetInfo(CInventoryItem& pInvItem)
 	DetachAll();
 	AttachChild(m_Prop_line);
 
-	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
+	CActor* actor = smart_cast<CActor>(Level().CurrentViewEntity());
 	shared_str section = pInvItem.object().cNameSect();
-	CCustomDetector* pDet = smart_cast<CCustomDetector*>(&pInvItem);
-	CDetectorAnomaly* pAnomDet = smart_cast<CDetectorAnomaly*>(&pInvItem);
-	CTorch* pTorch = smart_cast<CTorch*>(&pInvItem);
-	CArtefactContainer* pAfContainer = smart_cast<CArtefactContainer*>(&pInvItem);
-	CCustomBackpack* pBackpack = smart_cast<CCustomBackpack*>(&pInvItem);
+	CCustomDetector* pDet = smart_cast<CCustomDetector>(&pInvItem);
+	CDetectorAnomaly* pAnomDet = smart_cast<CDetectorAnomaly>(&pInvItem);
+	CTorch* pTorch = smart_cast<CTorch>(&pInvItem);
+	CArtefactContainer* pAfContainer = smart_cast<CArtefactContainer>(&pInvItem);
+	CCustomBackpack* pBackpack = smart_cast<CCustomBackpack>(&pInvItem);
 
 	if (!actor)
 	{

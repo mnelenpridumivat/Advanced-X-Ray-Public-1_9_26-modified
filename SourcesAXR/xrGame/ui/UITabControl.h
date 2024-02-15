@@ -8,8 +8,12 @@ class CUITabButton;
 
 DEF_VECTOR (TABS_VECTOR, CUITabButton*)
 
-class CUITabControl: public CUIWindow , public CUIOptionsItem 
+class CUITabControl: 
+	public CUIWindow, 
+	public CUIOptionsItem,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUITabControl, CUIWindow, CUIOptionsItem)
 	typedef				CUIWindow inherited;
 public:
 						CUITabControl				();

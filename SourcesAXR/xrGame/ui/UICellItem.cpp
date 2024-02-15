@@ -193,7 +193,7 @@ void CUICellItem::UpdateIndicators()
 			
 			if (item->m_custom_text_clr_inv != NULL)
 			{
-				CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+				CUIGameSP* pGameSP = smart_cast<CUIGameSP>(CurrentGameUI());
 				if (pGameSP && pGameSP->ActorMenu().IsShown())// Hrust: that's bad, but check with GetPickUpItem() makes a bug with item text colorizing in inventory when the same item is targeted
 				{
 					m_custom_text->TextItemControl()->SetTextColor(item->m_custom_text_clr_inv);
@@ -354,7 +354,7 @@ void CUICellItem::UpdatePortionsProgressBar()
 	if (m_pParentList && m_pParentList->GetConditionProgBarVisibility())
 	{
 		PIItem itm = static_cast<PIItem>(m_pData);
-		CEatableItem* pEatable = smart_cast<CEatableItem*>(itm);
+		CEatableItem* pEatable = smart_cast<CEatableItem>(itm);
 
 		if (pEatable && pEatable->m_iConstPortions > 1 && pEatable->m_iConstPortions <= 8)
 		{
@@ -436,10 +436,10 @@ void CUICellItem::UpdateChargeLevelProgressBar()
 	if (m_pParentList && m_pParentList->GetConditionProgBarVisibility())
 	{
 		PIItem itm = static_cast<PIItem>(m_pData);
-		CTorch* torch = smart_cast<CTorch*>(itm);
-		CCustomDetector* artefact_detector = smart_cast<CCustomDetector*>(itm);
-		CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly*>(itm);
-		CArtefact* artefact = smart_cast<CArtefact*>(itm);
+		CTorch* torch = smart_cast<CTorch>(itm);
+		CCustomDetector* artefact_detector = smart_cast<CCustomDetector>(itm);
+		CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly>(itm);
+		CArtefact* artefact = smart_cast<CArtefact>(itm);
 
 		if (torch || artefact_detector || anomaly_detector || artefact)
 		{

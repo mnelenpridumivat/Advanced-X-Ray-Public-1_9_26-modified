@@ -1,7 +1,10 @@
 #include "UICustomSpin.h"
 
-class CUISpinNum : public CUICustomSpin 
+class CUISpinNum : 
+	public CUICustomSpin,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUISpinNum, CUICustomSpin)
 public:
 					CUISpinNum			();
 

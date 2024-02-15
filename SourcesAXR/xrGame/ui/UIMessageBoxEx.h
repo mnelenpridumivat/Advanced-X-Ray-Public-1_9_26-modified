@@ -4,8 +4,12 @@
 
 class CUIMessageBox;
 
-class CUIMessageBoxEx : public CUIDialogWnd, public CUIWndCallback
+class CUIMessageBoxEx : 
+	public CUIDialogWnd, 
+	public CUIWndCallback,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUIMessageBoxEx, CUIDialogWnd, CUIWndCallback)
 public:
 					CUIMessageBoxEx		();
 					~CUIMessageBoxEx	() override;

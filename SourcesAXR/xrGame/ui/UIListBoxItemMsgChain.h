@@ -3,8 +3,11 @@
 
 #include "UIListBoxItem.h"
 
-class CUIListBoxItemMsgChain : public CUIListBoxItem
+class CUIListBoxItemMsgChain : 
+	public CUIListBoxItem,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUIListBoxItemMsgChain, CUIListBoxItem)
 	typedef CUIListBoxItem inherited;
 public:
 					CUIListBoxItemMsgChain	(float height) : CUIListBoxItem(height) {};

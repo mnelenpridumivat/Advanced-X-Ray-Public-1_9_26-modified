@@ -215,7 +215,7 @@ void game_cl_Deathmatch::SetBuyMenuItems		(PRESET_ITEMS* pItems, BOOL OnlyPreset
 		{
 			PIItem pItem = *IRuck;
 			//if (pItem->IsInvalid() || pItem->object().CLS_ID == CLSID_OBJECT_W_KNIFE) continue;
-			if ( pItem->IsInvalid() || smart_cast<CWeaponKnife*>( &pItem->object() ) )	continue;
+			if ( pItem->IsInvalid() || smart_cast<CWeaponKnife>( &pItem->object() ) )	continue;
 			if (!pItem->CanTrade())
 			{
 				continue;

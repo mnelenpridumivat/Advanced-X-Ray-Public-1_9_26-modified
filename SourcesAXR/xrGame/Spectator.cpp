@@ -142,7 +142,7 @@ void CSpectator::UpdateCL()
 					for (u32 j=0; j<S.groups().size(); ++j){
 						const CGroupHierarchyHolder& G = S.group(j);
 						for (u32 k=0; k<G.members().size(); ++k){
-							CActor* A = smart_cast<CActor*>(G.members()[k]);
+							CActor* A = smart_cast<CActor>(G.members()[k]);
 							if (A/*&&A->g_Alive()*/){
 								if(idx==look_idx){
 									cam_Update	(A);
@@ -200,7 +200,7 @@ void CSpectator::IR_OnKeyboardPress(int cmd)
 		}break;
 	case kWPN_ZOOM:
 		{
-			game_cl_mp* pMPGame = smart_cast<game_cl_mp*> (&Game());
+			game_cl_mp* pMPGame = smart_cast<game_cl_mp> (&Game());
 			if (!pMPGame) break;
 			game_PlayerState* PS = Game().local_player;
 			if (!Level().IsDemoPlay() && (!PS || PS->GameID != ID())) break;
@@ -260,7 +260,7 @@ void CSpectator::IR_OnKeyboardHold(int cmd)
 {
 	if (Remote())		return;
 
-	game_cl_mp* pMPGame = smart_cast<game_cl_mp*> (&Game());
+	game_cl_mp* pMPGame = smart_cast<game_cl_mp> (&Game());
 	game_PlayerState* PS = Game().local_player;
 
 	if ((cam_active==eacFreeFly)||(cam_active==eacFreeLook)){
@@ -336,7 +336,7 @@ void CSpectator::FirstEye_ToPlayer(CObject* pObject)
 		Engine.Sheduler.Unregister	(pObject);
 		Engine.Sheduler.Register	(pObject, TRUE);
 
-		CActor* pActor = smart_cast<CActor*> (pObject);
+		CActor* pActor = smart_cast<CActor> (pObject);
 		if (pActor)
 		{
 			pActor->inventory().Items_SetCurrentEntityHud(true);
@@ -470,7 +470,7 @@ BOOL			CSpectator::net_Spawn				( CSE_Abstract*	DC )
 	CSE_Abstract			*E	= (CSE_Abstract*)(DC);
 	if (!E) return FALSE;
 
-	game_cl_mp* pMPGame = smart_cast<game_cl_mp*> (&Game());
+	game_cl_mp* pMPGame = smart_cast<game_cl_mp> (&Game());
 	float tmp_roll = 0.f;
 	if (!pMPGame || pMPGame->Is_Spectator_Camera_Allowed(eacFreeFly))
 	{
@@ -516,7 +516,7 @@ bool			CSpectator::SelectNextPlayerToLook	(bool const search_next)
 	if (!PS) return false;
 	m_pActorToLookAt = NULL;
 
-	game_cl_mp* pMPGame = smart_cast<game_cl_mp*> (&Game());
+	game_cl_mp* pMPGame = smart_cast<game_cl_mp> (&Game());
 
 	game_cl_GameState::PLAYERS_MAP_IT it = Game().players.begin(),
 		ite = Game().players.end();
@@ -534,7 +534,7 @@ bool			CSpectator::SelectNextPlayerToLook	(bool const search_next)
 		u16 id = ps->GameID;
 		CObject* pObject = Level().Objects.net_Find(id);
 		if (!pObject) continue;
-		CActor* A = smart_cast<CActor*>(pObject);
+		CActor* A = smart_cast<CActor>(pObject);
 		if (!A) continue;
 		if (m_last_player_name.size() && (m_last_player_name == ps->getName()))
 		{

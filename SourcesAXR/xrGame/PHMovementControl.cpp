@@ -271,7 +271,7 @@ bool CPHMovementControl::MakeJumpPath(xr_vector<DetailPathManager::STravelPathPo
 	if ( !m_character->JumpState() )
 		return					false;
 
-	CBaseMonster * monster	=	smart_cast<CBaseMonster *>(pObject);
+	CBaseMonster * monster	=	smart_cast<CBaseMonster>(pObject);
 	if ( !monster )
 		return					false;
 
@@ -1131,7 +1131,7 @@ void CPHMovementControl::JumpV(const Fvector &jump_velocity)
 void CPHMovementControl::Jump(const Fvector &end_point, float time)
 {
 	//vPosition
-	Jump(smart_cast<CGameObject*>(m_character->PhysicsRefObject())->Position(),end_point,time);
+	Jump(smart_cast<CGameObject>(m_character->PhysicsRefObject())->Position(),end_point,time);
 }
 
 
@@ -1146,7 +1146,7 @@ void CPHMovementControl::Jump(const Fvector &start_point,const Fvector &end_poin
 float CPHMovementControl::Jump(const Fvector &end_point)
 {
 	float time =JumpMinVelTime(end_point);
-	Jump(smart_cast<CGameObject*>(m_character->PhysicsRefObject())->Position(),end_point,time);
+	Jump(smart_cast<CGameObject>(m_character->PhysicsRefObject())->Position(),end_point,time);
 	return time;
 }
 void CPHMovementControl::GetJumpMinVelParam(Fvector &min_vel,float &time,JumpType &type,const Fvector &end_point)
@@ -1157,12 +1157,12 @@ void CPHMovementControl::GetJumpMinVelParam(Fvector &min_vel,float &time,JumpTyp
 
 float CPHMovementControl::JumpMinVelTime(const Fvector &end_point)
 {
-	return ThrowMinVelTime(Fvector().sub(end_point,smart_cast<CGameObject*>(m_character->PhysicsRefObject())->Position()),physics_world()->Gravity());
+	return ThrowMinVelTime(Fvector().sub(end_point,smart_cast<CGameObject>(m_character->PhysicsRefObject())->Position()),physics_world()->Gravity());
 }
 
 void CPHMovementControl::GetJumpParam(Fvector &velocity, JumpType &type,const Fvector &end_point, float time)
 {
-	Fvector velosity;velosity.sub(smart_cast<CGameObject*>(m_character->PhysicsRefObject())->Position(),end_point);
+	Fvector velosity;velosity.sub(smart_cast<CGameObject>(m_character->PhysicsRefObject())->Position(),end_point);
 	TransferenceToThrowVel(velosity,time,physics_world()->Gravity());
 	if(velocity.y<0.f)
 	{
@@ -1216,7 +1216,7 @@ void CPHMovementControl::CreateCharacter()
 }
 CPHSynchronize*	CPHMovementControl::GetSyncItem()
 {
-	if(m_character)	return smart_cast<CPHSynchronize*>(m_character);
+	if(m_character)	return smart_cast<CPHSynchronize>(m_character);
 	else			return 0;
 }
 void CPHMovementControl::Freeze()
@@ -1357,7 +1357,7 @@ void	CPHMovementControl::TraceBorder(const Fvector &prev_position)
 
 	STraceBorderQParams			p(this,dir);
 	storage.r_clear				();
-	g_pGameLevel->ObjectSpace.RayQuery(storage,RD,BorderTraceCallback,&p,NULL,smart_cast<CObject*>(m_character->PhysicsRefObject()));
+	g_pGameLevel->ObjectSpace.RayQuery(storage,RD,BorderTraceCallback,&p,NULL,smart_cast<CObject>(m_character->PhysicsRefObject()));
 }
 
 void	CPHMovementControl::				UpdateObjectBox(CPHCharacter *ach)
@@ -1780,7 +1780,7 @@ void			CPHMovementControl::BlockDamageSet		( u64 steps_num )
 void	CPHMovementControl::NetRelcase	( CObject* O )
 {
 	
-	CPhysicsShellHolder *sh = smart_cast<CPhysicsShellHolder *>(O);
+	CPhysicsShellHolder *sh = smart_cast<CPhysicsShellHolder>(O);
 	if(!sh)
 		return;
 	IPHCapture* c=PHCapture();
