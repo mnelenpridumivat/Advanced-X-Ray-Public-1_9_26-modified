@@ -124,7 +124,7 @@ CGameTask*	CGameTaskManager::GiveGameTaskToActor(CGameTask* t, u32 timeToComplet
 	{
 		CurrentGameUI()->UpdatePda();
 
-		CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+		CUIGameSP* pGameSP = smart_cast<CUIGameSP>(CurrentGameUI());
 
 		if (pGameSP)
 			pGameSP->PdaMenu().PdaContentsChanged(pda_section::quests);

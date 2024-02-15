@@ -735,7 +735,7 @@ BOOL CCustomMonster::net_Spawn	(CSE_Abstract* DC)
 	}
 
 	// Eyes
-	eye_bone					= smart_cast<IKinematics*>(Visual())->LL_BoneID(pSettings->r_string(cNameSect(),"bone_head"));
+	eye_bone					= reinterpret_cast<IKinematics*>(Visual())->LL_BoneID(pSettings->r_string(cNameSect(),"bone_head"));
 
 	// weapons
 	if (Local()) {
