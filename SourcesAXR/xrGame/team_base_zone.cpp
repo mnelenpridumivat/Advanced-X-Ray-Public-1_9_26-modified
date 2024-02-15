@@ -125,7 +125,7 @@ void CTeamBaseZone::feel_touch_new	(CObject *tpObject)
 
 void CTeamBaseZone::feel_touch_delete	(CObject *tpObject)
 {
-	if(OnServer() && smart_cast<CActor*>(tpObject))
+	if(OnServer() && tpObject->IsA(CActor::StaticClass()))
 	{
 		NET_Packet			P_;
 		u_EventGen			(P_,GE_GAME_EVENT,ID()	);

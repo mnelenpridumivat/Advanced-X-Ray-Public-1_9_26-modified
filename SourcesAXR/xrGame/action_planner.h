@@ -35,8 +35,10 @@ class CActionPlanner :
 		_reverse_search,
 		_world_operator_ptr,
 		_condition_evaluator_ptr
-	> 
+	>,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CActionPlanner, CProblemSolver)
 public:
 	typedef CProblemSolver<
 		GraphEngineSpace::CWorldProperty,

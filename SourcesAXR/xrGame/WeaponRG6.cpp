@@ -80,7 +80,7 @@ void CWeaponRG6::FireStart ()
 											launch_matrix.j, launch_matrix.i);
 		launch_matrix.c.set(p1);
 
-		if (IsZoomed() && smart_cast<CActor*>(H_Parent()))
+		if (IsZoomed() && H_Parent()->IsA(CActor::StaticClass()))
 		{
 			H_Parent()->setEnabled(FALSE);
 			setEnabled(FALSE);

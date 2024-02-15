@@ -38,9 +38,12 @@ private:
 DEF_VECTOR(ITEMS_vec,SBuyItemInfo*);
 typedef ITEMS_vec::const_iterator ITEMS_vec_cit;
 
-class CUIMpTradeWnd :	public IBuyWnd, 
-						public CUIWndCallback
+class CUIMpTradeWnd :	
+	public IBuyWnd, 
+	public CUIWndCallback,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUIMpTradeWnd, IBuyWnd, CUIWndCallback)
 		typedef CUIDialogWnd	inherited;
 		friend class CUICellItemTradeMenuDraw;
 public:

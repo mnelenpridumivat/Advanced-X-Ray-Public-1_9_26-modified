@@ -58,7 +58,7 @@ void CZoneEffector::Update(float dist, float r, ALife::EHitType hit_type)
 	float min_r = r * r_min_perc;
 	float max_r = r * r_max_perc;
 
-	bool camera_on_actor = (Level().CurrentEntity() && smart_cast<CActor*>(Level().CurrentEntity()));
+	bool camera_on_actor = (Level().CurrentEntity() && Level().CurrentEntity()->IsA(CActor::StaticClass()));
 	
 	if (m_pp_effector)
 	{

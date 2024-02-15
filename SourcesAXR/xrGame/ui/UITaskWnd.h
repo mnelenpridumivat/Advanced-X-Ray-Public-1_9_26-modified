@@ -18,9 +18,12 @@ class UITaskListWnd;
 class UIMapLegend;
 class UIHint;
 
-class CUITaskWnd			:	public CUIWindow, 
-								public CUIWndCallback
+class CUITaskWnd:	
+	public CUIWindow, 
+	public CUIWndCallback,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUITaskWnd, CUIWindow, CUIWndCallback)
 private:
 	typedef CUIWindow		inherited;
 

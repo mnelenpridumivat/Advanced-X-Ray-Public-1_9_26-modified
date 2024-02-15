@@ -118,7 +118,7 @@ bool CBaseMonster::bfAssignMovement (CScriptEntityAction *tpEntityAction)
 	if (l_tMovementAction.m_bCompleted)	return(false);
 
 	// check if alive
-	CEntityAlive *entity_alive = smart_cast<CEntityAlive*>(this);
+	CEntityAlive *entity_alive = smart_cast<CEntityAlive>(this);
 	if (entity_alive && !entity_alive->g_Alive()) {
 		l_tMovementAction.m_bCompleted = true;
 		return				(false);
@@ -156,7 +156,7 @@ bool CBaseMonster::bfAssignMovement (CScriptEntityAction *tpEntityAction)
 	switch (l_tMovementAction.m_tGoalType) {
 		
 		case CScriptMovementAction::eGoalTypeObject : {
-			CGameObject		*l_tpGameObject = smart_cast<CGameObject*>(l_tMovementAction.m_tpObjectToGo);
+			CGameObject		*l_tpGameObject = smart_cast<CGameObject>(l_tMovementAction.m_tpObjectToGo);
 		
 			if ( AssignGamePathIfNeeded(Fvector().set(0.f, 0.f, 0.f), l_tpGameObject->ai_location().level_vertex_id()) )
 				break;
@@ -188,7 +188,7 @@ bool CBaseMonster::bfAssignMovement (CScriptEntityAction *tpEntityAction)
 		case CScriptMovementAction::eGoalTypeFollowLeader:
 		{
 			CSE_ALifeMonsterAbstract* const i_am 
-						=	smart_cast<CSE_ALifeMonsterAbstract*>( ai().alife().objects().object(ID()) );
+						=	smart_cast<CSE_ALifeMonsterAbstract>( ai().alife().objects().object(ID()) );
 			VERIFY								(i_am);
 			CSE_ALifeOnlineOfflineGroup& group	
 											=	ai().alife().groups().object(i_am->m_group_id);
@@ -196,7 +196,7 @@ bool CBaseMonster::bfAssignMovement (CScriptEntityAction *tpEntityAction)
 			ALife::_OBJECT_ID leader_id		=	group.commander_id();
 			bool const should_follow_leader	=	leader_id != static_cast<ALife::_OBJECT_ID>(-1) && leader_id != ID();
 			CCustomMonster* const leader	=	should_follow_leader ? 
-												smart_cast<CCustomMonster*>( Level().Objects.net_Find(leader_id) ) : 
+												smart_cast<CCustomMonster>( Level().Objects.net_Find(leader_id) ) : 
 												NULL;
 
 			if ( !should_follow_leader || !leader || (leader && !leader->GetScriptControl()) )
@@ -375,7 +375,7 @@ bool CBaseMonster::bfAssignMonsterAction(CScriptEntityAction *tpEntityAction)
 	CScriptMonsterAction	&l_tAction = tpEntityAction->m_tMonsterAction;	
 	if (l_tAction.completed()) return false;
 
-	CEntityAlive *pE = smart_cast<CEntityAlive *>(l_tAction.m_tObject);
+	CEntityAlive *pE = smart_cast<CEntityAlive>(l_tAction.m_tObject);
 
 	switch(l_tAction.m_tAction) {
 		case eGA_Rest:		
@@ -487,7 +487,7 @@ CEntity *CBaseMonster::GetCurrentCorpse()
 	CEntity *corpse = 0;
 
 	if (CorpseMan.get_corpse()) 
-		corpse = const_cast<CEntity *>(smart_cast<const CEntity*>(CorpseMan.get_corpse()));
+		corpse = const_cast<CEntity *>(smart_cast<const CEntity>(CorpseMan.get_corpse()));
 
 	if (!corpse || corpse->getDestroy() || corpse->g_Alive()) corpse = 0;
 

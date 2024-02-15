@@ -17,7 +17,11 @@
 class CScriptGameObject;
 
 template <typename _object_type>
-class CActionBase : public GraphEngineSpace::CWorldOperator {
+class CActionBase : 
+	public GraphEngineSpace::CWorldOperator,
+	public IMetaClass
+{
+	DECLARE_METACLASS(CActionBase)
 protected:
 	typedef GraphEngineSpace::CWorldOperator			inherited;
 	typedef GraphEngineSpace::CWorldProperty			COperatorCondition;

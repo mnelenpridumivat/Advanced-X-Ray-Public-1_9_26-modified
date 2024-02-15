@@ -40,7 +40,7 @@ void CSE_ALifeGraphPoint::script_register(lua_State *L)
 
 template <typename T>
 T* cse_object_cast(CSE_ALifeDynamicObject *se_obj) {
-	return smart_cast<T *>(se_obj);
+	return smart_cast<T>(se_obj);
 }
 
 void CSE_ALifeObject::script_register(lua_State *L)

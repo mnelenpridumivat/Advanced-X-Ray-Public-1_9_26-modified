@@ -51,7 +51,7 @@ void CDialogHolder::StartMenu(CUIDialogWnd* pDialog, bool bDoHideIndicators)
 
 	if (psActorFlags.test(AF_3D_PDA) &&IsGameTypeSingle() && !pDialog->IsA(CUIPdaWnd::StaticClass()) && Actor())
 	{
-		if (const auto pda = smart_cast<CPda*>(Actor()->inventory().ActiveItem()))
+		if (const auto pda = smart_cast<CPda>(Actor()->inventory().ActiveItem()))
 		{
 			CurrentGameUI()->PdaMenu().HideDialog();
 			Actor()->inventory().Action(kACTIVE_JOBS, CMD_START);
@@ -321,7 +321,7 @@ bool CDialogHolder::IR_UIOnKeyboardRelease(int dik)
 		CObject* O = Level().CurrentEntity();
 		if( O )
 		{
-			IInputReceiver*		IR	= smart_cast<IInputReceiver>( smart_cast<CGameObject*>(O) );
+			IInputReceiver*		IR	= smart_cast<IInputReceiver>( smart_cast<CGameObject>(O) );
 			if (IR)
 				IR->IR_OnKeyboardRelease(get_binded_action(dik));
 			return			(false);
@@ -344,7 +344,7 @@ bool CDialogHolder::IR_UIOnKeyboardHold(int dik)
 		CObject* O = Level().CurrentEntity();
 		if(O)
 		{
-			IInputReceiver*	IR	= smart_cast<IInputReceiver>( smart_cast<CGameObject*>(O) );
+			IInputReceiver*	IR	= smart_cast<IInputReceiver>( smart_cast<CGameObject>(O) );
 			if(IR)
 				IR->IR_OnKeyboardHold(get_binded_action(dik));
 			return		false;
@@ -381,7 +381,7 @@ bool CDialogHolder::IR_UIOnMouseMove(int dx, int dy)
 		CObject* O				= Level().CurrentEntity();
 		if(O)
 		{
-			IInputReceiver*	IR	= smart_cast<IInputReceiver>( smart_cast<CGameObject*>(O) );
+			IInputReceiver*	IR	= smart_cast<IInputReceiver>( smart_cast<CGameObject>(O) );
 			if (IR)
 				IR->IR_OnMouseMove	(dx,dy);
 			return			false;

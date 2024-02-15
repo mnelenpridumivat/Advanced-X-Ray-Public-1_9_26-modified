@@ -5,8 +5,12 @@
 class CUIGlobalMapSpot;
 class CUIMapWnd;
 
-class CUICustomMap : public CUIStatic, public CUIWndCallback
+class CUICustomMap : 
+	public CUIStatic, 
+	public CUIWndCallback,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUICustomMap, CUIStatic, CUIWndCallback)
 protected:	
 	shared_str		m_name;
 
@@ -90,8 +94,11 @@ protected:
 	void	Init_internal			(const shared_str& name, CInifile& pLtx, const shared_str& sect_name, LPCSTR sh_name) override;
 };
 
-class CUILevelMap: public CUICustomMap
+class CUILevelMap: 
+	public CUICustomMap,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CUILevelMap, CUICustomMap)
 	typedef  CUICustomMap inherited;
 
 	CUIMapWnd*					m_mapWnd;

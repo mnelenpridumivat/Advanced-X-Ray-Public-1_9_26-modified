@@ -1197,7 +1197,7 @@ void game_cl_Deathmatch::OnPlayerFlagsChanged(game_PlayerState* ps)
 	CObject* pObject				= Level().Objects.net_Find(ps->GameID);
 	if (!pObject)					return;
 
-	if (!smart_cast<CActor*>(pObject)) return;
+	if (!pObject->IsA(CActor::StaticClass())) return;
 
 	CActor* pActor					= smart_cast<CActor>(pObject);
 	if (!pActor)					return;

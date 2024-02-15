@@ -449,8 +449,13 @@ void CUIActorMenu::OnPressUserKey()
 
 void CUIActorMenu::OnBtnExitClicked(CUIWindow* w, void* d)
 {
-	if (GameConstants::GetBackpackAnimsEnabled() && smart_cast<CCustomBackpack*>(Actor()->inventory().ItemFromSlot(BACKPACK_SLOT)) && Actor()->inventory().GetActiveSlot() == BACKPACK_SLOT && Actor()->inventory().ActiveItem())
-			Actor()->inventory().Activate(NO_ACTIVE_SLOT);
+	if (GameConstants::GetBackpackAnimsEnabled()
+		&& Actor()->inventory().ItemFromSlot(BACKPACK_SLOT)->IsA(CCustomBackpack::StaticClass())
+		&& Actor()->inventory().GetActiveSlot() == BACKPACK_SLOT
+		&& Actor()->inventory().ActiveItem()) 
+	{
+		Actor()->inventory().Activate(NO_ACTIVE_SLOT);
+	}
 
 	g_btnHint->Discard();
 	HideDialog();

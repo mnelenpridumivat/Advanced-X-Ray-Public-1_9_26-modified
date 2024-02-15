@@ -28,8 +28,11 @@ struct _preset_item
 DEF_VECTOR			(preset_items,_preset_item);
 
 
-class IBuyWnd:			public CUIDialogWnd
+class IBuyWnd:			
+	public CUIDialogWnd,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(IBuyWnd, CUIDialogWnd)
 
 public:
 	~IBuyWnd					() override {};

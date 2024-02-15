@@ -8,7 +8,7 @@ class CUIEditBoxEx : /*public CUIMultiTextureOwner, */
 	public CUICustomEdit,
 	public IMetaClass
 {
-	DECLARE_METACLASS2(CUIEditBoxEx, CUICustomEdit)
+	DECLARE_METACLASS1(CUIEditBoxEx, CUICustomEdit)
 public:
 					CUIEditBoxEx	();
 					~CUIEditBoxEx	() override;

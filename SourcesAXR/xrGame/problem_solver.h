@@ -20,7 +20,10 @@ template <
 	typename _operator_ptr = _operator*,
 	typename _condition_evaluator_ptr = _condition_evaluator*
 >
-class CProblemSolver {
+class CProblemSolver:
+	public IMetaClass
+{
+	DECLARE_METACLASS(CProblemSolver)
 public:
 	enum {
 		reverse_search = _reverse_search,
