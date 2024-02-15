@@ -212,12 +212,12 @@ bool CInventoryItem::install_upgrade_impl( LPCSTR section, bool test )
 
 void CInventoryItem::pre_install_upgrade()
 {
-	CWeaponMagazined* wm = smart_cast<CWeaponMagazined*>( this );
+	CWeaponMagazined* wm = smart_cast<CWeaponMagazined>( this );
 	if ( wm )
 	{
 		wm->UnloadMagazine();
 
-		CWeaponMagazinedWGrenade* wg = smart_cast<CWeaponMagazinedWGrenade*>( this );
+		CWeaponMagazinedWGrenade* wg = smart_cast<CWeaponMagazinedWGrenade>( this );
 		if ( wg )
 		{
 			if ( wg->IsGrenadeLauncherAttached() ) 
@@ -229,7 +229,7 @@ void CInventoryItem::pre_install_upgrade()
 		}
 	}
 
-	CWeapon* weapon = smart_cast<CWeapon*>( this );
+	CWeapon* weapon = smart_cast<CWeapon>( this );
 	if ( weapon )
 	{
 		if ( weapon->ScopeAttachable() && weapon->IsScopeAttached() )
@@ -254,8 +254,8 @@ void CInventoryItem::pre_install_upgrade()
 		}
 		return;
 	}
-	CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>(this);
-	CHelmet* pHelmet = smart_cast<CHelmet*>(this);
+	CCustomOutfit* pOutfit = smart_cast<CCustomOutfit>(this);
+	CHelmet* pHelmet = smart_cast<CHelmet>(this);
 
 	if (!pHelmet && pOutfit && Actor()->GetOutfit() && Actor()->GetOutfit()->ID() == pOutfit->ID() && pOutfit->m_NightVisionSect != 0 && Actor()->GetNightVisionStatus())
 	{

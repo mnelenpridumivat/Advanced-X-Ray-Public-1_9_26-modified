@@ -706,7 +706,7 @@ bool CAI_Stalker::inside_anomaly		()
 	for ( ; I != E; ++I) {
 		CCustomZone			*zone = smart_cast<CCustomZone>(*I);
 		if ( zone && (zone->restrictor_type() != RestrictionSpace::eRestrictorTypeNone) ) {
-			if (smart_cast<CRadioactiveZone*>(zone))
+			if (zone->IsA(CRadioactiveZone::StaticClass()))
 				continue;
 
 			return			(true);

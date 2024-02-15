@@ -119,7 +119,7 @@ void try_change_current_entity()
 void restore_actor()
 {
 	VERIFY		(g_debug_actor);
-	VERIFY		(!smart_cast<CActor*>(Level().CurrentEntity()));
+	VERIFY		(!Level().CurrentEntity()->IsA(CActor::StaticClass()));
 
 	Engine.Sheduler.Unregister	(Level().CurrentEntity());
 	Engine.Sheduler.Register	(Level().CurrentEntity());

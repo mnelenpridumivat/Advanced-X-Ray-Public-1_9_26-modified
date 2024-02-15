@@ -22,7 +22,7 @@ void CHairsZone::CheckForAwaking()
 		CObject* pObject = it->object;
 		if (!pObject) continue;
 
-		CEntityAlive* pEnt = smart_cast<CEntityAlive*>(pObject);
+		CEntityAlive* pEnt = smart_cast<CEntityAlive>(pObject);
 		if(pEnt){
 			float sp = pEnt->character_physics_support()->movement()->GetVelocityActual();
 			if(sp>m_min_speed_to_react){
@@ -41,7 +41,7 @@ void CHairsZone::Load(LPCSTR section)
 
 void CHairsZone::Affect(SZoneObjectInfo* O) 
 {
-	CPhysicsShellHolder *pGameObject = smart_cast<CPhysicsShellHolder*>(O->object);
+	CPhysicsShellHolder *pGameObject = smart_cast<CPhysicsShellHolder>(O->object);
 	if(!pGameObject) return;
 
 	if(O->zone_ignore) return;

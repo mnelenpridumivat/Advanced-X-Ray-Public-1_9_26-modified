@@ -91,7 +91,7 @@ void CScriptBinder::reload			(LPCSTR section)
 		return;
 	}
 	
-	CGameObject				*game_object = smart_cast<CGameObject*>(this);
+	CGameObject				*game_object = smart_cast<CGameObject>(this);
 
 	try {
 		lua_function		(game_object ? game_object->lua_game_object() : 0);
@@ -127,7 +127,7 @@ BOOL CScriptBinder::net_Spawn		(CSE_Abstract* DC)
 		start							= Memory.mem_usage();
 #endif // DEBUG_MEMORY_MANAGER
 	CSE_Abstract			*abstract = (CSE_Abstract*)DC;
-	CSE_ALifeObject			*object = smart_cast<CSE_ALifeObject*>(abstract);
+	CSE_ALifeObject			*object = smart_cast<CSE_ALifeObject>(abstract);
 	if (object && m_object) {
 		try {
 			return			((BOOL)m_object->net_Spawn(object));
@@ -228,7 +228,7 @@ BOOL CScriptBinder::net_SaveRelevant()
 
 void CScriptBinder::net_Relcase		(CObject *object)
 {
-	CGameObject						*game_object = smart_cast<CGameObject*>(object);
+	CGameObject						*game_object = smart_cast<CGameObject>(object);
 	if (m_object && game_object) {
 		try {
 			m_object->net_Relcase	(game_object->lua_game_object());

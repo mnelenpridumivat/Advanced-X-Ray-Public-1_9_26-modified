@@ -546,7 +546,7 @@ void game_cl_Deathmatch::shedule_Update			(u32 dt)
 					m_game_ui->SetWarmUpCaption(tmpStr);
 				}
 
-				if (Level().CurrentEntity() && Level().CurrentEntity()->IsA(CSpectator::StaticClass()))
+				if (Level().CurrentEntity() && smart_cast<CSpectator>(Level().CurrentEntity()))
 				{
 					if (!(pCurBuyMenu && pCurBuyMenu->IsShown()) && 
 						!(pCurSkinMenu && pCurSkinMenu->IsShown()) &&
@@ -959,7 +959,7 @@ void		game_cl_Deathmatch::OnRender				()
 			if (!ps->testFlag(GAME_PLAYER_FLAG_INVINCIBLE)) continue;
 			CObject* pObject = Level().Objects.net_Find(id);
 			if (!pObject) continue;
-			if (!pObject || !smart_cast<CActor>(pObject)) continue;
+			if (!pObject || !pObject->IsA(CActor::StaticClass())) continue;
 			if (ps == local_player) continue;
 			if (!IsEnemy(ps)) continue;
 			cl_TeamStruct *pTS = &TeamList[ModifyTeam(ps->team)]; 

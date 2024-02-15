@@ -71,14 +71,14 @@ public:
 template< class wrap >
 wrap *get_script_wrapper( typename wrap::type_impl &E )
 {
-	wrap* e = smart_cast<wrap*>(E.get_scripted().get());
+	wrap* e = smart_cast<wrap>(E.get_scripted().get());
 	if( e )
 		return e;
 	
 	e	= xr_new<wrap>( &E );
 	E.get_scripted().set( e );
 
-	VERIFY( smart_cast<wrap*>(E.get_scripted().get()) == e );
+	VERIFY( smart_cast<wrap>(E.get_scripted().get()) == e );
 
 	return e;
 }

@@ -425,7 +425,7 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 #endif // DEBUG
 		return;
 	}
-	CGameObject* GO = smart_cast<CGameObject*>(O);
+	CGameObject* GO = smart_cast<CGameObject>(O);
 	if (!GO)		{
 #ifndef MASTER_GOLD
 		Msg("! ERROR: c_EVENT[%d] : non-game-object",dest);
@@ -462,7 +462,7 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 			ok			= false;
 		}
 
-		CGameObject		*GD = smart_cast<CGameObject*>(D);
+		CGameObject		*GD = smart_cast<CGameObject>(D);
 		if (!GD)		{
 #ifndef MASTER_GOLD
 			Msg			("! ERROR: c_EVENT[%d] : non-game-object",id);
@@ -520,7 +520,7 @@ void CLevel::ProcessGameEvents		()
 						P.r_vec3(NewPos);
 						P.r_vec3(NewDir);
 
-						CActor*	OActor	= smart_cast<CActor*>(Objects.net_Find		(ID));
+						CActor*	OActor	= smart_cast<CActor>(Objects.net_Find		(ID));
 						if (0 == OActor)		break;
 						OActor->MoveActor(NewPos, NewDir);
 					};
@@ -895,7 +895,7 @@ void CLevel::OnRender()
 	test_precise_path		();
 #endif
 
-	CAI_Stalker				*stalker = smart_cast<CAI_Stalker*>(Level().CurrentEntity());
+	CAI_Stalker				*stalker = smart_cast<CAI_Stalker>(Level().CurrentEntity());
 	if (stalker)
 		stalker->OnRender	();
 
@@ -903,42 +903,42 @@ void CLevel::OnRender()
 		for (u32 I=0; I < Level().Objects.o_count(); I++) {
 			CObject*	_O		= Level().Objects.o_get_by_iterator(I);
 
-			CAI_Stalker*		stalker = smart_cast<CAI_Stalker*>(_O);
+			CAI_Stalker*		stalker = smart_cast<CAI_Stalker>(_O);
 			if (stalker)
 				stalker->OnRender	();
 
-			CCustomMonster*		monster = smart_cast<CCustomMonster*>(_O);
+			CCustomMonster*		monster = smart_cast<CCustomMonster>(_O);
 			if (monster)
 				monster->OnRender	();
 
-			CPhysicObject		*physic_object = smart_cast<CPhysicObject*>(_O);
+			CPhysicObject		*physic_object = smart_cast<CPhysicObject>(_O);
 			if (physic_object)
 				physic_object->OnRender();
 
-			CSpaceRestrictor	*space_restrictor = smart_cast<CSpaceRestrictor*>	(_O);
+			CSpaceRestrictor	*space_restrictor = smart_cast<CSpaceRestrictor>	(_O);
 			if (space_restrictor)
 				space_restrictor->OnRender();
 
-			CLevelChanger*		lchanger = smart_cast<CLevelChanger*>	(_O);
+			CLevelChanger*		lchanger = smart_cast<CLevelChanger>	(_O);
 			if (lchanger)
 				lchanger->OnRender();
-			CClimableObject		*climable		  = smart_cast<CClimableObject*>	(_O);
+			CClimableObject		*climable		  = smart_cast<CClimableObject>	(_O);
 			if(climable)
 				climable->OnRender();
-			CTeamBaseZone	*team_base_zone = smart_cast<CTeamBaseZone*>(_O);
+			CTeamBaseZone	*team_base_zone = smart_cast<CTeamBaseZone>(_O);
 			if (team_base_zone)
 				team_base_zone->OnRender();
 			
 			if (GameID() != eGameIDSingle)
 			{
-				CInventoryItem* pIItem = smart_cast<CInventoryItem*>(_O);
+				CInventoryItem* pIItem = smart_cast<CInventoryItem>(_O);
 				if (pIItem) pIItem->OnRender();
 			}
 
 			
 			if (dbg_net_Draw_Flags.test(dbg_draw_skeleton)) //draw skeleton
 			{
-				CGameObject* pGO = smart_cast<CGameObject*>	(_O);
+				CGameObject* pGO = smart_cast<CGameObject>	(_O);
 				if (pGO && pGO != Level().CurrentViewEntity() && !pGO->H_Parent())
 				{
 					if (pGO->Position().distance_to_sqr(Device.vCameraPosition) < 400.0f)
@@ -985,7 +985,7 @@ void CLevel::OnRender()
 	if (psAI_Flags.is(aiVision)) {
 		for (u32 I=0; I < Level().Objects.o_count(); I++) {
 			CObject						*object = Objects.o_get_by_iterator(I);
-			CAI_Stalker					*stalker = smart_cast<CAI_Stalker*>(object);
+			CAI_Stalker					*stalker = smart_cast<CAI_Stalker>(object);
 			if (!stalker)
 				continue;
 			stalker->dbg_draw_vision	();
@@ -996,7 +996,7 @@ void CLevel::OnRender()
 	if (psAI_Flags.test(aiDrawVisibilityRays)) {
 		for (u32 I=0; I < Level().Objects.o_count(); I++) {
 			CObject						*object = Objects.o_get_by_iterator(I);
-			CAI_Stalker					*stalker = smart_cast<CAI_Stalker*>(object);
+			CAI_Stalker					*stalker = smart_cast<CAI_Stalker>(object);
 			if (!stalker)
 				continue;
 
@@ -1378,7 +1378,7 @@ BOOL CZoneList::feel_touch_contact( CObject* O )
 	TypesMapIt it	= m_TypesMap.find(O->cNameSect());
 	bool res		= ( it != m_TypesMap.end() );
 
-	CCustomZone *pZone = smart_cast<CCustomZone*>(O);
+	CCustomZone *pZone = smart_cast<CCustomZone>(O);
 	if ( pZone && !pZone->IsEnabled() )
 	{
 		res = false;
@@ -1407,7 +1407,7 @@ ICF static BOOL GetPickDist_Callback(collide::rq_result& result, LPVOID params)
 				return TRUE;
 			if (Actor()->Holder())
 			{
-				CCar* car = smart_cast<CCar*>(Actor()->Holder());
+				CCar* car = smart_cast<CCar>(Actor()->Holder());
 				if (car && result.O == car)
 					return TRUE;
 			}

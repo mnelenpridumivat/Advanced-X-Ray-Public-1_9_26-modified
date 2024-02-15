@@ -25,9 +25,10 @@ class CTraderAnimation;
 class CAI_Trader : public CEntityAlive, 
 	public CInventoryOwner, 
 	public CScriptEntity,
-	public CAI_PhraseDialogManager
+	public CAI_PhraseDialogManager,
+	public IMetaClass
 {
-
+	DECLARE_METACLASS4(CAI_Trader, CEntityAlive, CInventoryOwner, CScriptEntity, CAI_PhraseDialogManager)
 	typedef CEntityAlive inherited;
 
 private:

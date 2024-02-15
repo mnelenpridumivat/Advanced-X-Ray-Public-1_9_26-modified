@@ -1872,7 +1872,7 @@ void				CActor::OnCriticalHitHealthLoss			()
 	}	
 	//-------------------------------------------------------------------
 	SPECIAL_KILL_TYPE SpecialHit = SKT_NONE;
-	if ( smart_cast<CWeaponKnife*>(pLastHittingWeapon) )
+	if ( pLastHittingWeapon->IsA(CWeaponKnife::StaticClass()) )
 	{
 		SpecialHit = SKT_KNIFEKILL;
 	}

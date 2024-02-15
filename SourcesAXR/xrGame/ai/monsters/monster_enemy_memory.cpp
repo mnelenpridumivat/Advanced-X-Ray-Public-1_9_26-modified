@@ -42,7 +42,7 @@ void CMonsterEnemyMemory::update()
 
 	if ( monster_hit_memory.is_hit() && time() < monster_hit_memory.get_last_hit_time() + 1000 )
 	{
-		if ( CEntityAlive* enemy = smart_cast<CEntityAlive*>(monster->HitMemory.get_last_hit_object()) )
+		if ( CEntityAlive* enemy = smart_cast<CEntityAlive>(monster->HitMemory.get_last_hit_object()) )
 		{
 			if ( monster->CCustomMonster::useful(&monster->memory().enemy(), enemy) && 
 				 monster->Position().distance_to(enemy->Position()) 
@@ -68,7 +68,7 @@ void CMonsterEnemyMemory::update()
 		monster->SoundMemory.GetSound(sound, dangerous);
 		if ( dangerous && Device.dwTimeGlobal < sound.time + 2000 )
 		{
-			if ( CEntityAlive const* enemy = smart_cast<CEntityAlive const*>(sound.who) )
+			if ( CEntityAlive const* enemy = smart_cast<CEntityAlive const>(sound.who) )
 			{
 				float const xz_dist	=	monster->Position().distance_to_xz(g_actor->Position());
 				float const y_dist	=	_abs(monster->Position().y - g_actor->Position().y);
@@ -80,7 +80,7 @@ void CMonsterEnemyMemory::update()
 				{
 					add_enemy					(enemy);
 
-					bool const self_is_dog	=	!!smart_cast<const CAI_Dog*>(monster);
+					bool const self_is_dog	=	monster->IsA(CAI_Dog::StaticClass());
 					if ( self_is_dog )
 					{
 						CMonsterSquad* const squad	=	monster_squad().get_squad(monster);

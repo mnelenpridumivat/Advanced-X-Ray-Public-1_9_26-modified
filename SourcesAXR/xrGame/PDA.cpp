@@ -48,7 +48,7 @@ BOOL CPda::net_Spawn(CSE_Abstract* DC)
 {
 	inherited::net_Spawn(DC);
 	CSE_Abstract* abstract = (CSE_Abstract*)(DC);
-	CSE_ALifeItemPDA* pda = smart_cast<CSE_ALifeItemPDA*>(abstract);
+	CSE_ALifeItemPDA* pda = smart_cast<CSE_ALifeItemPDA>(abstract);
 	R_ASSERT(pda);
 	m_idOriginalOwner = pda->m_original_owner;
 	m_SpecificChracterOwner = pda->m_specific_character;
@@ -445,7 +445,7 @@ void CPda::shedule_Update(u32 dt)
 
 	if (IsOn() && Level().CurrentEntity() && Level().CurrentEntity()->ID() == H_Parent()->ID())
 	{
-		CEntityAlive* EA = smart_cast<CEntityAlive*>(H_Parent());
+		CEntityAlive* EA = smart_cast<CEntityAlive>(H_Parent());
 		if (!EA || !EA->g_Alive())
 		{
 			TurnOff();
@@ -525,7 +525,7 @@ void CPda::OnMoveToRuck(const SInvItemPlace& prev)
 
 void CPda::UpdateHudAdditional(Fmatrix& trans)
 {
-	CActor* pActor = smart_cast<CActor*>(H_Parent());
+	CActor* pActor = smart_cast<CActor>(H_Parent());
 	if (!pActor)
 		return;
 
@@ -712,7 +712,7 @@ void CPda::OnHiddenItem()
 void CPda::UpdateActiveContacts()
 {
 	m_active_contacts.clear_not_free();
-	auto Owner = smart_cast<CEntityAlive*>(GetOwnerObject());
+	auto Owner = smart_cast<CEntityAlive>(GetOwnerObject());
 	//VERIFY(Owner);
 	if(Owner && Owner->IsInEmi())
 	{
@@ -721,7 +721,7 @@ void CPda::UpdateActiveContacts()
 	xr_vector<CObject*>::iterator it = feel_touch.begin();
 	for (; it != feel_touch.end(); ++it)
 	{
-		CEntityAlive* pEA = smart_cast<CEntityAlive*>(*it);
+		CEntityAlive* pEA = smart_cast<CEntityAlive>(*it);
 		if (!!pEA->g_Alive() 
 			&& !pEA->cast_base_monster() 
 			&& !pEA->IsInEmi())
@@ -733,9 +733,9 @@ void CPda::UpdateActiveContacts()
 
 void CPda::feel_touch_new(CObject* O)
 {
-	if (CInventoryOwner* pNewContactInvOwner = smart_cast<CInventoryOwner*>(O))
+	if (CInventoryOwner* pNewContactInvOwner = smart_cast<CInventoryOwner>(O))
 	{
-		CInventoryOwner* pOwner = smart_cast<CInventoryOwner*>(H_Parent());
+		CInventoryOwner* pOwner = smart_cast<CInventoryOwner>(H_Parent());
 		VERIFY(pOwner);
 		pOwner->NewPdaContact(pNewContactInvOwner);
 	}
@@ -744,9 +744,9 @@ void CPda::feel_touch_new(CObject* O)
 void CPda::feel_touch_delete(CObject* O)
 {
 	if (!H_Parent()) return;
-	if (CInventoryOwner* pLostContactInvOwner = smart_cast<CInventoryOwner*>(O))
+	if (CInventoryOwner* pLostContactInvOwner = smart_cast<CInventoryOwner>(O))
 	{
-		CInventoryOwner* pOwner = smart_cast<CInventoryOwner*>(H_Parent());
+		CInventoryOwner* pOwner = smart_cast<CInventoryOwner>(H_Parent());
 		VERIFY(pOwner);
 		pOwner->LostPdaContact(pLostContactInvOwner);
 	}
@@ -754,17 +754,17 @@ void CPda::feel_touch_delete(CObject* O)
 
 BOOL CPda::feel_touch_contact(CObject* O)
 {
-	CEntityAlive* entity_alive = smart_cast<CEntityAlive*>(O);
+	CEntityAlive* entity_alive = smart_cast<CEntityAlive>(O);
 
 	if (entity_alive && entity_alive->cast_base_monster())
 	{
 		return true;
 	}
-	else if (CInventoryOwner* pInvOwner = smart_cast<CInventoryOwner*>(O))
+	else if (CInventoryOwner* pInvOwner = smart_cast<CInventoryOwner>(O))
 	{
 		if (this != pInvOwner->GetPDA())
 		{
-			CEntityAlive* pEntityAlive = smart_cast<CEntityAlive*>(O);
+			CEntityAlive* pEntityAlive = smart_cast<CEntityAlive>(O);
 			if (pEntityAlive)
 				return true;
 		}
@@ -787,7 +787,7 @@ void CPda::OnH_A_Chield()
 		{
 			m_sFullName.assign(NameItem());
 			m_sFullName += " ";
-			m_sFullName += (smart_cast<CInventoryOwner*>(H_Parent()))->Name();
+			m_sFullName += (smart_cast<CInventoryOwner>(H_Parent()))->Name();
 		}
 	};
 	inherited::OnH_A_Chield();
@@ -822,7 +822,7 @@ void CPda::OnH_B_Independent(bool just_before_destroy)
 CInventoryOwner* CPda::GetOriginalOwner()
 {
 	CObject* pObject = Level().Objects.net_Find(GetOriginalOwnerID());
-	CInventoryOwner* pInvOwner = smart_cast<CInventoryOwner*>(pObject);
+	CInventoryOwner* pInvOwner = smart_cast<CInventoryOwner>(pObject);
 
 	return pInvOwner;
 }
@@ -860,7 +860,7 @@ CObject* CPda::GetOwnerObject()
 
 CPda* CPda::GetPdaFromOwner(CObject* owner)
 {
-	return smart_cast<CInventoryOwner*>(owner)->GetPDA();
+	return smart_cast<CInventoryOwner>(owner)->GetPDA();
 }
 
 void CPda::PlayScriptFunction()

@@ -95,8 +95,8 @@ bool CPhraseDialog::SayPhrase (DIALOG_SHARED_PTR& phrase_dialog, const shared_st
 	phrase_dialog->m_bFirstIsSpeaking = !phrase_dialog->m_bFirstIsSpeaking;
 	//}
 
-	const CGameObject*	pSpeakerGO1 = smart_cast<const CGameObject*>(phrase_dialog->FirstSpeaker());	VERIFY(pSpeakerGO1);
-	const CGameObject*	pSpeakerGO2 = smart_cast<const CGameObject*>(phrase_dialog->SecondSpeaker());	VERIFY(pSpeakerGO2);
+	const CGameObject*	pSpeakerGO1 = smart_cast<const CGameObject>(phrase_dialog->FirstSpeaker());	VERIFY(pSpeakerGO1);
+	const CGameObject*	pSpeakerGO2 = smart_cast<const CGameObject>(phrase_dialog->SecondSpeaker());	VERIFY(pSpeakerGO2);
 	if(!first_is_speaking) std::swap(pSpeakerGO1, pSpeakerGO2);
 
 	CPhraseGraph::CVertex* phrase_vertex = phrase_dialog->data()->m_PhraseGraph.vertex(phrase_dialog->m_SaidPhraseID);
@@ -182,8 +182,8 @@ LPCSTR CPhraseDialog::GetPhraseText	(const shared_str& phrase_id, bool current_s
 	//CPhrase*	ph = phrase_vertex->data();
 	CPhrase*	ph = GetPhrase(phrase_id);
 
-	CGameObject*	pSpeakerGO1 = (current_speaking)?smart_cast<CGameObject*>(FirstSpeaker()):NULL;
-	CGameObject*	pSpeakerGO2 = (current_speaking)?smart_cast<CGameObject*>(SecondSpeaker()):NULL;
+	CGameObject*	pSpeakerGO1 = (current_speaking)?smart_cast<CGameObject>(FirstSpeaker()):NULL;
+	CGameObject*	pSpeakerGO2 = (current_speaking)?smart_cast<CGameObject>(SecondSpeaker()):NULL;
 	CGameObject*	pSpeakerGO  = NULL;
 	
 	if( smart_cast<CActor*>(pSpeakerGO1) )

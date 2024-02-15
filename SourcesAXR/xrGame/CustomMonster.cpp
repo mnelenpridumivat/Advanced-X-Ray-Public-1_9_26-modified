@@ -1177,7 +1177,7 @@ void CCustomMonster::OnRender()
 			character_physics_support()->movement()->dbg_Draw();
 	
 	if (bDebug)
-		smart_cast<IKinematics*>(Visual())->DebugRender(XFORM());
+		reinterpret_cast<IKinematics*>(Visual())->DebugRender(XFORM());
 
 
 #if 0
