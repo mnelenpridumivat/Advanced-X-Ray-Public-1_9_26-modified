@@ -421,7 +421,7 @@ void InventoryUtilities::UpdateCapacityStr(CUITextWnd& wnd, CUITextWnd& wnd_max,
  	R_ASSERT		(pInvOwner);
 	string128		buf;
 
-	CActor* Actor = smart_cast<CActor*>(pInvOwner);
+	CActor* Actor = smart_cast<CActor>(pInvOwner);
 
 	if (!Actor)
 		return;
@@ -554,7 +554,7 @@ void InventoryUtilities::SendInfoToActor(LPCSTR info_id)
 {
 	if (GameID() != eGameIDSingle) return;
 	
-	CActor* actor = smart_cast<CActor*>(Level().CurrentEntity());
+	CActor* actor = smart_cast<CActor>(Level().CurrentEntity());
 	if(actor)
 	{
 		actor->TransferInfo(info_id, true);

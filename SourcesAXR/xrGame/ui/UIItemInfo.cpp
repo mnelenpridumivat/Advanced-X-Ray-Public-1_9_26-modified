@@ -398,18 +398,18 @@ void CUIItemInfo::TryAddArtefactInfo(CInventoryItem& pInvItem)
 
 void CUIItemInfo::TryAddOutfitInfo( CInventoryItem& pInvItem, CInventoryItem* pCompareItem )
 {
-	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(&pInvItem);
-	CHelmet* helmet = smart_cast<CHelmet*>(&pInvItem);
+	CCustomOutfit* outfit = smart_cast<CCustomOutfit>(&pInvItem);
+	CHelmet* helmet = smart_cast<CHelmet>(&pInvItem);
 
 	if (outfit && UIOutfitItem)
 	{
-		CCustomOutfit* comp_outfit = smart_cast<CCustomOutfit*>(pCompareItem);
+		CCustomOutfit* comp_outfit = smart_cast<CCustomOutfit>(pCompareItem);
 		UIOutfitItem->SetInfo(outfit, comp_outfit);
 		UIDesc->AddWindow(UIOutfitItem, false);
 	}
 	if (helmet && UIOutfitItem)
 	{
-		CHelmet* comp_helmet = smart_cast<CHelmet*>(pCompareItem);
+		CHelmet* comp_helmet = smart_cast<CHelmet>(pCompareItem);
 		UIOutfitItem->SetInfo(helmet, comp_helmet);
 		UIDesc->AddWindow(UIOutfitItem, false);
 	}
@@ -426,7 +426,7 @@ void CUIItemInfo::TryAddUpgradeInfo( CInventoryItem& pInvItem )
 
 void CUIItemInfo::TryAddBoosterInfo(CInventoryItem& pInvItem)
 {
-	CEatableItem* food = smart_cast<CEatableItem*>(&pInvItem);
+	CEatableItem* food = smart_cast<CEatableItem>(&pInvItem);
 	if (food && UIBoosterInfo)
 	{
 		UIBoosterInfo->SetInfo(pInvItem);
@@ -442,11 +442,11 @@ void CUIItemInfo::ResetInventoryItem()
 
 void CUIItemInfo::TryAddItemInfo(CInventoryItem& pInvItem)
 {
-	CTorch* torch = smart_cast<CTorch*>(&pInvItem);
-	CCustomDetector* artefact_detector = smart_cast<CCustomDetector*>(&pInvItem);
-	CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly*>(&pInvItem);
-	CArtefactContainer* af_container = smart_cast<CArtefactContainer*>(&pInvItem);
-	CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(&pInvItem);
+	CTorch* torch = smart_cast<CTorch>(&pInvItem);
+	CCustomDetector* artefact_detector = smart_cast<CCustomDetector>(&pInvItem);
+	CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly>(&pInvItem);
+	CArtefactContainer* af_container = smart_cast<CArtefactContainer>(&pInvItem);
+	CCustomBackpack* backpack = smart_cast<CCustomBackpack>(&pInvItem);
 
 	bool ShowChargeTorch = GameConstants::GetTorchHasBattery();
 

@@ -390,10 +390,10 @@ void CInventoryOwner::spawn_supplies		()
 {
 	CGameObject								*game_object = smart_cast<CGameObject>(this);
 	VERIFY									(game_object);
-	if (smart_cast<CBaseMonster*>(this))	return;
+	if (IsA(CBaseMonster::StaticClass()))	return;
 
 
-	if (use_bolts() && !smart_cast<CActor*>(this))
+	if (use_bolts() && !IsA(CActor::StaticClass()))
 	{
 		CSE_Abstract* abstract = Level().spawn_item("bolt", game_object->Position(), game_object->ai_location().level_vertex_id(), game_object->ID(), true);
 		CSE_ALifeItemBolt* bolt = smart_cast<CSE_ALifeItemBolt>(abstract);
@@ -634,7 +634,7 @@ void CInventoryOwner::sell_useless_items		()
 	TIItemContainer::iterator	I = inventory().m_all.begin();
 	TIItemContainer::iterator	E = inventory().m_all.end();
 	for ( ; I != E; ++I) {
-		if ( smart_cast<CBolt*>( *I ) )
+		if ( (*I)->IsA(CBolt::StaticClass()))
 		{
 			continue;
 		}

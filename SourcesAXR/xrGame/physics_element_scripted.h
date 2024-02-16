@@ -5,8 +5,10 @@
 
 class CPhysicsElement;
 class cphysics_element_scripted:
-public cphysics_game_scripted<CPhysicsElement>
+public cphysics_game_scripted<CPhysicsElement>,
+public IMetaClass
 {
+	DECLARE_METACLASS1(cphysics_element_scripted, cphysics_game_scripted<CPhysicsElement>)
 public:
 	cphysics_element_scripted(CPhysicsElement* imp ):cphysics_game_scripted<CPhysicsElement>(imp){}
 

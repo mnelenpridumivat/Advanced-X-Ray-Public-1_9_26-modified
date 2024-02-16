@@ -360,14 +360,14 @@ void CUIWpnParams::SetInfo( CInventoryItem* slot_wpn, CInventoryItem& cur_wpn )
 bool CUIWpnParams::Check(CInventoryItem& wpn_section)
 {
 	LPCSTR wpn_sect = wpn_section.object().cNameSect().c_str();
-	CWeapon* wpn = smart_cast<CWeapon*>(&wpn_section);
+	CWeapon* wpn = smart_cast<CWeapon>(&wpn_section);
 	if (pSettings->line_exist(wpn_sect, "fire_dispersion_base"))
 	{
-		if (smart_cast<CSilencer*>(&wpn_section))
+		if (smart_cast<CSilencer>(&wpn_section))
 			return false;
-		if (smart_cast<CWeaponBinoculars*>(&wpn_section))
+		if (smart_cast<CWeaponBinoculars>(&wpn_section))
 			return false;
-		if (smart_cast<CWeaponKnife*>(&wpn_section))
+		if (smart_cast<CWeaponKnife>(&wpn_section))
 			return false;
 		if (!wpn->m_bShowWpnStats)
 			return false;

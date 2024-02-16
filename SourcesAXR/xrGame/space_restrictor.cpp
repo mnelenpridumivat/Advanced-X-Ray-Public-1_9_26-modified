@@ -38,7 +38,7 @@ BOOL CSpaceRestrictor::net_Spawn	(CSE_Abstract* data)
 	actual							(false);
 
 	CSE_Abstract					*abstract = (CSE_Abstract*)data;
-	CSE_ALifeSpaceRestrictor		*se_shape = smart_cast<CSE_ALifeSpaceRestrictor*>(abstract);
+	CSE_ALifeSpaceRestrictor		*se_shape = smart_cast<CSE_ALifeSpaceRestrictor>(abstract);
 	R_ASSERT						(se_shape);
 
 	m_space_restrictor_type			= se_shape->m_space_restrictor_type;
@@ -243,7 +243,7 @@ void CSpaceRestrictor::OnRender	()
 	xr_vector<CCF_Shape::shape_def>::iterator l_pShape;
 	
 	u32 Color = 0;
-	CCustomZone	*custom_zone = smart_cast<CCustomZone*>(this);
+	CCustomZone	*custom_zone = smart_cast<CCustomZone>(this);
 	if (custom_zone && custom_zone->IsEnabled())
 		Color = color_xrgb(0,255,255);
 	else
@@ -305,7 +305,7 @@ void CSpaceRestrictor::OnRender	()
 		UI().Font().pFontMedium->SetColor	(0xffff0000);
 		UI().Font().pFontMedium->OutSet	(x, y-=delta_height);
 		UI().Font().pFontMedium->OutNext	( Name() );
-		CCustomZone* z = smart_cast<CCustomZone*>(this);
+		CCustomZone* z = smart_cast<CCustomZone>(this);
 		if(z){
 			string64 str;
 			switch (z->ZoneState()){

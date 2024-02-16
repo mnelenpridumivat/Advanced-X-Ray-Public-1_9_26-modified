@@ -131,11 +131,11 @@ void CUIGameCustom::Render()
 
 	m_window->Draw();
 
-	CEntity* pEntity = smart_cast<CEntity*>(Level().CurrentEntity());
+	CEntity* pEntity = smart_cast<CEntity>(Level().CurrentEntity());
 
 	if (pEntity)
 	{
-		CActor* pActor			=	smart_cast<CActor*>(pEntity);
+		CActor* pActor			=	smart_cast<CActor>(pEntity);
 		CPda* pda				= pActor->GetPDA();
 		if(pActor && pActor->HUDview() && pActor->g_Alive() && psHUD_Flags.is(HUD_WEAPON|HUD_WEAPON_RT|HUD_WEAPON_RT2))
 		{
@@ -231,7 +231,7 @@ bool CUIGameCustom::ShowActorMenu()
 		if (!psActorFlags.test(AF_3D_PDA)) HidePdaMenu();
 
 		//HidePdaMenu();
-		CInventoryOwner* pIOActor	= smart_cast<CInventoryOwner*>( Level().CurrentViewEntity() );
+		CInventoryOwner* pIOActor	= smart_cast<CInventoryOwner>( Level().CurrentViewEntity() );
 		VERIFY						(pIOActor);
 		m_ActorMenu->SetActor		(pIOActor);
 		m_ActorMenu->SetMenuMode	(mmInventory);
@@ -268,7 +268,7 @@ CScriptGameObject* CUIGameCustom::CurrentItemAtCell()
 	if (!IItm)
 		return nullptr;
 
-	CGameObject* GO = smart_cast<CGameObject*>(IItm);
+	CGameObject* GO = smart_cast<CGameObject>(IItm);
 
 	if (GO)
 		return GO->lua_game_object();
@@ -411,7 +411,7 @@ void CUIGameCustom::UpdateZones()
 	//float actor_radia = m_actor->conditions().GetRadiation() * m_actor_radia_factor;
 	//m_radia_hit = _max( m_zone_cur_power[it_rad], actor_radia );
 
-	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
+	CActor* actor = smart_cast<CActor>(Level().CurrentViewEntity());
 	if (!actor)
 	{
 		return;
@@ -423,7 +423,7 @@ void CUIGameCustom::UpdateZones()
 		for (monsters::const_iterator it = pda->feel_touch.begin();
 			it != pda->feel_touch.end(); ++it)
 		{
-			CBaseMonster* const	monster = smart_cast<CBaseMonster*>(*it);
+			CBaseMonster* const	monster = smart_cast<CBaseMonster>(*it);
 			if (!monster || !monster->g_Alive())
 				continue;
 

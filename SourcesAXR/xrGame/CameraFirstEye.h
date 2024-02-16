@@ -3,8 +3,11 @@
 
 #include "../xrEngine/CameraBase.h"
 
-class CCameraFirstEye : public CCameraBase
+class CCameraFirstEye :
+	public CCameraBase,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(CCameraFirstEye, CCameraBase)
 	typedef CCameraBase inherited;
 	Fvector			lookat_point;
 	bool			lookat_active;

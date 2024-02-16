@@ -151,7 +151,7 @@ void		xrServer::client_Destroy	(IClient* C)
 	if (alife_client)
 	{
 		CSE_Abstract* pOwner	= static_cast<xrClientData*>(alife_client)->owner;
-		CSE_Spectator* pS		= smart_cast<CSE_Spectator*>(pOwner);
+		CSE_Spectator* pS		= smart_cast<CSE_Spectator>(pOwner);
 		if (pS)
 		{
 			NET_Packet			P;
@@ -1193,7 +1193,7 @@ struct PlayerInfoWriter
 	NET_Packet*	dest;
 	void operator()(IClient* C)
 	{
-		xrClientData* tmp_client = smart_cast<xrClientData*>(C);
+		xrClientData* tmp_client = smart_cast<xrClientData>(C);
 		if (!tmp_client)
 			return;
 

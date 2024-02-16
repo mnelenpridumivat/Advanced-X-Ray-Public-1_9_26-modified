@@ -2095,7 +2095,7 @@ void CScriptGameObject::IterateInstalledUpgrades(const luabind::functor<void>& f
 	if (!Item)
 		return;
 
-	for (auto upgrade : Item->get_upgrades())
+	for (auto& upgrade : Item->get_upgrades())
 		functor(upgrade.c_str(), object().lua_game_object());
 }
 

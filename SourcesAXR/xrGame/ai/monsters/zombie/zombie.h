@@ -7,9 +7,12 @@
 
 #define FAKE_DEATH_TYPES_COUNT	4
 
-class CZombie :	public CBaseMonster,
-				public CControlledEntity<CZombie> {
-	
+class CZombie :
+	public CBaseMonster,
+	public CControlledEntity<CZombie>,
+	public IMetaClass
+{
+	DECLARE_METACLASS2(CZombie, CBaseMonster, CControlledEntity<CZombie>)
 	typedef		CBaseMonster				inherited;
 	typedef		CControlledEntity<CZombie>	CControlled;
 

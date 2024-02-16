@@ -851,10 +851,10 @@ static void DBG_DrawTarckObj()
 	if( !v )
 		return;
 	DBG_OutText( "visual name: %s ", *trace_object->cNameVisual() );
-	IKinematics *k = smart_cast<IKinematics *>( v );
+	IKinematics *k = reinterpret_cast<IKinematics *>( v );
 	if( !k )
 		return;
-	IKinematicsAnimated* ka = smart_cast<IKinematicsAnimated*>( k );
+	IKinematicsAnimated* ka = reinterpret_cast<IKinematicsAnimated*>( k );
 	if(!ka)
 		return;
 	DBG_AnimState( *ka );
@@ -887,7 +887,7 @@ void	DBG_DrawBones( const Fmatrix &xform,  IKinematics *K )
 }
 void	DBG_DrawBones( CObject &O )
 {
-	IKinematics *K = smart_cast<IKinematics*> ( O.Visual() );
+	IKinematics *K = reinterpret_cast<IKinematics*> ( O.Visual() );
 
 	//K->CalculateBones_Invalidate();
 	//K->CalculateBones();
@@ -898,7 +898,7 @@ void	DBG_DrawBones( CObject &O )
 void	DBG_PhysBones( CObject &O )
 {
 
-	CPhysicsShellHolder	*sh = smart_cast<CPhysicsShellHolder*>(&O);
+	CPhysicsShellHolder	*sh = smart_cast<CPhysicsShellHolder>(&O);
 	VERIFY( sh );
 	CPhysicsShell* shell = sh->PPhysicsShell();
 	if(!shell)
@@ -919,7 +919,7 @@ void	DBG_PhysBones( CObject &O )
 
 void	DBG_DrawBind( CObject &O )
 {
-	IKinematics *K = smart_cast<IKinematics*> ( O.Visual() );
+	IKinematics *K = reinterpret_cast<IKinematics*> ( O.Visual() );
 
 	
 	u16 nbb = K->LL_BoneCount();
@@ -978,7 +978,7 @@ void DBG_PH_NetRelcase( CObject* obj )
 
 bool is_trace_obj( CPHObject *obj )
 {
-	return trace_object && smart_cast<CObject*>(obj->ref_object()) == trace_object;
+	return trace_object && smart_cast<CObject>(obj->ref_object()) == trace_object;
 }
 
 

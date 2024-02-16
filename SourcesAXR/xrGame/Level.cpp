@@ -1042,7 +1042,7 @@ void	CLevel::AddObject_To_Objects4CrPr	(CGameObject* pObj)
 void	CLevel::AddActor_To_Actors4CrPr		(CGameObject* pActor)
 {
 	if (!pActor) return;
-	if (!smart_cast<CActor*>(pActor)) return;
+	if (!pActor->IsA(CActor::StaticClass())) return;
 	for	(OBJECTS_LIST_it AIt = pActors4CrPr.begin(); AIt != pActors4CrPr.end(); AIt++)
 	{
 		if (*AIt == pActor) return;

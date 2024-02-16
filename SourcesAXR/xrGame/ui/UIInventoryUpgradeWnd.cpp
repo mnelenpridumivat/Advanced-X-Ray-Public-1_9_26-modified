@@ -110,19 +110,19 @@ void CUIInventoryUpgradeWnd::InitInventory( CInventoryItem* item, bool can_upgra
 	m_inv_item = item;
 	bool is_shader = false;
 	// Загружаем картинку
-	if(smart_cast<CWeapon*>(item))
+	if(item->IsA(CWeapon::StaticClass()))
 	{
 		is_shader = true;
 		m_item->SetShader(InventoryUtilities::GetWeaponUpgradeIconsShader());
-		if(smart_cast<CWeaponRPG7*>(item))
+		if(item->IsA(CWeaponRPG7::StaticClass()))
 			m_item->SetShader(InventoryUtilities::GetOutfitUpgradeIconsShader());
 	}
-	else if(smart_cast<CCustomOutfit*>(item) || smart_cast<CHelmet*>(item))
+	else if(item->IsA(CCustomOutfit::StaticClass()) || item->IsA(CHelmet::StaticClass()))
 	{
 		is_shader = true;
 		m_item->SetShader(InventoryUtilities::GetOutfitUpgradeIconsShader());
 	}
-	else if (smart_cast<CCustomDetector*>(item) || smart_cast<CTorch*>(item) || smart_cast<CCustomBackpack*>(item))
+	else if (item->IsA(CCustomDetector::StaticClass()) || item->IsA(CTorch::StaticClass()) || item->IsA(CCustomBackpack::StaticClass()))
 	{
 		is_shader = true;
 		m_item->SetShader(InventoryUtilities::GetDeviceUpgradeIconsShader());
@@ -332,7 +332,7 @@ void CUIInventoryUpgradeWnd::AskUsing( LPCSTR text, LPCSTR upgrade_name )
 
 	m_cur_upgrade_id = upgrade_name;
 	
-	CUIActorMenu* parent_wnd = smart_cast<CUIActorMenu*>(m_pParentWnd);
+	CUIActorMenu* parent_wnd = smart_cast<CUIActorMenu>(m_pParentWnd);
 	if ( parent_wnd )
 	{
 		parent_wnd->CallMessageBoxYesNo( text );
@@ -344,7 +344,7 @@ void CUIInventoryUpgradeWnd::OnMesBoxYes()
 	if ( get_manager().upgrade_install( *m_inv_item, m_cur_upgrade_id, false ) )
 	{
 		VERIFY( m_pParentWnd );
-		CUIActorMenu* parent_wnd = smart_cast<CUIActorMenu*>( m_pParentWnd );
+		CUIActorMenu* parent_wnd = smart_cast<CUIActorMenu>( m_pParentWnd );
 		if ( parent_wnd )
 		{
 			parent_wnd->UpdateActor();
@@ -381,7 +381,7 @@ void CUIInventoryUpgradeWnd::set_info_cur_upgrade( Upgrade_type* upgrade )
 		upgrade = NULL;
 	}
 
-	CUIActorMenu* parent_wnd = smart_cast<CUIActorMenu*>(m_pParentWnd);
+	CUIActorMenu* parent_wnd = smart_cast<CUIActorMenu>(m_pParentWnd);
 	if ( parent_wnd )
 	{
 		if ( parent_wnd->SetInfoCurUpgrade( upgrade, m_inv_item ) )

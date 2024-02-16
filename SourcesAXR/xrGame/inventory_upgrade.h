@@ -95,8 +95,10 @@ enum EMaxProps
 	max_properties_count = 3,
 };
 
-class Upgrade : public UpgradeBase
+class Upgrade : public UpgradeBase,
+	public IMetaClass
 {
+	DECLARE_METACLASS1(Upgrade, UpgradeBase)
 private:
 	typedef		UpgradeBase	inherited;
 public:

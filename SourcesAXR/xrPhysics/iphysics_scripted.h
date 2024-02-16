@@ -8,8 +8,10 @@
 
 
 class iphysics_scripted;
-class iphysics_game_scripted
+class iphysics_game_scripted:
+	public IMetaClass
 {
+	DECLARE_METACLASS(iphysics_game_scripted)
 public:
 	virtual						~iphysics_game_scripted	()	{};
 	virtual	iphysics_scripted	&iphysics_impl			()	=0;
@@ -40,8 +42,10 @@ protected:
 
 namespace non_copy
 {
-	class noncopyable
+	class noncopyable:
+		public IMetaClass
 	{
+		DECLARE_METACLASS(non_copy::noncopyable)
 	 protected:
 		noncopyable() {}
 		~noncopyable() {}
@@ -54,8 +58,10 @@ namespace non_copy
 template<class T>
 class cphysics_game_scripted:
 	public iphysics_game_scripted,
-	private non_copy::noncopyable
+	private non_copy::noncopyable,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(cphysics_game_scripted, iphysics_game_scripted, non_copy::noncopyable)
 	T	&impl;
 public:
 								cphysics_game_scripted		( T* im ):impl(*im){}

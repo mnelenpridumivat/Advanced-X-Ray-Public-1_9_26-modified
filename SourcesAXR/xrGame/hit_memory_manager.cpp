@@ -94,7 +94,7 @@ void CHitMemoryManager::reload				(LPCSTR section)
 void CHitMemoryManager::add					(float amount, const Fvector &vLocalDir, const CObject *who, s16 element)
 {
 #ifndef MASTER_GOLD
-	if (who && smart_cast<CActor const*>(who) && psAI_Flags.test(aiIgnoreActor))
+	if (who && who->IsA(CActor::StaticClass()) && psAI_Flags.test(aiIgnoreActor))
 		return;
 #endif // MASTER_GOLD
 
@@ -156,7 +156,7 @@ void CHitMemoryManager::add					(float amount, const Fvector &vLocalDir, const C
 void CHitMemoryManager::add					(const CHitObject &_hit_object)
 {
 #ifndef MASTER_GOLD
-	if (_hit_object.m_object && smart_cast<CActor const*>(_hit_object.m_object) && psAI_Flags.test(aiIgnoreActor))
+	if (_hit_object.m_object && _hit_object.m_object->IsA(CActor::StaticClass()) && psAI_Flags.test(aiIgnoreActor))
 		return;
 #endif // MASTER_GOLD
 

@@ -52,7 +52,7 @@ using namespace luabind;
 template <typename TClass>
 TClass* objectCast(CScriptGameObject* script_obj)
 {
-	TClass* obj = smart_cast<TClass*>(&script_obj->object());
+	TClass* obj = smart_cast<TClass>(&script_obj->object());
 	if (obj)
 		return obj;
 

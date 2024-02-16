@@ -940,7 +940,7 @@ void CAI_Stalker::dbg_draw_vision	()
 {
 	VERIFY						(!!psAI_Flags.is(aiVision));
 
-	if (!smart_cast<CGameObject*>(Level().CurrentEntity()))
+	if (!smart_cast<CGameObject>(Level().CurrentEntity()))
 		return;
 
 	Fvector						shift;

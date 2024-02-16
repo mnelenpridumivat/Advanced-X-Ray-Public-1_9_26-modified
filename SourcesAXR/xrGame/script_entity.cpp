@@ -639,7 +639,7 @@ const CScriptEntityAction *CScriptEntity::GetActionByIndex	(u32 action_index) co
 
 void CScriptEntity::sound_callback	(const CObject *object, int sound_type, const Fvector &position, float sound_power)
 {
-	if (!smart_cast<const CGameObject*>(object))
+	if (!object->IsA(CGameObject::StaticClass()))
 		return;
 
 	if (!this->object().callback(GameObject::eSound))

@@ -40,8 +40,10 @@ enum UpgradeStateResult
 };
 
 class UpgradeBase :
-	private	boost::noncopyable
+	private	boost::noncopyable,
+	public IMetaClass
 {
+	DECLARE_METACLASS(UpgradeBase)
 public:
 							UpgradeBase();
 	virtual					~UpgradeBase();

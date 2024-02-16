@@ -48,8 +48,10 @@ struct net_updatePhData{
 
 class CPhysicObject : 
 	public CPhysicsShellHolder,
-	public CPHSkeleton
+	public CPHSkeleton,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CPhysicObject, CPhysicsShellHolder, CPHSkeleton)
 	typedef CPhysicsShellHolder inherited;
 	EPOType					m_type					;
 	float					m_mass					;

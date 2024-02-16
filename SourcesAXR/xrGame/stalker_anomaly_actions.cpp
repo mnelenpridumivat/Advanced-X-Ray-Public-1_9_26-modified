@@ -94,7 +94,7 @@ void CStalkerActionGetOutOfAnomaly::execute	()
 	if ( !base_alife_object )
 		return;
 
-	CSE_ALifeHumanAbstract const* const alife_object = smart_cast<CSE_ALifeHumanAbstract const*>( base_alife_object );
+	CSE_ALifeHumanAbstract const* const alife_object = smart_cast<CSE_ALifeHumanAbstract const>( base_alife_object );
 	if ( !alife_object )
 		return;
 
@@ -104,9 +104,9 @@ void CStalkerActionGetOutOfAnomaly::execute	()
 	xr_vector<CObject*>::const_iterator	I = object().feel_touch.begin();
 	xr_vector<CObject*>::const_iterator	E = object().feel_touch.end();
 	for ( ; I != E; ++I) {
-		CCustomZone						*zone = smart_cast<CCustomZone*>(*I);
+		CCustomZone						*zone = smart_cast<CCustomZone>(*I);
 		if ( zone && (zone->restrictor_type() != RestrictionSpace::eRestrictorTypeNone) ) {
-			if (smart_cast<CRadioactiveZone*>(zone))
+			if (zone->IsA(CRadioactiveZone::StaticClass()))
 				continue;
 
 			if ( std::find( restrictions.begin(), restrictions.end(), zone->ID() ) != restrictions.end() )

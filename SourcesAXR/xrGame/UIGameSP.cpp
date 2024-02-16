@@ -53,7 +53,7 @@ void CUIGameSP::HideShownDialogs()
 void CUIGameSP::SetClGame (game_cl_GameState* g)
 {
 	inherited::SetClGame				(g);
-	m_game = smart_cast<game_cl_Single*>(g);
+	m_game = smart_cast<game_cl_Single>(g);
 	R_ASSERT							(m_game);
 }
 
@@ -99,12 +99,12 @@ bool CUIGameSP::IR_UIOnKeyboardPress(int dik)
 		attach_adjust_mode_keyb(dik);
 	}
 
-	CInventoryOwner* pInvOwner  = smart_cast<CInventoryOwner*>( Level().CurrentEntity() );
+	CInventoryOwner* pInvOwner  = smart_cast<CInventoryOwner>( Level().CurrentEntity() );
 	if ( !pInvOwner )			return false;
-	CEntityAlive* EA			= smart_cast<CEntityAlive*>(Level().CurrentEntity());
+	CEntityAlive* EA			= smart_cast<CEntityAlive>(Level().CurrentEntity());
 	if (!EA || !EA->g_Alive() )	return false;
 
-	CActor *pActor = smart_cast<CActor*>(pInvOwner);
+	CActor *pActor = smart_cast<CActor>(pInvOwner);
 	if( !pActor ) 
 		return false;
 
@@ -133,7 +133,7 @@ bool CUIGameSP::IR_UIOnKeyboardPress(int dik)
 				if (psActorFlags.test(AF_3D_PDA) && CurrentGameUI()->PdaMenu().IsShown())
 					pActor->inventory().Activate(NO_ACTIVE_SLOT);
 
-				CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(pActor->inventory().ItemFromSlot(BACKPACK_SLOT));
+				CCustomBackpack* backpack = smart_cast<CCustomBackpack>(pActor->inventory().ItemFromSlot(BACKPACK_SLOT));
 
 				if (!GameConstants::GetBackpackAnimsEnabled() || !backpack)
 					ShowActorMenu();

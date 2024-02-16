@@ -242,7 +242,7 @@ float CVisualMemoryManager::object_visible_distance(const CGameObject *game_obje
 
 	if (m_object) {
 		eye_matrix						= 
-			smart_cast<IKinematics*>(
+			reinterpret_cast<IKinematics*>(
 				m_object->Visual()
 			)
 			->LL_GetTransform		(
@@ -293,11 +293,11 @@ float CVisualMemoryManager::object_visible_distance(const CGameObject *game_obje
 
 float CVisualMemoryManager::object_luminocity	(const CGameObject *game_object) const
 {
-	const auto* pActor = smart_cast<const CActor*>(game_object);
+	const auto* pActor = smart_cast<const CActor>(game_object);
 	if (!pActor)
 		return	(1.f);
 
-	const auto* pTorch = smart_cast<const CTorch*>(pActor->GetCurrentTorch());
+	const auto* pTorch = smart_cast<const CTorch>(pActor->GetCurrentTorch());
 	if (pTorch && pTorch->torch_active()) 
 	{
 		float dist = 0.0f;
@@ -447,18 +447,18 @@ bool   CVisualMemoryManager::should_ignore_object (CObject const* object) const
 		return true;
 
 #ifndef MASTER_GOLD
-	if (smart_cast<CActor const*>(object) && psAI_Flags.test(aiIgnoreActor))
+	if (smart_cast<CActor const>(object) && psAI_Flags.test(aiIgnoreActor))
 		return	true;
 #endif // MASTER_GOLD
 	
-	CBaseMonster const* monster = smart_cast<CBaseMonster const*>(object);
+	CBaseMonster const* monster = smart_cast<CBaseMonster const>(object);
 
 	if (monster)
 	{
 		if (!monster->can_be_seen())
 			return true;
 
-		CZombie const* zombie = smart_cast<CZombie const*>(object);
+		CZombie const* zombie = smart_cast<CZombie const>(object);
 
 		if (zombie && zombie->fake_death_is_active())
 			return true;
@@ -479,7 +479,7 @@ void CVisualMemoryManager::add_visible_object	(const CObject *object, float time
 	const CGameObject *self;
 
 //	START_PROFILE("Memory Manager/visuals/update/add_visibles/visible")
-	game_object					= smart_cast<const CGameObject*>(object);
+	game_object					= smart_cast<const CGameObject>(object);
 	if (!game_object || (!fictitious && !visible(game_object,time_delta)))
 		return;
 //	STOP_PROFILE
@@ -580,7 +580,7 @@ float CVisualMemoryManager::feel_vision_mtl_transp(CObject* O, u32 element)
 {
 	float vis				= 1.f;
 	if (O){
-		IKinematics* V		= smart_cast<IKinematics*>(O->Visual());
+		IKinematics* V		= reinterpret_cast<IKinematics*>(O->Visual());
 		if (0!=V){
 			CBoneData& B	= V->LL_GetData(static_cast<u16>(element));
 			vis				= GMLib.GetMaterialByIdx(B.game_mtl_idx)->fVisTransparencyFactor;
@@ -773,7 +773,7 @@ void CVisualMemoryManager::update				(float time_delta)
 
 static inline bool is_object_valuable_to_save ( CCustomMonster const* const self, MemorySpace::CVisibleObject const& object )
 {
-	CEntityAlive const* const entity_alive = smart_cast<CEntityAlive const*>(object.m_object);
+	CEntityAlive const* const entity_alive = smart_cast<CEntityAlive const>(object.m_object);
 	if ( !entity_alive )
 		return					false;
 
@@ -860,7 +860,7 @@ void CVisualMemoryManager::load	(IReader &packet)
 		delayed_object.m_object_id	= packet.r_u16();
 
 		CVisibleObject				&object = delayed_object.m_visible_object;
-		object.m_object				= smart_cast<CGameObject*>(Level().Objects.net_Find(delayed_object.m_object_id));
+		object.m_object				= smart_cast<CGameObject>(Level().Objects.net_Find(delayed_object.m_object_id));
 		// object params
 		object.m_object_params.m_level_vertex_id	= packet.r_u32();
 		packet.r_fvector3			(object.m_object_params.m_position);
@@ -941,7 +941,7 @@ void CVisualMemoryManager::on_requested_spawn	(CObject *object)
 			continue;
 		
 		if (m_object->g_Alive()) {
-			I->m_visible_object.m_object	= smart_cast<CGameObject*>(object);
+			I->m_visible_object.m_object	= smart_cast<CGameObject>(object);
 			VERIFY						(I->m_visible_object.m_object);
 			add_visible_object			(I->m_visible_object);
 		}

@@ -17,8 +17,11 @@ class CSE_ALifeObjectHangingLamp;
 class CPHElement;
 class CHangingLamp: 
 public CPhysicsShellHolder,
-public CPHSkeleton
-{//need m_pPhysicShell
+public CPHSkeleton,
+public IMetaClass
+{
+	DECLARE_METACLASS2(CHangingLamp, CPhysicsShellHolder, CPHSkeleton)
+	//need m_pPhysicShell
 	typedef	CPhysicsShellHolder		inherited;
 private:
 	u16				light_bone;

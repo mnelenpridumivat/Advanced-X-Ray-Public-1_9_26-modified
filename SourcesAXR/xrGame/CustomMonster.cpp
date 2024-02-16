@@ -332,7 +332,7 @@ void CCustomMonster::shedule_Update	( u32 DT )
 			Device.seqParallel.push_back	(fastdelegate::FastDelegate0<>(this,&CCustomMonster::Exec_Visibility));
 #else // DEBUG
 		{
-			if (!psAI_Flags.test(aiStalker) || !!smart_cast<CActor*>(Level().CurrentEntity()))
+			if (!psAI_Flags.test(aiStalker) || Level().CurrentEntity()->IsA(CActor::StaticClass()))
 				Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this,&CCustomMonster::Exec_Visibility));
 			else
 				Exec_Visibility				();

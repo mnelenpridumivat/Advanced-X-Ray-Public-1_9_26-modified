@@ -55,9 +55,12 @@ enum EMenuMode{
 		mmCarTrunk,
 };
 
-class CUIActorMenu :	public CUIDialogWnd, 
-						public CUIWndCallback
+class CUIActorMenu :
+	public CUIDialogWnd, 
+	public CUIWndCallback,
+	public IMetaClass
 {
+	DECLARE_METACLASS2(CUIActorMenu, CUIDialogWnd, CUIWndCallback)
 	typedef CUIDialogWnd		inherited;
 	typedef inventory::upgrade::Upgrade 	Upgrade_type;
 

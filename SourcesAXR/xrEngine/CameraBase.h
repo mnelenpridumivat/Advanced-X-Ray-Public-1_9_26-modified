@@ -11,8 +11,10 @@
 // refs
 class CObject;
 
-class ENGINE_API	CCameraBase
+class ENGINE_API	CCameraBase :
+	public IMetaClass
 {
+	DECLARE_METACLASS(CCameraBase)
 protected:
 	CObject*		parent;
 

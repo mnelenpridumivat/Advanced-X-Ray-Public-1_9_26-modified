@@ -785,7 +785,7 @@ BOOL CGameObject::TestServerFlag(u32 Flag) const
 
 void CGameObject::add_visual_callback		(visual_callback *callback)
 {
-	VERIFY						(smart_cast<IKinematics*>(Visual()));
+	VERIFY						(reinterpret_cast<IKinematics*>(Visual()));
 	CALLBACK_VECTOR_IT			I = std::find(visual_callbacks().begin(),visual_callbacks().end(),callback);
 	VERIFY						(I == visual_callbacks().end());
 

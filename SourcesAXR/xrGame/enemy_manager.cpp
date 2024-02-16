@@ -90,7 +90,7 @@ float CEnemyManager::evaluate				(const CEntityAlive *object) const
 {
 //	Msg						("[%6d] enemy manager %s evaluates %s",Device.dwTimeGlobal,*m_object->cName(),*object->cName());
 
-	bool					actor = (!!smart_cast<CActor const*>(object));
+	bool					actor = object->IsA(CActor::StaticClass());
 	if (actor)
 		m_ready_to_save		= false;
 
@@ -252,10 +252,10 @@ bool CEnemyManager::change_from_wounded					(const CEntityAlive *current, const 
 
 IC	bool CEnemyManager::enemy_inertia					(const CEntityAlive *previous_enemy) const
 {
-	if (smart_cast<CActor const*>(m_selected))
+	if (m_selected->IsA(CActor::StaticClass()))
 		return					(Device.dwTimeGlobal <= (m_last_enemy_change + ENEMY_INERTIA_TIME_TO_ACTOR));
 
-	if (previous_enemy && smart_cast<CActor const*>(previous_enemy))
+	if (previous_enemy && previous_enemy->IsA(CActor::StaticClass()))
 		return					(Device.dwTimeGlobal <= (m_last_enemy_change + ENEMY_INERTIA_TIME_FROM_ACTOR));
 
 	return						(Device.dwTimeGlobal <= (m_last_enemy_change + ENEMY_INERTIA_TIME_TO_SOMEBODY));

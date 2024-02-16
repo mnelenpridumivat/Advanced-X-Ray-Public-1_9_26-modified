@@ -80,9 +80,9 @@ CScriptGameObject *tpfGetActor()
 		ai().script_engine().script_log(eLuaMessageTypeError,"Do not use level.actor function!");
 	first_time = false;
 	
-	CActor *l_tpActor = smart_cast<CActor*>(Level().CurrentEntity());
+	CActor *l_tpActor = smart_cast<CActor>(Level().CurrentEntity());
 	if (l_tpActor)
-		return	(smart_cast<CGameObject*>(l_tpActor)->lua_game_object());
+		return	(smart_cast<CGameObject>(l_tpActor)->lua_game_object());
 	else
 		return	(0);
 }
@@ -94,7 +94,7 @@ CScriptGameObject *get_object_by_name(LPCSTR caObjectName)
 		ai().script_engine().script_log(eLuaMessageTypeError,"Do not use level.object function!");
 	first_time = false;
 	
-	CGameObject		*l_tpGameObject	= smart_cast<CGameObject*>(Level().Objects.FindObjectByName(caObjectName));
+	CGameObject		*l_tpGameObject	= smart_cast<CGameObject>(Level().Objects.FindObjectByName(caObjectName));
 	if (l_tpGameObject)
 		return		(l_tpGameObject->lua_game_object());
 	else
@@ -104,7 +104,7 @@ CScriptGameObject *get_object_by_name(LPCSTR caObjectName)
 
 CScriptGameObject *get_object_by_id(u16 id)
 {
-	CGameObject* pGameObject = smart_cast<CGameObject*>(Level().Objects.net_Find(id));
+	CGameObject* pGameObject = smart_cast<CGameObject>(Level().Objects.net_Find(id));
 	if(!pGameObject)
 		return NULL;
 
@@ -239,7 +239,7 @@ float get_global_time_factor()
 void set_game_difficulty(ESingleGameDifficulty dif)
 {
 	g_SingleGameDifficulty		= dif;
-	game_cl_Single* game		= smart_cast<game_cl_Single*>(Level().game); VERIFY(game);
+	game_cl_Single* game		= smart_cast<game_cl_Single>(Level().game); VERIFY(game);
 	game->OnDifficultyChanged	();
 }
 ESingleGameDifficulty get_game_difficulty()
@@ -270,7 +270,7 @@ u32 get_time_minutes()
 
 void change_game_time(u32 days, u32 hours, u32 mins)
 {
-	game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
+	game_sv_Single	*tpGame = smart_cast<game_sv_Single>(Level().Server->game);
 	if(tpGame && ai().get_alife())
 	{
 		u32 value		= days*86400+hours*3600+mins*60;
@@ -283,7 +283,7 @@ void change_game_time(u32 days, u32 hours, u32 mins)
 
 void set_game_date_time(LPCSTR date, LPCSTR time)
 {
-	game_sv_Single* tpGame = smart_cast<game_sv_Single*>(Level().Server->game);
+	game_sv_Single* tpGame = smart_cast<game_sv_Single>(Level().Server->game);
 	if (tpGame && ai().get_alife())
 	{
 		u32	years, months, days, hours, minutes, seconds;
@@ -699,7 +699,7 @@ void add_pp_effector(LPCSTR fn, int id, bool cyclic)
 
 void remove_pp_effector(int id)
 {
-	CPostprocessAnimator*	pp	= smart_cast<CPostprocessAnimator*>(Actor()->Cameras().GetPPEffector(static_cast<EEffectorPPType>(id)));
+	CPostprocessAnimator*	pp	= smart_cast<CPostprocessAnimator>(Actor()->Cameras().GetPPEffector(static_cast<EEffectorPPType>(id)));
 
 	if(pp) pp->Stop(1.0f);
 
@@ -707,14 +707,14 @@ void remove_pp_effector(int id)
 
 void set_pp_effector_factor(int id, float f, float f_sp)
 {
-	CPostprocessAnimator*	pp	= smart_cast<CPostprocessAnimator*>(Actor()->Cameras().GetPPEffector(static_cast<EEffectorPPType>(id)));
+	CPostprocessAnimator*	pp	= smart_cast<CPostprocessAnimator>(Actor()->Cameras().GetPPEffector(static_cast<EEffectorPPType>(id)));
 
 	if(pp) pp->SetDesiredFactor(f,f_sp);
 }
 
 void set_pp_effector_factor2(int id, float f)
 {
-	CPostprocessAnimator*	pp	= smart_cast<CPostprocessAnimator*>(Actor()->Cameras().GetPPEffector(static_cast<EEffectorPPType>(id)));
+	CPostprocessAnimator*	pp	= smart_cast<CPostprocessAnimator>(Actor()->Cameras().GetPPEffector(static_cast<EEffectorPPType>(id)));
 
 	if(pp) pp->SetCurrentFactor(f);
 }
@@ -767,8 +767,8 @@ int g_get_general_goodwill_between ( u16 from, u16 to)
 {
 	CHARACTER_GOODWILL presonal_goodwill		= RELATION_REGISTRY().GetGoodwill(from, to); VERIFY(presonal_goodwill != NO_GOODWILL);
 
-	CSE_ALifeTraderAbstract* from_obj	= smart_cast<CSE_ALifeTraderAbstract*>(ai().alife().objects().object(from));
-	CSE_ALifeTraderAbstract* to_obj		= smart_cast<CSE_ALifeTraderAbstract*>(ai().alife().objects().object(to));
+	CSE_ALifeTraderAbstract* from_obj	= smart_cast<CSE_ALifeTraderAbstract>(ai().alife().objects().object(from));
+	CSE_ALifeTraderAbstract* to_obj		= smart_cast<CSE_ALifeTraderAbstract>(ai().alife().objects().object(to));
 
 	if (!from_obj||!to_obj){
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"RELATION_REGISTRY::get_general_goodwill_between  : cannot convert obj to CSE_ALifeTraderAbstract!");
@@ -890,7 +890,7 @@ CScriptGameObject* g_get_target_obj()
 	collide::rq_result& RQ = HUD().GetCurrentRayQuery();
 	if (RQ.O)
 	{
-		CGameObject* game_object = smart_cast<CGameObject*>(RQ.O);
+		CGameObject* game_object = smart_cast<CGameObject>(RQ.O);
 		if (game_object)
 			return game_object->lua_game_object();
 	}
@@ -1119,7 +1119,7 @@ void spawn_section(pcstr sSection, Fvector3 vPosition, u32 LevelVertexID, u16 Pa
 
 u8 get_active_cam()
 {
-	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
+	CActor* actor = smart_cast<CActor>(Level().CurrentViewEntity());
 	if (actor)
 		return static_cast<u8>(actor->active_cam());
 
@@ -1128,7 +1128,7 @@ u8 get_active_cam()
 
 void set_active_cam(u8 mode)
 {
-	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
+	CActor* actor = smart_cast<CActor>(Level().CurrentViewEntity());
 	if (actor && mode <= eacMaxCam)
 		actor->cam_Set(static_cast<EActorCameras>(mode));
 }
