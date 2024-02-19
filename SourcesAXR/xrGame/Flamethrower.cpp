@@ -149,7 +149,18 @@ void CFlamethrower::Load(LPCSTR section)
 
 	}
 
-	TraceManager->Load(section);
+	m_overheating_decrease_speed = pSettings->r_float(section, "overheating_decrease_speed");
+	m_overheating_increase_speed_min = pSettings->r_float(section, "overheating_increase_speed_min");
+	m_overheating_increase_speed_max = pSettings->r_float(section, "overheating_increase_speed_max");
+	m_overheating_reset_level_max = pSettings->r_float(section, "overheating_reset_level_max");
+
+	m_fuel_reduce_speed_charge = pSettings->r_float(section, "fuel_reduce_speed_charge");
+	m_fuel_reduce_speed_shoot = pSettings->r_float(section, "fuel_reduce_speed_shoot");
+
+	m_dps = pSettings->r_float(section, "dps");
+	m_burn_time = pSettings->r_float(section, "burn_time");
+
+	TraceManager->Load((xr_string(section)+"_trace").c_str());
 }
 
 bool CFlamethrower::UseScopeTexture()
@@ -431,43 +442,22 @@ void CFlamethrower::ReloadMagazine()
 
 		//попытаться найти в инвентаре патроны текущего типа 
 		AmmoCanister = smart_cast<CFlameCanister*>(m_pInventory->GetAny(tmp_sect_name));
-
-		if (!AmmoCanister && !m_bLockType)
+		while(AmmoCanister && m_current_fuel_level < 1.0f)
 		{
-			for (u8 i = 0; i < static_cast<u8>(m_ammoTypes.size()); ++i)
+			float Cond = AmmoCanister->GetCondition();
+			Cond -= (1.0f - m_current_fuel_level);
+			if(Cond <= 0.0)
 			{
-				//проверить патроны всех подходящих типов
-				AmmoCanister = smart_cast<CFlameCanister*>(m_pInventory->GetAny(m_ammoTypes[i].c_str()));
-				if (AmmoCanister)
-				{
-					m_ammoType = i;
-					break;
-				}
+				m_current_fuel_level += AmmoCanister->GetCondition();
+				AmmoCanister->SetCondition(0.0f);
+				AmmoCanister->SetDropManual(TRUE);
+			} else
+			{
+				AmmoCanister->SetCondition(Cond);
+				m_current_fuel_level = 1.0f;
 			}
+			AmmoCanister = smart_cast<CFlameCanister*>(m_pInventory->GetAny(tmp_sect_name));
 		}
-	}
-
-
-
-	//нет патронов для перезарядки
-	if (!AmmoCanister && !unlimited_ammo()) return;
-
-	//Модернизируем проверку на соотвествие патронов, будем проверять так же последний патрон
-	//разрядить магазин, если загружаем патронами другого типа
-	if (!m_bLockType && !m_current_fuel_level && (!AmmoCanister))
-	{
-		UnloadMagazine();
-	}
-
-	//выкинуть коробку патронов, если она пустая
-	if (AmmoCanister && !AmmoCanister->GetCondition() && OnServer())
-		AmmoCanister->SetDropManual(TRUE);
-
-	if (iMagazineSize > iAmmoElapsed)
-	{
-		m_bLockType = true;
-		ReloadMagazine();
-		m_bLockType = false;
 	}
 }
 
@@ -1024,7 +1014,7 @@ bool CFlamethrower::Action(u16 cmd, u32 flags)
 		if (Actor()->mstate_real & (mcSprint) && !GameConstants::GetReloadIfSprint())
 			break;
 		else if (flags & CMD_START)
-			if (iAmmoElapsed < iMagazineSize || IsMisfire())
+			if (m_current_fuel_level < 1.0 || IsMisfire())
 			{
 				if (GetState() == eUnMisfire) // Rietmon: Запрещаем перезарядку, если играет анима передергивания затвора
 					return false;
@@ -1551,8 +1541,8 @@ bool CFlamethrower::GetBriefInfo(II_BriefInfo& info)
 	VERIFY(m_pInventory);
 	string32	int_str, fire_mode, ammo = "";
 
-	int	ae = GetAmmoElapsed();
-	xr_sprintf(int_str, "%d", ae);
+	int	ae = (int)(m_current_fuel_level * 100.0f);
+	xr_sprintf(int_str, "%d%%", ae);
 	info.cur_ammo = int_str;
 	info.fire_mode._set("");
 
@@ -1606,13 +1596,13 @@ bool CFlamethrower::GetBriefInfo(II_BriefInfo& info)
 
 		info.ap_ammo = int_str;*/
 
-
-		info.fmj_ammo._set("");
-		info.ap_ammo._set("");
+		xr_sprintf(ammo, "%d%%", (int)(m_current_charge * 100.0f));
+		info.fmj_ammo._set(ammo);
+		/*info.ap_ammo._set("");
 
 		if (at_size >= 1 && at_size < 3)
 		{
-			xr_sprintf(ammo, "%d", GetAmmoCount(0));
+			xr_sprintf(ammo, "%d", (int)(m_current_fuel_level*100.0f));
 			info.fmj_ammo._set(ammo);
 		}
 		if (at_size == 2)
@@ -1634,7 +1624,7 @@ bool CFlamethrower::GetBriefInfo(II_BriefInfo& info)
 			}
 			xr_sprintf(ammo, "%d", ap);
 			info.ap_ammo._set(ammo);
-		}
+		}*/
 
 		// Lex Addon (correct by Suhar_) 28.07.2017		(end)
 	}

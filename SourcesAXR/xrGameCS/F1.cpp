@@ -33,6 +33,8 @@ void CF1::script_register	(lua_State *L)
 			//new 14.10.08 peacemaker
 		class_<CWeaponAmmo,CGameObject>("CWeaponAmmo")
 			.def(constructor<>()),
+		class_<CWeaponAmmo,CGameObject>("CWeaponAmmo")
+			.def(constructor<>()),
 		class_<CMedkit,CGameObject>("CMedkit")
 			.def(constructor<>()),
 		class_<CAntirad,CGameObject>("CAntirad")

@@ -225,6 +225,15 @@ SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemWeapon)
 #define script_type_list save_type_list(CSE_ALifeItemWeapon)
 
+SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemFlamethrower, CSE_ALifeItemWeapon)
+CSE_ALifeItemFlamethrower(LPCSTR caSection);
+virtual							~CSE_ALifeItemFlamethrower();
+
+virtual CSE_ALifeItemFlamethrower* cast_item_flamethrower() override { return this; }
+SERVER_ENTITY_DECLARE_END
+add_to_type_list(CSE_ALifeItemFlamethrower)
+#define script_type_list save_type_list(CSE_ALifeItemFlamethrower)
+
 SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeaponMagazined,CSE_ALifeItemWeapon)
 u8			m_u8CurFireMode;
 CSE_ALifeItemWeaponMagazined(LPCSTR caSection);

@@ -115,6 +115,12 @@ CFlamethrowerTraceCollision::~CFlamethrowerTraceCollision()
 
 void CFlamethrowerTraceCollision::Load(LPCSTR section)
 {
+	m_RadiusMin = pSettings->r_float(section, "RadiusMin");
+	m_RadiusMin = pSettings->r_float(section, "RadiusMax");
+	m_RadiusCollided = pSettings->r_float(section, "RadiusCollided");
+	m_RadiusMaxTime = pSettings->r_float(section, "RadiusMaxTime");
+	m_Velocity = pSettings->r_float(section, "Velocity");
+	m_LifeTime = pSettings->r_float(section, "LifeTime");
 }
 
 inline CFlamethrower* CFlamethrowerTraceCollision::GetParentWeapon() const
