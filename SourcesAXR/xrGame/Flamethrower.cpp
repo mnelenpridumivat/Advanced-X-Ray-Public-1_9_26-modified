@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "pch_script.h"
 
 #include "Flamethrower.h"
@@ -1462,7 +1463,7 @@ void CFlamethrower::OnZoomIn()
 		object->callback(GameObject::eOnWeaponZoomIn)(object->lua_game_object(), this->lua_game_object());
 	//-Alundaio
 
-	CActor* pActor = smart_cast<CActor*>(H_Parent());
+	/*CActor* pActor = smart_cast<CActor*>(H_Parent());
 	if (pActor)
 	{
 		CEffectorZoomInertion* S = smart_cast<CEffectorZoomInertion*>	(pActor->Cameras().GetCamEffector(eCEZoom));
@@ -1473,7 +1474,7 @@ void CFlamethrower::OnZoomIn()
 		};
 		S->SetRndSeed(pActor->GetZoomRndSeed());
 		R_ASSERT(S);
-	}
+	}*/
 }
 void CFlamethrower::OnZoomOut()
 {

@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "FlameCanister.h"
+#include "Flamethrower.h"
+#include "Inventory.h"
+#include "Level.h"
 
 CFlameCanister::CFlameCanister(void)
 {
@@ -13,24 +16,8 @@ void CFlameCanister::Load(LPCSTR section)
 {
 	inherited::Load(section);
 
-	cartridge_param.kDist = pSettings->r_float(section, "k_dist");
-	cartridge_param.kDisp = pSettings->r_float(section, "k_disp");
 	cartridge_param.kHit = pSettings->r_float(section, "k_hit");
-	//.	cartridge_param.kCritical	= pSettings->r_float(section, "k_hit_critical");
-	cartridge_param.kImpulse = pSettings->r_float(section, "k_impulse");
-	//m_kPierce				= pSettings->r_float(section, "k_pierce");
-	cartridge_param.kAP = pSettings->r_float(section, "k_ap");
-	cartridge_param.u8ColorID = READ_IF_EXISTS(pSettings, r_u8, section, "tracer_color_ID", 0);
 
-	if (pSettings->line_exist(section, "k_air_resistance"))
-		cartridge_param.kAirRes = pSettings->r_float(section, "k_air_resistance");
-	else
-		cartridge_param.kAirRes = pSettings->r_float(BULLET_MANAGER_SECTION, "air_resistance_k");
-	m_tracer = !!pSettings->r_bool(section, "tracer");
-	cartridge_param.buckShot = pSettings->r_s32(section, "buck_shot");
-	cartridge_param.impair = pSettings->r_float(section, "impair");
-	cartridge_param.fWallmarkSize = pSettings->r_float(section, "wm_size");
-	R_ASSERT(cartridge_param.fWallmarkSize > 0);
 }
 
 BOOL CFlameCanister::net_Spawn(CSE_Abstract* DC)
@@ -73,21 +60,6 @@ bool CFlameCanister::Useful() const
 {
 	// ≈сли IItem еще не полностью использованый, вернуть true
 	return !!GetCondition();
-}
-
-bool CFlameCanister::Get(CCartridge& cartridge)
-{
-	if (!m_boxCurr) return false;
-	cartridge.m_ammoSect = cNameSect();
-
-	cartridge.param_s = cartridge_param;
-
-	cartridge.m_flags.set(CCartridge::cfTracer, m_tracer);
-	cartridge.bullet_material_idx = GMLib.GetMaterialIdx(WEAPON_MATERIAL_NAME);
-	cartridge.m_InvShortName = NameShort();
-	--m_boxCurr;
-	if (m_pInventory)m_pInventory->InvalidateState();
-	return true;
 }
 
 void CFlameCanister::renderable_Render()

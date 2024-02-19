@@ -100,6 +100,7 @@ public:
 
 	CWeapon			*cast_weapon			() override {return this;}
 	virtual CWeaponMagazined*cast_weapon_magazined	()					{return 0;}
+	virtual CFlamethrower* cast_flamethrower() override { return nullptr; }
 
 
 	//serialization

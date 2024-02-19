@@ -36,6 +36,7 @@ class CAntigasFilter;
 class CBattery;
 class CRepairKit;
 class CArtefact;
+class CFlamethrower;
 
 struct SPHNetState;
 struct net_update_IItem;
@@ -295,6 +296,7 @@ public:
 	virtual CWeaponAmmo			*cast_weapon_ammo			()	{return nullptr;}
 	virtual CFlameCanister		*cast_flame_canister		()	{return nullptr;}
 	virtual CGameObject			*cast_game_object			()  {return nullptr;}
+	virtual CFlamethrower* cast_flamethrower() { return nullptr; }
 
 	////////// upgrades //////////////////////////////////////////////////
 public:

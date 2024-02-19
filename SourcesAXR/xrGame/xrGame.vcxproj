@@ -4926,6 +4926,7 @@
     <ClCompile Include="first_bullet_controller.cpp" />
     <ClCompile Include="FlameCanister.cpp" />
     <ClCompile Include="Flamethrower.cpp" />
+    <ClCompile Include="FlamethrowerTraceCollision.cpp" />
     <ClCompile Include="flare.cpp" />
     <ClCompile Include="FoodItem.cpp" />
     <ClCompile Include="FryupZone.cpp" />

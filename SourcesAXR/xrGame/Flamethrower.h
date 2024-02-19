@@ -66,7 +66,7 @@ public:
 	~CFlamethrower() override;
 
 	void	Load(LPCSTR section) override;
-	CFlamethrower* cast_flamethrower() override { return this; }
+	virtual CFlamethrower* cast_flamethrower() override { return this; }
 
 	bool    UseScopeTexture() override;
 	void	SetDefaults() override;

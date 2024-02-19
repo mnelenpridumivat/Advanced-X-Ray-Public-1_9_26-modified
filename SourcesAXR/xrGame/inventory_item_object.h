@@ -30,6 +30,7 @@ public:
 							CHudItem		*cast_hud_item					() override {return 0;}
 							CWeaponAmmo		*cast_weapon_ammo				() override {return 0;}
 							CGameObject		*cast_game_object				() override {return this;};
+							virtual CFlamethrower* cast_flamethrower() override { return nullptr; }
 
 public:
 							void	Load					(LPCSTR section) override;

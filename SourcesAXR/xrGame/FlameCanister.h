@@ -26,8 +26,6 @@ public:
 	float					Weight() const override;
 	u32						Cost() const override;
 
-	bool							Get(CCartridge& cartridge);
-
 	SCartridgeParam cartridge_param;
 
 public:
