@@ -3,6 +3,7 @@
 #include "ai_sounds.h"
 #include "weapon.h"
 
+class CFlamethrowerTraceManager;
 
 class CFlamethrower : public CWeapon
 {
@@ -98,6 +99,8 @@ public:
 
 	bool	GetBriefInfo(II_BriefInfo& info) override;
 
+	virtual BOOL			IsMisfire() const override;
+
 protected:
 	//скорость вылета остальных патронов
 	float			m_fOldBulletSpeed;
@@ -113,6 +116,8 @@ protected:
 	bool m_opened;
 	bool m_bUseFiremodeChangeAnim;
 
+	CFlameCanister* AmmoCanister = nullptr;
+
 	// overheating
 	bool m_is_overheated = false;
 	float m_overheating_state = 0.0f;
@@ -125,12 +130,25 @@ protected:
 	float m_charge_speed = 0.0f;
 	float m_current_charge = 0.0f;
 
+	// fuel params
+	float m_fuel_reduce_speed_charge = 0.0f;
+	float m_fuel_reduce_speed_shoot = 0.0f;
+
+	float m_current_fuel_level = 0.0f;
+	shared_str m_fuel_section_name;
+	float m_dps = 0.0f;
+	float m_burn_time = 0.0f;
+
+	bool m_keep_charge = false;
+
 public:
 	void	OnZoomIn() override;
 	void	OnZoomOut() override;
 
 	void	save(NET_Packet& output_packet) override;
 	void	load(IReader& input_packet) override;
+
+	void	SpawnFuelCanister(float Condition, LPCSTR ammoSect = NULL, u32 ParentID = 0xffffffff);
 
 protected:
 	bool	install_upgrade_impl(LPCSTR section, bool test) override;
@@ -186,4 +204,7 @@ protected:
 		u16 parent_id,
 		u16 weapon_id,
 		bool send_hit) override;
+
+	CFlamethrowerTraceManager* TraceManager = nullptr;
+
 };

@@ -26,6 +26,8 @@
 #include "script_game_object.h"
 #include "AdvancedXrayGameConstants.h"
 #include "FlameCanister.h"
+#include "FlamethrowerTraceCollision.h"
+#include "ai_object_location.h"
 
 ENGINE_API bool	g_dedicated_server;
 ENGINE_API  extern float psHUD_FOV;
@@ -56,11 +58,14 @@ CFlamethrower::CFlamethrower(ESoundTypes eSoundType) : CWeapon()
 	bHasBulletsToHide = false;
 
 	m_sSndShotCurrent = nullptr;
+
+	TraceManager = xr_new<CFlamethrowerTraceManager>(this);
 }
 
 CFlamethrower::~CFlamethrower()
 {
 	// sounds
+	xr_delete(TraceManager);
 }
 
 
@@ -143,6 +148,8 @@ void CFlamethrower::Load(LPCSTR section)
 		}
 
 	}
+
+	TraceManager->Load(section);
 }
 
 bool CFlamethrower::UseScopeTexture()
@@ -253,7 +260,7 @@ bool CFlamethrower::TryReload()
 			Actor()->callback(GameObject::eWeaponNoAmmoAvailable)(lua_game_object(), AC);
 		}
 
-		m_pCurrentAmmo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(m_ammoTypes[m_ammoType].c_str()));
+		AmmoCanister = smart_cast<CFlameCanister*>(m_pInventory->GetAny(m_ammoTypes[m_ammoType].c_str()));
 
 		if (IsMisfire() && iAmmoElapsed)
 		{
@@ -262,7 +269,7 @@ bool CFlamethrower::TryReload()
 			return				true;
 		}
 
-		if (m_pCurrentAmmo || unlimited_ammo())
+		if (AmmoCanister || unlimited_ammo())
 		{
 			SetPending(TRUE);
 			SwitchState(eReload);
@@ -272,8 +279,8 @@ bool CFlamethrower::TryReload()
 		{
 			for (u32 i = 0; i < m_ammoTypes.size(); ++i)
 			{
-				m_pCurrentAmmo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(*m_ammoTypes[i]));
-				if (m_pCurrentAmmo)
+				AmmoCanister = smart_cast<CFlameCanister*>(m_pInventory->GetAny(*m_ammoTypes[i]));
+				if (AmmoCanister)
 				{
 					m_set_next_ammoType_on_reload = i;
 					SetPending(TRUE);
@@ -333,31 +340,6 @@ void CFlamethrower::UnloadMagazine(bool spawn_ammo)
 	last_hide_bullet = -1;
 	HUD_VisualBulletUpdate();
 
-	xr_map<LPCSTR, u16> l_ammo;
-
-	while (!m_magazine.empty())
-	{
-		CCartridge& l_cartridge = m_magazine.back();
-		xr_map<LPCSTR, u16>::iterator l_it;
-		for (l_it = l_ammo.begin(); l_ammo.end() != l_it; ++l_it)
-		{
-			if (!xr_strcmp(*l_cartridge.m_ammoSect, l_it->first))
-			{
-				++(l_it->second);
-				break;
-			}
-		}
-
-		if (l_it == l_ammo.end()) l_ammo[*l_cartridge.m_ammoSect] = 1;
-		m_magazine.pop_back();
-		--iAmmoElapsed;
-	}
-
-	VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
-
-	if (iAmmoElapsed < 0)
-		iAmmoElapsed = 0;
-
 	if (IsGameTypeSingle() && ParentIsActor())
 	{
 		int AC = GetSuitableAmmoTotal();
@@ -367,24 +349,9 @@ void CFlamethrower::UnloadMagazine(bool spawn_ammo)
 	if (!spawn_ammo)
 		return;
 
-	xr_map<LPCSTR, u16>::iterator l_it;
-	for (l_it = l_ammo.begin(); l_ammo.end() != l_it; ++l_it)
-	{
-		if (m_pInventory)
-		{
-			CWeaponAmmo* l_pA = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(l_it->first));
-			if (l_pA)
-			{
-				u16 l_free = l_pA->m_boxSize - l_pA->m_boxCurr;
-				l_pA->m_boxCurr = l_pA->m_boxCurr + (l_free < l_it->second ? l_free : l_it->second);
-				l_it->second = l_it->second - (l_free < l_it->second ? l_free : l_it->second);
-			}
-		}
-		if (l_it->second && !unlimited_ammo()) SpawnAmmo(l_it->second, l_it->first);
+	if (!unlimited_ammo()) {
+		SpawnFuelCanister(m_current_fuel_level, m_fuel_section_name.c_str());
 	}
-
-	if (iAmmoElapsed < 0)
-		iAmmoElapsed = 0;
 
 	SwitchState(eIdle);
 }
@@ -441,7 +408,7 @@ void CFlamethrower::ReloadMagazine()
 
 	if (!m_bLockType)
 	{
-		m_pCurrentAmmo = NULL;
+		AmmoCanister = NULL;
 	}
 
 	if (!m_pInventory) return;
@@ -463,15 +430,15 @@ void CFlamethrower::ReloadMagazine()
 			return;
 
 		//попытаться найти в инвентаре патроны текущего типа 
-		m_pCurrentAmmo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(tmp_sect_name));
+		AmmoCanister = smart_cast<CFlameCanister*>(m_pInventory->GetAny(tmp_sect_name));
 
-		if (!m_pCurrentAmmo && !m_bLockType)
+		if (!AmmoCanister && !m_bLockType)
 		{
 			for (u8 i = 0; i < static_cast<u8>(m_ammoTypes.size()); ++i)
 			{
 				//проверить патроны всех подходящих типов
-				m_pCurrentAmmo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(m_ammoTypes[i].c_str()));
-				if (m_pCurrentAmmo)
+				AmmoCanister = smart_cast<CFlameCanister*>(m_pInventory->GetAny(m_ammoTypes[i].c_str()));
+				if (AmmoCanister)
 				{
 					m_ammoType = i;
 					break;
@@ -483,36 +450,18 @@ void CFlamethrower::ReloadMagazine()
 
 
 	//нет патронов для перезарядки
-	if (!m_pCurrentAmmo && !unlimited_ammo()) return;
+	if (!AmmoCanister && !unlimited_ammo()) return;
 
 	//Модернизируем проверку на соотвествие патронов, будем проверять так же последний патрон
 	//разрядить магазин, если загружаем патронами другого типа
-	if (!m_bLockType && !m_magazine.empty() && (!m_pCurrentAmmo || xr_strcmp(m_pCurrentAmmo->cNameSect(), *m_magazine.front().m_ammoSect)))
+	if (!m_bLockType && !m_current_fuel_level && (!AmmoCanister))
 	{
 		UnloadMagazine();
 	}
 
-	VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
-
-	if (m_DefaultCartridge.m_LocalAmmoType != m_ammoType)
-		m_DefaultCartridge.Load(m_ammoTypes[m_ammoType].c_str(), m_ammoType);
-	CCartridge l_cartridge = m_DefaultCartridge;
-	while (iAmmoElapsed < iMagazineSize)
-	{
-		if (!unlimited_ammo())
-		{
-			if (!m_pCurrentAmmo->Get(l_cartridge)) break;
-		}
-		++iAmmoElapsed;
-		l_cartridge.m_LocalAmmoType = m_ammoType;
-		m_magazine.push_back(l_cartridge);
-	}
-
-	VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
-
 	//выкинуть коробку патронов, если она пустая
-	if (m_pCurrentAmmo && !m_pCurrentAmmo->m_boxCurr && OnServer())
-		m_pCurrentAmmo->SetDropManual(TRUE);
+	if (AmmoCanister && !AmmoCanister->GetCondition() && OnServer())
+		AmmoCanister->SetDropManual(TRUE);
 
 	if (iMagazineSize > iAmmoElapsed)
 	{
@@ -520,8 +469,6 @@ void CFlamethrower::ReloadMagazine()
 		ReloadMagazine();
 		m_bLockType = false;
 	}
-
-	VERIFY(static_cast<u32>(iAmmoElapsed) == m_magazine.size());
 }
 
 void CFlamethrower::OnStateSwitch(u32 S)
@@ -592,9 +539,14 @@ void CFlamethrower::UpdateCL()
 		case eSprintEnd:
 		case eIdle:
 		{
-			fShotTimeCounter -= dt;
-			clamp(fShotTimeCounter, 0.0f, flt_max);
-			state_Idle(dt);
+			if (m_keep_charge) {
+				state_FireCharge(dt);
+			}
+			else {
+				fShotTimeCounter -= dt;
+				clamp(fShotTimeCounter, 0.0f, flt_max);
+				state_Idle(dt);
+			}
 			break;
 		}
 		case eFire:
@@ -639,8 +591,10 @@ void CFlamethrower::UpdateSounds()
 
 void CFlamethrower::state_FireCharge(float dt)
 {
-	m_current_charge = m_current_charge + m_charge_speed * dt;
+	m_current_charge += m_charge_speed * dt;
 	clamp(m_current_charge, 0.0f, 1.0f);
+	m_current_fuel_level -= m_fuel_reduce_speed_charge * dt;
+	clamp(m_current_fuel_level, 0.0f, 1.0f);
 }
 
 void CFlamethrower::state_Fire(float dt)
@@ -675,7 +629,18 @@ void CFlamethrower::state_Fire(float dt)
 		if (!E->g_stateFire())
 			StopShooting();
 
-		VERIFY(!m_magazine.empty());
+		while (m_current_fuel_level && IsWorking()) {
+			if (CheckForMisfire())
+			{
+				StopShooting();
+				return;
+			}
+			OnShot();
+			m_current_fuel_level -= (m_fuel_reduce_speed_charge + m_fuel_reduce_speed_shoot) * dt;
+			clamp(m_current_fuel_level, 0.0f, 1.0f);
+		}
+
+		/*VERIFY(!m_magazine.empty());
 
 		while (!m_magazine.empty() &&
 			fShotTimeCounter < 0 &&
@@ -695,7 +660,7 @@ void CFlamethrower::state_Fire(float dt)
 			OnShot();
 
 			FireTrace(p1, d);
-		}
+		}*/
 
 		UpdateSounds();
 	}
@@ -1463,6 +1428,8 @@ void CFlamethrower::OnZoomIn()
 		object->callback(GameObject::eOnWeaponZoomIn)(object->lua_game_object(), this->lua_game_object());
 	//-Alundaio
 
+	m_keep_charge = true;
+
 	/*CActor* pActor = smart_cast<CActor*>(H_Parent());
 	if (pActor)
 	{
@@ -1492,10 +1459,12 @@ void CFlamethrower::OnZoomOut()
 		object->callback(GameObject::eOnWeaponZoomOut)(object->lua_game_object(), this->lua_game_object());
 	//-Alundaio
 
-	CActor* pActor = smart_cast<CActor*>(H_Parent());
+	m_keep_charge = false;
+
+	/*CActor* pActor = smart_cast<CActor*>(H_Parent());
 
 	if (pActor)
-		pActor->Cameras().RemoveCamEffector(eCEZoom);
+		pActor->Cameras().RemoveCamEffector(eCEZoom);*/
 
 }
 
@@ -1525,6 +1494,45 @@ void CFlamethrower::load(IReader& input_packet)
 	inherited::load(input_packet);
 	load_data(m_is_overheated, input_packet);
 	load_data(m_overheating_state, input_packet);
+}
+
+void CFlamethrower::SpawnFuelCanister(float Condition, LPCSTR ammoSect, u32 ParentID)
+{
+	if (OnClient())	return;
+	m_bAmmoWasSpawned = true;
+
+	int l_type = 0;
+	l_type %= m_ammoTypes.size();
+
+	if (!ammoSect) ammoSect = m_ammoTypes[l_type].c_str();
+
+	++l_type;
+	l_type %= m_ammoTypes.size();
+
+	CSE_Abstract* D = F_entity_Create(ammoSect);
+
+	{
+		CSE_ALifeItemFuel* l_pA = smart_cast<CSE_ALifeItemFuel*>(D);
+		R_ASSERT(l_pA);
+		D->s_name = ammoSect;
+		D->set_name_replace("");
+		//.		D->s_gameid					= u8(GameID());
+		D->s_RP = 0xff;
+		D->ID = 0xffff;
+		if (ParentID == 0xffffffff)
+			D->ID_Parent = (u16)H_Parent()->ID();
+		else
+			D->ID_Parent = static_cast<u16>(ParentID);
+
+		D->ID_Phantom = 0xffff;
+		D->s_flags.assign(M_SPAWN_OBJECT_LOCAL);
+		D->RespawnTime = 0;
+		l_pA->m_tNodeID = g_dedicated_server ? static_cast<u32>(-1) : ai_location().level_vertex_id();
+
+		l_pA->m_fCondition = Condition;
+	}
+	F_entity_Destroy(D);
+
 }
 
 void CFlamethrower::net_Export(NET_Packet& P)
@@ -1644,6 +1652,11 @@ bool CFlamethrower::GetBriefInfo(II_BriefInfo& info)
 		info.icon = ammo_type;
 	}
 	return true;
+}
+
+BOOL CFlamethrower::IsMisfire() const
+{
+	return m_is_overheated;
 }
 
 bool CFlamethrower::install_upgrade_impl(LPCSTR section, bool test)

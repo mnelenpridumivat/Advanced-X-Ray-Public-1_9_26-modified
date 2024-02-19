@@ -135,6 +135,17 @@ SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemAmmo)
 #define script_type_list save_type_list(CSE_ALifeItemAmmo)
 
+SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemFuel, CSE_ALifeItem)
+
+								CSE_ALifeItemFuel(LPCSTR caSection);
+virtual							~CSE_ALifeItemFuel();
+virtual CSE_ALifeItemFuel*		cast_item_fuel() override { return this; };
+virtual bool					can_switch_online() const;
+virtual bool					can_switch_offline() const;
+SERVER_ENTITY_DECLARE_END
+add_to_type_list(CSE_ALifeItemFuel)
+#define script_type_list save_type_list(CSE_ALifeItemFuel)
+
 SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeapon,CSE_ALifeItem)
 
 	typedef	ALife::EWeaponAddonStatus	EWeaponAddonStatus;

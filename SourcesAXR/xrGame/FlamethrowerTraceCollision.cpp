@@ -113,6 +113,10 @@ CFlamethrowerTraceCollision::~CFlamethrowerTraceCollision()
 {
 }
 
+void CFlamethrowerTraceCollision::Load(LPCSTR section)
+{
+}
+
 inline CFlamethrower* CFlamethrowerTraceCollision::GetParentWeapon() const
 {
 	return m_flamethrower->GetParent();
@@ -192,6 +196,31 @@ void CFlamethrowerTraceCollision::Update(float DeltaTime)
 	Level().ObjectSpace.RayQuery(storage, RD, CFlamethrowerTraceCollision::hit_callback, &data, CFlamethrowerTraceCollision::test_callback, NULL);
 	m_direction = m_position.sub(old_pos).normalize();
 
+}
+
+CFlamethrowerTraceManager::CFlamethrowerTraceManager(CFlamethrower* flamethrower) : m_flamethrower(flamethrower)
+{
+}
+
+CFlamethrowerTraceManager::~CFlamethrowerTraceManager()
+{
+	for (auto& elem : CollisionsPool) {
+		xr_delete(elem);
+	}
+}
+
+void CFlamethrowerTraceManager::Load(LPCSTR section)
+{
+	for (auto& elem : CollisionsPool) {
+		xr_delete(elem);
+	}
+	CollisionsPool.clear();
+	int StartNum = pSettings->r_u16(section, "trace_collision_num_start");
+	for (int i = 0; i < StartNum; ++i) {
+		auto NewCollision = xr_new<CFlamethrowerTraceCollision>(this);
+		NewCollision->Load(section);
+		CollisionsPool.push_back(NewCollision);
+	}
 }
 
 void CFlamethrowerTraceManager::UpdateOverlaps(float DeltaTime)

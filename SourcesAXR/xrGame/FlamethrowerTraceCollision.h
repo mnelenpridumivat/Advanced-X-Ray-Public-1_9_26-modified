@@ -39,6 +39,8 @@ public:
 	CFlamethrowerTraceCollision(CFlamethrowerTraceManager* flamethrower);
 	~CFlamethrowerTraceCollision();
 
+	void Load(LPCSTR section);
+
 	inline CFlamethrowerTraceManager* GetParent() const { return m_flamethrower; };
 	inline CFlamethrower* GetParentWeapon() const;
 
@@ -74,6 +76,10 @@ class CFlamethrowerTraceManager
 	float LifeTimeGroundAddition;
 
 public:
+	CFlamethrowerTraceManager(CFlamethrower* flamethrower);
+	~CFlamethrowerTraceManager();
+
+	void Load(LPCSTR section);
 
 	void UpdateOverlaps(float DeltaTime);
 

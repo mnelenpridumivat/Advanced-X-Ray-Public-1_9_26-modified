@@ -181,7 +181,7 @@ public:
 	// Does weapon need's update?
 	BOOL					IsUpdating			();
 
-	BOOL					IsMisfire			() const;
+	virtual BOOL			IsMisfire			() const;
 	BOOL					CheckForMisfire		();
 	BOOL					IsEmptyMagazine		() const;
 
