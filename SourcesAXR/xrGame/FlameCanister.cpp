@@ -6,6 +6,7 @@
 
 CFlameCanister::CFlameCanister(void)
 {
+	m_flags.set(FUsingCondition, TRUE);
 }
 
 CFlameCanister::~CFlameCanister(void)

@@ -149,6 +149,8 @@ void CFlamethrower::Load(LPCSTR section)
 
 	}
 
+	m_charge_speed = pSettings->r_float(section, "charge_speed");
+
 	m_overheating_decrease_speed = pSettings->r_float(section, "overheating_decrease_speed");
 	m_overheating_increase_speed_min = pSettings->r_float(section, "overheating_increase_speed_min");
 	m_overheating_increase_speed_max = pSettings->r_float(section, "overheating_increase_speed_max");
@@ -273,7 +275,7 @@ bool CFlamethrower::TryReload()
 
 		AmmoCanister = smart_cast<CFlameCanister*>(m_pInventory->GetAny(m_ammoTypes[m_ammoType].c_str()));
 
-		if (IsMisfire() && iAmmoElapsed)
+		if (IsMisfire() && m_current_fuel_level)
 		{
 			SetPending(TRUE);
 			SwitchState(eUnMisfire);
@@ -440,9 +442,29 @@ void CFlamethrower::ReloadMagazine()
 		if (!tmp_sect_name)
 			return;
 
+		xr_vector<PIItem> canisters;
+		m_pInventory->GetAll(tmp_sect_name, canisters);
+
 		//попытаться найти в инвентаре патроны текущего типа 
-		AmmoCanister = smart_cast<CFlameCanister*>(m_pInventory->GetAny(tmp_sect_name));
-		while(AmmoCanister && m_current_fuel_level < 1.0f)
+		//AmmoCanister = smart_cast<CFlameCanister*>(m_pInventory->GetAny(tmp_sect_name));
+		for(int i = 0; i < canisters.size(); ++i)
+		{
+			AmmoCanister = smart_cast<CFlameCanister*>(canisters[i]);
+			float Cond = AmmoCanister->GetCondition();
+			Cond -= (1.0f - m_current_fuel_level);
+			if (Cond <= 0.0)
+			{
+				m_current_fuel_level += AmmoCanister->GetCondition();
+				AmmoCanister->SetCondition(0.0f);
+				AmmoCanister->SetDropManual(TRUE);
+			}
+			else
+			{
+				AmmoCanister->SetCondition(Cond);
+				m_current_fuel_level = 1.0f;
+			}
+		}
+		/*while(AmmoCanister && m_current_fuel_level < 1.0f)
 		{
 			float Cond = AmmoCanister->GetCondition();
 			Cond -= (1.0f - m_current_fuel_level);
@@ -457,7 +479,7 @@ void CFlamethrower::ReloadMagazine()
 				m_current_fuel_level = 1.0f;
 			}
 			AmmoCanister = smart_cast<CFlameCanister*>(m_pInventory->GetAny(tmp_sect_name));
-		}
+		}*/
 	}
 }
 
@@ -514,7 +536,7 @@ void CFlamethrower::UpdateCL()
 	inherited::UpdateCL();
 	float dt = Device.fTimeDelta;
 
-
+	Msg("Update flamethrower: dt = [%f]", dt);
 
 	//когда происходит апдейт состояния оружия
 	//ничего другого не делать
@@ -531,11 +553,13 @@ void CFlamethrower::UpdateCL()
 		{
 			if (m_keep_charge) {
 				state_FireCharge(dt);
+				Msg("State: idle, keep charge. Charge - [%f], fuel - [%f], overheat - [%f]", m_current_charge, m_current_fuel_level, m_overheating_state);
 			}
 			else {
 				fShotTimeCounter -= dt;
 				clamp(fShotTimeCounter, 0.0f, flt_max);
 				state_Idle(dt);
+				Msg("State: idle, uncharge. Charge - [%f], fuel - [%f], overheat - [%f]", m_current_charge, m_current_fuel_level, m_overheating_state);
 			}
 			break;
 		}
@@ -544,9 +568,11 @@ void CFlamethrower::UpdateCL()
 			if(m_current_charge < 1.0f)
 			{
 				state_FireCharge(dt);
+				Msg("State: fire, charge. Charge - [%f], fuel - [%f], overheat - [%f]", m_current_charge, m_current_fuel_level, m_overheating_state);
 			}
 			else {
 				state_Fire(dt);
+				Msg("State: fire, shoot. Charge - [%f], fuel - [%f], overheat - [%f]", m_current_charge, m_current_fuel_level, m_overheating_state);
 			}
 			break;
 		}
@@ -589,7 +615,7 @@ void CFlamethrower::state_FireCharge(float dt)
 
 void CFlamethrower::state_Fire(float dt)
 {
-	if (iAmmoElapsed > 0)
+	if (m_current_fuel_level > 0)
 	{
 		VERIFY(fOneShotTime > 0.f);
 
@@ -619,7 +645,7 @@ void CFlamethrower::state_Fire(float dt)
 		if (!E->g_stateFire())
 			StopShooting();
 
-		while (m_current_fuel_level && IsWorking()) {
+		//while (m_current_fuel_level && IsWorking()) {
 			if (CheckForMisfire())
 			{
 				StopShooting();
@@ -628,7 +654,7 @@ void CFlamethrower::state_Fire(float dt)
 			OnShot();
 			m_current_fuel_level -= (m_fuel_reduce_speed_charge + m_fuel_reduce_speed_shoot) * dt;
 			clamp(m_current_fuel_level, 0.0f, 1.0f);
-		}
+		//}
 
 		/*VERIFY(!m_magazine.empty());
 
@@ -655,8 +681,8 @@ void CFlamethrower::state_Fire(float dt)
 		UpdateSounds();
 	}
 
-	if (fShotTimeCounter < 0)
-	{
+	//if (fShotTimeCounter < 0)
+	//{
 		/*
 				if(bDebug && H_Parent() && (H_Parent()->ID() != Actor()->ID()))
 				{
@@ -668,15 +694,18 @@ void CFlamethrower::state_Fire(float dt)
 							m_iShotNum);
 				}
 		*/
-		if (iAmmoElapsed == 0)
+		if (!m_current_fuel_level) {
 			OnMagazineEmpty();
+		}
 
-		StopShooting();
-	}
+		if(!IsWorking()){
+			StopShooting();
+		}
+	/*}
 	else
 	{
 		fShotTimeCounter -= dt;
-	}
+	}*/
 
 	//if (m_fFactor > 0)
 		//StopShooting();
@@ -1541,8 +1570,8 @@ bool CFlamethrower::GetBriefInfo(II_BriefInfo& info)
 	VERIFY(m_pInventory);
 	string32	int_str, fire_mode, ammo = "";
 
-	int	ae = (int)(m_current_fuel_level * 100.0f);
-	xr_sprintf(int_str, "%d%%", ae);
+	float ae = m_current_fuel_level * 100.0f;
+	xr_sprintf(int_str, "%.1f%%", ae);
 	info.cur_ammo = int_str;
 	info.fire_mode._set("");
 
@@ -1596,11 +1625,12 @@ bool CFlamethrower::GetBriefInfo(II_BriefInfo& info)
 
 		info.ap_ammo = int_str;*/
 
-		xr_sprintf(ammo, "%d%%", (int)(m_current_charge * 100.0f));
+		xr_sprintf(ammo, "%.1f%%", m_current_charge * 100.0f);
 		info.fmj_ammo._set(ammo);
-		/*info.ap_ammo._set("");
+		xr_sprintf(ammo, "%.1f%%", m_overheating_state * 100.0f);
+		info.ap_ammo._set(ammo);
 
-		if (at_size >= 1 && at_size < 3)
+		/*if (at_size >= 1 && at_size < 3)
 		{
 			xr_sprintf(ammo, "%d", (int)(m_current_fuel_level*100.0f));
 			info.fmj_ammo._set(ammo);
