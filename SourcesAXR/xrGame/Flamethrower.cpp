@@ -536,7 +536,7 @@ void CFlamethrower::UpdateCL()
 	inherited::UpdateCL();
 	float dt = Device.fTimeDelta;
 
-	Msg("Update flamethrower: dt = [%f]", dt);
+	//Msg("Update flamethrower: dt = [%f]", dt);
 
 	//когда происходит апдейт состояния оружия
 	//ничего другого не делать
@@ -553,13 +553,13 @@ void CFlamethrower::UpdateCL()
 		{
 			if (m_keep_charge) {
 				state_FireCharge(dt);
-				Msg("State: idle, keep charge. Charge - [%f], fuel - [%f], overheat - [%f]", m_current_charge, m_current_fuel_level, m_overheating_state);
+				//Msg("State: idle, keep charge. Charge - [%f], fuel - [%f], overheat - [%f]", m_current_charge, m_current_fuel_level, m_overheating_state);
 			}
 			else {
 				fShotTimeCounter -= dt;
 				clamp(fShotTimeCounter, 0.0f, flt_max);
 				state_Idle(dt);
-				Msg("State: idle, uncharge. Charge - [%f], fuel - [%f], overheat - [%f]", m_current_charge, m_current_fuel_level, m_overheating_state);
+				//Msg("State: idle, uncharge. Charge - [%f], fuel - [%f], overheat - [%f]", m_current_charge, m_current_fuel_level, m_overheating_state);
 			}
 			break;
 		}
@@ -568,11 +568,11 @@ void CFlamethrower::UpdateCL()
 			if(m_current_charge < 1.0f)
 			{
 				state_FireCharge(dt);
-				Msg("State: fire, charge. Charge - [%f], fuel - [%f], overheat - [%f]", m_current_charge, m_current_fuel_level, m_overheating_state);
+				//Msg("State: fire, charge. Charge - [%f], fuel - [%f], overheat - [%f]", m_current_charge, m_current_fuel_level, m_overheating_state);
 			}
 			else {
 				state_Fire(dt);
-				Msg("State: fire, shoot. Charge - [%f], fuel - [%f], overheat - [%f]", m_current_charge, m_current_fuel_level, m_overheating_state);
+				//Msg("State: fire, shoot. Charge - [%f], fuel - [%f], overheat - [%f]", m_current_charge, m_current_fuel_level, m_overheating_state);
 			}
 			break;
 		}
@@ -583,6 +583,8 @@ void CFlamethrower::UpdateCL()
 	}
 
 	UpdateSounds();
+
+	TraceManager->UpdateOverlaps(dt);
 }
 
 void CFlamethrower::UpdateSounds()
@@ -607,10 +609,21 @@ void CFlamethrower::UpdateSounds()
 
 void CFlamethrower::state_FireCharge(float dt)
 {
-	m_current_charge += m_charge_speed * dt;
-	clamp(m_current_charge, 0.0f, 1.0f);
-	m_current_fuel_level -= m_fuel_reduce_speed_charge * dt;
-	clamp(m_current_fuel_level, 0.0f, 1.0f);
+	if(!IsWorking()&&!m_keep_charge)
+	{
+		StopShooting();
+		return;
+	}
+	if (m_current_fuel_level > 0) {
+		m_current_charge += m_charge_speed * dt;
+		clamp(m_current_charge, 0.0f, 1.0f);
+		m_current_fuel_level -= m_fuel_reduce_speed_charge * dt;
+		clamp(m_current_fuel_level, 0.0f, 1.0f);
+	} else
+	{
+		OnMagazineEmpty();
+		StopShooting();
+	}
 }
 
 void CFlamethrower::state_Fire(float dt)
@@ -696,6 +709,8 @@ void CFlamethrower::state_Fire(float dt)
 		*/
 		if (!m_current_fuel_level) {
 			OnMagazineEmpty();
+			StopShooting();
+			return;
 		}
 
 		if(!IsWorking()){
@@ -785,10 +800,14 @@ void CFlamethrower::OnShot()
 	string128 sndName;
 	strconcat(sizeof(sndName), sndName, m_sSndShotCurrent.c_str(), (iAmmoElapsed == 1) ? "Last" : "");
 
-	if (m_sounds.FindSoundItem(sndName, false))
+	if (m_sounds.FindSoundItem(sndName, false)) {
 		m_sounds.PlaySound(sndName, get_LastFP(), H_Root(), !!GetHUDmode(), false, static_cast<u8>(-1));
-	else
+	}
+	else {
 		m_sounds.PlaySound(m_sSndShotCurrent.c_str(), get_LastFP(), H_Root(), !!GetHUDmode(), false, static_cast<u8>(-1));
+	}
+
+	TraceManager->LaunchTrace(get_ParticlesXFORM());
 
 	// Эхо выстрела
 	if (IsSilencerAttached() == false)
@@ -827,7 +846,7 @@ void CFlamethrower::OnAnimationEnd(u32 state)
 	{
 	case eReload:
 	{
-		CheckMagazine(); // Основано на механизме из Lost Alpha: New Project
+		//CheckMagazine(); // Основано на механизме из Lost Alpha: New Project
 		// Авторы: rafa & Kondr48
 
 		CCartridge FirstBulletInGun;
@@ -1040,9 +1059,10 @@ bool CFlamethrower::Action(u16 cmd, u32 flags)
 	{
 	case kWPN_RELOAD:
 	{
-		if (Actor()->mstate_real & (mcSprint) && !GameConstants::GetReloadIfSprint())
+		if (Actor()->mstate_real & (mcSprint) && !GameConstants::GetReloadIfSprint()) {
 			break;
-		else if (flags & CMD_START)
+		}
+		if (flags & CMD_START) {
 			if (m_current_fuel_level < 1.0 || IsMisfire())
 			{
 				if (GetState() == eUnMisfire) // Rietmon: Запрещаем перезарядку, если играет анима передергивания затвора
@@ -1059,8 +1079,44 @@ bool CFlamethrower::Action(u16 cmd, u32 flags)
 						Reload();
 				}
 			}
+		}
+		return true;
 	}
-	return true;
+	case kWPN_ZOOM: {
+		if (flags & CMD_START) {
+			if (GetState() == eIdle) {
+				PlayAnimIdle();
+			}
+
+			//Alundaio: callback not sure why vs2013 gives error, it's fine
+			CGameObject* object = smart_cast<CGameObject*>(H_Parent());
+
+			if (object) {
+				object->callback(GameObject::eOnWeaponZoomIn)(object->lua_game_object(), this->lua_game_object());
+			}
+			//-Alundaio
+
+			m_keep_charge = true;
+			//return true;
+		}
+		if (flags & CMD_STOP) {
+			if (GetState() == eIdle) {
+				PlayAnimIdle();
+			}
+
+			//Alundaio
+			CGameObject* object = smart_cast<CGameObject*>(H_Parent());
+			if (object) {
+				object->callback(GameObject::eOnWeaponZoomOut)(object->lua_game_object(), this->lua_game_object());
+			}
+			//-Alundaio
+
+			m_keep_charge = false;
+		}
+
+		return true;
+	}
+	//return true;
 	}
 	return false;
 }
@@ -1340,7 +1396,7 @@ void CFlamethrower::PlayAnimReload()
 		PlayHUDMotion("anm_reload", TRUE, this, GetState());
 }
 
-void CFlamethrower::PlayAnimAim()
+/*void CFlamethrower::PlayAnimAim()
 {
 	if (IsRotatingToZoom())
 	{
@@ -1390,7 +1446,7 @@ void CFlamethrower::PlayAnimAim()
 		PlayHUDMotion("anm_idle_aim_jammed", true, nullptr, GetState());
 	else
 		PlayHUDMotion("anm_idle_aim", TRUE, NULL, GetState());
-}
+}*/
 
 void CFlamethrower::PlayAnimIdle()
 {
@@ -1398,22 +1454,22 @@ void CFlamethrower::PlayAnimIdle()
 
 	if (TryPlayAnimIdle()) return;
 
-	if (IsZoomed())
-		PlayAnimAim();
-	else if (iAmmoElapsed == 0 && psWpnAnimsFlag.test(ANM_IDLE_EMPTY))
+	//if (IsZoomed())
+		//PlayAnimAim();
+	/*else */if (!m_current_fuel_level && psWpnAnimsFlag.test(ANM_IDLE_EMPTY))
 		PlayHUDMotion("anm_idle_empty", TRUE, NULL, GetState());
 	else if (IsMisfire() && isHUDAnimationExist("anm_idle_jammed") && !TryPlayAnimIdle())
 		PlayHUDMotion("anm_idle_jammed", true, nullptr, GetState());
 	else
 	{
-		if (IsRotatingFromZoom())
+		/*if (IsRotatingFromZoom())
 		{
 			if (isHUDAnimationExist("anm_idle_aim_end"))
 			{
 				PlayHUDMotionNew("anm_idle_aim_end", true, GetState());
 				return;
 			}
-		}
+		}*/
 		inherited::PlayAnimIdle();
 	}
 }
@@ -1586,11 +1642,11 @@ bool CFlamethrower::GetBriefInfo(II_BriefInfo& info)
 
 	info.fire_mode = "";
 
-	if (m_pInventory->ModifyFrame() <= m_BriefInfo_CalcFrame)
+	/*if (m_pInventory->ModifyFrame() <= m_BriefInfo_CalcFrame)
 	{
 		return false;
-	}
-	GetSuitableAmmoTotal();//update m_BriefInfo_CalcFrame
+	}*/
+	//GetSuitableAmmoTotal();//update m_BriefInfo_CalcFrame
 	info.grenade = "";
 
 	u32 at_size = m_ammoTypes.size();
@@ -1760,7 +1816,7 @@ bool CFlamethrower::WeaponSoundExist(LPCSTR section, LPCSTR sound_name, bool log
 	return false;
 }
 
-void CFlamethrower::CheckMagazine()
+/*void CFlamethrower::CheckMagazine()
 {
 	if (!ParentIsActor())
 	{
@@ -1776,4 +1832,4 @@ void CFlamethrower::CheckMagazine()
 	{
 		m_bNeedBulletInGun = false;
 	}
-}
+}*/

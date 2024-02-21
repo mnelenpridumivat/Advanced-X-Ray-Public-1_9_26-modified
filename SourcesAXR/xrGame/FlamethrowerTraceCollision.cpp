@@ -105,6 +105,24 @@ BOOL CFlamethrowerTraceCollision::test_callback(const collide::ray_defs& rd, COb
 	return bRes;
 }
 
+void CFlamethrowerTraceCollision::UpdateParticles()
+{
+	if (!m_particles)		return;
+
+	Fmatrix particles_pos;
+	particles_pos.set(XFORM);
+	particles_pos.c.set(m_position);
+
+	m_particles->SetXFORM(particles_pos);
+
+	if (!m_particles->IsAutoRemove() && !m_particles->IsLooped()
+		&& !m_particles->PSI_alive())
+	{
+		m_particles->Stop();
+		CParticlesObject::Destroy(m_particles);
+	}
+}
+
 CFlamethrowerTraceCollision::CFlamethrowerTraceCollision(CFlamethrowerTraceManager* flamethrower) : m_flamethrower(flamethrower)
 {
 }
@@ -116,16 +134,36 @@ CFlamethrowerTraceCollision::~CFlamethrowerTraceCollision()
 void CFlamethrowerTraceCollision::Load(LPCSTR section)
 {
 	m_RadiusMin = pSettings->r_float(section, "RadiusMin");
-	m_RadiusMin = pSettings->r_float(section, "RadiusMax");
+	m_RadiusMax = pSettings->r_float(section, "RadiusMax");
 	m_RadiusCollided = pSettings->r_float(section, "RadiusCollided");
 	m_RadiusMaxTime = pSettings->r_float(section, "RadiusMaxTime");
 	m_Velocity = pSettings->r_float(section, "Velocity");
 	m_LifeTime = pSettings->r_float(section, "LifeTime");
+
+	string256 full_name;
+	// flames
+	strconcat(sizeof(full_name), full_name, "", "flame_particles");
+	m_sFlameParticles = pSettings->r_string(section, full_name);
 }
 
 inline CFlamethrower* CFlamethrowerTraceCollision::GetParentWeapon() const
 {
 	return m_flamethrower->GetParent();
+}
+
+bool CFlamethrowerTraceCollision::IsReadyToUpdateCollisions()
+{
+	float Dist = GetCurrentRadius()*0.8;
+	if(IsCollided())
+	{
+		if(m_last_update_time > 0.2)
+		{
+			m_last_update_time = 0.0f;
+			return true;
+		}
+		return false;
+	}
+	return m_position.distance_to_sqr(m_LastUpdatedPos) > Dist*Dist;
 }
 
 float CFlamethrowerTraceCollision::GetCurrentRadius()
@@ -142,6 +180,13 @@ float CFlamethrowerTraceCollision::GetCurrentRadius()
 	float CurRadius = m_RadiusMin + (m_RadiusMax - m_RadiusMin) * (m_current_time / m_RadiusMaxTime);
 	clamp(CurRadius, m_RadiusMin, m_RadiusMax);
 	return CurRadius;
+}
+
+void CFlamethrowerTraceCollision::SetTransform(const Fmatrix& StartPos)
+{
+	XFORM = StartPos;
+	StartPos.getXYZ(m_position);
+	StartPos.transform_dir(m_direction);
 }
 
 void CFlamethrowerTraceCollision::feel_touch_new(CObject* O)
@@ -169,6 +214,10 @@ BOOL CFlamethrowerTraceCollision::feel_touch_contact(CObject* O)
 void CFlamethrowerTraceCollision::Activate()
 {
 	m_IsActive = true;
+	feel_touch_update(m_position, GetCurrentRadius());
+	m_LastUpdatedPos = m_position;
+	m_particles = CParticlesObject::Create(*m_sFlameParticles, true);
+	m_particles->Play(false);
 }
 
 void CFlamethrowerTraceCollision::Deactivate()
@@ -177,6 +226,8 @@ void CFlamethrowerTraceCollision::Deactivate()
 	m_IsCollided = false;
 	m_GravityVelocity = 0.0f;
 	m_current_time = 0.0f;
+	m_particles->Stop();
+	CParticlesObject::Destroy(m_particles);
 }
 
 void CFlamethrowerTraceCollision::Update(float DeltaTime)
@@ -185,6 +236,7 @@ void CFlamethrowerTraceCollision::Update(float DeltaTime)
 		return;
 	}
 	m_current_time += DeltaTime;
+	m_last_update_time += DeltaTime;
 	if (m_current_time > m_LifeTime) {
 		Deactivate();
 		return;
@@ -201,6 +253,8 @@ void CFlamethrowerTraceCollision::Update(float DeltaTime)
 	data.TracedObj = this;
 	Level().ObjectSpace.RayQuery(storage, RD, CFlamethrowerTraceCollision::hit_callback, &data, CFlamethrowerTraceCollision::test_callback, NULL);
 	m_direction = m_position.sub(old_pos).normalize();
+
+	UpdateParticles();
 
 }
 
@@ -220,12 +274,14 @@ void CFlamethrowerTraceManager::Load(LPCSTR section)
 	for (auto& elem : CollisionsPool) {
 		xr_delete(elem);
 	}
+	CollisionSection = section;
 	CollisionsPool.clear();
 	int StartNum = pSettings->r_u16(section, "trace_collision_num_start");
 	for (int i = 0; i < StartNum; ++i) {
 		auto NewCollision = xr_new<CFlamethrowerTraceCollision>(this);
 		NewCollision->Load(section);
 		CollisionsPool.push_back(NewCollision);
+		//CollisionsDeque.push_back(NewCollision);
 	}
 }
 
@@ -234,10 +290,11 @@ void CFlamethrowerTraceManager::UpdateOverlaps(float DeltaTime)
 
 	for (auto& elem : CollisionsPool) {
 		elem->Update(DeltaTime);
-		if (!elem->IsActive()) {
+		if (!elem->IsActive() || !elem->IsReadyToUpdateCollisions()) {
 			continue;
 		}
-		elem->feel_touch_update(elem->GetPosition(), elem->GetCurrentRadius());
+		auto Pos = elem->GetPosition();
+		//elem->feel_touch_update(Pos, elem->GetCurrentRadius());
 	}
 }
 
@@ -254,4 +311,21 @@ void CFlamethrowerTraceManager::UnregisterOverlapped(CCustomMonster* enemy)
 const CFlamethrowerTraceManager::FOverlappedObjects& CFlamethrowerTraceManager::GetOverlapped()
 {
 	return Overlapped;
+}
+
+void CFlamethrowerTraceManager::LaunchTrace(const Fmatrix& StartPos)
+{
+	auto First = CollisionsPool.front();
+	if(First->IsActive())
+	{
+		First = xr_new<CFlamethrowerTraceCollision>(this);
+		First->Load(CollisionSection.c_str());
+	} else
+	{
+		CollisionsPool.pop_front();
+	}
+	CollisionsPool.push_back(First);
+	First->SetTransform(StartPos);
+	First->Activate();
+	Msg("Current collisions num in pool: [%d]", CollisionsPool.size());
 }

@@ -3,6 +3,7 @@
 #include "../xrEngine/feel_touch.h"
 #include "../xrCore/_types.h"
 
+class CParticlesObject;
 class CFlamethrower;
 class CFlamethrowerTraceManager;
 class ENGINE_API CObject;
@@ -16,8 +17,14 @@ class CFlamethrowerTraceCollision :
 	bool m_IsActive = false;
 	bool m_IsCollided = false;
 	float m_current_time = 0.0f;
+	Fmatrix XFORM;
+	Fvector m_LastUpdatedPos;
 	Fvector m_position;
 	Fvector m_direction;
+
+	shared_str m_sFlameParticles;
+
+	float m_last_update_time;
 
 	float m_LifeTime = 0.0f;
 	float m_RadiusMin = 0.0f;
@@ -27,12 +34,16 @@ class CFlamethrowerTraceCollision :
 	float m_Velocity = 0.0f;
 	float m_GravityVelocity = 0.0f;
 
+	CParticlesObject* m_particles = nullptr;
+
 	struct FlamethrowerTraceData {
 		CFlamethrowerTraceCollision* TracedObj = nullptr;
 	};
 
 	static BOOL	hit_callback(collide::rq_result& result, LPVOID params);
 	static BOOL test_callback(const collide::ray_defs& rd, CObject* object, LPVOID params);
+
+	void UpdateParticles();
 
 public:
 
@@ -46,10 +57,13 @@ public:
 
 	inline bool IsActive() { return m_IsActive; }
 	inline bool IsCollided() { return m_IsCollided; }
+	bool IsReadyToUpdateCollisions();
 	inline Fvector GetCurrentPosition() { return m_position; }
 	float GetCurrentRadius();
 	inline Fvector GetPosition() { return m_position; }
 	inline Fvector GetDirection() { return m_direction; }
+
+	void SetTransform(const Fmatrix& StartPos);
 
 	void	feel_touch_new(CObject* O) override;
 	void	feel_touch_delete(CObject* O) override;
@@ -65,12 +79,16 @@ class CFlamethrowerTraceManager
 {
 
 	CFlamethrower* m_flamethrower;
+	shared_str CollisionSection;
 
 	DEFINE_VECTOR(CCustomMonster*, FOverlappedObjects, FOverlappedObjectsIt);
 	DEFINE_VECTOR(CFlamethrowerTraceCollision*, FCollisions, FCollisionsIt);
 
+	DEFINE_DEQUE(CFlamethrowerTraceCollision*, FCollisionsDeque, FCollisionsDequeIt);
+
 	FOverlappedObjects Overlapped;
-	FCollisions CollisionsPool;
+	FCollisionsDeque CollisionsPool;
+	//FCollisionsDeque CollisionsDeque;
 
 	float LifeTime;
 	float LifeTimeGroundAddition;
@@ -88,6 +106,8 @@ public:
 	const FOverlappedObjects& GetOverlapped();
 
 	inline CFlamethrower* GetParent() const { return m_flamethrower; };
+
+	void LaunchTrace(const Fmatrix& StartPos);
 
 
 
