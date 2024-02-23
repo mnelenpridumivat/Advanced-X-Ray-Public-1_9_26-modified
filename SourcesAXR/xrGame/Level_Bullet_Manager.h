@@ -243,6 +243,10 @@ public:
 	void					CommitEvents		();	// @ the start of frame
 	void					CommitRenderSet		();	// @ the end of frame
 	void 					Render				();
+
+#ifdef DEBUG
+	void AddBulletMoveChunk(Fvector A, Fvector B);
+#endif
 };
 
 struct bullet_test_callback_data

@@ -1026,6 +1026,14 @@ void CBulletManager::Render	()
 	UIRender->CacheSetCullMode		(IUIRender::cmCCW);
 }
 
+#ifdef DEBUG
+void CBulletManager::AddBulletMoveChunk(Fvector A, Fvector B)
+{
+	m_bullet_points.push_back(A);
+	m_bullet_points.push_back(B);
+}
+#endif
+
 void CBulletManager::CommitRenderSet		()	// @ the end of frame
 {
 	m_BulletsRendered	= m_Bullets			;

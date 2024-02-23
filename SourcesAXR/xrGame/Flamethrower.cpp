@@ -658,6 +658,9 @@ void CFlamethrower::state_Fire(float dt)
 		if (!E->g_stateFire())
 			StopShooting();
 
+		m_vStartPos = p1;
+		m_vStartDir = d;
+
 		//while (m_current_fuel_level && IsWorking()) {
 			if (CheckForMisfire())
 			{
@@ -807,7 +810,7 @@ void CFlamethrower::OnShot()
 		m_sounds.PlaySound(m_sSndShotCurrent.c_str(), get_LastFP(), H_Root(), !!GetHUDmode(), false, static_cast<u8>(-1));
 	}
 
-	TraceManager->LaunchTrace(get_ParticlesXFORM());
+	TraceManager->LaunchTrace(m_vStartPos, m_vStartDir);
 
 	// Ёхо выстрела
 	if (IsSilencerAttached() == false)

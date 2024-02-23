@@ -25,7 +25,7 @@ protected:
 	//кадр момента пересчета UpdateSounds
 	u32				dwUpdateSounds_Frame;
 
-	virtual void    CheckMagazine();
+	//virtual void    CheckMagazine();
 
 	bool            m_bNeedBulletInGun;
 
@@ -75,6 +75,7 @@ public:
 	void	FireEnd() override;
 	void	Reload() override;
 
+	virtual bool	IsZoomEnabled()	const override { return false; }
 
 	void	UpdateCL() override;
 	void	net_Destroy() override;
@@ -163,7 +164,7 @@ protected:
 	void	PlayAnimIdle() override;
 	virtual void	PlayAnimShoot();
 	virtual void	PlayReloadSound();
-	virtual void	PlayAnimAim();
+	//virtual void	PlayAnimAim();
 	void	PlayAnimBore() override;
 	void	PlayAnimIdleSprint() override;
 	void	PlayAnimIdleMoving() override;

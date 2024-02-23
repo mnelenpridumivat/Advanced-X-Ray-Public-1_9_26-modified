@@ -17,7 +17,8 @@ class CFlamethrowerTraceCollision :
 	bool m_IsActive = false;
 	bool m_IsCollided = false;
 	float m_current_time = 0.0f;
-	Fmatrix XFORM;
+	//Fmatrix XFORM;
+	//Fmatrix invXFORM;
 	Fvector m_LastUpdatedPos;
 	Fvector m_position;
 	Fvector m_direction;
@@ -63,7 +64,7 @@ public:
 	inline Fvector GetPosition() { return m_position; }
 	inline Fvector GetDirection() { return m_direction; }
 
-	void SetTransform(const Fmatrix& StartPos);
+	void SetTransform(const Fvector& StartPos, const Fvector& StartDir);
 
 	void	feel_touch_new(CObject* O) override;
 	void	feel_touch_delete(CObject* O) override;
@@ -75,7 +76,8 @@ public:
 
 };
 
-class CFlamethrowerTraceManager
+class CFlamethrowerTraceManager :
+	public Feel::Touch
 {
 
 	CFlamethrower* m_flamethrower;
@@ -97,6 +99,10 @@ public:
 	CFlamethrowerTraceManager(CFlamethrower* flamethrower);
 	~CFlamethrowerTraceManager();
 
+	void	feel_touch_new(CObject* O) override;
+	void	feel_touch_delete(CObject* O) override;
+	BOOL	feel_touch_contact(CObject* O) override;
+
 	void Load(LPCSTR section);
 
 	void UpdateOverlaps(float DeltaTime);
@@ -107,7 +113,7 @@ public:
 
 	inline CFlamethrower* GetParent() const { return m_flamethrower; };
 
-	void LaunchTrace(const Fmatrix& StartPos);
+	void LaunchTrace(const Fvector& StartPos, const Fvector& StartDir);
 
 
 

@@ -341,7 +341,7 @@ protected:
 		CUIWindow*		m_UIScope;
 public:
 
-	IC bool					IsZoomEnabled		()	const		{return m_zoom_params.m_bZoomEnabled;}
+	virtual IC bool					IsZoomEnabled		()	const		{return m_zoom_params.m_bZoomEnabled;}
 	virtual	void			ZoomInc				();
 	virtual	void			ZoomDec				();
 	virtual void			OnZoomIn			();

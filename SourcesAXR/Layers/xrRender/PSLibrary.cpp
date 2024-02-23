@@ -69,8 +69,12 @@ PS::PEDIt CPSLibrary::FindPEDIt(LPCSTR Name)
 	return m_PEDs.end();
 #else
 	PS::PEDIt I = std::lower_bound(m_PEDs.begin(),m_PEDs.end(),Name,ped_find_pred);
-	if (I==m_PEDs.end() || (0!=xr_strcmp((*I)->m_Name,Name)))	return m_PEDs.end();
-	else														return I;
+    if (I == m_PEDs.end() 
+        || (0 != xr_strcmp((*I)->m_Name, Name)))
+    {
+	    return m_PEDs.end();
+    }
+	return I;
 #endif
 }
 
