@@ -48,12 +48,35 @@ local id_by_status = {
 	reversed	= 4
 }
 
-class "CGeneralTask"
-function CGeneralTask:__init(task_ini, id)
-	self.task_ini = task_ini
+class "CGeneralTaskDataBase"
+function CGeneralTaskDataBase:__init(task_ini, id)
+	self.current_title = nil
+	self.current_descr = nil
+	self.current_target = nil
 
-	self.id				= id
+	self.icon = nil;
 
+	self.condlist = nil
+	self.on_init = nil
+	self.on_complete = nil
+	self.on_reversed = nil
+end
+
+function CGeneralTaskDataBase:update(id)
+
+end
+
+function CGeneralTaskDataBase:save(packet)
+	
+end
+
+function CGeneralTaskDataBase:load(packet)
+	
+end
+
+class "CGeneralTaskDataOrig" (CGeneralTaskDataBase)
+function CGeneralTaskDataOrig:__init(task_ini, id)
+	self.id = id
 	self.title			= utils.cfg_get_string(task_ini, id, "title", nil, false, "", "TITLE_DOESNT_EXIST")
 	self.title_functor	= utils.cfg_get_string(task_ini, id, "title_functor", nil, false, "", "condlist")
 	self.current_title = nil
@@ -67,11 +90,286 @@ function CGeneralTask:__init(task_ini, id)
 	self.current_target = nil
 
 	self.icon			= utils.cfg_get_string(task_ini, id, "icon", nil, false, "", "ui_pda2_mtask_overlay")
+
+	local i = 0
+	self.condlist = {}
+	while task_ini:line_exist(id, "condlist_"..i) do
+		self.condlist[i] = xr_logic.parse_condlist(nil, "task_manager", "condlist", task_ini:r_string(id, "condlist_"..i))
+		i = i + 1
+	end
+
+	self.on_complete = xr_logic.parse_condlist(nil, "task_manager", "condlist", utils.cfg_get_string(task_ini, id, "on_complete", nil, false, "", ""))
+	self.on_reversed = xr_logic.parse_condlist(nil, "task_manager", "condlist", utils.cfg_get_string(task_ini, id, "on_reversed", nil, false, "", ""))
+
+	self.current_title = task_functor[self.title_functor](id, "title", self.title)
+	self.current_descr = task_functor[self.descr_functor](id, "descr", self.descr)
+	self.current_target = task_functor[self.target_functor](id, "target", self.target)
+end
+
+function CGeneralTaskDataOrig:update()
+
+	local task_updated = false
+
+	local t_tile = task_functor[self.title_functor](self.id, "title", self.title)
+	if self.current_title ~= t_tile then
+		printf("task [%s] updated due to title change from [%s] to [%s]", tostring(self.id), tostring(self.current_title), tostring(t_tile))
+		task_updated = true
+		self.current_title = t_tile
+	end
+
+	local t_descr = task_functor[self.descr_functor](self.id, "descr", self.descr)
+	if self.current_descr ~= t_descr then
+		printf("task [%s] updated due to description change from [%s] to [%s]", tostring(self.id), tostring(self.current_descr), tostring(t_descr))
+		task_updated = true
+		self.current_descr = t_descr
+	end
+
+	local t_target = task_functor[self.target_functor](self.id, "target", self.target)
+	if self.current_target ~= t_target then
+		printf("task [%s] updated due to target change from [%s] to [%s]", tostring(self.id), tostring(self.current_target), tostring(t_target))
+		if self.current_target == nil then
+			task_updated = true
+			if(self.storyline) then
+				level.map_add_object_spot(t_target, "ui_storyline_task_blink", "")
+			else
+				level.map_add_object_spot(t_target, "ui_secondary_task_blink", "")
+			end
+		else
+			if t_target == nil then
+				task_updated = true
+			else
+				if(self.storyline) then
+					level.map_add_object_spot(t_target, "ui_storyline_task_blink", "")
+				else
+					level.map_add_object_spot(t_target, "ui_secondary_task_blink", "")
+				end
+				task_updated = true
+			end
+		end
+		self.current_target = t_target
+	end
+
+	return task_updated
+end
+
+function CGeneralTaskDataOrig:save(packet)
+	packet:w_stringZ(self.current_title)
+	packet:w_stringZ(self.current_descr)
+	packet:w_stringZ(tostring(self.current_target))
+end
+
+function CGeneralTaskDataOrig:load(packet)
+	self.current_title = packet:r_stringZ()
+	self.current_descr = packet:r_stringZ()
+	self.current_target = packet:r_stringZ()
+	if self.current_target == "nil" then
+		self.current_target = nil
+	else
+		self.current_target = tonumber(self.current_target)
+	end
+end
+
+class "CGeneralTaskDataLogic" (CGeneralTaskDataBase)
+function CGeneralTaskDataLogic:__init(task_ini, id)
+	self.id	= id
+	self.ini = task_ini
+	local section = utils.cfg_get_string(task_ini, id, "logic", nil, false, "", nil)
+	if not section then
+		abort("Task ["..id.."] marked as using logic but no logic assigned!")
+	end
+
+	self.current_title = nil
+	self.current_descr = nil
+	self.current_target = nil
+
+	self:switch_to_section(section)
+
+end
+
+function CGeneralTaskDataLogic:switch_to_section(section)
+	printf("Switch from [%s] to [%s]", self.current_section, section)
+
+	if not section or self.current_section == section then
+		return false
+	end
+
+	self.current_section = section
+
+	self.title			= utils.cfg_get_string(self.ini, section, "title", nil, false, "", "TITLE_DOESNT_EXIST")
+	self.title_functor	= utils.cfg_get_string(self.ini, section, "title_functor", nil, false, "", "condlist")
+
+	self.descr			= utils.cfg_get_string(self.ini, section, "descr", nil, false, "", "DESCR_DOESNT_EXIST")
+	self.descr_functor	= utils.cfg_get_string(self.ini, section, "descr_functor", nil, false, "", "condlist")
+
+	self.target			= utils.cfg_get_string(self.ini, section, "target", nil, false, "", "DESCR_DOESNT_EXIST")
+	self.target_functor	= utils.cfg_get_string(self.ini, section, "target_functor", nil, false, "", "target_condlist")
+
+	self.icon			= utils.cfg_get_string(self.ini, section, "icon", nil, false, "", "ui_pda2_mtask_overlay")
+
+	local i = 0
+	self.condlist = {}
+	while self.ini:line_exist(section, "condlist_"..i) do
+		self.condlist[i] = xr_logic.parse_condlist(nil, "task_manager", "condlist", self.ini:r_string(self.id, "condlist_"..i))
+		i = i + 1
+	end
+
+	self.on_complete = xr_logic.parse_condlist(nil, "task_manager", "condlist", utils.cfg_get_string(self.ini, section, "on_complete", nil, false, "", ""))
+	self.on_reversed = xr_logic.parse_condlist(nil, "task_manager", "condlist", utils.cfg_get_string(self.ini, section, "on_reversed", nil, false, "", ""))
+
+	self.current_title = task_functor[self.title_functor](section, "title", self.title)
+	self.current_descr = task_functor[self.descr_functor](section, "descr", self.descr)
+	local t_target = task_functor[self.target_functor](section, "target", self.target)
+	if self.current_target ~= t_target then
+		printf("task [%s] updated due to target change from [%s] to [%s]", tostring(self.id), tostring(self.current_target), tostring(t_target))
+		if self.current_target == nil then
+			if(self.storyline) then
+				level.map_add_object_spot(t_target, "ui_storyline_task_blink", "")
+			else
+				level.map_add_object_spot(t_target, "ui_secondary_task_blink", "")
+			end
+		else
+			if t_target ~= nil then
+				if(self.storyline) then
+					level.map_add_object_spot(t_target, "ui_storyline_task_blink", "")
+				else
+					level.map_add_object_spot(t_target, "ui_secondary_task_blink", "")
+				end
+			end
+		end
+		self.current_target = t_target
+	end
+
+	self.activation_time = time_global()
+	self.activation_game_time = game.get_game_time()
+
+	self.logic = xr_logic.cfg_get_switch_conditions(self.ini, self.current_section, db.actor)
+
+	return true
+
+end
+
+function CGeneralTaskDataLogic:try_switch_to_another_section()
+
+	local switched = false
+	for n, c in pairs(self.logic) do
+		if xr_logic.cond_name(c.name, "on_info") then
+			printf("test switching from 'on_info'")
+			switched = self:switch_to_section(xr_logic.pick_section_from_condlist(db.actor, db.actor, c.condlist))
+		elseif xr_logic.cond_name(c.name, "on_timer") then
+			printf("test switching from 'on_timer' ([%d] >= [%d] + [%d])", time_global(), self.activation_time, c.v1)
+			if time_global() >= self.activation_time + c.v1 then
+				switched = self:switch_to_section(xr_logic.pick_section_from_condlist(db.actor, db.actor, c.condlist))
+			end
+		elseif xr_logic.cond_name(c.name, "on_game_timer") then
+			printf("test switching from 'on_game_timer' (time spawn is [%d], want [%d])", game.get_game_time():diffSec(self.activation_game_time), c.v1)
+			if  game.get_game_time():diffSec(self.activation_game_time) >= c.v1 then
+				switched = self:switch_to_section(xr_logic.pick_section_from_condlist(db.actor, db.actor, c.condlist))
+			end
+
+		elseif xr_logic.cond_name(c.name, "on_actor_in_zone") then
+			printf("test switching from 'on_actor_in_zone'")
+			if utils.npc_in_zone(db.actor, db.zone_by_name[c.v1]) then
+				switched = self:switch_to_section(xr_logic.pick_section_from_condlist(db.actor, db.actor, c.condlist))
+			end
+		elseif xr_logic.cond_name(c.name, "on_actor_not_in_zone") then
+			printf("test switching from 'on_actor_not_in_zone'")
+			if not utils.npc_in_zone(db.actor, db.zone_by_name[c.v1]) then
+				switched = self:switch_to_section(xr_logic.pick_section_from_condlist(db.actor, db.actor, c.condlist))
+			end
+		else
+			abort(
+				"WARNING: task [%s]': try_switch_to_another_section: unknown condition '%s' encountered",
+				self.id, c.name)
+		end
+		if switched == true then
+			break
+		end
+	end
+
+	return switched
+end
+
+function CGeneralTaskDataLogic:update()
+
+	local task_updated = false
+
+	if self:try_switch_to_another_section() then
+		task_updated = true
+	end
+
+	local t_tile = task_functor[self.title_functor](self.id, "title", self.title)
+	if self.current_title ~= t_tile then
+		printf("task [%s] updated due to title change from [%s] to [%s]", tostring(self.id), tostring(self.current_title), tostring(t_tile))
+		task_updated = true
+		self.current_title = t_tile
+	end
+
+	local t_descr = task_functor[self.descr_functor](self.id, "descr", self.descr)
+	if self.current_descr ~= t_descr then
+		printf("task [%s] updated due to description change from [%s] to [%s]", tostring(self.id), tostring(self.current_descr), tostring(t_descr))
+		task_updated = true
+		self.current_descr = t_descr
+	end
+
+	local t_target = task_functor[self.target_functor](self.id, "target", self.target)
+	if self.current_target ~= t_target then
+		printf("task [%s] updated due to target change from [%s] to [%s]", tostring(self.id), tostring(self.current_target), tostring(t_target))
+		if self.current_target == nil then
+			task_updated = true
+			if(self.storyline) then
+				level.map_add_object_spot(t_target, "ui_storyline_task_blink", "")
+			else
+				level.map_add_object_spot(t_target, "ui_secondary_task_blink", "")
+			end
+		else
+			if t_target == nil then
+				task_updated = true
+			else
+				if(self.storyline) then
+					level.map_add_object_spot(t_target, "ui_storyline_task_blink", "")
+				else
+					level.map_add_object_spot(t_target, "ui_secondary_task_blink", "")
+				end
+				task_updated = true
+			end
+		end
+		self.current_target = t_target
+	end
+
+	return task_updated
+end
+
+function CGeneralTaskDataLogic:save(packet)
+	packet:w_stringZ(self.current_section)
+	packet:w_s32(self.activation_time - time_global())
+	utils.w_CTime(packet, self.activation_game_time)
+end
+
+function CGeneralTaskDataLogic:load(packet)
+	self.current_section = packet:r_stringZ()
+	self:switch_to_section(self.current_section)
+	self.activation_time = packet:r_s32() + time_global()
+	self.activation_game_time = utils.r_CTime(packet)
+end
+
+class "CGeneralTask"
+function CGeneralTask:__init(task_ini, id)
+	self.task_ini = task_ini
+
+	self.id				= id
+
+	self.quest_logic	= utils.cfg_get_bool(task_ini, id, "use_quest_logic", nil, false, false)
+	self.quest_data = nil
+	if self.quest_logic then
+		self.quest_data = CGeneralTaskDataLogic(task_ini, id)
+	else
+		self.quest_data = CGeneralTaskDataOrig(task_ini, id)
+	end
+
 	self.prior			= utils.cfg_get_number(task_ini, id, "prior", nil, false, 0)
 	self.storyline		= utils.cfg_get_bool(task_ini, id, "storyline", nil, false, true)
 	self.task_difficult	= utils.cfg_get_string(task_ini, id, "task_difficult", nil, false, "", "none")
-	
-	--' Условия выполнения и провала квеста
+
 	local i = 0
 	self.condlist = {}
 	while task_ini:line_exist(id, "condlist_"..i) do
@@ -81,9 +379,7 @@ function CGeneralTask:__init(task_ini, id)
 
 	--' Кондлисты на статусы квеста
 	self.on_init = xr_logic.parse_condlist(nil, "task_manager", "condlist", utils.cfg_get_string(task_ini, id, "on_init", nil, false, "", ""))
-	self.on_complete = xr_logic.parse_condlist(nil, "task_manager", "condlist", utils.cfg_get_string(task_ini, id, "on_complete", nil, false, "", ""))
-	self.on_reversed = xr_logic.parse_condlist(nil, "task_manager", "condlist", utils.cfg_get_string(task_ini, id, "on_reversed", nil, false, "", ""))
-
+	
 	--' Награды за квест
 	self.reward_money = xr_logic.parse_condlist(nil, "task_manager", "condlist", utils.cfg_get_string(task_ini, id, "reward_money", nil, false, "", ""))
 	self.reward_item = xr_logic.parse_condlist(nil, "task_manager", "condlist", utils.cfg_get_string(task_ini, id, "reward_item", nil, false, "", ""))
@@ -93,9 +389,6 @@ function CGeneralTask:__init(task_ini, id)
 
 	--' Статус квеста, может быть: "normal", "selected", "completed", "fail", "reversed"
 	self.status = "normal"
-
-	self.current_title = task_functor[self.title_functor](self.id, "title", self.title)
-	self.current_descr = task_functor[self.descr_functor](self.id, "descr", self.descr)
 
 	local time = 0
 	if self.wait_time ~= nil then
@@ -114,7 +407,7 @@ function CGeneralTask:__init(task_ini, id)
 					self.spot = "secondary_task_location_complex_timer"
 			end
 	end
-	self.current_target = task_functor[self.target_functor](self.id, "target", self.target)
+	--self.current_target = task_functor[self.target_functor](self.id, "target", self.target)
 	self.dont_send_update_news = utils.cfg_get_bool(task_ini, id, "dont_send_update_news", nil, false, false)
 end
 
@@ -143,10 +436,10 @@ function CGeneralTask:give_task(community)
 	else
 		t:set_type(task.additional)
 	end
-	t:set_title(self.current_title)
-	t:set_description(self.current_descr)
+	t:set_title(self.quest_data.current_title)
+	t:set_description(self.quest_data.current_descr)
 	t:set_priority(self.prior)
-	t:set_icon_name(self.icon)
+	t:set_icon_name(self.quest_data.icon)
 	
 	if self.task_difficult ~= "none" then
 		t:set_difficult_icon_name(CGeneralTask.get_task_difficult_icon(self.task_difficult))
@@ -157,14 +450,14 @@ function CGeneralTask:give_task(community)
 
 	xr_logic.pick_section_from_condlist(db.actor, db.actor, self.on_init)
 
-	if self.current_target ~= nil then
+	if self.quest_data.current_target ~= nil then
 		t:set_map_location(self.spot)
-		t:set_map_object_id(self.current_target)
+		t:set_map_object_id(self.quest_data.current_target)
 
 		if(self.storyline) then
-			level.map_add_object_spot(self.current_target, "ui_storyline_task_blink", "")
+			level.map_add_object_spot(self.quest_data.current_target, "ui_storyline_task_blink", "")
 		else
-			level.map_add_object_spot(self.current_target, "ui_secondary_task_blink", "")
+			level.map_add_object_spot(self.quest_data.current_target, "ui_secondary_task_blink", "")
 		end
 	end
 	local time = 0
@@ -196,53 +489,40 @@ function CGeneralTask:check_task(tm)
 
 	self.check_time = global_time
 
-	local t_tile = task_functor[self.title_functor](self.id, "title", self.title)
-	if self.current_title ~= t_tile then
-		printf("task [%s] updated due to title change from [%s] to [%s]", tostring(self.id), tostring(self.current_title), tostring(t_tile))
-		task_updated = true
-		self.current_title = t_tile
-		self.t:set_title(game.translate_string(t_tile))
-	end
+	printf("Verify task [%s] status...", self.id)
 
-	local t_descr = task_functor[self.descr_functor](self.id, "descr", self.descr)
-	if self.current_descr ~= t_descr then
-		printf("task [%s] updated due to description change from [%s] to [%s]", tostring(self.id), tostring(self.current_descr), tostring(t_descr))
-		task_updated = true
-		self.current_descr = t_descr
-		self.t:set_description(game.translate_string(t_descr))
-	end
+	local updated = self.quest_data:update(self.id)
 
-	local t_target = task_functor[self.target_functor](self.id, "target", self.target)
-	self:check_level(t_target)
-	if self.current_target ~= t_target then
-		printf("task [%s] updated due to target change from [%s] to [%s]", tostring(self.id), tostring(self.current_target), tostring(t_target))
-		if self.current_target == nil then
-			task_updated = true
-			self.t:change_map_location(self.spot, t_target)
-			if(self.storyline) then
-				level.map_add_object_spot(t_target, "ui_storyline_task_blink", "")
-			else
-				level.map_add_object_spot(t_target, "ui_secondary_task_blink", "")
-			end
+	printf("Updated - [%s]", tostring(updated))
+
+	if updated then
+		self.t:set_title(game.translate_string(self.quest_data.current_title))
+		self.t:set_description(game.translate_string(self.quest_data.current_descr))
+		if not self.quest_data.current_target then
+			self.t:remove_map_locations(false)
 		else
-			if t_target == nil then
-				self.t:remove_map_locations(false)
-				task_updated = true
-			else
-				if(self.storyline) then
-					level.map_add_object_spot(t_target, "ui_storyline_task_blink", "")
-				else
-					level.map_add_object_spot(t_target, "ui_secondary_task_blink", "")
-				end
-				self.t:change_map_location(self.spot, t_target)
-				task_updated = true
-			end
+			self.t:change_map_location(self.spot, self.quest_data.current_target)
 		end
-		self.current_target = t_target
+
+		if not self.dont_send_update_news then
+			news_manager.send_task(db.actor, "updated", self.t)
+		end
 	end
-	if task_updated and not(self.dont_send_update_news) then
-		news_manager.send_task(db.actor, "updated", self.t)
+
+	self:check_level(self.quest_data.current_target)
+
+	for k,v in pairs(self.quest_data.condlist) do
+		local t = xr_logic.pick_section_from_condlist(db.actor, db.actor, v)
+		if t ~= nil then
+			--' Проверка на валидность
+			if valid_values[t] ~= true then
+				abort("Invalid task status [%s] for task [%s]", t, self.name)
+			end
+			self.last_check_task = t
+			return
+		end
 	end
+
 	for k,v in pairs(self.condlist) do
 		local t = xr_logic.pick_section_from_condlist(db.actor, db.actor, v)
 		if t ~= nil then
@@ -259,7 +539,7 @@ end
 
 --' Инициализация награды
 function CGeneralTask:give_reward()
-	xr_logic.pick_section_from_condlist(db.actor, db.actor, self.on_complete)
+	xr_logic.pick_section_from_condlist(db.actor, db.actor, self.quest_data.on_complete)
 
 	local money = xr_logic.pick_section_from_condlist(db.actor, db.actor, self.reward_money)
 	local items = xr_logic.pick_section_from_condlist(db.actor, db.actor, self.reward_item)
@@ -298,7 +578,7 @@ function CGeneralTask:deactivate_task(task)
 	if self.last_check_task == "fail" then
 		news_manager.send_task(db.actor, "fail", task)
 	elseif self.last_check_task == "reversed" then
-		xr_logic.pick_section_from_condlist(db.actor, db.actor, self.on_reversed)
+		xr_logic.pick_section_from_condlist(db.actor, db.actor, self.quest_data.on_reversed)
 		news_manager.send_task(db.actor, "reversed", task)
 	end
 	self.last_check_task = nil
@@ -362,9 +642,7 @@ function CGeneralTask:save(packet)
 	set_save_marker(packet, "save", false, "CGeneralTask")
 	packet:w_u8(id_by_status[self.status])
 	utils.w_CTime(packet, self.inited_time)
-	packet:w_stringZ(self.current_title)
-	packet:w_stringZ(self.current_descr)
-	packet:w_stringZ(tostring(self.current_target))
+	self.quest_data:save(packet)
 	set_save_marker(packet, "save", true, "CGeneralTask")
 end
 -- Load quest
@@ -372,14 +650,7 @@ function CGeneralTask:load(packet)
 	set_save_marker(packet, "load", false, "CGeneralTask")
 	self.status = status_by_id[packet:r_u8()]
 	self.inited_time = utils.r_CTime(packet)
-	self.current_title = packet:r_stringZ()
-	self.current_descr = packet:r_stringZ()
-	self.current_target = packet:r_stringZ()
-	if self.current_target == "nil" then
-		self.current_target = nil
-	else
-		self.current_target = tonumber(self.current_target)
-	end
-
+	self.quest_data:load(packet)
+	self.quest_data:update(self.id)
 	set_save_marker(packet, "load", true, "CGeneralTask")
 end
