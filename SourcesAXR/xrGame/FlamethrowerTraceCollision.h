@@ -39,6 +39,7 @@ class CFlamethrowerTraceCollision :
 
 	struct FlamethrowerTraceData {
 		CFlamethrowerTraceCollision* TracedObj = nullptr;
+		float HitDist;
 	};
 
 	static BOOL	hit_callback(collide::rq_result& result, LPVOID params);

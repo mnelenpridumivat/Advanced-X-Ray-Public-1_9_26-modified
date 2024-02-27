@@ -82,7 +82,7 @@ public:
 	IC		void		last_idle_time				(u32 const &value);
 	IC		u32 const	&last_lookout_time			() const;
 	IC		void		last_lookout_time			(u32 const &value);
-	LPCSTR		object_name					() const override;
+	LPCSTR		object_name					() const;
 };
 
 } // namespace smart_cover

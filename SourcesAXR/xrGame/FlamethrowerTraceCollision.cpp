@@ -12,7 +12,11 @@
 
 BOOL CFlamethrowerTraceCollision::hit_callback(collide::rq_result& result, LPVOID params)
 {
-	FlamethrowerTraceData* pData = static_cast<FlamethrowerTraceData*>(params);
+	if (result.O == nullptr) {
+		FlamethrowerTraceData* pData = static_cast<FlamethrowerTraceData*>(params);
+		pData->HitDist = result.range;
+		return true;
+	}
 	return false;
 }
 
@@ -255,20 +259,23 @@ void CFlamethrowerTraceCollision::Update(float DeltaTime)
 	auto old_pos = m_position;
 	//invXFORM.transform(old_pos);
 	m_position = m_position + m_direction *m_Velocity* DeltaTime - Fvector{ 0.0f, m_GravityVelocity * DeltaTime, 0.0f };
-	auto new_pos = m_position;
 	//invXFORM.transform(new_pos);
-	Msg("pos = [%f, %f, %f]", new_pos.x, new_pos.y, new_pos.z);
+	Msg("pos = [%f, %f, %f]", m_position.x, m_position.y, m_position.z);
 	//m_position = m_position.add(m_direction.mul(m_Velocity * DeltaTime)).sub({ 0.0f, m_GravityVelocity * DeltaTime, 0.0f });
 	collide::rq_results storage;
-	collide::ray_defs RD(old_pos, new_pos, CDB::OPT_FULL_TEST, collide::rqtBoth);
-#ifdef DEBUG
-	Level().BulletManager().AddBulletMoveChunk(old_pos, new_pos);
-#endif
+	collide::ray_defs RD(old_pos, m_position, CDB::OPT_FULL_TEST, collide::rqtBoth);
 	FlamethrowerTraceData data;
 	data.TracedObj = this;
-	Level().ObjectSpace.RayQuery(storage, RD, CFlamethrowerTraceCollision::hit_callback, &data, CFlamethrowerTraceCollision::test_callback, NULL);
-	//m_direction = m_position.sub(old_pos).normalize();
-	m_direction = (new_pos - old_pos).normalize();
+	m_direction = (m_position - old_pos).normalize();
+	if(Level().ObjectSpace.RayQuery(storage, RD, CFlamethrowerTraceCollision::hit_callback, &data, CFlamethrowerTraceCollision::test_callback, NULL))
+	{
+		m_position = old_pos + m_direction * data.HitDist;
+		m_IsCollided = true;
+	}
+
+#ifdef DEBUG
+	Level().BulletManager().AddBulletMoveChunk(old_pos, m_position);
+#endif
 
 	UpdateParticles();
 

@@ -15,6 +15,6 @@ public:
 					CMapActionPlanner	();
 	~CMapActionPlanner	() override;
 	void	setup				(CUIMapWnd *object) override;
-	LPCSTR	object_name			() const override;
+	LPCSTR	object_name			() const;
 };
 

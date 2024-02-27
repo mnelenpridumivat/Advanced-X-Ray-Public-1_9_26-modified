@@ -38,7 +38,7 @@ public:
 	IC			void		idle_time					(u32 const &value);
 	IC			u32	const	&lookout_time				() const;
 	IC			void		lookout_time				(u32 const &value);
-	LPCSTR		object_name					() const override;
+	LPCSTR		object_name					() const;
 
 private:
 		u32				m_idle_time;

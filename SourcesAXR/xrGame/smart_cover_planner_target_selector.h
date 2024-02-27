@@ -40,7 +40,7 @@ public:
 	~target_selector() override {}
 	void	setup			(animation_planner *object, CPropertyStorage *storage) override;
 	void	update			() override;
-	LPCSTR	object_name		() const override;
+	LPCSTR	object_name		() const;
 			void	callback		(callback_type const &callback);
 	IC callback_type const& callback() const;
 };
