@@ -224,7 +224,7 @@ bool CALifeStorageManager::load	(LPCSTR save_name_no_check)
 
 	u32	WorldsNum = stream->r_u32();
 
-	u32	source_count;
+	u32	source_count = 0;
 	void* source_data = nullptr;
 
 	for(u32 i = 0; i < WorldsNum; ++i)
@@ -254,7 +254,7 @@ bool CALifeStorageManager::load	(LPCSTR save_name_no_check)
 
 	FS.r_close					(stream);
 	load						(source_data, source_count, file_name);
-	xr_free						(source_data);
+	//xr_free						(source_data);
 
 	groups().on_after_game_load	();
 

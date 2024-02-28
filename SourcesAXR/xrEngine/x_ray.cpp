@@ -1247,6 +1247,7 @@ CApplication::CApplication()
 	eStart						= Engine.Event.Handler_Attach("KERNEL:start",this);
 	eStartLoad					= Engine.Event.Handler_Attach("KERNEL:load",this);
 	eDisconnect					= Engine.Event.Handler_Attach("KERNEL:disconnect",this);
+	eTransit					= Engine.Event.Handler_Attach("KERNEL:transit", this);
 	eConsole					= Engine.Event.Handler_Attach("KERNEL:console",this);
 	eStartMPDemo				= Engine.Event.Handler_Attach("KERNEL:start_mp_demo",this);
 
@@ -1364,6 +1365,32 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 		}
 		R_ASSERT			(0!=g_pGamePersistent);
 		g_pGamePersistent->Disconnect();
+	}
+	else if (E == eTransit) {
+		LPSTR		op_server = LPSTR(P1);
+		LPSTR		op_client = LPSTR(P2);
+		Level_Current = u32(-1);
+		R_ASSERT(0 != g_pGameLevel);
+		R_ASSERT(0 != g_pGamePersistent);
+
+		{
+			Console->Execute("main_menu off");
+			Console->Hide();
+			//!			this line is commented by Dima
+			//!			because I don't see any reason to reset device here
+			//!			Device.Reset					(false);
+						//-----------------------------------------------------------
+			//g_pGamePersistent->PreStart(op_server);
+			//-----------------------------------------------------------
+			//g_pGameLevel = (IGame_Level*)NEW_INSTANCE(CLSID_GAME_LEVEL);
+			//pApp->LoadBegin();
+			g_pGamePersistent->UpdateGameInfo(op_server);
+			//g_pGamePersistent->Start(op_server);
+			g_pGameLevel->net_Start(op_server, op_client);
+			//pApp->LoadEnd();
+		}
+		xr_free(op_server);
+		xr_free(op_client);
 	}
 	else if (E == eConsole)
 	{

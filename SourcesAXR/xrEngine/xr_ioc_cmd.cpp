@@ -285,46 +285,54 @@ bool CCC_LoadCFG_custom::allow(LPCSTR cmd)
 };
 
 //-----------------------------------------------------------------------
-class CCC_Start : public IConsole_Command
+class CCC_StartBase : public IConsole_Command
 {
-	void	parse		(LPSTR dest, LPCSTR args, LPCSTR name)
+protected:
+	void	parse(LPSTR dest, LPCSTR args, LPCSTR name)
 	{
-		dest[0]	= 0;
-		if (strstr(args,name))
-			sscanf(strstr(args,name)+xr_strlen(name),"(%[^)])",dest);
+		dest[0] = 0;
+		if (strstr(args, name))
+			sscanf(strstr(args, name) + xr_strlen(name), "(%[^)])", dest);
 	}
 
-	void	protect_Name_strlwr( LPSTR str )
+	void	protect_Name_strlwr(LPSTR str)
 	{
- 		string4096	out;
-		xr_strcpy( out, sizeof(out), str );
-		strlwr( str );
+		string4096	out;
+		xr_strcpy(out, sizeof(out), str);
+		strlwr(str);
 
 		LPCSTR name_str = "name=";
-		LPCSTR name1 = strstr( str, name_str );
-		if ( !name1 || !xr_strlen( name1 ) )
+		LPCSTR name1 = strstr(str, name_str);
+		if (!name1 || !xr_strlen(name1))
 		{
 			return;
 		}
-		int begin_p = xr_strlen( str ) - xr_strlen( name1 ) + xr_strlen( name_str );
-		if ( begin_p < 1 )
+		int begin_p = xr_strlen(str) - xr_strlen(name1) + xr_strlen(name_str);
+		if (begin_p < 1)
 		{
 			return;
 		}
 
-		LPCSTR name2 = strchr( name1, '/' );
-		int end_p = xr_strlen( str ) - ((name2)? xr_strlen(name2) : 0);
-		if ( begin_p >= end_p )
+		LPCSTR name2 = strchr(name1, '/');
+		int end_p = xr_strlen(str) - ((name2) ? xr_strlen(name2) : 0);
+		if (begin_p >= end_p)
 		{
 			return;
 		}
-		for ( int i = begin_p; i < end_p;++i )
+		for (int i = begin_p; i < end_p; ++i)
 		{
 			str[i] = out[i];
 		}
 	}
 public:
-	CCC_Start(LPCSTR N) : IConsole_Command(N)	{ 	  bLowerCaseArgs = false; };
+	CCC_StartBase(LPCSTR N) : IConsole_Command(N) { bLowerCaseArgs = false; };
+};
+
+//-----------------------------------------------------------------------
+class CCC_Start : public CCC_StartBase
+{
+public:
+	CCC_Start(LPCSTR N) : CCC_StartBase(N)	{ 	  bLowerCaseArgs = false; };
 	virtual void Execute(LPCSTR args)
 	{
 /*		if (g_pGameLevel)	{
@@ -359,7 +367,7 @@ public:
 			Engine.Event.Defer	("KERNEL:start_mp_demo",u64(xr_strdup(op_demo)),0);
 		} else
 		{
-			Engine.Event.Defer	("KERNEL:start",u64(xr_strlen(op_server)?xr_strdup(op_server):0),u64(xr_strdup(op_client)));
+			Engine.Event.Defer	("KERNEL:transit",u64(xr_strlen(op_server)?xr_strdup(op_server):0),u64(xr_strdup(op_client)));
 		}
 	}
 };
@@ -370,6 +378,34 @@ public:
 	CCC_Disconnect(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
 	virtual void Execute(LPCSTR args) {
 		Engine.Event.Defer("KERNEL:disconnect");
+	}
+};
+
+class CCC_Transit : public CCC_StartBase
+{
+public:
+	CCC_Transit(LPCSTR N) : CCC_StartBase(N) { bEmptyArgsHandled = false; };
+	virtual void Execute(LPCSTR args) {
+
+		string4096	op_server, op_client;
+		op_server[0] = 0;
+		op_client[0] = 0;
+
+		parse(op_server, args, "server");	// 1. server
+		parse(op_client, args, "client");	// 2. client
+
+		strlwr(op_server);
+		protect_Name_strlwr(op_client);
+
+		if (!op_client[0] && strstr(op_server, "single"))
+			xr_strcpy(op_client, "localhost");
+
+		if (0 == xr_strlen(op_client))
+		{
+			Log("! Can't start game without client. Arguments: '%s'.", args);
+			return;
+		}
+		Engine.Event.Defer("KERNEL:transit", u64(xr_strlen(op_server) ? xr_strdup(op_server) : 0), u64(xr_strdup(op_client)));
 	}
 };
 //-----------------------------------------------------------------------

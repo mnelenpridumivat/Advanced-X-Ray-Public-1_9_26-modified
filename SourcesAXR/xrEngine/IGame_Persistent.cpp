@@ -134,6 +134,12 @@ void IGame_Persistent::Start		(LPCSTR op)
 	VERIFY							(ps_destroy.empty());
 }
 
+void IGame_Persistent::UpdateGameInfo(LPCSTR op)
+{
+    m_game_params.parse_cmd_line(op);
+    UpdateGameType();
+}
+
 void IGame_Persistent::Disconnect	()
 {
 #ifndef _EDITOR

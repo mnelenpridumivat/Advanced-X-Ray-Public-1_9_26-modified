@@ -107,6 +107,7 @@ public:
 
 	virtual void					PreStart			(LPCSTR op);
 	virtual void					Start				(LPCSTR op);
+	virtual void					UpdateGameInfo		(LPCSTR op);
 	virtual void					Disconnect			();
 #ifndef _EDITOR
 	IGame_ObjectPool				ObjectPool;

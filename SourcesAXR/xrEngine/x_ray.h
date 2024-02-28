@@ -32,6 +32,7 @@ private:
 	EVENT					eStart;
 	EVENT					eStartLoad;
 	EVENT					eDisconnect;
+	EVENT					eTransit;
 	EVENT					eConsole;
 	EVENT					eStartMPDemo;
 
