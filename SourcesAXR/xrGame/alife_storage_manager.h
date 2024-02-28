@@ -21,6 +21,18 @@ protected:
 	string_path		m_save_name;
 	LPCSTR			m_section;
 
+	struct WorldData
+	{
+		string256 SpawnName;
+		u32	source_count;
+		u32	dest_count;
+		void* DataPtr = nullptr;
+	};
+
+	DEFINE_VECTOR(WorldData, WorldsStates, WorldsStatesIt)
+
+	WorldsStates LoadedWorldsStates;
+
 private:
 			void	prepare_objects_for_save();
 			void	load					(void *buffer, const u32 &buffer_size, LPCSTR file_name);

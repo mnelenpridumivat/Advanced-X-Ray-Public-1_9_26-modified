@@ -60,6 +60,7 @@ void CALifeStorageManager::save	(LPCSTR save_name_no_check, bool update_name)
 	void						*dest_data;
 	{
 		CMemoryWriter			stream;
+		//g_pGamePersistent->m_game_params.m_game_or_spawn;
 		header().save			(stream);
 		time_manager().save		(stream);
 		spawns().save			(stream);
@@ -78,10 +79,51 @@ void CALifeStorageManager::save	(LPCSTR save_name_no_check, bool update_name)
 	IWriter						*writer = FS.w_open(temp);
 	writer->w_u32				(static_cast<u32>(-1));
 	writer->w_u32				(ALIFE_VERSION);
-	
-	writer->w_u32				(source_count);
-	writer->w					(dest_data,dest_count);
-	xr_free						(dest_data);
+
+	writer->w_stringZ(g_pGamePersistent->m_game_params.m_game_or_spawn);
+
+	bool FoundDataInVec = false;
+
+	for (auto& LoadedWorldsState : LoadedWorldsStates)
+	{
+		if (!strcmp(LoadedWorldsState.SpawnName, g_pGamePersistent->m_game_params.m_game_or_spawn))
+		{
+			FoundDataInVec = true;
+			xr_free(LoadedWorldsState.DataPtr);
+			LoadedWorldsState.source_count = source_count;
+			LoadedWorldsState.dest_count = dest_count;
+			LoadedWorldsState.DataPtr = dest_data;
+			break;
+		}
+	}
+
+	if (!FoundDataInVec)
+	{
+		auto& NewData = LoadedWorldsStates.emplace_back();
+		strcpy(NewData.SpawnName, g_pGamePersistent->m_game_params.m_game_or_spawn);
+		NewData.DataPtr = dest_data;
+		NewData.dest_count = dest_count;
+		NewData.source_count = source_count;
+	}
+
+	writer->w_u32(LoadedWorldsStates.size());
+
+	for (auto& LoadedWorldsState : LoadedWorldsStates)
+	{
+		if(!strcmp(LoadedWorldsState.SpawnName, g_pGamePersistent->m_game_params.m_game_or_spawn))
+		{
+			FoundDataInVec = true;
+			xr_free(LoadedWorldsState.DataPtr);
+			LoadedWorldsState.source_count = source_count;
+			LoadedWorldsState.dest_count = dest_count;
+			LoadedWorldsState.DataPtr = dest_data;
+		}
+		writer->w_stringZ(LoadedWorldsState.SpawnName);
+		writer->w_u32(LoadedWorldsState.source_count);
+		writer->w_u32(LoadedWorldsState.dest_count);
+		writer->w(LoadedWorldsState.DataPtr, LoadedWorldsState.dest_count);
+	}
+
 	FS.w_close					(writer);
 #ifdef DEBUG
 	Msg							("* Game %s is successfully saved to file '%s' (%d bytes compressed to %d)",m_save_name,temp,source_count,dest_count + 4);
@@ -171,9 +213,45 @@ bool CALifeStorageManager::load	(LPCSTR save_name_no_check)
 	unload						();
 	reload						(m_section);
 
-	u32							source_count = stream->r_u32();
-	void						*source_data = xr_malloc(source_count);
+	for (auto& elem : LoadedWorldsStates)
+	{
+		xr_free(elem.DataPtr);
+	}
+	LoadedWorldsStates.clear();
+
+	xr_string CurrentWorldName;
+	stream->r_stringZ(CurrentWorldName);
+
+	u32	WorldsNum = stream->r_u32();
+
+	u32	source_count;
+	void* source_data = nullptr;
+
+	for(u32 i = 0; i < WorldsNum; ++i)
+	{
+		string256 WorldName;
+		stream->r_string(WorldName, sizeof(string256));
+		u32	SourceCount = stream->r_u32();
+		void* SourceData = xr_malloc(SourceCount);
+		u32	DestCount = stream->r_u32();
+		rtc_decompress(SourceData, SourceCount, stream->pointer(), DestCount);
+		stream->advance(DestCount);
+		auto& NewData = LoadedWorldsStates.emplace_back();
+		strcpy(NewData.SpawnName, WorldName);
+		NewData.DataPtr = SourceData;
+		NewData.dest_count = DestCount;
+		NewData.source_count = SourceCount;
+		if(!strcmp(WorldName, g_pGamePersistent->m_game_params.m_game_or_spawn))
+		{
+			source_count = SourceCount;
+			source_data = SourceData;
+		}
+	}
+
+	R_ASSERT4(source_data, "Unable to find world data for [%s] in save [%s]", g_pGamePersistent->m_game_params.m_game_or_spawn, save_name_no_check);
+
 	rtc_decompress				(source_data,source_count,stream->pointer(),stream->length() - 3*sizeof(u32));
+
 	FS.r_close					(stream);
 	load						(source_data, source_count, file_name);
 	xr_free						(source_data);

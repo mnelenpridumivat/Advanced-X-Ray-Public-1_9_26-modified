@@ -20,7 +20,10 @@
 #define GAME_TIME_CHUNK_DATA		0x0005
 #define REGISTRY_CHUNK_DATA			0x0009
 #define SECTION_HEADER				"location_"
-#define SAVE_EXTENSION				".scop"
+#define SAVE_EXTENSION				".scop" // Global data for save
+#define SAVE_EXTENSION_GLOBAL		".scopg" // Global data for save
+#define SAVE_EXTENSION_LOCAL		".scopl" // Local data (i.e. world state of different spawns)
+#define SAVE_EXTENSION_USERDATA		".scopu" // User data (progress, is game completed once...)
 #define SPAWN_NAME					"game.spawn"
 // inventory rukzak size
 #define MAX_ITEM_VOLUME				100
