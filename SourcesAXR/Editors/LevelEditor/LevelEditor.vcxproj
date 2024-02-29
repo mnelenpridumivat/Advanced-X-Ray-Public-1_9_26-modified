@@ -1,0 +1,987 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Mixed|Win32">
+      <Configuration>Mixed</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Mixed|Win32">
+      <Configuration>Mixed</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Mixed|x64">
+      <Configuration>Mixed</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\xrRender\Private\DetailManager.cpp" />
+    <ClCompile Include="..\..\xrRender\Private\DetailManager_CACHE.cpp" />
+    <ClCompile Include="..\..\xrRender\Private\DetailManager_Decompress.cpp" />
+    <ClCompile Include="..\..\xrRender\Private\DetailManager_soft.cpp" />
+    <ClCompile Include="..\..\xrRender\Private\DetailManager_VS.cpp" />
+    <ClCompile Include="..\..\xrRender\Private\stats_manager.cpp" />
+    <ClCompile Include="AI\game_graph_editor.cpp" />
+    <ClCompile Include="AI\game_graph_builder.cpp" />
+    <ClCompile Include="AI\game_spawn_constructor.cpp" />
+    <ClCompile Include="AI\level_graph_editor.cpp" />
+    <ClCompile Include="AI\level_spawn_constructor.cpp" />
+    <ClCompile Include="AI\patrol_path.cpp" />
+    <ClCompile Include="AI\patrol_path_storage.cpp" />
+    <ClCompile Include="AI\patrol_point.cpp" />
+    <ClCompile Include="AI\server_entity_wrapper.cpp" />
+    <ClCompile Include="AI\space_restrictor_wrapper.cpp" />
+    <ClCompile Include="AI\xrThread.cpp" />
+    <ClCompile Include="Editor\Builder\Builder.cpp" />
+    <ClCompile Include="Editor\Builder\BuilderCore.cpp" />
+    <ClCompile Include="Editor\Builder\BuilderGame.cpp" />
+    <ClCompile Include="Editor\Builder\BuilderLODs.cpp" />
+    <ClCompile Include="Editor\Builder\BuilderLTX.cpp" />
+    <ClCompile Include="Editor\Builder\BuilderOGF.cpp" />
+    <ClCompile Include="Editor\Builder\BuilderRemote.cpp" />
+    <ClCompile Include="Editor\Entry\CustomObject.cpp" />
+    <ClCompile Include="Editor\Entry\CustomObjectAnimation.cpp" />
+    <ClCompile Include="Editor\Entry\CustomObjectLE.cpp" />
+    <ClCompile Include="Editor\Entry\EditObjectExportLWO.cpp" />
+    <ClCompile Include="Editor\Entry\Glow\glow.cpp" />
+    <ClCompile Include="Editor\Entry\Group\GroupObject.cpp" />
+    <ClCompile Include="Editor\Entry\Group\GroupObjectUtils.cpp" />
+    <ClCompile Include="Editor\Entry\Light\ELight.cpp" />
+    <ClCompile Include="Editor\Entry\Light\ELight_IO.cpp" />
+    <ClCompile Include="Editor\Entry\Light\ELight_props.cpp" />
+    <ClCompile Include="Editor\Entry\Particles\EParticlesObject.cpp" />
+    <ClCompile Include="Editor\Entry\Portal\portal.cpp" />
+    <ClCompile Include="Editor\Entry\Sector\sector.cpp" />
+    <ClCompile Include="Editor\Entry\Shape\EShape.cpp" />
+    <ClCompile Include="Editor\Entry\Sound\ESound_Environment.cpp" />
+    <ClCompile Include="Editor\Entry\Sound\ESound_Source.cpp" />
+    <ClCompile Include="Editor\Entry\Spawn\SpawnPoint.cpp" />
+    <ClCompile Include="Editor\Entry\StaticObject\SceneObject.cpp" />
+    <ClCompile Include="Editor\Entry\StaticObject\SceneObjectIO.cpp" />
+    <ClCompile Include="Editor\Entry\WayPoint\WayPoint.cpp" />
+    <ClCompile Include="Editor\Scene\CFromBuilder.cpp" />
+    <ClCompile Include="Editor\Scene\LEPhysics.cpp" />
+    <ClCompile Include="Editor\Scene\scene.cpp" />
+    <ClCompile Include="Editor\Scene\SceneIO.cpp" />
+    <ClCompile Include="Editor\Scene\ScenePick.cpp" />
+    <ClCompile Include="Editor\Scene\SceneRender.cpp" />
+    <ClCompile Include="Editor\Scene\SceneSelection.cpp" />
+    <ClCompile Include="Editor\Scene\SceneSnap.cpp" />
+    <ClCompile Include="Editor\Scene\SceneSummaryInfo.cpp" />
+    <ClCompile Include="Editor\Scene\SceneUndo.cpp" />
+    <ClCompile Include="Editor\Scene\SceneUtil.cpp" />
+    <ClCompile Include="Editor\Scene\scene_spawn.cpp" />
+    <ClCompile Include="Editor\Scene\Scene_Tools.cpp" />
+    <ClCompile Include="Editor\Tools\AIMap\ESceneAIMapControls.cpp" />
+    <ClCompile Include="Editor\Tools\AIMap\ESceneAIMapTools.cpp" />
+    <ClCompile Include="Editor\Tools\AIMap\ESceneAIMapTools_Controls.cpp" />
+    <ClCompile Include="Editor\Tools\AIMap\ESceneAIMapTools_Export.cpp" />
+    <ClCompile Include="Editor\Tools\AIMap\ESceneAIMapTools_Generate.cpp" />
+    <ClCompile Include="Editor\Tools\AIMap\ESceneAIMapTools_MotionSimulator.cpp" />
+    <ClCompile Include="Editor\Tools\AIMap\ESceneAIMapTools_Pick.cpp" />
+    <ClCompile Include="Editor\Tools\AIMap\ESceneAIMapTools_Render.cpp" />
+    <ClCompile Include="Editor\Tools\Base\ESceneControlsCustom.cpp" />
+    <ClCompile Include="Editor\Tools\Base\ESceneCustomMTools.cpp" />
+    <ClCompile Include="Editor\Tools\Base\ESceneCustomMToolsControls.cpp" />
+    <ClCompile Include="Editor\Tools\Base\ESceneCustomOTools.cpp" />
+    <ClCompile Include="Editor\Tools\Base\ESceneCustomOToolsIO.cpp" />
+    <ClCompile Include="Editor\Tools\Base\ESceneDummyTools.cpp" />
+    <ClCompile Include="Editor\Tools\Details\ESceneDOTools.cpp" />
+    <ClCompile Include="Editor\Tools\Details\ESceneDOTools_Controls.cpp" />
+    <ClCompile Include="Editor\Tools\Details\ESceneDOTools_Generate.cpp" />
+    <ClCompile Include="Editor\Tools\Details\ESceneDOTools_Pick.cpp" />
+    <ClCompile Include="Editor\Tools\FogVolume\ESceneFogVolumeTools.cpp" />
+    <ClCompile Include="Editor\Tools\Glow\ESceneGlowTools.cpp" />
+    <ClCompile Include="Editor\Tools\Glow\ESceneGlowToolsIO.cpp" />
+    <ClCompile Include="Editor\Tools\Glow\ESceneGroupToolsIO.cpp" />
+    <ClCompile Include="Editor\Tools\Group\ESceneGroupControls.cpp" />
+    <ClCompile Include="Editor\Tools\Group\ESceneGroupTools.cpp" />
+    <ClCompile Include="Editor\Tools\Light\ESceneLightTools.cpp" />
+    <ClCompile Include="Editor\Tools\Light\ESceneLightToolsIO.cpp" />
+    <ClCompile Include="Editor\Tools\Particles\EScenePSControls.cpp" />
+    <ClCompile Include="Editor\Tools\Particles\EScenePSTools.cpp" />
+    <ClCompile Include="Editor\Tools\Particles\EScenePSToolsIO.cpp" />
+    <ClCompile Include="Editor\Tools\Portal\EScenePortalControls.cpp" />
+    <ClCompile Include="Editor\Tools\Portal\EScenePortalTools.cpp" />
+    <ClCompile Include="Editor\Tools\Portal\EScenePortalToolsIO.cpp" />
+    <ClCompile Include="Editor\Tools\Sector\ESceneSectorControls.cpp" />
+    <ClCompile Include="Editor\Tools\Sector\ESceneSectorTools.cpp" />
+    <ClCompile Include="Editor\Tools\Sector\ESceneSectorToolsIO.cpp" />
+    <ClCompile Include="Editor\Tools\Shape\ESceneShapeControls.cpp" />
+    <ClCompile Include="Editor\Tools\Shape\ESceneShapeTools.cpp" />
+    <ClCompile Include="Editor\Tools\Shape\ESceneShapeToolsIO.cpp" />
+    <ClCompile Include="Editor\Tools\Sound\ESceneSoundEnvTools.cpp" />
+    <ClCompile Include="Editor\Tools\Sound\ESceneSoundEnvToolsIO.cpp" />
+    <ClCompile Include="Editor\Tools\Sound\ESceneSoundSrcTools.cpp" />
+    <ClCompile Include="Editor\Tools\Sound\ESceneSoundSrcToolsIO.cpp" />
+    <ClCompile Include="Editor\Tools\Spawn\ESceneSpawnControls.cpp" />
+    <ClCompile Include="Editor\Tools\Spawn\ESceneSpawnTools.cpp" />
+    <ClCompile Include="Editor\Tools\Spawn\ESceneSpawnToolsIO.cpp" />
+    <ClCompile Include="Editor\Tools\StaticObject\ESceneObjectControls.cpp" />
+    <ClCompile Include="Editor\Tools\StaticObject\ESceneObjectTools.cpp" />
+    <ClCompile Include="Editor\Tools\StaticObject\ESceneObjectToolsExportBreakable.cpp" />
+    <ClCompile Include="Editor\Tools\StaticObject\ESceneObjectToolsIO.cpp" />
+    <ClCompile Include="Editor\Tools\Wallmark\ESceneWallmarkControls.cpp" />
+    <ClCompile Include="Editor\Tools\Wallmark\ESceneWallmarkTools.cpp" />
+    <ClCompile Include="Editor\Tools\WayPoint\ESceneWayControls.cpp" />
+    <ClCompile Include="Editor\Tools\WayPoint\ESceneWayTools.cpp" />
+    <ClCompile Include="Editor\Tools\WayPoint\ESceneWayToolsIO.cpp" />
+    <ClCompile Include="Editor\UI_LevelMain.cpp" />
+    <ClCompile Include="Editor\UI_LevelTools.cpp" />
+    <ClCompile Include="Editor\Utils\Cursor3D.cpp" />
+    <ClCompile Include="Editor\Utils\Custom2DProjector.cpp" />
+    <ClCompile Include="Editor\Utils\FS2.cpp" />
+    <ClCompile Include="Editor\Utils\GeometryPartExtractor.cpp" />
+    <ClCompile Include="Editor\Utils\Gizmo\IM_Manipulator.cpp" />
+    <ClCompile Include="Editor\Utils\iniStreamImpl.cpp" />
+    <ClCompile Include="Editor\Utils\LevelPreferences.cpp" />
+    <ClCompile Include="Editor\Utils\portalutils.cpp" />
+    <ClCompile Include="Editor\Utils\SoundManager_LE.cpp" />
+    <ClCompile Include="Editor\Utils\xrSEFactoryManager.cpp" />
+    <ClCompile Include="Engine\XRayEditor.cpp" />
+    <ClCompile Include="Engine\xrGameManager.cpp" />
+    <ClCompile Include="LevelEditor.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UI\ObjectList\UIObjectList.cpp" />
+    <ClCompile Include="UI\ObjectList\UIObjectListItem.cpp" />
+    <ClCompile Include="UI\Tools\UIAIMapTool.cpp" />
+    <ClCompile Include="UI\Tools\UIDOTool.cpp" />
+    <ClCompile Include="UI\Tools\UIFogVolTool.cpp" />
+    <ClCompile Include="UI\Tools\UIGroupTool.cpp" />
+    <ClCompile Include="UI\Tools\UILightTool.cpp" />
+    <ClCompile Include="UI\Tools\UIObjectTool.cpp" />
+    <ClCompile Include="UI\Tools\UIParticlesTool.cpp" />
+    <ClCompile Include="UI\Tools\UIPortalTool.cpp" />
+    <ClCompile Include="UI\Tools\UISectorTool.cpp" />
+    <ClCompile Include="UI\Tools\UIShapeTool.cpp" />
+    <ClCompile Include="UI\Tools\UISpawnTool.cpp" />
+    <ClCompile Include="UI\Tools\UIWayTool.cpp" />
+    <ClCompile Include="UI\UIDOOneColor.cpp" />
+    <ClCompile Include="UI\UIDOShuffle.cpp" />
+    <ClCompile Include="UI\UILeftBarForm.cpp" />
+    <ClCompile Include="UI\UIMainForm.cpp" />
+    <ClCompile Include="UI\UIMainMenuForm.cpp" />
+    <ClCompile Include="UI\UILPropertiesFrom.cpp" />
+    <ClCompile Include="UI\UIPropertiesModal.cpp" />
+    <ClCompile Include="UI\UITopBarForm.cpp" />
+    <ClCompile Include="UI\UIWorldPropertiesFrom.cpp" />
+    <ClCompile Include="UI\UIEditLibrary.cpp" />
+    <ClCompile Include="resources\splash.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\xrRender\Private\DetailManager.h" />
+    <ClInclude Include="AI\cover_point.h" />
+    <ClInclude Include="AI\cover_point_inline.h" />
+    <ClInclude Include="AI\game_graph_editor.h" />
+    <ClInclude Include="AI\game_graph_builder.h" />
+    <ClInclude Include="AI\game_graph_builder_inline.h" />
+    <ClInclude Include="AI\game_level_cross_table_editor.h" />
+    <ClCompile Include="AI\game_level_cross_table_editor.cpp" />
+    <ClInclude Include="AI\game_spawn_constructor.h" />
+    <ClInclude Include="AI\game_spawn_constructor_inline.h" />
+    <ClInclude Include="AI\graph_engine_editor.h" />
+    <ClInclude Include="AI\graph_engine_editor_inline.h" />
+    <ClInclude Include="AI\graph_engine_editor_space.h" />
+    <ClInclude Include="AI\level_graph_editor.h" />
+    <ClInclude Include="AI\level_spawn_constructor.h" />
+    <ClInclude Include="AI\level_spawn_constructor_inline.h" />
+    <ClInclude Include="AI\path_manager.h" />
+    <ClInclude Include="AI\path_manager_game.h" />
+    <ClInclude Include="AI\path_manager_game_inline.h" />
+    <ClInclude Include="AI\path_manager_game_level.h" />
+    <ClInclude Include="AI\path_manager_game_level_inline.h" />
+    <ClInclude Include="AI\path_manager_game_vertex_type.h" />
+    <ClInclude Include="AI\path_manager_game_vertex_type_inline.h" />
+    <ClInclude Include="AI\path_manager_generic.h" />
+    <ClInclude Include="AI\path_manager_generic_inline.h" />
+    <ClInclude Include="AI\path_manager_level.h" />
+    <ClInclude Include="AI\path_manager_level_evaluator.h" />
+    <ClInclude Include="AI\path_manager_level_evaluator_inline.h" />
+    <ClInclude Include="AI\path_manager_level_flooder.h" />
+    <ClInclude Include="AI\path_manager_level_flooder_inline.h" />
+    <ClInclude Include="AI\path_manager_level_inline.h" />
+    <ClInclude Include="AI\path_manager_level_straight_line.h" />
+    <ClInclude Include="AI\path_manager_level_straight_line_inline.h" />
+    <ClInclude Include="AI\path_manager_params.h" />
+    <ClInclude Include="AI\path_manager_params_flooder.h" />
+    <ClInclude Include="AI\path_manager_params_game_level.h" />
+    <ClInclude Include="AI\path_manager_params_straight_line.h" />
+    <ClInclude Include="AI\patrol_path.h" />
+    <ClInclude Include="AI\patrol_path_inline.h" />
+    <ClInclude Include="AI\patrol_path_storage.h" />
+    <ClInclude Include="AI\patrol_path_storage_inline.h" />
+    <ClInclude Include="AI\patrol_point.h" />
+    <ClInclude Include="AI\patrol_point_inline.h" />
+    <ClInclude Include="AI\server_entity_wrapper.h" />
+    <ClInclude Include="AI\server_entity_wrapper_inline.h" />
+    <ClInclude Include="AI\space_restrictor_wrapper.h" />
+    <ClInclude Include="AI\space_restrictor_wrapper_inline.h" />
+    <ClInclude Include="AI\xrThread.h" />
+    <ClInclude Include="Editor\Builder\Builder.h" />
+    <ClInclude Include="Editor\Entry\CustomObject.h" />
+    <ClInclude Include="Editor\Entry\Glow\glow.h" />
+    <ClInclude Include="Editor\Entry\Group\GroupObject.h" />
+    <ClInclude Include="Editor\Entry\Light\ELight.h" />
+    <ClInclude Include="Editor\Entry\Particles\EParticlesObject.h" />
+    <ClInclude Include="Editor\Entry\Portal\portal.h" />
+    <ClInclude Include="Editor\Entry\Sector\sector.h" />
+    <ClInclude Include="Editor\Entry\Shape\EShape.h" />
+    <ClInclude Include="Editor\Entry\Sound\ESound_Environment.h" />
+    <ClInclude Include="Editor\Entry\Sound\ESound_Source.h" />
+    <ClInclude Include="Editor\Entry\Spawn\SpawnPoint.h" />
+    <ClInclude Include="Editor\Entry\StaticObject\SceneObject.h" />
+    <ClInclude Include="Editor\Entry\WayPoint\WayPoint.h" />
+    <ClInclude Include="Editor\Scene\CFromBuilder.h" />
+    <ClInclude Include="Editor\Scene\LEPhysics.h" />
+    <ClInclude Include="Editor\Scene\mesh_data.h" />
+    <ClInclude Include="Editor\Scene\scene.h" />
+    <ClInclude Include="Editor\Scene\SceneGraph.h" />
+    <ClInclude Include="Editor\Scene\SceneSummaryInfo.h" />
+    <ClInclude Include="Editor\Tools\AIMap\ESceneAIMapControls.h" />
+    <ClInclude Include="Editor\Tools\AIMap\ESceneAIMapTools.h" />
+    <ClInclude Include="Editor\Tools\AIMap\ESceneAIMapTools_Export.h" />
+    <ClInclude Include="Editor\Tools\Base\ESceneControlsCustom.h" />
+    <ClInclude Include="Editor\Tools\Base\ESceneCustomMTools.h" />
+    <ClInclude Include="Editor\Tools\Base\ESceneCustomOTools.h" />
+    <ClInclude Include="Editor\Tools\Base\ESceneDummyTools.h" />
+    <ClInclude Include="Editor\Tools\Details\ESceneDOTools.h" />
+    <ClInclude Include="Editor\Tools\ESceneClassList.h" />
+    <ClInclude Include="Editor\Tools\FogVolume\ESceneFogVolumeTools.h" />
+    <ClInclude Include="Editor\Tools\Glow\ESceneGlowTools.h" />
+    <ClInclude Include="Editor\Tools\Group\ESceneGroupControls.h" />
+    <ClInclude Include="Editor\Tools\Group\ESceneGroupTools.h" />
+    <ClInclude Include="Editor\Tools\Light\ESceneLightTools.h" />
+    <ClInclude Include="Editor\Tools\Particles\EScenePSControls.h" />
+    <ClInclude Include="Editor\Tools\Particles\EScenePSTools.h" />
+    <ClInclude Include="Editor\Tools\Portal\EScenePortalControls.h" />
+    <ClInclude Include="Editor\Tools\Portal\EScenePortalTools.h" />
+    <ClInclude Include="Editor\Tools\Sector\ESceneSectorControls.h" />
+    <ClInclude Include="Editor\Tools\Sector\ESceneSectorTools.h" />
+    <ClInclude Include="Editor\Tools\Shape\ESceneShapeControls.h" />
+    <ClInclude Include="Editor\Tools\Shape\ESceneShapeTools.h" />
+    <ClInclude Include="Editor\Tools\Sound\ESceneSoundEnvTools.h" />
+    <ClInclude Include="Editor\Tools\Sound\ESceneSoundSrcTools.h" />
+    <ClInclude Include="Editor\Tools\Spawn\ESceneSpawnControls.h" />
+    <ClInclude Include="Editor\Tools\Spawn\ESceneSpawnTools.h" />
+    <ClInclude Include="Editor\Tools\StaticObject\ESceneObjectControls.h" />
+    <ClInclude Include="Editor\Tools\StaticObject\ESceneObjectTools.h" />
+    <ClInclude Include="Editor\Tools\Wallmark\ESceneWallmarkControls.h" />
+    <ClInclude Include="Editor\Tools\Wallmark\ESceneWallmarkTools.h" />
+    <ClInclude Include="Editor\Tools\WayPoint\ESceneWayControls.h" />
+    <ClInclude Include="Editor\Tools\WayPoint\ESceneWayTools.h" />
+    <ClInclude Include="Editor\UI_LevelMain.h" />
+    <ClInclude Include="Editor\UI_LevelTools.h" />
+    <ClInclude Include="Editor\Utils\Cursor3D.h" />
+    <ClInclude Include="Editor\Utils\Custom2DProjector.h" />
+    <ClInclude Include="Editor\Utils\FS2.h" />
+    <ClInclude Include="Editor\Utils\GeometryPartExtractor.h" />
+    <ClInclude Include="Editor\Utils\Gizmo\IM_Manipulator.h" />
+    <ClInclude Include="Editor\Utils\iniStreamImpl.h" />
+    <ClInclude Include="Editor\Utils\LevelPreferences.h" />
+    <ClInclude Include="Editor\Utils\lwchunks.h" />
+    <ClInclude Include="Editor\Utils\portalutils.h" />
+    <ClInclude Include="Editor\Utils\SoundManager_LE.h" />
+    <ClInclude Include="Editor\Utils\xrSEFactoryManager.h" />
+    <ClInclude Include="Engine\XRayEditor.h" />
+    <ClInclude Include="Engine\xrGameManager.h" />
+    <ClInclude Include="resources\resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="UI\ObjectList\UIObjectList.h" />
+    <ClInclude Include="UI\ObjectList\UIObjectListItem.h" />
+    <ClInclude Include="UI\Tools\UIAIMapTool.h" />
+    <ClInclude Include="UI\Tools\UIDOTool.h" />
+    <ClInclude Include="UI\Tools\UIFogVolTool.h" />
+    <ClInclude Include="UI\Tools\UIGroupTool.h" />
+    <ClInclude Include="UI\Tools\UILightTool.h" />
+    <ClInclude Include="UI\Tools\UIObjectTool.h" />
+    <ClInclude Include="UI\Tools\UIParticlesTool.h" />
+    <ClInclude Include="UI\Tools\UIPortalTool.h" />
+    <ClInclude Include="UI\Tools\UISectorTool.h" />
+    <ClInclude Include="UI\Tools\UIShapeTool.h" />
+    <ClInclude Include="UI\Tools\UISpawnTool.h" />
+    <ClInclude Include="UI\Tools\UIToolCustom.h" />
+    <ClInclude Include="UI\Tools\UIWayTool.h" />
+    <ClInclude Include="UI\UIDOOneColor.h" />
+    <ClInclude Include="UI\UIDOShuffle.h" />
+    <ClInclude Include="UI\UILeftBarForm.h" />
+    <ClInclude Include="UI\UIMainForm.h" />
+    <ClInclude Include="UI\UIMainMenuForm.h" />
+    <ClInclude Include="UI\UILPropertiesFrom.h" />
+    <ClInclude Include="UI\UIPropertiesModal.h" />
+    <ClInclude Include="UI\UITopBarForm.h" />
+    <ClInclude Include="UI\UIWorldPropertiesFrom.h" />
+    <ClInclude Include="UI\UIEditLibrary.h" />
+    <ClInclude Include="resources\splash.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\xrAPI\xrAPI.vcxproj">
+      <Project>{ff16ef0a-8a51-4c36-9213-4aa87cb4b317}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\xrCDB\xrCDB.vcxproj">
+      <Project>{7e263157-2fc0-42d7-a676-dd6049bb60f5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\xrCore\xrCore.vcxproj">
+      <Project>{da642d7c-4fff-43dc-98f8-3f96caf1e4ba}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\xrEngine\xrEngine.vcxproj">
+      <Project>{2820680f-79fe-4477-a14c-007f273a5fa8}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\xrPhysics\xrPhysics.vcxproj">
+      <Project>{3d3cc439-aabc-4565-99c8-9c53f425380c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\xrSound\xrSound.vcxproj">
+      <Project>{57601b62-902a-4ec8-bcc7-b6a2e30b0676}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\FreeMagic\FreeMagic.vcxproj">
+      <Project>{dcc5b76d-be13-4d1f-be14-75d0fa678340}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\xrECore\xrECore.vcxproj">
+      <Project>{9187be98-531a-4276-b78e-dba3c8ab8447}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\xrEProps\xrEProps.vcxproj">
+      <Project>{6d47afc7-0557-4bbf-8902-b248f3621419}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\xrETools\xrETools.vcxproj">
+      <Project>{fb040f9f-8344-43da-a4d6-1c8a9d5dbc59}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\xrEUI\xrEUI.vcxproj">
+      <Project>{7e28883c-db86-4ee8-813a-991ba20c68c9}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\LevelEditor.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\icon_LE.ico" />
+    <Image Include="resources\Splash_LE.bmp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7E13BFCC-55B0-4715-8BBB-84A143CCE84B}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>LevelEditor</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>12.0.30501.0</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\..\OutputDirectory\Binaries\$(Configuration)\</OutDir>
+    <IntDir>..\..\OutputDirectory\Intermediate\$(Configuration)\$(ProjectName)\</IntDir>
+    <ExtensionsToDeleteOnClean>*.idb%3b*.obj%3b*.ilk%3b*.pdb%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.bat%3b$(TargetPath)</ExtensionsToDeleteOnClean>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ExtensionsToDeleteOnClean>*.idb%3b*.obj%3b*.ilk%3b*.pdb%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.bat%3b$(TargetPath)</ExtensionsToDeleteOnClean>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+    <OutDir>..\..\OutputDirectory\Binaries\$(Configuration)\</OutDir>
+    <IntDir>..\..\OutputDirectory\Intermediate\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
+    <OutDir>..\..\OutputDirectory\Binaries\$(Configuration)\</OutDir>
+    <IntDir>..\..\OutputDirectory\Intermediate\$(Configuration)\$(ProjectName)\</IntDir>
+    <ExtensionsToDeleteOnClean>*.idb%3b*.obj%3b*.ilk%3b*.pdb%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.bat%3b$(TargetPath)</ExtensionsToDeleteOnClean>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
+    <ExtensionsToDeleteOnClean>*.idb%3b*.obj%3b*.ilk%3b*.pdb%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.bat%3b$(TargetPath)</ExtensionsToDeleteOnClean>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
+    <OutDir>..\..\OutputDirectory\Binaries\$(Configuration)\</OutDir>
+    <IntDir>..\..\OutputDirectory\Intermediate\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IntDir>..\..\OutputDirectory\Intermediate\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>..\..\OutputDirectory\Binaries\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\..\OutputDirectory\Binaries\$(Configuration)\</OutDir>
+    <IntDir>..\..\OutputDirectory\Intermediate\$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28March 2009%29\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28March 2009%29\Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <TargetName>AdvancedXRay</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <TargetName>AdvancedXRay</TargetName>
+    <IntDir>..\..\OutputDirectory\Intermediate\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>..\..\OutputDirectory\Binaries\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Zm200  %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rd party/imgui;../../sdk/include/;../../sdk/include/directx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>INGAME_EDITOR;DEBUG;WIN32;_WINDOWS;ENGINE_BUILD;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <BrowseInformation />
+      <WarningLevel>Level1</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0422</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <AdditionalDependencies>d3dx9.lib;DiscordRPC.lib;soft_oal.lib;vfw32.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\sdk\libraries;..\..\OutputDirectory\Libraries\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmtd;libc;libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName />
+      <MapExports>false</MapExports>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <ImportLibrary>..\..\OutputDirectory\Libraries\$(Configuration)\AdvancedXRay.lib</ImportLibrary>
+      <ProgramDatabaseFile>$(OutDir)AdvancedXRay.pdb</ProgramDatabaseFile>
+    </Link>
+    <Manifest>
+      <AdditionalManifestFiles>as-invoker-manifest-part.xml;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalOptions>/Zm200  %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rd party/imgui;../../sdk/include/;../../sdk/include/directx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>INGAME_EDITOR;DEBUG;WIN32;_WINDOWS;ENGINE_BUILD;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <BrowseInformation>
+      </BrowseInformation>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0422</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <AdditionalDependencies>d3dx9.lib;DiscordRPC.lib;soft_oal.lib;vfw32.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\sdk\libraries\x64;..\..\OutputDirectory\Libraries\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmtd;libc;libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>
+      </MapFileName>
+      <MapExports>false</MapExports>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>..\..\OutputDirectory\Libraries\$(Configuration)\AdvancedXRay.lib</ImportLibrary>
+      <ProgramDatabaseFile>$(OutDir)AdvancedXRay.pdb</ProgramDatabaseFile>
+    </Link>
+    <Manifest>
+      <AdditionalManifestFiles>as-invoker-manifest-part.xml;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Zm200  %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rd party/imgui;../../sdk/include/;../../sdk/include/directx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>INGAME_EDITOR;DEBUG;WIN32;_WINDOWS;ENGINE_BUILD;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <BrowseInformation>
+      </BrowseInformation>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0422</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/ignore:4099
+/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>d3dx9.lib;DiscordRPC.lib;soft_oal.lib;vfw32.lib;libogg_static.lib;libtheora_static.lib;oalibmt.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\sdk\libraries;..\..\OutputDirectory\Libraries\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmtd;libc;libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>
+      </MapFileName>
+      <MapExports>false</MapExports>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>..\..\OutputDirectory\Libraries\$(Configuration)\AdvancedXRay.lib</ImportLibrary>
+      <ProgramDatabaseFile>$(OutDir)AdvancedXRay.pdb</ProgramDatabaseFile>
+    </Link>
+    <Manifest>
+      <AdditionalManifestFiles>as-invoker-manifest-part.xml;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
+    <ClCompile>
+      <AdditionalOptions>/Zm200  %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rd party/imgui;../../sdk/include/;../../sdk/include/directx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>INGAME_EDITOR;DEBUG;WIN32;_WINDOWS;ENGINE_BUILD;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <BrowseInformation>
+      </BrowseInformation>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0422</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/ignore:4099
+/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>d3dx9.lib;DiscordRPC.lib;soft_oal.lib;vfw32.lib;libogg_static.lib;libtheora_static.lib;oalibmt.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\sdk\libraries;..\..\OutputDirectory\Libraries\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmtd;libc;libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>
+      </MapFileName>
+      <MapExports>false</MapExports>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>..\..\OutputDirectory\Libraries\$(Configuration)\AdvancedXRay.lib</ImportLibrary>
+      <ProgramDatabaseFile>$(OutDir)AdvancedXRay.pdb</ProgramDatabaseFile>
+    </Link>
+    <Manifest>
+      <AdditionalManifestFiles>as-invoker-manifest-part.xml;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>../../sdk/include/stlport;../../sdk/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>INGAME_EDITOR;DEBUG;MIXED;WIN32;_WINDOWS;ENGINE_BUILD;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerOutput />
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <WarningLevel>Level1</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0422</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <AdditionalDependencies>d3dx9.lib;DiscordRPC.lib;soft_oal.lib;vfw32.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\sdk\libraries;..\..\OutputDirectory\Libraries\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>$(OutDir)$(ProjectName).map</MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <DataExecutionPrevention />
+      <ImportLibrary>..\..\OutputDirectory\Libraries\$(Configuration)\AdvancedXRay.lib</ImportLibrary>
+      <TargetMachine>NotSet</TargetMachine>
+    </Link>
+    <Manifest>
+      <AdditionalManifestFiles>as-invoker-manifest-part.xml;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>../../sdk/include/stlport;../../sdk/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>INGAME_EDITOR;DEBUG;MIXED;WIN32;_WINDOWS;ENGINE_BUILD;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerOutput>
+      </AssemblerOutput>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0422</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <AdditionalDependencies>d3dx9.lib;DiscordRPC.lib;soft_oal.lib;vfw32.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\sdk\libraries\x64;..\..\OutputDirectory\Libraries\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>$(OutDir)$(ProjectName).map</MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>..\..\OutputDirectory\Libraries\$(Configuration)\AdvancedXRay.lib</ImportLibrary>
+    </Link>
+    <Manifest>
+      <AdditionalManifestFiles>as-invoker-manifest-part.xml;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rd party/imgui;../../sdk/include/;../../sdk/include/directx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;ENGINE_BUILD;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling />
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <BrowseInformation />
+      <WarningLevel>Level1</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0422</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <AdditionalDependencies>d3dx9.lib;DiscordRPC.lib;soft_oal.lib;vfw32.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\sdk\libraries;..\..\OutputDirectory\Libraries\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)AdvancedXRay.pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName />
+      <SubSystem>NotSet</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <DataExecutionPrevention />
+      <ImportLibrary>..\..\OutputDirectory\Libraries\$(Configuration)\AdvancedXRay.lib</ImportLibrary>
+    </Link>
+    <Manifest>
+      <AdditionalManifestFiles>as-invoker-manifest-part.xml;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <DisableSpecificWarnings>4995</DisableSpecificWarnings>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_EDITOR;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;..\..\xrEngine\;..\..\xrRender\Public;..\..\xrRender\Private;Engine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>Full</Optimization>
+      <StringPooling>true</StringPooling>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>xrEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
