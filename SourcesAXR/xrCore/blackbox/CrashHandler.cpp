@@ -12,7 +12,7 @@ CONDITIONAL COMPILATION :
                               versions.
 ----------------------------------------------------------------------*/
 
-#include "stdafx_.h"
+#include "stdafx.h"
 #include "BugslayerUtil.h"
 #include "CrashHandler.h"
 

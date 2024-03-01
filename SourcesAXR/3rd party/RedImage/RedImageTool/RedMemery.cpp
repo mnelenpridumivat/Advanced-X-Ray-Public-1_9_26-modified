@@ -1,4 +1,4 @@
-﻿#include "RedImage.hpp"
+﻿#include "RedImage.h"
 
 namespace RedImageTool
 {

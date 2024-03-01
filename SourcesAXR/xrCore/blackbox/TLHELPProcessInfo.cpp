@@ -4,7 +4,7 @@ Copyright (c) 1997-2000 John Robbins -- All rights reserved.
 ----------------------------------------------------------------------*/
 
 
-#include "stdafx_.h"
+#include "stdafx.h"
 #include "BugslayerUtil.h"
 #include "TLHELP32.h"
 

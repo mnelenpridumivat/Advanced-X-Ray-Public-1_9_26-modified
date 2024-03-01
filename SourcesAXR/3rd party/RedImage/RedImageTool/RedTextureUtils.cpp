@@ -1,4 +1,4 @@
-﻿#include "RedImage.hpp"
+﻿#include "RedImage.h"
 #include "ispc_texcomp/ispc_texcomp.h"
 #include "Nvtt/nvimage/ColorBlock.h"
 #include "Nvtt/nvimage/BlockDXT.h"

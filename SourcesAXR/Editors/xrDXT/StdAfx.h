@@ -6,9 +6,9 @@
 #pragma once
 
 #include "../../xrCore/xrCore.h"
-#include "RedImageTool/RedImage.hpp"
+#include "RedImageTool/RedImage.h"
 #define ECORE_API
-#include "../../xrRender/Private/ETextureParams.h"
+#include "ETextureParams.h"
 #include <io.h>
 #include <fcntl.h>
 #include <sys\stat.h>

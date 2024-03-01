@@ -1,4 +1,4 @@
-﻿#include "RedImage.hpp"
+﻿#include "RedImage.h"
 using namespace RedImageTool;
 
 RedImage::RedImage(): m_PixelFotmat(RedTexturePixelFormat::R8), m_Width(0), m_Height(0), m_Mips(0), m_Depth(0), m_ImageBuffer(0) {}

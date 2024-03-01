@@ -1,4 +1,4 @@
-﻿#include "RedImage.hpp"
+﻿#include "RedImage.h"
 #include "stbImage/stb_image.h"
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION

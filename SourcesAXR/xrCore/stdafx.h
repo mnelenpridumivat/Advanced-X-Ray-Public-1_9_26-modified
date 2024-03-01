@@ -10,6 +10,7 @@
 
 #include "xrCore.h"
 #include "xrCore_platform.h"
+#include "cximage/CxImage/ximadef.h"
 //.#include "../../Include/xrAPI/xrAPI.h"
 #endif
 

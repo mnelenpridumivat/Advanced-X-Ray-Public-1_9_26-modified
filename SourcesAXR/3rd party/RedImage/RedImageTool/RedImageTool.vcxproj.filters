@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RedImage.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="RedTextureUtils.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
@@ -33,9 +30,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RedImage.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="RedImage.PCH.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="RedTextureUtils.cpp">

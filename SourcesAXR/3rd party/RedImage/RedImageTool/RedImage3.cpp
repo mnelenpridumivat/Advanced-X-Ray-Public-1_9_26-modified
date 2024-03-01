@@ -1,4 +1,4 @@
-﻿#include "RedImage.hpp"
+﻿#include "RedImage.h"
 #include "dds.h"
 #include "DXGIFormat.h"
 using namespace RedImageTool;
