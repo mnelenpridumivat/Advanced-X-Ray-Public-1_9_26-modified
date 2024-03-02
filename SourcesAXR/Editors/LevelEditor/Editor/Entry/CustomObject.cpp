@@ -134,9 +134,9 @@ bool CCustomObject::LoadStream(IReader& F)
 {
     R_ASSERT(F.find_chunk(CUSTOMOBJECT_CHUNK_FLAGS));
 
-    if (xrGameManager::GetGame() != EGame::SHOC)
-        m_CO_Flags.assign(F.r_u32());
-    else
+    //if (xrGameManager::GetGame() != EGame::SHOC)
+    m_CO_Flags.assign(F.r_u32());
+    /*else
     {
         Flags32 tempFlags;
         tempFlags.assign(F.r_u32());
@@ -147,7 +147,7 @@ bool CCustomObject::LoadStream(IReader& F)
         m_CO_Flags.set(flMotion, tempFlags.is((u32)SocFlags::flMotion));
         m_CO_Flags.set(flAutoKey, tempFlags.is((u32)SocFlags::flAutoKey));
         m_CO_Flags.set(flCameraView, tempFlags.is((u32)SocFlags::flCameraView));
-    }
+    }*/
 
     R_ASSERT(F.find_chunk(CUSTOMOBJECT_CHUNK_NAME));
     F.r_stringZ(FName);
@@ -200,9 +200,9 @@ void CCustomObject::SaveLTX(CInifile& ini, LPCSTR sect_name)
 void CCustomObject::SaveStream(IWriter& F)
 {
     F.open_chunk(CUSTOMOBJECT_CHUNK_FLAGS);
-    if (xrGameManager::GetGame() != EGame::SHOC)
+    //if (xrGameManager::GetGame() != EGame::SHOC)
         F.w_u32(m_CO_Flags.get());
-    else
+    /*else
     {
         Flags32 tempFlags;
         tempFlags.set((u32)SocFlags::flSelected, m_RT_Flags.is(flRT_Selected));
@@ -212,7 +212,7 @@ void CCustomObject::SaveStream(IWriter& F)
         tempFlags.set((u32)SocFlags::flAutoKey, m_CO_Flags.is(flAutoKey));
         tempFlags.set((u32)SocFlags::flCameraView, m_CO_Flags.is(flCameraView));
         F.w_u32(tempFlags.get());
-    }
+    }*/
     F.close_chunk();
 
     F.open_chunk(CUSTOMOBJECT_CHUNK_NAME);

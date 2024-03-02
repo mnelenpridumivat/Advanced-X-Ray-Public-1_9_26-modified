@@ -204,9 +204,9 @@ void EParticlesObject::SaveStream(IWriter& F)
     inherited::SaveStream(F);
 
     F.open_chunk(CPSOBJECT_CHUNK_VERSION);
-    if (xrGameManager::GetGame() == EGame::SHOC)
+    /*if (xrGameManager::GetGame() == EGame::SHOC)
         F.w_u16(CPSOBJECT_VERSION - 2);
-    else
+    else*/
         F.w_u16(CPSOBJECT_VERSION);
     F.close_chunk();
 
@@ -214,12 +214,12 @@ void EParticlesObject::SaveStream(IWriter& F)
     F.w_stringZ(m_RefName);
     F.close_chunk();
 
-    if (xrGameManager::GetGame() != EGame::SHOC)
-    {
+    //if (xrGameManager::GetGame() != EGame::SHOC)
+    //{
         F.open_chunk(CPSOBJECT_CHUNK_GAMETYPE);
         m_GameType.SaveStream(F);
         F.close_chunk();
-    }
+    //}
 }
 
 void EParticlesObject::OnDeviceCreate() {}
@@ -230,8 +230,8 @@ bool EParticlesObject::ExportGame(SExportStreams* F)
 {
     SExportStreamItem& I = F->pe_static;
 
-    if (xrGameManager::GetGame() != EGame::SHOC)
-    {
+    //if (xrGameManager::GetGame() != EGame::SHOC)
+    //{
         if (I.chunk == 0)
         {
             I.stream.open_chunk(I.chunk++);
@@ -244,14 +244,14 @@ bool EParticlesObject::ExportGame(SExportStreams* F)
         I.stream.w_stringZ(m_RefName);
         I.stream.w(&_Transform(), sizeof(Fmatrix));
         I.stream.close_chunk();
-    }
+    /*}
     else
     {
         I.stream.open_chunk(I.chunk++);
         I.stream.w_stringZ(m_RefName);
         I.stream.w(&_Transform(), sizeof(Fmatrix));
         I.stream.close_chunk();
-    }
+    }*/
 
     return true;
 }

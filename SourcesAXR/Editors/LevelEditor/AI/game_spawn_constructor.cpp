@@ -174,7 +174,7 @@ bool CGameSpawnConstructor::verify_level_changers()
 bool CGameSpawnConstructor::save_spawn(LPCSTR name, LPCSTR output)
 {
     CMemoryWriter stream;
-    switch (xrGameManager::GetGame())
+    /*switch (xrGameManager::GetGame())
     {
         case EGame::SHOC:
             m_spawn_header.m_version = XRAI_SOC_CURRENT_VERSION;
@@ -182,7 +182,8 @@ bool CGameSpawnConstructor::save_spawn(LPCSTR name, LPCSTR output)
         default:
             m_spawn_header.m_version = XRAI_CURRENT_VERSION;
             break;
-    }
+    }*/
+    m_spawn_header.m_version = XRAI_CURRENT_VERSION;
     m_spawn_header.m_guid        = generate_guid();
     m_spawn_header.m_graph_guid  = game_graph().header().guid();
     m_spawn_header.m_spawn_count = spawn_graph().vertex_count();
@@ -217,7 +218,7 @@ bool CGameSpawnConstructor::save_spawn(LPCSTR name, LPCSTR output)
 
 bool CGameSpawnConstructor::save_spawn(LPCSTR name, CMemoryWriter& stream)
 {
-    switch (xrGameManager::GetGame())
+    /*switch (xrGameManager::GetGame())
     {
         case EGame::SHOC:
             m_spawn_header.m_version = XRAI_SOC_CURRENT_VERSION;
@@ -225,8 +226,9 @@ bool CGameSpawnConstructor::save_spawn(LPCSTR name, CMemoryWriter& stream)
         default:
             m_spawn_header.m_version = XRAI_CURRENT_VERSION;
             break;
-    }
+    }*/
 
+    m_spawn_header.m_version = XRAI_CURRENT_VERSION;
     m_spawn_header.m_guid        = generate_guid();
     m_spawn_header.m_graph_guid  = game_graph().header().guid();
     m_spawn_header.m_spawn_count = spawn_graph().vertex_count();

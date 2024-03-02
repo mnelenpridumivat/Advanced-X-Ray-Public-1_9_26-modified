@@ -4,8 +4,8 @@ static HMODULE   hXRSE_FACTORY = 0;
 
 CEditableObject* ESceneSpawnTool::get_draw_visual(u8 _RP_TeamID, u8 _RP_Type, const GameTypeChooser& _GameType)
 {
-    if (xrGameManager::GetGame() == EGame::SHOC)
-        return nullptr;
+    /*if (xrGameManager::GetGame() == EGame::SHOC)
+        return nullptr;*/
 
     CEditableObject* ret = nullptr;
 

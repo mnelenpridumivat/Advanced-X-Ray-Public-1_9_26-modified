@@ -296,9 +296,9 @@ CCommandVar CommandSave(CCommandVar p1, CCommandVar p2)
     xr_strlwr(temp_fn);
     UI->SetStatus("# Level saving...");
 
-    if (xrGameManager::GetGame() == EGame::SHOC)
+    /*if (xrGameManager::GetGame() == EGame::SHOC)
         Scene->Save(temp_fn.c_str(), false, true);
-    else
+    else*/
         Scene->SaveLTX(temp_fn.c_str(), false, (p2 == 66));
 
     UI->ResetStatus();

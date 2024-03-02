@@ -342,10 +342,10 @@ void SceneBuilder::SaveBuild()
         return;
 
     F->open_chunk(EB_Version);
-    if (xrGameManager::GetGame() == EGame::SHOC)
+    /*if (xrGameManager::GetGame() == EGame::SHOC)
         F->w_u32(XRCL_CURRENT_VERSION - 1);
-    else
-        F->w_u32(XRCL_CURRENT_VERSION);
+    else*/
+    F->w_u32(XRCL_CURRENT_VERSION);
     F->close_chunk();
 
     F->open_chunk(EB_Parameters);
@@ -360,12 +360,12 @@ void SceneBuilder::SaveBuild()
     F->w(l_faces, sizeof(b_face) * l_face_it);   //. l_face_cnt
     F->close_chunk();
 
-    if (xrGameManager::GetGame() != EGame::SHOC)
-    {
+    /*if (xrGameManager::GetGame() != EGame::SHOC)
+    {*/
         F->open_chunk(EB_SmoothGroups);
         F->w(l_smgroups, sizeof(u32) * l_face_it);   //. l_face_cnt
         F->close_chunk();
-    }
+    //}
 
     F->open_chunk(EB_Materials);
     F->w(l_materials.data(), sizeof(b_material) * l_materials.size());
@@ -429,8 +429,8 @@ void SceneBuilder::SaveBuild()
         // lod_id
         F->w_u16(m.lod_id);
 
-        if (xrGameManager::GetGame() != EGame::SHOC)
-            F->w(m.m_smgroups, sizeof(int) * m.m_iFaceCount);
+        //if (xrGameManager::GetGame() != EGame::SHOC)
+        F->w(m.m_smgroups, sizeof(int) * m.m_iFaceCount);
     }
     F->close_chunk();
 

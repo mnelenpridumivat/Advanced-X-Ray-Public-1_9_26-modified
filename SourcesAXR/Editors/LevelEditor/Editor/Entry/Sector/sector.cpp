@@ -542,7 +542,7 @@ void CSector::SaveLTX(CInifile& ini, LPCSTR sect_name)
         ini.w_string(sect_name, buff, it->mesh->Name().c_str());
         ++count;
     }
-    if (xrGameManager::GetGame() != EGame::SHOC)
+    //if (xrGameManager::GetGame() != EGame::SHOC)
         ini.w_u8(sect_name, "change_map_to_idx", m_map_idx);
 }
 
@@ -579,11 +579,11 @@ bool CSector::LoadStream(IReader& F)
         OBJ->close();
     }
 
-    if (xrGameManager::GetGame() != EGame::SHOC)
-    {
+    //if (xrGameManager::GetGame() != EGame::SHOC)
+    //{
         if (F.find_chunk(SECTOR_CHUNK_MAP_IDX))
             m_map_idx = F.r_u8();
-    }
+    //}
 
     if (sector_items.empty())
         return false;
@@ -597,9 +597,9 @@ void CSector::SaveStream(IWriter& F)
     CCustomObject::SaveStream(F);
 
     F.open_chunk(SECTOR_CHUNK_VERSION);
-    if (xrGameManager::GetGame() == EGame::SHOC)
-        F.w_u16(SECTOR_VERSION_SHOC);
-    else
+    //if (xrGameManager::GetGame() == EGame::SHOC)
+    //    F.w_u16(SECTOR_VERSION_SHOC);
+    //else
         F.w_u16(SECTOR_VERSION);
     F.close_chunk();
 
@@ -623,12 +623,12 @@ void CSector::SaveStream(IWriter& F)
     }
     F.close_chunk();
 
-    if (xrGameManager::GetGame() != EGame::SHOC)
-    {
+    //if (xrGameManager::GetGame() != EGame::SHOC)
+    //{
         F.open_chunk(SECTOR_CHUNK_MAP_IDX);
         F.w_u8(m_map_idx);
         F.close_chunk();
-    }
+    //}
 }
 
 xr_token level_sub_map[] = {{"default", u8(-1)}, {"#0", 0}, {"#1", 1}, {"#2", 2}, {"#3", 3}, {NULL, 4}};

@@ -11,7 +11,7 @@ extern "C"
 xrGameManagerLE::xrGameManagerLE()
 {
     LPCSTR g_name = "xrGame.dll";
-    switch (xrGameManager::GetGame())
+    /*switch (xrGameManager::GetGame())
     {
         case EGame::CS:
             g_name = "xrGameCS.dll";
@@ -19,7 +19,7 @@ xrGameManagerLE::xrGameManagerLE()
         case EGame::SHOC:
             g_name = "xrGameSOC.dll";
             break;
-    }
+    }*/
 
     Log("Loading DLL:", g_name);
     m_hGame = LoadLibrary(g_name);

@@ -23,9 +23,9 @@ CEditShape::~CEditShape() {}
 void CEditShape::Construct(LPVOID data)
 {
     FClassID = OBJCLASS_SHAPE;
-    if (xrGameManager::GetGame() == EGame::SHOC)
+    /*if (xrGameManager::GetGame() == EGame::SHOC)
         m_DrawTranspColor = SHAPE_COLOR_TRANSP_SHOC;
-    else
+    else*/
         m_DrawTranspColor = SHAPE_COLOR_TRANSP;
     m_DrawEdgeColor = SHAPE_COLOR_EDGE;
     m_shape_type    = eShapeCommon;
@@ -239,9 +239,9 @@ void CEditShape::OnDetach()
 {
     inherited::OnDetach();
 
-    if (xrGameManager::GetGame() == EGame::SHOC)
+    /*if (xrGameManager::GetGame() == EGame::SHOC)
         m_DrawTranspColor = SHAPE_COLOR_TRANSP_SHOC;
-    else
+    else*/
         m_DrawTranspColor = SHAPE_COLOR_TRANSP;
     m_DrawEdgeColor = SHAPE_COLOR_EDGE;
 }
@@ -438,11 +438,11 @@ bool CEditShape::LoadStream(IReader& F)
     shapes.resize(F.r_u32());
     F.r(shapes.data(), shapes.size() * sizeof(shape_def));
 
-    if (xrGameManager::GetGame() != EGame::SHOC)
-    {
+    /*if (xrGameManager::GetGame() != EGame::SHOC)
+    {*/
         if (F.find_chunk(SHAPE_CHUNK_DATA))
             m_shape_type = F.r_u8();
-    }
+    //}
 
     ComputeBounds();
     return true;
@@ -453,9 +453,9 @@ void CEditShape::SaveStream(IWriter& F)
     inherited::SaveStream(F);
 
     F.open_chunk(SHAPE_CHUNK_VERSION);
-    if (xrGameManager::GetGame() == EGame::SHOC)
+    /*if (xrGameManager::GetGame() == EGame::SHOC)
         F.w_u16(SHAPE_CURRENT_VERSION_SHOC);
-    else
+    else*/
         F.w_u16(SHAPE_CURRENT_VERSION);
     F.close_chunk();
 
@@ -464,12 +464,12 @@ void CEditShape::SaveStream(IWriter& F)
     F.w(shapes.data(), shapes.size() * sizeof(shape_def));
     F.close_chunk();
 
-    if (xrGameManager::GetGame() != EGame::SHOC)
-    {
+    //if (xrGameManager::GetGame() != EGame::SHOC)
+    //{
         F.open_chunk(SHAPE_CHUNK_DATA);
         F.w_u8(m_shape_type);
         F.close_chunk();
-    }
+    //}
 }
 
 void CEditShape::FillProp(LPCSTR pref, PropItemVec& values)

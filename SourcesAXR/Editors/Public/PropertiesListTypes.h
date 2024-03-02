@@ -2,7 +2,7 @@
 #ifndef PropertiesListTypesH
 #define PropertiesListTypesH
 
-#include "../../xrEngine/gametype_chooser.h"
+#include "../../xrServerEntities/gametype_chooser.h"
 #include "../xrEUI/localization_types.h"
 #include "../../xrcore/ChooseTypes.H"
 #include "WaveForm.H"

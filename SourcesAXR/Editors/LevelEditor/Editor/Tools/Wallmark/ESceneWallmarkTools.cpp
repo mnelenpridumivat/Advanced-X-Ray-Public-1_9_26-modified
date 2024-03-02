@@ -489,9 +489,9 @@ void ESceneWallmarkTool::SaveStream(IWriter& F)
     inherited::SaveStream(F);
 
     F.open_chunk(WM_CHUNK_VERSION);
-    if (xrGameManager::GetGame() == EGame::SHOC)
+    /*if (xrGameManager::GetGame() == EGame::SHOC)
         F.w_u16(WM_VERSION - 1);
-    else
+    else*/
         F.w_u16(WM_VERSION);
     F.close_chunk();
 

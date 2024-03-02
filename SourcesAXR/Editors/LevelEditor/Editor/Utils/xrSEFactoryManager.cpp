@@ -5,9 +5,9 @@ xrSEFactoryManager* g_SEFactoryManager = nullptr;
 
 xrSEFactoryManager::xrSEFactoryManager()
 {
-    auto        a    = xrGameManager::GetGame();
+    //auto        a    = xrGameManager::GetGame();
     const char* Name = "xrSE_Factory.dll";
-    switch (a)
+    /*switch (a)
     {
         case EGame::COP:
             break;
@@ -19,7 +19,7 @@ xrSEFactoryManager::xrSEFactoryManager()
             break;
         default:
             NODEFAULT;
-    }
+    }*/
     m_Module = LoadLibrary(Name);
     R_CHK(GetLastError());
     R_ASSERT(m_Module);

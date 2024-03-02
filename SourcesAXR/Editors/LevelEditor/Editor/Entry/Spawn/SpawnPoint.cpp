@@ -338,12 +338,12 @@ void CSpawnPoint::SSpawnData::SaveStream(IWriter& F)
     F.w_stringZ(m_Data->name());
     F.close_chunk();
 
-    if (xrGameManager::GetGame() != EGame::SHOC)
-    {
+    //if (xrGameManager::GetGame() != EGame::SHOC)
+    //{
         F.open_chunk(SPAWNPOINT_CHUNK_FLAGS);
         F.w_u8(m_flags.get());
         F.close_chunk();
-    }
+    //}
 
     F.open_chunk(SPAWNPOINT_CHUNK_SPAWNDATA);
     NET_Packet Packet;
@@ -627,16 +627,16 @@ void CSpawnPoint::Construct(LPVOID data)
         m_Type    = ptRPoint;
         m_RP_Type = rptActorSpawn;
 
-        if (xrGameManager::GetGame() == EGame::SHOC)
+        /*if (xrGameManager::GetGame() == EGame::SHOC)
         {
             m_GameType.m_GameType.assign(static_cast<u16>(rpgtGameAny));
             m_RP_TeamID = 0;
         }
         else
-        {
+        {*/
             m_GameType.SetDefaults();
             m_RP_TeamID = 1;
-        }
+        //}
     }
     else if (!strcmp(LPSTR(data), ENVMOD_CHOOSE_NAME))
     {
@@ -1325,10 +1325,10 @@ void CSpawnPoint::SaveStream(IWriter& F)
     CCustomObject::SaveStream(F);
     F.open_chunk(SPAWNPOINT_CHUNK_VERSION);
 
-    if (xrGameManager::GetGame() != EGame::SHOC)
+    //if (xrGameManager::GetGame() != EGame::SHOC)
         F.w_u16(SPAWNPOINT_VERSION);
-    else
-        F.w_u16(SPAWNPOINT_VERSION - 3);
+    /*else
+        F.w_u16(SPAWNPOINT_VERSION - 3);*/
 
     F.close_chunk();
 
@@ -1355,16 +1355,16 @@ void CSpawnPoint::SaveStream(IWriter& F)
             F.w_u8(m_RP_TeamID);
             F.w_u8(m_RP_Type);
 
-            if (xrGameManager::GetGame() == EGame::SHOC)
+            /*if (xrGameManager::GetGame() == EGame::SHOC)
             {
                 F.w_u8(m_GameType.m_GameType.get());
                 F.w_u8(0);
             }
             else
-            {
+            {*/
                 m_GameType.SaveStream(F);
                 F.w_stringZ(m_rpProfile);
-            }
+            //}
             F.close_chunk();
             break;
         case ptEnvMod:
@@ -1382,12 +1382,12 @@ void CSpawnPoint::SaveStream(IWriter& F)
             F.w_u32(m_EM_HemiColor);
             F.close_chunk();
 
-            if (xrGameManager::GetGame() != EGame::SHOC)
-            {
+            //if (xrGameManager::GetGame() != EGame::SHOC)
+            //{
                 F.open_chunk(SPAWNPOINT_CHUNK_ENVMOD3);
                 F.w_u16(m_EM_Flags.get());
                 F.close_chunk();
-            }
+            //}
             break;
         default:
             THROW;
@@ -1429,12 +1429,12 @@ bool CSpawnPoint::ExportGame(SExportStreams* F)
                 F->rpoint.stream.w_u8(m_RP_TeamID);
                 F->rpoint.stream.w_u8(m_RP_Type);
 
-                if (xrGameManager::GetGame() == EGame::SHOC)
+                /*if (xrGameManager::GetGame() == EGame::SHOC)
                 {
                     F->rpoint.stream.w_u8(static_cast<u8>(m_GameType.m_GameType.get()));
                     F->rpoint.stream.w_u8(0);
                 }
-                else
+                else*/
                     F->rpoint.stream.w_u16(m_GameType.m_GameType.get());
 
                 F->rpoint.stream.w_stringZ(m_rpProfile);
@@ -1565,7 +1565,7 @@ void CSpawnPoint::FillProp(LPCSTR pref, PropItemVec& items)
         {
             case ptRPoint:
             {
-                if (m_RP_Type == rptItemSpawn && xrGameManager::GetGame() != EGame::SHOC)
+                if (m_RP_Type == rptItemSpawn)
                 {
                     ChooseValue* C = PHelper().CreateChoose(items, PrepareKey(pref, "Respawn Point\\Profile"), &m_rpProfile, smCustom, 0, 0, 10, cfMultiSelect);
                     C->OnChooseFillEvent.bind(this, &CSpawnPoint::OnFillRespawnItemProfile);
@@ -1575,9 +1575,9 @@ void CSpawnPoint::FillProp(LPCSTR pref, PropItemVec& items)
 
                 Token8Value* TV;
 
-                if (xrGameManager::GetGame() == EGame::SHOC)
+                /*if (xrGameManager::GetGame() == EGame::SHOC)
                     TV = PHelper().CreateToken8(items, PrepareKey(pref, "Respawn Point\\Spawn Type"), &m_RP_Type, rpoint_type_soc);
-                else
+                else*/
                     TV = PHelper().CreateToken8(items, PrepareKey(pref, "Respawn Point\\Spawn Type"), &m_RP_Type, rpoint_type);
 
                 TV->OnChangeEvent.bind(this, &CSpawnPoint::OnRPointTypeChange);

@@ -123,10 +123,10 @@ extern ENGINE_API xr_token rpoint_game_type[];
 //------------------------------------------------------------------------------
 IC void CreatePropsForGameTypeChooser(GameTypeChooser* chooser, LPCSTR pref, PropItemVec& items)
 {
-    if (xrGameManager::GetGame() == EGame::SHOC)
+    /*if (xrGameManager::GetGame() == EGame::SHOC)
         PHelper().CreateToken16(items, PrepareKey(pref, "Game Type"), &chooser->m_GameType.flags, rpoint_game_type);   // &m_RP_GameType, rpoint_game_type
-    else
-        PHelper().CreateGameType(items, PrepareKey(pref, "Game Type"), chooser);
+    else*/
+    PHelper().CreateGameType(items, PrepareKey(pref, "Game Type"), chooser);
 }
 
 //------------------------------------------------------------------------------

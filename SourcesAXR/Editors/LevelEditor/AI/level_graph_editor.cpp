@@ -146,7 +146,7 @@ bool CLevelGraphEditor::build()
     };
     hdrNODES* RealHeader = (hdrNODES*)&m_RealHeader;
     AIMapTool->CalculateNodesBBox(RealHeader->aabb);
-    switch (xrGameManager::GetGame())
+    /*switch (xrGameManager::GetGame())
     {
         case EGame::SHOC:
             RealHeader->version = XRAI_SOC_CURRENT_VERSION;
@@ -154,8 +154,9 @@ bool CLevelGraphEditor::build()
         default:
             RealHeader->version = XRAI_CURRENT_VERSION;
             break;
-    }
+    }*/
 
+    RealHeader->version = XRAI_CURRENT_VERSION;
     RealHeader->count  = AIMapTool->Nodes().size();
     RealHeader->size   = g_params.fPatchSize;
     RealHeader->size_y = CalculateHeight(RealHeader->aabb);

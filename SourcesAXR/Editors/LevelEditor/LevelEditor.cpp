@@ -36,7 +36,7 @@ int WINAPI               wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, 
     splash::update_progress(5);
     const char* FSName = "fs.ltx";
     {
-        if (xrGameManager::GetGame() == EGame::SHOC)
+        /*if (xrGameManager::GetGame() == EGame::SHOC)
         {
             FSName = "fs_soc.ltx";
             Core._initialize("Level_Editor_ShoC", ELogCallback, 1, FSName, true);
@@ -46,8 +46,8 @@ int WINAPI               wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, 
             FSName = "fs_cs.ltx";
             Core._initialize("Level_Editor_CS", ELogCallback, 1, FSName, true);
         }
-        else
-            Core._initialize("Level_Editor_CoP", ELogCallback, 1, FSName, true);
+        else*/
+            Core._initialize("Level_Editor_CoP_AXR", ELogCallback, 1, FSName, true);
     }
 
     splash::update_progress(24);

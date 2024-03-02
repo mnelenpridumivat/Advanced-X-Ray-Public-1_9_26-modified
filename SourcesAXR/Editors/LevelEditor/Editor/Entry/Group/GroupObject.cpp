@@ -217,27 +217,27 @@ bool CGroupObject::LoadStream(IReader& F)
         F.r_chunk(GROUPOBJ_CHUNK_FLAGS, &tmp_flags);
 
     // objects
-    if (xrGameManager::GetGame() == EGame::SHOC)
-    {
-        if (tmp_flags.test(1 << 0))   // opened flag, old group format
-        {
-            // m_PObjects = xr_new<SStringVec>();
-            R_ASSERT(F.find_chunk(GROUPOBJ_CHUNK_OPEN_OBJECT_LIST));
-            u32       cnt = F.r_u32();
-            xr_string tmp;
-            for (u32 k = 0; k < cnt; k++)
-            {
-                m_ObjectsInGroup.resize(m_ObjectsInGroup.size() + 1);
-                F.r_stringZ(m_ObjectsInGroup.back().ObjectName);
-            }
-        }
-        else
-        {
-            Scene->ReadObjectsStream(F, GROUPOBJ_CHUNK_OBJECT_LIST, EScene::TAppendObject(this, &CGroupObject::AppendObjectLoadCB), 0);
-        }
-    }
-    else
-    {
+    //if (xrGameManager::GetGame() == EGame::SHOC)
+    //{
+    //    if (tmp_flags.test(1 << 0))   // opened flag, old group format
+    //    {
+    //        // m_PObjects = xr_new<SStringVec>();
+    //        R_ASSERT(F.find_chunk(GROUPOBJ_CHUNK_OPEN_OBJECT_LIST));
+    //        u32       cnt = F.r_u32();
+    //        xr_string tmp;
+    //        for (u32 k = 0; k < cnt; k++)
+    //        {
+    //            m_ObjectsInGroup.resize(m_ObjectsInGroup.size() + 1);
+    //            F.r_stringZ(m_ObjectsInGroup.back().ObjectName);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Scene->ReadObjectsStream(F, GROUPOBJ_CHUNK_OBJECT_LIST, EScene::TAppendObject(this, &CGroupObject::AppendObjectLoadCB), 0);
+    //    }
+    //}
+    //else
+    //{
         if (tmp_flags.test(1 << 0))   // opened flag, old group format
         {
             ELog.Msg(mtInformation, "~ Warning! Group has old format. Objects from group will be loaded ungrouped.");
@@ -247,7 +247,7 @@ bool CGroupObject::LoadStream(IReader& F)
         {
             Scene->ReadObjectsStream(F, GROUPOBJ_CHUNK_OBJECT_LIST, EScene::TAppendObject(this, &CGroupObject::AppendObjectLoadCB), 0);
         }
-    }
+    //}
     VERIFY(m_ObjectsInGroup.size());
 
     if (F.find_chunk(GROUPOBJ_CHUNK_REFERENCE))
@@ -275,7 +275,7 @@ void CGroupObject::SaveStream(IWriter& F)
     CCustomObject::SaveStream(F);
 
     F.open_chunk(GROUPOBJ_CHUNK_VERSION);
-    if (xrGameManager::GetGame() == EGame::SHOC)
+    /*if (xrGameManager::GetGame() == EGame::SHOC)
     {
         F.w_u16(GROUPOBJ_CURRENT_VERSION_SOC);
         F.close_chunk();
@@ -285,10 +285,10 @@ void CGroupObject::SaveStream(IWriter& F)
         F.w_chunk(GROUPOBJ_CHUNK_FLAGS, &flags, sizeof(flags));
     }
     else
-    {
+    {*/
         F.w_u16(GROUPOBJ_CURRENT_VERSION);
         F.close_chunk();
-    }
+    //}
 
     {
         ObjectList grp_lst;
@@ -506,13 +506,13 @@ void CGroupObject::OnSceneUpdate()
     {
         if (it->pObject == NULL)
         {
-            if (xrGameManager::GetGame() == EGame::SHOC)
+            /*if (xrGameManager::GetGame() == EGame::SHOC)
             {
                 R_ASSERT(it->ObjectName.size());
                 CCustomObject* CO = Scene->FindObjectByName(it->ObjectName.c_str(), (CCustomObject*)0);
 
                 R_ASSERT2(!CO->m_CO_Flags.test(flObjectInGroup), it->ObjectName.c_str());
-                it->pObject = CO;
+                it->pObject = CO;*/
 
                 /*
                 string256 buf;
@@ -525,12 +525,12 @@ void CGroupObject::OnSceneUpdate()
                 }
                 */
 
-                it->pObject->m_CO_Flags.set(flObjectInGroup, TRUE);
+                /*it->pObject->m_CO_Flags.set(flObjectInGroup, TRUE);
                 it->pObject->m_CO_Flags.set(flObjectInGroupUnique, TRUE);
                 if (it->pObject == NULL)
                     ELog.Msg(mtError, "Group '%s' has invalid reference to object '%s'.", GetName(), it->ObjectName.c_str());
             }
-            else
+            else*/
                 R_ASSERT(0);
         }
     }

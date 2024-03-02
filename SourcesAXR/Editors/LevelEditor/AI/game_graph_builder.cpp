@@ -270,7 +270,8 @@ void CGameGraphBuilder::build_cross_table()
     iterate_distances();
 
     IGameLevelCrossTable::CHeader tCrossTableHeader;
-    switch (xrGameManager::GetGame())
+    tCrossTableHeader.dwVersion = XRAI_CURRENT_VERSION;
+    /*switch (xrGameManager::GetGame())
     {
         case EGame::SHOC:
             tCrossTableHeader.dwVersion = XRAI_SOC_CURRENT_VERSION;
@@ -278,7 +279,7 @@ void CGameGraphBuilder::build_cross_table()
         default:
             tCrossTableHeader.dwVersion = XRAI_CURRENT_VERSION;
             break;
-    }
+    }*/
     tCrossTableHeader.dwNodeCount       = level_graph().header().vertex_count();
     tCrossTableHeader.dwGraphPointCount = graph().header().vertex_count();
     tCrossTableHeader.m_level_guid      = level_graph().header().guid();
@@ -529,7 +530,8 @@ bool CGameGraphBuilder::build_graph()
     // Msg("# %f",timer.GetElapsed_sec());
 
     IGameGraph::CHeader GameGraphHeader;
-    switch (xrGameManager::GetGame())
+    GameGraphHeader.m_version = XRAI_CURRENT_VERSION;
+    /*switch (xrGameManager::GetGame())
     {
         case EGame::SHOC:
             GameGraphHeader.m_version = XRAI_SOC_CURRENT_VERSION;
@@ -537,7 +539,7 @@ bool CGameGraphBuilder::build_graph()
         default:
             GameGraphHeader.m_version = XRAI_CURRENT_VERSION;
             break;
-    }
+    }*/
     VERIFY(graph().vertices().size() < (u32(1) << (8 * sizeof(GameGraph::_GRAPH_ID))));
     GameGraphHeader.m_vertex_count = (GameGraph::_GRAPH_ID)graph().vertices().size();
     VERIFY(graph().edge_count() < (u32(1) << (8 * sizeof(GameGraph::_GRAPH_ID))));
