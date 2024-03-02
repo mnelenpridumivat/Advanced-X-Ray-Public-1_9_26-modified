@@ -73,7 +73,7 @@ ENGINE_API std::string dbg_object_props_dump_string( const CObject *obj )
 		)
 		+
 		make_string( "\n dbg_update_cl: %d, dwFrame_UpdateCL: %d, dwFrame_AsCrow :%d, Device.dwFrame :%d, Device.dwTimeGlobal: %d  \n",
-		obj->dbg_update_cl, obj->dwFrame_UpdateCL, obj->dwFrame_AsCrow, Device.dwFrame, Device.dwTimeGlobal );
+		obj->dbg_update_cl, obj->dwFrame_UpdateCL, obj->dwFrame_AsCrow, CRenderDevice::GetInstance()->dwFrame, CRenderDevice::GetInstance()->dwTimeGlobal );
 }
 ENGINE_API std::string dbg_object_full_dump_string( const CObject *obj )
 {

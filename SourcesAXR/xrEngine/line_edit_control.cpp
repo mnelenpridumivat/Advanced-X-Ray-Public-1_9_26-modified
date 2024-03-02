@@ -484,7 +484,7 @@ void line_edit_control::on_frame()
 {
 	update_key_states	( );
 
-	u32   fr_time = Device.dwTimeContinual;
+	u32   fr_time = CRenderDevice::GetInstance()->dwTimeContinual;
 	float dt      = (fr_time - m_last_frame_time) * 0.001f;
 	if ( dt > 0.06666f )
 	{
@@ -506,7 +506,7 @@ void line_edit_control::on_frame()
 	}
 	m_last_key_time += dt;
 
-	if ( m_last_changed_frame + 1 < Device.dwFrame )
+	if ( m_last_changed_frame + 1 < CRenderDevice::GetInstance()->dwFrame )
 	{
 		m_need_update = false;
 	}
@@ -533,7 +533,7 @@ void line_edit_control::update_bufs()
 	strncpy_s( m_buf3, m_buffer_size, m_edit_str + m_p2 + ds, edit_size - m_p2 - ds );
 	
 	m_need_update = true;
-	m_last_changed_frame = Device.dwFrame;
+	m_last_changed_frame = CRenderDevice::GetInstance()->dwFrame;
 //	if ( m_cursor_view )	{
 //		Msg( " m_p1=%d  m_p2=%d  cur=%d  sstart=%d", m_p1, m_p2, m_cur_pos, m_select_start );	}
 }

@@ -40,7 +40,7 @@
 //#include <addons/ImGuizmo/ImGuizmo.h>
 
 
-ENGINE_API CRenderDevice Device;
+//ENGINE_API CRenderDevice* EngineDevice = nullptr;
 ENGINE_API CLoadScreenRenderer load_screen_renderer;
 ENGINE_API bool prefetching_in_progress = false;
 extern ENGINE_API int g_current_renderer;
@@ -56,7 +56,7 @@ ref_light	precache_light = 0;
 static INT64 g_Time = 0;
 static INT64 g_TicksPerSecond = 0;
 
-BOOL CRenderDevice::Begin	()
+bool CRenderDevice::Begin	()
 {
 #ifndef DEDICATED_SERVER
 
@@ -165,7 +165,7 @@ void CRenderDevice::End		(void)
 	// end scene
 	//	Present goes here, so call OA Frame end.
 	if (g_SASH.IsBenchmarkRunning())
-		g_SASH.DisplayFrame(Device.fTimeGlobal);
+		g_SASH.DisplayFrame(CRenderDevice::GetInstance()->fTimeGlobal);
 
 	extern BOOL g_appLoaded;
 	if (g_appLoaded)
@@ -254,7 +254,7 @@ void ImGui_NewFrame()
 
 	// Setup display size (every frame to accommodate for window resizing)
 	RECT rect;
-	GetClientRect(Device.m_hWnd, &rect);
+	GetClientRect(CRenderDevice::GetInstance()->m_hWnd, &rect);
 	io.DisplaySize = ImVec2((float)(rect.right - rect.left), (float)(rect.bottom - rect.top));
 
 	if (g_TicksPerSecond == 0) {
@@ -297,7 +297,7 @@ void ImGui_NewFrame()
 ENGINE_API void GetMonitorResolution(u32& horizontal, u32& vertical)
 {
 	HMONITOR hMonitor = MonitorFromWindow(
-		Device.m_hWnd, MONITOR_DEFAULTTOPRIMARY);
+		CRenderDevice::GetInstance()->m_hWnd, MONITOR_DEFAULTTOPRIMARY);
 
 	MONITORINFO mi;
 	mi.cbSize = sizeof(mi);
@@ -345,7 +345,7 @@ void CRenderDevice::on_idle		()
 		return;
 	}
 
-	if ((!Device.dwPrecacheFrame) && (!g_SASH.IsBenchmarkRunning()) && g_bLoaded)
+	if ((!CRenderDevice::GetInstance()->dwPrecacheFrame) && (!g_SASH.IsBenchmarkRunning()) && g_bLoaded)
 		g_SASH.StartBenchmark();
 
 	ImGui_NewFrame();
@@ -365,7 +365,7 @@ void CRenderDevice::on_idle		()
 	}
 
 	// Render Viewports
-	if (Device.m_SecondViewport.IsSVPActive() && Device.m_SecondViewport.IsSVPFrame())
+	if (CRenderDevice::GetInstance()->m_SecondViewport.IsSVPActive() && CRenderDevice::GetInstance()->m_SecondViewport.IsSVPFrame())
 	{
 		Render->firstViewPort = MAIN_VIEWPORT;
 		Render->lastViewPort = SECONDARY_WEAPON_SCOPE;
@@ -392,7 +392,7 @@ void CRenderDevice::on_idle		()
     u32 time_diff = time_curr - time_frame;
     time_frame = time_curr;
     u32 optimal = 10;
-    if (Device.Paused() || IGame_Persistent::IsMainMenuActive())
+    if (CRenderDevice::GetInstance()->Paused() || IGame_Persistent::IsMainMenuActive())
         optimal = 32;
     if (time_diff < optimal)
         Sleep(optimal - time_diff);
@@ -400,7 +400,7 @@ void CRenderDevice::on_idle		()
 	Sleep						(0);
 #endif // ECO_RENDER END
 
-	u32 t_width = Device.dwWidth, t_height = Device.dwHeight;
+	u32 t_width = CRenderDevice::GetInstance()->dwWidth, t_height = CRenderDevice::GetInstance()->dwHeight;
 
 	for (size_t i = 0; i < Render->viewPortsThisFrame.size(); i++)
 	{
@@ -412,8 +412,8 @@ void CRenderDevice::on_idle		()
 
 		if (Render->currentViewPort == SECONDARY_WEAPON_SCOPE && psDeviceFlags.test(rsR4))
 		{
-			Device.dwWidth = m_SecondViewport.screenWidth;
-			Device.dwHeight = m_SecondViewport.screenHeight;
+			CRenderDevice::GetInstance()->dwWidth = m_SecondViewport.screenWidth;
+			CRenderDevice::GetInstance()->dwHeight = m_SecondViewport.screenHeight;
 		}
 
 		if (g_pGameLevel)
@@ -467,8 +467,8 @@ void CRenderDevice::on_idle		()
 
 		if (psDeviceFlags.test(rsR4))
 		{
-			Device.dwWidth = t_width;
-			Device.dwHeight = t_height;
+			CRenderDevice::GetInstance()->dwWidth = t_width;
+			CRenderDevice::GetInstance()->dwHeight = t_height;
 		}
 	}
 
@@ -496,7 +496,7 @@ void CRenderDevice::on_idle		()
 
 //	IMainMenu* pMainMenu = g_pGamePersistent ? g_pGamePersistent->m_pMainMenu : 0;
 
-	if (Device.Paused() || bMainMenuActive())
+	if (CRenderDevice::GetInstance()->Paused() || bMainMenuActive())
 		updateDelta = 16; // 16 ms, ~60 FPS max while paused
 	else
 		updateDelta = (u32)fps_to_rate;
@@ -629,7 +629,7 @@ void CRenderDevice::FrameMove()
 	// Frame move
 	Statistic->EngineTOTAL.Begin	();
 
-	Device.seqFrame.Process				(rp_Frame);
+	CRenderDevice::GetInstance()->seqFrame.Process				(rp_Frame);
 	g_bLoaded							= TRUE;
 
 	Statistic->EngineTOTAL.End();
@@ -638,11 +638,7 @@ void CRenderDevice::FrameMove()
 ENGINE_API BOOL bShowPauseString = TRUE;
 #include "IGame_Persistent.h"
 
-void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound
-#ifdef DEBUG
-, LPCSTR reason
-#endif
-)
+void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 {
 	static int snd_emitters_ = -1;
 
@@ -707,7 +703,7 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound
 
 }
 
-BOOL CRenderDevice::Paused()
+bool CRenderDevice::Paused() const
 {
 	return g_pauseMngr.Paused();
 };
@@ -718,13 +714,13 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM lParam)
 	BOOL fMinimized					= (BOOL) HIWORD(wParam);
 	BOOL bActive					= ((fActive!=WA_INACTIVE) && (!fMinimized))?TRUE:FALSE;
 	
-	if (bActive!=Device.b_is_Active)
+	if (bActive!= CRenderDevice::GetInstance()->b_is_Active)
 	{
-		Device.b_is_Active			= bActive;
+		CRenderDevice::GetInstance()->b_is_Active			= bActive;
 
-		if (Device.b_is_Active)	
+		if (CRenderDevice::GetInstance()->b_is_Active)
 		{
-			Device.seqAppActivate.Process(rp_AppActivate);
+			CRenderDevice::GetInstance()->seqAppActivate.Process(rp_AppActivate);
 			app_inactive_time		+= TimerMM.GetElapsed_ms() - app_inactive_time_start;
 
 #ifndef DEDICATED_SERVER
@@ -736,7 +732,7 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM lParam)
 		}else	
 		{
 			app_inactive_time_start	= TimerMM.GetElapsed_ms();
-			Device.seqAppDeactivate.Process(rp_AppDeactivate);
+			CRenderDevice::GetInstance()->seqAppDeactivate.Process(rp_AppDeactivate);
 			ShowCursor				(TRUE);
 		}
 	}
@@ -763,7 +759,7 @@ CLoadScreenRenderer::CLoadScreenRenderer()
 
 void CLoadScreenRenderer::start(bool b_user_input) 
 {
-	Device.seqRender.Add			(this, 0);
+	CRenderDevice::GetInstance()->seqRender.Add			(this, 0);
 	b_registered					= true;
 	b_need_user_input				= b_user_input;
 }
@@ -771,7 +767,7 @@ void CLoadScreenRenderer::start(bool b_user_input)
 void CLoadScreenRenderer::stop()
 {
 	if(!b_registered)				return;
-	Device.seqRender.Remove			(this);
+	CRenderDevice::GetInstance()->seqRender.Remove			(this);
 	pApp->DestroyLoadingScreen		();
 	b_registered					= false;
 	b_need_user_input				= false;
@@ -791,5 +787,5 @@ void CSecondVPParams::SetSVPActive(bool bState) //--#SM+#-- +SecondVP+
 
 bool CSecondVPParams::IsSVPFrame() //--#SM+#-- +SecondVP+
 {
-	return (Device.dwFrame % GetSVPFrameDelay() == 0);
+	return (CRenderDevice::GetInstance()->dwFrame % GetSVPFrameDelay() == 0);
 }

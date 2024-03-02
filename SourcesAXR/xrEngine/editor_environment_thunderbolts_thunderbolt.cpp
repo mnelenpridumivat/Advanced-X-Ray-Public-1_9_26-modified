@@ -28,7 +28,7 @@ thunderbolt::thunderbolt		(manager* manager, shared_str const& id) :
 
 thunderbolt::~thunderbolt		()
 {
-	if (!Device.editor())
+	if (!CRenderDevice::GetInstance()->editor())
 		return;
 
 	::ide().destroy		(m_property_holder);

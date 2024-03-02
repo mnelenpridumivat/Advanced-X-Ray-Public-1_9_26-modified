@@ -494,7 +494,7 @@ void xrSASH::TryInitEngine( bool bNoRun)
 	if (bNoRun)
 	{
 		InitSound2();
-		Device.Create();
+		CRenderDevice::GetInstance()->Create();
 	}
 
 }

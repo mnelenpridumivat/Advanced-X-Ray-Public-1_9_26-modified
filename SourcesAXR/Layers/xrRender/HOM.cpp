@@ -187,8 +187,8 @@ void CHOM::Render_DB			(CFrustum& base)
 		0.0f,				0.0f,				1.0f,		0.0f,
 		1.f/2.f + 0 + 0,	1.f/2.f + 0 + 0,	0.0f,		1.0f
 	};
-	m_xform.mul					(m_viewport,	Device.mFullTransform);
-	m_xform_01.mul				(m_viewport_01,	Device.mFullTransform);
+	m_xform.mul					(m_viewport, CRenderDevice::GetInstance()->mFullTransform);
+	m_xform_01.mul				(m_viewport_01, CRenderDevice::GetInstance()->mFullTransform);
 
 	// Query DB
 	xrc.frustum_options			(0);
@@ -199,7 +199,7 @@ void CHOM::Render_DB			(CFrustum& base)
 	CDB::RESULT*	it			= xrc.r_begin	();
 	CDB::RESULT*	end			= xrc.r_end		();
 	
-	Fvector			COP			= Device.vCameraPosition;
+	Fvector			COP			= CRenderDevice::GetInstance()->vCameraPosition;
 	end				= std::remove_if	(it,end,pred_fb(m_pTris));
 	std::sort		(it,end,pred_fb(m_pTris,COP));
 

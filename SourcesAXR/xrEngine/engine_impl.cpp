@@ -42,12 +42,12 @@ bool engine_impl::on_message	(
 		LRESULT &result
 	)
 {
-	return			(Device.on_message(hWnd, uMsg, wParam, lParam, result));
+	return			(CRenderDevice::GetInstance()->on_message(hWnd, uMsg, wParam, lParam, result));
 }
 
 void engine_impl::on_idle		()
 {
-	Device.on_idle	();
+	CRenderDevice::GetInstance()->on_idle	();
 }
 
 void engine_impl::on_resize		()
@@ -58,7 +58,7 @@ void engine_impl::on_resize		()
 
 void engine_impl::pause			(bool const &value)
 {
-	if (value == !!Device.Paused())
+	if (value == !!CRenderDevice::GetInstance()->Paused())
 		return;
 
 	GAME_PAUSE(value ? TRUE : FALSE, TRUE, TRUE, "editor query");

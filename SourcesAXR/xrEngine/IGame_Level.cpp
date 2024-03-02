@@ -27,7 +27,7 @@ IGame_Level::IGame_Level	()
 	pCurrentViewEntity			= NULL;
 	lastApplyCameraVPNear		= -1.f;
 
-	Device.DumpResourcesMemoryUsage();
+	CRenderDevice::GetInstance()->DumpResourcesMemoryUsage();
 }
 
 //#include "resourcemanager.h"
@@ -36,24 +36,24 @@ IGame_Level::~IGame_Level	()
 {
 	if(strstr(Core.Params,"-nes_texture_storing") )
 		//Device.Resources->StoreNecessaryTextures();
-		Device.m_pRender->ResourcesStoreNecessaryTextures();
+		CRenderDevice::GetInstance()->m_pRender->ResourcesStoreNecessaryTextures();
 	xr_delete					( pLevel		);
 
 	// Render-level unload
 	Render->level_Unload		();
 	xr_delete					(m_pCameras);
 	// Unregister
-	Device.seqRender.Remove		(this);
-	Device.seqFrame.Remove		(this);
+	CRenderDevice::GetInstance()->seqRender.Remove		(this);
+	CRenderDevice::GetInstance()->seqFrame.Remove		(this);
 	CCameraManager::ResetPP		();
 ///////////////////////////////////////////
 	Sound->set_geometry_occ		(NULL);
 	Sound->set_handler			(NULL);
-	Device.DumpResourcesMemoryUsage();
+	CRenderDevice::GetInstance()->DumpResourcesMemoryUsage();
 
 	u32		m_base=0,c_base=0,m_lmaps=0,c_lmaps=0;
-	if (Device.m_pRender) 
-		Device.m_pRender->ResourcesGetMemoryUsage(m_base,c_base,m_lmaps,c_lmaps);
+	if (CRenderDevice::GetInstance()->m_pRender)
+		CRenderDevice::GetInstance()->m_pRender->ResourcesGetMemoryUsage(m_base,c_base,m_lmaps,c_lmaps);
 
 	Msg		("* [ D3D ]: textures[%d K]", (m_base+m_lmaps)/1024);
 
@@ -144,10 +144,10 @@ BOOL IGame_Level::Load			(u32 dwNum)
 	bReady						= true;
 	if (!g_dedicated_server)	IR_Capture();
 #ifndef DEDICATED_SERVER
-	Device.seqRender.Add		(this);
+	CRenderDevice::GetInstance()->seqRender.Add		(this);
 #endif
 
-	Device.seqFrame.Add			(this);
+	CRenderDevice::GetInstance()->seqFrame.Add			(this);
 
 	SECUROM_MARKER_PERFORMANCE_OFF(10)
 
@@ -197,11 +197,11 @@ void	IGame_Level::OnFrame		( )
 	g_hud->OnFrame				();
 
 	// Ambience
-	if (Sounds_Random.size() && (Device.dwTimeGlobal > Sounds_Random_dwNextTime))
+	if (Sounds_Random.size() && (CRenderDevice::GetInstance()->dwTimeGlobal > Sounds_Random_dwNextTime))
 	{
-		Sounds_Random_dwNextTime		= Device.dwTimeGlobal + ::Random.randI	(10000,20000);
+		Sounds_Random_dwNextTime		= CRenderDevice::GetInstance()->dwTimeGlobal + ::Random.randI	(10000,20000);
 		Fvector	pos;
-		pos.random_dir().normalize().mul(::Random.randF(30,100)).add	(Device.vCameraPosition);
+		pos.random_dir().normalize().mul(::Random.randF(30,100)).add	(CRenderDevice::GetInstance()->vCameraPosition);
 		int		id						= ::Random.randI(Sounds_Random.size());
 		if (Sounds_Random_Enabled)		{
 			Sounds_Random[id].play_at_pos	(0,pos,0);
@@ -323,7 +323,7 @@ void	IGame_Level::SoundEvent_Dispatch	( )
 				D.source->g_type,
 				D.source->g_userdata,
 
-				D.source->feedback->is_2D() ? Device.vCameraPosition : 
+				D.source->feedback->is_2D() ? CRenderDevice::GetInstance()->vCameraPosition :
 					D.source->feedback->get_params()->position,
 				D.power
 				);

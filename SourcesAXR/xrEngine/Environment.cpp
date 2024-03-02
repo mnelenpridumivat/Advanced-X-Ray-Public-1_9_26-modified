@@ -497,7 +497,7 @@ void CEnvironment::lerp		(float& current_weight)
 	EM.hemi_color.set		( 0,0,0 );
 	EM.use_flags.zero		();
 
-	Fvector	view			= Device.vCameraPosition;
+	Fvector	view			= CRenderDevice::GetInstance()->vCameraPosition;
 	float	mpower			= 0;
 	for (xr_vector<CEnvModifier>::iterator mit=Modifiers.begin(); mit!=Modifiers.end(); mit++)
 		mpower				+= EM.sum(*mit,view);
@@ -509,7 +509,7 @@ void CEnvironment::lerp		(float& current_weight)
 void CEnvironment::OnFrame()
 {
 #ifdef _EDITOR
-	SetGameTime				(fGameTime+Device.fTimeDelta*fTimeFactor,fTimeFactor);
+	SetGameTime				(fGameTime+ CRenderDevice::GetInstance()->fTimeDelta*fTimeFactor,fTimeFactor);
     if (fsimilar(ed_to_time,DAY_LENGTH)&&fsimilar(ed_from_time,0.f)){
 	    if (fGameTime>DAY_LENGTH)	fGameTime-=DAY_LENGTH;
     }else{
@@ -536,9 +536,9 @@ void CEnvironment::OnFrame()
 	float WindDir = -CurrentEnv->wind_direction + PI_DIV_2;
 	Fvector2 WDir = { _cos(WindDir), _sin(WindDir) };
 
-	wind_anim.x += WindVel * WDir.x * Device.fTimeDelta;
-	wind_anim.y += WindVel * WDir.y * Device.fTimeDelta;
-	wind_anim.z += clampr(WindVel * 1.33f, 0.0f, 1.0f) * Device.fTimeDelta;
+	wind_anim.x += WindVel * WDir.x * CRenderDevice::GetInstance()->fTimeDelta;
+	wind_anim.y += WindVel * WDir.y * CRenderDevice::GetInstance()->fTimeDelta;
+	wind_anim.z += clampr(WindVel * 1.33f, 0.0f, 1.0f) * CRenderDevice::GetInstance()->fTimeDelta;
 
 //	if (pInput->iGetAsyncKeyState(DIK_O))		SetWeatherFX("surge_day"); 
 	float					current_weight;
@@ -575,7 +575,7 @@ void CEnvironment::OnFrame()
 	}
 
 	PerlinNoise1D->SetFrequency		(wind_gust_factor*MAX_NOISE_FREQ);
-	wind_strength_factor			= clampr(PerlinNoise1D->GetContinious(Device.fTimeGlobal)+0.5f,0.f,1.f); 
+	wind_strength_factor			= clampr(PerlinNoise1D->GetContinious(CRenderDevice::GetInstance()->fTimeGlobal)+0.5f,0.f,1.f);
 
     shared_str l_id						=	(current_weight<0.5f)?Current[0]->lens_flare_id:Current[1]->lens_flare_id;
 	eff_LensFlare->OnFrame				(l_id);

@@ -31,7 +31,7 @@ effect::effect			(manager const& manager, shared_str const& id) :
 
 effect::~effect			()
 {
-	if (!Device.editor())
+	if (!CRenderDevice::GetInstance()->editor())
 		return;
 
 	::ide().destroy		(m_property_holder);

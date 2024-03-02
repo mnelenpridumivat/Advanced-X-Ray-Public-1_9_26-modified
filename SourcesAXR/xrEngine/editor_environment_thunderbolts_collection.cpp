@@ -50,7 +50,7 @@ collection::~collection					()
 
 	palette.clear		();
 
-	if (!Device.editor())
+	if (!CRenderDevice::GetInstance()->editor())
 		return;
 
 	::ide().destroy		(m_property_holder);

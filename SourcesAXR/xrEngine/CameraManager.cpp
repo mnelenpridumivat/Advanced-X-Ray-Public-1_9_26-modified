@@ -283,9 +283,9 @@ void CCameraManager::UpdateFromCamera(const CCameraBase* C)
 void CCameraManager::Update(const Fvector& P, const Fvector& D, const Fvector& N, float fFOV_Dest, float fASPECT_Dest, float fFAR_Dest, u32 flags, ECameraStyle style, CObject* parent)
 {
 #ifdef DEBUG
-	if (!Device.Paused()) {
-		VERIFY				(dbg_upd_frame!=Device.dwFrame);// already updated !!!
-		dbg_upd_frame		= Device.dwFrame;
+	if (!CRenderDevice::GetInstance()->Paused()) {
+		VERIFY				(dbg_upd_frame!= CRenderDevice::GetInstance()->dwFrame);// already updated !!!
+		dbg_upd_frame		= CRenderDevice::GetInstance()->dwFrame;
 	}
 #endif // DEBUG
 	// camera
@@ -308,8 +308,8 @@ void CCameraManager::Update(const Fvector& P, const Fvector& D, const Fvector& N
 	m_cam_info.r.crossproduct	(m_cam_info.n, m_cam_info.d);
 	m_cam_info.n.crossproduct	(m_cam_info.d, m_cam_info.r);
 
-	float aspect				= Device.fHeight_2/Device.fWidth_2;
-	float src					= 10*Device.fTimeDelta;	clamp(src,0.f,1.f);
+	float aspect				= CRenderDevice::GetInstance()->fHeight_2/ CRenderDevice::GetInstance()->fWidth_2;
+	float src					= 10* CRenderDevice::GetInstance()->fTimeDelta;	clamp(src,0.f,1.f);
 	float dst					= 1-src;
 	m_cam_info.fFov				= m_cam_info.fFov*dst		+ fFOV_Dest*src;
 	m_cam_info.fFar				= m_cam_info.fFar*dst		+ fFAR_Dest*src;
@@ -447,33 +447,37 @@ void CCameraManager::ApplyDevice (float _viewport_near)
 void CCameraManager::ApplyDeviceInternal(float _viewport_near)
 {
 	// Device params
-	if (Device.m_bMakeLevelMap)
+	if (CRenderDevice::GetInstance()->m_bMakeLevelMap)
 	{
 		// build camera matrix
-		Fbox bb = Device.curr_lm_fbox;
-		bb.getcenter(Device.vCameraPosition);
+		Fbox bb = CRenderDevice::GetInstance()->curr_lm_fbox;
+		bb.getcenter(CRenderDevice::GetInstance()->vCameraPosition);
 
-		Device.vCameraDirection.set(0.f, -1.f, 0.f);
-		Device.vCameraTop.set(0.f, 0.f, 1.f);
-		Device.vCameraRight.set(1.f, 0.f, 0.f);
-		Device.mView.build_camera_dir(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
+		CRenderDevice::GetInstance()->vCameraDirection.set(0.f, -1.f, 0.f);
+		CRenderDevice::GetInstance()->vCameraTop.set(0.f, 0.f, 1.f);
+		CRenderDevice::GetInstance()->vCameraRight.set(1.f, 0.f, 0.f);
+		CRenderDevice::GetInstance()->mView.build_camera_dir(
+			CRenderDevice::GetInstance()->vCameraPosition, 
+			CRenderDevice::GetInstance()->vCameraDirection, 
+			CRenderDevice::GetInstance()->vCameraTop
+		);
 
-		bb.xform(Device.mView);
+		bb.xform(CRenderDevice::GetInstance()->mView);
 		// build project matrix
-		Device.mProject.build_projection_ortho(bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.min.z, bb.max.z);
+		CRenderDevice::GetInstance()->mProject.build_projection_ortho(bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.min.z, bb.max.z);
 	}
 	else
 	{
-		Device.mView.build_camera_dir(m_cam_info.p, m_cam_info.d, m_cam_info.n);
+		CRenderDevice::GetInstance()->mView.build_camera_dir(m_cam_info.p, m_cam_info.d, m_cam_info.n);
 
-		Device.vCameraPosition.set(m_cam_info.p);
-		Device.vCameraDirection.set(m_cam_info.d);
-		Device.vCameraTop.set(m_cam_info.n);
-		Device.vCameraRight.set(m_cam_info.r);
+		CRenderDevice::GetInstance()->vCameraPosition.set(m_cam_info.p);
+		CRenderDevice::GetInstance()->vCameraDirection.set(m_cam_info.d);
+		CRenderDevice::GetInstance()->vCameraTop.set(m_cam_info.n);
+		CRenderDevice::GetInstance()->vCameraRight.set(m_cam_info.r);
 
 		// projection
-		Device.fFOV = m_cam_info.fFov;
-		Device.fASPECT = m_cam_info.fAspect;
+		CRenderDevice::GetInstance()->fFOV = m_cam_info.fFov;
+		CRenderDevice::GetInstance()->fASPECT = m_cam_info.fAspect;
 		float aspect = m_cam_info.fAspect;
 
 		//Device.mProject.build_projection(deg2rad(m_cam_info.fFov), m_cam_info.fAspect, _viewport_near, m_cam_info.fFar);
@@ -484,22 +488,22 @@ void CCameraManager::ApplyDeviceInternal(float _viewport_near)
 		{
 			//    FOV  
 			//Device.fFOV = fFovSecond;
-			Device.fFOV = g_pGamePersistent->m_pGShaderConstants->hud_params.y;
+			CRenderDevice::GetInstance()->fFOV = g_pGamePersistent->m_pGShaderConstants->hud_params.y;
 
 			//      
-			Device.m_SecondViewport.isCamReady = true;
+			CRenderDevice::GetInstance()->m_SecondViewport.isCamReady = true;
 		}
 		else
-			Device.m_SecondViewport.isCamReady = false;
+			CRenderDevice::GetInstance()->m_SecondViewport.isCamReady = false;
 
-		Device.mProject.build_projection(deg2rad(Device.fFOV), aspect, _viewport_near, m_cam_info.fFar);
+		CRenderDevice::GetInstance()->mProject.build_projection(deg2rad(CRenderDevice::GetInstance()->fFOV), aspect, _viewport_near, m_cam_info.fFar);
 		//--#SM+# End--
 	}
 
 	if (Render->currentViewPort == MAIN_VIEWPORT)
 	{
-		Device.mFullTransform.mul(Device.mProject, Device.mView);
-		D3DXMatrixInverse((D3DXMATRIX*)&Device.mInvFullTransform, 0, (D3DXMATRIX*)&Device.mFullTransform);
+		CRenderDevice::GetInstance()->mFullTransform.mul(CRenderDevice::GetInstance()->mProject, CRenderDevice::GetInstance()->mView);
+		D3DXMatrixInverse((D3DXMATRIX*)&CRenderDevice::GetInstance()->mInvFullTransform, 0, (D3DXMATRIX*)&CRenderDevice::GetInstance()->mFullTransform);
 	}
 
 	if( g_pGamePersistent && g_pGamePersistent->m_pMainMenu->IsActive() )
@@ -553,7 +557,7 @@ void CCameraManager::Dump()
 	Fmatrix mInvCamera;
 	Fvector _R,_U,_T,_P;
 	
-	mInvCamera.invert(Device.mView);
+	mInvCamera.invert(CRenderDevice::GetInstance()->mView);
 	_R.set( mInvCamera._11, mInvCamera._12, mInvCamera._13 );
 	_U.set( mInvCamera._21, mInvCamera._22, mInvCamera._23 );
 	_T.set( mInvCamera._31, mInvCamera._32, mInvCamera._33 );

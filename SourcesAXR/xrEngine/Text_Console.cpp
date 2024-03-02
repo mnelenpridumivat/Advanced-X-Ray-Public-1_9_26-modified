@@ -17,8 +17,8 @@ CTextConsole::CTextConsole()
 	m_dwStartLine = 0;
 
 	m_bNeedUpdate      = false;
-	m_dwLastUpdateTime = Device.dwTimeGlobal;
-	m_last_time        = Device.dwTimeGlobal;
+	m_dwLastUpdateTime = CRenderDevice::GetInstance()->dwTimeGlobal;
+	m_last_time        = CRenderDevice::GetInstance()->dwTimeGlobal;
 }
 
 CTextConsole::~CTextConsole()
@@ -154,9 +154,9 @@ void CTextConsole::Initialize()
 {
 	inherited::Initialize();
 	
-	m_pMainWnd         = &Device.m_hWnd;
-	m_dwLastUpdateTime = Device.dwTimeGlobal;
-	m_last_time        = Device.dwTimeGlobal;
+	m_pMainWnd         = &CRenderDevice::GetInstance()->m_hWnd;
+	m_dwLastUpdateTime = CRenderDevice::GetInstance()->dwTimeGlobal;
+	m_last_time        = CRenderDevice::GetInstance()->dwTimeGlobal;
 
 	CreateConsoleWnd();
 	CreateLogWnd();
@@ -195,7 +195,7 @@ void CTextConsole::OnPaint()
 	PAINTSTRUCT ps;
 	BeginPaint( m_hLogWnd, &ps );
 
-	if ( /*m_bNeedUpdate*/ Device.dwFrame % 2 )
+	if ( /*m_bNeedUpdate*/ CRenderDevice::GetInstance()->dwFrame % 2 )
 	{
 //		m_dwLastUpdateTime = Device.dwTimeGlobal;
 //		m_bNeedUpdate = false;
@@ -301,9 +301,9 @@ void CTextConsole::DrawLog( HDC hDC, RECT* pRect )
 		}
 	}
 
-	if ( g_pGameLevel && ( Device.dwTimeGlobal - m_last_time > 500 ) )
+	if ( g_pGameLevel && (CRenderDevice::GetInstance()->dwTimeGlobal - m_last_time > 500 ) )
 	{
-		m_last_time = Device.dwTimeGlobal;
+		m_last_time = CRenderDevice::GetInstance()->dwTimeGlobal;
 
 		m_server_info.ResetData();
 		g_pGameLevel->GetLevelInfo( &m_server_info );

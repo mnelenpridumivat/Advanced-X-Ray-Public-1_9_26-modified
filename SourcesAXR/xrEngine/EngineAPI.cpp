@@ -138,17 +138,17 @@ void CEngineAPI::Initialize(void)
 
 	R_ASSERT2(hRender, "Can't load renderer");
 
-	Device.ConnectToRender();
+	CRenderDevice::GetInstance()->ConnectToRender();
 
 	// game	
 	{
 		LPCSTR			g_name = "xrGame.dll";
-		switch (xrGameManager::GetGame())
+		/*switch (xrGameManager::GetGame())
 		{
 		case EGame::CS:
 			g_name = "xrGameCS.dll";
 			break;
-		}
+		}*/
 		Log				("Loading DLL:",g_name);
 		hGame			= LoadLibrary	(g_name);
 		if (0==hGame)	R_CHK			(GetLastError());

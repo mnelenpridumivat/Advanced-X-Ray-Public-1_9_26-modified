@@ -28,7 +28,7 @@ effect_id::effect_id								(
 
 effect_id::~effect_id								()
 {
-	if (!Device.editor())
+	if (!CRenderDevice::GetInstance()->editor())
 		return;
 
 	::ide().destroy					(m_property_holder);

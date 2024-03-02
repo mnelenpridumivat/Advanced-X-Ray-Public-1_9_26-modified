@@ -80,7 +80,7 @@ CEffect_Rain::~CEffect_Rain()
 void CEffect_Rain::Prepare(Fvector2& offset, Fvector3& axis, float W_Velocity, float W_Direction)
 {
 	// Wind gust, to add variation.
-	float Wind_Gust = RainPerlin->GetContinious(Device.fTimeGlobal * 0.3f) * 2.0f;
+	float Wind_Gust = RainPerlin->GetContinious(CRenderDevice::GetInstance()->fTimeGlobal * 0.3f) * 2.0f;
 
 	// Wind velocity [ 0 ~ 1 ]
 	float Wind_Velocity = W_Velocity + Wind_Gust;
@@ -119,14 +119,14 @@ void CEffect_Rain::Born(Item& dest, const float radius, const float speed)
 	Prepare(Rain_Offset, Rain_Axis, Wind_Velocity, Wind_Direction);
 
 	// Camera Position
-	const Fvector& view	= Device.vCameraPosition;
+	const Fvector& view	= CRenderDevice::GetInstance()->vCameraPosition;
 
 	// Random Position
 	float r = radius * 0.5f;
 	Fvector2 RandomP	= { ::Random.randF(-r, r), ::Random.randF(-r, r) };
 
 	// Aim ahead of where the player is facing
-	Fvector FinalView	= Fvector().mad(view, Device.vCameraDirection, 5.0f);
+	Fvector FinalView	= Fvector().mad(view, CRenderDevice::GetInstance()->vCameraDirection, 5.0f);
 
 	// Random direction. Higher angle at lower velocity
 	dest.D.random_dir(Rain_Axis, ::Random.randF(-drop_angle, drop_angle) * (1.5f - Wind_Velocity));
@@ -160,12 +160,12 @@ void CEffect_Rain::RenewItem(Item& dest, float height, BOOL bHit)
 {
 	dest.uv_set			= Random.randI(2);
     if (bHit){
-		dest.dwTime_Life= Device.dwTimeGlobal + iFloor(1000.f*height/dest.fSpeed) - Device.dwTimeDelta;
-		dest.dwTime_Hit	= Device.dwTimeGlobal + iFloor(1000.f*height/dest.fSpeed) - Device.dwTimeDelta;
+		dest.dwTime_Life= CRenderDevice::GetInstance()->dwTimeGlobal + iFloor(1000.f*height/dest.fSpeed) - CRenderDevice::GetInstance()->dwTimeDelta;
+		dest.dwTime_Hit	= CRenderDevice::GetInstance()->dwTimeGlobal + iFloor(1000.f*height/dest.fSpeed) - CRenderDevice::GetInstance()->dwTimeDelta;
 		dest.Phit.mad	(dest.P,dest.D,height);
 	}else{
-		dest.dwTime_Life= Device.dwTimeGlobal + iFloor(1000.f*height/dest.fSpeed) - Device.dwTimeDelta;
-		dest.dwTime_Hit	= Device.dwTimeGlobal + iFloor(2*1000.f*height/dest.fSpeed)-Device.dwTimeDelta;
+		dest.dwTime_Life= CRenderDevice::GetInstance()->dwTimeGlobal + iFloor(1000.f*height/dest.fSpeed) - CRenderDevice::GetInstance()->dwTimeDelta;
+		dest.dwTime_Hit	= CRenderDevice::GetInstance()->dwTimeGlobal + iFloor(2*1000.f*height/dest.fSpeed)- CRenderDevice::GetInstance()->dwTimeDelta;
 		dest.Phit.set	(dest.P);
 	}
 }
@@ -198,7 +198,7 @@ void	CEffect_Rain::OnFrame	()
 		
 //		float f					= 0.9f*hemi_factor + 0.1f*hemi_val;
 		float f					= hemi_val;
-		float t					= Device.fTimeDelta;
+		float t					= CRenderDevice::GetInstance()->fTimeDelta;
 		clamp					(t, 0.001f, 1.0f);
 		hemi_factor				= hemi_factor*(1.0f-t) + f*t;
 		rain_hemi				= hemi_val;

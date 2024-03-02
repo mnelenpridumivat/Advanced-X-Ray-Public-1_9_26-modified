@@ -123,7 +123,7 @@ class CCC_TexturesStat : public IConsole_Command
 public:
 	CCC_TexturesStat(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = TRUE; };
 	virtual void Execute(LPCSTR args) {
-		Device.DumpResourcesMemoryUsage();
+		CRenderDevice::GetInstance()->DumpResourcesMemoryUsage();
 		//Device.Resources->_DumpMemoryUsage();
 		//	TODO: move this console commant into renderer
 		//VERIFY(0);
@@ -378,8 +378,8 @@ class CCC_VID_Reset : public IConsole_Command
 public:
 	CCC_VID_Reset(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
 	virtual void Execute(LPCSTR args) {
-		if (Device.b_is_Ready) {
-			Device.Reset	();
+		if (CRenderDevice::GetInstance()->b_is_Ready) {
+			CRenderDevice::GetInstance()->Reset	();
 		}
 	}
 };
@@ -460,13 +460,13 @@ public:
 	{
 		CCC_Float::Execute		(args);
 		//Device.Gamma.Gamma		(ps_gamma);
-		Device.m_pRender->setGamma(ps_gamma);
+		CRenderDevice::GetInstance()->m_pRender->setGamma(ps_gamma);
 		//Device.Gamma.Brightness	(ps_brightness);
-		Device.m_pRender->setBrightness(ps_brightness);
+		CRenderDevice::GetInstance()->m_pRender->setBrightness(ps_brightness);
 		//Device.Gamma.Contrast	(ps_contrast);
-		Device.m_pRender->setContrast(ps_contrast);
+		CRenderDevice::GetInstance()->m_pRender->setContrast(ps_contrast);
 		//Device.Gamma.Update		();
-		Device.m_pRender->updateGamma();
+		CRenderDevice::GetInstance()->m_pRender->updateGamma();
 	}
 };
 

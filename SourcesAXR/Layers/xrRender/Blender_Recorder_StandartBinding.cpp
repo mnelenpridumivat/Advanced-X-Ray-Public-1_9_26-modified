@@ -596,7 +596,7 @@ static class cl_debug : public R_constant_setup
 
 static class cl_spv_screen_res : public R_constant_setup //--#SM+#--
 {
-	virtual void setup(R_constant* C) { RCache.set_c(C, (float)Device.m_SecondViewport.screenWidth, (float)Device.m_SecondViewport.screenHeight, 0, 0); }
+	virtual void setup(R_constant* C) { RCache.set_c(C, (float)CRenderDevice::GetInstance()->m_SecondViewport.screenWidth, (float)CRenderDevice::GetInstance()->m_SecondViewport.screenHeight, 0, 0); }
 } binder_spv_screen_res;
 
 class ssfx_blood_decals : public R_constant_setup

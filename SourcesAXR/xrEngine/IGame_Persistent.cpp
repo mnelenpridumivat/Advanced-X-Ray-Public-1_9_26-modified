@@ -172,7 +172,7 @@ void IGame_Persistent::Prefetch()
 	prefetching_in_progress = true;
 
 	// prefetch game objects & models
-	float	p_time		=			1000.f*Device.GetTimerGlobal()->GetElapsed_sec();
+	float	p_time		=			1000.f* CRenderDevice::GetInstance()->GetTimerGlobal()->GetElapsed_sec();
 	u32	mem_0			=			Memory.mem_usage()	;
 
 	Log				("Loading objects...");
@@ -180,9 +180,9 @@ void IGame_Persistent::Prefetch()
 	Log				("Loading models...");
 	Render->models_Prefetch				();
 	//Device.Resources->DeferredUpload	();
-	Device.m_pRender->ResourcesDeferredUpload();
+    CRenderDevice::GetInstance()->m_pRender->ResourcesDeferredUpload();
 
-	p_time				=			1000.f*Device.GetTimerGlobal()->GetElapsed_sec() - p_time;
+	p_time				=			1000.f* CRenderDevice::GetInstance()->GetTimerGlobal()->GetElapsed_sec() - p_time;
 	u32		p_mem		=			Memory.mem_usage() - mem_0	;
 
 	Msg					("* [prefetch] time:    %d ms",	iFloor(p_time));
@@ -205,7 +205,7 @@ void IGame_Persistent::OnFrame		()
 {
 #ifndef _EDITOR
 
-    if (!Device.Paused() || Device.dwPrecacheFrame)
+    if (!CRenderDevice::GetInstance()->Paused() || CRenderDevice::GetInstance()->dwPrecacheFrame)
     {
         Environment().OnFrame();
         UpdateHudRaindrops();
@@ -213,9 +213,9 @@ void IGame_Persistent::OnFrame		()
     }
 
 
-	Device.Statistic->Particles_starting= ps_needtoplay.size	();
-	Device.Statistic->Particles_active	= ps_active.size		();
-	Device.Statistic->Particles_destroy	= ps_destroy.size		();
+    CRenderDevice::GetInstance()->Statistic->Particles_starting= ps_needtoplay.size	();
+    CRenderDevice::GetInstance()->Statistic->Particles_active	= ps_active.size		();
+    CRenderDevice::GetInstance()->Statistic->Particles_destroy	= ps_destroy.size		();
 
 	// Play req particle systems
 	while (ps_needtoplay.size())
@@ -284,7 +284,7 @@ void IGame_Persistent::destroy_particles		(const bool &all_particles)
 void IGame_Persistent::OnAssetsChanged()
 {
 #ifndef _EDITOR
-	Device.m_pRender->OnAssetsChanged(); //Resources->m_textures_description.Load();
+    CRenderDevice::GetInstance()->m_pRender->OnAssetsChanged(); //Resources->m_textures_description.Load();
 #endif    
 }
 
@@ -301,7 +301,7 @@ void IGame_Persistent::GrassBendersUpdate(u16 id, u8& data_idx, u32& data_frame,
         if (grass_shader_data.id[data_idx] != id)
         {
             data_idx = 0;
-            data_frame = Device.dwFrame + Random.randI(10, 35);
+            data_frame = CRenderDevice::GetInstance()->dwFrame + Random.randI(10, 35);
         }
         else
         {
@@ -309,16 +309,16 @@ void IGame_Persistent::GrassBendersUpdate(u16 id, u8& data_idx, u32& data_frame,
         }
     }
 
-    if (Device.dwFrame < data_frame)
+    if (CRenderDevice::GetInstance()->dwFrame < data_frame)
         return;
 
     // Wait some random frames to split the checks
-    data_frame = Device.dwFrame + Random.randI(10, 35);
+    data_frame = CRenderDevice::GetInstance()->dwFrame + Random.randI(10, 35);
 
     // Check Distance
     if (CheckDistance)
     {
-        if (position.distance_to_xz_sqr(Device.vCameraPosition) > ps_ssfx_grass_interactive.z)
+        if (position.distance_to_xz_sqr(CRenderDevice::GetInstance()->vCameraPosition) > ps_ssfx_grass_interactive.z)
         {
             GrassBendersRemoveByIndex(data_idx);
             return;
@@ -386,7 +386,7 @@ void IGame_Persistent::GrassBendersAddShot(u16 id, Fvector position, Fvector3 di
         return;
 
     // Check distance
-    if (position.distance_to_xz_sqr(Device.vCameraPosition) > ps_ssfx_grass_interactive.z)
+    if (position.distance_to_xz_sqr(CRenderDevice::GetInstance()->vCameraPosition) > ps_ssfx_grass_interactive.z)
         return;
 
     int AddAt = -1;
@@ -430,7 +430,7 @@ void IGame_Persistent::GrassBendersUpdateAnimations()
             case BENDER_ANIM_EXPLOSION: // Internal Only ( You can use BENDER_ANIM_PULSE for anomalies )
             {
                 // Radius
-                grass_shader_data.time[idx] += Device.fTimeDelta * grass_shader_data.speed[idx];
+                grass_shader_data.time[idx] += CRenderDevice::GetInstance()->fTimeDelta * grass_shader_data.speed[idx];
                 grass_shader_data.radius_curr[idx] = grass_shader_data.radius[idx] * std::min(1.0f, grass_shader_data.time[idx]);
 
                 grass_shader_data.str_target[idx] = std::min(1.0f, grass_shader_data.str_target[idx]);
@@ -442,11 +442,11 @@ void IGame_Persistent::GrassBendersUpdateAnimations()
                 // Intensity
                 if (grass_shader_data.str_target[idx] <= grass_shader_data.str[idx])
                 {
-                    grass_shader_data.str[idx] -= Device.fTimeDelta * grass_shader_data.fade[idx] * diff;
+                    grass_shader_data.str[idx] -= CRenderDevice::GetInstance()->fTimeDelta * grass_shader_data.fade[idx] * diff;
                 }
                 else
                 {
-                    grass_shader_data.str[idx] += Device.fTimeDelta * grass_shader_data.speed[idx] * diff;
+                    grass_shader_data.str[idx] += CRenderDevice::GetInstance()->fTimeDelta * grass_shader_data.speed[idx] * diff;
 
                     if (grass_shader_data.str[idx] >= grass_shader_data.str_target[idx])
                         grass_shader_data.str_target[idx] = 0;
@@ -461,7 +461,7 @@ void IGame_Persistent::GrassBendersUpdateAnimations()
             case BENDER_ANIM_WAVY:
             {
                 // Anim Speed
-                grass_shader_data.time[idx] += Device.fTimeDelta * 1.5f * grass_shader_data.speed[idx];
+                grass_shader_data.time[idx] += CRenderDevice::GetInstance()->fTimeDelta * 1.5f * grass_shader_data.speed[idx];
 
                 // Curve
                 float curve = sin(grass_shader_data.time[idx]);
@@ -475,7 +475,7 @@ void IGame_Persistent::GrassBendersUpdateAnimations()
             case BENDER_ANIM_SUCK:
             {
                 // Anim Speed
-                grass_shader_data.time[idx] += Device.fTimeDelta * grass_shader_data.speed[idx];
+                grass_shader_data.time[idx] += CRenderDevice::GetInstance()->fTimeDelta * grass_shader_data.speed[idx];
 
                 // Perlin Noise
                 float curve = clampr(PerlinNoise1D->GetContinious(grass_shader_data.time[idx]) + 0.5f, 0.f, 1.f) * -1.0;
@@ -488,7 +488,7 @@ void IGame_Persistent::GrassBendersUpdateAnimations()
             case BENDER_ANIM_BLOW:
             {
                 // Anim Speed
-                grass_shader_data.time[idx] += Device.fTimeDelta * 1.2f * grass_shader_data.speed[idx];
+                grass_shader_data.time[idx] += CRenderDevice::GetInstance()->fTimeDelta * 1.2f * grass_shader_data.speed[idx];
 
                 // Perlin Noise
                 float curve = clampr(PerlinNoise1D->GetContinious(grass_shader_data.time[idx]) + 1.0f, 0.f, 2.0f) * 0.25f;
@@ -501,7 +501,7 @@ void IGame_Persistent::GrassBendersUpdateAnimations()
             case BENDER_ANIM_PULSE:
             {
                 // Anim Speed
-                grass_shader_data.time[idx] += Device.fTimeDelta * grass_shader_data.speed[idx];
+                grass_shader_data.time[idx] += CRenderDevice::GetInstance()->fTimeDelta * grass_shader_data.speed[idx];
 
                 // Radius
                 grass_shader_data.radius_curr[idx] = grass_shader_data.radius[idx] * std::min(1.0f, grass_shader_data.time[idx]);
@@ -578,13 +578,13 @@ void IGame_Persistent::GrassBendersSet(u8 idx, u16 id, Fvector position, Fvector
 bool IGame_Persistent::IsActorInHideout() const
 {
     static bool actor_in_hideout = true;
-    static u32 last_ray_pick_time = Device.dwTimeGlobal;
+    static u32 last_ray_pick_time = CRenderDevice::GetInstance()->dwTimeGlobal;
 
-    if (Device.dwTimeGlobal > (last_ray_pick_time + 1000))
+    if (CRenderDevice::GetInstance()->dwTimeGlobal > (last_ray_pick_time + 1000))
     { // Апдейт рейтрейса - раз в секунду. Чаще апдейтить нет смысла.
-        last_ray_pick_time = Device.dwTimeGlobal;
+        last_ray_pick_time = CRenderDevice::GetInstance()->dwTimeGlobal;
         collide::rq_result RQ;
-        actor_in_hideout = !!g_pGameLevel->ObjectSpace.RayPick(Device.vCameraPosition, Fvector{ 0.f, 1.f, 0.f }, 50.f, collide::rqtBoth, RQ, g_pGameLevel->CurrentViewEntity());
+        actor_in_hideout = !!g_pGameLevel->ObjectSpace.RayPick(CRenderDevice::GetInstance()->vCameraPosition, Fvector{ 0.f, 1.f, 0.f }, 50.f, collide::rqtBoth, RQ, g_pGameLevel->CurrentViewEntity());
     }
     return actor_in_hideout;
 }
@@ -619,7 +619,7 @@ void IGame_Persistent::UpdateHudRaindrops() const
     static float drops_int{}, drops_anim{};
     const float Rain_factor = g_pGamePersistent->Environment().CurrentEnv->rain_density;
 
-    const float delta_time = Device.fTimeDelta;
+    const float delta_time = CRenderDevice::GetInstance()->fTimeDelta;
     if (Rain_factor > 0.f)
     {
         if (!IsActorInHideout())
@@ -683,7 +683,7 @@ float IGame_Persistent::GrassBenderToValue(float& current, float go_to, float in
 {
     float diff = abs(current - go_to);
 
-    float r_value = Device.fTimeDelta * intensity * (use_easing ? std::min(0.5f, diff) : 1.0f);
+    float r_value = CRenderDevice::GetInstance()->fTimeDelta * intensity * (use_easing ? std::min(0.5f, diff) : 1.0f);
 
     if (diff - r_value <= 0)
     {

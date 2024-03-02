@@ -53,15 +53,15 @@ namespace Feel {
 		I.Cache.verts[2].set	(0,0,0);
 		I.fuzzy					= -EPS_S;
 
-		if (CallOfPripyatMode)
-		{
+		/*if (CallOfPripyatMode)
+		{*/
 			I.cp_LP = O->get_new_local_point_on_mesh(I.bone_id);
 			I.cp_LAST = O->get_last_local_point_on_mesh(I.cp_LP, I.bone_id);
-		}
+		/*}
 		else
 		{
 			I.cp_LP.set(0, 0, 0);
-		}
+		}*/
 
 	}
 	void	Vision::o_delete	(CObject* O)
@@ -171,11 +171,11 @@ namespace Feel {
 
 			// verify relation
 
-			if (ClearSkyMode)
+			/*if (ClearSkyMode)
 			{
 				if (positive(I->fuzzy) && I->O->Position().similar(I->cp_LR_dst, lr_granularity) && P.similar(I->cp_LR_src, lr_granularity))
 					continue;
-			}
+			}*/
 
 			I->cp_LR_dst		= I->O->Position();
 			I->cp_LR_src		= P;
@@ -185,33 +185,33 @@ namespace Feel {
 			Fmatrix				mE;
 			float f				= 0.0f;
 
-			if (CallOfPripyatMode)
-			{
+			//if (CallOfPripyatMode)
+			//{
 				I->cp_LAST = I->O->get_last_local_point_on_mesh(I->cp_LP, I->bone_id);
-			}
-			else
-			{
-				// Fetch data
-				const Fbox& B = I->O->CFORM()->getBBox();
-				const Fmatrix& M = I->O->XFORM();
+			//}
+			//else
+			//{
+			//	// Fetch data
+			//	const Fbox& B = I->O->CFORM()->getBBox();
+			//	const Fmatrix& M = I->O->XFORM();
 
-				// Build OBB + Ellipse and X-form point
-				Fvector				c, r;
-				Fmatrix				T, mR, mS;
-				B.getcenter(c);
-				B.getradius(r);
-				T.translate(c);
-				mR.mul_43(M, T);
-				mS.scale(r);
-				mE.mul_43(mR, mS);
-				mE.transform_tiny(OP, I->cp_LP);
-				I->cp_LAST = OP;
-			}
+			//	// Build OBB + Ellipse and X-form point
+			//	Fvector				c, r;
+			//	Fmatrix				T, mR, mS;
+			//	B.getcenter(c);
+			//	B.getradius(r);
+			//	T.translate(c);
+			//	mR.mul_43(M, T);
+			//	mS.scale(r);
+			//	mE.mul_43(mR, mS);
+			//	mE.transform_tiny(OP, I->cp_LP);
+			//	I->cp_LAST = OP;
+			//}
 
 			D.sub(OP, P);
 
-			if (CallOfPripyatMode)
-			{
+			/*if (CallOfPripyatMode)
+			{*/
 				if (fis_zero(D.magnitude()))
 				{
 					I->fuzzy = 1.f;
@@ -219,11 +219,11 @@ namespace Feel {
 				}
 
 				f = D.magnitude() + .2f;
-			}
+			/*}
 			else
 			{
 				f = D.magnitude();
-			}
+			}*/
 
 			if (f>fuzzy_guaranteed){
 				D.div						(f);
@@ -254,8 +254,8 @@ namespace Feel {
 				}
 //				Log("Vis",feel_params.vis);
 
-				if (CallOfPripyatMode)
-				{
+				/*if (CallOfPripyatMode)
+				{*/
 					r_spatial.clear_not_free();
 					g_SpatialSpace->q_ray(r_spatial, 0, STYPE_VISIBLEFORAI, P, D, f);
 
@@ -282,22 +282,22 @@ namespace Feel {
 
 					if (collision_found)
 						feel_params.vis = 0.f;
-				}
+				//}
 
 				if (feel_params.vis<feel_params.vis_threshold){
 					// INVISIBLE, choose next point
 					I->fuzzy				-=	fuzzy_update_novis*dt;
 					clamp					(I->fuzzy,-.5f,1.f);
 
-					if (CallOfPripyatMode)
-					{
+					/*if (CallOfPripyatMode)
+					{*/
 						I->cp_LP = I->O->get_new_local_point_on_mesh(I->bone_id);
-					}
+					/*}
 					else
 					{
 						I->cp_LP.random_dir();
 						I->cp_LP.mul(.7f);
-					}
+					}*/
 				}else{
 					// VISIBLE
 					I->fuzzy				+=	fuzzy_update_vis*dt;

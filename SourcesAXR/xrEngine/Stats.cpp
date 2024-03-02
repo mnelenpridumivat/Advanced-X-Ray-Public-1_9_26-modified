@@ -64,12 +64,12 @@ CStats::CStats	()
 	pFont				= 0;
 	fMem_calls			= 0;
 	RenderDUMP_DT_Count = 0;
-	Device.seqRender.Add		(this,REG_PRIORITY_LOW-1000);
+	CRenderDevice::GetInstance()->seqRender.Add		(this,REG_PRIORITY_LOW-1000);
 }
 
 CStats::~CStats()
 {
-	Device.seqRender.Remove		(this);
+	CRenderDevice::GetInstance()->seqRender.Remove		(this);
 	xr_delete		(pFont);
 }
 
@@ -78,7 +78,7 @@ void _draw_cam_pos(CGameFont* pFont)
 	float sz		= pFont->GetHeight();
 	pFont->SetHeightI(0.02f);
 	pFont->SetColor	(0xffffffff);
-	pFont->Out		(10, 600, "CAMERA POSITION:  [%3.2f,%3.2f,%3.2f]",VPUSH(Device.vCameraPosition));
+	pFont->Out		(10, 600, "CAMERA POSITION:  [%3.2f,%3.2f,%3.2f]",VPUSH(CRenderDevice::GetInstance()->vCameraPosition));
 	pFont->SetHeight(sz);
 	pFont->OnRender	();
 }
@@ -146,15 +146,15 @@ void CStats::Show()
 	}
 
 	// calc FPS & TPS
-	if (Device.fTimeDelta>EPS_S) {
-		float fps  = 1.f/Device.fTimeDelta;
+	if (CRenderDevice::GetInstance()->fTimeDelta>EPS_S) {
+		float fps  = 1.f/ CRenderDevice::GetInstance()->fTimeDelta;
 		//if (Engine.External.tune_enabled)	vtune.update	(fps);
 		float fOne = 0.3f;
 		float fInv = 1.f-fOne;
 		fFPS = fInv*fFPS + fOne*fps;
 
 		if (RenderTOTAL.result>EPS_S) {
-			u32	rendered_polies = Device.m_pRender->GetCacheStatPolys();
+			u32	rendered_polies = CRenderDevice::GetInstance()->m_pRender->GetCacheStatPolys();
 			fTPS = fInv*fTPS + fOne*float(rendered_polies)/(RenderTOTAL.result*1000.f);
 			//fTPS = fInv*fTPS + fOne*float(RCache.stat.polys)/(RenderTOTAL.result*1000.f);
 			fRFPS= fInv*fRFPS+ fOne*1000.f/RenderTOTAL.result;
@@ -171,7 +171,7 @@ void CStats::Show()
 	if (g_dedicated_server) return;
 	////////////////////////////////////////////////
 	int frm = 2000;
-	div_t ddd = div(Device.dwFrame,frm);
+	div_t ddd = div(CRenderDevice::GetInstance()->dwFrame,frm);
 	if( ddd.rem < frm/2.0f ){
 		pFont->SetColor	(0xFFFFFFFF	);
 		pFont->OutSet	(0,0);
@@ -189,7 +189,10 @@ void CStats::Show()
 		float sz		= pFont->GetHeight();
 		pFont->SetHeightI(0.02f);
 		pFont->SetColor	(0xFFFF0000	);
-		pFont->OutSet	(Device.dwWidth/2.0f+(pFont->SizeOf_("--= tune =--")/2.0f),Device.dwHeight/2.0f);
+		pFont->OutSet	(
+			CRenderDevice::GetInstance()->dwWidth/2.0f+(pFont->SizeOf_("--= tune =--")/2.0f), 
+			CRenderDevice::GetInstance()->dwHeight/2.0f
+		);
 		pFont->OutNext	("--= tune =--");
 		pFont->OnRender	();
 		pFont->SetHeight(sz);
@@ -354,7 +357,7 @@ void CStats::Show()
 
 		const char* FPSFormat = "FPS: %0.0f";
 		//If game paused, engine not updating deltaTime variable, so FPS variable is freezed to last value
-		if (Device.Paused())
+		if (CRenderDevice::GetInstance()->Paused())
 		{
 			FPSFormat = "LAST KNOWN FPS: %0.0f";
 		}
@@ -479,7 +482,7 @@ void CStats::Show()
 void	_LogCallback				(LPCSTR string)
 {
 	if (string && '!'==string[0] && ' '==string[1])
-		Device.Statistic->errors.push_back	(shared_str(string));
+		CRenderDevice::GetInstance()->Statistic->errors.push_back	(shared_str(string));
 }
 
 void CStats::OnDeviceCreate			()
@@ -525,7 +528,7 @@ void CStats::OnRender				()
 			const CSound_stats_ext::SItem& item = *_I;
 			if (item._3D)
 			{
-				m_pRender->SetDrawParams(&*Device.m_pRender);
+				m_pRender->SetDrawParams(&*CRenderDevice::GetInstance()->m_pRender);
 				//RCache.set_xform_world(Fidentity);
 				//RCache.set_Shader		(Device.m_SelectionShader);
 				//RCache.set_c			("tfactor",1,1,1,1);

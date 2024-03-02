@@ -636,6 +636,9 @@
     <ClInclude Include="ILoadingScreen.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="xrDeviceInterface.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -982,6 +985,9 @@
     </ClCompile>
     <ClCompile Include="DiscordRichPresense.cpp">
       <Filter>General</Filter>
+    </ClCompile>
+    <ClCompile Include="xrDeviceInterface.cpp">
+      <Filter>Interfaces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

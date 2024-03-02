@@ -25,7 +25,7 @@ static bool g_exclusive	= true;
 static void on_error_dialog			(bool before)
 {
 #ifdef INGAME_EDITOR
-	if (Device.editor())
+	if (CRenderDevice::GetInstance()->editor())
 		return;
 #endif // #ifdef INGAME_EDITOR
 	if (!pInput || !g_exclusive)
@@ -86,18 +86,18 @@ CInput::CInput						( BOOL bExclusive, int deviceForInit)
 	Debug.set_on_dialog				(&on_error_dialog);
 
 #ifdef ENGINE_BUILD
-	Device.seqAppActivate.Add		(this);
-	Device.seqAppDeactivate.Add		(this, REG_PRIORITY_HIGH);
-	Device.seqFrame.Add				(this, REG_PRIORITY_HIGH);
+	CRenderDevice::GetInstance()->seqAppActivate.Add		(this);
+	CRenderDevice::GetInstance()->seqAppDeactivate.Add		(this, REG_PRIORITY_HIGH);
+	CRenderDevice::GetInstance()->seqFrame.Add				(this, REG_PRIORITY_HIGH);
 #endif
 }
 
 CInput::~CInput(void)
 {
 #ifdef ENGINE_BUILD
-	Device.seqFrame.Remove			(this);
-	Device.seqAppDeactivate.Remove	(this);
-	Device.seqAppActivate.Remove	(this);
+	CRenderDevice::GetInstance()->seqFrame.Remove			(this);
+	CRenderDevice::GetInstance()->seqAppDeactivate.Remove	(this);
+	CRenderDevice::GetInstance()->seqAppActivate.Remove	(this);
 #endif
 	//_______________________
 
@@ -134,7 +134,7 @@ HRESULT CInput::CreateInputDevice( LPDIRECTINPUTDEVICE8* device, GUID guidDevice
 	// Set the cooperativity level to let DirectInput know how this device
 	// should interact with the system and with other DirectInput applications.
 #ifdef INGAME_EDITOR
-	if (!Device.editor())
+	if (!CRenderDevice::GetInstance()->editor())
 #endif // #ifdef INGAME_EDITOR
 	{
 		HRESULT	_hr = (*device)->SetCooperativeLevel( RDEVICE.m_hWnd, dwFlags );
@@ -228,7 +228,7 @@ void CInput::KeyUpdate	( )
 	if(b_altF4)					return;
 
 	#ifndef _EDITOR
-   	if(Device.dwPrecacheFrame==0)
+   	if(CRenderDevice::GetInstance()->dwPrecacheFrame==0)
 	#endif
 	{
 
@@ -250,14 +250,14 @@ void CInput::KeyUpdate	( )
 			}
 		}
 
-		for ( i = 0; i < COUNT_KB_BUTTONS; i++ )
+		for (u32 i = 0; i < COUNT_KB_BUTTONS; i++ )
 			if (KBState[i]) 
 				cbStack.back()->IR_OnKeyboardHold( i );
 	}
 
 #ifndef _EDITOR
 	if(b_alt_tab)
-		SendMessage(Device.m_hWnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+		SendMessage(CRenderDevice::GetInstance()->m_hWnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
 #endif
 /*
 #ifndef _EDITOR
@@ -358,7 +358,7 @@ void CInput::MouseUpdate( )
 	};
 
 	#ifndef _EDITOR
-	if(Device.dwPrecacheFrame)
+	if(CRenderDevice::GetInstance()->dwPrecacheFrame)
 		return;
     #endif
 	BOOL				mouse_prev[COUNT_MOUSE_BUTTONS];
@@ -544,7 +544,7 @@ void CInput::acquire				(const bool &exclusive)
 {
 	pKeyboard->SetCooperativeLevel	(
 #ifdef INGAME_EDITOR
-		Device.editor() ? Device.editor()->main_handle() : 
+		CRenderDevice::GetInstance()->editor() ? CRenderDevice::GetInstance()->editor()->main_handle() :
 #endif // #ifdef INGAME_EDITOR
 		RDEVICE.m_hWnd,
 		(exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND
@@ -553,7 +553,7 @@ void CInput::acquire				(const bool &exclusive)
 
 	pMouse->SetCooperativeLevel		(
 #ifdef INGAME_EDITOR
-		Device.editor() ? Device.editor()->main_handle() :
+		CRenderDevice::GetInstance()->editor() ? CRenderDevice::GetInstance()->editor()->main_handle() :
 #endif // #ifdef INGAME_EDITOR
 		RDEVICE.m_hWnd,
 		(exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND | DISCL_NOWINKEY

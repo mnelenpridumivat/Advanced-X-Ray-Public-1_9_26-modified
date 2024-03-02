@@ -10,6 +10,9 @@
 
 
 
+class xrDeviceInterface;
+extern XRAPI_API xrDeviceInterface* Device;
+
 #ifndef _EDITOR
 class IRender_interface;
 extern XRAPI_API IRender_interface*	Render;

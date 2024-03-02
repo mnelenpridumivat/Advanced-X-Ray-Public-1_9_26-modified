@@ -19,7 +19,7 @@ enum ViewPort;
 class dxRenderDeviceRender : public IRenderDeviceRender
 {
 public:
-	static dxRenderDeviceRender& Instance() {  return *((dxRenderDeviceRender*)(&*Device.m_pRender));}
+	static dxRenderDeviceRender& Instance() {  return *((dxRenderDeviceRender*)(&*CRenderDevice::GetInstance()->m_pRender));}
 
 	dxRenderDeviceRender();
 

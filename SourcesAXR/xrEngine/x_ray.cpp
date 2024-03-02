@@ -49,7 +49,7 @@ extern "C"
 
 //---------------------------------------------------------------------
 ENGINE_API CInifile* pGameIni		= NULL;
-XRAPI_API extern EGamePath GCurrentGame;
+//XRAPI_API extern EGamePath GCurrentGame;
 BOOL	g_bIntroFinished			= FALSE;
 extern	void	Intro				( void* fn );
 extern	void	Intro_DSHOW			( void* fn );
@@ -66,8 +66,8 @@ XRCORE_API	u32		build_id;
 #	define NO_MULTI_INSTANCES
 #endif // #ifdef MASTER_GOLD
 
-ENGINE_API bool CallOfPripyatMode = false;
-ENGINE_API bool ClearSkyMode = false;
+//ENGINE_API bool CallOfPripyatMode = false;
+//ENGINE_API bool ClearSkyMode = false;
 ENGINE_API bool bDeveloperMode = false;
 ENGINE_API bool bWinterMode = false;
 ENGINE_API bool bDofWeather = false;
@@ -207,9 +207,9 @@ struct _SoundProcessor	: public pureFrame
 	virtual void	_BCL	OnFrame	( )
 	{
 		//Msg							("------------- sound: %d [%3.2f,%3.2f,%3.2f]",u32(Device.dwFrame),VPUSH(Device.vCameraPosition));
-		Device.Statistic->Sound.Begin();
-		::Sound->update				(Device.vCameraPosition,Device.vCameraDirection,Device.vCameraTop);
-		Device.Statistic->Sound.End	();
+		CRenderDevice::GetInstance()->Statistic->Sound.Begin();
+		::Sound->update				(CRenderDevice::GetInstance()->vCameraPosition, CRenderDevice::GetInstance()->vCameraDirection, CRenderDevice::GetInstance()->vCameraTop);
+		CRenderDevice::GetInstance()->Statistic->Sound.End	();
 	}
 }	SoundProcessor;
 
@@ -231,9 +231,11 @@ ENGINE_API	string_path		g_sLaunchWorkingFolder;
 // startup point
 void InitEngine		()
 {
-	Engine.Initialize			( );
+	//EngineDevice = xr_new<CRenderDevice>();
+	//GameMaterialLibrary = xr_new<CGameMtlLibrary>();
+	//Device = EngineDevice;
 	while (!g_bIntroFinished)	Sleep	(100);
-	Device.Initialize			( );
+	CRenderDevice::GetInstance()->Initialize();
 	CheckCopyProtection			( );
 }
 
@@ -313,7 +315,7 @@ PROTECT_API void InitSettings()
 	Msg("# Developer Mode: %d", bDeveloperMode);
 	Msg("# Winter Mode: %d", bWinterMode);
 
-	if (xr_strcmp("cop", EngineMode) == 0)
+	/*if (xr_strcmp("cop", EngineMode) == 0)
 	{
 		CallOfPripyatMode = true;
 		ClearSkyMode = false;
@@ -322,7 +324,7 @@ PROTECT_API void InitSettings()
 	{
 		CallOfPripyatMode = false;
 		ClearSkyMode = true;
-	}
+	}*/
 }
 PROTECT_API void InitConsole	()
 {
@@ -394,7 +396,7 @@ void destroyConsole	()
 
 void destroyEngine	()
 {
-	Device.Destroy				( );
+	CRenderDevice::GetInstance()->Destroy				( );
 	Engine.Destroy				( );
 }
 
@@ -422,8 +424,8 @@ void Startup()
 
 	// Initialize APP
 //#ifndef DEDICATED_SERVER
-	ShowWindow( Device.m_hWnd , SW_SHOWNORMAL );
-	Device.Create				( );
+	ShowWindow(CRenderDevice::GetInstance()->m_hWnd , SW_SHOWNORMAL );
+	CRenderDevice::GetInstance()->Create				( );
 //#endif
 	LALib.OnCreate				( );
 	pApp						= xr_new<CApplication>	();
@@ -440,7 +442,7 @@ void Startup()
 	// Main cycle
 	CheckCopyProtection			( );
 	Memory.mem_usage();
-	Device.Run					( );
+	CRenderDevice::GetInstance()->Run					( );
 
 	// Destroy APP
 	xr_delete(g_SpatialSpacePhysic);
@@ -1033,14 +1035,14 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance,
 			xr_strcpy( Core.CompName , sizeof( Core.CompName ) , "Computer" );
 	}
 
-	if (ClearSkyMode)
+	/*if (ClearSkyMode)
 	{
 		GCurrentGame = EGamePath::CS_1510;
 	}
 	else if (CallOfPripyatMode)
 	{
 		GCurrentGame = EGamePath::COP_1602;
-	}
+	}*/
 
 #ifndef DEDICATED_SERVER
 	{
@@ -1192,13 +1194,13 @@ LPCSTR _GetFontTexName (LPCSTR section)
 	int idx			= def_idx;
 
 #if 0
-	u32 w = Device.dwWidth;
+	u32 w = CRenderDevice::GetInstance()->dwWidth;
 
 	if(w<=800)		idx = 0;
 	else if(w<=1280)idx = 1;
 	else 			idx = 2;
 #else
-	u32 h = Device.dwHeight;
+	u32 h = CRenderDevice::GetInstance()->dwHeight;
 	
 	if		(h<=600)	idx = 0;
 	else if (h<1024)	idx = 1;
@@ -1258,10 +1260,10 @@ CApplication::CApplication()
 	pFontSystem					= NULL;
 
 	// Register us
-	Device.seqFrame.Add			(this, REG_PRIORITY_HIGH+1000);
+	CRenderDevice::GetInstance()->seqFrame.Add			(this, REG_PRIORITY_HIGH+1000);
 	
-	if (psDeviceFlags.test(mtSound))	Device.seqFrameMT.Add		(&SoundProcessor);
-	else								Device.seqFrame.Add			(&SoundProcessor);
+	if (psDeviceFlags.test(mtSound))	CRenderDevice::GetInstance()->seqFrameMT.Add		(&SoundProcessor);
+	else								CRenderDevice::GetInstance()->seqFrame.Add			(&SoundProcessor);
 
 	Console->Show				( );
 
@@ -1276,9 +1278,9 @@ CApplication::~CApplication()
 	// font
 	xr_delete					( pFontSystem		);
 
-	Device.seqFrameMT.Remove	(&SoundProcessor);
-	Device.seqFrame.Remove		(&SoundProcessor);
-	Device.seqFrame.Remove		(this);
+	CRenderDevice::GetInstance()->seqFrameMT.Remove	(&SoundProcessor);
+	CRenderDevice::GetInstance()->seqFrame.Remove		(&SoundProcessor);
+	CRenderDevice::GetInstance()->seqFrame.Remove		(this);
 
 
 	// events
@@ -1291,7 +1293,7 @@ CApplication::~CApplication()
 	
 }
 
-extern CRenderDevice Device;
+//extern CRenderDevice Device;
 
 void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 {
@@ -1380,7 +1382,7 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 
 		Console->Execute("main_menu off");
 		Console->Hide();
-		Device.Reset					(false);
+		CRenderDevice::GetInstance()->Reset					(false);
 
 		g_pGameLevel					= (IGame_Level*)NEW_INSTANCE(CLSID_GAME_LEVEL);
 		shared_str server_options		= g_pGameLevel->OpenDemoFile(demo_file);
@@ -1452,7 +1454,7 @@ PROTECT_API void CApplication::LoadDraw		()
 {
 	if(g_appLoaded)				return;
 
-	Device.dwFrame				+= 1;
+	CRenderDevice::GetInstance()->dwFrame				+= 1;
 
 
 	Render->firstViewPort = MAIN_VIEWPORT;
@@ -1460,14 +1462,14 @@ PROTECT_API void CApplication::LoadDraw		()
 	Render->currentViewPort = MAIN_VIEWPORT;
 	Render->needPresenting = true;
 
-	if(!Device.Begin () )		return;
+	if(!CRenderDevice::GetInstance()->Begin () )		return;
 
 	if	(g_dedicated_server)
 		Console->OnRender			();
 	else
 		load_draw_internal			();
 
-	Device.End					();
+	CRenderDevice::GetInstance()->End					();
 	CheckCopyProtection			();
 }
 
@@ -1479,7 +1481,7 @@ void CApplication::LoadForceFinish()
 
 void CApplication::SetLoadStageTitle(const char* _ls_title)
 {
-	if (((load_screen_renderer.b_need_user_input && ClearSkyMode) || ps_rs_loading_stages) && loadingScreen)
+	if ((/*(load_screen_renderer.b_need_user_input && ClearSkyMode) || */ps_rs_loading_stages) && loadingScreen)
 		loadingScreen->SetStageTitle(_ls_title);
 }
 

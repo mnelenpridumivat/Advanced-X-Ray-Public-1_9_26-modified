@@ -5,15 +5,15 @@
 // DirectX headers
 #include <d3d9.h>
 #include "directx/d3dx9.h"
-#include "../../xrRender/Private/xrD3dDefs.h"
-#include "../xrCore/Utils.hpp"
+#include "../../Layers/xrRender/xrD3dDefs.h"
+#include "../../xrCore/Utils.hpp"
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 // #include <dsound.h>
 
-#include "../xrEngine/stdafx.h"
-#include "../xrEngine/xrDeviceInterface.h"
+#include "../../xrEngine/stdafx.h"
+#include "../../xrEngine/xrDeviceInterface.h"
 #include "../xrEProps/stdafx.h"
 #include "../../xrCDB/xrCDB.h"
 #include "../../xrSound/Sound.h"

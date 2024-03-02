@@ -19,8 +19,8 @@ namespace editor {
 
 inline editor::ide&	ide	()
 {
-	VERIFY	(Device.editor());
-	return	(*Device.editor());
+	VERIFY	(CRenderDevice::GetInstance()->editor());
+	return	(*CRenderDevice::GetInstance()->editor());
 }
 
 #endif // #ifdef INGAME_EDITOR

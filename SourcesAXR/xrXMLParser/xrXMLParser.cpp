@@ -86,14 +86,14 @@ void CXml::Load(LPCSTR path, LPCSTR  xml_filename)
 	{
 		string1024			str;
 		xr_sprintf				(str, "XML file:%s value:%s errDescr:%s",m_xml_file_name,m_Doc.Value(), m_Doc.ErrorDesc());
-		if (xrGameManager::GetGame() == EGame::COP)
-		{
+		/*if (xrGameManager::GetGame() == EGame::COP)
+		{*/
 			R_ASSERT2(false, str);
-		}
+		/*}
 		else
 		{
 			Msg(str);
-		}
+		}*/
 	} 
 
 	m_root					= m_Doc.FirstChildElement();

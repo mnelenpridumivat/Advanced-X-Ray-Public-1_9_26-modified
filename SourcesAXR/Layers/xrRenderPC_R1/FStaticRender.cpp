@@ -71,10 +71,10 @@ void					CRender::create					()
 
 	if (strstr(Core.Params, "-nodistort"))		o.distortion = FALSE;
 
-	if (xrGameManager::GetGame() == EGame::CS)
+	/*if (xrGameManager::GetGame() == EGame::CS)
 	{
 		o.distortion = FALSE;
-	}
+	}*/
 
 	Msg				("* distortion: %s, dev(%d),need(%d)",o.distortion?"used":"unavailable",v_dev,v_need);
 
@@ -82,10 +82,10 @@ void					CRender::create					()
 	if ( v_dev >= v_need )						o.color_mapping = TRUE;
 	else										o.color_mapping = FALSE;
 
-	if (xrGameManager::GetGame() == EGame::CS)
+	/*if (xrGameManager::GetGame() == EGame::CS)
 	{
 		o.color_mapping = FALSE;
-	}
+	}*/
 
 	Msg				("* color_mapping: %s, dev(%d),need(%d)",o.color_mapping?"used":"unavailable",v_dev,v_need);
 

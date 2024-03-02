@@ -784,6 +784,7 @@
     <ClInclude Include="trivial_encryptor.h" />
     <ClInclude Include="vis_common.h" />
     <ClInclude Include="WaveForm.h" />
+    <ClInclude Include="xrDeviceInterface.h" />
     <ClInclude Include="xrHemisphere.h" />
     <ClInclude Include="xrImage_Resampler.h" />
     <ClInclude Include="xrLevel.h" />
@@ -945,6 +946,7 @@
     <ClCompile Include="Text_Console_WndProc.cpp" />
     <ClCompile Include="thunderbolt.cpp" />
     <ClCompile Include="tntQAVI.cpp" />
+    <ClCompile Include="xrDeviceInterface.cpp" />
     <ClCompile Include="xrHemisphere.cpp" />
     <ClCompile Include="xrImage_Resampler.cpp" />
     <ClCompile Include="xrSASH.cpp" />

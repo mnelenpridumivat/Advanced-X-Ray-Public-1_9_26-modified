@@ -64,7 +64,7 @@ void xrDiscordPresense::SetStatus()
 		presenseInfo.smallImageKey = "advanced_xray";
 	}
 
-	if (CallOfPripyatMode)
+	/*if (CallOfPripyatMode)
 	{
 		presenseInfo.largeImageText = "Режим Advanced X-Ray: Зов Припяти";
 	}
@@ -73,9 +73,9 @@ void xrDiscordPresense::SetStatus()
 		presenseInfo.largeImageText = "Режим Advanced X-Ray: Чистое Небо";
 	}
 	else
-	{
+	{*/
 		presenseInfo.largeImageText = "Advanced X-Ray Engine";
-	}
+	//}
 
 	if (g_current_renderer == 1)
 	{

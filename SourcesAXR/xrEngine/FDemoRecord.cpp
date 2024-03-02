@@ -29,22 +29,26 @@ void setup_lm_screenshot_matrices()
 
 	// build camera matrix
 	Fbox bb								= curr_lm_fbox;
-	bb.getcenter						(Device.vCameraPosition);
+	bb.getcenter						(CRenderDevice::GetInstance()->vCameraPosition);
 
-	Device.vCameraDirection.set			( 0.f,-1.f,0.f	);
-	Device.vCameraTop.set				( 0.f,0.f,1.f	);
-	Device.vCameraRight.set				( 1.f,0.f,0.f	);
-	Device.mView.build_camera_dir		(Device.vCameraPosition,Device.vCameraDirection,Device.vCameraTop);
+	CRenderDevice::GetInstance()->vCameraDirection.set			( 0.f,-1.f,0.f	);
+	CRenderDevice::GetInstance()->vCameraTop.set				( 0.f,0.f,1.f	);
+	CRenderDevice::GetInstance()->vCameraRight.set				( 1.f,0.f,0.f	);
+	CRenderDevice::GetInstance()->mView.build_camera_dir		(
+		CRenderDevice::GetInstance()->vCameraPosition, 
+		CRenderDevice::GetInstance()->vCameraDirection, 
+		CRenderDevice::GetInstance()->vCameraTop
+	);
 
-	bb.xform					(Device.mView);
+	bb.xform					(CRenderDevice::GetInstance()->mView);
 	// build project matrix
-	Device.mProject.build_projection_ortho(	bb.max.x-bb.min.x,
+	CRenderDevice::GetInstance()->mProject.build_projection_ortho(	bb.max.x-bb.min.x,
 											bb.max.y-bb.min.y,
 											bb.min.z,
 											bb.max.z);
 
-	Device.m_bMakeLevelMap = true;
-	Device.curr_lm_fbox = curr_lm_fbox;
+	CRenderDevice::GetInstance()->m_bMakeLevelMap = true;
+	CRenderDevice::GetInstance()->curr_lm_fbox = curr_lm_fbox;
 }
 
 Fbox get_level_screenshot_bound()
@@ -81,7 +85,7 @@ CDemoRecord::CDemoRecord(const char *name, float life_time) : CEffectorCam(cefDe
 	{
 		g_position.set_position  = false;
 		IR_Capture		();	// capture input
-		m_Camera.invert	(Device.mView);
+		m_Camera.invert	(CRenderDevice::GetInstance()->mView);
 
 		// parse yaw
 		Fvector& dir	= m_Camera.k;
@@ -129,7 +133,7 @@ CDemoRecord::~CDemoRecord()
 
 	g_bDisableRedText	= stored_red_text;
 
-	Device.seqRender.Remove		( this		);
+	CRenderDevice::GetInstance()->seqRender.Remove		( this		);
 }
 
 //								+X,				-X,				+Y,				-Y,			+Z,				-Z
@@ -198,7 +202,7 @@ void CDemoRecord::MakeLevelMapProcess()
 			psDeviceFlags.zero	();
 			psDeviceFlags.set	(rsClearBB|rsFullscreen|rsDrawStatic,TRUE);
 			if (!psDeviceFlags.equal(s_dev_flags,rsFullscreen))
-				Device.Reset();
+				CRenderDevice::GetInstance()->Reset();
 
 		}break;
 
@@ -232,9 +236,9 @@ void CDemoRecord::MakeLevelMapProcess()
 
 				BOOL bDevReset				= !psDeviceFlags.equal(s_dev_flags,rsFullscreen);
 				psDeviceFlags				= s_dev_flags;
-				if (bDevReset)				Device.Reset();
+				if (bDevReset)				CRenderDevice::GetInstance()->Reset();
 				m_bMakeLevelMap				= FALSE;
-				Device.m_bMakeLevelMap		= FALSE;
+				CRenderDevice::GetInstance()->m_bMakeLevelMap		= FALSE;
 				m_iLMScreenshotFragment		= -1;
 			}
 		}break;
@@ -347,8 +351,8 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 			ang_speed=m_fAngSpeed3;
 		}
 		
-		m_vT.mul				(m_vVelocity, Device.fTimeDelta * speed);
-		m_vR.mul				(m_vAngularVelocity, Device.fTimeDelta * ang_speed);
+		m_vT.mul				(m_vVelocity, CRenderDevice::GetInstance()->fTimeDelta * speed);
+		m_vR.mul				(m_vAngularVelocity, CRenderDevice::GetInstance()->fTimeDelta * ang_speed);
 
 		m_HPB.x -= m_vR.y;
 		m_HPB.y -= m_vR.x;
@@ -385,7 +389,7 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 		info.d.set(m_Camera.k);
 		info.p.set(m_Camera.c);
 
-		fLifeTime-=Device.fTimeDelta;
+		fLifeTime-= CRenderDevice::GetInstance()->fTimeDelta;
 
 		m_vT.set(0,0,0);
 		m_vR.set(0,0,0);
@@ -423,13 +427,13 @@ void CDemoRecord::IR_OnKeyboardPress	(int dik)
 	}
 
 	if	(dik == DIK_PAUSE)		
-		GAME_PAUSE(!Device.Paused(), TRUE, TRUE, "demo_record");
+		GAME_PAUSE(!CRenderDevice::GetInstance()->Paused(), TRUE, TRUE, "demo_record");
 }
 
 static void update_whith_timescale( Fvector &v, const Fvector &v_delta )
 {
-	VERIFY(!fis_zero(Device.time_factor()));
-	float scale = 1.f/Device.time_factor();
+	VERIFY(!fis_zero(CRenderDevice::GetInstance()->time_factor()));
+	float scale = 1.f/ CRenderDevice::GetInstance()->time_factor();
 	v.mad( v, v_delta, scale );
 }
 

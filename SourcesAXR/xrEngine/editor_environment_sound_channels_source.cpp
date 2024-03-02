@@ -23,7 +23,7 @@ source::source				(shared_str const& source) :
 
 source::~source				()
 {
-	if (!Device.editor())
+	if (!CRenderDevice::GetInstance()->editor())
 		return;
 
 	::ide().destroy		(m_property_holder);
