@@ -16,7 +16,8 @@
 #include <string.h>
 
 #include "platform.h"
-#include <vorbis/vorbisenc.h>
+#include <../../../SDK/include/vorbis/vorbisenc.h>
+//#include <vorbis/vorbisenc.h>
 #include "encode.h"
 // #include "i18n.h"
 
