@@ -12,12 +12,12 @@ void	r_pixel_calculator::begin	()
 	RCache.set_RT	(rt->pRT);
 	RCache.set_ZB	(zb);
 
-	R_ASSERT		(Device.Begin());
+	R_ASSERT		(CRenderDevice::GetInstance()->Begin());
 }
 
 void	r_pixel_calculator::end		()	
 {
-	Device.End		();
+	CRenderDevice::GetInstance()->End		();
 
 	RCache.set_RT	(HW.pBaseRT);
 	RCache.set_ZB	(HW.pBaseZB);
@@ -51,7 +51,7 @@ r_aabb_ssa		r_pixel_calculator::calculate	(dxRender_Visual* V)	{
 		RCache.set_xform_project	(mProject);
 
 		// render-0
-		Device.Clear				();	// clear-ZB
+		CRenderDevice::GetInstance()->Clear				();	// clear-ZB
 		RCache.set_Shader			(V->shader);
 		V->Render					(1.f);
 

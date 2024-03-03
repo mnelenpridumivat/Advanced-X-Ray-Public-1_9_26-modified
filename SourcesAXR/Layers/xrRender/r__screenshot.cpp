@@ -516,7 +516,7 @@ void CRender::ScreenshotAsyncEnd(CMemoryWriter &memory_writer)
 	{
 
 		u32* pPixel		= (u32*)MappedData.pData;
-		u32* pEnd		= pPixel+(Device.dwWidth*Device.dwHeight);
+		u32* pEnd		= pPixel+(CRenderDevice::GetInstance()->dwWidth* CRenderDevice::GetInstance()->dwHeight);
 
 		//	Kill alpha and swap r and b.
 		for (;pPixel!=pEnd; pPixel++)	
@@ -529,9 +529,9 @@ void CRender::ScreenshotAsyncEnd(CMemoryWriter &memory_writer)
 				);
 		}
 
-		memory_writer.w( &Device.dwWidth, sizeof(Device.dwWidth) );
-		memory_writer.w( &Device.dwHeight, sizeof(Device.dwHeight) );
-		memory_writer.w( MappedData.pData, (Device.dwWidth*Device.dwHeight)*4 );
+		memory_writer.w( &CRenderDevice::GetInstance()->dwWidth, sizeof(CRenderDevice::GetInstance()->dwWidth) );
+		memory_writer.w( &CRenderDevice::GetInstance()->dwHeight, sizeof(CRenderDevice::GetInstance()->dwHeight) );
+		memory_writer.w( MappedData.pData, (CRenderDevice::GetInstance()->dwWidth* CRenderDevice::GetInstance()->dwHeight)*4 );
 	}
 
 	HW.pContext->Unmap(pTex, 0);

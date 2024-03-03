@@ -132,8 +132,8 @@ void	CRenderTarget::u_stencil_optimize	(eStencilOptimizeMode eSOM)
 	VERIFY	(RImplementation.o.nvstencil);
 	//RCache.set_ColorWriteEnable	(FALSE);
 	u32		Offset;
-	float	_w					= float(Device.dwWidth);
-	float	_h					= float(Device.dwHeight);
+	float	_w					= float(CRenderDevice::GetInstance()->dwWidth);
+	float	_h					= float(CRenderDevice::GetInstance()->dwHeight);
 	u32		C					= color_rgba	(255,255,255,255);
 	float	eps					= 0;
 	float	_dw					= 0.5f;
@@ -196,8 +196,8 @@ void	CRenderTarget::u_compute_texgen_jitter	(Fmatrix&		m_Texgen_J)
 	m_Texgen_J.mul	(m_TexelAdjust,RCache.xforms.m_wvp);
 
 	// rescale - tile it
-	float	scale_X			= float(Device.dwWidth)	/ float(TEX_jitter);
-	float	scale_Y			= float(Device.dwHeight)/ float(TEX_jitter);
+	float	scale_X			= float(CRenderDevice::GetInstance()->dwWidth)	/ float(TEX_jitter);
+	float	scale_Y			= float(CRenderDevice::GetInstance()->dwHeight)/ float(TEX_jitter);
 	//float	offset			= (.5f / float(TEX_jitter));
 	m_TexelAdjust.scale			(scale_X,	scale_Y,1.f	);
 	//m_TexelAdjust.translate_over(offset,	offset,	0	);
@@ -415,11 +415,11 @@ CRenderTarget::CRenderTarget		()
 	}
 	//	NORMAL
 	{
-		u32		w=Device.dwWidth, h=Device.dwHeight;
+		u32		w= CRenderDevice::GetInstance()->dwWidth, h= CRenderDevice::GetInstance()->dwHeight;
 
 		xr_vector<RtCreationParams> vp_params_main_secondary;
 		vp_params_main_secondary.push_back(RtCreationParams(w, h, MAIN_VIEWPORT));
-		vp_params_main_secondary.push_back(RtCreationParams(Device.m_SecondViewport.screenWidth, Device.m_SecondViewport.screenHeight, SECONDARY_WEAPON_SCOPE));
+		vp_params_main_secondary.push_back(RtCreationParams(CRenderDevice::GetInstance()->m_SecondViewport.screenWidth, CRenderDevice::GetInstance()->m_SecondViewport.screenHeight, SECONDARY_WEAPON_SCOPE));
 
 		rt_Position.create(r2_RT_P, vp_params_main_secondary, D3DFMT_A16B16G16R16F, SampleCount);
 
@@ -464,7 +464,7 @@ CRenderTarget::CRenderTarget		()
 		rt_Generic_0.create		(r2_RT_generic0, vp_params_main_secondary,D3DFMT_A8R8G8B8, 1		);
 		rt_Generic_1.create		(r2_RT_generic1, vp_params_main_secondary,D3DFMT_A8R8G8B8, 1		);
 		rt_Generic.create		(r2_RT_generic,	 vp_params_main_secondary,D3DFMT_A8R8G8B8, 1		);
-		rt_secondVP.create		(r2_RT_secondVP, RtCreationParams(Device.m_SecondViewport.screenWidth, Device.m_SecondViewport.screenHeight, MAIN_VIEWPORT), D3DFMT_A8R8G8B8, 1); //--#SM+#-- +SecondVP+
+		rt_secondVP.create		(r2_RT_secondVP, RtCreationParams(CRenderDevice::GetInstance()->m_SecondViewport.screenWidth, CRenderDevice::GetInstance()->m_SecondViewport.screenHeight, MAIN_VIEWPORT), D3DFMT_A8R8G8B8, 1); //--#SM+#-- +SecondVP+
 
 		rt_dof.create			(r2_RT_dof, vp_params_main_secondary, D3DFMT_A8R8G8B8			);
 		rt_secondVP.create		(r2_RT_secondVP, vp_params_main_secondary, D3DFMT_A8R8G8B8, 1	); //--#SM+#-- +SecondVP+
@@ -736,8 +736,8 @@ CRenderTarget::CRenderTarget		()
 	}
 
 	// STCoP Engine
-	rt_temp.create(r2_RT_temp, RtCreationParams(Device.dwWidth, Device.dwHeight, MAIN_VIEWPORT), RtCreationParams(Device.m_SecondViewport.screenWidth, Device.m_SecondViewport.screenHeight, SECONDARY_WEAPON_SCOPE), D3DFORMAT::D3DFMT_A16B16G16R16, SampleCount);
-	rt_temp_without_samples.create(r2_RT_temp_without_samples, RtCreationParams(Device.dwWidth, Device.dwHeight, MAIN_VIEWPORT), RtCreationParams(Device.m_SecondViewport.screenWidth, Device.m_SecondViewport.screenHeight, SECONDARY_WEAPON_SCOPE), D3DFORMAT::D3DFMT_A16B16G16R16);
+	rt_temp.create(r2_RT_temp, RtCreationParams(CRenderDevice::GetInstance()->dwWidth, CRenderDevice::GetInstance()->dwHeight, MAIN_VIEWPORT), RtCreationParams(CRenderDevice::GetInstance()->m_SecondViewport.screenWidth, CRenderDevice::GetInstance()->m_SecondViewport.screenHeight, SECONDARY_WEAPON_SCOPE), D3DFORMAT::D3DFMT_A16B16G16R16, SampleCount);
+	rt_temp_without_samples.create(r2_RT_temp_without_samples, RtCreationParams(CRenderDevice::GetInstance()->dwWidth, CRenderDevice::GetInstance()->dwHeight, MAIN_VIEWPORT), RtCreationParams(CRenderDevice::GetInstance()->m_SecondViewport.screenWidth, CRenderDevice::GetInstance()->m_SecondViewport.screenHeight, SECONDARY_WEAPON_SCOPE), D3DFORMAT::D3DFMT_A16B16G16R16);
 
 	// TONEMAP
 	{
@@ -759,7 +759,7 @@ CRenderTarget::CRenderTarget		()
 			FLOAT ColorRGBA[4] = { 127.0f/255.0f, 127.0f/255.0f, 127.0f/255.0f, 127.0f/255.0f};
 			HW.pContext->ClearRenderTargetView(rt_LUM_pool[it]->pRT, ColorRGBA);
 		}
-		u_setrt						( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
+		u_setrt						(CRenderDevice::GetInstance()->dwWidth, CRenderDevice::GetInstance()->dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
 	}
 
 	// HBAO
@@ -769,13 +769,13 @@ CRenderTarget::CRenderTarget		()
 		u32		h = 0;
 		if (RImplementation.o.ssao_half_data)
 		{
-			w = Device.dwWidth / 2;
-			h = Device.dwHeight / 2;
+			w = CRenderDevice::GetInstance()->dwWidth / 2;
+			h = CRenderDevice::GetInstance()->dwHeight / 2;
 		}
 		else
 		{
-			w = Device.dwWidth;
-			h = Device.dwHeight;
+			w = CRenderDevice::GetInstance()->dwWidth;
+			h = CRenderDevice::GetInstance()->dwHeight;
 		}
 
 		D3DFORMAT	fmt = HW.Caps.id_vendor==0x10DE?D3DFMT_R32F:D3DFMT_R16F;
@@ -789,8 +789,8 @@ CRenderTarget::CRenderTarget		()
     const bool ssao_hdao_ultra = RImplementation.o.ssao_hdao && RImplementation.o.ssao_ultra;
     if (ssao_blur_on || ssao_hdao_ultra)
     {
-        const auto w = Device.dwWidth, h = Device.dwHeight;
-		rt_ssao_temp.create(r2_RT_ssao_temp, RtCreationParams(w, h, MAIN_VIEWPORT), RtCreationParams(Device.m_SecondViewport.screenWidth, Device.m_SecondViewport.screenHeight, SECONDARY_WEAPON_SCOPE), D3DFMT_R16F, 1, true);
+        const auto w = CRenderDevice::GetInstance()->dwWidth, h = CRenderDevice::GetInstance()->dwHeight;
+		rt_ssao_temp.create(r2_RT_ssao_temp, RtCreationParams(w, h, MAIN_VIEWPORT), RtCreationParams(CRenderDevice::GetInstance()->m_SecondViewport.screenWidth, CRenderDevice::GetInstance()->m_SecondViewport.screenHeight, SECONDARY_WEAPON_SCOPE), D3DFMT_R16F, 1, true);
 		
         if (ssao_hdao_ultra)
         {
@@ -854,8 +854,8 @@ CRenderTarget::CRenderTarget		()
 		// Testure for async sreenshots
 		{
 			D3D_TEXTURE2D_DESC	desc;
-			desc.Width = Device.dwWidth;
-			desc.Height = Device.dwHeight;
+			desc.Width = CRenderDevice::GetInstance()->dwWidth;
+			desc.Height = CRenderDevice::GetInstance()->dwHeight;
 			desc.MipLevels = 1;
 			desc.ArraySize = 1;
 			desc.SampleDesc.Count = 1;
@@ -1054,7 +1054,7 @@ CRenderTarget::CRenderTarget		()
 			descHBAO.CPUAccessFlags = 0;
 			descHBAO.MiscFlags = 0;
 
-			it = TEX_jitter_count-1;
+			int it = TEX_jitter_count-1;
 			subData[it].pSysMem = tempDataHBAO;
 			subData[it].SysMemPitch = descHBAO.Width*sampleSize * sizeof(float);
 
@@ -1119,8 +1119,8 @@ CRenderTarget::CRenderTarget		()
 	g_menu.create						(FVF::F_TL,RCache.Vertex.Buffer(),RCache.QuadIB);
 
 	// 
-	dwWidth		= Device.dwWidth;
-	dwHeight	= Device.dwHeight;
+	dwWidth		= CRenderDevice::GetInstance()->dwWidth;
+	dwHeight	= CRenderDevice::GetInstance()->dwHeight;
 }
 
 CRenderTarget::~CRenderTarget	()
@@ -1246,8 +1246,8 @@ void CRenderTarget::reset_light_marker( bool bResetStencil)
 	if (bResetStencil)
 	{
 		u32		Offset;
-		float	_w					= float(Device.dwWidth);
-		float	_h					= float(Device.dwHeight);
+		float	_w					= float(CRenderDevice::GetInstance()->dwWidth);
+		float	_h					= float(CRenderDevice::GetInstance()->dwHeight);
 		u32		C					= color_rgba	(255,255,255,255);
 		float	eps					= 0;
 		float	_dw					= 0.5f;

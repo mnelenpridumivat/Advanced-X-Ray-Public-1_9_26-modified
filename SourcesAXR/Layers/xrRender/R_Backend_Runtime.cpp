@@ -51,7 +51,7 @@ void CBackend::OnFrameBegin	()
 		HW.SwitchVP(RImplementation.currentViewPort);
 		RImplementation.Target->SwitchViewPort(RImplementation.currentViewPort);
 		// Below are just in case
-		RImplementation.Target->u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB); // Set up HW base as RT and ZB
+		RImplementation.Target->u_setrt(CRenderDevice::GetInstance()->dwWidth, CRenderDevice::GetInstance()->dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB); // Set up HW base as RT and ZB
 
 		//	DX9 sets base rt nd base zb by default
 		RImplementation.rmNormal();

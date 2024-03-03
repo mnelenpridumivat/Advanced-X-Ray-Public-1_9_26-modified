@@ -8,8 +8,8 @@
 
 IC	bool	pred_sp_sort	(ISpatial*	_1, ISpatial* _2)
 {
-	float	d1		= _1->spatial.sphere.P.distance_to_sqr	(Device.vCameraPosition);
-	float	d2		= _2->spatial.sphere.P.distance_to_sqr	(Device.vCameraPosition);
+	float	d1		= _1->spatial.sphere.P.distance_to_sqr	(CRenderDevice::GetInstance()->vCameraPosition);
+	float	d2		= _2->spatial.sphere.P.distance_to_sqr	(CRenderDevice::GetInstance()->vCameraPosition);
 	return	d1<d2	;
 }
 
@@ -68,7 +68,7 @@ void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 			(
 			pLastSector,
 			ViewBase,
-			Device.vCameraPosition,
+				CRenderDevice::GetInstance()->vCameraPosition,
 			m_ViewProjection,
 			CPortalTraverser::VQ_HOM + CPortalTraverser::VQ_SSA + CPortalTraverser::VQ_FADE
 			//. disabled scissoring (HW.Caps.bScissor?CPortalTraverser::VQ_SCISSOR:0)	// generate scissoring info
@@ -167,15 +167,15 @@ void CRender::render_menu	()
 	}
 
 	// Actual Display
-	Target->u_setrt					( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
+	Target->u_setrt					(CRenderDevice::GetInstance()->dwWidth, CRenderDevice::GetInstance()->dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
 	RCache.set_Shader				( Target->s_menu	);
 	RCache.set_Geometry				( Target->g_menu	);
 
 	Fvector2						p0,p1;
 	u32								Offset;
 	u32		C						= color_rgba	(255,255,255,255);
-	float	_w						= float(Device.dwWidth);
-	float	_h						= float(Device.dwHeight);
+	float	_w						= float(CRenderDevice::GetInstance()->dwWidth);
+	float	_h						= float(CRenderDevice::GetInstance()->dwHeight);
 	float	d_Z						= EPS_S;
 	float	d_W						= 1.f;
 	p0.set							(.5f/_w, .5f/_h);
@@ -200,7 +200,7 @@ void CRender::Render		()
 
 	Target->needClearAccumulator = true;
 
-	Target->u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB); // Set up HW base as RT and ZB
+	Target->u_setrt(CRenderDevice::GetInstance()->dwWidth, CRenderDevice::GetInstance()->dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB); // Set up HW base as RT and ZB
 
 	rmNormal();
 
@@ -216,7 +216,7 @@ void CRender::Render		()
 
 	if (!(g_pGameLevel && g_hud) || is_blocked)
 	{
-		Target->u_setrt				( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
+		Target->u_setrt				(CRenderDevice::GetInstance()->dwWidth, CRenderDevice::GetInstance()->dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
 		return;
 	}
 
@@ -236,7 +236,7 @@ void CRender::Render		()
 	// Msg						("sstatic: %s, sun: %s",o.sunstatic?;"true":"false", bSUN?"true":"false");
 
 	// HOM
-	ViewBase.CreateFromMatrix					(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
+	ViewBase.CreateFromMatrix					(CRenderDevice::GetInstance()->mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 	View										= 0;
 	if (!ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))	{
 		HOM.Enable									();
@@ -247,20 +247,20 @@ void CRender::Render		()
 	if (ps_r2_ls_flags.test(R2FLAG_ZFILL))		
 	{
 		PIX_EVENT(DEFER_Z_FILL);
-		Device.Statistic->RenderCALC.Begin			();
+		CRenderDevice::GetInstance()->Statistic->RenderCALC.Begin			();
 		float		z_distance	= ps_r2_zfill		;
 		Fmatrix		m_zfill, m_project				;
 		m_project.build_projection	(
-			deg2rad(Device.fFOV/* *Device.fASPECT*/), 
-			Device.fASPECT, VIEWPORT_NEAR, 
+			deg2rad(CRenderDevice::GetInstance()->fFOV/* *Device.fASPECT*/),
+			CRenderDevice::GetInstance()->fASPECT, VIEWPORT_NEAR,
 			z_distance * g_pGamePersistent->Environment().CurrentEnv->far_plane);
-		m_zfill.mul	(m_project,Device.mView);
+		m_zfill.mul	(m_project, CRenderDevice::GetInstance()->mView);
 		r_pmask										(true,false);	// enable priority "0"
 		set_Recorder								(NULL)		;
 		phase										= PHASE_SMAP;
 		render_main									(m_zfill,false)	;
 		r_pmask										(true,false);	// disable priority "1"
-		Device.Statistic->RenderCALC.End				( )			;
+		CRenderDevice::GetInstance()->Statistic->RenderCALC.End				( )			;
 
 		// flush
 		Target->phase_scene_prepare					();
@@ -280,7 +280,7 @@ void CRender::Render		()
 
 	//*******
 	// Sync point
-	Device.Statistic->RenderDUMP_Wait_S.Begin	();
+	CRenderDevice::GetInstance()->Statistic->RenderDUMP_Wait_S.Begin	();
 
 	if (currentViewPort == MAIN_VIEWPORT)
 	{
@@ -299,19 +299,19 @@ void CRender::Render		()
 		q_sync_count = (q_sync_count + 1) % HW.Caps.iGPUNum;
 		CHK_DX(EndQuery(q_sync_point[q_sync_count]));
 	}
-	Device.Statistic->RenderDUMP_Wait_S.End		();
+	CRenderDevice::GetInstance()->Statistic->RenderDUMP_Wait_S.End		();
 
 	//******* Main calc - DEFERRER RENDERER
 	// Main calc
-	Device.Statistic->RenderCALC.Begin			();
+	CRenderDevice::GetInstance()->Statistic->RenderCALC.Begin			();
 	r_pmask										(true,false,true);	// enable priority "0",+ capture wmarks
 	if (bSUN)									set_Recorder	(&main_coarse_structure);
 	else										set_Recorder	(NULL);
 	phase										= PHASE_NORMAL;
-	render_main									(Device.mFullTransform,true);
+	render_main									(CRenderDevice::GetInstance()->mFullTransform,true);
 	set_Recorder								(NULL);
 	r_pmask										(true,false);	// disable priority "1"
-	Device.Statistic->RenderCALC.End			();
+	CRenderDevice::GetInstance()->Statistic->RenderCALC.End			();
 
 	BOOL	split_the_scene_to_minimize_wait		= FALSE;
 	if (ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE))	split_the_scene_to_minimize_wait=TRUE;
@@ -457,8 +457,8 @@ void CRender::Render		()
 		PIX_EVENT(DEFER_SELF_ILLUM);
 		Target->phase_accumulator			();
 		// Render emissive geometry, stencil - write 0x0 at pixel pos
-		RCache.set_xform_project			(Device.mProject); 
-		RCache.set_xform_view				(Device.mView);
+		RCache.set_xform_project			(CRenderDevice::GetInstance()->mProject);
+		RCache.set_xform_view				(CRenderDevice::GetInstance()->mView);
 		// Stencil - write 0x1 at pixel pos - 
       if( !RImplementation.o.dx10_msaa )
 		   RCache.set_Stencil					( TRUE,D3DCMP_ALWAYS,0x01,0xff,0xff,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
@@ -509,7 +509,7 @@ void CRender::render_forward				()
 		// level
 		r_pmask									(false,true);			// enable priority "1"
 		phase									= PHASE_NORMAL;
-		render_main								(Device.mFullTransform,false);//
+		render_main								(CRenderDevice::GetInstance()->mFullTransform,false);//
 		//	Igor: we don't want to render old lods on next frame.
 		mapLOD.clear							();
 		r_dsgraph_render_graph					(1)	;					// normal level, secondary priority
@@ -546,9 +546,9 @@ void CRender::AfterWorldRender()
 
 		D3D11_BOX sourceRegion;
 		sourceRegion.left = 0;
-		sourceRegion.right = Device.m_SecondViewport.screenWidth;
+		sourceRegion.right = CRenderDevice::GetInstance()->m_SecondViewport.screenWidth;
 		sourceRegion.top = 0;
-		sourceRegion.bottom = Device.m_SecondViewport.screenHeight;
+		sourceRegion.bottom = CRenderDevice::GetInstance()->m_SecondViewport.screenHeight;
 		sourceRegion.front = 0;
 		sourceRegion.back = 1;
 

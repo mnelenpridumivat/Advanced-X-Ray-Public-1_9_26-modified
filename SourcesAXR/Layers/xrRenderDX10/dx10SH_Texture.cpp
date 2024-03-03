@@ -298,7 +298,7 @@ void CTexture::Apply(u32 dwStage)
 
 void CTexture::apply_theora(u32 dwStage)
 {
-	if (pTheora->Update(m_play_time!=0xFFFFFFFF?m_play_time:Device.dwTimeContinual))
+	if (pTheora->Update(m_play_time!=0xFFFFFFFF?m_play_time: CRenderDevice::GetInstance()->dwTimeContinual))
 	{
 		D3D_RESOURCE_DIMENSION	type;
 		pSurface->GetType(&type);
@@ -352,7 +352,7 @@ void CTexture::apply_avi	(u32 dwStage)
 };
 void CTexture::apply_seq	(u32 dwStage)	{
 	// SEQ
-	u32	frame		= Device.dwTimeContinual/seqMSPF; //Device.dwTimeGlobal
+	u32	frame		= CRenderDevice::GetInstance()->dwTimeContinual/seqMSPF; //Device.dwTimeGlobal
 	u32	frame_data	= seqDATA.size();
 	if (flags.seqCycles)		{
 		u32	frame_id	= frame%(frame_data*2);
@@ -408,7 +408,7 @@ void CTexture::Load		()
 			FATAL				("Can't open video stream");
 		} else {
 			flags.MemoryUsage	= pTheora->Width(true)*pTheora->Height(true)*4;
-			pTheora->Play		(TRUE,Device.dwTimeContinual);
+			pTheora->Play		(TRUE, CRenderDevice::GetInstance()->dwTimeContinual);
 
 			// Now create texture
 			ID3DTexture2D*	pTexture = 0;
@@ -654,7 +654,7 @@ D3D_USAGE CTexture::GetUsage()
 
 void CTexture::video_Play		(BOOL looped, u32 _time)	
 { 
-	if (pTheora) pTheora->Play	(looped,(_time!=0xFFFFFFFF)?(m_play_time=_time):Device.dwTimeContinual); 
+	if (pTheora) pTheora->Play	(looped,(_time!=0xFFFFFFFF)?(m_play_time=_time): CRenderDevice::GetInstance()->dwTimeContinual);
 }
 
 void CTexture::video_Pause		(BOOL state)

@@ -51,9 +51,9 @@ void CDetailManager::hw_Render()
 	// Render-prepare
 	//	Update timer
 	//	Can't use Device.fTimeDelta since it is smoothed! Don't know why, but smoothed value looks more choppy!
-	float fDelta = Device.fTimeGlobal-m_global_time_old;
+	float fDelta = CRenderDevice::GetInstance()->fTimeGlobal-m_global_time_old;
 	if ( (fDelta<0) || (fDelta>1))	fDelta = 0.03;
-	m_global_time_old = Device.fTimeGlobal;
+	m_global_time_old = CRenderDevice::GetInstance()->fTimeGlobal;
 
 	m_time_rot_1	+= (PI_MUL_2*fDelta/swing_current.rot1);
 	m_time_rot_2	+= (PI_MUL_2*fDelta/swing_current.rot2);
@@ -117,9 +117,9 @@ void CDetailManager::hw_Render_dump(const Fvector4 &consts, const Fvector4 &wave
 
 	// Add Player?
 	if (ps_ssfx_grass_interactive.x > 0)
-		player_pos.set(Device.vCameraPosition.x, Device.vCameraPosition.y, Device.vCameraPosition.z, -1);
+		player_pos.set(CRenderDevice::GetInstance()->vCameraPosition.x, CRenderDevice::GetInstance()->vCameraPosition.y, CRenderDevice::GetInstance()->vCameraPosition.z, -1);
 
-	Device.Statistic->RenderDUMP_DT_Count	= 0;
+	CRenderDevice::GetInstance()->Statistic->RenderDUMP_DT_Count	= 0;
 
 	// Matrices and offsets
 	u32		vOffset	=	0;
@@ -152,7 +152,7 @@ void CDetailManager::hw_Render_dump(const Fvector4 &consts, const Fvector4 &wave
 				RCache.set_c(strConsts, consts);
 				RCache.set_c(strWave, wave);
 				RCache.set_c(strDir2D, wind);
-				RCache.set_c(strXForm, Device.mFullTransform);
+				RCache.set_c(strXForm, CRenderDevice::GetInstance()->mFullTransform);
 
 				if (ps_ssfx_grass_interactive.y > 0)
 				{
@@ -237,7 +237,7 @@ void CDetailManager::hw_Render_dump(const Fvector4 &consts, const Fvector4 &wave
 						dwBatch	++;
 						if (dwBatch == hw_BatchSize)	{
 							// flush
-							Device.Statistic->RenderDUMP_DT_Count					+=	dwBatch;
+							CRenderDevice::GetInstance()->Statistic->RenderDUMP_DT_Count					+=	dwBatch;
 							u32 dwCNT_verts			= dwBatch * Object.number_vertices;
 							u32 dwCNT_prims			= (dwBatch * Object.number_indices)/3;
 							//RCache.get_ConstantCache_Vertex().b_dirty				=	TRUE;
@@ -276,7 +276,7 @@ void CDetailManager::hw_Render_dump(const Fvector4 &consts, const Fvector4 &wave
 						}
 					}
 
-					Device.Statistic->RenderDUMP_DT_Count	+= dwBatch;
+					CRenderDevice::GetInstance()->Statistic->RenderDUMP_DT_Count	+= dwBatch;
 					u32 dwCNT_verts			= dwBatch * Object.number_vertices;
 					u32 dwCNT_prims			= (dwBatch * Object.number_indices)/3;
 					//RCache.get_ConstantCache_Vertex().b_dirty				=	TRUE;
