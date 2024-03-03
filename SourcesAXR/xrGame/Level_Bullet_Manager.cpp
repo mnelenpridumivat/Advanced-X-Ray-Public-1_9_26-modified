@@ -66,7 +66,7 @@ void SBullet::Init(const Fvector& position,
 
 	start_position			= position;
 	start_velocity.mul		(direction, starting_speed);
-	born_time				= Device.dwTimeGlobal;
+	born_time				= CRenderDevice::GetInstance()->dwTimeGlobal;
 	life_time				= 0.f;
 
 	VERIFY					(direction.magnitude() > 0.f);
@@ -98,7 +98,7 @@ void SBullet::Init(const Fvector& position,
 	flags.magnetic_beam		= !!cartridge.m_flags.test(CCartridge::cfMagneticBeam);
 //	flags.skipped_frame		= 0;
 
-	init_frame_num			= Device.dwFrame;
+	init_frame_num			= CRenderDevice::GetInstance()->dwFrame;
 
 	targetID				= 0;	
 	density_mode			= 0;
@@ -239,7 +239,7 @@ void CBulletManager::UpdateWorkload()
 
 	rq_storage.r_clear			();
 
-	u32 const time_delta		= Device.dwTimeDelta;
+	u32 const time_delta		= CRenderDevice::GetInstance()->dwTimeDelta;
 	if (!time_delta)
 		return;
 
@@ -994,7 +994,7 @@ void CBulletManager::Render	()
 			length			= m_fTracerLengthMax;
 
 		float width			= m_fTracerWidth;
-		float dist2segSqr	= SqrDistancePointToSegment(Device.vCameraPosition, bullet->bullet_pos, tracer);
+		float dist2segSqr	= SqrDistancePointToSegment(CRenderDevice::GetInstance()->vCameraPosition, bullet->bullet_pos, tracer);
 		//---------------------------------------------
 		float MaxDistSqr = 1.0f;
 		float MinDistSqr = 0.09f;
@@ -1004,9 +1004,9 @@ void CBulletManager::Render	()
 
 			width *= _sqrt(dist2segSqr/MaxDistSqr);
 		}
-		if (Device.vCameraPosition.distance_to_sqr(bullet->bullet_pos)<(length*length))
+		if (CRenderDevice::GetInstance()->vCameraPosition.distance_to_sqr(bullet->bullet_pos)<(length*length))
 		{
-			length = Device.vCameraPosition.distance_to(bullet->bullet_pos) - 0.3f;
+			length = CRenderDevice::GetInstance()->vCameraPosition.distance_to(bullet->bullet_pos) - 0.3f;
 		}
 
 		Fvector center;
@@ -1038,7 +1038,7 @@ void CBulletManager::CommitRenderSet		()	// @ the end of frame
 {
 	m_BulletsRendered	= m_Bullets			;
 	if (g_mt_config.test(mtBullets))		{
-		Device.seqParallel.push_back		(fastdelegate::FastDelegate0<>(this,&CBulletManager::UpdateWorkload));
+		CRenderDevice::GetInstance()->seqParallel.push_back		(fastdelegate::FastDelegate0<>(this,&CBulletManager::UpdateWorkload));
 	} else {
 		UpdateWorkload						();
 	}

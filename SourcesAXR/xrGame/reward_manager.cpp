@@ -34,7 +34,7 @@ void reward_manager::update_tasks		()
 
 	u32 const tmp_award_id		= m_to_reward_queue.front();
 
-	if ((Device.dwTimeGlobal - m_last_reward_time) < m_reward_process_time)
+	if ((CRenderDevice::GetInstance()->dwTimeGlobal - m_last_reward_time) < m_reward_process_time)
 		return;
 	
 	process_reward				(tmp_award_id);

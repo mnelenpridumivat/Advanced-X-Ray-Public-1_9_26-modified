@@ -23,12 +23,12 @@ float		r_ssaHZBvsTEX;
 ICF	float	CalcSSA				(float& distSQ, Fvector& C, dxRender_Visual* V)
 {
 	float R	= V->vis.sphere.R + 0;
-	distSQ	= Device.vCameraPosition.distance_to_sqr(C)+EPS;
+	distSQ	= CRenderDevice::GetInstance()->vCameraPosition.distance_to_sqr(C)+EPS;
 	return	R/distSQ;
 }
 ICF	float	CalcSSA				(float& distSQ, Fvector& C, float R)
 {
-	distSQ	= Device.vCameraPosition.distance_to_sqr(C)+EPS;
+	distSQ	= CRenderDevice::GetInstance()->vCameraPosition.distance_to_sqr(C)+EPS;
 	return	R/distSQ;
 }
 
@@ -47,8 +47,8 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 	pVisual->vis.marker		=	RI.marker			;
 
 #if RENDER==R_R1
-	if (RI.o.vis_intersect &&	(pVisual->vis.accept_frame!=Device.dwFrame))	return;
-	pVisual->vis.accept_frame	=	Device.dwFrame	;
+	if (RI.o.vis_intersect &&	(pVisual->vis.accept_frame!= CRenderDevice::GetInstance()->dwFrame))	return;
+	pVisual->vis.accept_frame	= CRenderDevice::GetInstance()->dwFrame	;
 #endif
 
 	float distSQ			;
@@ -245,8 +245,8 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 	pVisual->vis.marker			=	RI.marker			;
 
 #if RENDER==R_R1
-	if (RI.o.vis_intersect &&	(pVisual->vis.accept_frame!=Device.dwFrame))	return;
-	pVisual->vis.accept_frame	=	Device.dwFrame		;
+	if (RI.o.vis_intersect &&	(pVisual->vis.accept_frame!= CRenderDevice::GetInstance()->dwFrame))	return;
+	pVisual->vis.accept_frame	= CRenderDevice::GetInstance()->dwFrame		;
 #endif
 
 	float distSQ;
@@ -483,8 +483,8 @@ Fvector4 o_optimize_dynamic_l3_size = { O_D_L3_S_LOW, O_D_L3_S_MED, O_D_L3_S_HII
 IC float GetDistFromCamera(const Fvector& from_position)
 // Aproximate, adjusted by fov, distance from camera to position (For right work when looking though binoculars and scopes)
 {
-	float distance = Device.vCameraPosition.distance_to(from_position);
-	float fov_K = BASE_FOV / Device.fFOV;
+	float distance = CRenderDevice::GetInstance()->vCameraPosition.distance_to(from_position);
+	float fov_K = BASE_FOV / CRenderDevice::GetInstance()->fFOV;
 	float adjusted_distane = distance / fov_K;
 
 	return adjusted_distane;

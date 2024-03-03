@@ -142,7 +142,7 @@ bool	CLevel::net_start_client4				()
 
 		// Send physics to single or multithreaded mode
 		
-		create_physics_world				(!!psDeviceFlags.test(mtPhysics),&ObjectSpace,&Objects,&Device);
+		create_physics_world				(!!psDeviceFlags.test(mtPhysics),&ObjectSpace,&Objects, CRenderDevice::GetInstance());
 
 
 
@@ -160,10 +160,10 @@ bool	CLevel::net_start_client4				()
 
 		// Send network to single or multithreaded mode
 		// *note: release version always has "mt_*" enabled
-		Device.seqFrameMT.Remove			(g_pNetProcessor);
-		Device.seqFrame.Remove				(g_pNetProcessor);
-		if (psDeviceFlags.test(mtNetwork))	Device.seqFrameMT.Add	(g_pNetProcessor,REG_PRIORITY_HIGH	+ 2);
-		else								Device.seqFrame.Add		(g_pNetProcessor,REG_PRIORITY_LOW	- 2);
+		CRenderDevice::GetInstance()->seqFrameMT.Remove			(g_pNetProcessor);
+		CRenderDevice::GetInstance()->seqFrame.Remove				(g_pNetProcessor);
+		if (psDeviceFlags.test(mtNetwork))	CRenderDevice::GetInstance()->seqFrameMT.Add	(g_pNetProcessor,REG_PRIORITY_HIGH	+ 2);
+		else								CRenderDevice::GetInstance()->seqFrame.Add		(g_pNetProcessor,REG_PRIORITY_LOW	- 2);
 
 		if(!psNET_direct_connect)
 		{
@@ -218,9 +218,9 @@ bool	CLevel::net_start_client5				()
 			g_pGamePersistent->SetLoadStageTitle("st_loading_textures");
 			g_pGamePersistent->LoadTitle		();
 			//Device.Resources->DeferredLoad	(FALSE);
-			Device.m_pRender->DeferredLoad		(FALSE);
+			CRenderDevice::GetInstance()->m_pRender->DeferredLoad		(FALSE);
 			//Device.Resources->DeferredUpload	();
-			Device.m_pRender->ResourcesDeferredUpload();
+			CRenderDevice::GetInstance()->m_pRender->ResourcesDeferredUpload();
 			LL_CheckTextures					();
 		}
 		sended_request_connection_data	= FALSE;
@@ -263,7 +263,7 @@ bool	CLevel::net_start_client6				()
 		g_pGamePersistent->SetLoadStageTitle("st_client_synchronising");
 		pApp->LoadForceFinish				();
 		g_pGamePersistent->LoadTitle		();
-		Device.PreCache						(60, true, true);
+		CRenderDevice::GetInstance()->PreCache						(60, true, true);
 		net_start_result_total				= TRUE;
 
 	}else{

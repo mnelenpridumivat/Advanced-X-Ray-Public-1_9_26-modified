@@ -524,7 +524,7 @@ void game_sv_TeamDeathmatch::Update()
 	case GAME_PHASE_TEAM2_SCORES :
 	case GAME_PHASE_TEAMS_IN_A_DRAW :
 		{
-			if ( m_delayedRoundEnd && m_roundEndDelay < Device.TimerAsync() )
+			if ( m_delayedRoundEnd && m_roundEndDelay < CRenderDevice::GetInstance()->TimerAsync() )
 			{
 				OnRoundEnd(); // eRoundEnd_Finish 
 			}

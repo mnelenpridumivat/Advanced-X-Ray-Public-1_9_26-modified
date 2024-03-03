@@ -189,8 +189,8 @@ void   CPoltergeist::update_detection ()
 	Fvector const actor_pos				=	Actor()->Position();
 	float const dist2actor				=	actor_pos.distance_to(Position());
 
-	float const time_passed_sec			=	static_cast<float>(Device.dwTimeGlobal - m_last_detection_time) / 1000.f;
-	m_last_detection_time				=	Device.dwTimeGlobal;
+	float const time_passed_sec			=	static_cast<float>(CRenderDevice::GetInstance()->dwTimeGlobal - m_last_detection_time) / 1000.f;
+	m_last_detection_time				= CRenderDevice::GetInstance()->dwTimeGlobal;
 	
 	if ( !get_actor_ignore() &&
 		  time_passed_sec > 0.f &&
@@ -326,7 +326,7 @@ void CPoltergeist::Show()
 
 void CPoltergeist::renderable_Render()
 {
-	Visual()->getVisData().hom_frame = Device.dwFrame;
+	Visual()->getVisData().hom_frame = CRenderDevice::GetInstance()->dwFrame;
 	inherited::renderable_Render();
 }
 
@@ -487,7 +487,7 @@ void CPoltergeist::UpdateHeight()
 {
 	if (!state_invisible) return;
 	
-	u32 cur_time = Device.dwTimeGlobal;
+	u32 cur_time = CRenderDevice::GetInstance()->dwTimeGlobal;
 	
 	if (time_height_updated < cur_time)	{
 		time_height_updated = cur_time + Random.randI(m_height_change_min_time,m_height_change_max_time);

@@ -66,8 +66,8 @@ public:
 
     IC void GetWndRect(Frect& res) const
     {
-        const float width = (float)Device.dwWidth * (UI_BASE_WIDTH / (float)Device.dwWidth);
-        const float height = (float)Device.dwHeight * (UI_BASE_HEIGHT / (float)Device.dwHeight);
+        const float width = (float)CRenderDevice::GetInstance()->dwWidth * (UI_BASE_WIDTH / (float)CRenderDevice::GetInstance()->dwWidth);
+        const float height = (float)CRenderDevice::GetInstance()->dwHeight * (UI_BASE_HEIGHT / (float)CRenderDevice::GetInstance()->dwHeight);
 
         switch (m_alignment)
         {

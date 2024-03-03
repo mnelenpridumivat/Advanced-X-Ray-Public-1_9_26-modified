@@ -12,14 +12,14 @@ CPPEffectorPsyDogAura::CPPEffectorPsyDogAura(const SPPInfo &ppi, u32 time_to_fad
 {
 	m_time_to_fade			= time_to_fade;
 	m_effector_state		= eStateFadeIn;
-	m_time_state_started	= Device.dwTimeGlobal;
+	m_time_state_started	= CRenderDevice::GetInstance()->dwTimeGlobal;
 
 }
 
 void CPPEffectorPsyDogAura::switch_off()
 {
 	m_effector_state		= eStateFadeOut;		
-	m_time_state_started	= Device.dwTimeGlobal;
+	m_time_state_started	= CRenderDevice::GetInstance()->dwTimeGlobal;
 }
 
 
@@ -29,7 +29,7 @@ BOOL CPPEffectorPsyDogAura::update()
 	if (m_effector_state == eStatePermanent) {
 		m_factor = 1.f;
 	} else {
-		m_factor = static_cast<float>(Device.dwTimeGlobal - m_time_state_started) / static_cast<float>(m_time_to_fade);
+		m_factor = static_cast<float>(CRenderDevice::GetInstance()->dwTimeGlobal - m_time_state_started) / static_cast<float>(m_time_to_fade);
 		if (m_effector_state == eStateFadeOut) m_factor = 1 - m_factor;
 
 		if (m_factor > 1) {

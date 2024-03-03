@@ -156,12 +156,12 @@ public:
 	RDebugRender()
 	{
 		//Device.seqRender.Add		(this);
-		Device.seqRender.Add		(this,REG_PRIORITY_LOW-100);
+		CRenderDevice::GetInstance()->seqRender.Add		(this,REG_PRIORITY_LOW-100);
 	}
 
 virtual	~RDebugRender()
 	{
-		Device.seqRender.Remove		(this);
+		CRenderDevice::GetInstance()->seqRender.Remove		(this);
 	}
 
 void OnRender()

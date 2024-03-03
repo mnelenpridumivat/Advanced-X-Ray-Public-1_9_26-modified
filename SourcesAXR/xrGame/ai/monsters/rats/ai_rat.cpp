@@ -261,7 +261,7 @@ BOOL CAI_Rat::net_Spawn	(CSE_Abstract* DC)
 	int								iPointCount	= static_cast<int>(movement().locations().vertex_types().size());
 	for (int j=0; j<iPointCount; ++j)
 		if (ai().game_graph().mask(movement().locations().vertex_types()[j].tMask,ai().game_graph().vertex(ai_location().game_vertex_id())->vertex_type())) {
-			m_time_to_change_graph_point= Device.dwTimeGlobal + ::Random32.random(60000) + 60000;
+			m_time_to_change_graph_point= CRenderDevice::GetInstance()->dwTimeGlobal + ::Random32.random(60000) + 60000;
 			break;
 		}
 

@@ -144,7 +144,7 @@ void CLightR_Manager::render_point	()
 void CLightR_Manager::render_point	(u32 _priority)
 {
 	// for each light
-	Fvector		lc_COP		= Device.vCameraPosition	;
+	Fvector		lc_COP		= CRenderDevice::GetInstance()->vCameraPosition	;
 	float		lc_limit	= ps_r1_dlights_clip		;
 	for (xr_vector<light*>::iterator it=selected_point.begin(); it!=selected_point.end(); it++)
 	{
@@ -209,7 +209,7 @@ void CLightR_Manager::render_point	(u32 _priority)
 		BOOL				bHUD	= FALSE;
 		CFrustum			F;
 		F.CreateFromMatrix	(L_combine,FRUSTUM_P_ALL);
-		bHUD				= F.testSphere_dirty	(Device.vCameraPosition,2.f);
+		bHUD				= F.testSphere_dirty	(CRenderDevice::GetInstance()->vCameraPosition,2.f);
 
 		//		5. Dump sorting tree
 		RCache.set_Constants((R_constant_table*)0);
@@ -224,7 +224,7 @@ void CLightR_Manager::render_spot	(u32 _priority)
 {
 	// for each light
 	//	Msg	("l=%d",selected_spot.size());
-	Fvector		lc_COP		= Device.vCameraPosition	;
+	Fvector		lc_COP		= CRenderDevice::GetInstance()->vCameraPosition	;
 	float		lc_limit	= ps_r1_dlights_clip		;
 
 	for (xr_vector<light*>::iterator it=selected_spot.begin(); it!=selected_spot.end(); it++)
@@ -287,7 +287,7 @@ void CLightR_Manager::render_spot	(u32 _priority)
 		BOOL				bHUD	= FALSE;
 		CFrustum			F;
 		F.CreateFromMatrix	(L_combine,FRUSTUM_P_ALL);
-		bHUD				= F.testSphere_dirty	(Device.vCameraPosition,2.f);
+		bHUD				= F.testSphere_dirty	(CRenderDevice::GetInstance()->vCameraPosition,2.f);
 		// if (bHUD)		Msg	("HUD");
 
 		//		4. Dump sorting tree

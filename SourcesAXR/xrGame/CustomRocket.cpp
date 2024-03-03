@@ -104,7 +104,7 @@ void CCustomRocket::SetLaunchParams (const Fmatrix& xform,
 //		Msg("set p start v:	%f,%f,%f	\n",m_vLaunchVelocity.x,m_vLaunchVelocity.y,m_vLaunchVelocity.z);
 //	}
 	m_vLaunchAngularVelocity	= angular_vel;
-	m_time_to_explode			= Device.fTimeGlobal + pSettings->r_float(cNameSect(), "force_explode_time")/1000.0f;
+	m_time_to_explode			= CRenderDevice::GetInstance()->fTimeGlobal + pSettings->r_float(cNameSect(), "force_explode_time")/1000.0f;
 #ifdef	DEBUG
 	gbg_rocket_speed1=0;
 	gbg_rocket_speed2=0;
@@ -416,7 +416,7 @@ void CCustomRocket::UpdateCL()
 	}
 	if(m_eState==eEngine || m_eState==eFlying )
 	{
-		if(m_time_to_explode<Device.fTimeGlobal)
+		if(m_time_to_explode< CRenderDevice::GetInstance()->fTimeGlobal)
 		{
 			Contact(Position(), Direction());
 //			Msg("--contact");
@@ -491,7 +491,7 @@ void CCustomRocket::UpdateEngine				()
 		Msg("! CCustomRocket::UpdateEngine called, but m_pPhysicsShell is NULL");
 
 	if( !getVisible() ){
-		Msg("! CCustomRocket::UpdateEngine called, but false==getVisible() id[%d] frame[%d]",ID(),Device.dwFrame);
+		Msg("! CCustomRocket::UpdateEngine called, but false==getVisible() id[%d] frame[%d]",ID(), CRenderDevice::GetInstance()->dwFrame);
 	}
 
 	if (m_dwEngineTime <= 0) 
@@ -501,7 +501,7 @@ void CCustomRocket::UpdateEngine				()
 		return;
 	}
 
-	m_dwEngineTime -= Device.dwTimeDelta;
+	m_dwEngineTime -= CRenderDevice::GetInstance()->dwTimeDelta;
 }
 
 

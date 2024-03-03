@@ -87,7 +87,7 @@ void CLightShadows::set_object	(IRenderable* O)
 	if (0==O)	current		= 0;
 	else 
 	{
-		if (!O->renderable_ShadowGenerate()	|| RImplementation.val_bHUD || ((CROS_impl*)O->renderable_ROS())->shadow_gen_frame==Device.dwFrame)
+		if (!O->renderable_ShadowGenerate()	|| RImplementation.val_bHUD || ((CROS_impl*)O->renderable_ROS())->shadow_gen_frame== CRenderDevice::GetInstance()->dwFrame)
 		{
 			current		= 0;
 			return;
@@ -96,7 +96,7 @@ void CLightShadows::set_object	(IRenderable* O)
 		const vis_data	&vis = O->renderable.visual->getVisData();
 		Fvector		C;	O->renderable.xform.transform_tiny		(C,vis.sphere.P);
 		float		R				= vis.sphere.R;
-		float		D				= C.distance_to(Device.vCameraPosition)+R;
+		float		D				= C.distance_to(CRenderDevice::GetInstance()->vCameraPosition)+R;
 					// D=0 -> P=0; 
 					// R<S_ideal_size -> P=max, R>S_ideal_size -> P=min
 		float		_priority		= (D/S_distance)*(S_ideal_size/(R+EPS));
@@ -105,7 +105,7 @@ void CLightShadows::set_object	(IRenderable* O)
 		
 		if (current)
 		{
-			((CROS_impl*)O->renderable_ROS())->shadow_gen_frame	=	Device.dwFrame;
+			((CROS_impl*)O->renderable_ROS())->shadow_gen_frame	= CRenderDevice::GetInstance()->dwFrame;
 
 			// alloc
 			caster*	cs		= NULL;
@@ -143,7 +143,7 @@ void CLightShadows::calculate	()
 	if (casters.empty())		return;
 
 	BOOL bRTS					= FALSE;
-	Device.Statistic->RenderDUMP_Scalc.Begin	();
+	CRenderDevice::GetInstance()->Statistic->RenderDUMP_Scalc.Begin	();
 	HW.pDevice->SetRenderState	(D3DRS_ZENABLE, D3DZB_FALSE);
 	
 	// iterate on objects
@@ -307,10 +307,10 @@ void CLightShadows::calculate	()
 	
 	// Finita la comedia
 	HW.pDevice->SetRenderState				(D3DRS_ZENABLE, D3DZB_TRUE);
-	Device.Statistic->RenderDUMP_Scalc.End	();
+	CRenderDevice::GetInstance()->Statistic->RenderDUMP_Scalc.End	();
 	
-	RCache.set_xform_project	(Device.mProject);
-	RCache.set_xform_view		(Device.mView);
+	RCache.set_xform_project	(CRenderDevice::GetInstance()->mProject);
+	RCache.set_xform_view		(CRenderDevice::GetInstance()->mView);
 }
 
 #define CLS(a)	color_rgba	(a,a,a,a)
@@ -355,7 +355,7 @@ IC float PLC_energy	(Fvector& P, Fvector& N, light* L, float E)
 IC int PLC_calc	(Fvector& P, Fvector& N, light* L, float energy, Fvector& O)
 {
 	float	E		= PLC_energy(P,N,L,energy);
-	float	C1		= clampr(Device.vCameraPosition.distance_to_sqr(P)/S_distance2,	0.f,1.f);
+	float	C1		= clampr(CRenderDevice::GetInstance()->vCameraPosition.distance_to_sqr(P)/S_distance2,	0.f,1.f);
 	float	C2		= clampr(O.distance_to_sqr(P)/S_fade2,							0.f,1.f);
 	float	A		= 1.f-1.5f*E*(1.f-C1)*(1.f-C2);
 	return			iCeil(255.f*A);
@@ -371,7 +371,7 @@ void CLightShadows::render	()
 	int			slot_line	= S_rt_size/S_size;
 	
 	// Projection and xform
-	float _43					=	Device.mProject._43;
+	float _43					= CRenderDevice::GetInstance()->mProject._43;
 
 	//	Handle biasing problem when near changes
 	const float fMinNear = 0.1f;
@@ -381,13 +381,13 @@ void CLightShadows::render	()
 	float	fLerpCoeff	= (_43 - fMinNear) / (fMaxNear - fMinNear);
 	clamp( fLerpCoeff, 0.0f, 1.0f );
 	//	lerp
-	Device.mProject._43			-=	fMinNearBias + (fMaxNearBias-fMinNearBias) * fLerpCoeff;
+	CRenderDevice::GetInstance()->mProject._43			-=	fMinNearBias + (fMaxNearBias-fMinNearBias) * fLerpCoeff;
 	//Device.mProject._43			-=	0.0002f; 
-	Device.mProject._43			-=	0.002f; 
+	CRenderDevice::GetInstance()->mProject._43			-=	0.002f;
 	//Device.mProject._43			-=	0.0008f; 
 	RCache.set_xform_world		(Fidentity);
-	RCache.set_xform_project	(Device.mProject);
-	Fvector	View				= Device.vCameraPosition;
+	RCache.set_xform_project	(CRenderDevice::GetInstance()->mProject);
+	Fvector	View				= CRenderDevice::GetInstance()->vCameraPosition;
 	
 	// Render shadows
 	RCache.set_Shader			(sh_World);
@@ -397,7 +397,7 @@ void CLightShadows::render	()
 	FVF::LIT* pv				= (FVF::LIT*) RCache.Vertex.Lock	(batch_size*3,geom_World->vb_stride,Offset);
 	for (u32 s_it=0; s_it<shadows.size(); s_it++)
 	{
-		Device.Statistic->RenderDUMP_Srender.Begin	();
+		CRenderDevice::GetInstance()->Statistic->RenderDUMP_Srender.Begin	();
 		shadow&		S			=	shadows[s_it];
 		float		Le			=	S.L->color.intensity()*S.E;
 		int			s_x			=	S.slot%slot_line;
@@ -432,7 +432,7 @@ void CLightShadows::render	()
 				else if (!CI->Lp.similar(CI->L->position))		bValid = FALSE;
 			}
 		}
-		CI->time				= Device.dwTimeGlobal;	// acess time
+		CI->time				= CRenderDevice::GetInstance()->dwTimeGlobal;	// acess time
 
 		if (!bValid)			{
 			// Frustum
@@ -515,7 +515,7 @@ void CLightShadows::render	()
 			*/
 			int	c0,c1,c2;
 
-			XRay::Math::PLCCalc_SSE(c0, c1, c2, Device.vCameraPosition, v, TT.N, S.L, Le, S.C);
+			XRay::Math::PLCCalc_SSE(c0, c1, c2, CRenderDevice::GetInstance()->vCameraPosition, v, TT.N, S.L, Le, S.C);
 
 			if (c0>S_clip && c1>S_clip && c2>S_clip)		continue;	
 			clamp		(c0,S_ambient,255);
@@ -536,7 +536,7 @@ void CLightShadows::render	()
 				batch					= 0;
 			}
 		}
-		Device.Statistic->RenderDUMP_Srender.End	();
+		CRenderDevice::GetInstance()->Statistic->RenderDUMP_Srender.End	();
 	}
 
 	// Flush if nessesary
@@ -549,7 +549,7 @@ void CLightShadows::render	()
 	shadows.clear				();
 	for (int cit=0; cit<int(cache.size()); cit++)	{
 		cache_item&		ci		= cache[cit];
-		u32				time	= Device.dwTimeGlobal - ci.time;
+		u32				time	= CRenderDevice::GetInstance()->dwTimeGlobal - ci.time;
 		if				(time > cache_old)	{
 			//Msg			("---free--- %x",u32(ci.tris));
 			xr_free		(ci.tris);	VERIFY(0==ci.tris);
@@ -559,6 +559,6 @@ void CLightShadows::render	()
 	}
 
 	// Projection
-	Device.mProject._43			= _43;
-	RCache.set_xform_project	(Device.mProject);
+	CRenderDevice::GetInstance()->mProject._43			= _43;
+	RCache.set_xform_project	(CRenderDevice::GetInstance()->mProject);
 }

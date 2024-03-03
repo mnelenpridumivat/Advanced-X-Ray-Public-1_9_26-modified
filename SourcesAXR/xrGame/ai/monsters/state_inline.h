@@ -36,7 +36,7 @@ void CStateAbstract::reinit()
 TEMPLATE_SPECIALIZATION
 void CStateAbstract::initialize() 
 {
-	time_state_started	= Device.dwTimeGlobal;
+	time_state_started	= CRenderDevice::GetInstance()->dwTimeGlobal;
 
 	current_substate	= static_cast<u32>(-1); // means need reselect state
 	prev_substate		= static_cast<u32>(-1);

@@ -12,7 +12,7 @@
 IC	void			CALifeTimeManager::set_time_factor		(float time_factor)
 {
 	m_game_time					= game_time();
-	m_start_time				= Device.dwTimeGlobal;
+	m_start_time				= CRenderDevice::GetInstance()->dwTimeGlobal;
 	m_time_factor				= time_factor;
 };
 
@@ -23,7 +23,7 @@ IC	ALife::_TIME_ID	CALifeTimeManager::start_game_time		() const
 
 IC	ALife::_TIME_ID	CALifeTimeManager::game_time			() const
 {
-	return						(m_game_time + static_cast<ALife::_TIME_ID>(m_time_factor * float(Device.dwTimeGlobal - m_start_time)));
+	return						(m_game_time + static_cast<ALife::_TIME_ID>(m_time_factor * float(CRenderDevice::GetInstance()->dwTimeGlobal - m_start_time)));
 };
 
 IC	float			CALifeTimeManager::time_factor	() const
@@ -44,7 +44,7 @@ IC	void			CALifeTimeManager::change_game_time		(u32 value)
 IC void CALifeTimeManager::set_game_time_factor(ALife::_TIME_ID gameTime, const float timeFactor)
 {
 	m_game_time = gameTime;
-	m_start_time = Device.dwTimeGlobal;
+	m_start_time = CRenderDevice::GetInstance()->dwTimeGlobal;
 	m_time_factor = timeFactor;
 }
 
@@ -52,6 +52,6 @@ IC void CALifeTimeManager::set_date_time(u64 date_time)
 {
 	m_start_game_time = date_time;
 	m_game_time = m_start_game_time;
-	m_start_time = Device.dwTimeGlobal;
+	m_start_time = CRenderDevice::GetInstance()->dwTimeGlobal;
 }
 

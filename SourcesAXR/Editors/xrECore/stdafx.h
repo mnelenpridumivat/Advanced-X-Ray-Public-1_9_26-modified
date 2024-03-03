@@ -17,7 +17,7 @@
 #include "../xrEProps/stdafx.h"
 #include "../../xrCDB/xrCDB.h"
 #include "../../xrSound/Sound.h"
-#include "../../xrEngine/psystem.h"
+#include "../../xrParticles/psystem.h"
 
 #include "../../xrEngine/fmesh.h"
 #include "../../xrEngine/_d3d_extensions.h"
@@ -61,7 +61,7 @@ DEFINE_VECTOR(xr_string*, LPAStringVec, LPAStringIt);
 #include "../../xrEngine/defines.h"
 
 #include "../../xrphysics/xrphysics.h"
-#include "../../xrRender/Private/FVF.h"
+#include "../../Layers/xrRender/FVF.h"
 
 struct str_pred
 {
@@ -126,8 +126,8 @@ DEFINE_VECTOR(shared_str, RStrVec, RStrVecIt);
 #define TEX_POINT_ATT       "internal\\internal_light_attpoint"
 #define TEX_SPOT_ATT        "internal\\internal_light_attclip"
 
-#include "../../xrRender/Private/ETextureParams.h"
-#include "../../xrRender/Private/ResourceManager.h"
+#include "../../Layers/xrRender/ETextureParams.h"
+#include "../../Layers/xrRender/ResourceManager.h"
 #include "Editor/ImageManager.h"
 
 inline xr_string ChangeFileExt(const char* name, const char* e)

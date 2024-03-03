@@ -158,7 +158,7 @@ void CWeaponStatMgun::UpdateCL()
 
 	if(OwnerActor() && OwnerActor()->IsMyCamera()) 
 	{
-		cam_Update(Device.fTimeDelta, g_fov);
+		cam_Update(CRenderDevice::GetInstance()->fTimeDelta, g_fov);
 		OwnerActor()->Cameras().UpdateFromCamera(Camera());
 		OwnerActor()->Cameras().ApplyDevice(VIEWPORT_NEAR);
 	}
@@ -207,8 +207,8 @@ void CWeaponStatMgun::UpdateBarrelDir()
 		if (!fsimilar(sv_y,m_tgt_y_rot,EPS_L)) m_allow_fire=FALSE;
 	}
 
-	m_cur_x_rot		= angle_inertion_var(m_cur_x_rot,m_tgt_x_rot,0.5f,3.5f,PI_DIV_6,Device.fTimeDelta);
-	m_cur_y_rot		= angle_inertion_var(m_cur_y_rot,m_tgt_y_rot,0.5f,3.5f,PI_DIV_6,Device.fTimeDelta);
+	m_cur_x_rot		= angle_inertion_var(m_cur_x_rot,m_tgt_x_rot,0.5f,3.5f,PI_DIV_6, CRenderDevice::GetInstance()->fTimeDelta);
+	m_cur_y_rot		= angle_inertion_var(m_cur_y_rot,m_tgt_y_rot,0.5f,3.5f,PI_DIV_6, CRenderDevice::GetInstance()->fTimeDelta);
 }
 
 void CWeaponStatMgun::cam_Update			(float dt, float fov)
@@ -230,8 +230,8 @@ void CWeaponStatMgun::cam_Update			(float dt, float fov)
 	des_cam_dir.mul(-1.0f);
 
 
-	Camera()->yaw		= angle_inertion_var(Camera()->yaw,		des_cam_dir.x,	0.5f,	7.5f,	PI_DIV_6,	Device.fTimeDelta);
-	Camera()->pitch		= angle_inertion_var(Camera()->pitch,	des_cam_dir.y,	0.5f,	7.5f,	PI_DIV_6,	Device.fTimeDelta);
+	Camera()->yaw		= angle_inertion_var(Camera()->yaw,		des_cam_dir.x,	0.5f,	7.5f,	PI_DIV_6, CRenderDevice::GetInstance()->fTimeDelta);
+	Camera()->pitch		= angle_inertion_var(Camera()->pitch,	des_cam_dir.y,	0.5f,	7.5f,	PI_DIV_6, CRenderDevice::GetInstance()->fTimeDelta);
 
 
 

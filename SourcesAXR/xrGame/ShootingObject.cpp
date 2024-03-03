@@ -172,9 +172,9 @@ void CShootingObject::Light_Start	()
 {
 	if(!light_render)		Light_Create();
 
-	if (Device.dwFrame	!= light_frame)
+	if (CRenderDevice::GetInstance()->dwFrame	!= light_frame)
 	{
-		light_frame					= Device.dwFrame;
+		light_frame					= CRenderDevice::GetInstance()->dwFrame;
 		light_time					= light_lifetime;
 		
 		light_build_color.set		(Random.randFs(light_var_color,light_base_color.r),Random.randFs(light_var_color,light_base_color.g),Random.randFs(light_var_color,light_base_color.b),1);
@@ -293,7 +293,7 @@ void CShootingObject::OnShellDrop	(const Fvector& play_pos,
 									 const Fvector& parent_vel)
 {
 	if(!m_sShellParticles) return;
-	if( Device.vCameraPosition.distance_to_sqr(play_pos)>10*4) return;
+	if(CRenderDevice::GetInstance()->vCameraPosition.distance_to_sqr(play_pos)>10*4) return;
 
 	CParticlesObject* pShellParticles	= CParticlesObject::Create(*m_sShellParticles,TRUE);
 
@@ -387,7 +387,7 @@ void CShootingObject::UpdateLight()
 {
 	if (light_render && light_time>0)		
 	{
-		light_time -= Device.fTimeDelta;
+		light_time -= CRenderDevice::GetInstance()->fTimeDelta;
 		if (light_time<=0) StopLight();
 	}
 }
@@ -464,7 +464,7 @@ void CShootingObject::FireBullet(const Fvector& pos,
 			}
 			else
 			{
-				if ((Device.fTimeGlobal-m_fPredBulletTime)>=m_fTimeToAim)
+				if ((CRenderDevice::GetInstance()->fTimeGlobal-m_fPredBulletTime)>=m_fTimeToAim)
 				{
 					aim_bullet=true;
 				}
@@ -483,7 +483,7 @@ void CShootingObject::FireBullet(const Fvector& pos,
 	{
 		aim_bullet=false;
 	}
-	m_fPredBulletTime = Device.fTimeGlobal;
+	m_fPredBulletTime = CRenderDevice::GetInstance()->fTimeGlobal;
 
 	float l_fHitPower = 0.0f;
 	if (ParentIsActor())//если из оружия стреляет актёр(игрок)

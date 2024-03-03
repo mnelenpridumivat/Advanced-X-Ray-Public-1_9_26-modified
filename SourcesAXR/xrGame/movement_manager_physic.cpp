@@ -54,7 +54,7 @@ void dump_collision_hit(CPHMovementControl *movement_control)
 	VERIFY( iobj );
 	VERIFY( smart_cast<CPhysicsShellHolder*>(iobj) );
 	CPhysicsShellHolder	*obj = static_cast<CPhysicsShellHolder	*>(iobj);
-	Msg( "ai unit: %s hited by collision; power: %f, spawn frame %d, current frame %d ", obj->cName().c_str(), movement_control->gcontact_HealthLost, obj->spawn_time(), Device.dwFrame ); 
+	Msg( "ai unit: %s hited by collision; power: %f, spawn frame %d, current frame %d ", obj->cName().c_str(), movement_control->gcontact_HealthLost, obj->spawn_time(), CRenderDevice::GetInstance()->dwFrame );
 	//CPhysicsShellHolder* object =static_cast<CPhysicsShellHolder*>(Level().Objects.net_Find(m_collision_damage_info.m_obj_id));
 	//const ICollisionDamageInfo * di=movement_control->CollisionDamageInfo();
 	//VERIFY( di );
@@ -274,7 +274,7 @@ void CMovementManager::move_along_path		(CPHMovementControl *movement_control, F
 //	Msg					("[%6d][%s] curr_tp=%d",Device.dwFrame,*object().cName(),detail().m_current_travel_point);
 
 	// Физика устанавливает новую позицию
-	Device.Statistic->Physics.Begin	();
+	CRenderDevice::GetInstance()->Statistic->Physics.Begin	();
 
 	// получить физ. объекты в радиусе
 	m_nearest_objects.clear_not_free	();
@@ -349,7 +349,7 @@ void CMovementManager::move_along_path		(CPHMovementControl *movement_control, F
 		}
 	}
 	
-	Device.Statistic->Physics.End	();
+	CRenderDevice::GetInstance()->Statistic->Physics.End	();
 
 	STOP_PROFILE
 }

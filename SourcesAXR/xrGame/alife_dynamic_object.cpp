@@ -192,8 +192,8 @@ void CSE_ALifeInventoryBox::add_online	(const bool &update_registries)
 //			Msg					("[LSS] Spawning item [%s][%s][%d]",l_tpALifeInventoryItem->base()->name_replace(),*l_tpALifeInventoryItem->base()->s_name,l_tpALifeDynamicObject->ID);
 		Msg						(
 			"[LSS][%d] Going online [%d][%s][%d] with parent [%d][%s] on '%s'",
-			Device.dwFrame,
-			Device.dwTimeGlobal,
+			CRenderDevice::GetInstance()->dwFrame,
+			CRenderDevice::GetInstance()->dwTimeGlobal,
 			l_tpALifeInventoryItem->base()->name_replace(),
 			l_tpALifeInventoryItem->base()->ID,
 			ID,
@@ -228,8 +228,8 @@ void CSE_ALifeInventoryBox::add_offline	(const xr_vector<ALife::_OBJECT_ID> &sav
 //			Msg					("[LSS] Destroying item [%s][%s][%d]",inventory_item->base()->name_replace(),*inventory_item->base()->s_name,inventory_item->base()->ID);
 		Msg						(
 			"[LSS][%d] Going offline [%d][%s][%d] with parent [%d][%s] on '%s'",
-			Device.dwFrame,
-			Device.dwTimeGlobal,
+			CRenderDevice::GetInstance()->dwFrame,
+			CRenderDevice::GetInstance()->dwTimeGlobal,
 			inventory_item->base()->name_replace(),
 			inventory_item->base()->ID,
 			ID,
@@ -299,8 +299,8 @@ void CSE_ALifeCar::add_online(const bool& update_registries)
 		//			Msg					("[LSS] Spawning item [%s][%s][%d]",l_tpALifeInventoryItem->base()->name_replace(),*l_tpALifeInventoryItem->base()->s_name,l_tpALifeDynamicObject->ID);
 		Msg(
 			"[LSS][%d] Going online [%d][%s][%d] with parent [%d][%s] on '%s'",
-			Device.dwFrame,
-			Device.dwTimeGlobal,
+			CRenderDevice::GetInstance()->dwFrame,
+			CRenderDevice::GetInstance()->dwTimeGlobal,
 			l_tpALifeInventoryItem->base()->name_replace(),
 			l_tpALifeInventoryItem->base()->ID,
 			ID,
@@ -335,8 +335,8 @@ void CSE_ALifeCar::add_offline(const xr_vector<ALife::_OBJECT_ID>& saved_childre
 		//			Msg					("[LSS] Destroying item [%s][%s][%d]",inventory_item->base()->name_replace(),*inventory_item->base()->s_name,inventory_item->base()->ID);
 		Msg(
 			"[LSS][%d] Going offline [%d][%s][%d] with parent [%d][%s] on '%s'",
-			Device.dwFrame,
-			Device.dwTimeGlobal,
+			CRenderDevice::GetInstance()->dwFrame,
+			CRenderDevice::GetInstance()->dwTimeGlobal,
 			inventory_item->base()->name_replace(),
 			inventory_item->base()->ID,
 			ID,

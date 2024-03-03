@@ -73,7 +73,7 @@ public:
 	  CPHParticlesPlayCall( contact, invert_n, psn ), b_called ( false )
 	{
 		static const u32 time_to_call_remove  = 3000;
-		remove_time = Device.dwTimeGlobal + time_to_call_remove;
+		remove_time = CRenderDevice::GetInstance()->dwTimeGlobal + time_to_call_remove;
 	}
 	const Fvector 	&position() const
 	{
@@ -90,7 +90,7 @@ private:
 		CPHParticlesPlayCall::run();
 	}
 
-	bool 			obsolete						()const override {return Device.dwTimeGlobal > remove_time ;}
+	bool 			obsolete						()const override {return CRenderDevice::GetInstance()->dwTimeGlobal > remove_time ;}
 };
 
 

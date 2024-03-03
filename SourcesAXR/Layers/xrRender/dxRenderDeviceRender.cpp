@@ -149,7 +149,7 @@ void dxRenderDeviceRender::OnDeviceCreate(LPCSTR shName)
 	m_Gamma.Update				();
 	Resources->OnDeviceCreate	(shName);
 	::Render->create			();
-	Device.Statistic->OnDeviceCreate	();
+	CRenderDevice::GetInstance()->Statistic->OnDeviceCreate	();
 
 //#ifndef DEDICATED_SERVER
 	if (!g_dedicated_server)
@@ -235,10 +235,10 @@ void dxRenderDeviceRender::overdrawEnd()
 		u32	c	= D3DCOLOR_XRGB(_c,_c,_c);
 
 		FVF::TL	pv[4];
-		pv[0].set(float(0),			float(Device.dwHeight),	c,0,0);			
+		pv[0].set(float(0),			float(CRenderDevice::GetInstance()->dwHeight),	c,0,0);
 		pv[1].set(float(0),			float(0),			c,0,0);					
-		pv[2].set(float(Device.dwWidth),	float(Device.dwHeight),	c,0,0);	
-		pv[3].set(float(Device.dwWidth),	float(0),			c,0,0);
+		pv[2].set(float(CRenderDevice::GetInstance()->dwWidth),	float(CRenderDevice::GetInstance()->dwHeight),	c,0,0);
+		pv[3].set(float(CRenderDevice::GetInstance()->dwWidth),	float(0),			c,0,0);
 
 		CHK_DX(HW.pDevice->SetRenderState	( D3DRS_STENCILREF,		I	));
 		CHK_DX(HW.pDevice->DrawPrimitiveUP	( D3DPT_TRIANGLESTRIP,	2,	pv, sizeof(FVF::TL) ));

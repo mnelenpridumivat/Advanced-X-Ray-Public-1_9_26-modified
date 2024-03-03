@@ -40,13 +40,13 @@ class engine_impl;
 
 #pragma pack(push,4)
 
-class IRenderDevice
-{
-public:
-	virtual		CStatsPhysics*	_BCL		StatPhysics		()							= 0;								
-	virtual				void	_BCL		AddSeqFrame		( pureFrame* f, bool mt )	= 0;
-	virtual				void	_BCL		RemoveSeqFrame	( pureFrame* f )			= 0;
-};
+//class IRenderDevice
+//{
+//public:
+//	virtual		CStatsPhysics*	_BCL		StatPhysics		()							= 0;								
+//	virtual				void	_BCL		AddSeqFrame		( pureFrame* f, bool mt )	= 0;
+//	virtual				void	_BCL		RemoveSeqFrame	( pureFrame* f )			= 0;
+//};
 
 class ENGINE_API CRenderDeviceData
 {
@@ -111,7 +111,7 @@ public:
 };
 
 class	ENGINE_API CRenderDeviceBase :
-	public IRenderDevice,
+	//public IRenderDevice,
 	public CRenderDeviceData,
 	public xrDeviceInterface
 {
@@ -413,9 +413,9 @@ public:
 
 private:
 			void					message_loop		();
-virtual		void			_BCL	AddSeqFrame			( pureFrame* f, bool mt );
-virtual		void			_BCL	RemoveSeqFrame		( pureFrame* f );
-virtual		CStatsPhysics*	_BCL	StatPhysics			()	{ return  Statistic ;}
+virtual		void			_BCL	AddSeqFrame			( pureFrame* f, bool mt ) override;
+virtual		void			_BCL	RemoveSeqFrame		( pureFrame* f ) override;
+virtual		CStatsPhysics*	_BCL	StatPhysics			() override { return  Statistic ;}
 #ifdef INGAME_EDITOR
 public:
 	IC		editor::ide			*editor				() const { return m_editor; }

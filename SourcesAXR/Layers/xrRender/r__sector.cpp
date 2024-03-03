@@ -16,14 +16,14 @@
 CPortal::CPortal		()
 {
 #ifdef DEBUG
-	Device.seqRender.Add(this,REG_PRIORITY_LOW-1000);
+	CRenderDevice::GetInstance()->seqRender.Add(this,REG_PRIORITY_LOW-1000);
 #endif
 }
 
 CPortal::~CPortal		()
 {
 #ifdef DEBUG
-	Device.seqRender.Remove(this);
+	CRenderDevice::GetInstance()->seqRender.Remove(this);
 #endif
 }
 
@@ -50,14 +50,14 @@ void CPortal::OnRender	()
 		if (bDebug){
 			RImplementation.rmNear();
 		}else{
-			Device.SetNearer(TRUE);
+			CRenderDevice::GetInstance()->SetNearer(TRUE);
 		}
 		RCache.set_Shader	(dxRenderDeviceRender::Instance().m_WireShader);
 		RCache.dbg_Draw		(D3DPT_LINESTRIP,&*(V.begin()+1),V.size()-2);
 		if (bDebug){
 			RImplementation.rmNormal();
 		}else{
-			Device.SetNearer(FALSE);
+			CRenderDevice::GetInstance()->SetNearer(FALSE);
 		}
 	}
 }

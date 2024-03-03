@@ -164,7 +164,7 @@ void CStalkerAnimationPair::play			(IKinematicsAnimated *skeleton_animated, Play
 		LPCSTR				name = skeleton_animated->LL_MotionDefName_dbg(animation()).first;
 		Msg					(
 			"%6d [%s][%s][%s][%d][%c][%c][%c][%f][%f][%f]",
-			Device.dwTimeGlobal,
+			CRenderDevice::GetInstance()->dwTimeGlobal,
 			m_object_name,
 			m_animation_type_name,
 			name,

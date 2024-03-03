@@ -129,7 +129,7 @@ void CProfiler::setup_timer			(LPCSTR timer_id, const u64 &timer_time, const u32
 	else
 		i->second.m_time		= .01f*_time + .99f*i->second.m_time;
 
-	i->second.m_update_time	= Device.dwTimeGlobal;
+	i->second.m_update_time	= CRenderDevice::GetInstance()->dwTimeGlobal;
 }
 
 void CProfiler::clear				()

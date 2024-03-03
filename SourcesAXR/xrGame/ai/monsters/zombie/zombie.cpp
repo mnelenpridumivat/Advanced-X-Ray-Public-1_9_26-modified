@@ -106,7 +106,7 @@ void CZombie::BoneCallback(CBoneInstance *B)
 	CZombie*	this_class = static_cast<CZombie*>(B->callback_param());
 
 	START_PROFILE("Zombie/Bones Update");
-	this_class->Bones.Update(B, Device.dwTimeGlobal);
+	this_class->Bones.Update(B, CRenderDevice::GetInstance()->dwTimeGlobal);
 	STOP_PROFILE("AI/Zombie/Bones Update");
 }
 
@@ -149,13 +149,13 @@ void	CZombie::Hit								(SHit* pHDS)
 
 	if (!g_Alive()) return;
 	
-	if ((pHDS->hit_type == ALife::eHitTypeFireWound) && (Device.dwFrame != last_hit_frame)) {
-		if (!com_man().ta_is_active() && (time_resurrect + TIME_RESURRECT_RESTORE < Device.dwTimeGlobal) && (conditions().GetHealth() < health_death_threshold)) {
+	if ((pHDS->hit_type == ALife::eHitTypeFireWound) && (CRenderDevice::GetInstance()->dwFrame != last_hit_frame)) {
+		if (!com_man().ta_is_active() && (time_resurrect + TIME_RESURRECT_RESTORE < CRenderDevice::GetInstance()->dwTimeGlobal) && (conditions().GetHealth() < health_death_threshold)) {
 			if (conditions().GetHealth() < (health_death_threshold - static_cast<float>(fake_death_count - fake_death_left) * health_death_threshold / fake_death_count)) {
 				active_triple_idx			= static_cast<u8>(Random.randI(FAKE_DEATH_TYPES_COUNT));
 				com_man().ta_activate		(anim_triple_death[active_triple_idx]);
 				move().stop					();
-				time_dead_start				= Device.dwTimeGlobal;
+				time_dead_start				= CRenderDevice::GetInstance()->dwTimeGlobal;
 				fakedeath_is_active			= true;
 
 				if (fake_death_left == 0)	fake_death_left = 1;
@@ -164,7 +164,7 @@ void	CZombie::Hit								(SHit* pHDS)
 		} 
 	}
 
-	last_hit_frame = Device.dwFrame;
+	last_hit_frame = CRenderDevice::GetInstance()->dwFrame;
 }
 
 
@@ -173,13 +173,13 @@ void CZombie::shedule_Update(u32 dt)
 	inherited::shedule_Update(dt);
 
 	if (time_dead_start != 0) {
-		if (time_dead_start + TIME_FAKE_DEATH < Device.dwTimeGlobal) {
+		if (time_dead_start + TIME_FAKE_DEATH < CRenderDevice::GetInstance()->dwTimeGlobal) {
 			time_dead_start  = 0;
 			fakedeath_is_active = false;
 
 			com_man().ta_pointbreak();	
 
-			time_resurrect = Device.dwTimeGlobal;
+			time_resurrect = CRenderDevice::GetInstance()->dwTimeGlobal;
 		}
 	}
 }

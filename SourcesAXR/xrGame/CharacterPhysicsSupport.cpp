@@ -523,14 +523,14 @@ const u32 hit_valide_time = 1000;
 void CCharacterPhysicsSupport::in_Hit( SHit &H, bool is_killing )
 {
 	m_sv_hit = H;
-	m_hit_valide_time = Device.dwTimeGlobal + hit_valide_time;
+	m_hit_valide_time = CRenderDevice::GetInstance()->dwTimeGlobal + hit_valide_time;
 	if( m_EntityAlife.use_simplified_visual	( ) || esRemoved == m_eState )
 		return;
 	if( m_flags.test( fl_block_hit ) )
 	{
 		VERIFY2( !m_EntityAlife.g_Alive( ),
 			make_string("entity [%s][%d] is dead", m_EntityAlife.Name(), m_EntityAlife.ID()).c_str());
-		if( Device.dwTimeGlobal - m_EntityAlife.GetLevelDeathTime( ) >= 2000 )
+		if(CRenderDevice::GetInstance()->dwTimeGlobal - m_EntityAlife.GetLevelDeathTime( ) >= 2000 )
 			m_flags.set(fl_block_hit,FALSE);
 		else return;
 	}
@@ -663,7 +663,7 @@ void CCharacterPhysicsSupport::in_UpdateCL( )
 
 		m_EntityAlife.XFORM().transform_tiny(p, vis.sphere.P);
 
-		float dist = Device.vCameraPosition.distance_to(p);
+		float dist = CRenderDevice::GetInstance()->vCameraPosition.distance_to(p);
 
 		if (dist < IK_CALC_DIST)
 		{
@@ -867,7 +867,7 @@ void	CCharacterPhysicsSupport::	destroy_animation_collision		( )
 }
 void CCharacterPhysicsSupport::create_animation_collision		( )
 {
-	m_physics_shell_animated_time_destroy = Device.dwTimeGlobal + physics_shell_animated_destroy_delay;
+	m_physics_shell_animated_time_destroy = CRenderDevice::GetInstance()->dwTimeGlobal + physics_shell_animated_destroy_delay;
 	if( m_physics_shell_animated )
 		return;
 	m_physics_shell_animated = xr_new<physics_shell_animated>( &m_EntityAlife, true );
@@ -879,7 +879,7 @@ void CCharacterPhysicsSupport::update_animation_collision		( )
 	{
 			animation_collision( )->update( mXFORM );
 			//animation_collision( )->shell()->set_LinearVel( movement()->GetVelocity() );
-			if( Device.dwTimeGlobal > m_physics_shell_animated_time_destroy )
+			if(CRenderDevice::GetInstance()->dwTimeGlobal > m_physics_shell_animated_time_destroy )
 						destroy_animation_collision		( );
 	}
 }

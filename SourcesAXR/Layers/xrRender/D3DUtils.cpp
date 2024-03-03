@@ -170,7 +170,7 @@ void CDrawUtilities::UpdateGrid(int number_of_cell, float square_size, int subdi
 				m_GridPoints.push_back( right );
 			}
 		}
-		for(i=-m_GridCounts[1]; i<=m_GridCounts[1]; i++){
+		for(int i=-m_GridCounts[1]; i<=m_GridCounts[1]; i++){
 			if( (!!thin) != !!(i%m_GridSubDiv[1]) ){
 				left.p.x = -m_GridCounts[0]*m_GridStep.x;
 				right.p.x = m_GridCounts[0]*m_GridStep.x;
@@ -187,7 +187,7 @@ void CDrawUtilities::UpdateGrid(int number_of_cell, float square_size, int subdi
 
 void CDrawUtilities::OnDeviceCreate()
 {
-	Device.seqRender.Add			(this,REG_PRIORITY_LOW-1000);
+    CRenderDevice::GetInstance()->seqRender.Add			(this,REG_PRIORITY_LOW-1000);
 
 	m_SolidBox.CreateFromData		(D3DPT_TRIANGLELIST,DU_BOX_NUMFACES,		D3DFVF_XYZ|D3DFVF_DIFFUSE,du_box_vertices,			DU_BOX_NUMVERTEX,			du_box_faces,			DU_BOX_NUMFACES*3);
 	m_SolidCone.CreateFromData		(D3DPT_TRIANGLELIST,DU_CONE_NUMFACES,		D3DFVF_XYZ|D3DFVF_DIFFUSE,du_cone_vertices,		DU_CONE_NUMVERTEX,			du_cone_faces,			DU_CONE_NUMFACES*3);
@@ -216,7 +216,7 @@ void CDrawUtilities::OnDeviceCreate()
     // initialize identity box
 	Fbox bb;
 	bb.set(-0.505f,-0.505f,-0.505f, 0.505f,0.505f,0.505f);
-	for (i=0; i<8; i++){
+	for (int i=0; i<8; i++){
     	Fvector S;
     	Fvector p;
         bb.getpoint(i,p);
@@ -238,7 +238,7 @@ void CDrawUtilities::OnDeviceCreate()
 
 void CDrawUtilities::OnDeviceDestroy()
 {
-	Device.seqRender.Remove		(this);
+    CRenderDevice::GetInstance()->seqRender.Remove		(this);
 	xr_delete					(m_Font);
     m_SolidBox.Destroy			();
 	m_SolidCone.Destroy			();
@@ -560,25 +560,25 @@ void CDrawUtilities::DrawLineSphere(const Fvector& p, float radius, u32 c, BOOL 
 //----------------------------------------------------
 #ifdef _EDITOR
 IC float 				_x2real			(float x)
-{ return (x+1)*Device.m_RenderWidth_2;	}
+{ return (x+1)* CRenderDevice::GetInstance()->m_RenderWidth_2;	}
 IC float 				_y2real			(float y)
-{ return (y+1)*Device.m_RenderHeight_2;}
+{ return (y+1)* CRenderDevice::GetInstance()->m_RenderHeight_2;}
 #else
 IC float 				_x2real			(float x)
-{ return (x+1)*Device.dwWidth*0.5f;	}
+{ return (x+1)* CRenderDevice::GetInstance()->dwWidth*0.5f;	}
 IC float 				_y2real			(float y)
-{ return (y+1)*Device.dwHeight*0.5f;}
+{ return (y+1)* CRenderDevice::GetInstance()->dwHeight*0.5f;}
 #endif
 
 void CDrawUtilities::dbgDrawPlacement(const Fvector& p, int sz, u32 clr, LPCSTR caption, u32 clr_font)
 {
-	VERIFY( Device.b_is_Ready );
+	VERIFY(CRenderDevice::GetInstance()->b_is_Ready );
     Fvector c;
-	float w	= p.x*Device.mFullTransform._14 + p.y*Device.mFullTransform._24 + p.z*Device.mFullTransform._34 + Device.mFullTransform._44;
+	float w	= p.x* CRenderDevice::GetInstance()->mFullTransform._14 + p.y* CRenderDevice::GetInstance()->mFullTransform._24 + p.z* CRenderDevice::GetInstance()->mFullTransform._34 + CRenderDevice::GetInstance()->mFullTransform._44;
     if (w<0) return; // culling
 
 	float s = (float)sz;
-	Device.mFullTransform.transform(c,p);
+    CRenderDevice::GetInstance()->mFullTransform.transform(c,p);
 	c.x = (float)iFloor(_x2real(c.x)); c.y = (float)iFloor(_y2real(-c.y));
 
 	_VertexStream*	Stream	= &RCache.Vertex;
@@ -1016,11 +1016,11 @@ void CDrawUtilities::DrawAxis(const Fmatrix& T)
     u32 vBase;
 	FVF::TL* pv	= (FVF::TL*)Stream->Lock(6,vs_TL->vb_stride,vBase);
     // transform to screen
-    float dx=-float(Device.dwWidth)/2.2f;
-    float dy=float(Device.dwHeight)/2.25f;
+    float dx=-float(CRenderDevice::GetInstance()->dwWidth)/2.2f;
+    float dy=float(CRenderDevice::GetInstance()->dwHeight)/2.25f;
 
     for (int i=0; i<6; i++,pv++){
-	    pv->color = c[i]; pv->transform(p[i],Device.mFullTransform);
+	    pv->color = c[i]; pv->transform(p[i], CRenderDevice::GetInstance()->mFullTransform);
 	    pv->p.set((float)iFloor(_x2real(pv->p.x)+dx),(float)iFloor(_y2real(pv->p.y)+dy),0,1);
         p[i].set(pv->p.x,pv->p.y,0);
     }
@@ -1044,17 +1044,17 @@ void CDrawUtilities::DrawAxis(const Fmatrix& T)
 
 void CDrawUtilities::DrawObjectAxis(const Fmatrix& T, float sz, BOOL sel)
 {
-	VERIFY( Device.b_is_Ready );
+	VERIFY(CRenderDevice::GetInstance()->b_is_Ready );
 	_VertexStream*	Stream	= &RCache.Vertex;
     Fvector c,r,n,d;
-	float w	= T.c.x*Device.mFullTransform._14 + T.c.y*Device.mFullTransform._24 + T.c.z*Device.mFullTransform._34 + Device.mFullTransform._44;
+	float w	= T.c.x* CRenderDevice::GetInstance()->mFullTransform._14 + T.c.y* CRenderDevice::GetInstance()->mFullTransform._24 + T.c.z* CRenderDevice::GetInstance()->mFullTransform._34 + CRenderDevice::GetInstance()->mFullTransform._44;
     if (w<0) return; // culling
 
 	float s = w*sz;
-								Device.mFullTransform.transform(c,T.c);
-    r.mul(T.i,s); r.add(T.c); 	Device.mFullTransform.transform(r);
-    n.mul(T.j,s); n.add(T.c); 	Device.mFullTransform.transform(n);
-    d.mul(T.k,s); d.add(T.c); 	Device.mFullTransform.transform(d);
+    CRenderDevice::GetInstance()->mFullTransform.transform(c,T.c);
+    r.mul(T.i,s); r.add(T.c); 	CRenderDevice::GetInstance()->mFullTransform.transform(r);
+    n.mul(T.j,s); n.add(T.c); 	CRenderDevice::GetInstance()->mFullTransform.transform(n);
+    d.mul(T.k,s); d.add(T.c); 	CRenderDevice::GetInstance()->mFullTransform.transform(d);
 	c.x = (float)iFloor(_x2real(c.x)); c.y = (float)iFloor(_y2real(-c.y));
     r.x = (float)iFloor(_x2real(r.x)); r.y = (float)iFloor(_y2real(-r.y));
     n.x = (float)iFloor(_x2real(n.x)); n.y = (float)iFloor(_y2real(-n.y));
@@ -1088,7 +1088,7 @@ void CDrawUtilities::DrawObjectAxis(const Fmatrix& T, float sz, BOOL sel)
 
 void CDrawUtilities::DrawGrid()
 {
-	VERIFY( Device.b_is_Ready );
+	VERIFY(CRenderDevice::GetInstance()->b_is_Ready );
 	_VertexStream*	Stream	= &RCache.Vertex;
     u32 vBase;
 	// fill VB
@@ -1104,7 +1104,7 @@ void CDrawUtilities::DrawGrid()
 }
 
 void CDrawUtilities::DrawSelectionRect(const Ivector2& m_SelStart, const Ivector2& m_SelEnd){
-	VERIFY( Device.b_is_Ready );
+	VERIFY(CRenderDevice::GetInstance()->b_is_Ready );
 	// fill VB
 	_VertexStream*	Stream	= &RCache.Vertex;
     u32 vBase;
@@ -1202,9 +1202,9 @@ void CDrawUtilities::OnRender()
 void CDrawUtilities::OutText(const Fvector& pos, LPCSTR text, u32 color, u32 shadow_color)
 {
 	Fvector p;
-	float w	= pos.x*Device.mFullTransform._14 + pos.y*Device.mFullTransform._24 + pos.z*Device.mFullTransform._34 + Device.mFullTransform._44;
+	float w	= pos.x* CRenderDevice::GetInstance()->mFullTransform._14 + pos.y* CRenderDevice::GetInstance()->mFullTransform._24 + pos.z* CRenderDevice::GetInstance()->mFullTransform._34 + CRenderDevice::GetInstance()->mFullTransform._44;
 	if (w>=0){
-		Device.mFullTransform.transform(p,pos);
+        CRenderDevice::GetInstance()->mFullTransform.transform(p,pos);
 		p.x = (float)iFloor(_x2real(p.x)); p.y = (float)iFloor(_y2real(-p.y));
 
 		m_Font->SetColor(shadow_color);

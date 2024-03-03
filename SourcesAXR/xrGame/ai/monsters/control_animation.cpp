@@ -132,7 +132,7 @@ void CControlAnimation::play_part(SAnimationPart &part, PlayCallback callback)
 		part.blend->timeCurrent = part.blend->timeTotal*pos;
 	}
 
-	part.time_started	= Device.dwTimeGlobal;
+	part.time_started	= CRenderDevice::GetInstance()->dwTimeGlobal;
 	part.actual			= true;
 
 	m_man->notify		(ControlCom::eventAnimationStart, 0);

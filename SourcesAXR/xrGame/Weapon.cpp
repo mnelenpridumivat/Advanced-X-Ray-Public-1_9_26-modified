@@ -249,10 +249,10 @@ void CWeapon::Hit					(SHit* pHDS)
 
 void CWeapon::UpdateXForm	()
 {
-	if (Device.dwFrame == dwXF_Frame)
+	if (CRenderDevice::GetInstance()->dwFrame == dwXF_Frame)
 		return;
 
-	dwXF_Frame				= Device.dwFrame;
+	dwXF_Frame				= CRenderDevice::GetInstance()->dwFrame;
 
 	if (!GetHUDmode())
 		UpdateAddonsTransform(false);
@@ -377,9 +377,9 @@ void CWeapon::UpdateXForm	()
 
 void CWeapon::UpdateFireDependencies_internal()
 {
-	if (Device.dwFrame!=dwFP_Frame) 
+	if (CRenderDevice::GetInstance()->dwFrame!=dwFP_Frame)
 	{
-		dwFP_Frame			= Device.dwFrame;
+		dwFP_Frame			= CRenderDevice::GetInstance()->dwFrame;
 
 		UpdateXForm			();
 
@@ -1567,7 +1567,7 @@ void CWeapon::UpdateCL		()
 		{
 			if (hud_adj_mode==0 && 
 				GetState()==eIdle && 
-				(Device.dwTimeGlobal-m_dw_curr_substate_time>20000) && 
+				(CRenderDevice::GetInstance()->dwTimeGlobal-m_dw_curr_substate_time>20000) &&
 				!IsZoomed()&&
 				g_player_hud->attached_item(1)==NULL)
 			{
@@ -1611,17 +1611,17 @@ void CWeapon::GetBoneOffsetPosDir(const shared_str& bone_name, Fvector& dest_pos
 	Fmatrix& fire_mat = HudItemData()->m_model->LL_GetTransform(bone_id);
 	fire_mat.transform_tiny(dest_pos, offset);
 	HudItemData()->m_item_transform.transform_tiny(dest_pos);
-	dest_pos.add(Device.vCameraPosition);
+	dest_pos.add(CRenderDevice::GetInstance()->vCameraPosition);
 	dest_dir.set(0.f, 0.f, 1.f);
 	HudItemData()->m_item_transform.transform_dir(dest_dir);
 }
 
 void CWeapon::CorrectDirFromWorldToHud(Fvector& dir)
 {
-	const auto& CamDir = Device.vCameraDirection;
-	const float Fov = Device.fFOV;
+	const auto& CamDir = CRenderDevice::GetInstance()->vCameraDirection;
+	const float Fov = CRenderDevice::GetInstance()->fFOV;
 	extern ENGINE_API float psHUD_FOV;
-	const float HudFov = psHUD_FOV < 1.f ? psHUD_FOV * Device.fFOV : psHUD_FOV;
+	const float HudFov = psHUD_FOV < 1.f ? psHUD_FOV * CRenderDevice::GetInstance()->fFOV : psHUD_FOV;
 	const float diff = hud_recalc_koef * Fov / HudFov;
 	dir.sub(CamDir);
 	dir.mul(diff);
@@ -1674,7 +1674,7 @@ void CWeapon::UpdateLaser()
 			if (laser_lanim)
 			{
 				int frame;
-				const u32 clr = laser_lanim->CalculateBGR(Device.fTimeGlobal, frame);
+				const u32 clr = laser_lanim->CalculateBGR(CRenderDevice::GetInstance()->fTimeGlobal, frame);
 
 				Fcolor fclr{ static_cast<float>(color_get_B(clr)), static_cast<float>(color_get_G(clr)), static_cast<float>(color_get_R(clr)), 1.f };
 				fclr.mul_rgb(laser_fBrightness / 255.f);
@@ -1746,7 +1746,7 @@ void CWeapon::UpdateFlashlight()
 			if (flashlight_lanim)
 			{
 				int frame;
-				const u32 clr = flashlight_lanim->CalculateBGR(Device.fTimeGlobal, frame);
+				const u32 clr = flashlight_lanim->CalculateBGR(CRenderDevice::GetInstance()->fTimeGlobal, frame);
 
 				Fcolor fclr{ static_cast<float>(color_get_B(clr)), static_cast<float>(color_get_G(clr)), static_cast<float>(color_get_R(clr)), 1.f };
 				fclr.mul_rgb(flashlight_fBrightness / 255.f);
@@ -2015,7 +2015,7 @@ int CWeapon::GetSuitableAmmoTotal( bool use_item_to_spawn ) const
 	{
 		return ae_count + m_iAmmoCurrentTotal;
 	}
-	m_BriefInfo_CalcFrame = Device.dwFrame;
+	m_BriefInfo_CalcFrame = CRenderDevice::GetInstance()->dwFrame;
 
 	m_iAmmoCurrentTotal = 0;
 	for ( u8 i = 0; i < static_cast<u8>(m_ammoTypes.size()); ++i ) 
@@ -2905,7 +2905,7 @@ static BOOL pick_trace_callback(collide::rq_result& result, LPVOID params)
 static float GetRayQueryDist()
 {
 	collide::rq_result RQ;
-	g_pGameLevel->ObjectSpace.RayPick(Device.vCameraPosition, Device.vCameraDirection, 3.0f, collide::rqtStatic, RQ, Actor());
+	g_pGameLevel->ObjectSpace.RayPick(CRenderDevice::GetInstance()->vCameraPosition, CRenderDevice::GetInstance()->vCameraDirection, 3.0f, collide::rqtStatic, RQ, Actor());
 	if (!RQ.O)
 	{
 		CDB::TRI* T = Level().ObjectSpace.GetStaticTris() + RQ.element;
@@ -2914,7 +2914,7 @@ static float GetRayQueryDist()
 			collide::rq_result  RQ2;
 			collide::rq_results RQR;
 			RQ2.range = 3.0f;
-			collide::ray_defs RD(Device.vCameraPosition, Device.vCameraDirection, RQ2.range, CDB::OPT_CULL, collide::rqtStatic);
+			collide::ray_defs RD(CRenderDevice::GetInstance()->vCameraPosition, CRenderDevice::GetInstance()->vCameraDirection, RQ2.range, CDB::OPT_CULL, collide::rqtStatic);
 			if (Level().ObjectSpace.RayQuery(RQR, RD, pick_trace_callback, &RQ2, NULL, Level().CurrentEntity()))
 			{
 				clamp(RQ2.range, RQ.range, RQ2.range);
@@ -2963,9 +2963,9 @@ void CWeapon::UpdateHudAdditional(Fmatrix& trans)
 		trans.mulB_43(hud_rotation);
 
 		if (pActor->IsZoomAimingMode())
-			m_zoom_params.m_fZoomRotationFactor += Device.fTimeDelta / m_zoom_params.m_fZoomRotateTime;
+			m_zoom_params.m_fZoomRotationFactor += CRenderDevice::GetInstance()->fTimeDelta / m_zoom_params.m_fZoomRotateTime;
 		else
-			m_zoom_params.m_fZoomRotationFactor -= Device.fTimeDelta / m_zoom_params.m_fZoomRotateTime;
+			m_zoom_params.m_fZoomRotationFactor -= CRenderDevice::GetInstance()->fTimeDelta / m_zoom_params.m_fZoomRotateTime;
 
 		clamp(m_zoom_params.m_fZoomRotationFactor, 0.f, 1.f);
 	}
@@ -2997,13 +2997,13 @@ void CWeapon::UpdateHudAdditional(Fmatrix& trans)
 
 		if (m_fFactor < m_fColPosition)
 		{
-			m_fFactor += Device.fTimeDelta / 0.3;
+			m_fFactor += CRenderDevice::GetInstance()->fTimeDelta / 0.3;
 			if (m_fFactor > m_fColPosition)
 				m_fFactor = m_fColPosition;
 		}
 		else if (m_fFactor > m_fColPosition)
 		{
-			m_fFactor -= Device.fTimeDelta / 0.3;
+			m_fFactor -= CRenderDevice::GetInstance()->fTimeDelta / 0.3;
 			if (m_fFactor < m_fColPosition)
 				m_fFactor = m_fColPosition;
 		}
@@ -3041,8 +3041,8 @@ void CWeapon::UpdateHudAdditional(Fmatrix& trans)
 	float fYMag = pActor->fFPCamYawMagnitude;
 	float fPMag = pActor->fFPCamPitchMagnitude;
 
-	static float fAvgTimeDelta = Device.fTimeDelta;
-	_inertion(fAvgTimeDelta, Device.fTimeDelta, 0.8f);
+	static float fAvgTimeDelta = CRenderDevice::GetInstance()->fTimeDelta;
+	_inertion(fAvgTimeDelta, CRenderDevice::GetInstance()->fTimeDelta, 0.8f);
 
 	//======== Проверяем доступность инерции и стрейфа ========//
 	if (!g_player_hud->inertion_allowed())

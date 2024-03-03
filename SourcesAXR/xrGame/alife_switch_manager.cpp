@@ -119,7 +119,7 @@ void CALifeSwitchManager::switch_online(CSE_ALifeDynamicObject *object)
 	START_PROFILE("ALife/switch/switch_online")
 #ifdef DEBUG
 //	if (psAI_Flags.test(aiALife))
-		Msg						("[LSS][%d] Going online [%d][%s][%d] ([%f][%f][%f] : [%f][%f][%f]), on '%s'",Device.dwFrame,Device.dwTimeGlobal,object->name_replace(), object->ID,VPUSH(graph().actor()->o_Position),VPUSH(object->o_Position), "*SERVER*");
+		Msg						("[LSS][%d] Going online [%d][%s][%d] ([%f][%f][%f] : [%f][%f][%f]), on '%s'", CRenderDevice::GetInstance()->dwFrame, CRenderDevice::GetInstance()->dwTimeGlobal,object->name_replace(), object->ID,VPUSH(graph().actor()->o_Position),VPUSH(object->o_Position), "*SERVER*");
 #endif
 	object->switch_online		();
 	STOP_PROFILE
@@ -130,7 +130,7 @@ void CALifeSwitchManager::switch_offline(CSE_ALifeDynamicObject *object)
 	START_PROFILE("ALife/switch/switch_offline")
 #ifdef DEBUG
 //	if (psAI_Flags.test(aiALife))
-		Msg							("[LSS][%d] Going offline [%d][%s][%d] ([%f][%f][%f] : [%f][%f][%f]), on '%s'",Device.dwFrame,Device.dwTimeGlobal,object->name_replace(), object->ID,VPUSH(graph().actor()->o_Position),VPUSH(object->o_Position), "*SERVER*");
+		Msg							("[LSS][%d] Going offline [%d][%s][%d] ([%f][%f][%f] : [%f][%f][%f]), on '%s'", CRenderDevice::GetInstance()->dwFrame, CRenderDevice::GetInstance()->dwTimeGlobal,object->name_replace(), object->ID,VPUSH(graph().actor()->o_Position),VPUSH(object->o_Position), "*SERVER*");
 #endif
 	object->switch_offline			();
 	STOP_PROFILE
@@ -198,7 +198,7 @@ void CALifeSwitchManager::try_switch_online	(CSE_ALifeDynamicObject	*I)
 		) ||
 		!Level().Objects.net_Find(I->ID) ||
 		Level().Objects.dump_all_objects(),
-		make_string("frame [%d] time [%d] object [%s] with id [%d] is offline, but is on the level",Device.dwFrame,Device.dwTimeGlobal,I->name_replace(),I->ID)
+		make_string("frame [%d] time [%d] object [%s] with id [%d] is offline, but is on the level", CRenderDevice::GetInstance()->dwFrame, CRenderDevice::GetInstance()->dwTimeGlobal,I->name_replace(),I->ID)
 	);
 
 	I->try_switch_online		();

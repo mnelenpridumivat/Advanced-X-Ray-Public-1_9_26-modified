@@ -97,7 +97,7 @@ void CCarWeapon::UpdateCL()
 
 void CCarWeapon::UpdateFire()
 {
-	fShotTimeCounter -= Device.fTimeDelta;
+	fShotTimeCounter -= CRenderDevice::GetInstance()->fTimeDelta;
 
 	inheritedShooting::UpdateFlameParticles();
 	inheritedShooting::UpdateLight();
@@ -177,8 +177,8 @@ void CCarWeapon::UpdateBarrelDir()
 		clamp			(m_tgt_y_rot,-m_lim_y_rot.y,-m_lim_y_rot.x);
 	}
 
-	m_cur_x_rot		= angle_inertion_var(m_cur_x_rot,m_tgt_x_rot,m_min_gun_speed,m_max_gun_speed,PI,Device.fTimeDelta);
-	m_cur_y_rot		= angle_inertion_var(m_cur_y_rot,m_tgt_y_rot,m_min_gun_speed,m_max_gun_speed,PI,Device.fTimeDelta);
+	m_cur_x_rot		= angle_inertion_var(m_cur_x_rot,m_tgt_x_rot,m_min_gun_speed,m_max_gun_speed,PI, CRenderDevice::GetInstance()->fTimeDelta);
+	m_cur_y_rot		= angle_inertion_var(m_cur_y_rot,m_tgt_y_rot,m_min_gun_speed,m_max_gun_speed,PI, CRenderDevice::GetInstance()->fTimeDelta);
 	static float dir_eps = deg2rad(5.0f);
 	if( !fsimilar(m_cur_x_rot,m_tgt_x_rot,dir_eps)|| !fsimilar(m_cur_y_rot,m_tgt_y_rot,dir_eps))
 		m_allow_fire=FALSE;

@@ -205,8 +205,8 @@ light*			CLight_DB::Create	()
 #if RENDER==R_R1
 void			CLight_DB::add_light		(light* L)
 {
-	if (Device.dwFrame==L->frame_render)	return;
-	L->frame_render							=	Device.dwFrame;
+	if (CRenderDevice::GetInstance()->dwFrame==L->frame_render)	return;
+	L->frame_render							= CRenderDevice::GetInstance()->dwFrame;
 	if (L->flags.bStatic)					return;	// skip static lighting, 'cause they are in lmaps
 	if (ps_r1_flags.test(R1FLAG_DLIGHTS))	RImplementation.L_Dynamic->add	(L);
 }
@@ -255,7 +255,7 @@ void			CLight_DB::Update			()
 		VERIFY2						(E.sun_dir.y<0,"Invalid sun direction settings in evironment-config");
 		Fvector						OD,OP,AD,AP;
 		OD.set						(E.sun_dir).normalize			();
-		OP.mad						(Device.vCameraPosition,OD,-500.f);
+		OP.mad						(CRenderDevice::GetInstance()->vCameraPosition,OD,-500.f);
 		AD.set(0,-.75f,0).add		(E.sun_dir);
 
 		// for some reason E.sun_dir can point-up
@@ -264,7 +264,7 @@ void			CLight_DB::Update			()
 			AD.add(E.sun_dir); counter++;
 		}
 		AD.normalize				();
-		AP.mad						(Device.vCameraPosition,AD,-500.f);
+		AP.mad						(CRenderDevice::GetInstance()->vCameraPosition,AD,-500.f);
 		sun_original->set_rotation	(OD,_sun_original->right	);
 		sun_original->set_position	(OP);
 		sun_original->set_color		(E.sun_color.x,E.sun_color.y,E.sun_color.z);

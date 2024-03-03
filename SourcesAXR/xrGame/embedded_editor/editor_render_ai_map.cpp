@@ -57,7 +57,7 @@ void renderAiMap()
         sh_Tracer->create("editor\\ai_node", "ed\\ed_ai_arrows_01");
 
     Fvector min_position, max_position;
-    max_position = min_position = Device.vCameraPosition;
+    max_position = min_position = CRenderDevice::GetInstance()->vCameraPosition;
     min_position.sub(30.f);
     max_position.add(30.f);
 
@@ -94,7 +94,7 @@ void renderAiMap()
         Fvector PC;
         PC = graph.vertex_position(N);
 
-        if (Device.vCameraPosition.distance_to_sqr(PC) > 900.0f)
+        if (CRenderDevice::GetInstance()->vCameraPosition.distance_to_sqr(PC) > 900.0f)
             continue;
 
         float sr = graph.header().cell_size();

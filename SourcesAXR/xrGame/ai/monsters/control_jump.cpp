@@ -257,7 +257,7 @@ void CControlJump::select_next_anim_state()
 
 float CControlJump::relative_time ()
 {
-	float time	=	((Device.dwTimeGlobal - m_time_started) / 1000.f) / m_jump_time;
+	float time	=	((CRenderDevice::GetInstance()->dwTimeGlobal - m_time_started) / 1000.f) / m_jump_time;
 	if ( time > 1.f )
 		time	=	1.f;
 

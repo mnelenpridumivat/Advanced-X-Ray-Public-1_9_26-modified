@@ -215,7 +215,7 @@ public:
 	float			get_partial_visibility_radius ();
 	float			get_no_visibility_radius ();
 	TTime			get_visibility_state_change_min_delay ();
-	void			start_runaway_invisible () { m_runaway_invisible_time	=	Device.dwTimeGlobal; }
+	void			start_runaway_invisible () { m_runaway_invisible_time	= CRenderDevice::GetInstance()->dwTimeGlobal; }
 	void			clear_runaway_invisible () { m_runaway_invisible_time	=	0; }
 
 	bool	can_be_seen				() const override { return get_visibility_state() == full_visibility; }

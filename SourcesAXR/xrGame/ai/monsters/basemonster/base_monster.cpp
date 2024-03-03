@@ -160,12 +160,12 @@ void CBaseMonster::update_pos_by_grouping_behaviour ()
 
 	if ( !m_last_grouping_behaviour_update_tick )
 	{
-		m_last_grouping_behaviour_update_tick = Device.dwTimeGlobal;
+		m_last_grouping_behaviour_update_tick = CRenderDevice::GetInstance()->dwTimeGlobal;
 	}	
 
-	const float dt = 0.001f * (Device.dwTimeGlobal - m_last_grouping_behaviour_update_tick);
+	const float dt = 0.001f * (CRenderDevice::GetInstance()->dwTimeGlobal - m_last_grouping_behaviour_update_tick);
 	
-	m_last_grouping_behaviour_update_tick = Device.dwTimeGlobal;
+	m_last_grouping_behaviour_update_tick = CRenderDevice::GetInstance()->dwTimeGlobal;
 
 	const Fvector old_pos  = Position();
 	Fvector       offs     = acc*dt;
@@ -282,7 +282,7 @@ bool CBaseMonster::enemy_accessible ()
 			return						false;
 	}
 
-	if ( Device.dwTimeGlobal < m_first_tick_enemy_inaccessible + 3000 )
+	if (CRenderDevice::GetInstance()->dwTimeGlobal < m_first_tick_enemy_inaccessible + 3000 )
 		return							true;
 
 	return								false;
@@ -291,7 +291,7 @@ bool CBaseMonster::enemy_accessible ()
 bool CBaseMonster::at_home ()
 {
 	return										!m_first_tick_object_not_at_home ||
-												(Device.dwTimeGlobal < m_first_tick_object_not_at_home + 4000);
+												(CRenderDevice::GetInstance()->dwTimeGlobal < m_first_tick_object_not_at_home + 4000);
 }
 
 void CBaseMonster::update_enemy_accessible_and_at_home_info	()
@@ -299,7 +299,7 @@ void CBaseMonster::update_enemy_accessible_and_at_home_info	()
 	if ( !Home->at_home() )
 	{
 		if ( !m_first_tick_object_not_at_home )
-			m_first_tick_object_not_at_home	=	Device.dwTimeGlobal;
+			m_first_tick_object_not_at_home	= CRenderDevice::GetInstance()->dwTimeGlobal;
 	}
 	else
 		m_first_tick_object_not_at_home		=	0;
@@ -314,13 +314,13 @@ void CBaseMonster::update_enemy_accessible_and_at_home_info	()
 	if ( ::enemy_inaccessible(this) )
 	{
 		if ( !m_first_tick_enemy_inaccessible )
-			m_first_tick_enemy_inaccessible	=	Device.dwTimeGlobal;
+			m_first_tick_enemy_inaccessible	= CRenderDevice::GetInstance()->dwTimeGlobal;
 
-		m_last_tick_enemy_inaccessible		=	Device.dwTimeGlobal;
+		m_last_tick_enemy_inaccessible		= CRenderDevice::GetInstance()->dwTimeGlobal;
 	}
 	else
 	{
-		if ( m_last_tick_enemy_inaccessible && Device.dwTimeGlobal - m_last_tick_enemy_inaccessible > 3000 )
+		if ( m_last_tick_enemy_inaccessible && CRenderDevice::GetInstance()->dwTimeGlobal - m_last_tick_enemy_inaccessible > 3000 )
 		{
 			m_first_tick_enemy_inaccessible	=	0;
 			m_last_tick_enemy_inaccessible	=	0;
@@ -369,7 +369,7 @@ void CBaseMonster::shedule_Update(u32 dt)
 #ifdef DEBUG
 	if ( is_paused () )
 	{
-		dbg_update_cl	= Device.dwFrame;
+		dbg_update_cl	= CRenderDevice::GetInstance()->dwFrame;
 		return;
 	}
 #endif
@@ -1057,7 +1057,7 @@ float CBaseMonster::get_screen_space_coverage_diagonal()
 	Fbox		b		= Visual()->getVisData().box;
 
 	Fmatrix				xform;
-	xform.mul			(Device.mFullTransform,XFORM());
+	xform.mul			(CRenderDevice::GetInstance()->mFullTransform,XFORM());
 	Fvector2	mn		={flt_max,flt_max},mx={flt_min,flt_min};
 
 	for (u32 k=0; k<8; ++k)

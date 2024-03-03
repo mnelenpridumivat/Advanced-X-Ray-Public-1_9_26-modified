@@ -56,7 +56,7 @@ void					CRender::create					()
 	L_Shadows			= 0;
 	L_Projector			= 0;
 
-	Device.seqFrame.Add	(this,REG_PRIORITY_HIGH+0x12345678);
+	CRenderDevice::GetInstance()->seqFrame.Add	(this,REG_PRIORITY_HIGH+0x12345678);
 
 	// c-setup
 	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("L_dynamic_pos",		&r1_dlight_binder_PR);
@@ -125,7 +125,7 @@ void					CRender::destroy				()
 	
 	//*** Components
 	xr_delete					(Target);
-	Device.seqFrame.Remove		(this);
+	CRenderDevice::GetInstance()->seqFrame.Remove		(this);
 
 	r_dsgraph_destroy			();
 }
@@ -134,7 +134,7 @@ extern u32 reset_frame;
 
 void					CRender::reset_begin			()
 {
-	reset_frame = Device.dwFrame;
+	reset_frame = CRenderDevice::GetInstance()->dwFrame;
 
 	//AVO: let's reload details while changed details options on vid_restart
 	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)))
@@ -323,7 +323,7 @@ void					CRender::apply_object			(IRenderable*		O )
 		float o_sun			= 0.5f*LT.get_sun						();
 		RCache.set_c		(c_ldynamic_props,o_sun,o_sun,o_sun,o_hemi);
 		// shadowing
-		if ((LT.shadow_recv_frame==Device.dwFrame) && O->renderable_ShadowReceive())	
+		if ((LT.shadow_recv_frame== CRenderDevice::GetInstance()->dwFrame) && O->renderable_ShadowReceive())
 			RImplementation.L_Projector->setup	(LT.shadow_recv_slot);
 	}
 }
@@ -362,8 +362,8 @@ extern float		r_ssaHZBvsTEX;
 
 ICF bool			pred_sp_sort		(ISpatial* _1, ISpatial* _2)
 {
-	float	d1		= _1->spatial.sphere.P.distance_to_sqr(Device.vCameraPosition);
-	float	d2		= _2->spatial.sphere.P.distance_to_sqr(Device.vCameraPosition);
+	float	d1		= _1->spatial.sphere.P.distance_to_sqr(CRenderDevice::GetInstance()->vCameraPosition);
+	float	d2		= _2->spatial.sphere.P.distance_to_sqr(CRenderDevice::GetInstance()->vCameraPosition);
 	return	d1<d2;
 }
 
@@ -373,11 +373,11 @@ void CRender::Calculate				()
 		TAL_SCOPED_TASK_NAMED( "CRender::Calculate()" );
 	#endif // _GPA_ENABLED
 
-	Device.Statistic->RenderCALC.Begin();
+		CRenderDevice::GetInstance()->Statistic->RenderCALC.Begin();
 
 	// Transfer to global space to avoid deep pointer access
 	IRender_Target* T				=	getTarget	();
-	float	fov_factor				=	_sqr		(90.f / Device.fFOV);
+	float	fov_factor				=	_sqr		(90.f / CRenderDevice::GetInstance()->fFOV);
 	g_fSCREEN						=	float(T->get_width()*T->get_height())*fov_factor*(EPS_S+ps_r__LOD);
 	r_ssaDISCARD					=	_sqr(ps_r__ssaDISCARD)		/g_fSCREEN;
 	r_ssaDONTSORT					=	_sqr(ps_r__ssaDONTSORT/3)	/g_fSCREEN;
@@ -388,7 +388,7 @@ void CRender::Calculate				()
 	r_ssaHZBvsTEX					=	_sqr(ps_r__ssaHZBvsTEX/3)	/g_fSCREEN;
 
 	// Frustum & HOM rendering
-	ViewBase.CreateFromMatrix		(Device.mFullTransform,FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
+	ViewBase.CreateFromMatrix		(CRenderDevice::GetInstance()->mFullTransform,FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 	View							= 0;
 	HOM.Enable						();
 	HOM.Render						(ViewBase);
@@ -396,15 +396,15 @@ void CRender::Calculate				()
 	phase							= PHASE_NORMAL;
 
 	// Detect camera-sector
-	if (!vLastCameraPos.similar(Device.vCameraPosition,EPS_S)) 
+	if (!vLastCameraPos.similar(CRenderDevice::GetInstance()->vCameraPosition,EPS_S))
 	{
-		CSector* pSector		= (CSector*)detectSector(Device.vCameraPosition);
+		CSector* pSector		= (CSector*)detectSector(CRenderDevice::GetInstance()->vCameraPosition);
 		if (pSector && (pSector!=pLastSector))
 			g_pGamePersistent->OnSectorChanged( translateSector(pSector) );
 
 		if (0==pSector) pSector = pLastSector;
 		pLastSector = pSector;
-		vLastCameraPos.set(Device.vCameraPosition);
+		vLastCameraPos.set(CRenderDevice::GetInstance()->vCameraPosition);
 	}
 
 	// Check if camera is too near to some portal - if so force DualRender
@@ -412,7 +412,7 @@ void CRender::Calculate				()
 	{
 		Fvector box_radius;		box_radius.set(EPS_L*2,EPS_L*2,EPS_L*2);
 		Sectors_xrc.box_options	(CDB::OPT_FULL_TEST);
-		Sectors_xrc.box_query	(rmPortals,Device.vCameraPosition,box_radius);
+		Sectors_xrc.box_query	(rmPortals, CRenderDevice::GetInstance()->vCameraPosition,box_radius);
 		for (int K=0; K<Sectors_xrc.r_count(); K++)
 		{
 			CPortal*	pPortal		= (CPortal*) Portals[rmPortals->get_tris()[Sectors_xrc.r_begin()[K].id].dummy];
@@ -432,8 +432,8 @@ void CRender::Calculate				()
 			(
 			pLastSector,
 			ViewBase,
-			Device.vCameraPosition,
-			Device.mFullTransform,
+				CRenderDevice::GetInstance()->vCameraPosition,
+				CRenderDevice::GetInstance()->mFullTransform,
 			CPortalTraverser::VQ_HOM + CPortalTraverser::VQ_SSA + CPortalTraverser::VQ_FADE
 			);
 
@@ -567,7 +567,7 @@ void CRender::Calculate				()
 	}
 
 	// End calc
-	Device.Statistic->RenderCALC.End	();
+	CRenderDevice::GetInstance()->Statistic->RenderCALC.End	();
 }
 
 void	CRender::rmNear		()
@@ -603,7 +603,7 @@ void	CRender::Render		()
 	}
 
 	g_r											= 1;
-	Device.Statistic->RenderDUMP.Begin();
+	CRenderDevice::GetInstance()->Statistic->RenderDUMP.Begin();
 	// Begin
 	Target->Begin								();
 	o.vis_intersect								= FALSE			;
@@ -654,7 +654,7 @@ void	CRender::Render		()
 	if (L_Projector) L_Projector->finalize		();
 
 	// HUD
-	Device.Statistic->RenderDUMP.End	();
+	CRenderDevice::GetInstance()->Statistic->RenderDUMP.End	();
 }
 
 void	CRender::ApplyBlur4		(FVF::TL4uv* pv, u32 w, u32 h, float k)
@@ -1035,7 +1035,7 @@ void CRender::BeforeWorldRender()
 {
 	if (currentViewPort == SECONDARY_WEAPON_SCOPE)
 	{
-		Device.m_SecondViewport.isR1 = true;
+		CRenderDevice::GetInstance()->m_SecondViewport.isR1 = true;
 	}
 }
 

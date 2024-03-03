@@ -37,7 +37,7 @@ bool const xrClientsPool::expired_client_deleter::operator()(dclient & right) co
 void xrClientsPool::ClearExpiredClients()
 {
 	expired_client_deleter tmp_deleter;
-	tmp_deleter.m_current_time	= Device.dwTimeGlobal;
+	tmp_deleter.m_current_time	= CRenderDevice::GetInstance()->dwTimeGlobal;
 	tmp_deleter.m_expire_time	= g_sv_Client_Reconnect_Time * 60*1000; //in minutes
 	m_dclients.erase(
 		std::remove_if(

@@ -73,7 +73,7 @@ CMainMenu::CMainMenu	()
 	m_startDialog					= NULL;
 	m_screenshotFrame				= static_cast<u32>(-1);
 	g_pGamePersistent->m_pMainMenu	= this;
-	if (Device.b_is_Ready)			OnDeviceCreate();  	
+	if (CRenderDevice::GetInstance()->b_is_Ready)			OnDeviceCreate();
 	ReadTextureInfo					();
 	CUIXmlInit::InitColorDefs		();
 	g_btnHint						= NULL;
@@ -126,16 +126,16 @@ CMainMenu::CMainMenu	()
 		m_atlas_submit_queue	= xr_new<atlas_submit_queue>				(m_stats_submitter);
 	}
 	
-	Device.seqFrame.Add		(this,REG_PRIORITY_LOW-1000);
+	CRenderDevice::GetInstance()->seqFrame.Add		(this,REG_PRIORITY_LOW-1000);
 
 	Msg("*Start prefetching UI textures");
-	Device.m_pRender->RenderPrefetchUITextures();
+	CRenderDevice::GetInstance()->m_pRender->RenderPrefetchUITextures();
 }
 
 CMainMenu::~CMainMenu	()
 {
 	ReportTxrsForPrefetching		();
-	Device.seqFrame.Remove			(this);
+	CRenderDevice::GetInstance()->seqFrame.Remove			(this);
 	xr_delete						(g_btnHint);
 	xr_delete						(g_statHint);
 	xr_delete						(m_startDialog);
@@ -178,9 +178,9 @@ void CMainMenu::Activate	(bool bActivate)
 {
 	if (	!!m_Flags.test(flActive) == bActivate)		return;
 	if (	m_Flags.test(flGameSaveScreenshot)	)		return;
-	if (	(m_screenshotFrame == Device.dwFrame)	||
-		(m_screenshotFrame == Device.dwFrame-1) ||
-		(m_screenshotFrame == Device.dwFrame+1))	return;
+	if (	(m_screenshotFrame == CRenderDevice::GetInstance()->dwFrame)	||
+		(m_screenshotFrame == CRenderDevice::GetInstance()->dwFrame-1) ||
+		(m_screenshotFrame == CRenderDevice::GetInstance()->dwFrame+1))	return;
 
 	bool b_is_single				= IsGameTypeSingle();
 
@@ -198,7 +198,7 @@ void CMainMenu::Activate	(bool bActivate)
 
 		m_Flags.set					(flRestoreConsole,Console->bVisible);
 
-		if(b_is_single)	m_Flags.set	(flRestorePause,Device.Paused());
+		if(b_is_single)	m_Flags.set	(flRestorePause, CRenderDevice::GetInstance()->Paused());
 
 		Console->Hide				();
 
@@ -214,12 +214,12 @@ void CMainMenu::Activate	(bool bActivate)
 		if(g_pGameLevel)
 		{
 			if(b_is_single){
-				Device.seqFrame.Remove		(g_pGameLevel);
+				CRenderDevice::GetInstance()->seqFrame.Remove		(g_pGameLevel);
 			}
-			Device.seqRender.Remove			(g_pGameLevel);
+			CRenderDevice::GetInstance()->seqRender.Remove			(g_pGameLevel);
 			CCameraManager::ResetPP			();
 		};
-		Device.seqRender.Add				(this, 4); // 1-console 2-cursor 3-tutorial
+		CRenderDevice::GetInstance()->seqRender.Add				(this, 4); // 1-console 2-cursor 3-tutorial
 
 		Console->Execute					("stat_memory");
 
@@ -229,11 +229,11 @@ void CMainMenu::Activate	(bool bActivate)
 			g_discord.SetStatus();
 		}
 	}else{
-		m_deactivated_frame					= Device.dwFrame;
+		m_deactivated_frame					= CRenderDevice::GetInstance()->dwFrame;
 		m_Flags.set							(flActive,				FALSE);
 		m_Flags.set							(flNeedChangeCapture,	TRUE);
 
-		Device.seqRender.Remove				(this);
+		CRenderDevice::GetInstance()->seqRender.Remove				(this);
 
 		bool b = !!Console->bVisible;
 		if(b){
@@ -252,10 +252,10 @@ void CMainMenu::Activate	(bool bActivate)
 		if(g_pGameLevel)
 		{
 			if(b_is_single){
-				Device.seqFrame.Add			(g_pGameLevel);
+				CRenderDevice::GetInstance()->seqFrame.Add			(g_pGameLevel);
 
 			}
-			Device.seqRender.Add			(g_pGameLevel);
+			CRenderDevice::GetInstance()->seqRender.Add			(g_pGameLevel);
 		};
 		if(m_Flags.test(flRestoreConsole))
 			Console->Show			();
@@ -301,7 +301,7 @@ bool CMainMenu::ReloadUI()
 	m_startDialog->m_bWorkInPause= true;
 	m_startDialog->ShowDialog	(true);
 
-	m_activatedScreenRatio		= static_cast<float>(Device.dwWidth)/static_cast<float>(Device.dwHeight) > (UI_BASE_WIDTH/UI_BASE_HEIGHT+0.01f);
+	m_activatedScreenRatio		= static_cast<float>(CRenderDevice::GetInstance()->dwWidth)/static_cast<float>(CRenderDevice::GetInstance()->dwHeight) > (UI_BASE_WIDTH/UI_BASE_HEIGHT+0.01f);
 	return true;
 }
 
@@ -470,15 +470,15 @@ void CMainMenu::OnFrame()
 
 
 	//screenshot stuff
-	if(m_Flags.test(flGameSaveScreenshot) && Device.dwFrame > m_screenshotFrame  )
+	if(m_Flags.test(flGameSaveScreenshot) && CRenderDevice::GetInstance()->dwFrame > m_screenshotFrame  )
 	{
 		m_Flags.set					(flGameSaveScreenshot,FALSE);
 		::Render->Screenshot		(IRender_interface::SM_FOR_GAMESAVE, m_screenshot_name);
 		
 		if(g_pGameLevel && m_Flags.test(flActive))
 		{
-			Device.seqFrame.Remove	(g_pGameLevel);
-			Device.seqRender.Remove	(g_pGameLevel);
+			CRenderDevice::GetInstance()->seqFrame.Remove	(g_pGameLevel);
+			CRenderDevice::GetInstance()->seqRender.Remove	(g_pGameLevel);
 		};
 
 		if(m_Flags.test(flRestoreConsole))
@@ -494,7 +494,7 @@ void CMainMenu::OnFrame()
 	if(IsActive())
 	{
 		CheckForErrorDlg();
-		bool b_is_16_9	= static_cast<float>(Device.dwWidth)/static_cast<float>(Device.dwHeight) > (UI_BASE_WIDTH/UI_BASE_HEIGHT+0.01f);
+		bool b_is_16_9	= static_cast<float>(CRenderDevice::GetInstance()->dwWidth)/static_cast<float>(CRenderDevice::GetInstance()->dwHeight) > (UI_BASE_WIDTH/UI_BASE_HEIGHT+0.01f);
 		if(b_is_16_9 !=m_activatedScreenRatio)
 		{
 			ReloadUI();
@@ -517,10 +517,10 @@ void CMainMenu::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 		m_Flags.set					(flGameSaveScreenshot, TRUE);
 		xr_strcpy(m_screenshot_name,name);
 		if(g_pGameLevel && m_Flags.test(flActive)){
-			Device.seqFrame.Add		(g_pGameLevel);
-			Device.seqRender.Add	(g_pGameLevel);
+			CRenderDevice::GetInstance()->seqFrame.Add		(g_pGameLevel);
+			CRenderDevice::GetInstance()->seqRender.Add	(g_pGameLevel);
 		};
-		m_screenshotFrame			= Device.dwFrame+1;
+		m_screenshotFrame			= CRenderDevice::GetInstance()->dwFrame+1;
 		m_Flags.set					(flRestoreConsole,		Console->bVisible);
 		Console->Hide				();
 	}
@@ -563,7 +563,7 @@ void CMainMenu::SwitchToMultiplayerMenu()
 
 void CMainMenu::DestroyInternal(bool bForce)
 {
-	if(m_startDialog && ((m_deactivated_frame < Device.dwFrame+4)||bForce) )
+	if(m_startDialog && ((m_deactivated_frame < CRenderDevice::GetInstance()->dwFrame+4)||bForce) )
 		xr_delete		(m_startDialog);
 }
 
@@ -645,10 +645,10 @@ void	CMainMenu::OnDownloadPatchSuccess			()
 
 void	CMainMenu::OnSessionTerminate				(LPCSTR reason)
 {
-	if ( m_NeedErrDialog == SessionTerminate && (Device.dwTimeGlobal - m_start_time) < 8000 )
+	if ( m_NeedErrDialog == SessionTerminate && (CRenderDevice::GetInstance()->dwTimeGlobal - m_start_time) < 8000 )
 		return;
 
-	m_start_time = Device.dwTimeGlobal;
+	m_start_time = CRenderDevice::GetInstance()->dwTimeGlobal;
 	CStringTable	st;
 	LPCSTR str = st.translate("ui_st_kicked_by_server").c_str();
 	LPSTR		text;

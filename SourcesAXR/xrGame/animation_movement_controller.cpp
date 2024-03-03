@@ -118,15 +118,15 @@ void	animation_movement_controller::GetInitalPositionBlenSpeed	( )
 	Fmatrix m1;
 	//m_pKinematicsC->Bone_GetAnimPos( m1, root, u8(-1), true );
 	animation_root_position( m1 );
-	m_control_blend->timeCurrent+=Device.fTimeDelta;
+	m_control_blend->timeCurrent+= CRenderDevice::GetInstance()->fTimeDelta;
 	clamp(m_control_blend->timeCurrent,0.f,m_control_blend->timeTotal);
 	Fmatrix m0;
 	//m_pKinematicsC->Bone_GetAnimPos( m0, root, u8(-1), true );
 	animation_root_position( m0 );
 	float l,a;
 	get_diff_value( m0, m1, l, a );
-	blend_linear_speed =  l/Device.fTimeDelta;
-	blend_angular_speed = a/Device.fTimeDelta;
+	blend_linear_speed =  l/ CRenderDevice::GetInstance()->fTimeDelta;
+	blend_angular_speed = a/ CRenderDevice::GetInstance()->fTimeDelta;
 	m_control_blend->timeCurrent = sv_blend_time;
 }
 

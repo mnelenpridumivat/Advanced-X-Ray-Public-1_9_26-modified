@@ -27,13 +27,14 @@ void RELATION_REGISTRY::FightRegister (u16 attacker, u16 defender, ALife::ERelat
 	UpdateFightRegister();
 
 	FIGHT_VECTOR& fights = fight_registry();
-	for(FIGHT_VECTOR_IT it = fights.begin(); it != fights.end(); it++)
+	FIGHT_VECTOR_IT it;
+	for(it = fights.begin(); it != fights.end(); it++)
 	{
 		FIGHT_DATA& fight_data = *it;
 		if(attacker == fight_data.attacker && defender == fight_data.defender)
 		{
 			fight_data.time_old = fight_data.time;
-			fight_data.time = Device.dwTimeGlobal;
+			fight_data.time = CRenderDevice::GetInstance()->dwTimeGlobal;
 			fight_data.total_hit += hit_amount;
 			break;
 		}
@@ -45,7 +46,7 @@ void RELATION_REGISTRY::FightRegister (u16 attacker, u16 defender, ALife::ERelat
 		fight_data.attacker = attacker;
 		fight_data.defender = defender;
 		fight_data.total_hit = hit_amount;
-		fight_data.time = Device.dwTimeGlobal;
+		fight_data.time = CRenderDevice::GetInstance()->dwTimeGlobal;
 		fight_data.defender_to_attacker = defender_to_attacker;
 		fights.push_back(fight_data);
 	}
@@ -73,7 +74,7 @@ bool fight_time_pred(RELATION_REGISTRY::FIGHT_DATA& fight_data)
 	//(c) время которое про драку помнит реестр (иначе считать неактуальным)
 	static u32 fight_remember_time	= static_cast<u32>(1000.f * pSettings->r_float(ACTIONS_POINTS_SECT, "fight_remember_time"));	
 
-	u32 time_delta =  Device.dwTimeGlobal - fight_data.time;
+	u32 time_delta = CRenderDevice::GetInstance()->dwTimeGlobal - fight_data.time;
 	if( time_delta > fight_remember_time)
 		return true;
 

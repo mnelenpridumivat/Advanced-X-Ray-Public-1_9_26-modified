@@ -317,7 +317,7 @@ void HUD_SOUND_COLLECTION_LAYERED::PlaySound(LPCSTR alias, const Fvector& positi
 				it->PlaySound(alias, position, parent, hud_mode, looped, index);
 			else
 			{
-				if (position.distance_to(Device.vCameraPosition) >= GameConstants::GetDistantSndDistance())
+				if (position.distance_to(CRenderDevice::GetInstance()->vCameraPosition) >= GameConstants::GetDistantSndDistance())
 					it->PlaySound(alias, position, parent, hud_mode, looped, index);
 			}
 		}

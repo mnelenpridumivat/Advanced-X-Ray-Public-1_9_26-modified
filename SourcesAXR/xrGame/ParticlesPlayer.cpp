@@ -255,7 +255,7 @@ void CParticlesPlayer::UpdateParticles()
 			//обновить время существования
 			if(p_info.life_time!=static_cast<u32>(-1))
 			{
-				if(p_info.life_time>Device.dwTimeDelta)	p_info.life_time-=Device.dwTimeDelta;
+				if(p_info.life_time> CRenderDevice::GetInstance()->dwTimeDelta)	p_info.life_time-= CRenderDevice::GetInstance()->dwTimeDelta;
 				else 
 				{
 					p_info.ps->Stop();

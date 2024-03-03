@@ -228,7 +228,7 @@ void CTorch::ProcessSwitch()
 		if (use_cam_effector)
 			g_player_hud->PlayBlendAnm(use_cam_effector, 0, anim_speed, effector_intensity, false);
 		
-		m_iAnimLength = Device.dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", anim_speed);
+		m_iAnimLength = CRenderDevice::GetInstance()->dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", anim_speed);
 	}
 
 	if (pSettings->line_exist(anim_sect, "snd_using"))
@@ -241,7 +241,7 @@ void CTorch::ProcessSwitch()
 		m_action_anim_sound.play(NULL, sm_2D);
 	}
 
-	m_iActionTiming = Device.dwTimeGlobal + anim_timer;
+	m_iActionTiming = CRenderDevice::GetInstance()->dwTimeGlobal + anim_timer;
 
 	m_bSwitched = false;
 	Actor()->m_bActionAnimInProcess = true;
@@ -255,19 +255,19 @@ void CTorch::UpdateUseAnim()
 	bool IsActorAlive = g_pGamePersistent->GetActorAliveStatus();
 	bool bActive = !m_switched_on;
 
-	if ((m_iActionTiming <= Device.dwTimeGlobal && !m_bSwitched) && IsActorAlive)
+	if ((m_iActionTiming <= CRenderDevice::GetInstance()->dwTimeGlobal && !m_bSwitched) && IsActorAlive)
 	{
-		m_iActionTiming = Device.dwTimeGlobal;
+		m_iActionTiming = CRenderDevice::GetInstance()->dwTimeGlobal;
 		Switch(bActive);
 		m_bSwitched = true;
 	}
 
 	if (m_bActivated)
 	{
-		if ((m_iAnimLength <= Device.dwTimeGlobal) || !IsActorAlive)
+		if ((m_iAnimLength <= CRenderDevice::GetInstance()->dwTimeGlobal) || !IsActorAlive)
 		{
-			m_iAnimLength = Device.dwTimeGlobal;
-			m_iActionTiming = Device.dwTimeGlobal;
+			m_iAnimLength = CRenderDevice::GetInstance()->dwTimeGlobal;
+			m_iActionTiming = CRenderDevice::GetInstance()->dwTimeGlobal;
 			m_action_anim_sound.stop();
 			g_block_all_except_movement = false;
 			g_actor_allow_ladder = true;
@@ -424,7 +424,7 @@ void CTorch::UpdateChargeLevel(void)
 {
 	if (GameConstants::GetTorchHasBattery())
 	{
-		float uncharge_coef = (m_fUnchargeSpeed / 16) * Device.fTimeDelta;
+		float uncharge_coef = (m_fUnchargeSpeed / 16) * CRenderDevice::GetInstance()->fTimeDelta;
 		ChangeChargeLevel(-uncharge_coef);
 
 		float rangeCoef = atan(m_fCurveRange * m_fCurrentChargeLevel) / PI_DIV_2;
@@ -466,7 +466,7 @@ void CTorch::UpdateCL()
 		CActor*			actor = smart_cast<CActor*>(H_Parent());
 		if (actor)		smart_cast<IKinematics*>(H_Parent()->Visual())->CalculateBones_Invalidate	();
 
-		if (H_Parent()->XFORM().c.distance_to_sqr(Device.vCameraPosition)<_sqr(OPTIMIZATION_DISTANCE) || GameID() != eGameIDSingle) {
+		if (H_Parent()->XFORM().c.distance_to_sqr(CRenderDevice::GetInstance()->vCameraPosition)<_sqr(OPTIMIZATION_DISTANCE) || GameID() != eGameIDSingle) {
 			// near camera
 			smart_cast<IKinematics*>(H_Parent()->Visual())->CalculateBones	();
 			M.mul_43				(XFORM(),BI.mTransform);
@@ -481,12 +481,12 @@ void CTorch::UpdateCL()
 		{
 			if (actor->active_cam() == eacLookAt)
 			{
-				m_prev_hp.x = angle_inertion_var(m_prev_hp.x, -actor->cam_Active()->yaw, m_torch_inertion_speed_min, m_torch_inertion_speed_max, TORCH_INERTION_CLAMP, Device.fTimeDelta);
-				m_prev_hp.y = angle_inertion_var(m_prev_hp.y, -actor->cam_Active()->pitch, m_torch_inertion_speed_min, m_torch_inertion_speed_max, TORCH_INERTION_CLAMP, Device.fTimeDelta);
+				m_prev_hp.x = angle_inertion_var(m_prev_hp.x, -actor->cam_Active()->yaw, m_torch_inertion_speed_min, m_torch_inertion_speed_max, TORCH_INERTION_CLAMP, CRenderDevice::GetInstance()->fTimeDelta);
+				m_prev_hp.y = angle_inertion_var(m_prev_hp.y, -actor->cam_Active()->pitch, m_torch_inertion_speed_min, m_torch_inertion_speed_max, TORCH_INERTION_CLAMP, CRenderDevice::GetInstance()->fTimeDelta);
 			}
 			else {
-				m_prev_hp.x = angle_inertion_var(m_prev_hp.x, -actor->cam_FirstEye()->yaw, m_torch_inertion_speed_min, m_torch_inertion_speed_max, TORCH_INERTION_CLAMP, Device.fTimeDelta);
-				m_prev_hp.y = angle_inertion_var(m_prev_hp.y, -actor->cam_FirstEye()->pitch, m_torch_inertion_speed_min, m_torch_inertion_speed_max, TORCH_INERTION_CLAMP, Device.fTimeDelta);
+				m_prev_hp.x = angle_inertion_var(m_prev_hp.x, -actor->cam_FirstEye()->yaw, m_torch_inertion_speed_min, m_torch_inertion_speed_max, TORCH_INERTION_CLAMP, CRenderDevice::GetInstance()->fTimeDelta);
+				m_prev_hp.y = angle_inertion_var(m_prev_hp.y, -actor->cam_FirstEye()->pitch, m_torch_inertion_speed_min, m_torch_inertion_speed_max, TORCH_INERTION_CLAMP, CRenderDevice::GetInstance()->fTimeDelta);
 			}
 
 			Fvector			dir,right,up;	
@@ -564,7 +564,7 @@ void CTorch::UpdateCL()
 
 	int						frame;
 	// возвращает в формате BGR
-	u32 clr					= lanim->CalculateBGR(Device.fTimeGlobal,frame); 
+	u32 clr					= lanim->CalculateBGR(CRenderDevice::GetInstance()->fTimeGlobal,frame);
 
 	Fcolor					fclr;
 	fclr.set				(static_cast<float>(color_get_B(clr)),static_cast<float>(color_get_G(clr)),static_cast<float>(color_get_R(clr)),1.f);

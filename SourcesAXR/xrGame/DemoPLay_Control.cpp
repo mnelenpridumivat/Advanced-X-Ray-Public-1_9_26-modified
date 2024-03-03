@@ -27,7 +27,7 @@ void demoplay_control::pause_on(EAction const action, shared_str const & param)
 		Msg("! ERROR: already active.");
 		return;
 	}
-	if (Device.Paused())
+	if (CRenderDevice::GetInstance()->Paused())
 	{
 		GAME_PAUSE(FALSE, TRUE, TRUE, "playing demo until");
 	}
@@ -54,7 +54,7 @@ bool demoplay_control::rewind_until(EAction const action, shared_str const & par
 		Msg("! ERROR: already active.");
 		return false;
 	}
-	if (Device.Paused())
+	if (CRenderDevice::GetInstance()->Paused())
 	{
 		GAME_PAUSE(FALSE, TRUE, TRUE, "playing demo until");
 	}

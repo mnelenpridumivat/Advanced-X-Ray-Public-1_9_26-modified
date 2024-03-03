@@ -83,7 +83,7 @@ void CPolterSpecialAbility::on_die()
 
 void CPolterSpecialAbility::on_hit(SHit* pHDS)
 {
-	if (m_object->GetMonster()->g_Alive() && (pHDS->hit_type == ALife::eHitTypeFireWound) && (Device.dwFrame != m_last_hit_frame)) {
+	if (m_object->GetMonster()->g_Alive() && (pHDS->hit_type == ALife::eHitTypeFireWound) && (CRenderDevice::GetInstance()->dwFrame != m_last_hit_frame)) {
 		if(BI_NONE != pHDS->bone()) {
 
 			//вычислить координаты попадания
@@ -98,6 +98,6 @@ void CPolterSpecialAbility::on_hit(SHit* pHDS)
 		}
 	} 
 
-	m_last_hit_frame = Device.dwFrame;
+	m_last_hit_frame = CRenderDevice::GetInstance()->dwFrame;
 }
 

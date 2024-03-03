@@ -180,7 +180,7 @@ void CWeaponKnife::FastStrike(u32 state)
 	fireDistance	= m_hit_dist + m_splash_radius;
 
 	if(H_Parent())
-		KnifeStrike(Device.vCameraPosition, Device.vCameraDirection);
+		KnifeStrike(CRenderDevice::GetInstance()->vCameraPosition, CRenderDevice::GetInstance()->vCameraDirection);
 }
 
 void CWeaponKnife::KnifeStrike(const Fvector& pos, const Fvector& dir)

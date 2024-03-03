@@ -269,7 +269,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph	(u32	_priority, bool _clear)
 {
 
 	//PIX_EVENT(r_dsgraph_render_graph);
-	Device.Statistic->RenderDUMP.Begin		();
+	CRenderDevice::GetInstance()->Statistic->RenderDUMP.Begin		();
 
 	// **************************************************** NORMAL
 	// Perform sorting based on ScreenSpaceArea
@@ -460,7 +460,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph	(u32	_priority, bool _clear)
 		if(_clear) vs.clear		();
 	}
 
-	Device.Statistic->RenderDUMP.End	();
+	CRenderDevice::GetInstance()->Statistic->RenderDUMP.End	();
 }
 
 /*
@@ -478,17 +478,17 @@ public:
 		extern ENGINE_API float psHUD_FOV;
 
 		// Change projection
-		Pold = Device.mProject;
-		FTold = Device.mFullTransform;
+		Pold = CRenderDevice::GetInstance()->mProject;
+		FTold = CRenderDevice::GetInstance()->mFullTransform;
 
-		Vold = Device.mView;
-		Device.mView.build_camera_dir(Fvector().set(0.f, 0.f, 0.f), Device.vCameraDirection, Device.vCameraTop);
+		Vold = CRenderDevice::GetInstance()->mView;
+		CRenderDevice::GetInstance()->mView.build_camera_dir(Fvector().set(0.f, 0.f, 0.f), CRenderDevice::GetInstance()->vCameraDirection, CRenderDevice::GetInstance()->vCameraTop);
 
-		Device.mProject.build_projection(psHUD_FOV, Device.fASPECT, HUD_VIEWPORT_NEAR, g_pGamePersistent->Environment().CurrentEnv->far_plane);
+		CRenderDevice::GetInstance()->mProject.build_projection(psHUD_FOV, CRenderDevice::GetInstance()->fASPECT, HUD_VIEWPORT_NEAR, g_pGamePersistent->Environment().CurrentEnv->far_plane);
 
-		Device.mFullTransform.mul(Device.mProject, Device.mView);
-		RCache.set_xform_view(Device.mView);
-		RCache.set_xform_project(Device.mProject);
+		CRenderDevice::GetInstance()->mFullTransform.mul(CRenderDevice::GetInstance()->mProject, CRenderDevice::GetInstance()->mView);
+		RCache.set_xform_view(CRenderDevice::GetInstance()->mView);
+		RCache.set_xform_project(CRenderDevice::GetInstance()->mProject);
 
 		RImplementation.rmNear();
 	}
@@ -498,11 +498,11 @@ public:
 		RImplementation.rmNormal();
 
 		// Restore projection
-		Device.mProject = Pold;
-		Device.mFullTransform = FTold;
-		Device.mView = Vold;
-		RCache.set_xform_view(Device.mView);
-		RCache.set_xform_project(Device.mProject);
+		CRenderDevice::GetInstance()->mProject = Pold;
+		CRenderDevice::GetInstance()->mFullTransform = FTold;
+		CRenderDevice::GetInstance()->mView = Vold;
+		RCache.set_xform_view(CRenderDevice::GetInstance()->mView);
+		RCache.set_xform_project(CRenderDevice::GetInstance()->mProject);
 	}
 };
 

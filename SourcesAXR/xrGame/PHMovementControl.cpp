@@ -518,8 +518,9 @@ void CPHMovementControl::PathNearestPoint(const xr_vector<DetailPathManager::STr
 
 	Fvector path_point,vtemp;
 	float temp;
-
-	for(int i=0;i<m_path_size-1;++i)
+	
+	int i = 0;
+	for(;i<m_path_size-1;++i)
 	{
 		const Fvector &first=path[i].position, &second=path[i+1].position;
 		from_first.sub(new_position,first);
@@ -611,7 +612,8 @@ void CPHMovementControl::PathNearestPointFindUp(const xr_vector<DetailPathManage
 	float temp;
 	dir.set		(0,0,1);
 
-	for(int i=m_start_index;i<m_path_size-1;++i)
+	int i = m_start_index;
+	for(;i<m_path_size-1;++i)
 	{
 		const Fvector &first=path[i].position, &second=path[i+1].position;
 		from_first.sub(new_position,first);
@@ -699,7 +701,8 @@ void CPHMovementControl::PathNearestPointFindDown(const xr_vector<DetailPathMana
 	float temp;
 	//(going down)
 	dir.set(0,0,1);
-	for(int i=m_start_index;i>1;--i)
+	int i = m_start_index;
+	for(;i>1;--i)
 	{
 		const Fvector &first=path[i-1].position, &second=path[i].position;
 		from_first.sub(new_position,first);
@@ -1375,7 +1378,7 @@ void	CPHMovementControl::				UpdateObjectBox(CPHCharacter *ach)
 	Fvector2 poses_dir;poses_dir.set(p.x-pa.x,p.z-pa.z);float plane_dist=poses_dir.magnitude(); 
 	if(plane_dist>2.f) return;
 	if(plane_dist>EPS_S)poses_dir.mul(1.f/plane_dist);
-	Fvector2 plane_cam;plane_cam.set(Device.vCameraDirection.x,Device.vCameraDirection.z);plane_cam.normalize_safe();
+	Fvector2 plane_cam;plane_cam.set(CRenderDevice::GetInstance()->vCameraDirection.x, CRenderDevice::GetInstance()->vCameraDirection.z);plane_cam.normalize_safe();
 	Fvector2 plane_i;plane_i.set(pObject->XFORM().i.x,pObject->XFORM().i.z);
 	Fvector2 plane_k;plane_k.set(pObject->XFORM().k.x,pObject->XFORM().k.z);
 	float R=_abs(poses_dir.dotproduct(plane_i)*cbox.x)+_abs(poses_dir.dotproduct(plane_k)*cbox.z);

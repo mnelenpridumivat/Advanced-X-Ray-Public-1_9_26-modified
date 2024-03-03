@@ -53,7 +53,7 @@ class Shader_xrLC_LIB
 public:
 	void					Load	(LPCSTR name)
 	{
-		IReader* fs			= FS->r_open(name);
+		IReader* fs			= FS.r_open(name);
 		if(NULL==fs){
 			string256		inf;
 			extern HWND		logWindow;
@@ -68,14 +68,14 @@ public:
 		R_ASSERT			(int(fs->length()) == int(count*sizeof(Shader_xrLC)));
 		library.resize		(count);
 		fs->r				(&*library.begin(),fs->length());
-        FS->r_close			(fs);
+        FS.r_close			(fs);
 	}
 	bool					Save	(LPCSTR name)
 	{
-		IWriter* F			= FS->w_open(name);
+		IWriter* F			= FS.w_open(name);
         if (F){
 			F->w			(&*library.begin(),(u32)library.size()*sizeof(Shader_xrLC));
-    	    FS->w_close		(F);
+    	    FS.w_close		(F);
             return 			true;
         }else{
         	return 			false;

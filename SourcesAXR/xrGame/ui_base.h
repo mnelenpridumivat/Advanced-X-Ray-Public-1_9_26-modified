@@ -10,8 +10,8 @@ class CUIGameCustom;
 class CDeviceResetNotifier :public pureDeviceReset
 {
 public:
-						CDeviceResetNotifier					()	{Device.seqDeviceReset.Add(this,REG_PRIORITY_NORMAL);};
-	virtual				~CDeviceResetNotifier					()	{Device.seqDeviceReset.Remove(this);};
+						CDeviceResetNotifier					()	{ CRenderDevice::GetInstance()->seqDeviceReset.Add(this,REG_PRIORITY_NORMAL);};
+	virtual				~CDeviceResetNotifier					()	{ CRenderDevice::GetInstance()->seqDeviceReset.Remove(this);};
 						void		OnDeviceReset							() override {};
 
 };

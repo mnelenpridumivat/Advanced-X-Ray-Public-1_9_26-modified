@@ -177,7 +177,7 @@ float CAgentLocationManager::danger		(const CCoverPoint *cover, CAI_Stalker *mem
 	LOCATIONS::const_iterator	I = m_danger_locations.begin();
 	LOCATIONS::const_iterator	E = m_danger_locations.end();
 	for ( ; I != E; ++I) {
-		if (Device.dwTimeGlobal > (*I)->m_level_time + (*I)->m_interval)
+		if (CRenderDevice::GetInstance()->dwTimeGlobal > (*I)->m_level_time + (*I)->m_interval)
 			continue;
 
 		if (!(*I)->mask().test(mask))
@@ -188,7 +188,7 @@ float CAgentLocationManager::danger		(const CCoverPoint *cover, CAI_Stalker *mem
 			continue;
 
 		result					*= 
-			static_cast<float>(Device.dwTimeGlobal - (*I)->m_level_time)/static_cast<float>((*I)->m_interval);
+			static_cast<float>(CRenderDevice::GetInstance()->dwTimeGlobal - (*I)->m_level_time)/static_cast<float>((*I)->m_interval);
 	}
 
 	return						(result);

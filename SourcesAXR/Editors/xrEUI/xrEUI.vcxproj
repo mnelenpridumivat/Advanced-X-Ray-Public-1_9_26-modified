@@ -525,7 +525,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>../../sdk/include/;../../sdk/include/directx;../3rd party/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../sdk/include/;$(SolutionDir)../sdk/include/directx;$(SolutionDir)3rd party/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;XREUI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -557,7 +557,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>..\..\OutputDirectory\Libraries\$(Configuration)\$(ProjectName).lib</ImportLibrary>
+      <ImportLibrary>$(SolutionDir)..\OutputDirectory\Libraries\$(Configuration)\$(ProjectName).lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
       <Command>copy ..\..\SDK\binaries\tbb.dll $(OutDir)</Command>

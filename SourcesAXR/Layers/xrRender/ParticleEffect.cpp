@@ -543,16 +543,16 @@ void CParticleEffect::Render(float )
 			if (dwCount)    
 			{
 #ifndef _EDITOR
-				Fmatrix Pold						= Device.mProject;
-				Fmatrix FTold						= Device.mFullTransform;
+				Fmatrix Pold						= CRenderDevice::GetInstance()->mProject;
+				Fmatrix FTold						= CRenderDevice::GetInstance()->mFullTransform;
 				if(GetHudMode())
 				{
-					RDEVICE.mProject.build_projection(psHUD_FOV, Device.fASPECT, HUD_VIEWPORT_NEAR, g_pGamePersistent->Environment().CurrentEnv->far_plane);
+					RDEVICE.mProject.build_projection(psHUD_FOV, CRenderDevice::GetInstance()->fASPECT, HUD_VIEWPORT_NEAR, g_pGamePersistent->Environment().CurrentEnv->far_plane);
 
-					Device.mFullTransform.mul	(Device.mProject, Device.mView);
-					RCache.set_xform_project	(Device.mProject);
+					CRenderDevice::GetInstance()->mFullTransform.mul	(CRenderDevice::GetInstance()->mProject, CRenderDevice::GetInstance()->mView);
+					RCache.set_xform_project	(CRenderDevice::GetInstance()->mProject);
 					RImplementation.rmNear		();
-					ApplyTexgen(Device.mFullTransform);
+					ApplyTexgen(CRenderDevice::GetInstance()->mFullTransform);
 				}
 #endif
 
@@ -566,10 +566,10 @@ void CParticleEffect::Render(float )
 				if(GetHudMode())
 				{
 					RImplementation.rmNormal	();
-					Device.mProject				= Pold;
-					Device.mFullTransform		= FTold;
-					RCache.set_xform_project	(Device.mProject);
-					ApplyTexgen(Device.mFullTransform);
+					CRenderDevice::GetInstance()->mProject				= Pold;
+					CRenderDevice::GetInstance()->mFullTransform		= FTold;
+					RCache.set_xform_project	(CRenderDevice::GetInstance()->mProject);
+					ApplyTexgen(CRenderDevice::GetInstance()->mFullTransform);
 				}
 #endif
 			}

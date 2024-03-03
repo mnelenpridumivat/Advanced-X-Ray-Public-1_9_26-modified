@@ -38,6 +38,6 @@ public:
 
 						bool			use_parent_ai_locations	() const override
 						{
-		return				CInventoryItemObject::use_parent_ai_locations	() && (Device.dwFrame != dwXF_Frame);
+		return				CInventoryItemObject::use_parent_ai_locations	() && (CRenderDevice::GetInstance()->dwFrame != dwXF_Frame);
 	}
 };

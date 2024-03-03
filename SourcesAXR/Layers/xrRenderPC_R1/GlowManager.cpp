@@ -143,16 +143,16 @@ IC bool glow_compare	(ref_glow g1, ref_glow g2)
 void CGlowManager::add	(ref_glow G_)
 {
 	CGlow*	G		= (CGlow*)	G_._get		();
-	if (G->dwFrame	==Device.dwFrame)		return;
-	G->dwFrame		= Device.dwFrame;
+	if (G->dwFrame	== CRenderDevice::GetInstance()->dwFrame)		return;
+	G->dwFrame		= CRenderDevice::GetInstance()->dwFrame;
 #ifdef DEBUG
-	Device.Statistic->RenderDUMP_Glows.Begin();
+	CRenderDevice::GetInstance()->Statistic->RenderDUMP_Glows.Begin();
 #endif
 
-	float	dt		= Device.fTimeDelta;
+	float	dt		= CRenderDevice::GetInstance()->fTimeDelta;
 	float	dlim2	= MAX_GlowsDist2;
 
-	float	range = Device.vCameraPosition.distance_to_sqr	(G->spatial.sphere.P);
+	float	range = CRenderDevice::GetInstance()->vCameraPosition.distance_to_sqr	(G->spatial.sphere.P);
 	if (range < dlim2) 
 	{
 		// 2. Use result of test
@@ -170,14 +170,14 @@ void CGlowManager::add	(ref_glow G_)
 	G->fade -= dt*FADE_SCALE_DOWN;
 	if (G->fade<1.) G->fade = 1;
 #ifdef DEBUG
-	Device.Statistic->RenderDUMP_Glows.End();
+	CRenderDevice::GetInstance()->Statistic->RenderDUMP_Glows.End();
 #endif
 }
 
 IC void FillSprite	(FVF::LIT*& pv, const Fvector& pos, float r, u32 clr)
 {
-	const Fvector& T 	= Device.vCameraTop;
-	const Fvector& R 	= Device.vCameraRight;
+	const Fvector& T 	= CRenderDevice::GetInstance()->vCameraTop;
+	const Fvector& R 	= CRenderDevice::GetInstance()->vCameraRight;
 	Fvector		Vr, Vt;
 	Vr.mul 		(R,r);
 	Vt.mul		(T,r);
@@ -198,9 +198,9 @@ void CGlowManager::Render			()
 	if (Selected.empty())					return		;
 	RCache.set_xform_world					(Fidentity)	;
 
-	Device.Statistic->RenderDUMP_Glows.Begin	();
+	CRenderDevice::GetInstance()->Statistic->RenderDUMP_Glows.Begin	();
 	render_sw								();
-	Device.Statistic->RenderDUMP_Glows.End	();
+	CRenderDevice::GetInstance()->Statistic->RenderDUMP_Glows.End	();
 }
 
 void CGlowManager::render_sw		()
@@ -209,7 +209,7 @@ void CGlowManager::render_sw		()
 	CObject*	o_main		= g_pGameLevel->CurrentViewEntity();
 
 	// 1. Test some number of glows
-	Fvector start	= Device.vCameraPosition;
+	Fvector start	= CRenderDevice::GetInstance()->vCameraPosition;
 	for (int i=0; i<ps_r1_GlowsPerFrame; i++,dwTestID++)
 	{
 		u32	ID		= dwTestID%Selected.size();
@@ -261,7 +261,7 @@ void CGlowManager::render_selected()
 	ref_shader		T;
 
 	Fplane			NP;
-	NP.build		(Device.vCameraPosition,Device.vCameraDirection);
+	NP.build		(CRenderDevice::GetInstance()->vCameraPosition, CRenderDevice::GetInstance()->vCameraDirection);
 
 	float		dlim2	= MAX_GlowsDist2;
 	for (;pos<Selected.size();) 
@@ -282,7 +282,7 @@ void CGlowManager::render_selected()
 			// Now perform dotproduct if need it
 			float	scale	= 1.f, dist_sq;
 			Fvector	dir;
-			dir.sub			(Device.vCameraPosition,G.position);
+			dir.sub			(CRenderDevice::GetInstance()->vCameraPosition,G.position);
 			dist_sq			= dir.square_magnitude();
 			if (G.direction.square_magnitude()>EPS)	{
 				dir.div			(_sqrt(dist_sq));

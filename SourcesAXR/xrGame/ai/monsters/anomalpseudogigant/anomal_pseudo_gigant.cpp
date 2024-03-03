@@ -261,7 +261,7 @@ void	CAnomalPseudoGigant::Hit(SHit* pHDS)
 	}
 	if (m_shield_active &&
 		pHDS->hit_type == ALife::eHitTypeFireWound &&
-		Device.dwFrame != last_hit_frame)
+		CRenderDevice::GetInstance()->dwFrame != last_hit_frame)
 	{
 		// вычислить позицию и направленность партикла
 		Fmatrix pos;
@@ -280,7 +280,7 @@ void	CAnomalPseudoGigant::Hit(SHit* pHDS)
 		inherited::Hit(pHDS);
 	}
 
-	last_hit_frame = Device.dwFrame;
+	last_hit_frame = CRenderDevice::GetInstance()->dwFrame;
 }
 
 bool CAnomalPseudoGigant::check_start_conditions(ControlCom::EControlType type)

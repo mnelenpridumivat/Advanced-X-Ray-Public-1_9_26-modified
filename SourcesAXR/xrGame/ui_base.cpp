@@ -57,7 +57,7 @@ sPoly2D* C2DFrustum::ClipPoly	(sPoly2D& S, sPoly2D& D) const
 		cls[src->size()] = cls[0]	;
 		src->push_back((*src)[0])	;
 		Fvector2 dir_pt,dir_uv;		float denum,t;
-		for (j=0; j<src->size()-1; j++)	{
+		for (u32 j=0; j<src->size()-1; j++)	{
 			if ((*src)[j].pt.similar((*src)[j+1].pt,EPS_S)) continue;
 			if (negative(cls[j]))	{
 				dest->push_back((*src)[j])	;
@@ -99,12 +99,12 @@ sPoly2D* C2DFrustum::ClipPoly	(sPoly2D& S, sPoly2D& D) const
 
 void ui_core::OnDeviceReset()
 {
-	m_scale_.set		( static_cast<float>(Device.dwWidth)/UI_BASE_WIDTH, static_cast<float>(Device.dwHeight)/UI_BASE_HEIGHT );
+	m_scale_.set		( static_cast<float>(CRenderDevice::GetInstance()->dwWidth)/UI_BASE_WIDTH, static_cast<float>(CRenderDevice::GetInstance()->dwHeight)/UI_BASE_HEIGHT );
 
 	m_2DFrustum.CreateFromRect	(Frect().set(	0.0f,
 												0.0f,
-												static_cast<float>(Device.dwWidth),
-												static_cast<float>(Device.dwHeight)
+												static_cast<float>(CRenderDevice::GetInstance()->dwWidth),
+												static_cast<float>(CRenderDevice::GetInstance()->dwHeight)
 												));
 }
 
@@ -235,8 +235,8 @@ void ui_core::pp_start()
 
 	m_current_scale			= &m_pp_scale_;
 	
-	g_current_font_scale.set(	static_cast<float>(::Render->getTarget()->get_width())/static_cast<float>(Device.dwWidth),	
-								static_cast<float>(::Render->getTarget()->get_height())/static_cast<float>(Device.dwHeight) );
+	g_current_font_scale.set(	static_cast<float>(::Render->getTarget()->get_width())/static_cast<float>(CRenderDevice::GetInstance()->dwWidth),
+								static_cast<float>(::Render->getTarget()->get_height())/static_cast<float>(CRenderDevice::GetInstance()->dwHeight) );
 
 }
 
@@ -254,13 +254,13 @@ void ui_core::RenderFont()
 
 bool ui_core::is_widescreen()
 {
-	return (Device.dwWidth)/static_cast<float>(Device.dwHeight) > (UI_BASE_WIDTH/UI_BASE_HEIGHT +0.01f);
+	return (CRenderDevice::GetInstance()->dwWidth)/static_cast<float>(CRenderDevice::GetInstance()->dwHeight) > (UI_BASE_WIDTH/UI_BASE_HEIGHT +0.01f);
 }
 
 float ui_core::get_current_kx()
 {
-	float h		= static_cast<float>(Device.dwHeight);
-	float w		= static_cast<float>(Device.dwWidth);
+	float h		= static_cast<float>(CRenderDevice::GetInstance()->dwHeight);
+	float w		= static_cast<float>(CRenderDevice::GetInstance()->dwWidth);
 
 	float res = (h/w)/(UI_BASE_HEIGHT/UI_BASE_WIDTH);
 	return res;

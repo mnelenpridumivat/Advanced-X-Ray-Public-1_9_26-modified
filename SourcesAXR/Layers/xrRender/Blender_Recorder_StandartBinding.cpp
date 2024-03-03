@@ -140,11 +140,11 @@ class cl_fog_plane	: public R_constant_setup {
 	Fvector4	result;
 	virtual void setup(R_constant* C)
 	{
-		if (marker!=Device.dwFrame)
+		if (marker!= CRenderDevice::GetInstance()->dwFrame)
 		{
 			// Plane
 			Fvector4		plane;
-			Fmatrix&	M	= Device.mFullTransform;
+			Fmatrix&	M	= CRenderDevice::GetInstance()->mFullTransform;
 			plane.x			= -(M._14 + M._13);
 			plane.y			= -(M._24 + M._23);
 			plane.z			= -(M._34 + M._33);
@@ -168,7 +168,7 @@ class cl_fog_params	: public R_constant_setup {
 	Fvector4	result;
 	virtual void setup(R_constant* C)
 	{
-		if (marker!=Device.dwFrame)
+		if (marker!= CRenderDevice::GetInstance()->dwFrame)
 		{
 			// Near/Far
 			float	n		= g_pGamePersistent->Environment().CurrentEnv->fog_near	;
@@ -185,7 +185,7 @@ class cl_fog_color	: public R_constant_setup {
 	u32			marker;
 	Fvector4	result;
 	virtual void setup	(R_constant* C)	{
-		if (marker!=Device.dwFrame)	{
+		if (marker!= CRenderDevice::GetInstance()->dwFrame)	{
 			CEnvDescriptor&	desc	= *g_pGamePersistent->Environment().CurrentEnv;
 			result.set				(desc.fog_color.x,	desc.fog_color.y, desc.fog_color.z, desc.fog_density);
 		}
@@ -212,7 +212,7 @@ class cl_m_v2w : public R_constant_setup
 	virtual void setup(R_constant* C)
 	{
 		Fmatrix m_v2w;
-		m_v2w.invert(Device.mView);
+		m_v2w.invert(CRenderDevice::GetInstance()->mView);
 		RCache.set_c(C, m_v2w);
 	}
 };
@@ -325,7 +325,7 @@ class cl_sun0_color	: public R_constant_setup {
 	u32			marker;
 	Fvector4	result;
 	virtual void setup	(R_constant* C)	{
-		if (marker!=Device.dwFrame)	{
+		if (marker!= CRenderDevice::GetInstance()->dwFrame)	{
 			CEnvDescriptor&	desc	= *g_pGamePersistent->Environment().CurrentEnv;
 			result.set				(desc.sun_color.x,	desc.sun_color.y, desc.sun_color.z,	0);
 		}
@@ -336,7 +336,7 @@ class cl_sun0_dir_w	: public R_constant_setup {
 	u32			marker;
 	Fvector4	result;
 	virtual void setup	(R_constant* C)	{
-		if (marker!=Device.dwFrame)	{
+		if (marker!= CRenderDevice::GetInstance()->dwFrame)	{
 			CEnvDescriptor&	desc	= *g_pGamePersistent->Environment().CurrentEnv;
 			result.set				(desc.sun_dir.x,	desc.sun_dir.y, desc.sun_dir.z,	0);
 		}
@@ -347,10 +347,10 @@ class cl_sun0_dir_e	: public R_constant_setup {
 	u32			marker;
 	Fvector4	result;
 	virtual void setup	(R_constant* C)	{
-		if (marker!=Device.dwFrame)	{
+		if (marker!= CRenderDevice::GetInstance()->dwFrame)	{
 			Fvector D;
 			CEnvDescriptor&	desc		= *g_pGamePersistent->Environment().CurrentEnv;
-			Device.mView.transform_dir	(D,desc.sun_dir);
+			CRenderDevice::GetInstance()->mView.transform_dir	(D,desc.sun_dir);
 			D.normalize					();
 			result.set					(D.x,D.y,D.z,0);
 		}
@@ -363,7 +363,7 @@ class cl_amb_color	: public R_constant_setup {
 	u32			marker;
 	Fvector4	result;
 	virtual void setup	(R_constant* C)	{
-		if (marker!=Device.dwFrame)	{
+		if (marker!= CRenderDevice::GetInstance()->dwFrame)	{
 			CEnvDescriptorMixer&	desc	= *g_pGamePersistent->Environment().CurrentEnv;
 			result.set				(desc.ambient.x, desc.ambient.y, desc.ambient.z, desc.weight);
 		}
@@ -374,7 +374,7 @@ class cl_hemi_color	: public R_constant_setup {
 	u32			marker;
 	Fvector4	result;
 	virtual void setup	(R_constant* C)	{
-		if (marker!=Device.dwFrame)	{
+		if (marker!= CRenderDevice::GetInstance()->dwFrame)	{
 			CEnvDescriptor&	desc	= *g_pGamePersistent->Environment().CurrentEnv;
 			result.set				(desc.hemi_color.x, desc.hemi_color.y, desc.hemi_color.z, desc.hemi_color.w);
 		}
@@ -414,8 +414,8 @@ static class cl_screen_params : public R_constant_setup
 	Fvector4	result;
 	virtual void setup(R_constant* C)
 	{
-		float fov = float(Device.fFOV);
-		float aspect = float(Device.fASPECT);
+		float fov = float(CRenderDevice::GetInstance()->fFOV);
+		float aspect = float(CRenderDevice::GetInstance()->fASPECT);
 		result.set(fov, aspect, tan(deg2rad(fov) / 2), g_pGamePersistent->Environment().CurrentEnv->far_plane*0.75f);
 		RCache.set_c(C, result);
 	}
@@ -533,7 +533,7 @@ static class cl_inv_v : public R_constant_setup
 
 	virtual void setup(R_constant* C)
 	{
-		result.invert(Device.mView);
+		result.invert(CRenderDevice::GetInstance()->mView);
 
 		RCache.set_c(C, result);
 	}
