@@ -16,8 +16,8 @@ void CRenderTarget::phase_cut()
 	u32 Offset;
 	u32 C = color_rgba(255, 255, 255, 255);
 
-	float _w = float(Device.dwWidth);
-	float _h = float(Device.dwHeight);
+	float _w = float(CRenderDevice::GetInstance()->dwWidth);
+	float _h = float(CRenderDevice::GetInstance()->dwHeight);
 
 	Fvector2 p0, p1;
 

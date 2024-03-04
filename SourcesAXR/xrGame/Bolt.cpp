@@ -56,7 +56,7 @@ void CBolt::State(u32 state)
 				if (Local())
 				{
 #ifdef DEBUG
-					Msg("Destroying local bolt[%d][%d]", ID(), Device.dwFrame);
+					Msg("Destroying local bolt[%d][%d]", ID(), CRenderDevice::GetInstance()->dwFrame);
 #endif
 					DestroyObject();
 				}
@@ -130,7 +130,7 @@ void CBolt::PutNextToSlot()
 		this->u_EventSend(P);
 	}
 	else
-		Msg("! Bolt PutNextToSlot : m_pInventory = NULL [%d][%d]", ID(), Device.dwFrame);
+		Msg("! Bolt PutNextToSlot : m_pInventory = NULL [%d][%d]", ID(), CRenderDevice::GetInstance()->dwFrame);
 
 	if (smart_cast<CInventoryOwner*>(H_Parent()) && m_pInventory)
 	{

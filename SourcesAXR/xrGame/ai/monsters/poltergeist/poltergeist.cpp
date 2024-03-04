@@ -353,7 +353,7 @@ void CPoltergeist::UpdateCL()
 		MakeMeCrow					();
 	}
 	
-	//	Visual()->getVisData().hom_frame = Device.dwFrame;
+	//	Visual()->getVisData().hom_frame = CRenderDevice::GetInstance()->dwFrame;
 }
 
 void CPoltergeist::ForceFinalAnimation()

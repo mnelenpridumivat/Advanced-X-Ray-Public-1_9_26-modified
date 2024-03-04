@@ -17,15 +17,15 @@ CUICursor::CUICursor()
 	vPrevPos.set			(0.0f, 0.0f);
 	vPos.set				(0.f,0.f);
 	InitInternal			();
-	Device.seqRender.Add	(this,-3/*2*/);
-	Device.seqResolutionChanged.Add(this);
+	CRenderDevice::GetInstance()->seqRender.Add	(this,-3/*2*/);
+	CRenderDevice::GetInstance()->seqResolutionChanged.Add(this);
 }
 //--------------------------------------------------------------------
 CUICursor::~CUICursor	()
 {
 	xr_delete				(m_static);
-	Device.seqRender.Remove	(this);
-	Device.seqResolutionChanged.Remove(this);
+	CRenderDevice::GetInstance()->seqRender.Remove	(this);
+	CRenderDevice::GetInstance()->seqResolutionChanged.Remove(this);
 }
 
 void CUICursor::OnScreenResolutionChanged()
@@ -50,7 +50,7 @@ void CUICursor::InitInternal()
 
 	u32 screen_size_x	= GetSystemMetrics( SM_CXSCREEN );
 	u32 screen_size_y	= GetSystemMetrics( SM_CYSCREEN );
-	m_b_use_win_cursor	= (screen_size_y >=Device.dwHeight && screen_size_x>=Device.dwWidth);
+	m_b_use_win_cursor	= (screen_size_y >= CRenderDevice::GetInstance()->dwHeight && screen_size_x>= CRenderDevice::GetInstance()->dwWidth);
 }
 
 //--------------------------------------------------------------------
@@ -62,7 +62,7 @@ void CUICursor::OnRender	()
 
 	if( !IsVisible() ) return;
 #ifdef DEBUG
-	VERIFY(!g_pGamePersistent->IsMainMenuActive() || last_render_frame != Device.dwFrame);
+	VERIFY(!g_pGamePersistent->IsMainMenuActive() || last_render_frame != CRenderDevice::GetInstance()->dwFrame);
 
 	if (bDebug)
 	{
@@ -76,7 +76,7 @@ void CUICursor::OnRender	()
 	}
 #endif
 
-	u32 curFrame = Device.dwFrame;
+	u32 curFrame = CRenderDevice::GetInstance()->dwFrame;
 	if (g_pGamePersistent->IsMainMenuActive() || curFrame != last_render_frame)
 	{
 		m_static->SetWndPos(vPos);
@@ -84,7 +84,7 @@ void CUICursor::OnRender	()
 		m_static->Draw();
 	}
 
-	last_render_frame = Device.dwFrame;
+	last_render_frame = CRenderDevice::GetInstance()->dwFrame;
 }
 
 Fvector2 CUICursor::GetCursorPosition()
@@ -111,8 +111,8 @@ void CUICursor::UpdateCursorPosition(int _dx, int _dy)
 		IInputReceiver::IR_GetMousePosReal(pti);
 		p.x			= static_cast<float>(pti.x);
 		p.y			= static_cast<float>(pti.y);
-		vPos.x		= p.x * (UI_BASE_WIDTH/static_cast<float>(Device.dwWidth));
-		vPos.y		= p.y * (UI_BASE_HEIGHT/static_cast<float>(Device.dwHeight));
+		vPos.x		= p.x * (UI_BASE_WIDTH/static_cast<float>(CRenderDevice::GetInstance()->dwWidth));
+		vPos.y		= p.y * (UI_BASE_HEIGHT/static_cast<float>(CRenderDevice::GetInstance()->dwHeight));
 	}else
 	{
 		float sens = 1.0f;
@@ -127,10 +127,10 @@ void CUICursor::SetUICursorPosition(Fvector2 pos)
 {
 	vPos		= pos;
 	POINT		p;
-	p.x			= iFloor(vPos.x / (UI_BASE_WIDTH/static_cast<float>(Device.dwWidth)));
-	p.y			= iFloor(vPos.y / (UI_BASE_HEIGHT/static_cast<float>(Device.dwHeight)));
+	p.x			= iFloor(vPos.x / (UI_BASE_WIDTH/static_cast<float>(CRenderDevice::GetInstance()->dwWidth)));
+	p.y			= iFloor(vPos.y / (UI_BASE_HEIGHT/static_cast<float>(CRenderDevice::GetInstance()->dwHeight)));
 
 	if (m_b_use_win_cursor)
-		ClientToScreen(Device.m_hWnd, (LPPOINT)&p);
+		ClientToScreen(CRenderDevice::GetInstance()->m_hWnd, (LPPOINT)&p);
 		SetCursorPos(p.x, p.y);
 }

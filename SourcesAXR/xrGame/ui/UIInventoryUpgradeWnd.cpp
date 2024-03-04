@@ -371,7 +371,7 @@ void CUIInventoryUpgradeWnd::set_info_cur_upgrade( Upgrade_type* upgrade )
 	UIUpgrade* uiu = FindUIUpgrade( upgrade );
 	if ( uiu )
 	{
-		if ( Device.dwTimeGlobal < uiu->FocusReceiveTime())
+		if (CRenderDevice::GetInstance()->dwTimeGlobal < uiu->FocusReceiveTime())
 		{
 			upgrade = NULL; // visible = false
 		}

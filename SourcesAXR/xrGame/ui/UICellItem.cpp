@@ -118,7 +118,7 @@ void CUICellItem::init()
 
 void CUICellItem::Draw()
 {	
-	m_drawn_frame		= Device.dwFrame;
+	m_drawn_frame		= CRenderDevice::GetInstance()->dwFrame;
 	
 	inherited::Draw();
 	if(m_custom_draw) 
@@ -562,15 +562,15 @@ CUIDragItem::CUIDragItem(CUICellItem* parent)
 	m_back_list						= NULL;
 	m_pParent						= parent;
 	AttachChild						(&m_static);
-	Device.seqRender.Add			(this, REG_PRIORITY_LOW-5000);
-	Device.seqFrame.Add				(this, REG_PRIORITY_LOW-5000);
+	CRenderDevice::GetInstance()->seqRender.Add			(this, REG_PRIORITY_LOW-5000);
+	CRenderDevice::GetInstance()->seqFrame.Add				(this, REG_PRIORITY_LOW-5000);
 	VERIFY							(m_pParent->GetMessageTarget());
 }
 
 CUIDragItem::~CUIDragItem()
 {
-	Device.seqRender.Remove			(this);
-	Device.seqFrame.Remove			(this);
+	CRenderDevice::GetInstance()->seqRender.Remove			(this);
+	CRenderDevice::GetInstance()->seqFrame.Remove			(this);
 	delete_data						(m_custom_draw);
 }
 

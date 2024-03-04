@@ -132,7 +132,7 @@ void CLevelChanger::feel_touch_new	(CObject *tpObject)
 	if (pGameSP)
         pGameSP->ChangeLevel	(m_game_vertex_id, m_level_vertex_id, m_position, m_angles, p, r, b, m_invite_str, m_b_enabled);
 
-	m_entrance_time	= Device.fTimeGlobal;
+	m_entrance_time	= CRenderDevice::GetInstance()->fTimeGlobal;
 }
 
 bool CLevelChanger::get_reject_pos(Fvector& p, Fvector& r)
@@ -182,7 +182,7 @@ void CLevelChanger::update_actor_invitation()
 		if(!l_tpActor->g_Alive())
 			continue;
 
-		if(m_entrance_time+5.0f < Device.fTimeGlobal){
+		if(m_entrance_time+5.0f < CRenderDevice::GetInstance()->fTimeGlobal){
 			CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
 			Fvector p,r;
 			bool b = get_reject_pos(p,r);
@@ -190,7 +190,7 @@ void CLevelChanger::update_actor_invitation()
 			if(pGameSP)
 				pGameSP->ChangeLevel(m_game_vertex_id,m_level_vertex_id,m_position,m_angles,p,r,b, m_invite_str, m_b_enabled);
 
-			m_entrance_time		= Device.fTimeGlobal;
+			m_entrance_time		= CRenderDevice::GetInstance()->fTimeGlobal;
 		}
 	}
 }
@@ -242,7 +242,7 @@ void CLevelChanger::OnRender	()
 //DRAW name
 
 		Fmatrix		res;
-		res.mul		(Device.mFullTransform, XFORM());
+		res.mul		(CRenderDevice::GetInstance()->mFullTransform, XFORM());
 
 		Fvector4	v_res;
 
@@ -261,8 +261,8 @@ void CLevelChanger::OnRender	()
 		if (v_res.x < -1.f || v_res.x > 1.f || v_res.y<-1.f || v_res.y>1.f) return;
 
 		// get real (x,y)
-		float x = (1.f + v_res.x)/2.f * (Device.dwWidth);
-		float y = (1.f - v_res.y)/2.f * (Device.dwHeight) - delta_height;
+		float x = (1.f + v_res.x)/2.f * (CRenderDevice::GetInstance()->dwWidth);
+		float y = (1.f - v_res.y)/2.f * (CRenderDevice::GetInstance()->dwHeight) - delta_height;
 
 		UI().Font().pFontMedium->SetColor	(0xffff0000);
 		UI().Font().pFontMedium->OutSet	(x, y-=delta_height);

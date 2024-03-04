@@ -2,7 +2,7 @@
 
 void CRenderTarget::PhaseRainDrops()
 {
-	if (Device.m_SecondViewport.IsSVPActive()) //В прицеле не рендерим
+	if (CRenderDevice::GetInstance()->m_SecondViewport.IsSVPActive()) //В прицеле не рендерим
 		return;
 
 	static float rain_drops_factor = 0.f;
@@ -44,10 +44,10 @@ void CRenderTarget::PhaseRainDrops()
 
 			if (steps_finished < (steps_count + 1))
 			{ // + 1 обязательно из за неровного деления. Иначе эффект при максимальном шторме может не до конца отключаться при входе в укрытие.
-				static u32 last_update = Device.dwTimeGlobal;
-				if (Device.dwTimeGlobal > (last_update + change_step))
+				static u32 last_update = CRenderDevice::GetInstance()->dwTimeGlobal;
+				if (CRenderDevice::GetInstance()->dwTimeGlobal > (last_update + change_step))
 				{
-					last_update = Device.dwTimeGlobal;
+					last_update = CRenderDevice::GetInstance()->dwTimeGlobal;
 					steps_finished++;
 					if (act_on_rain)
 					{ //плавное повышение интенсивности капель.
@@ -74,13 +74,13 @@ void CRenderTarget::PhaseRainDrops()
 	};
 
 	static bool actor_in_hideout = true;
-	static u32 last_ray_pick_time = Device.dwTimeGlobal;
-	if (Device.dwTimeGlobal > (last_ray_pick_time + 1000))
+	static u32 last_ray_pick_time = CRenderDevice::GetInstance()->dwTimeGlobal;
+	if (CRenderDevice::GetInstance()->dwTimeGlobal > (last_ray_pick_time + 1000))
 	{ //Апдейт рейтрейса - раз в секунду. Чаще апдейтить нет смысла.
-		last_ray_pick_time = Device.dwTimeGlobal;
+		last_ray_pick_time = CRenderDevice::GetInstance()->dwTimeGlobal;
 
 		collide::rq_result RQ;
-		actor_in_hideout = !!g_pGameLevel->ObjectSpace.RayPick(Device.vCameraPosition, Fvector().set(0, 1, 0), 50.f, collide::rqtBoth, RQ, g_pGameLevel->CurrentViewEntity());
+		actor_in_hideout = !!g_pGameLevel->ObjectSpace.RayPick(CRenderDevice::GetInstance()->vCameraPosition, Fvector().set(0, 1, 0), 50.f, collide::rqtBoth, RQ, g_pGameLevel->CurrentViewEntity());
 	}
 
 	update_rain_drops_factor(!actor_in_hideout);
@@ -103,8 +103,8 @@ void CRenderTarget::PhaseRainDrops()
 		Fvector4 uv6;
 	};
 
-	float _w = float(Device.dwWidth);
-	float _h = float(Device.dwHeight);
+	float _w = float(CRenderDevice::GetInstance()->dwWidth);
+	float _h = float(CRenderDevice::GetInstance()->dwHeight);
 	float ddw = 1.f / _w;
 	float ddh = 1.f / _h;
 	p0.set(.5f / _w, .5f / _h);

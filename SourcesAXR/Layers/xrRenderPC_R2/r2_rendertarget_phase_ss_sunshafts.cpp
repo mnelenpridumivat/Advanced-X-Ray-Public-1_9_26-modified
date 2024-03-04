@@ -14,8 +14,8 @@ void	CRenderTarget::phase_sunshafts()
         Fvector2	uv0;
     };
 
-    float	_w = float(Device.dwWidth);
-    float	_h = float(Device.dwHeight);
+    float	_w = float(CRenderDevice::GetInstance()->dwWidth);
+    float	_h = float(CRenderDevice::GetInstance()->dwHeight);
     //float	ddw = 1.f / _w;
     //float	ddh = 1.f / _h;
     p0.set(.5f / _w, .5f / _h);

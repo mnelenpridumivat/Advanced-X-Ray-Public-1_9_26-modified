@@ -3659,7 +3659,7 @@ void CWeapon::UpdateSecondVP(bool bInGrenade)
 
 
 
-	Device.m_SecondViewport.SetSVPActive(bCond_1 && bCond_2 && bCond_3 && !bInGrenade);
+	CRenderDevice::GetInstance()->m_SecondViewport.SetSVPActive(bCond_1 && bCond_2 && bCond_3 && !bInGrenade);
 }
 
 const char* CWeapon::GetAnimAimName()

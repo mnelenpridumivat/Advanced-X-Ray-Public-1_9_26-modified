@@ -173,7 +173,7 @@ void FTreeVisual::Render	(float LOD)
 		// Add Player?
 		if (ps_ssfx_grass_interactive.x > 0)
 		{
-			player_pos.set(Device.vCameraPosition.x, Device.vCameraPosition.y, Device.vCameraPosition.z, -1);
+			player_pos.set(CRenderDevice::GetInstance()->vCameraPosition.x, CRenderDevice::GetInstance()->vCameraPosition.y, CRenderDevice::GetInstance()->vCameraPosition.z, -1);
 		}
 
 		Fvector4* c_grass{};

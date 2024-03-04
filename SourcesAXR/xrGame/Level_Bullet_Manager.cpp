@@ -219,7 +219,7 @@ SBullet& CBulletManager::AddBullet(const Fvector& position,
 	m_Bullets.push_back			(SBullet());
 	SBullet& bullet				= m_Bullets.back();
 	bullet.Init					(position, direction, starting_speed, power, /*power_critical,*/ impulse, sender_id, sendersweapon_id, e_hit_type, maximum_distance, cartridge, air_resistance_factor, SendHit);
-//	bullet.frame_num			= Device.dwFrame;
+//	bullet.frame_num			= CRenderDevice::GetInstance()->dwFrame;
 	bullet.flags.aim_bullet		= AimBullet;
 	return bullet;
 
@@ -627,7 +627,7 @@ static void update_bullet_parabolic	(
 
 //	VERIFY						(data.collide_time <= data.high_time);
 //	VERIFY						(data.collide_time >= bullet.life_time);
-//	VERIFY						(data.collide_time <= bullet.life_time + Device.fTimeGlobal);
+//	VERIFY						(data.collide_time <= bullet.life_time + CRenderDevice::GetInstance()->fTimeGlobal);
 	clamp						(data.collide_time, bullet.life_time, data.high_time);
 
 	data.collide_position		= trajectory_position(bullet.start_position, bullet.start_velocity, gravity, air_resistance, data.collide_time);
@@ -660,7 +660,7 @@ static void update_bullet_gravitation	(
 
 //		VERIFY					(data.collide_time <= data.high_time);
 //		VERIFY					(data.collide_time >= bullet.life_time);
-//		VERIFY					(data.collide_time <= bullet.life_time + Device.fTimeGlobal);
+//		VERIFY					(data.collide_time <= bullet.life_time + CRenderDevice::GetInstance()->fTimeGlobal);
 		clamp					(data.collide_time, bullet.life_time, data.high_time);
 	}
 	else {
@@ -675,7 +675,7 @@ static void update_bullet_gravitation	(
 
 //		VERIFY					(data.collide_time <= data.high_time);
 //		VERIFY					(data.collide_time >= bullet.life_time);
-//		VERIFY					(data.collide_time <= bullet.life_time + Device.fTimeGlobal);
+//		VERIFY					(data.collide_time <= bullet.life_time + CRenderDevice::GetInstance()->fTimeGlobal);
 		clamp					(data.collide_time, bullet.life_time, data.high_time);
 	}
 

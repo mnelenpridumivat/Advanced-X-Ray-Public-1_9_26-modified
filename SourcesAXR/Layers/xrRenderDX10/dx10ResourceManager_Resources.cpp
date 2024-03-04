@@ -458,7 +458,7 @@ CRT*	CResourceManager::_CreateRT(LPCSTR Name, xr_vector<RtCreationParams>& vp_pa
 		RT->dwFlags				|=	xr_resource_flagged::RF_REGISTERED;
 		m_rtargets.insert		(std::make_pair(RT->set_name(Name),RT));
 
-		if (Device.b_is_Ready)	RT->create(Name, vp_params, f, SampleCount, useUAV);
+		if (CRenderDevice::GetInstance()->b_is_Ready)	RT->create(Name, vp_params, f, SampleCount, useUAV);
 
 		return					RT;
 	}
@@ -580,7 +580,7 @@ CTexture* CResourceManager::_CreateTexture	(LPCSTR _Name)
 		T->dwFlags			|=	xr_resource_flagged::RF_REGISTERED;
 		m_textures.insert	(std::make_pair(T->set_name(Name),T));
 		T->Preload			();
-		if (Device.b_is_Ready && !bDeferredLoad) T->Load();
+		if (CRenderDevice::GetInstance()->b_is_Ready && !bDeferredLoad) T->Load();
 		return		T;
 	}
 }

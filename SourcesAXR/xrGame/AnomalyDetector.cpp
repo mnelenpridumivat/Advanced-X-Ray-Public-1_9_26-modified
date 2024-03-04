@@ -191,7 +191,7 @@ void CDetectorAnomaly::UpdateCL()
 
 		} 
 		else 
-			zone_info.snd_time += Device.dwTimeDelta;
+			zone_info.snd_time += CRenderDevice::GetInstance()->dwTimeDelta;
 	}
 }
 
@@ -280,7 +280,7 @@ void CDetectorAnomaly::UpdateChargeLevel(void)
 {
 	if (IsWorking())
 	{
-		float uncharge_coef = (m_fUnchargeSpeed / 16) * Device.fTimeDelta;
+		float uncharge_coef = (m_fUnchargeSpeed / 16) * CRenderDevice::GetInstance()->fTimeDelta;
 		ChangeChargeLevel(-uncharge_coef);
 	}
 }

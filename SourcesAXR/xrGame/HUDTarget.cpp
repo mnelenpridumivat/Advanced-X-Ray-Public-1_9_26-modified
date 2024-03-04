@@ -116,8 +116,8 @@ void CHUDTarget::CursorOnFrame ()
 {
 	Fvector				p1,dir;
 
-	p1					= Device.vCameraPosition;
-	dir					= Device.vCameraDirection;
+	p1					= CRenderDevice::GetInstance()->vCameraPosition;
+	dir					= CRenderDevice::GetInstance()->vCameraDirection;
 	
 	// Render cursor
 	if(Level().CurrentEntity())
@@ -154,8 +154,8 @@ void CHUDTarget::Render()
 
 	if (!Actor)	return;
 
-	Fvector p1 = Device.vCameraPosition;
-	Fvector dir = Device.vCameraDirection;
+	Fvector p1 = CRenderDevice::GetInstance()->vCameraPosition;
+	Fvector dir = CRenderDevice::GetInstance()->vCameraDirection;
 
 
 	if (auto Wpn = smart_cast<CHudItem*>(Actor->inventory().ActiveItem()))
@@ -172,7 +172,7 @@ void CHUDTarget::Render()
 	Fvector				p2;
 	p2.mad				(p1,dir,PP.RQ.range);
 	Fvector4			pt;
-	Device.mFullTransform.transform(pt, p2);
+	CRenderDevice::GetInstance()->mFullTransform.transform(pt, p2);
 	pt.y = -pt.y;
 	float				di_size = C_SIZE/powf(pt.w,.2f);
 
@@ -250,7 +250,7 @@ void CHUDTarget::Render()
 							}
 						}
 
-						fuzzyShowInfo += SHOW_INFO_SPEED*Device.fTimeDelta;
+						fuzzyShowInfo += SHOW_INFO_SPEED* CRenderDevice::GetInstance()->fTimeDelta;
 					}
 					else if (l_pI && our_inv_owner && PP.RQ.range < 2.0f*2.0f)
 					{
@@ -270,7 +270,7 @@ void CHUDTarget::Render()
 							F->OutSetI(0.f + hud_info_x + hud_info_item_x, 0.05f + hud_info_y + pos);
 							F->OutNext	("%s",l_pI->NameItem());
 						}
-						fuzzyShowInfo += SHOW_INFO_SPEED*Device.fTimeDelta;
+						fuzzyShowInfo += SHOW_INFO_SPEED* CRenderDevice::GetInstance()->fTimeDelta;
 					}
 				}
 			}
@@ -290,10 +290,10 @@ void CHUDTarget::Render()
 						{
 							float ddist = (PP.RQ.range - recon_mindist())/(recon_maxdist() - recon_mindist());
 							float dspeed = recon_minspeed() + (recon_maxspeed() - recon_minspeed())*ddist;
-							fuzzyShowInfo += Device.fTimeDelta/dspeed;
+							fuzzyShowInfo += CRenderDevice::GetInstance()->fTimeDelta/dspeed;
 						}else{
 							if (PP.RQ.range < recon_mindist()) 
-								fuzzyShowInfo += recon_minspeed()*Device.fTimeDelta;
+								fuzzyShowInfo += recon_minspeed()* CRenderDevice::GetInstance()->fTimeDelta;
 							else 
 								fuzzyShowInfo = 0;
 						};
@@ -311,7 +311,7 @@ void CHUDTarget::Render()
 			};
 
 		}else{
-			fuzzyShowInfo -= HIDE_INFO_SPEED*Device.fTimeDelta;
+			fuzzyShowInfo -= HIDE_INFO_SPEED* CRenderDevice::GetInstance()->fTimeDelta;
 		}
 		clamp(fuzzyShowInfo,0.f,1.f);
 	}
@@ -328,7 +328,7 @@ void CHUDTarget::Render()
 	}
 
 	Fvector2 scr_size;
-	scr_size.set(static_cast<float>(Device.dwWidth), static_cast<float>(Device.dwHeight));
+	scr_size.set(static_cast<float>(CRenderDevice::GetInstance()->dwWidth), static_cast<float>(CRenderDevice::GetInstance()->dwHeight));
 	float size_x = scr_size.x * di_size;
 	float size_y = scr_size.y * di_size;
 

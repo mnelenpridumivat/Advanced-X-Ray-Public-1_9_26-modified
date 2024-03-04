@@ -39,7 +39,7 @@ u64 const day2ms			= static_cast<u64>(24 * 60 * 60 * 1000);
 CUILogsWnd::CUILogsWnd()
 {
 //	m_actor_ch_info			= NULL;
-	m_previous_time			= Device.dwTimeGlobal;
+	m_previous_time			= CRenderDevice::GetInstance()->dwTimeGlobal;
 	m_selected_period		= 0;
 }
 

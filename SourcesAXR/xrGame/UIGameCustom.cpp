@@ -185,7 +185,7 @@ SDrawStaticStruct* CUIGameCustom::AddCustomStatic(LPCSTR id, bool bSingleInstanc
 	xml_init.InitStatic				(*m_msgs_xml, id, 0, sss->m_static);
 	float ttl						= m_msgs_xml->ReadAttribFlt(id, 0, "ttl", -1);
 	if(ttl>0.0f)
-		sss->m_endTime				= Device.fTimeGlobal + ttl;
+		sss->m_endTime				= CRenderDevice::GetInstance()->fTimeGlobal + ttl;
 
 	return sss;
 }
@@ -444,7 +444,7 @@ void CUIGameCustom::UpdateZones()
 	}
 	m_radia_hit = m_zone_cur_power[ALife::infl_rad];
 
-	/*	if ( Device.dwFrame % 20 == 0 )
+	/*	if ( CRenderDevice::GetInstance()->dwFrame % 20 == 0 )
 		{
 			Msg(" self = %.2f   hit = %.2f", m_radia_self, m_radia_hit );
 		}*/
@@ -466,9 +466,9 @@ void CUIGameCustom::UpdateZones()
 
 	for (int i = 0; i < ALife::infl_max_count; ++i)
 	{
-		if (Device.fTimeDelta < 1.0f)
+		if (CRenderDevice::GetInstance()->fTimeDelta < 1.0f)
 		{
-			m_zone_cur_power[i] *= 0.9f * (1.0f - Device.fTimeDelta);
+			m_zone_cur_power[i] *= 0.9f * (1.0f - CRenderDevice::GetInstance()->fTimeDelta);
 		}
 		if (m_zone_cur_power[i] < 0.01f)
 		{
@@ -545,7 +545,7 @@ void CUIGameCustom::UpdateZones()
 		}
 		else
 		{
-			zone_info.snd_time += Device.fTimeDelta;
+			zone_info.snd_time += CRenderDevice::GetInstance()->fTimeDelta;
 		}
 	} // for itb
 }
@@ -574,7 +574,7 @@ void SDrawStaticStruct::destroy()
 bool SDrawStaticStruct::IsActual() const
 {
 	if(m_endTime<0)			return true;
-	return (Device.fTimeGlobal < m_endTime);
+	return (CRenderDevice::GetInstance()->fTimeGlobal < m_endTime);
 }
 
 void SDrawStaticStruct::SetText(LPCSTR text)

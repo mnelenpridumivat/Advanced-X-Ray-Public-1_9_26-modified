@@ -446,7 +446,7 @@ void CDetailManager::StartAsync()
 	if (!ps_r2_ls_flags.test(R2FLAG_EXP_MT_DETAILS))
 		return;
 
-	if (reset_frame == Device.dwFrame)
+	if (reset_frame == CRenderDevice::GetInstance()->dwFrame)
 		return;
 
 	if (!RImplementation.Details)
@@ -470,7 +470,7 @@ void CDetailManager::WaitAsync() const
 void __stdcall CDetailManager::MT_CALC()
 {
 #ifndef _EDITOR
-	if (reset_frame == Device.dwFrame)
+	if (reset_frame == CRenderDevice::GetInstance()->dwFrame)
 		return;
 	if (0 == RImplementation.Details)
 		return; // possibly deleted

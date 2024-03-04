@@ -50,16 +50,16 @@ CHW::CHW() :
 	//pBaseRT(NULL),
 	//pBaseZB(NULL)
 {
-	Device.seqAppActivate.Add(this);
-	Device.seqAppDeactivate.Add(this);
+	CRenderDevice::GetInstance()->seqAppActivate.Add(this);
+	CRenderDevice::GetInstance()->seqAppDeactivate.Add(this);
 
 	storedVP = (ViewPort)0;
 }
 
 CHW::~CHW()
 {
-	Device.seqAppActivate.Remove(this);
-	Device.seqAppDeactivate.Remove(this);
+	CRenderDevice::GetInstance()->seqAppActivate.Remove(this);
+	CRenderDevice::GetInstance()->seqAppDeactivate.Remove(this);
 }
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -976,8 +976,8 @@ void CHW::UpdateViews()
 	HRESULT R;
 
 	// Set up svp image size
-	Device.m_SecondViewport.screenWidth = u32((sd.BufferDesc.Width / 32) * psSVPImageSizeK) * 32;
-	Device.m_SecondViewport.screenHeight = u32((sd.BufferDesc.Height / 32) * psSVPImageSizeK) * 32;
+	CRenderDevice::GetInstance()->m_SecondViewport.screenWidth = u32((sd.BufferDesc.Width / 32) * psSVPImageSizeK) * 32;
+	CRenderDevice::GetInstance()->m_SecondViewport.screenHeight = u32((sd.BufferDesc.Height / 32) * psSVPImageSizeK) * 32;
 
 	// Create a render target view
 	//R_CHK	(pDevice->GetRenderTarget			(0,&pBaseRT));
@@ -996,8 +996,8 @@ void CHW::UpdateViews()
 
 	D3D_TEXTURE2D_DESC desc;
 	temp1->GetDesc(&desc);
-	desc.Width = Device.m_SecondViewport.screenWidth;
-	desc.Height = Device.m_SecondViewport.screenHeight;
+	desc.Width = CRenderDevice::GetInstance()->m_SecondViewport.screenWidth;
+	desc.Height = CRenderDevice::GetInstance()->m_SecondViewport.screenHeight;
 
 	R = pDevice->CreateTexture2D(&desc, NULL, &temp2);
 	R_CHK(R);
@@ -1047,8 +1047,8 @@ void CHW::UpdateViews()
 
 	depth_stencil->Release();
 
-	descDepth.Width = Device.m_SecondViewport.screenWidth;
-	descDepth.Height = Device.m_SecondViewport.screenHeight;
+	descDepth.Width = CRenderDevice::GetInstance()->m_SecondViewport.screenWidth;
+	descDepth.Height = CRenderDevice::GetInstance()->m_SecondViewport.screenHeight;
 
 	R = pDevice->CreateTexture2D(&descDepth, NULL, &depth_stencil);
 	R_CHK(R);

@@ -377,7 +377,7 @@ void ui_actor_state_wnd::update_round_states( CActor* actor, ALife::EHitType hit
 
 void ui_actor_state_wnd::UpdateHitZone()
 {
-	if (Device.dwFrame % 2 == 0)
+	if (CRenderDevice::GetInstance()->dwFrame % 2 == 0)
 		CurrentGameUI()->UpdateZones(); //некрасиво слишком
 }
 

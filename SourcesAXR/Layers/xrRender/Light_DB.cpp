@@ -215,8 +215,8 @@ void			CLight_DB::add_light		(light* L)
 #if (RENDER==R_R2) || (RENDER==R_R4)
 void			CLight_DB::add_light		(light* L)
 {
-	if (Device.dwFrame == L->frame_render && L->vp_render == RImplementation.currentViewPort)	return;
-	L->frame_render = Device.dwFrame;
+	if (CRenderDevice::GetInstance()->dwFrame == L->frame_render && L->vp_render == RImplementation.currentViewPort)	return;
+	L->frame_render = CRenderDevice::GetInstance()->dwFrame;
 	L->vp_render = RImplementation.currentViewPort;
 	if (RImplementation.o.noshadows)		L->flags.bShadow = FALSE;
 	if (L->flags.bStatic && !ps_r2_ls_flags.test(R2FLAG_R1LIGHTS))	return;

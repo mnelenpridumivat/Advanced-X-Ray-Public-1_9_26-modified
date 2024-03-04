@@ -40,8 +40,8 @@ void	CalcGauss_k7(
 	// calculate
 	float mag					=	0;
 	for (int i=-7; i<=0; i++)	W[-i]	=	expf	(-float(i*i)/(2*r*r));	// weight
-	for (i=0; i<8; i++)	mag		+= i?2*W[i]:W[i];							// symmetrical weight
-	for (i=0; i<8; i++)	W[i]	= s_out*W[i]/mag;
+	for (int i=0; i<8; i++)	mag		+= i?2*W[i]:W[i];							// symmetrical weight
+	for (int i=0; i<8; i++)	W[i]	= s_out*W[i]/mag;
 
 	// W[0]=0, W[7]=-7
 	w0.set	(W[1],W[2],W[3],W[4]);		// -1, -2, -3, -4
@@ -79,8 +79,8 @@ void CRenderTarget::phase_bloom	()
 
 	// Transfer into Bloom1
 	{
-		float		_w				= float(Device.dwWidth);
-		float		_h				= float(Device.dwHeight);
+		float		_w				= float(CRenderDevice::GetInstance()->dwWidth);
+		float		_h				= float(CRenderDevice::GetInstance()->dwHeight);
 		float		_2w				= _w/2;	float tw = BLOOM_size_X;
 		float		_2h				= _h/2; float th = BLOOM_size_Y;
 		float		_aspect_w		= _2w/tw;
@@ -114,7 +114,7 @@ void CRenderTarget::phase_bloom	()
 
 		// Perform combine (all scalers must account for 4 samples + final diffuse multiply);
 		float s						= ps_r2_ls_bloom_threshold;											// scale
-		f_bloom_factor				= .9f*f_bloom_factor + .1f*ps_r2_ls_bloom_speed*Device.fTimeDelta;	// speed
+		f_bloom_factor				= .9f*f_bloom_factor + .1f*ps_r2_ls_bloom_speed* CRenderDevice::GetInstance()->fTimeDelta;	// speed
       if( !RImplementation.o.dx10_msaa )
 		   RCache.set_Element			(s_bloom->E[0]);
       else
@@ -306,7 +306,7 @@ void CRenderTarget::phase_bloom	()
 
 			// Perform filtering
 			Fvector4	w0,w1;
-			float		kernel			= ps_r2_ls_bloom_kernel_g	* float(Device.dwHeight)/float(Device.dwWidth);
+			float		kernel			= ps_r2_ls_bloom_kernel_g	* float(CRenderDevice::GetInstance()->dwHeight)/float(CRenderDevice::GetInstance()->dwWidth);
 			CalcGauss_wave				(w0,w1,kernel,kernel/3.f,ps_r2_ls_bloom_kernel_scale);
 			u_setrt						(rt_Bloom_1,NULL,NULL,NULL);				// No need for ZBuffer at all
 			RCache.set_Element			(s_bloom->E[2]);

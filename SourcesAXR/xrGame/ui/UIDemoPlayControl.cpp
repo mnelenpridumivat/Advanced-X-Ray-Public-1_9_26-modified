@@ -179,7 +179,7 @@ void CUIDemoPlayControl::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
 void CUIDemoPlayControl::OnPlayPause(CUIWindow* w, void* d)
 {
 	StopRewind();
-	if (Device.Paused())
+	if (CRenderDevice::GetInstance()->Paused())
 	{
 		//m_play_pause_btn->SetText("Pause");
 		GAME_PAUSE(FALSE, TRUE, TRUE, "mpdemoplay ctrl unpause");
@@ -304,7 +304,7 @@ void CUIDemoPlayControl::Update()
 	xr_sprintf	(demo_speed,	": %1.1fx", Level().GetDemoPlaySpeed());
 	
 	STRCONCAT(demo_play_string, 
-		Device.Paused() ?
+		CRenderDevice::GetInstance()->Paused() ?
 			st.translate("mpdemoplay_paused") :
 			st.translate("mpdemoplay_active"),
 		demo_pos,

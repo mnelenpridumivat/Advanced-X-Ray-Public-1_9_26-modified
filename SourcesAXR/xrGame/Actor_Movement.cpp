@@ -665,7 +665,7 @@ bool CActor::CanAccelerate()
 {
 	bool can_accel = !conditions().IsLimping() &&
 		!character_physics_support()->movement()->PHCapture() && 
-		(m_time_lock_accel < Device.dwTimeGlobal)
+		(m_time_lock_accel < CRenderDevice::GetInstance()->dwTimeGlobal)
 	;		
 
 	return can_accel;

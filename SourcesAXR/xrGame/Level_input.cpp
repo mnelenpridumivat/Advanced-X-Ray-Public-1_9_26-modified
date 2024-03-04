@@ -61,7 +61,7 @@ void CLevel::IR_OnMouseWheel( int direction )
 	if (CurrentGameUI()->IR_UIOnMouseWheel(direction))
 		return;
 
-	if( Device.Paused()
+	if(CRenderDevice::GetInstance()->Paused()
 #ifdef DEBUG
 		&& !psActorFlags.test(AF_NO_CLIP) 
 #endif //DEBUG
@@ -99,7 +99,7 @@ void CLevel::IR_OnMouseMove( int dx, int dy )
 	if (CurrentGameUI()->IR_UIOnMouseMove(dx,dy))
 		return;
 
-	if (Device.Paused() && !IsDemoPlay() 
+	if (CRenderDevice::GetInstance()->Paused() && !IsDemoPlay()
 #ifdef DEBUG
 		&& !psActorFlags.test(AF_NO_CLIP) 
 #endif //DEBUG
@@ -125,14 +125,14 @@ extern float g_separate_radius;
 
 void CLevel::IR_OnKeyboardPress	(int key)
 {
-	if(Device.dwPrecacheFrame)
+	if(CRenderDevice::GetInstance()->dwPrecacheFrame)
 		return;
 
 	if (Editor_KeyPress(key))
 		return;
 
 #ifdef INGAME_EDITOR
-	if (Device.editor() && (pInput->iGetAsyncKeyState(DIK_LALT) || pInput->iGetAsyncKeyState(DIK_RALT)))
+	if (CRenderDevice::GetInstance()->editor() && (pInput->iGetAsyncKeyState(DIK_LALT) || pInput->iGetAsyncKeyState(DIK_RALT)))
 		return;
 #endif // #ifdef INGAME_EDITOR
 
@@ -154,17 +154,17 @@ void CLevel::IR_OnKeyboardPress	(int key)
 	if(_curr==kPAUSE)
 	{
 		#ifdef INGAME_EDITOR
-			if (Device.editor())	return;
+			if (CRenderDevice::GetInstance()->editor())	return;
 		#endif // INGAME_EDITOR
 
 		if (!g_block_pause && (IsGameTypeSingle() || IsDemoPlay()))
 		{
 #ifdef DEBUG
 			if(psActorFlags.test(AF_NO_CLIP))
-				GAME_PAUSE(!Device.Paused(), TRUE, TRUE, "li_pause_key_no_clip");
+				GAME_PAUSE(!CRenderDevice::GetInstance()->Paused(), TRUE, TRUE, "li_pause_key_no_clip");
 			else
 #endif //DEBUG
-				GAME_PAUSE(!Device.Paused(), TRUE, TRUE, "li_pause_key");
+				GAME_PAUSE(!CRenderDevice::GetInstance()->Paused(), TRUE, TRUE, "li_pause_key");
 		}
 		return;
 	}
@@ -191,7 +191,7 @@ void CLevel::IR_OnKeyboardPress	(int key)
 			if(b_ui_exist && CurrentGameUI()->TopInputReceiver() )
 			{
 				//Arkada
-				if(Device.Paused())
+				if(CRenderDevice::GetInstance()->Paused())
 				{
 					GAME_PAUSE(FALSE, TRUE, TRUE, "bug_fix");
 					return;
@@ -209,7 +209,7 @@ void CLevel::IR_OnKeyboardPress	(int key)
 
 	if ( b_ui_exist && CurrentGameUI()->IR_UIOnKeyboardPress(key)) return;
 
-	if ( Device.Paused() && !IsDemoPlay() 
+	if (CRenderDevice::GetInstance()->Paused() && !IsDemoPlay()
 #ifdef DEBUG
 		&& !psActorFlags.test(AF_NO_CLIP) 
 #endif //DEBUG
@@ -523,7 +523,7 @@ void CLevel::IR_OnKeyboardRelease(int key)
 	if (game && game->OnKeyboardRelease(get_binded_action(key)))
 		return;
 
-	if (Device.Paused() 
+	if (CRenderDevice::GetInstance()->Paused()
 #ifdef DEBUG
 		&& !psActorFlags.test(AF_NO_CLIP)
 #endif //DEBUG
@@ -553,25 +553,25 @@ void CLevel::IR_OnKeyboardHold(int key)
 	// Lain: added
 	if ( key == DIK_UP )
 	{
-		static u32 time = Device.dwTimeGlobal;
-		if ( Device.dwTimeGlobal - time > 20 )
+		static u32 time = CRenderDevice::GetInstance()->dwTimeGlobal;
+		if (CRenderDevice::GetInstance()->dwTimeGlobal - time > 20 )
 		{
 			if ( CBaseMonster* pBM = smart_cast<CBaseMonster*>(CurrentEntity()) )
 			{
 				DBG().debug_info_up();
-				time = Device.dwTimeGlobal;
+				time = CRenderDevice::GetInstance()->dwTimeGlobal;
 			}
 		}
 	}
 	else if ( key == DIK_DOWN )
 	{
-		static u32 time = Device.dwTimeGlobal;
-		if ( Device.dwTimeGlobal - time > 20 )
+		static u32 time = CRenderDevice::GetInstance()->dwTimeGlobal;
+		if (CRenderDevice::GetInstance()->dwTimeGlobal - time > 20 )
 		{
 			if ( CBaseMonster* pBM = smart_cast<CBaseMonster*>(CurrentEntity()) )
 			{
 				DBG().debug_info_down();
-				time = Device.dwTimeGlobal;
+				time = CRenderDevice::GetInstance()->dwTimeGlobal;
 			}
 		}
 	}
@@ -579,7 +579,7 @@ void CLevel::IR_OnKeyboardHold(int key)
 #endif // DEBUG
 
 	if (CurrentGameUI() && CurrentGameUI()->IR_UIOnKeyboardHold(key)) return;
-	if (Device.Paused() && !Level().IsDemoPlay() 
+	if (CRenderDevice::GetInstance()->Paused() && !Level().IsDemoPlay()
 #ifdef DEBUG
 		&& !psActorFlags.test(AF_NO_CLIP)
 #endif //DEBUG

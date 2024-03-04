@@ -148,9 +148,9 @@ void CUIArtefactDetectorAdv::update()
 
 	a								*= 2.0f;
 
-	m_curr_ang_speed				= m_curr_ang_speed + a*Device.fTimeDelta;
+	m_curr_ang_speed				= m_curr_ang_speed + a*CRenderDevice::GetInstance()->fTimeDelta;
 	clamp							(m_curr_ang_speed,-2.0f,2.0f);
-	float _add						= m_curr_ang_speed*Device.fTimeDelta;
+	float _add						= m_curr_ang_speed*CRenderDevice::GetInstance()->fTimeDelta;
 
 	m_cur_y_rot						+= _add;
 */

@@ -17,13 +17,13 @@ void	light::vis_prepare			()
 	//		. camera inside light volume	= visible,	shedule for 'small' interval
 	//		. perform testing				= ???,		pending
 
-	u32	frame	= Device.dwFrame;
+	u32	frame	= CRenderDevice::GetInstance()->dwFrame;
 	if (frame	<	vis.frame2test)		return;
 
 	float	safe_area					= VIEWPORT_NEAR;
 	{
-		float	a0	= deg2rad(Device.fFOV*Device.fASPECT/2.f);
-		float	a1	= deg2rad(Device.fFOV/2.f);
+		float	a0	= deg2rad(CRenderDevice::GetInstance()->fFOV* CRenderDevice::GetInstance()->fASPECT/2.f);
+		float	a1	= deg2rad(CRenderDevice::GetInstance()->fFOV/2.f);
 		float	x0	= VIEWPORT_NEAR/_cos	(a0);
 		float	x1	= VIEWPORT_NEAR/_cos	(a1);
 		float	c	= _sqrt					(x0*x0 + x1*x1);
@@ -39,7 +39,7 @@ void	light::vis_prepare			()
 	//	TODO: DX10: Remove this pessimization
 	//skiptest	= true;
 
-	vis.distance = Device.vCameraPosition.distance_to(spatial.sphere.P);
+	vis.distance = CRenderDevice::GetInstance()->vCameraPosition.distance_to(spatial.sphere.P);
 
 	if (skiptest || vis.distance <= (spatial.sphere.R * 1.01f + safe_area))
 	{	// small error
@@ -77,7 +77,7 @@ void	light::vis_update			()
 
 	if (!vis.pending)	return;
 
-	u32	frame			= Device.dwFrame;
+	u32	frame			= CRenderDevice::GetInstance()->dwFrame;
 	u64 fragments		= RImplementation.occq_get	(vis.query_id);
 	//Log					("",fragments);
 	vis.visible			= (fragments > cullfragments);

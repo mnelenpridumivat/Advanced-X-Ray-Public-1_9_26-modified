@@ -84,7 +84,7 @@ CActorCondition::CActorCondition(CActor *object) :
 	m_zone_danger[ALife::infl_acid]	= 0.0f;
 	m_zone_danger[ALife::infl_psi]	= 0.0f;
 	m_zone_danger[ALife::infl_electra]= 0.0f;
-	m_f_time_affected = Device.fTimeGlobal;
+	m_f_time_affected = CRenderDevice::GetInstance()->fTimeGlobal;
 
 	m_max_power_restore_speed	= 0.0f;
 	m_max_wound_protection		= 0.0f;
@@ -439,7 +439,7 @@ void CActorCondition::UpdateBoosters()
 void CActorCondition::AffectDamage_InjuriousMaterialAndMonstersInfluence()
 {
 	float one = 0.1f;
-	float tg  = Device.fTimeGlobal;
+	float tg  = CRenderDevice::GetInstance()->fTimeGlobal;
 	if ( m_f_time_affected + one > tg )
 	{
 		return;
@@ -1248,12 +1248,12 @@ void CActorCondition::BoostChemicalBurnProtection(const float value)
 
 void CActorCondition::BoostTimeFactor(const float value)
 {
-	m_fBoostTimeFactor = Device.time_factor();
+	m_fBoostTimeFactor = CRenderDevice::GetInstance()->time_factor();
 
 	m_fBoostTimeFactor += value;
 	clamp(m_fBoostTimeFactor, 0.25f, 1.5f);
 
-	Device.time_factor(m_fBoostTimeFactor);
+	CRenderDevice::GetInstance()->time_factor(m_fBoostTimeFactor);
 	psSpeedOfSound = m_fBoostTimeFactor;
 }
 

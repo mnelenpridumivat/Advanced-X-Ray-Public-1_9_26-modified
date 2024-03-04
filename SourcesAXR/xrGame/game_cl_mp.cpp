@@ -1837,7 +1837,7 @@ void game_cl_mp::add_detected_cheater(shared_str const & file_name, string256 di
 	detected_cheater_t	tmp_cheater;
 	tmp_cheater.m_file_name			= file_name;
 	xr_strcpy						(tmp_cheater.m_diff, diff);
-	tmp_cheater.m_detect_time		= Device.dwTimeGlobal;
+	tmp_cheater.m_detect_time		= CRenderDevice::GetInstance()->dwTimeGlobal;
 	m_detected_cheaters.push_back	(tmp_cheater);
 }
 
@@ -1847,7 +1847,7 @@ struct old_detected_cheater
 	bool operator () (game_cl_mp::detected_cheater_t const & cheater)
 	{
 		if (cheater.m_detect_time +
-			game_cl_mp::detected_cheater_t::max_showing_time <= Device.dwTimeGlobal)
+			game_cl_mp::detected_cheater_t::max_showing_time <= CRenderDevice::GetInstance()->dwTimeGlobal)
 			return true;
 		return false;
 	}

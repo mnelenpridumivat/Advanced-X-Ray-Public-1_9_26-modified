@@ -8,6 +8,7 @@
 #include "script_game_object.h"
 #include "actor.h"
 #include "stdafx.h"
+#include "luabind/functor.hpp"
 
 SPhraseDialogData::SPhraseDialogData ()
 {
@@ -195,7 +196,7 @@ LPCSTR CPhraseDialog::GetPhraseText	(const shared_str& phrase_id, bool current_s
 
 	if(ph->m_script_text_id.length() > 0 )
 	{
-		luabind::functor<LPCSTR>	lua_function;
+		luabind::functor<xr_string>	lua_function;
 		bool functor_exists		= ai().script_engine().functor(ph->m_script_text_id.c_str() ,lua_function);
 		THROW3(functor_exists, "Cannot find function", ph->m_script_text_id.c_str());
 

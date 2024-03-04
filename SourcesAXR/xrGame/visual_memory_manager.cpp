@@ -413,7 +413,7 @@ bool CVisualMemoryManager::visible				(const CGameObject *game_object, float tim
 			if (object->m_value < 0.f)
 				object->m_value	= 0.f;
 			else
-				object->m_update_time	= Device.dwTimeGlobal;
+				object->m_update_time	= CRenderDevice::GetInstance()->dwTimeGlobal;
 			return				(object->m_value >= current_state().m_visibility_threshold);
 		}
 		return					(false);
@@ -427,13 +427,13 @@ bool CVisualMemoryManager::visible				(const CGameObject *game_object, float tim
 		new_object.m_prev_time		= 0;
 		new_object.m_value			= get_visible_value(distance, object_distance, time_delta, get_object_velocity(game_object, new_object), luminocity);
 		clamp						(new_object.m_value,0.f,current_state().m_visibility_threshold + EPS_L);
-		new_object.m_update_time	= Device.dwTimeGlobal;
+		new_object.m_update_time	= CRenderDevice::GetInstance()->dwTimeGlobal;
 		new_object.m_prev_time		= get_prev_time(game_object);
 		add_not_yet_visible_object	(new_object);
 		return						(new_object.m_value >= current_state().m_visibility_threshold);
 	}
 
-	object->m_update_time		= Device.dwTimeGlobal;
+	object->m_update_time		= CRenderDevice::GetInstance()->dwTimeGlobal;
 	object->m_value				+= get_visible_value(distance, object_distance, time_delta, get_object_velocity(game_object, *object), luminocity);
 	clamp						(object->m_value,0.f,current_state().m_visibility_threshold + EPS_L);
 	object->m_prev_time			= get_prev_time(game_object);
@@ -498,7 +498,7 @@ void CVisualMemoryManager::add_visible_object	(const CObject *object, float time
 		visible_object.m_first_game_time	= Level().GetGameTime();
 #endif
 #ifdef USE_FIRST_LEVEL_TIME
-		visible_object.m_first_level_time	= Device.dwTimeGlobal;
+		visible_object.m_first_level_time	= CRenderDevice::GetInstance()->dwTimeGlobal;
 #endif
 
 		if (m_max_object_count <= m_objects->size()) {
@@ -669,7 +669,7 @@ void CVisualMemoryManager::update				(float time_delta)
 	if (!enabled())
 		return;
 
-	m_last_update_time					= Device.dwTimeGlobal;
+	m_last_update_time					= CRenderDevice::GetInstance()->dwTimeGlobal;
 
 	squad_mask_type						mask = this->mask();
 	VERIFY								(m_objects);
@@ -689,7 +689,7 @@ void CVisualMemoryManager::update				(float time_delta)
 		xr_vector<CVisibleObject>::iterator	I = m_objects->begin();
 		xr_vector<CVisibleObject>::iterator	E = m_objects->end();
 		for ( ; I != E; ++I)
-			if (I->m_level_time + current_state().m_still_visible_time < Device.dwTimeGlobal)
+			if (I->m_level_time + current_state().m_still_visible_time < CRenderDevice::GetInstance()->dwTimeGlobal)
 				I->visible			(mask,false);
 	}
 	STOP_PROFILE
@@ -708,7 +708,7 @@ void CVisualMemoryManager::update				(float time_delta)
 		xr_vector<CNotYetVisibleObject>::iterator	I = m_not_yet_visible_objects.begin();
 		xr_vector<CNotYetVisibleObject>::iterator	E = m_not_yet_visible_objects.end();
 		for ( ; I != E; ++I)
-			if (I->m_update_time < Device.dwTimeGlobal)
+			if (I->m_update_time < CRenderDevice::GetInstance()->dwTimeGlobal)
 				I->m_value			= 0.f;
 	}
 	STOP_PROFILE
@@ -828,13 +828,13 @@ void CVisualMemoryManager::save	(NET_Packet &packet) const
 		packet.w_float			((*I).m_self_params.m_orientation.roll);
 #endif // USE_ORIENTATION
 #ifdef USE_LEVEL_TIME
-		packet.w_u32			((Device.dwTimeGlobal >= I->m_level_time) ? (Device.dwTimeGlobal - I->m_level_time) : 0);
+		packet.w_u32			((CRenderDevice::GetInstance()->dwTimeGlobal >= I->m_level_time) ? (CRenderDevice::GetInstance()->dwTimeGlobal - I->m_level_time) : 0);
 #endif // USE_LAST_LEVEL_TIME
 #ifdef USE_LEVEL_TIME
-		packet.w_u32			((Device.dwTimeGlobal >= I->m_level_time) ? (Device.dwTimeGlobal - I->m_last_level_time) : 0);
+		packet.w_u32			((CRenderDevice::GetInstance()->dwTimeGlobal >= I->m_level_time) ? (CRenderDevice::GetInstance()->dwTimeGlobal - I->m_last_level_time) : 0);
 #endif // USE_LAST_LEVEL_TIME
 #ifdef USE_FIRST_LEVEL_TIME
-		packet.w_u32			((Device.dwTimeGlobal >= (*I).m_level_time) ? (Device.dwTimeGlobal - (*I).m_first_level_time) : 0);
+		packet.w_u32			((CRenderDevice::GetInstance()->dwTimeGlobal >= (*I).m_level_time) ? (CRenderDevice::GetInstance()->dwTimeGlobal - (*I).m_first_level_time) : 0);
 #endif // USE_FIRST_LEVEL_TIME
 		packet.w_u64			(I->m_visible.flags);
 	}
@@ -878,19 +878,19 @@ void CVisualMemoryManager::load	(IReader &packet)
 		packet.r_float				(object.m_self_params.m_orientation.roll);
 #endif
 #ifdef USE_LEVEL_TIME
-		VERIFY						(Device.dwTimeGlobal >= object.m_level_time);
+		VERIFY						(CRenderDevice::GetInstance()->dwTimeGlobal >= object.m_level_time);
 		object.m_level_time			= packet.r_u32();
-		object.m_level_time			+= Device.dwTimeGlobal;
+		object.m_level_time			+= CRenderDevice::GetInstance()->dwTimeGlobal;
 #endif // USE_LEVEL_TIME
 #ifdef USE_LAST_LEVEL_TIME
-		VERIFY						(Device.dwTimeGlobal >= object.m_last_level_time);
+		VERIFY						(CRenderDevice::GetInstance()->dwTimeGlobal >= object.m_last_level_time);
 		object.m_last_level_time	= packet.r_u32();
-		object.m_last_level_time	+= Device.dwTimeGlobal;
+		object.m_last_level_time	+= CRenderDevice::GetInstance()->dwTimeGlobal;
 #endif // USE_LAST_LEVEL_TIME
 #ifdef USE_FIRST_LEVEL_TIME
-		VERIFY						(Device.dwTimeGlobal >= (*I).m_first_level_time);
+		VERIFY						(CRenderDevice::GetInstance()->dwTimeGlobal >= (*I).m_first_level_time);
 		object.m_first_level_time	= packet.r_u32();
-		object.m_first_level_time	+= Device.dwTimeGlobal;
+		object.m_first_level_time	+= CRenderDevice::GetInstance()->dwTimeGlobal;
 #endif // USE_FIRST_LEVEL_TIME
 		object.m_visible.assign		(packet.r_u64());
 

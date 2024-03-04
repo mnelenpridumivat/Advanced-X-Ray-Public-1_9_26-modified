@@ -37,7 +37,7 @@ void CControlDirectionBase::face_target(const Fvector &position, u32 delay, floa
 
 	m_heading.target	= yaw;
 
-	m_time_last_faced	= Device.dwTimeGlobal;
+	m_time_last_faced	= CRenderDevice::GetInstance()->dwTimeGlobal;
 }
 void CControlDirectionBase::face_target(const CObject *obj,	u32 delay, float add_yaw) 
 {

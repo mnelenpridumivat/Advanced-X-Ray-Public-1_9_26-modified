@@ -9,8 +9,8 @@ void CRenderTarget::phase_blur()
 	u32 C = color_rgba(0, 0, 0, 255);
 	
 	//Full resolution
-	float w = float(Device.dwWidth);
-	float h = float(Device.dwHeight);	
+	float w = float(CRenderDevice::GetInstance()->dwWidth);
+	float h = float(CRenderDevice::GetInstance()->dwHeight);
 	
 	Fvector2 p0, p1;
 #ifdef USE_DX11
@@ -24,8 +24,8 @@ void CRenderTarget::phase_blur()
 ///////////////////////////////////////////////////////////////////////////////////
 ////Horizontal blur
 ///////////////////////////////////////////////////////////////////////////////////
-	w = float(Device.dwWidth) * 0.5f;
-	h = float(Device.dwHeight) * 0.5f;
+	w = float(CRenderDevice::GetInstance()->dwWidth) * 0.5f;
+	h = float(CRenderDevice::GetInstance()->dwHeight) * 0.5f;
 
 	u_setrt(rt_blur_h_2, 0, 0, HW.pBaseZB);
 	RCache.set_CullMode(CULL_NONE);
@@ -67,8 +67,8 @@ void CRenderTarget::phase_blur()
 ///////////////////////////////////////////////////////////////////////////////////
 ////Horizontal blur / Half res
 ///////////////////////////////////////////////////////////////////////////////////
-	w = float(Device.dwWidth) * 0.25f;
-	h = float(Device.dwHeight) * 0.25f;
+	w = float(CRenderDevice::GetInstance()->dwWidth) * 0.25f;
+	h = float(CRenderDevice::GetInstance()->dwHeight) * 0.25f;
 
 	u_setrt(rt_blur_h_4, 0, 0, HW.pBaseZB);
 	RCache.set_CullMode(CULL_NONE);
@@ -110,8 +110,8 @@ void CRenderTarget::phase_blur()
 ///////////////////////////////////////////////////////////////////////////////////
 ////Horizontal blur
 ///////////////////////////////////////////////////////////////////////////////////
-	w = float(Device.dwWidth) * 0.125f;
-	h = float(Device.dwHeight) * 0.125f;
+	w = float(CRenderDevice::GetInstance()->dwWidth) * 0.125f;
+	h = float(CRenderDevice::GetInstance()->dwHeight) * 0.125f;
 	
 	u_setrt(rt_blur_h_8, 0, 0, HW.pBaseZB);
 	RCache.set_CullMode(CULL_NONE);

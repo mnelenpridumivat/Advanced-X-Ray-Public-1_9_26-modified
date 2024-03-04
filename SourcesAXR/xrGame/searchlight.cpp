@@ -143,7 +143,7 @@ void CProjector::UpdateCL	()
 		if (lanim){
 			int frame;
 			// возвращает в формате BGR
-			u32 clr			= lanim->CalculateBGR(Device.fTimeGlobal,frame); 
+			u32 clr			= lanim->CalculateBGR(CRenderDevice::GetInstance()->fTimeGlobal,frame);
 
 			Fcolor			fclr;
 			fclr.set		(static_cast<float>(color_get_B(clr)),static_cast<float>(color_get_G(clr)),static_cast<float>(color_get_R(clr)),1.f);
@@ -165,8 +165,8 @@ void CProjector::UpdateCL	()
 	}
 
 	// Update searchlight 
-	angle_lerp(_current.yaw,	_target.yaw,	bone_x.velocity, Device.fTimeDelta);
-	angle_lerp(_current.pitch,	_target.pitch,	bone_y.velocity, Device.fTimeDelta);
+	angle_lerp(_current.yaw,	_target.yaw,	bone_x.velocity, CRenderDevice::GetInstance()->fTimeDelta);
+	angle_lerp(_current.pitch,	_target.pitch,	bone_y.velocity, CRenderDevice::GetInstance()->fTimeDelta);
 }
 
 

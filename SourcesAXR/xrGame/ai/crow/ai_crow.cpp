@@ -291,8 +291,8 @@ void CAI_Crow::Die				(CObject* who)
 };
 void CAI_Crow::UpdateWorkload	(float fdt)
 {
-	if (o_workload_frame	==	Device.dwFrame)	return;
-	o_workload_frame		=	Device.dwFrame	;
+	if (o_workload_frame	== CRenderDevice::GetInstance()->dwFrame)	return;
+	o_workload_frame		= CRenderDevice::GetInstance()->dwFrame	;
 	switch (st_current)		{
 	case eFlyIdle	:
 	case eFlyUp		:
@@ -314,9 +314,9 @@ void CAI_Crow::UpdateCL		()
 }
 void CAI_Crow::renderable_Render	()
 {
-	UpdateWorkload(Device.fTimeDelta * (Device.dwFrame - o_workload_frame));
+	UpdateWorkload(CRenderDevice::GetInstance()->fTimeDelta * (CRenderDevice::GetInstance()->dwFrame - o_workload_frame));
 	inherited::renderable_Render	();
-	o_workload_rframe				= Device.dwFrame	;
+	o_workload_rframe				= CRenderDevice::GetInstance()->dwFrame	;
 }
 void CAI_Crow::shedule_Update		(u32 DT)
 {
@@ -362,7 +362,7 @@ void CAI_Crow::shedule_Update		(u32 DT)
 	m_Sounds.m_idle.SetPosition		(Position());
 
 	// work
-	if (o_workload_rframe >= (Device.dwFrame - 2));
+	if (o_workload_rframe >= (CRenderDevice::GetInstance()->dwFrame - 2));
 	else					UpdateWorkload			(fDT);
 	VERIFY2( valid_pos( Position() ), dbg_valide_pos_string(Position(),this," CAI_Crow::shedule_Update		(u32 DT)") );
 }

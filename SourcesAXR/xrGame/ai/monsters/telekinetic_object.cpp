@@ -45,7 +45,7 @@ bool CTelekineticObject::init(CTelekinesis* tele,CPhysicsShellHolder *obj, float
 	strength			= s;
 
 	time_fire_started	= 0;
-	//time_raise_started	= Device.dwTimeGlobal;
+	//time_raise_started	= CRenderDevice::GetInstance()->dwTimeGlobal;
 
 	m_rotate			= rot;
 
@@ -122,7 +122,7 @@ void CTelekineticObject::raise(float step)
 
 void CTelekineticObject::prepare_keep()
 {
-	//time_keep_started	= Device.dwTimeGlobal;
+	//time_keep_started	= CRenderDevice::GetInstance()->dwTimeGlobal;
 	//state				= TS_Keep;
 	switch_state(TS_Keep);
 	time_keep_updated	= 0;
@@ -144,7 +144,7 @@ bool CTelekineticObject::time_fire_elapsed()
 void CTelekineticObject::keep()
 {
 	// проверить время последнего обновления
-	//if (time_keep_updated + KEEP_IMPULSE_UPDATE > Device.dwTimeGlobal) return;
+	//if (time_keep_updated + KEEP_IMPULSE_UPDATE > CRenderDevice::GetInstance()->dwTimeGlobal) return;
 	
 	if (!object || !object->m_pPhysicsShell || !object->m_pPhysicsShell->isActive()) return;
 
@@ -194,7 +194,7 @@ void CTelekineticObject::release()
 void CTelekineticObject::fire_t(const Fvector &target, float time)
 {
 	switch_state(TS_Fire);
-	//time_fire_started	= Device.dwTimeGlobal;
+	//time_fire_started	= CRenderDevice::GetInstance()->dwTimeGlobal;
 
 	if (!object || !object->m_pPhysicsShell || !object->m_pPhysicsShell->isActive()) return;
 
@@ -217,7 +217,7 @@ void CTelekineticObject::fire(const Fvector &target, float power)
 {
 	//state				= TS_Fire;
 	switch_state(TS_Fire);
-	//time_fire_started	= Device.dwTimeGlobal;
+	//time_fire_started	= CRenderDevice::GetInstance()->dwTimeGlobal;
 
 	if (!object || !object->m_pPhysicsShell || !object->m_pPhysicsShell->isActive()) return;
 

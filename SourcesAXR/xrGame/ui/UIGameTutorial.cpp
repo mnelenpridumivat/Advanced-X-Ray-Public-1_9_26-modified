@@ -114,7 +114,7 @@ void CUISequencer::Start(LPCSTR tutor_name)
 {
 
 	VERIFY						(m_sequencer_items.size()==0);
-	Device.seqFrame.Add			(this, REG_PRIORITY_LOW-10000);
+	CRenderDevice::GetInstance()->seqFrame.Add			(this, REG_PRIORITY_LOW-10000);
 	
 	m_name						= tutor_name;
 	m_UIWindow					= xr_new<CUIWindow>();
@@ -172,7 +172,7 @@ void CUISequencer::Start(LPCSTR tutor_name)
 		pItem->Load				(&uiXml,i);
 	}
 
-	Device.seqRender.Add		(this, render_prio /*-2*/);
+	CRenderDevice::GetInstance()->seqRender.Add		(this, render_prio /*-2*/);
 	
 	CUISequenceItem* pCurrItem	= GetNextItem();
 	R_ASSERT3					(pCurrItem, "no item(s) to start", tutor_name);
@@ -182,7 +182,7 @@ void CUISequencer::Start(LPCSTR tutor_name)
 
 
 	m_flags.set					(etsActive, TRUE);
-	m_flags.set					(etsStoredPauseState, Device.Paused());
+	m_flags.set					(etsStoredPauseState, CRenderDevice::GetInstance()->Paused());
 	
 	if(m_flags.test(etsNeedPauseOn) && !m_flags.test(etsStoredPauseState))
 	{
@@ -243,8 +243,8 @@ void CUISequencer::Destroy()
 		CallFunction(m_stop_lua_function);
 
 	m_global_sound.stop			();
-	Device.seqFrame.Remove		(this);
-	Device.seqRender.Remove		(this);
+	CRenderDevice::GetInstance()->seqFrame.Remove		(this);
+	CRenderDevice::GetInstance()->seqRender.Remove		(this);
 	delete_data					(m_sequencer_items);
 	delete_data					(m_UIWindow);
 	IR_Release					();
@@ -290,7 +290,7 @@ void CUISequencer::Stop()
 
 void CUISequencer::OnFrame()
 {  
-	if(!Device.b_is_Active)		return;
+	if(!CRenderDevice::GetInstance()->b_is_Active)		return;
 	if(!IsActive() )			return;
 
 	if(!m_sequencer_items.size())

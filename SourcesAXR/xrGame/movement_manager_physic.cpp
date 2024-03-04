@@ -225,7 +225,7 @@ void CMovementManager::move_along_path		(CPHMovementControl *movement_control, F
 
 		// проверка на хит
 		apply_collision_hit(movement_control);
-//		Msg				("[%6d][%s] no move, curr_tp=%d",Device.dwFrame,*object().cName(),detail().m_current_travel_point);
+//		Msg				("[%6d][%s] no move, curr_tp=%d",CRenderDevice::GetInstance()->dwFrame,*object().cName(),detail().m_current_travel_point);
 		return;
 	}
 
@@ -268,10 +268,10 @@ void CMovementManager::move_along_path		(CPHMovementControl *movement_control, F
 		else
 			detail().m_current_travel_point = detail().path().size() - 1;
 		m_speed			= 0.f;
-		//Msg				("[%6d][%s] strange exit, curr_tp=%d",Device.dwFrame,*object().cName(),detail().m_current_travel_point);
+		//Msg				("[%6d][%s] strange exit, curr_tp=%d",CRenderDevice::GetInstance()->dwFrame,*object().cName(),detail().m_current_travel_point);
 		return;
 	}
-//	Msg					("[%6d][%s] curr_tp=%d",Device.dwFrame,*object().cName(),detail().m_current_travel_point);
+//	Msg					("[%6d][%s] curr_tp=%d",CRenderDevice::GetInstance()->dwFrame,*object().cName(),detail().m_current_travel_point);
 
 	// Физика устанавливает новую позицию
 	CRenderDevice::GetInstance()->Statistic->Physics.Begin	();

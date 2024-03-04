@@ -256,7 +256,7 @@ void CAI_Stalker::Hit(SHit* pHDS)
 			if ( !invulnerable() && cover && HDS.initiator() &&
 				( HDS.initiator()->ID() != ID() ) && !fis_zero( HDS.damage() ) && brain().affect_cover() )
 			{
-				agent_manager().location().add( xr_new<CDangerCoverLocation>(cover,Device.dwTimeGlobal,DANGER_INTERVAL,DANGER_DISTANCE) );
+				agent_manager().location().add( xr_new<CDangerCoverLocation>(cover, CRenderDevice::GetInstance()->dwTimeGlobal,DANGER_INTERVAL,DANGER_DISTANCE) );
 			}
 		}
 
@@ -681,10 +681,10 @@ float CAI_Stalker::pick_distance		()
 
 void CAI_Stalker::update_can_kill_info	()
 {
-	if (m_pick_frame_id == Device.dwFrame)
+	if (m_pick_frame_id == CRenderDevice::GetInstance()->dwFrame)
 		return;
 
-	m_pick_frame_id			= Device.dwFrame;
+	m_pick_frame_id			= CRenderDevice::GetInstance()->dwFrame;
 	m_can_kill_member		= false;
 	m_can_kill_enemy		= false;
 
@@ -778,7 +778,7 @@ bool CAI_Stalker::fire_make_sense		()
 	if (last_time_seen == static_cast<u32>(-1))
 		return				(false);
 
-	if (Device.dwTimeGlobal > last_time_seen + FIRE_MAKE_SENSE_INTERVAL)
+	if (CRenderDevice::GetInstance()->dwTimeGlobal > last_time_seen + FIRE_MAKE_SENSE_INTERVAL)
 		return				(false);
 
 	// if we do not have a weapon
@@ -1060,7 +1060,7 @@ void CAI_Stalker::update_throw_params		()
 void CAI_Stalker::on_throw_completed		()
 {
 	agent_manager().member().on_throw_completed	();
-	m_last_throw_time		= Device.dwTimeGlobal;
+	m_last_throw_time		= CRenderDevice::GetInstance()->dwTimeGlobal;
 }
 
 bool CAI_Stalker::critically_wounded		()
@@ -1103,7 +1103,7 @@ bool CAI_Stalker::critical_wound_external_conditions_suitable()
 	if (!agent_manager().member().registered_in_combat(this))
 		return						(false);
 
-//	Msg								("%6d executing critical hit",Device.dwTimeGlobal);
+//	Msg								("%6d executing critical hit",CRenderDevice::GetInstance()->dwTimeGlobal);
 	animation().global().make_inactual	();
 	return							(true);
 }

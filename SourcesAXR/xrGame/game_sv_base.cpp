@@ -620,7 +620,7 @@ void game_sv_GameState::GenerateGameMessage (NET_Packet &P)
 void game_sv_GameState::u_EventGen(NET_Packet& P, u16 type, u16 dest)
 {
 	P.w_begin	(M_EVENT);
-	P.w_u32		(Level().timeServer());//Device.TimerAsync());
+	P.w_u32		(Level().timeServer());//CRenderDevice::GetInstance()->TimerAsync());
 	P.w_u16		(type);
 	P.w_u16		(dest);
 }

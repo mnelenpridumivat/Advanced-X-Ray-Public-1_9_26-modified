@@ -4,7 +4,7 @@
 //#include <addons/ImGuizmo/ImGuizmo.h>
 #include "imgui_internal.h"
 
-#include "../../xrEngine/device.h"
+#include "../../xrEngine/Device.h"
 #include "../player_hud.h"
 #include "../Weapon.h"
 #include "../WeaponAttaches.h"
@@ -56,7 +56,7 @@ void ShowHudEditor(bool& show)
 			ImGui::InputFloat3(orient_name.c_str(), (float*)&mesh->hud_attach_pos[1]);
 		}
 
-		/*ImGuizmo::Manipulate((float*)&Device.mView, (float*)&Device.mProject, mode, ImGuizmo::WORLD, (float*)&item->m_attach_offset);
+		/*ImGuizmo::Manipulate((float*)&CRenderDevice::GetInstance()->mView, (float*)&CRenderDevice::GetInstance()->mProject, mode, ImGuizmo::WORLD, (float*)&item->m_attach_offset);
 
 		if (ImGuizmo::IsUsing())
 		{
@@ -84,7 +84,7 @@ void ShowHudEditor(bool& show)
 		ImGui::InputFloat3("fire_point2 1", (float*)&item->m_measures.m_fire_point2_offset[0]);
 		ImGui::InputFloat3("shell_point 1", (float*)&item->m_measures.m_shell_point_offset[0]);
 
-		/*ImGuizmo::Manipulate((float*)&Device.mView, (float*)&Device.mProject, mode, ImGuizmo::WORLD, (float*)&item->m_attach_offset);
+		/*ImGuizmo::Manipulate((float*)&CRenderDevice::GetInstance()->mView, (float*)&CRenderDevice::GetInstance()->mProject, mode, ImGuizmo::WORLD, (float*)&item->m_attach_offset);
 
 		if (ImGuizmo::IsUsing())
 		{

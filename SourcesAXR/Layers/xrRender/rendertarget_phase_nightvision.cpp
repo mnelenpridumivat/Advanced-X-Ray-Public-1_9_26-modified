@@ -8,8 +8,8 @@ void CRenderTarget::phase_nightvision()
 
 	float d_Z = EPS_S;
 	float d_W = 1.0f;
-	float w = float(Device.dwWidth);
-	float h = float(Device.dwHeight);
+	float w = float(CRenderDevice::GetInstance()->dwWidth);
+	float h = float(CRenderDevice::GetInstance()->dwHeight);
 
 	int NightVisionType = g_pGamePersistent->GetNightvisionType();
 	//Msg("NV Type Is: %d", NightVisionType);

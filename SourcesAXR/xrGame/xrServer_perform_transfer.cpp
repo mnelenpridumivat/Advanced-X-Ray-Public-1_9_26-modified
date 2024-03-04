@@ -43,7 +43,7 @@ void xrServer::Perform_reject(CSE_Abstract* what, CSE_Abstract* from, int delta)
 	R_ASSERT				(what->ID_Parent == from->ID);
 
 	NET_Packet				P;
-	u32						time = Device.dwTimeGlobal - delta;
+	u32						time = CRenderDevice::GetInstance()->dwTimeGlobal - delta;
 
 	P.w_begin				(M_EVENT);
 	P.w_u32					(time);

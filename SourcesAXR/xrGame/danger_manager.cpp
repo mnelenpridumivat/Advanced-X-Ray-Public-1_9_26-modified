@@ -235,7 +235,7 @@ float CDangerManager::do_evaluate	(const CDangerObject &object) const
 	}
 
 	result					*= 10.f;
-	result					+= static_cast<float>(Device.dwTimeGlobal - object.time());
+	result					+= static_cast<float>(CRenderDevice::GetInstance()->dwTimeGlobal - object.time());
 
 	return					(result);
 }

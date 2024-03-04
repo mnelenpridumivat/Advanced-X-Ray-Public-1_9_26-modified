@@ -215,7 +215,7 @@ void CInventory::TakeItemAnim(CGameObject* GameObj, CObject* Obj, bool use_picku
 		if (use_cam_effector)
 			g_player_hud->PlayBlendAnm(use_cam_effector, 0, anim_speed, effector_intensity, false);
 
-		m_iTakeAnimLength = Device.dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", anim_speed);
+		m_iTakeAnimLength = CRenderDevice::GetInstance()->dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", anim_speed);
 	}
 
 	if (pSettings->line_exist(anim_sect, "snd_using"))
@@ -228,7 +228,7 @@ void CInventory::TakeItemAnim(CGameObject* GameObj, CObject* Obj, bool use_picku
 		m_action_anim_sound.play(NULL, sm_2D);
 	}
 
-	m_iActionTiming = Device.dwTimeGlobal + anim_timer;
+	m_iActionTiming = CRenderDevice::GetInstance()->dwTimeGlobal + anim_timer;
 
 	m_bItemTaked = false;
 	Actor()->m_bActionAnimInProcess = true;
@@ -250,9 +250,9 @@ void CInventory::UpdateUseAnim(CActor* actor)
 
 	bool IsActorAlive = g_pGamePersistent->GetActorAliveStatus();
 
-	if ((m_iActionTiming <= Device.dwTimeGlobal && !m_bItemTaked) && IsActorAlive)
+	if ((m_iActionTiming <= CRenderDevice::GetInstance()->dwTimeGlobal && !m_bItemTaked) && IsActorAlive)
 	{
-		m_iActionTiming = Device.dwTimeGlobal;
+		m_iActionTiming = CRenderDevice::GetInstance()->dwTimeGlobal;
 
 		bool vis_status = READ_IF_EXISTS(pSettings, r_bool, Object->cNameSect(), "visible_with_take_anim", true);
 
@@ -266,10 +266,10 @@ void CInventory::UpdateUseAnim(CActor* actor)
 
 	if (m_bTakeItemActivated)
 	{
-		if ((m_iTakeAnimLength <= Device.dwTimeGlobal) || !IsActorAlive)
+		if ((m_iTakeAnimLength <= CRenderDevice::GetInstance()->dwTimeGlobal) || !IsActorAlive)
 		{
-			m_iTakeAnimLength = Device.dwTimeGlobal;
-			m_iActionTiming = Device.dwTimeGlobal;
+			m_iTakeAnimLength = CRenderDevice::GetInstance()->dwTimeGlobal;
+			m_iActionTiming = CRenderDevice::GetInstance()->dwTimeGlobal;
 			m_action_anim_sound.stop();
 			g_block_all_except_movement = false;
 			g_actor_allow_ladder = true;
@@ -445,13 +445,13 @@ bool CInventory::DropItem(CGameObject *pObj, bool just_before_destroy, bool dont
 					if (just_before_destroy)
 					{
 #ifdef DEBUG
-						Msg("---DropItem activating slot [-1], forced, Frame[%d]", Device.dwFrame);
+						Msg("---DropItem activating slot [-1], forced, Frame[%d]", CRenderDevice::GetInstance()->dwFrame);
 #endif // #ifdef DEBUG
 						Activate		(NO_ACTIVE_SLOT, true);
 					} else 
 					{
 #ifdef DEBUG
-						Msg("---DropItem activating slot [-1], Frame[%d]", Device.dwFrame);
+						Msg("---DropItem activating slot [-1], Frame[%d]", CRenderDevice::GetInstance()->dwFrame);
 #endif // #ifdef DEBUG
 						Activate		(NO_ACTIVE_SLOT);
 					}
@@ -570,7 +570,7 @@ bool CInventory::Slot(u16 slot_id, PIItem pIItem, bool bNotActivate, bool strict
 	if (((m_iActiveSlot==slot_id) ||(m_iActiveSlot==NO_ACTIVE_SLOT) && m_iNextActiveSlot==NO_ACTIVE_SLOT) && (!bNotActivate))
 	{
 #ifdef DEBUG
-		Msg("---To Slot: activating slot [%d], Frame[%d]", slot_id, Device.dwFrame);
+		Msg("---To Slot: activating slot [%d], Frame[%d]", slot_id, CRenderDevice::GetInstance()->dwFrame);
 #endif // #ifdef DEBUG
 		Activate				(slot_id);
 	}
@@ -725,7 +725,7 @@ void CInventory::Activate(u16 slot, bool bForce)
 //			LPCSTR const name = smart_cast<CGameObject const*>(m_pOwner)->cName().c_str();
 //			if ( !xr_strcmp("jup_b43_stalker_assistant_pri6695", name) )
 //				LogStackTrace	("");
-//			Msg				( "[%6d][%s] CInventory::Activate changing next active slot to %d", Device.dwTimeGlobal, name, slot );
+//			Msg				( "[%6d][%s] CInventory::Activate changing next active slot to %d", CRenderDevice::GetInstance()->dwTimeGlobal, name, slot );
 //		}
 		m_iNextActiveSlot=slot;
 #ifdef DEBUG
@@ -740,7 +740,7 @@ void CInventory::Activate(u16 slot, bool bForce)
 		return;
 
 #ifdef DEBUG
-//	Msg("--- Activating slot [%d], inventory owner: [%s], Frame[%d]", slot, m_pOwner->Name(), Device.dwFrame);
+//	Msg("--- Activating slot [%d], inventory owner: [%s], Frame[%d]", slot, m_pOwner->Name(), CRenderDevice::GetInstance()->dwFrame);
 #endif // #ifdef DEBUG
 	
 	//активный слот не выбран
@@ -752,7 +752,7 @@ void CInventory::Activate(u16 slot, bool bForce)
 //				LPCSTR const name = smart_cast<CGameObject const*>(m_pOwner)->cName().c_str();
 //				if ( !xr_strcmp("jup_b43_stalker_assistant_pri6695", name) )
 //					LogStackTrace	("");
-//				Msg				( "[%6d][%s] CInventory::Activate changing next active slot2 to %d", Device.dwTimeGlobal, name, slot );
+//				Msg				( "[%6d][%s] CInventory::Activate changing next active slot2 to %d", CRenderDevice::GetInstance()->dwTimeGlobal, name, slot );
 //			}
 			m_iNextActiveSlot		= slot;
 		}
@@ -788,7 +788,7 @@ void CInventory::Activate(u16 slot, bool bForce)
 //!				LPCSTR const name = smart_cast<CGameObject const*>(m_pOwner)->cName().c_str();
 //				if ( !xr_strcmp("jup_b43_stalker_assistant_pri6695", name) )
 //					LogStackTrace	("");
-//!				Msg				("[%6d][%s] CInventory::Activate changing active slot from %d to %d", Device.dwTimeGlobal, name, m_iActiveSlot, slot );
+//!				Msg				("[%6d][%s] CInventory::Activate changing active slot from %d to %d", CRenderDevice::GetInstance()->dwTimeGlobal, name, m_iActiveSlot, slot );
 //!			}
 
 			m_iActiveSlot		= slot;
@@ -797,7 +797,7 @@ void CInventory::Activate(u16 slot, bool bForce)
 //			LPCSTR const name = smart_cast<CGameObject const*>(m_pOwner)->cName().c_str();
 //			if ( !xr_strcmp("jup_b43_stalker_assistant_pri6695", name) && !slot )
 //				LogStackTrace	("");
-//			Msg				( "[%6d][%s] CInventory::Activate changing next active slot3 to %d", Device.dwTimeGlobal, name, slot );
+//			Msg				( "[%6d][%s] CInventory::Activate changing next active slot3 to %d", CRenderDevice::GetInstance()->dwTimeGlobal, name, slot );
 //		}
 		m_iNextActiveSlot		= slot;
 	}
@@ -1057,7 +1057,7 @@ void CInventory::Update()
 //				LPCSTR const name = smart_cast<CGameObject const*>(m_pOwner)->cName().c_str();
 //				if ( !xr_strcmp("jup_b43_stalker_assistant_pri6695", name) )
 //					LogStackTrace	("");
-//				Msg					("[%6d][%s] CInventory::Activate changing active slot from %d to next active slot %d", Device.dwTimeGlobal, name, m_iActiveSlot, GetNextActiveSlot() );
+//				Msg					("[%6d][%s] CInventory::Activate changing active slot from %d to next active slot %d", CRenderDevice::GetInstance()->dwTimeGlobal, name, m_iActiveSlot, GetNextActiveSlot() );
 //			}
 			m_iActiveSlot			= GetNextActiveSlot();
 		}
@@ -1648,7 +1648,7 @@ void CInventory::TryActivatePrevSlot()
 			m_slots[PrevActiveSlot].CanBeActivated())
 		{
 #ifndef MASTER_GOLD
-			Msg("Set slots blocked: activating prev slot [%d], Frame[%d]", PrevActiveSlot, Device.dwFrame);
+			Msg("Set slots blocked: activating prev slot [%d], Frame[%d]", PrevActiveSlot, CRenderDevice::GetInstance()->dwFrame);
 #endif // #ifndef MASTER_GOLD
 			Activate(PrevActiveSlot);
 			SetPrevActiveSlot(NO_ACTIVE_SLOT);
@@ -1674,7 +1674,7 @@ void CInventory::TryDeactivateActiveSlot	()
 		)
 	{
 #ifndef MASTER_GOLD
-		Msg("Set slots blocked: activating slot [-1], Frame[%d]", Device.dwFrame);
+		Msg("Set slots blocked: activating slot [-1], Frame[%d]", CRenderDevice::GetInstance()->dwFrame);
 #endif // #ifndef MASTER_GOLD
 		ItemFromSlot(ActiveSlot)->DiscardState();
 		Activate			(NO_ACTIVE_SLOT);

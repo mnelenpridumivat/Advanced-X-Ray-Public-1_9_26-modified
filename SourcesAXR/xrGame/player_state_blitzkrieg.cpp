@@ -51,7 +51,7 @@ void player_blitzkrieg::OnPlayerBringArtefact(game_PlayerState const * ps)
 	game_PlayerState* tmp_local_player = m_owner->get_local_player();
 	if ((m_art_drop_count <= 1) && (ps == tmp_local_player))
 	{
-		m_deliver_time = Device.dwTimeGlobal - m_take_time;
+		m_deliver_time = CRenderDevice::GetInstance()->dwTimeGlobal - m_take_time;
 	} else
 	{
 		m_deliver_time = static_cast<u32>(-1);

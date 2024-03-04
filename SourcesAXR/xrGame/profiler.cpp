@@ -222,7 +222,7 @@ void CProfiler::show_stats			(CGameFont *game_font, bool show)
 	TIMERS::iterator			I = m_timers.begin();
 	TIMERS::iterator			E = m_timers.end();
 	for ( ; I != E; ++I) {
-		if (I->second.m_update_time != Device.dwTimeGlobal)
+		if (I->second.m_update_time != CRenderDevice::GetInstance()->dwTimeGlobal)
 			I->second.m_time	*= .99f;
 
 		float					average = I->second.m_count ? I->second.m_total_time/static_cast<float>(I->second.m_count) : 0.f;

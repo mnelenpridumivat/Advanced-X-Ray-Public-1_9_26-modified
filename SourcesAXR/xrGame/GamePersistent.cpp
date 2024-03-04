@@ -100,7 +100,7 @@ CGamePersistent::CGamePersistent(void)
 		R_ASSERT2			(fname[0],"Missing filename for 'demomode'");
 		Msg					("- playing in demo mode '%s'",fname);
 		pDemoFile			=	FS.r_open	(fname);
-		Device.seqFrame.Add	(this);
+		CRenderDevice::GetInstance()->seqFrame.Add	(this);
 		eDemoStart			=	Engine.Event.Handler_Attach("GAME:demo",this);	
 		uTime2Change		=	0;
 	} else {
@@ -116,7 +116,7 @@ CGamePersistent::CGamePersistent(void)
 CGamePersistent::~CGamePersistent(void)
 {	
 	FS.r_close					(pDemoFile);
-	Device.seqFrame.Remove		(this);
+	CRenderDevice::GetInstance()->seqFrame.Remove		(this);
 	Engine.Event.Handler_Detach	(eDemoStart,this);
 	Engine.Event.Handler_Detach	(eQuickLoad,this);
 }
@@ -314,9 +314,9 @@ void CGamePersistent::WeathersUpdate()
 
 				if(ambient_sound_next_time[idx]==0)//first
 				{
-					ambient_sound_next_time[idx] = Device.dwTimeGlobal + ch.get_rnd_sound_first_time();
+					ambient_sound_next_time[idx] = CRenderDevice::GetInstance()->dwTimeGlobal + ch.get_rnd_sound_first_time();
 				}
-				else if(Device.dwTimeGlobal > ambient_sound_next_time[idx])
+				else if(CRenderDevice::GetInstance()->dwTimeGlobal > ambient_sound_next_time[idx])
 				{
 					ref_sound& snd					= ch.get_rnd_sound();
 
@@ -325,7 +325,7 @@ void CGamePersistent::WeathersUpdate()
 					pos.x				= _cos(angle);
 					pos.y				= 0;
 					pos.z				= _sin(angle);
-					pos.normalize		().mul(ch.get_rnd_sound_dist()).add(Device.vCameraPosition);
+					pos.normalize		().mul(ch.get_rnd_sound_dist()).add(CRenderDevice::GetInstance()->vCameraPosition);
 					pos.y				+= 10.f;
 					snd.play_at_pos		(0,pos);
 
@@ -336,15 +336,15 @@ void CGamePersistent::WeathersUpdate()
 
 					VERIFY							(snd._handle());
 					u32 _length_ms					= iFloor(snd.get_length_sec()*1000.0f);
-					ambient_sound_next_time[idx]	= Device.dwTimeGlobal + _length_ms + ch.get_rnd_sound_time();
+					ambient_sound_next_time[idx]	= CRenderDevice::GetInstance()->dwTimeGlobal + _length_ms + ch.get_rnd_sound_time();
 //					Msg("- Playing ambient sound channel [%s] file[%s]",ch.m_load_section.c_str(),snd._handle()->file_name());
 				}
 			}
 /*
-			if (Device.dwTimeGlobal > ambient_sound_next_time)
+			if (CRenderDevice::GetInstance()->dwTimeGlobal > ambient_sound_next_time)
 			{
 				ref_sound* snd			= env_amb->get_rnd_sound();
-				ambient_sound_next_time	= Device.dwTimeGlobal + env_amb->get_rnd_sound_time();
+				ambient_sound_next_time	= CRenderDevice::GetInstance()->dwTimeGlobal + env_amb->get_rnd_sound_time();
 				if (snd)
 				{
 					Fvector	pos;
@@ -352,27 +352,27 @@ void CGamePersistent::WeathersUpdate()
 					pos.x				= _cos(angle);
 					pos.y				= 0;
 					pos.z				= _sin(angle);
-					pos.normalize		().mul(env_amb->get_rnd_sound_dist()).add(Device.vCameraPosition);
+					pos.normalize		().mul(env_amb->get_rnd_sound_dist()).add(CRenderDevice::GetInstance()->vCameraPosition);
 					pos.y				+= 10.f;
 					snd->play_at_pos	(0,pos);
 				}
 			}
 */
 			// start effect
-			if ((FALSE==bIndoor) && (0==ambient_particles) && Device.dwTimeGlobal>ambient_effect_next_time){
+			if ((FALSE==bIndoor) && (0==ambient_particles) && CRenderDevice::GetInstance()->dwTimeGlobal>ambient_effect_next_time){
 				CEnvAmbient::SEffect* eff			= env_amb->get_rnd_effect(); 
 				if (eff){
 					Environment().wind_gust_factor	= eff->wind_gust_factor;
-					ambient_effect_next_time		= Device.dwTimeGlobal + env_amb->get_rnd_effect_time();
-					ambient_effect_stop_time		= Device.dwTimeGlobal + eff->life_time;
-					ambient_effect_wind_start		= Device.fTimeGlobal;
-					ambient_effect_wind_in_time		= Device.fTimeGlobal + eff->wind_blast_in_time;
-					ambient_effect_wind_end			= Device.fTimeGlobal + eff->life_time/1000.f;
-					ambient_effect_wind_out_time	= Device.fTimeGlobal + eff->life_time/1000.f + eff->wind_blast_out_time;
+					ambient_effect_next_time		= CRenderDevice::GetInstance()->dwTimeGlobal + env_amb->get_rnd_effect_time();
+					ambient_effect_stop_time		= CRenderDevice::GetInstance()->dwTimeGlobal + eff->life_time;
+					ambient_effect_wind_start		= CRenderDevice::GetInstance()->fTimeGlobal;
+					ambient_effect_wind_in_time		= CRenderDevice::GetInstance()->fTimeGlobal + eff->wind_blast_in_time;
+					ambient_effect_wind_end			= CRenderDevice::GetInstance()->fTimeGlobal + eff->life_time/1000.f;
+					ambient_effect_wind_out_time	= CRenderDevice::GetInstance()->fTimeGlobal + eff->life_time/1000.f + eff->wind_blast_out_time;
 					ambient_effect_wind_on			= true;
 										
 					ambient_particles				= CParticlesObject::Create(eff->particles.c_str(),FALSE,false);
-					Fvector pos; pos.add			(Device.vCameraPosition,eff->offset); 
+					Fvector pos; pos.add			(CRenderDevice::GetInstance()->vCameraPosition,eff->offset);
 					ambient_particles->play_at_pos	(pos);
 					if (eff->sound._handle())		eff->sound.play_at_pos(0,pos);
 
@@ -392,13 +392,13 @@ void CGamePersistent::WeathersUpdate()
 				}
 			}
 		}
-		if (Device.fTimeGlobal>=ambient_effect_wind_start && Device.fTimeGlobal<=ambient_effect_wind_in_time && ambient_effect_wind_on)
+		if (CRenderDevice::GetInstance()->fTimeGlobal>=ambient_effect_wind_start && CRenderDevice::GetInstance()->fTimeGlobal<=ambient_effect_wind_in_time && ambient_effect_wind_on)
 		{
 			float delta=ambient_effect_wind_in_time-ambient_effect_wind_start;
 			float t;
 			if (delta!=0.f)
 			{
-				float cur_in=Device.fTimeGlobal-ambient_effect_wind_start;
+				float cur_in= CRenderDevice::GetInstance()->fTimeGlobal-ambient_effect_wind_start;
 				t=cur_in/delta;
 			}
 			else
@@ -412,14 +412,14 @@ void CGamePersistent::WeathersUpdate()
 		}
 
 		// stop if time exceed or indoor
-		if (bIndoor || Device.dwTimeGlobal>=ambient_effect_stop_time){
+		if (bIndoor || CRenderDevice::GetInstance()->dwTimeGlobal>=ambient_effect_stop_time){
 			if (ambient_particles)					ambient_particles->Stop();
 			
 			Environment().wind_gust_factor		= 0.f;
 			
 		}
 
-		if (Device.fTimeGlobal>=ambient_effect_wind_end && ambient_effect_wind_on)
+		if (CRenderDevice::GetInstance()->fTimeGlobal>=ambient_effect_wind_end && ambient_effect_wind_on)
 		{
 			Environment().wind_blast_strength_start_value=Environment().wind_strength_factor;
 			Environment().wind_blast_strength_stop_value	=0.f;
@@ -427,13 +427,13 @@ void CGamePersistent::WeathersUpdate()
 			ambient_effect_wind_on=false;
 		}
 
-		if (Device.fTimeGlobal>=ambient_effect_wind_end &&  Device.fTimeGlobal<=ambient_effect_wind_out_time)
+		if (CRenderDevice::GetInstance()->fTimeGlobal>=ambient_effect_wind_end && CRenderDevice::GetInstance()->fTimeGlobal<=ambient_effect_wind_out_time)
 		{
 			float delta=ambient_effect_wind_out_time-ambient_effect_wind_end;
 			float t;
 			if (delta!=0.f)
 			{
-				float cur_in=Device.fTimeGlobal-ambient_effect_wind_end;
+				float cur_in= CRenderDevice::GetInstance()->fTimeGlobal-ambient_effect_wind_end;
 				t=cur_in/delta;
 			}
 			else
@@ -442,7 +442,7 @@ void CGamePersistent::WeathersUpdate()
 			}
 			Environment().wind_strength_factor=Environment().wind_blast_strength_start_value+t*(Environment().wind_blast_strength_stop_value-Environment().wind_blast_strength_start_value);
 		}
-		if (Device.fTimeGlobal>ambient_effect_wind_out_time && ambient_effect_wind_out_time!=0.f )
+		if (CRenderDevice::GetInstance()->fTimeGlobal>ambient_effect_wind_out_time && ambient_effect_wind_out_time!=0.f )
 		{			
 			Environment().wind_strength_factor=0.0;
 		}
@@ -468,7 +468,7 @@ bool allow_intro ()
 
 void CGamePersistent::start_logo_intro()
 {
-	if (Device.dwPrecacheFrame==0)
+	if (CRenderDevice::GetInstance()->dwPrecacheFrame==0)
 	{
 		m_intro_event.bind		(this, &CGamePersistent::update_logo_intro);
 		if (!g_dedicated_server && 0==xr_strlen(m_game_params.m_game_or_spawn) && NULL==g_pGameLevel)
@@ -500,7 +500,7 @@ void CGamePersistent::update_logo_intro()
 extern int g_keypress_on_start;
 void CGamePersistent::game_loaded()
 {
-	if (Device.dwPrecacheFrame <= 2)
+	if (CRenderDevice::GetInstance()->dwPrecacheFrame <= 2)
 	{
 		if (g_pGameLevel							&&
 			g_pGameLevel->bReady					&&
@@ -538,7 +538,7 @@ void CGamePersistent::start_game_intro		()
 		return;
 	}
 
-	if (g_pGameLevel && g_pGameLevel->bReady && Device.dwPrecacheFrame<=2)
+	if (g_pGameLevel && g_pGameLevel->bReady && CRenderDevice::GetInstance()->dwPrecacheFrame<=2)
 	{
 		m_intro_event.bind		(this, &CGamePersistent::update_game_intro);
 		if (0==stricmp(m_game_params.m_new_or_load, "new"))
@@ -570,7 +570,7 @@ extern CUISequencer * g_tutorial2;
 
 void CGamePersistent::OnFrame	()
 {
-	if (Device.dwPrecacheFrame==5 && m_intro_event.empty())
+	if (CRenderDevice::GetInstance()->dwPrecacheFrame==5 && m_intro_event.empty())
 	{
 		SetLoadStageTitle();
 		m_intro_event.bind			(this,&CGamePersistent::game_loaded);
@@ -586,7 +586,7 @@ void CGamePersistent::OnFrame	()
 	{
 		xr_delete(g_tutorial);
 	}
-	if(0==Device.dwFrame%200)
+	if(0== CRenderDevice::GetInstance()->dwFrame%200)
 		CUITextureMaster::FreeCachedShaders();
 
 #ifdef DEBUG
@@ -595,7 +595,7 @@ void CGamePersistent::OnFrame	()
 	if (!g_dedicated_server && !m_intro_event.empty())
 		m_intro_event();
 
-	if (!g_dedicated_server && Device.dwPrecacheFrame == 0 && !m_intro && m_intro_event.empty())
+	if (!g_dedicated_server && CRenderDevice::GetInstance()->dwPrecacheFrame == 0 && !m_intro && m_intro_event.empty())
 		load_screen_renderer.stop();
 
 	if( !m_pMainMenu->IsActive() )
@@ -604,7 +604,7 @@ void CGamePersistent::OnFrame	()
 	if(!g_pGameLevel)			return;
 	if(!g_pGameLevel->bReady)	return;
 
-	if(Device.Paused())
+	if(CRenderDevice::GetInstance()->Paused())
 	{
 		if (Level().IsDemoPlay())
 		{
@@ -638,8 +638,8 @@ void CGamePersistent::OnFrame	()
 					{
 						Actor()->dbg_update_cl			= 0;
 						Actor()->dbg_update_shedule		= 0;
-						Device.dwTimeDelta				= 0;
-						Device.fTimeDelta				= 0.01f;			
+						CRenderDevice::GetInstance()->dwTimeDelta				= 0;
+						CRenderDevice::GetInstance()->fTimeDelta				= 0.01f;
 						Actor()->UpdateCL				();
 						Actor()->shedule_Update			(0);
 						Actor()->dbg_update_cl			= 0;
@@ -685,16 +685,16 @@ void CGamePersistent::OnFrame	()
 	}
 	__super::OnFrame			();
 
-	if(!Device.Paused())
+	if(!CRenderDevice::GetInstance()->Paused())
 		Engine.Sheduler.Update		();
 
 	// update weathers ambient
-	if(!Device.Paused())
+	if(!CRenderDevice::GetInstance()->Paused())
 		WeathersUpdate				();
 
 	if	(0!=pDemoFile)
 	{
-		if	(Device.dwTimeGlobal>uTime2Change){
+		if	(CRenderDevice::GetInstance()->dwTimeGlobal>uTime2Change){
 			// Change level + play demo
 			if			(pDemoFile->elapsed()<3)	pDemoFile->seek(0);		// cycle
 
@@ -729,7 +729,7 @@ void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 {
 	if(E==eQuickLoad)
 	{
-		if (Device.Paused())
+		if (CRenderDevice::GetInstance()->Paused())
 			GAME_PAUSE		(FALSE, TRUE, TRUE, "eQuickLoad");
 		
 		if(CurrentGameUI())
@@ -761,7 +761,7 @@ void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 		xr_sprintf				(cmd,"demo_play %s",demo);
 		Console->Execute	(cmd);
 		xr_free				(demo);
-		uTime2Change		= Device.TimerAsync() + static_cast<u32>(P2)*1000;
+		uTime2Change		= CRenderDevice::GetInstance()->TimerAsync() + static_cast<u32>(P2)*1000;
 	}
 }
 
@@ -785,7 +785,7 @@ static BOOL bEntryFlag		= TRUE;
 void CGamePersistent::OnAppActivate		()
 {
 	bool bIsMP = (g_pGameLevel && Level().game && GameID() != eGameIDSingle);
-	bIsMP		&= !Device.Paused();
+	bIsMP		&= !CRenderDevice::GetInstance()->Paused();
 
 	if( !bIsMP )
 	{
@@ -808,7 +808,7 @@ void CGamePersistent::OnAppDeactivate	()
 
 	if ( !bIsMP )
 	{
-		bRestorePause			= Device.Paused();
+		bRestorePause			= CRenderDevice::GetInstance()->Paused();
 		GAME_PAUSE			(TRUE, TRUE, TRUE, "CGP::OnAppDeactivate");
 	}else
 	{
@@ -1044,7 +1044,7 @@ void CGamePersistent::UpdateDof()
 	if (m_dof[eDofCurrent].similar(m_dof[eDofDest]))
 						return;
 
-	float td			= Device.fTimeDelta;
+	float td			= CRenderDevice::GetInstance()->fTimeDelta;
 	Fvector				diff;
 	diff.sub			(m_dof[eDofDest], m_dof[eDofFrom]);
 	diff.mul			(td/0.2f); //0.2 sec

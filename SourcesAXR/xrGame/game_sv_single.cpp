@@ -362,6 +362,6 @@ void game_sv_Single::restart_simulator			(LPCSTR saved_game_name)
 	g_pGamePersistent->SetLoadStageTitle("st_client_synchronising");
 	pApp->LoadForceFinish();
 	g_pGamePersistent->LoadTitle();
-	Device.PreCache			(60, true, true);
+	CRenderDevice::GetInstance()->PreCache			(60, true, true);
 	pApp->LoadEnd			();
 }

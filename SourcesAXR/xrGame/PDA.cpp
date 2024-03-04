@@ -152,7 +152,7 @@ void CPda::OnStateSwitch(u32 S)
 			pda->ResetJoystick(true);
 
 		SetPending(true);
-		target_screen_switch = Device.fTimeGlobal + m_screen_on_delay;
+		target_screen_switch = CRenderDevice::GetInstance()->fTimeGlobal + m_screen_on_delay;
 	}
 	break;
 	case eHiding:
@@ -166,7 +166,7 @@ void CPda::OnStateSwitch(u32 S)
 		CurrentGameUI()->PdaMenu().ResetJoystick(false);
 		if (joystick != BI_NONE && HudItemData())
 			HudItemData()->m_model->LL_GetBoneInstance(joystick).reset_callback();
-		target_screen_switch = Device.fTimeGlobal + m_screen_off_delay;
+		target_screen_switch = CRenderDevice::GetInstance()->fTimeGlobal + m_screen_off_delay;
 	}
 	break;
 	case eHidden:
@@ -252,8 +252,8 @@ void CPda::JoystickCallback(CBoneInstance* B)
 	CPda* Pda = static_cast<CPda*>(B->callback_param());
 	CUIPdaWnd* pda = &CurrentGameUI()->PdaMenu();
 
-	static float fAvgTimeDelta = Device.fTimeDelta;
-	fAvgTimeDelta = inertion(fAvgTimeDelta, Device.fTimeDelta, 0.8f);
+	static float fAvgTimeDelta = CRenderDevice::GetInstance()->fTimeDelta;
+	fAvgTimeDelta = inertion(fAvgTimeDelta, CRenderDevice::GetInstance()->fTimeDelta, 0.8f);
 
 	Fvector& target = pda->target_joystickrot;
 	Fvector& current = pda->joystickrot;
@@ -390,7 +390,7 @@ void CPda::UpdateCL()
 		if (m_bPowerSaving)
 		{
 			if (g_pGamePersistent->devices_shader_data.pda_displaybrightness > m_fDisplayBrightnessPowerSaving)
-				g_pGamePersistent->devices_shader_data.pda_displaybrightness -= Device.fTimeDelta / .25f;
+				g_pGamePersistent->devices_shader_data.pda_displaybrightness -= CRenderDevice::GetInstance()->fTimeDelta / .25f;
 		}
 		else
 			g_pGamePersistent->devices_shader_data.pda_displaybrightness = 1.f;
@@ -401,14 +401,14 @@ void CPda::UpdateCL()
 		g_pGamePersistent->devices_shader_data.pda_psy_influence = m_psy_factor;
 
 		// Update Display Visibility (turn on/off)
-		if (target_screen_switch < Device.fTimeGlobal)
+		if (target_screen_switch < CRenderDevice::GetInstance()->fTimeGlobal)
 		{
 			if (!enoughBatteryPower || state == eHiding)
 				// Change screen transparency (towards 0 = not visible).
-				g_pGamePersistent->devices_shader_data.pda_display_factor -= Device.fTimeDelta / .25f;
+				g_pGamePersistent->devices_shader_data.pda_display_factor -= CRenderDevice::GetInstance()->fTimeDelta / .25f;
 			else
 				// Change screen transparency (towards 1 = fully visible).
-				g_pGamePersistent->devices_shader_data.pda_display_factor += Device.fTimeDelta / .75f;
+				g_pGamePersistent->devices_shader_data.pda_display_factor += CRenderDevice::GetInstance()->fTimeDelta / .75f;
 		}
 
 		clamp(g_pGamePersistent->devices_shader_data.pda_display_factor, 0.f, 1.f);
@@ -494,7 +494,7 @@ void CPda::UpdateLights()
 			if (light_lanim)
 			{
 				int frame{};
-				u32 clr = light_lanim->CalculateRGB(Device.fTimeGlobal, frame);
+				u32 clr = light_lanim->CalculateRGB(CRenderDevice::GetInstance()->fTimeGlobal, frame);
 				Fcolor fclr;
 				fclr.set(clr);
 				pda_light->set_color(fclr);
@@ -560,17 +560,17 @@ void CPda::UpdateHudAdditional(Fmatrix& trans)
 	trans.mulB_43(hud_rotation);
 
 	if (m_bZoomed)
-		m_fZoomfactor += Device.fTimeDelta / .25f;
+		m_fZoomfactor += CRenderDevice::GetInstance()->fTimeDelta / .25f;
 	else
-		m_fZoomfactor -= Device.fTimeDelta / .25f;
+		m_fZoomfactor -= CRenderDevice::GetInstance()->fTimeDelta / .25f;
 
 	clamp(m_fZoomfactor, 0.f, 1.f);
 
 	if (!g_player_hud->inertion_allowed())
 		return;
 
-	static float fAvgTimeDelta = Device.fTimeDelta;
-	fAvgTimeDelta = inertion(fAvgTimeDelta, Device.fTimeDelta, 0.8f);
+	static float fAvgTimeDelta = CRenderDevice::GetInstance()->fTimeDelta;
+	fAvgTimeDelta = inertion(fAvgTimeDelta, CRenderDevice::GetInstance()->fTimeDelta, 0.8f);
 
 	u8 idx = m_bZoomed ? 1 : 0;
 

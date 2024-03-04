@@ -60,7 +60,7 @@ void xrClientsPool::Add(xrClientData* new_dclient)
 
 	dclient					tmp_dclient;
 	tmp_dclient.m_client	= new_dclient;
-	tmp_dclient.m_dtime		= Device.dwTimeGlobal;
+	tmp_dclient.m_dtime		= CRenderDevice::GetInstance()->dwTimeGlobal;
 	m_dclients.push_back	(tmp_dclient);
 }
 

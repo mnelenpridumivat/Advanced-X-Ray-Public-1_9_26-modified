@@ -7,8 +7,8 @@ void CRenderTarget::draw_rain( light &RainSetup )
 	// Common calc for quad-rendering
 	u32		Offset;
 	u32		C					= color_rgba	(255,255,255,255);
-	float	_w					= float			(Device.dwWidth);
-	float	_h					= float			(Device.dwHeight);
+	float	_w					= float			(CRenderDevice::GetInstance()->dwWidth);
+	float	_h					= float			(CRenderDevice::GetInstance()->dwHeight);
 	Fvector2					p0,p1;
 	p0.set						(.5f/_w, .5f/_h);
 	p1.set						((_w+.5f)/_w, (_h+.5f)/_h );
@@ -16,15 +16,15 @@ void CRenderTarget::draw_rain( light &RainSetup )
 
 	// Common constants (light-related)
 	Fvector		L_dir;
-	Device.mView.transform_dir	(L_dir,RainSetup.direction);
+	CRenderDevice::GetInstance()->mView.transform_dir	(L_dir,RainSetup.direction);
 	L_dir.normalize				();
 
 	Fvector		W_dirX;
-	Device.mView.transform_dir	(W_dirX,Fvector().set(1.0f, 0.0f, 0.0f));
+	CRenderDevice::GetInstance()->mView.transform_dir	(W_dirX,Fvector().set(1.0f, 0.0f, 0.0f));
 	W_dirX.normalize				();
 
 	Fvector		W_dirZ;
-	Device.mView.transform_dir	(W_dirZ,Fvector().set(0.0f, 0.0f, 1.0f));
+	CRenderDevice::GetInstance()->mView.transform_dir	(W_dirZ,Fvector().set(0.0f, 0.0f, 1.0f));
 	W_dirZ.normalize				();
 
 	// Perform masking (only once - on the first/near phase)
@@ -60,8 +60,8 @@ void CRenderTarget::draw_rain( light &RainSetup )
 	if (ps_ssfx_gloss_method == 0)
 		fRainFar = ps_r3_dyn_wet_surf_far;
 
-	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,fRainFar);
-	Device.mFullTransform.transform(center_pt)	;
+	Fvector	center_pt;			center_pt.mad	(CRenderDevice::GetInstance()->vCameraPosition, CRenderDevice::GetInstance()->vCameraDirection,fRainFar);
+	CRenderDevice::GetInstance()->mFullTransform.transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
 	// nv-stencil recompression
@@ -99,7 +99,7 @@ void CRenderTarget::draw_rain( light &RainSetup )
 		};
 
 		// compute xforms
-		Fmatrix				xf_invview;		xf_invview.invert	(Device.mView)	;
+		Fmatrix				xf_invview;		xf_invview.invert	(CRenderDevice::GetInstance()->mView)	;
 
 		// shadow xform
 		Fmatrix				m_shadow;
@@ -159,7 +159,7 @@ void CRenderTarget::draw_rain( light &RainSetup )
 
 		// Make jitter texture
 		Fvector2					j0,j1;
-		float	scale_X				= float(Device.dwWidth)	/ float(TEX_jitter);
+		float	scale_X				= float(CRenderDevice::GetInstance()->dwWidth)	/ float(TEX_jitter);
 		//float	scale_Y				= float(Device.dwHeight)/ float(TEX_jitter);
 		float	offset				= (.5f / float(TEX_jitter));
 		j0.set						(offset,offset);

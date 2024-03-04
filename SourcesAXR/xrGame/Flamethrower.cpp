@@ -534,7 +534,7 @@ void CFlamethrower::OnStateSwitch(u32 S)
 void CFlamethrower::UpdateCL()
 {
 	inherited::UpdateCL();
-	float dt = Device.fTimeDelta;
+	float dt = CRenderDevice::GetInstance()->fTimeDelta;
 
 	//Msg("Update flamethrower: dt = [%f]", dt);
 
@@ -589,10 +589,10 @@ void CFlamethrower::UpdateCL()
 
 void CFlamethrower::UpdateSounds()
 {
-	if (Device.dwFrame == dwUpdateSounds_Frame)
+	if (CRenderDevice::GetInstance()->dwFrame == dwUpdateSounds_Frame)
 		return;
 
-	dwUpdateSounds_Frame = Device.dwFrame;
+	dwUpdateSounds_Frame = CRenderDevice::GetInstance()->dwFrame;
 
 	Fvector P = get_LastFP();
 	m_sounds.SetPosition("sndShow", P);

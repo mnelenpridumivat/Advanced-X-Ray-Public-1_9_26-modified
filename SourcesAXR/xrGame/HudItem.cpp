@@ -247,7 +247,7 @@ void CHudItem::UpdateCL()
 			if(!marks.empty())
 			{
 				float motion_prev_time = (static_cast<float>(m_dwMotionCurrTm) - static_cast<float>(m_dwMotionStartTm))/1000.0f;
-				float motion_curr_time = (static_cast<float>(Device.dwTimeGlobal) - static_cast<float>(m_dwMotionStartTm))/1000.0f;
+				float motion_curr_time = (static_cast<float>(CRenderDevice::GetInstance()->dwTimeGlobal) - static_cast<float>(m_dwMotionStartTm))/1000.0f;
 				
 				xr_vector<motion_marks>::const_iterator it = marks.begin();
 				xr_vector<motion_marks>::const_iterator it_e = marks.end();
@@ -267,7 +267,7 @@ void CHudItem::UpdateCL()
 			
 			}
 
-			m_dwMotionCurrTm					= Device.dwTimeGlobal;
+			m_dwMotionCurrTm					= CRenderDevice::GetInstance()->dwTimeGlobal;
 			if(m_dwMotionCurrTm > m_dwMotionEndTm)
 			{
 				m_current_motion_def				= NULL;
@@ -337,7 +337,7 @@ void CHudItem::on_a_hud_attach()
 	{
 		PlayHUDMotion_noCB(m_current_motion, false);
 #ifdef DEBUG
-//		Msg("continue playing [%s][%d]",m_current_motion.c_str(), Device.dwFrame);
+//		Msg("continue playing [%s][%d]",m_current_motion.c_str(), CRenderDevice::GetInstance()->dwFrame);
 #endif // #ifdef DEBUG
 	}
 }
@@ -348,7 +348,7 @@ u32 CHudItem::PlayHUDMotion(const shared_str& M, BOOL bMixIn, CHudItem*  W, u32 
 	if (anim_time > 0)
 	{
 		m_bStopAtEndAnimIsRunning = true;
-		m_dwMotionStartTm = Device.dwTimeGlobal;
+		m_dwMotionStartTm = CRenderDevice::GetInstance()->dwTimeGlobal;
 		m_dwMotionCurrTm = m_dwMotionStartTm;
 		m_dwMotionEndTm = m_dwMotionStartTm + anim_time;
 		m_startedMotionState = state;
@@ -366,7 +366,7 @@ u32 CHudItem::PlayHUDMotionNew(const shared_str& M, const bool bMixIn, const u32
 	if (anim_time>0)
 	{
 		m_bStopAtEndAnimIsRunning	= true;
-		m_dwMotionStartTm			= Device.dwTimeGlobal;
+		m_dwMotionStartTm			= CRenderDevice::GetInstance()->dwTimeGlobal;
 		m_dwMotionCurrTm			= m_dwMotionStartTm;
 		m_dwMotionEndTm				= m_dwMotionStartTm + anim_time;
 		m_startedMotionState		= state;
@@ -430,7 +430,7 @@ u32 CHudItem::PlayHUDMotion_noCB(const shared_str& motion_name, const bool bMixI
 			item().m_pInventory->GetActiveSlot(), 
 			item().object_id(),
 			motion_name.c_str(), 
-			Device.dwFrame);
+			CRenderDevice::GetInstance()->dwFrame);
 	}
 	if( HudItemData() )
 	{
@@ -742,7 +742,7 @@ float CHudItem::GetHudFov()
 
 		clamp(fBaseFov, 0.0f, FLT_MAX);
 
-		float src = m_nearwall_speed_mod * Device.fTimeDelta;
+		float src = m_nearwall_speed_mod * CRenderDevice::GetInstance()->fTimeDelta;
 		clamp(src, 0.f, 1.f);
 
 		float fTrgFov = m_nearwall_target_hud_fov + fDistanceMod * (fBaseFov - m_nearwall_target_hud_fov);

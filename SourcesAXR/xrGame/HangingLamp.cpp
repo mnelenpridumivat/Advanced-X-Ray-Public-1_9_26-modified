@@ -248,7 +248,7 @@ void CHangingLamp::UpdateCL	()
 		
 		if (lanim){
 			int frame;
-			u32 clr					= lanim->CalculateBGR(Device.fTimeGlobal,frame); // возвращает в формате BGR
+			u32 clr					= lanim->CalculateBGR(CRenderDevice::GetInstance()->fTimeGlobal,frame); // возвращает в формате BGR
 			Fcolor					fclr;
 			fclr.set				(static_cast<float>(color_get_B(clr)),static_cast<float>(color_get_G(clr)),static_cast<float>(color_get_R(clr)),1.f);
 			fclr.mul_rgb			(fBrightness/255.f);

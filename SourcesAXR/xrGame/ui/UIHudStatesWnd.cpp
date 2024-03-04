@@ -192,9 +192,9 @@ void CUIHudStatesWnd::Update()
 
 void CUIHudStatesWnd::UpdateHealth( CActor* actor )
 {
-//	if ( Device.dwTimeGlobal - m_timer_1sec > 1000 ) // 1 sec
+//	if ( CRenderDevice::GetInstance()->dwTimeGlobal - m_timer_1sec > 1000 ) // 1 sec
 //	{
-//		m_timer_1sec = Device.dwTimeGlobal;
+//		m_timer_1sec = CRenderDevice::GetInstance()->dwTimeGlobal;
 //	}
 	
 	float cur_health = actor->GetfHealth();

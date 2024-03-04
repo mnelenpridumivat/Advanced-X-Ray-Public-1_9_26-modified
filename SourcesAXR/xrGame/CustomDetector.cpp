@@ -371,7 +371,7 @@ void CCustomDetector::UpdateLights()
 			if (light_lanim)
 			{
 				int frame{};
-				u32 clr = light_lanim->CalculateRGB(Device.fTimeGlobal, frame);
+				u32 clr = light_lanim->CalculateRGB(CRenderDevice::GetInstance()->fTimeGlobal, frame);
 				Fcolor fclr;
 				fclr.set(clr);
 				detector_light->set_color(fclr);
@@ -438,7 +438,7 @@ void CCustomDetector::Flash(bool bOn, float fRelPower)
 	if (bOn)
 	{
 		K->LL_SetBoneVisible(m_flash_bone_id, TRUE, TRUE);
-		m_turn_off_flash_time = Device.dwTimeGlobal + iFloor(fRelPower * 1000.0f);
+		m_turn_off_flash_time = CRenderDevice::GetInstance()->dwTimeGlobal + iFloor(fRelPower * 1000.0f);
 	}
 	else
 	{
@@ -570,7 +570,7 @@ void CCustomDetector::UpdateChargeLevel(void)
 {
 	if (IsWorking())
 	{
-		float uncharge_coef = (m_fUnchargeSpeed / 16) * Device.fTimeDelta;
+		float uncharge_coef = (m_fUnchargeSpeed / 16) * CRenderDevice::GetInstance()->fTimeDelta;
 		ChangeChargeLevel(-uncharge_coef);
 	}
 }

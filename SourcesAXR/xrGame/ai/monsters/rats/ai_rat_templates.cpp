@@ -163,7 +163,7 @@ void CAI_Rat::make_turn()
 		return;
 	}
 
-//	Msg					("%6d : Rat %s, %f -> %f [%f]",Device.dwTimeGlobal,*cName(),movement().m_body.current.pitch,movement().m_body.target.pitch,get_custom_pitch_speed(0.f));
+//	Msg					("%6d : Rat %s, %f -> %f [%f]",CRenderDevice::GetInstance()->dwTimeGlobal,*cName(),movement().m_body.current.pitch,movement().m_body.target.pitch,get_custom_pitch_speed(0.f));
 
 	m_turning			= true;
 	movement().m_body.speed		= PI_MUL_2;

@@ -111,7 +111,7 @@ void CUISequenceVideoItem::Update()
 		GetUICursor().Hide	();
 	}
 	// deferred start
-	if (Device.dwTimeContinual>=m_time_start)
+	if (CRenderDevice::GetInstance()->dwTimeContinual>=m_time_start)
 	{
 		if (m_flags.test(etiDelayed))
 		{
@@ -126,7 +126,7 @@ void CUISequenceVideoItem::Update()
 		}
 	}else return;
 
-	u32 sync_tm				= (0==m_sound._handle())?Device.dwTimeContinual:(m_sound._feedback()?m_sound._feedback()->play_time():m_sync_time);
+	u32 sync_tm				= (0==m_sound._handle())? CRenderDevice::GetInstance()->dwTimeContinual:(m_sound._feedback()?m_sound._feedback()->play_time():m_sync_time);
 	m_sync_time				= sync_tm;
 	// processing A&V
 
@@ -167,7 +167,7 @@ void CUISequenceVideoItem::OnRender()
 void CUISequenceVideoItem::Start()
 {
 	inherited::Start			();
-	m_flags.set					(etiStoredPauseState, Device.Paused());
+	m_flags.set					(etiStoredPauseState, CRenderDevice::GetInstance()->Paused());
 
 	if(m_flags.test(etiNeedPauseOn) && !m_flags.test(etiStoredPauseState))
 	{
@@ -185,7 +185,7 @@ void CUISequenceVideoItem::Start()
 	m_flags.set					(etiNeedStart,TRUE);
 
 	m_sync_time					= 0;
-	m_time_start				= Device.dwTimeContinual+iFloor(m_delay*1000.f);
+	m_time_start				= CRenderDevice::GetInstance()->dwTimeContinual+iFloor(m_delay*1000.f);
 	m_flags.set					(etiDelayed,TRUE);
 
 	if (m_flags.test(etiBackVisible)){
@@ -205,7 +205,7 @@ bool CUISequenceVideoItem::Stop	(bool bForce)
 	m_flags.set					(etiPlaying,FALSE);
 
 	m_wnd->Show					(false);
-	if(Device.dwTimeContinual>=m_time_start && m_wnd->GetParent()==m_owner->MainWnd())
+	if(CRenderDevice::GetInstance()->dwTimeContinual>=m_time_start && m_wnd->GetParent()==m_owner->MainWnd())
 		m_owner->MainWnd()->DetachChild(m_wnd);
 
 	m_sound.stop				();

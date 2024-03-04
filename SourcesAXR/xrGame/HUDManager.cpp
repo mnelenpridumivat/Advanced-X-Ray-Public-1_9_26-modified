@@ -25,7 +25,7 @@ extern CUIGameCustom*	CurrentGameUI()	{return HUD().GetGameUI();}
 
 CFontManager::CFontManager()
 {
-	Device.seqDeviceReset.Add(this,REG_PRIORITY_HIGH);
+	CRenderDevice::GetInstance()->seqDeviceReset.Add(this,REG_PRIORITY_HIGH);
 
 	m_all_fonts.push_back(&pFontMedium				);// used cpp
 	m_all_fonts.push_back(&pFontDI					);// used cpp
@@ -72,13 +72,13 @@ LPCSTR CFontManager::GetFontTexName (LPCSTR section)
 	int def_idx		= 1;//default 1024x768
 	int idx			= def_idx;
 #if 0
-	u32 w = Device.dwWidth;
+	u32 w = CRenderDevice::GetInstance()->dwWidth;
 
 	if(w<=800)		idx = 0;
 	else if(w<=1280)idx = 1;
 	else 			idx = 2;
 #else
-	u32 h = Device.dwHeight;
+	u32 h = CRenderDevice::GetInstance()->dwHeight;
 	
 	if		(h<=600)	idx = 0;
 	else if (h<1024)	idx = 1;
@@ -113,7 +113,7 @@ void CFontManager::InitializeFont(CGameFont*& F, LPCSTR section, u32 flags)
 
 CFontManager::~CFontManager()
 {
-	Device.seqDeviceReset.Remove(this);
+	CRenderDevice::GetInstance()->seqDeviceReset.Remove(this);
 	FONTS_VEC_IT it		= m_all_fonts.begin();
 	FONTS_VEC_IT it_e	= m_all_fonts.end();
 	for(;it!=it_e;++it)
@@ -270,7 +270,7 @@ void  CHUDManager::RenderUI()
 		m_pHUDTarget->Render();
 
 
-	if( Device.Paused() && bShowPauseString){
+	if(CRenderDevice::GetInstance()->Paused() && bShowPauseString){
 		CGameFont* pFont	= UI().Font().pFontGraffiti50Russian;
 		pFont->SetColor		(0x80FF0000	);
 		LPCSTR _str			= CStringTable().translate("st_game_paused").c_str();
@@ -378,7 +378,7 @@ void CHUDManager::OnDisconnected()
 {
 	b_online				= false;
 	if(pUIGame)
-		Device.seqFrame.Remove	(pUIGame);
+		CRenderDevice::GetInstance()->seqFrame.Remove	(pUIGame);
 }
 
 void CHUDManager::OnConnected()
@@ -386,7 +386,7 @@ void CHUDManager::OnConnected()
 	if(b_online)			return;
 	b_online				= true;
 	if(pUIGame)
-		Device.seqFrame.Add	(pUIGame,REG_PRIORITY_LOW-1000);
+		CRenderDevice::GetInstance()->seqFrame.Add	(pUIGame,REG_PRIORITY_LOW-1000);
 }
 
 void CHUDManager::net_Relcase( CObject* obj )

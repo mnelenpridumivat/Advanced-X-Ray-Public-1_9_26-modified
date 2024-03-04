@@ -11,8 +11,8 @@ void CRenderTarget::phase_hud_blood()
 
 	float d_Z = EPS_S;
 	float d_W = 1.0f;
-	float w = float(Device.dwWidth);
-	float h = float(Device.dwHeight);
+	float w = float(CRenderDevice::GetInstance()->dwWidth);
+	float h = float(CRenderDevice::GetInstance()->dwHeight);
 
 	Fvector2 p0, p1;
 #ifdef USE_DX11
@@ -65,8 +65,8 @@ void CRenderTarget::phase_hud_power()
 
 	float d_Z = EPS_S;
 	float d_W = 1.0f;
-	float w = float(Device.dwWidth);
-	float h = float(Device.dwHeight);
+	float w = float(CRenderDevice::GetInstance()->dwWidth);
+	float h = float(CRenderDevice::GetInstance()->dwHeight);
 
 	Fvector2 p0, p1;
 #ifdef USE_DX11
@@ -118,8 +118,8 @@ void CRenderTarget::phase_hud_bleeding()
 
 	float d_Z = EPS_S;
 	float d_W = 1.0f;
-	float w = float(Device.dwWidth);
-	float h = float(Device.dwHeight);
+	float w = float(CRenderDevice::GetInstance()->dwWidth);
+	float h = float(CRenderDevice::GetInstance()->dwHeight);
 
 	Fvector2 p0, p1;
 #ifdef USE_DX11
@@ -171,8 +171,8 @@ void CRenderTarget::phase_hud_intoxication()
 
 	float d_Z = EPS_S;
 	float d_W = 1.0f;
-	float w = float(Device.dwWidth);
-	float h = float(Device.dwHeight);
+	float w = float(CRenderDevice::GetInstance()->dwWidth);
+	float h = float(CRenderDevice::GetInstance()->dwHeight);
 
 	Fvector2 p0, p1;
 #ifdef USE_DX11

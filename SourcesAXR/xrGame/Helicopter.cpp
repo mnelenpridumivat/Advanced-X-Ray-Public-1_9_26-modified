@@ -50,7 +50,7 @@ void CHelicopter::init()
 	m_min_rocket_dist			= 20.0f;
 	m_max_rocket_dist			= 200.0f;
 	m_time_between_rocket_attack = 0;
-	m_last_rocket_attack		= Device.dwTimeGlobal;
+	m_last_rocket_attack		= CRenderDevice::GetInstance()->dwTimeGlobal;
 
 	SetfHealth					(1.0f);
 }
@@ -239,7 +239,7 @@ BOOL CHelicopter::net_Spawn(CSE_Abstract*	DC)
 	if(pUserData->section_exist("destroyed"))
 		CPHDestroyable::Load(pUserData,"destroyed");
 #ifdef DEBUG
-	Device.seqRender.Add(this,REG_PRIORITY_LOW-1);
+	CRenderDevice::GetInstance()->seqRender.Add(this,REG_PRIORITY_LOW-1);
 #endif
 
 	return TRUE;
@@ -259,7 +259,7 @@ void CHelicopter::net_Destroy()
 	m_light_render.destroy				();
 	m_movement.net_Destroy				();
 #ifdef DEBUG
-	Device.seqRender.Remove(this);
+	CRenderDevice::GetInstance()->seqRender.Remove(this);
 #endif
 
 }
@@ -400,7 +400,7 @@ void CHelicopter::UpdateCL()
 
 	m_movement.Update();
 
-	m_stepRemains+=Device.fTimeDelta;
+	m_stepRemains+= CRenderDevice::GetInstance()->fTimeDelta;
 	while(m_stepRemains>STEP){
 		MoveStep();
 		m_stepRemains-=STEP;

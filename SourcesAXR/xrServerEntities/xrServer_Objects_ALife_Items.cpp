@@ -398,7 +398,7 @@ BOOL CSE_ALifeItem::Net_Relevant			()
 		return					(TRUE);
 
 #ifdef XRGAME_EXPORTS
-//	if (Device.dwTimeGlobal < (m_last_update_time + update_rate()))
+//	if (CRenderDevice::GetInstance()->dwTimeGlobal < (m_last_update_time + update_rate()))
 //		return					(FALSE);
 #endif // XRGAME_EXPORTS
 

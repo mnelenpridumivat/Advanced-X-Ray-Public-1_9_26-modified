@@ -66,7 +66,7 @@ void CUIGameSP::OnFrame()
 {
 	inherited::OnFrame();
 	
-	if(Device.Paused())	return;
+	if(CRenderDevice::GetInstance()->Paused())	return;
 
 	if(m_game_objective)
 	{
@@ -91,7 +91,7 @@ void CUIGameSP::OnFrame()
 bool CUIGameSP::IR_UIOnKeyboardPress(int dik) 
 {
 	if(inherited::IR_UIOnKeyboardPress(dik)) return true;
-	if( Device.Paused()		) return false;
+	if(CRenderDevice::GetInstance()->Paused()		) return false;
 
 	if (Actor()->active_cam() == eacFirstEye)
 	{

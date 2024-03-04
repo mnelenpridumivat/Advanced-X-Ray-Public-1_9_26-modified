@@ -82,7 +82,7 @@ BOOL CCustomRocket::net_Spawn(CSE_Abstract* DC)
 
 void CCustomRocket::net_Destroy() 
 {
-//	Msg("---------net_Destroy [%d] frame[%d]",ID(), Device.dwFrame);
+//	Msg("---------net_Destroy [%d] frame[%d]",ID(), CRenderDevice::GetInstance()->dwFrame);
 	CPHUpdateObject::Deactivate();
 	inherited::net_Destroy();
 	
@@ -363,13 +363,13 @@ void CCustomRocket::OnH_B_Chield		()
 {
 	VERIFY(m_eState == eInactive);
 	inherited::OnH_B_Chield		();
-//	Msg("! CCustomRocket::OnH_B_Chield called, id[%d] frame[%d]",ID(),Device.dwFrame);
+//	Msg("! CCustomRocket::OnH_B_Chield called, id[%d] frame[%d]",ID(),CRenderDevice::GetInstance()->dwFrame);
 }
 void CCustomRocket::OnH_A_Chield		()
 {
 	VERIFY(m_eState == eInactive);
 	inherited::OnH_A_Chield		();
-//	Msg("! CCustomRocket::OnH_A_Chield called, id[%d] frame[%d]",ID(),Device.dwFrame);
+//	Msg("! CCustomRocket::OnH_A_Chield called, id[%d] frame[%d]",ID(),CRenderDevice::GetInstance()->dwFrame);
 }
 
 
@@ -390,7 +390,7 @@ void CCustomRocket::OnH_A_Independent()
 	setVisible					(true);
 	StartFlying					();
 	StartEngine					();
-//	Msg("! CCustomRocket::OnH_A_Independent called, id[%d] frame[%d]",ID(),Device.dwFrame);
+//	Msg("! CCustomRocket::OnH_A_Independent called, id[%d] frame[%d]",ID(),CRenderDevice::GetInstance()->dwFrame);
 
 }
 
@@ -460,7 +460,7 @@ void CCustomRocket::StopEngine				()
 void CCustomRocket::UpdateEnginePh			()
 {
 	if (Level().In_NetCorrectionPrediction()) return;
-	float force = m_fEngineImpulse*fixed_step;// * Device.fTimeDelta;
+	float force = m_fEngineImpulse*fixed_step;// * CRenderDevice::GetInstance()->fTimeDelta;
 	float k_back=1.f;
 	Fvector l_pos, l_dir; 
 	l_pos.set(0, 0,-2.f);
@@ -475,7 +475,7 @@ void CCustomRocket::UpdateEnginePh			()
 	l_dir.invert();
 	m_pPhysicsShell->applyImpulseTrace(l_pos, l_dir, force);
 	l_dir.set(0, 1.f, 0);
-	force = m_fEngineImpulseUp*fixed_step;// * Device.fTimeDelta;
+	force = m_fEngineImpulseUp*fixed_step;// * CRenderDevice::GetInstance()->fTimeDelta;
 	m_pPhysicsShell->applyImpulse(l_dir, force);
 
 

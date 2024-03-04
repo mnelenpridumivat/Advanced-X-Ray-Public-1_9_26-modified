@@ -201,7 +201,7 @@ void CHelmet::UpdateFilterCondition(void)
 
 		if (helmet)
 		{
-			float uncharge_coef = ((helmet->m_fFilterDegradation + m_radia_hit + m_chemical_hit) / 16) * Device.fTimeDelta;
+			float uncharge_coef = ((helmet->m_fFilterDegradation + m_radia_hit + m_chemical_hit) / 16) * CRenderDevice::GetInstance()->fTimeDelta;
 
 			helmet->m_fFilterCondition -= uncharge_coef;
 			clamp(helmet->m_fFilterCondition, 0.0f, m_fMaxFilterCondition);
@@ -227,7 +227,7 @@ void CHelmet::UpdateFilterCondition(void)
 
 		if (helmet2)
 		{
-			float uncharge_coef = ((helmet2->m_fFilterDegradation + m_radia_hit + m_chemical_hit) / 16) * Device.fTimeDelta;
+			float uncharge_coef = ((helmet2->m_fFilterDegradation + m_radia_hit + m_chemical_hit) / 16) * CRenderDevice::GetInstance()->fTimeDelta;
 
 			helmet2->m_fFilterCondition -= uncharge_coef;
 			clamp(helmet2->m_fFilterCondition, 0.0f, m_fMaxFilterCondition);

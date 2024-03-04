@@ -159,10 +159,10 @@ void animation_movement_controller::InitalPositionBlending( const Fmatrix &to )
 #endif
 /*
 	Fmatrix res = to;
-	blend_linear_speed  += blend_linear_accel *Device.fTimeDelta ;
-	blend_angular_speed += blend_angular_accel *Device.fTimeDelta ;
+	blend_linear_speed  += blend_linear_accel *CRenderDevice::GetInstance()->fTimeDelta ;
+	blend_angular_speed += blend_angular_accel *CRenderDevice::GetInstance()->fTimeDelta ;
 	
-	inital_position_blending = !clamp_change( res, m_pObjXForm, blend_linear_speed*Device.fTimeDelta, blend_angular_speed*Device.fTimeDelta, 0.00001, 0.000001 ); 
+	inital_position_blending = !clamp_change( res, m_pObjXForm, blend_linear_speed*CRenderDevice::GetInstance()->fTimeDelta, blend_angular_speed*CRenderDevice::GetInstance()->fTimeDelta, 0.00001, 0.000001 ); 
 	m_pObjXForm.set( res );
 */
 	if( !m_poses_blending.target_reached( m_control_blend->timeCurrent ) )
@@ -428,7 +428,7 @@ float change_pos_delta = 0.02f;
 //	Fsphere		sphere; b.getsphere( sphere.P, sphere.R );
 //	float sq_diff = Fvector().sub( m_pObjXForm.c,m_update_vis_pos).magnitude();
 //
-//	float change_pos_sq_delta = change_pos_delta * change_pos_delta * (( Device.fTimeDelta/0.01f )*( Device.fTimeDelta/0.01f ));
+//	float change_pos_sq_delta = change_pos_delta * change_pos_delta * (( CRenderDevice::GetInstance()->fTimeDelta/0.01f )*( CRenderDevice::GetInstance()->fTimeDelta/0.01f ));
 //
 //	if(  pos_sq_delta > change_pos_sq_delta || sphere.P.square_magnitude() + change_pos_sq_delta + pos_sq_delta > sphere.R*sphere.R )
 //	{

@@ -412,7 +412,7 @@ protected:
 	virtual void            UpdatePosition_alt      (const Fmatrix& transform);
 	void			UpdateXForm				() override;
 	void			UpdateHudAdditional		(Fmatrix&) override;
-	IC		void			UpdateFireDependencies	()			{ if (dwFP_Frame==Device.dwFrame) return; UpdateFireDependencies_internal(); };
+	IC		void			UpdateFireDependencies	()			{ if (dwFP_Frame== CRenderDevice::GetInstance()->dwFrame) return; UpdateFireDependencies_internal(); };
 
 	void			LoadFireParams		(LPCSTR section) override;
 public:	

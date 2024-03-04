@@ -10,8 +10,8 @@ void CRenderTarget::phase_chrom_aberration()
 	float EffectIntensity = g_pGamePersistent->GetActorIntoxication();
 	clamp(EffectIntensity, 0.0f, 1.0f);
 
-	const float w = float(Device.dwWidth);
-	const float h = float(Device.dwHeight);
+	const float w = float(CRenderDevice::GetInstance()->dwWidth);
+	const float h = float(CRenderDevice::GetInstance()->dwHeight);
 
 	// Half-pixel offset (DX9 only)
 	Fvector2 p0, p1;

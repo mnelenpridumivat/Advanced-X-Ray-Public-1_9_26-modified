@@ -4,8 +4,8 @@
 void CRenderTarget::phase_fxaa()
 {
     u32 Offset = 0;
-    const float _w = float(Device.dwWidth);
-    const float _h = float(Device.dwHeight);
+    const float _w = float(CRenderDevice::GetInstance()->dwWidth);
+    const float _h = float(CRenderDevice::GetInstance()->dwHeight);
     const float du = ps_r1_pps_u, dv = ps_r1_pps_v;
 
     u_setrt(rt_Generic_0, NULL, NULL, HW.pBaseZB);

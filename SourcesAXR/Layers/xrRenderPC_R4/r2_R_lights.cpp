@@ -240,11 +240,11 @@ void	CRender::render_indirect			(light* L)
 	if (!!ps_r2_lfx)
 	{
 		Fvector4 pos;
-		Device.mFullTransform.transform(pos, L->position);
+		CRenderDevice::GetInstance()->mFullTransform.transform(pos, L->position);
 
-		Fvector ldir = Fvector().set(L->position).sub(Device.vCameraPosition);
+		Fvector ldir = Fvector().set(L->position).sub(CRenderDevice::GetInstance()->vCameraPosition);
 		float dist = ldir.magnitude(); ldir.normalize();
-		float cosLo = ldir.dotproduct(Device.vCameraDirection);
+		float cosLo = ldir.dotproduct(CRenderDevice::GetInstance()->vCameraDirection);
 
 		if (dist <= 20.f && dist >= 2.0f && cosLo > 0.0f)
 		{
@@ -254,7 +254,7 @@ void	CRender::render_indirect			(light* L)
 
 			if (g_pGameLevel)
 			{
-				g_pGameLevel->ObjectSpace.RayPick(Device.vCameraPosition, ldir, dist, collide::rqtBoth, l_rq, g_pGameLevel->CurrentViewEntity());
+				g_pGameLevel->ObjectSpace.RayPick(CRenderDevice::GetInstance()->vCameraPosition, ldir, dist, collide::rqtBoth, l_rq, g_pGameLevel->CurrentViewEntity());
 				float fade = (dist - l_rq.range) / 0.4f; clamp(fade, 0.0f, 1.0f); fade = 1.0f - fade; fade *= cosLo * 0.2f;
 				Fvector3 color = Fvector3().set(L->color.r, L->color.g, L->color.b); color.normalize();
 				{

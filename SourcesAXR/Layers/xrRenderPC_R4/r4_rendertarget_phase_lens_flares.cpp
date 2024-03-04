@@ -9,8 +9,8 @@ void CRenderTarget::phase_lfx(int i)
 		return;
 
 	u32 Offset = 0;
-	const float	_w = float(Device.dwWidth);
-	const float	_h = float(Device.dwHeight);
+	const float	_w = float(CRenderDevice::GetInstance()->dwWidth);
+	const float	_h = float(CRenderDevice::GetInstance()->dwHeight);
 	const float	du = ps_r1_pps_u, dv = ps_r1_pps_v;
 
 	FVF::V* pv = (FVF::V*)RCache.Vertex.Lock(4, g_lfx->vb_stride, Offset);

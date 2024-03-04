@@ -345,14 +345,14 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 	m_fAttenuation				= pSettings->r_float(cNameSect(),"attenuation");
 	m_owner_id					= Z->m_owner_id;
 	if(m_owner_id != static_cast<u32>(-1))
-		m_ttl					= Device.dwTimeGlobal + 40000;// 40 sec
+		m_ttl					= CRenderDevice::GetInstance()->dwTimeGlobal + 40000;// 40 sec
 	else
 		m_ttl					= static_cast<u32>(-1);
 
 	m_TimeToDisable				= Z->m_disabled_time*1000;
 	m_TimeToEnable				= Z->m_enabled_time*1000;
 	m_TimeShift					= Z->m_start_time_shift*1000;
-	m_StartTime					= Device.dwTimeGlobal;
+	m_StartTime					= CRenderDevice::GetInstance()->dwTimeGlobal;
 	m_zone_flags.set			(eUseOnOffTime,	(m_TimeToDisable!=0)&&(m_TimeToEnable!=0) );
 
 	//добавить источники света
@@ -396,7 +396,7 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 
 	m_iPreviousStateTime		= m_iStateTime = 0;
 
-	m_dwLastTimeMoved			= Device.dwTimeGlobal;
+	m_dwLastTimeMoved			= CRenderDevice::GetInstance()->dwTimeGlobal;
 	m_vPrevPos.set				(Position());
 
 
@@ -542,7 +542,7 @@ void CCustomZone::UpdateCL		()
 {
 	inherited::UpdateCL			();
 	if (m_zone_flags.test(eFastMode))				
-		UpdateWorkload	(Device.dwTimeDelta);	
+		UpdateWorkload	(CRenderDevice::GetInstance()->dwTimeDelta);
 }
 
 // called as usual
@@ -635,7 +635,7 @@ void CCustomZone::shedule_Update(u32 dt)
 
 	if( !IsGameTypeSingle() && Local() )
 	{
-		if(Device.dwTimeGlobal > m_ttl)
+		if(CRenderDevice::GetInstance()->dwTimeGlobal > m_ttl)
 			DestroyObject ();
 	}
 }
@@ -797,7 +797,7 @@ void CCustomZone::UpdateIdleLight	()
 	VERIFY(m_pIdleLAnim);
 
 	int frame = 0;
-	u32 clr					= m_pIdleLAnim->CalculateBGR(Device.fTimeGlobal,frame); // возвращает в формате BGR
+	u32 clr					= m_pIdleLAnim->CalculateBGR(CRenderDevice::GetInstance()->fTimeGlobal,frame); // возвращает в формате BGR
 	Fcolor					fclr;
 	fclr.set				(static_cast<float>(color_get_B(clr))/255.f,static_cast<float>(color_get_G(clr))/255.f,static_cast<float>(color_get_R(clr))/255.f,1.f);
 	
@@ -820,7 +820,7 @@ void CCustomZone::PlayBlowoutParticles()
 	pParticles->UpdateParent(XFORM(),zero_vel);
 	pParticles->Play(false);
 
-	m_fBlowoutTimeLeft = static_cast<float>(Device.dwTimeGlobal) + m_BendGrass_Blowout_time;
+	m_fBlowoutTimeLeft = static_cast<float>(CRenderDevice::GetInstance()->dwTimeGlobal) + m_BendGrass_Blowout_time;
 }
 
 void CCustomZone::PlayHitParticles(CGameObject* pObject)
@@ -1055,7 +1055,7 @@ void CCustomZone::StartBlowoutLight		()
 {
 	if(!m_pLight || m_fLightTime<=0.f) return;
 	
-	m_fLightTimeLeft = static_cast<float>(Device.dwTimeGlobal) + m_fLightTime*1000.0f;
+	m_fLightTimeLeft = static_cast<float>(CRenderDevice::GetInstance()->dwTimeGlobal) + m_fLightTime*1000.0f;
 
 	m_pLight->set_color(m_LightColor.r, m_LightColor.g, m_LightColor.b);
 	m_pLight->set_range(m_fLightRange);
@@ -1075,11 +1075,11 @@ void  CCustomZone::StopBlowoutLight		()
 
 void CCustomZone::UpdateBlowoutLight	()
 {
-	if(m_fLightTimeLeft > static_cast<float>(Device.dwTimeGlobal))
+	if(m_fLightTimeLeft > static_cast<float>(CRenderDevice::GetInstance()->dwTimeGlobal))
 	{
-		float time_k	= m_fLightTimeLeft - static_cast<float>(Device.dwTimeGlobal);
+		float time_k	= m_fLightTimeLeft - static_cast<float>(CRenderDevice::GetInstance()->dwTimeGlobal);
 
-//		m_fLightTimeLeft -= Device.fTimeDelta;
+//		m_fLightTimeLeft -= CRenderDevice::GetInstance()->fTimeDelta;
 		clamp(time_k, 0.0f, m_fLightTime*1000.0f);
 
 		float scale		= time_k/(m_fLightTime*1000.0f);
@@ -1101,12 +1101,12 @@ void CCustomZone::UpdateBlowoutLight	()
 
 void CCustomZone::AffectObjects()
 {
-	if(m_dwAffectFrameNum == Device.dwFrame)	
+	if(m_dwAffectFrameNum == CRenderDevice::GetInstance()->dwFrame)
 		return;
 
-	m_dwAffectFrameNum	= Device.dwFrame;
+	m_dwAffectFrameNum	= CRenderDevice::GetInstance()->dwFrame;
 
-	if(Device.dwPrecacheFrame)					
+	if(CRenderDevice::GetInstance()->dwPrecacheFrame)
 		return;
 
 
@@ -1153,13 +1153,13 @@ void  CCustomZone::OnMove()
 {
 	if(m_dwLastTimeMoved == 0)
 	{
-		m_dwLastTimeMoved = Device.dwTimeGlobal;
+		m_dwLastTimeMoved = CRenderDevice::GetInstance()->dwTimeGlobal;
 		m_vPrevPos.set(Position());
 	}
 	else
 	{
-		float time_delta	= static_cast<float>(Device.dwTimeGlobal - m_dwLastTimeMoved)/1000.f;
-		m_dwLastTimeMoved	= Device.dwTimeGlobal;
+		float time_delta	= static_cast<float>(CRenderDevice::GetInstance()->dwTimeGlobal - m_dwLastTimeMoved)/1000.f;
+		m_dwLastTimeMoved	= CRenderDevice::GetInstance()->dwTimeGlobal;
 
 		Fvector				vel;
 			
@@ -1438,7 +1438,7 @@ void CCustomZone::UpdateOnOffState()
 	if(!m_zone_flags.test(eUseOnOffTime)) return;
 	
 	bool dest_state;
-	u32 t = (Device.dwTimeGlobal-m_StartTime+m_TimeShift) % (m_TimeToEnable+m_TimeToDisable);
+	u32 t = (CRenderDevice::GetInstance()->dwTimeGlobal-m_StartTime+m_TimeShift) % (m_TimeToEnable+m_TimeToDisable);
 	if	(t < m_TimeToEnable)
 	{
 		dest_state=true;
@@ -1668,7 +1668,7 @@ void CCustomZone::GrassZoneUpdate()
 	if (m_BendGrass_Blowout_time <= -1)
 		IsActive = m_eZoneState != eZoneStateIdle;
 	else
-		IsActive = m_fBlowoutTimeLeft > static_cast<float>(Device.dwTimeGlobal);
+		IsActive = m_fBlowoutTimeLeft > static_cast<float>(CRenderDevice::GetInstance()->dwTimeGlobal);
 
 	// Target animation depending if Zone is active
 	if (IsActive)

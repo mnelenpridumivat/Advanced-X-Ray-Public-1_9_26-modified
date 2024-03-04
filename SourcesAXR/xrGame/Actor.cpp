@@ -194,7 +194,7 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 
 
 #ifdef DEBUG
-	Device.seqRender.Add	(this,REG_PRIORITY_LOW);
+	CRenderDevice::GetInstance()->seqRender.Add	(this,REG_PRIORITY_LOW);
 #endif
 
 	//разрешить использование пояса в inventory
@@ -283,7 +283,7 @@ CActor::~CActor()
 	xr_delete				(encyclopedia_registry);
 	xr_delete				(game_news_registry);
 #ifdef DEBUG
-	Device.seqRender.Remove(this);
+	CRenderDevice::GetInstance()->seqRender.Remove(this);
 #endif
 	//xr_delete(Weapons);
 	for (int i=0; i<eacMaxCam; ++i) xr_delete(cameras[i]);
@@ -575,7 +575,7 @@ void	CActor::Hit(SHit* pHDS)
 		if (ps && ps->testFlag(GAME_PLAYER_FLAG_INVINCIBLE))
 		{
 			bPlaySound = false;
-			if (Device.dwFrame != last_hit_frame &&
+			if (CRenderDevice::GetInstance()->dwFrame != last_hit_frame &&
 				HDS.bone() != BI_NONE)
 			{		
 				// вычислить позицию и направленность партикла
@@ -597,7 +597,7 @@ void	CActor::Hit(SHit* pHDS)
 		};
 		 
 
-		last_hit_frame = Device.dwFrame;
+		last_hit_frame = CRenderDevice::GetInstance()->dwFrame;
 	};
 
 	if(	!g_dedicated_server				&& 
@@ -1047,7 +1047,7 @@ void CActor::UpdateCL	()
 		}
 	}
 
-	UpdateInventoryOwner			(Device.dwTimeDelta);
+	UpdateInventoryOwner			(CRenderDevice::GetInstance()->dwTimeDelta);
 
 	if (load_screen_renderer.IsActive() && inventory().GetActiveSlot() == PDA_SLOT)
 		inventory().Activate(NO_ACTIVE_SLOT);
@@ -1066,7 +1066,7 @@ void CActor::UpdateCL	()
 	if(m_holder)
 		m_holder->UpdateEx( currentFOV() );
 
-	m_snd_noise -= 0.3f*Device.fTimeDelta;
+	m_snd_noise -= 0.3f* CRenderDevice::GetInstance()->fTimeDelta;
 
 	inherited::UpdateCL				();
 	m_pPhysics_support->in_UpdateCL	();
@@ -1080,7 +1080,7 @@ void CActor::UpdateCL	()
 	SetZoomAimingMode		(false);
 	CWeapon* pWeapon		= smart_cast<CWeapon*>(inventory().ActiveItem());	
 
-	cam_Update(static_cast<float>(Device.dwTimeDelta)/1000.0f, currentFOV());
+	cam_Update(static_cast<float>(CRenderDevice::GetInstance()->dwTimeDelta)/1000.0f, currentFOV());
 
 	if(Level().CurrentEntity() && this->ID()==Level().CurrentEntity()->ID() )
 	{
@@ -1108,7 +1108,7 @@ void CActor::UpdateCL	()
 			fire_disp_full = m_fdisp_controller.GetCurrentDispertion();
 
 			//--#SM+#-- +SecondVP+        FOV (Sin!) [fix for crosshair shaking while SecondVP]
-			if (!Device.m_SecondViewport.IsSVPActive())
+			if (!CRenderDevice::GetInstance()->m_SecondViewport.IsSVPActive())
 				HUD().SetCrosshairDisp(fire_disp_full, 0.02f);
 
 			HUD().ShowCrosshair(pWeapon->use_crosshair());
@@ -1160,7 +1160,7 @@ void CActor::UpdateCL	()
 
 			//    [Turn off SecondVP]
 			//CWeapon::UpdateSecondVP();
-			Device.m_SecondViewport.SetSVPActive(false); //--#SM+#-- +SecondVP+
+			CRenderDevice::GetInstance()->m_SecondViewport.SetSVPActive(false); //--#SM+#-- +SecondVP+
 		}
 	}
 
@@ -1192,7 +1192,7 @@ void CActor::UpdateCL	()
 	
 	if (IsFocused()) 
 	{
-		trans.c.sub(Device.vCameraPosition);
+		trans.c.sub(CRenderDevice::GetInstance()->vCameraPosition);
 		g_player_hud->update(trans);
 	}
 
@@ -1692,8 +1692,8 @@ void CActor::RenderIndicator			(Fvector dpos, float r1, float r2, const ui_shade
 	M.mul						(XFORM(),BI.mTransform);
 
 	Fvector pos = M.c; pos.add(dpos);
-	const Fvector& T        = Device.vCameraTop;
-	const Fvector& R        = Device.vCameraRight;
+	const Fvector& T        = CRenderDevice::GetInstance()->vCameraTop;
+	const Fvector& R        = CRenderDevice::GetInstance()->vCameraRight;
 	Fvector Vr, Vt;
 	Vr.x            = R.x*r1;
 	Vr.y            = R.y*r1;
@@ -1743,12 +1743,12 @@ void CActor::RenderText				(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 	//------------------------------------------------
 	Fvector v0, v1;
 	v0.set(M.c); v1.set(M.c);
-	Fvector T        = Device.vCameraTop;
+	Fvector T        = CRenderDevice::GetInstance()->vCameraTop;
 	v1.add(T);
 
 	Fvector v0r, v1r;
-	Device.mFullTransform.transform(v0r,v0);
-	Device.mFullTransform.transform(v1r,v1);
+	CRenderDevice::GetInstance()->mFullTransform.transform(v0r,v0);
+	CRenderDevice::GetInstance()->mFullTransform.transform(v1r,v1);
 	float size = v1r.distance_to(v0r);
 	CGameFont* pFont = UI().Font().pFontArial14;
 	if (!pFont) return;
@@ -1763,13 +1763,13 @@ void CActor::RenderText				(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 	M.c.y += dpos.y;
 
 	Fvector4 v_res;	
-	Device.mFullTransform.transform(v_res,M.c);
+	CRenderDevice::GetInstance()->mFullTransform.transform(v_res,M.c);
 
 	if (v_res.z < 0 || v_res.w < 0)	return;
 	if (v_res.x < -1.f || v_res.x > 1.f || v_res.y<-1.f || v_res.y>1.f) return;
 
-	float x = (1.f + v_res.x)/2.f * (Device.dwWidth);
-	float y = (1.f - v_res.y)/2.f * (Device.dwHeight);
+	float x = (1.f + v_res.x)/2.f * (CRenderDevice::GetInstance()->dwWidth);
+	float y = (1.f - v_res.y)/2.f * (CRenderDevice::GetInstance()->dwHeight);
 
 	pFont->SetAligment	(CGameFont::alCenter);
 	pFont->SetColor		(color);
@@ -2808,7 +2808,7 @@ void CActor::StartNVGAnimation()
 		if (use_cam_effector)
 			g_player_hud->PlayBlendAnm(use_cam_effector, 0, anim_speed, effector_intensity, false);
 
-		m_iNVGAnimLength = Device.dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", anim_speed);
+		m_iNVGAnimLength = CRenderDevice::GetInstance()->dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", anim_speed);
 	}
 
 	if (pSettings->line_exist(anim_sect, "snd_using"))
@@ -2821,7 +2821,7 @@ void CActor::StartNVGAnimation()
 		m_action_anim_sound.play(NULL, sm_2D);
 	}
 
-	m_iActionTiming = Device.dwTimeGlobal + anim_timer;
+	m_iActionTiming = CRenderDevice::GetInstance()->dwTimeGlobal + anim_timer;
 
 	m_bNVGSwitched = false;
 	m_bActionAnimInProcess = true;
@@ -2829,19 +2829,19 @@ void CActor::StartNVGAnimation()
 
 void CActor::UpdateNVGUseAnim()
 {
-	if ((m_iActionTiming <= Device.dwTimeGlobal && !m_bNVGSwitched) && g_Alive())
+	if ((m_iActionTiming <= CRenderDevice::GetInstance()->dwTimeGlobal && !m_bNVGSwitched) && g_Alive())
 	{
-		m_iActionTiming = Device.dwTimeGlobal;
+		m_iActionTiming = CRenderDevice::GetInstance()->dwTimeGlobal;
 		SwitchNightVision(!m_bNightVisionOn);
 		m_bNVGSwitched = true;
 	}
 
 	if (m_bNVGActivated)
 	{
-		if ((m_iNVGAnimLength <= Device.dwTimeGlobal) || !g_Alive())
+		if ((m_iNVGAnimLength <= CRenderDevice::GetInstance()->dwTimeGlobal) || !g_Alive())
 		{
-			m_iNVGAnimLength = Device.dwTimeGlobal;
-			m_iActionTiming = Device.dwTimeGlobal;
+			m_iNVGAnimLength = CRenderDevice::GetInstance()->dwTimeGlobal;
+			m_iActionTiming = CRenderDevice::GetInstance()->dwTimeGlobal;
 			m_action_anim_sound.stop();
 			g_block_all_except_movement = false;
 			g_actor_allow_ladder = true;
@@ -2916,7 +2916,7 @@ void CActor::CleanMask()
 		if (use_cam_effector)
 			g_player_hud->PlayBlendAnm(use_cam_effector, 0, anim_speed, effector_intensity, false);
 
-		m_iMaskAnimLength = Device.dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", anim_speed);
+		m_iMaskAnimLength = CRenderDevice::GetInstance()->dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, !Wpn ? "anm_use" : "anm_use_weapon", anim_speed);
 	}
 
 	if (pSettings->line_exist(anim_sect, "snd_using"))
@@ -2929,7 +2929,7 @@ void CActor::CleanMask()
 		m_action_anim_sound.play(NULL, sm_2D);
 	}
 
-	m_iActionTiming = Device.dwTimeGlobal + anim_timer;
+	m_iActionTiming = CRenderDevice::GetInstance()->dwTimeGlobal + anim_timer;
 
 	m_bMaskClear = false;
 	m_bActionAnimInProcess = true;
@@ -2937,18 +2937,18 @@ void CActor::CleanMask()
 
 void CActor::UpdateMaskUseAnim()
 {
-	if ((m_iActionTiming <= Device.dwTimeGlobal && !m_bMaskClear) && g_Alive())
+	if ((m_iActionTiming <= CRenderDevice::GetInstance()->dwTimeGlobal && !m_bMaskClear) && g_Alive())
 	{
-		m_iActionTiming = Device.dwTimeGlobal;
+		m_iActionTiming = CRenderDevice::GetInstance()->dwTimeGlobal;
 		m_bMaskClear = true;
 	}
 
 	if (m_bMaskAnimActivated)
 	{
-		if ((m_iMaskAnimLength <= Device.dwTimeGlobal) || !g_Alive())
+		if ((m_iMaskAnimLength <= CRenderDevice::GetInstance()->dwTimeGlobal) || !g_Alive())
 		{
-			m_iMaskAnimLength = Device.dwTimeGlobal;
-			m_iActionTiming = Device.dwTimeGlobal;
+			m_iMaskAnimLength = CRenderDevice::GetInstance()->dwTimeGlobal;
+			m_iActionTiming = CRenderDevice::GetInstance()->dwTimeGlobal;
 			m_action_anim_sound.stop();
 			g_block_all_except_movement = false;
 			g_actor_allow_ladder = true;
@@ -3003,7 +3003,7 @@ void CActor::QuickKick()
 		if (!effector && use_cam_effector != nullptr)
 			AddEffector(this, effUseItem, use_cam_effector, effector_intensity);
 
-		m_iQuickKickAnimLength = Device.dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, !active_item ? "anm_use" : "anm_use_weapon", anim_speed);
+		m_iQuickKickAnimLength = CRenderDevice::GetInstance()->dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, !active_item ? "anm_use" : "anm_use_weapon", anim_speed);
 	}
 
 	if (pSettings->line_exist(anim_sect, "snd_using"))
@@ -3016,7 +3016,7 @@ void CActor::QuickKick()
 		m_action_anim_sound.play(NULL, sm_2D);
 	}
 
-	m_iActionTiming = Device.dwTimeGlobal + anim_timer;
+	m_iActionTiming = CRenderDevice::GetInstance()->dwTimeGlobal + anim_timer;
 
 	m_bQuickKick = false;
 	m_bActionAnimInProcess = true;
@@ -3024,9 +3024,9 @@ void CActor::QuickKick()
 
 void CActor::UpdateQuickKickAnim()
 {
-	if ((m_iActionTiming <= Device.dwTimeGlobal && !m_bQuickKick) && g_Alive())
+	if ((m_iActionTiming <= CRenderDevice::GetInstance()->dwTimeGlobal && !m_bQuickKick) && g_Alive())
 	{
-		m_iActionTiming = Device.dwTimeGlobal;
+		m_iActionTiming = CRenderDevice::GetInstance()->dwTimeGlobal;
 		m_bQuickKick = true;
 
 		CWeaponKnife* cur_knife = smart_cast<CWeaponKnife*>(inventory().ItemFromSlot(KNIFE_SLOT));
@@ -3037,7 +3037,7 @@ void CActor::UpdateQuickKickAnim()
 
 	if (m_bQuickKickActivated)
 	{
-		if ((m_iQuickKickAnimLength <= Device.dwTimeGlobal) || !g_Alive())
+		if ((m_iQuickKickAnimLength <= CRenderDevice::GetInstance()->dwTimeGlobal) || !g_Alive())
 		{
 			CEffectorCam* effector = Cameras().GetCamEffector((ECamEffectorType)effUseItem);
 
@@ -3045,8 +3045,8 @@ void CActor::UpdateQuickKickAnim()
 				RemoveEffector(this, effUseItem);
 
 			SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
-			m_iQuickKickAnimLength = Device.dwTimeGlobal;
-			m_iActionTiming = Device.dwTimeGlobal;
+			m_iQuickKickAnimLength = CRenderDevice::GetInstance()->dwTimeGlobal;
+			m_iActionTiming = CRenderDevice::GetInstance()->dwTimeGlobal;
 			m_action_anim_sound.stop();
 			g_block_all_except_movement = false;
 			g_actor_allow_ladder = true;
@@ -3220,7 +3220,7 @@ bool CActor::use_HolderEx(CHolderCustom* object, bool bForce)
 		if (object && (!object->EnterLocked() || bForce))
 		{
 			Fvector center;	Center(center);
-			if ((bForce || object->Use(Device.vCameraPosition, Device.vCameraDirection, center)) && object->attach_Actor(this))
+			if ((bForce || object->Use(CRenderDevice::GetInstance()->vCameraPosition, CRenderDevice::GetInstance()->vCameraDirection, center)) && object->attach_Actor(this))
 			{
 				inventory().SetActiveSlot(NO_ACTIVE_SLOT);
 				SetWeaponHideState(INV_STATE_BLOCK_ALL, true);

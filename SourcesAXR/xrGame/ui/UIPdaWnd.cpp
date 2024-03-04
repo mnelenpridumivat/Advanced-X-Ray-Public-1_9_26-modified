@@ -400,10 +400,10 @@ void CUIPdaWnd::Show_MapLegendWnd(bool status)
 
 void CUIPdaWnd::Draw()
 {
-	if (Device.dwFrame == dwPDAFrame)
+	if (CRenderDevice::GetInstance()->dwFrame == dwPDAFrame)
 		return;
 
-	dwPDAFrame = Device.dwFrame;
+	dwPDAFrame = CRenderDevice::GetInstance()->dwFrame;
 
 	inherited::Draw();
 	//.	DrawUpdatedSections();

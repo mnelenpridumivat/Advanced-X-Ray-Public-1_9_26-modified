@@ -95,7 +95,7 @@ void CCustomOutfit::UpdateFilterCondition(void)
 	{
 		float m_radia_hit = CurrentGameUI()->get_zone_cur_power(ALife::eHitTypeRadiation) * 4;
 		float m_chemical_hit = CurrentGameUI()->get_zone_cur_power(ALife::eHitTypeChemicalBurn);
-		float uncharge_coef = ((m_fFilterDegradation + m_radia_hit + m_chemical_hit) / 16) * Device.fTimeDelta;
+		float uncharge_coef = ((m_fFilterDegradation + m_radia_hit + m_chemical_hit) / 16) * CRenderDevice::GetInstance()->fTimeDelta;
 
 		m_fFilterCondition -= uncharge_coef;
 		clamp(m_fFilterCondition, 0.0f, m_fMaxFilterCondition);

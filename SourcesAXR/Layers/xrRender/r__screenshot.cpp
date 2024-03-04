@@ -558,8 +558,8 @@ void CRender::ScreenshotAsyncEnd(CMemoryWriter &memory_writer)
 	u32 rtWidth = Target->get_rtwidth();
 	u32 rtHeight = Target->get_rtheight();
 #else	//	RENDER != R_R1
-	u32 rtWidth = Device.dwWidth;
-	u32 rtHeight = Device.dwHeight;
+	u32 rtWidth = CRenderDevice::GetInstance()->dwWidth;
+	u32 rtHeight = CRenderDevice::GetInstance()->dwHeight;
 #endif	//	RENDER != R_R1
 
 	// Image processing (gamma-correct)

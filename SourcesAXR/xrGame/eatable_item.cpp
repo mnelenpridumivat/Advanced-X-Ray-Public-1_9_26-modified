@@ -154,7 +154,7 @@ void CEatableItem::UpdateInRuck(CActor* actor)
 	if (GameConstants::GetFoodIrradiation())
 	{
 		float m_radia_hit = CurrentGameUI()->get_zone_cur_power(ALife::eHitTypeRadiation);
-		float irradiation_coef = ((m_fIrradiationCoef + m_radia_hit) / 64) * Device.fTimeDelta;
+		float irradiation_coef = ((m_fIrradiationCoef + m_radia_hit) / 64) * CRenderDevice::GetInstance()->fTimeDelta;
 
 		if (m_radia_hit > m_fIrradiationZonePower)
 			m_fRadioactivity += irradiation_coef;
@@ -164,7 +164,7 @@ void CEatableItem::UpdateInRuck(CActor* actor)
 
 	if (GameConstants::GetFoodRotting() && GameConstants::GetActorIntoxication())
 	{
-		float rotten_coef = (m_fFoodRottingCoef / 128) * Device.fTimeDelta;
+		float rotten_coef = (m_fFoodRottingCoef / 128) * CRenderDevice::GetInstance()->fTimeDelta;
 		static float spoliage = m_fSpoliage;
 
 		if (spoliage < 1.0f)
@@ -219,12 +219,12 @@ void CEatableItem::StartAnimation()
 		if (pSettings->line_exist(anim_sect, anim_name))
 		{
 			g_player_hud->script_anim_play(m_iAnimHandsCnt, anim_sect, anim_name, false, 1.0f, attach_visual);
-			m_iAnimLength = Device.dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, anim_name, 1.0f);
+			m_iAnimLength = CRenderDevice::GetInstance()->dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, anim_name, 1.0f);
 		}
 		else
 		{
 			g_player_hud->script_anim_play(m_iAnimHandsCnt, anim_sect, "anm_use", false, 1.0f, attach_visual);
-			m_iAnimLength = Device.dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, "anm_use", 1.0f);
+			m_iAnimLength = CRenderDevice::GetInstance()->dwTimeGlobal + g_player_hud->motion_length_script(anim_sect, "anm_use", 1.0f);
 		}
 
 		if (pSettings->line_exist(anim_sect, "hud_fov"))
@@ -281,11 +281,11 @@ void CEatableItem::UpdateUseAnim(CActor* actor)
 
 	if (m_bActivated)
 	{
-		if (m_iAnimLength <= Device.dwTimeGlobal || !IsActorAlive)
+		if (m_iAnimLength <= CRenderDevice::GetInstance()->dwTimeGlobal || !IsActorAlive)
 		{
 			actor->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
 
-			m_iAnimLength = Device.dwTimeGlobal;
+			m_iAnimLength = CRenderDevice::GetInstance()->dwTimeGlobal;
 			m_bActivated = false;
 			g_block_all_except_movement = false;
 			g_actor_allow_ladder = true;

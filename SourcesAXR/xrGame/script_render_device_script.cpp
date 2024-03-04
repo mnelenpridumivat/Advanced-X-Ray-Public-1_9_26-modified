@@ -13,7 +13,7 @@ using namespace luabind;
 
 bool is_device_paused(CRenderDevice* d)
 {
-	return !!Device.Paused();
+	return !!CRenderDevice::GetInstance()->Paused();
 }
 
 void set_device_paused(CRenderDevice* d, bool b)

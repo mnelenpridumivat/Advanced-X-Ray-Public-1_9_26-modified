@@ -66,7 +66,7 @@ void try_change_current_entity()
 	g_debug_actor						= actor;
 
 	CFrustum							frustum;
-	frustum.CreateFromMatrix			(Device.mFullTransform,FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
+	frustum.CreateFromMatrix			(CRenderDevice::GetInstance()->mFullTransform,FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
 	typedef xr_vector<ISpatial*>		OBJECTS;
 	OBJECTS								ISpatialResult;
@@ -413,7 +413,7 @@ void CAI_Stalker::debug_text			()
 	if (memory().danger().selected() && memory().danger().selected()->object()) {
 		DBG_OutText	("%s%sselected",indent,indent);
 		DBG_OutText	("%s%s%stype      : %s",indent,indent,indent,danger_type(memory().danger().selected()->type()));
-		DBG_OutText	("%s%s%stime      : %.3f (%.3f)",indent,indent,indent,static_cast<float>(memory().danger().selected()->time())/1000.f,static_cast<float>(Device.dwTimeGlobal - memory().danger().selected()->time())/1000.f);
+		DBG_OutText	("%s%s%stime      : %.3f (%.3f)",indent,indent,indent,static_cast<float>(memory().danger().selected()->time())/1000.f,static_cast<float>(CRenderDevice::GetInstance()->dwTimeGlobal - memory().danger().selected()->time())/1000.f);
 		DBG_OutText	("%s%s%sinitiator : %s",indent,indent,indent,*memory().danger().selected()->object()->cName());
 		if (g_Alive() && memory().danger().selected()->object())
 			DBG_OutText("%s%s%svisible   : %s",indent,indent,indent,memory().visual().visible_now(memory().danger().selected()->object()) ? "+" : "-");
@@ -807,7 +807,7 @@ void CAI_Stalker::debug_text			()
 				indent,
 				indent,
 				indent,
-				(Device.dwTimeGlobal < I->m_start_time)
+				(CRenderDevice::GetInstance()->dwTimeGlobal < I->m_start_time)
 				?
 				"not yet started"
 				:
@@ -947,7 +947,7 @@ void CAI_Stalker::dbg_draw_vision	()
 	shift.set					(0.f,2.5f,0.f);
 
 	Fmatrix						res;
-	res.mul						(Device.mFullTransform,XFORM());
+	res.mul						(CRenderDevice::GetInstance()->mFullTransform,XFORM());
 
 	Fvector4					v_res;
 
@@ -959,8 +959,8 @@ void CAI_Stalker::dbg_draw_vision	()
 	if (v_res.x < -1.f || v_res.x > 1.f || v_res.y<-1.f || v_res.y>1.f)
 		return;
 
-	float						x = (1.f + v_res.x)/2.f * (Device.dwWidth);
-	float						y = (1.f - v_res.y)/2.f * (Device.dwHeight);
+	float						x = (1.f + v_res.x)/2.f * (CRenderDevice::GetInstance()->dwWidth);
+	float						y = (1.f - v_res.y)/2.f * (CRenderDevice::GetInstance()->dwHeight);
 
 	CNotYetVisibleObject		*object = memory().visual().not_yet_visible_object(smart_cast<CGameObject*>(Level().CurrentEntity()));
 	string64					out_text;
@@ -1744,6 +1744,7 @@ void CAI_Stalker::OnRender				()
 			Fvector						direction;
 			float						best_value = -1.f;
 
+			u32 j;
 			for (u32 i=0, j = 0; i<36; ++i) {
 				float				value = ai().level_graph().high_cover_in_direction(static_cast<float>(10 * i)/180.f*PI,v);
 				direction.setHP		(static_cast<float>(10 * i)/180.f*PI,0);

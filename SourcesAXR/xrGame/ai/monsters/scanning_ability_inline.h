@@ -86,8 +86,8 @@ void CScanningAbilityAbstract::schedule_update()
 		if ( vel > velocity_threshold) {
 			
 			// трейсить не чаще, чем scan_trace_time_freq
-			if (time_last_trace + static_cast<u32>(1000 / scan_trace_time_freq) < Device.dwTimeGlobal) {
-				time_last_trace = Device.dwTimeGlobal;
+			if (time_last_trace + static_cast<u32>(1000 / scan_trace_time_freq) < CRenderDevice::GetInstance()->dwTimeGlobal) {
+				time_last_trace = CRenderDevice::GetInstance()->dwTimeGlobal;
 				scan_value		+= vel;
 			}
 			

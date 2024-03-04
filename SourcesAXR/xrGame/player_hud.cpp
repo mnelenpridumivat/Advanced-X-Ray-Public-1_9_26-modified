@@ -159,7 +159,7 @@ void attachable_hud_item::set_bone_visible(const shared_str& bone_name, BOOL bVi
 
 void attachable_hud_item::update(bool bForce)
 {
-	if(!bForce && m_upd_firedeps_frame==Device.dwFrame)	return;
+	if(!bForce && m_upd_firedeps_frame== CRenderDevice::GetInstance()->dwFrame)	return;
 	bool is_16x9 = UI().is_widescreen();
 	
 	if(!!m_measures.m_prop_flags.test(hud_item_measures::e_16x9_mode_now)!=is_16x9)
@@ -172,7 +172,7 @@ void attachable_hud_item::update(bool bForce)
 
 	m_parent->calc_transform		(m_attach_place_idx, m_attach_offset, m_item_transform);
 	m_parent_hud_item->UpdateAddonsTransform(true);
-	m_upd_firedeps_frame			= Device.dwFrame;
+	m_upd_firedeps_frame			= CRenderDevice::GetInstance()->dwFrame;
 
 	IKinematicsAnimated* ka			=	m_model->dcast_PKinematicsAnimated();
 	if(ka)
@@ -200,7 +200,7 @@ void attachable_hud_item::setup_firedeps(firedeps& fd)
 		Fmatrix& fire_mat								= m_model->LL_GetTransform(m_measures.m_fire_bone);
 		fire_mat.transform_tiny							(fd.vLastFP, m_measures.m_fire_point_offset);
 		m_item_transform.transform_tiny					(fd.vLastFP);
-		fd.vLastFP.add(Device.vCameraPosition);
+		fd.vLastFP.add(CRenderDevice::GetInstance()->vCameraPosition);
 
 		fd.vLastFD.set									(0.f,0.f,1.f);
 		m_item_transform.transform_dir					(fd.vLastFD);
@@ -225,7 +225,7 @@ void attachable_hud_item::setup_firedeps(firedeps& fd)
 		Fmatrix& fire_mat			= m_model->LL_GetTransform(m_measures.m_fire_bone2);
 		fire_mat.transform_tiny		(fd.vLastFP2,m_measures.m_fire_point2_offset);
 		m_item_transform.transform_tiny	(fd.vLastFP2);
-		fd.vLastFP2.add(Device.vCameraPosition);
+		fd.vLastFP2.add(CRenderDevice::GetInstance()->vCameraPosition);
 		VERIFY(_valid(fd.vLastFP2));
 	}
 
@@ -234,7 +234,7 @@ void attachable_hud_item::setup_firedeps(firedeps& fd)
 		Fmatrix& fire_mat			= m_model->LL_GetTransform(m_measures.m_shell_bone);
 		fire_mat.transform_tiny		(fd.vLastSP,m_measures.m_shell_point_offset);
 		m_item_transform.transform_tiny	(fd.vLastSP);
-		fd.vLastSP.add(Device.vCameraPosition);
+		fd.vLastSP.add(CRenderDevice::GetInstance()->vCameraPosition);
 		VERIFY(_valid(fd.vLastSP));
 	}
 }
@@ -550,7 +550,7 @@ void player_hud::Thumb0Callback(CBoneInstance* B)
 		Fvector diff[2];
 		diff[0] = target;
 		diff[0].sub(current);
-		diff[0].mul(Device.fTimeDelta / .1f);
+		diff[0].mul(CRenderDevice::GetInstance()->fTimeDelta / .1f);
 		current.add(diff[0]);
 	}
 	else
@@ -584,7 +584,7 @@ void player_hud::Thumb01Callback(CBoneInstance* B)
 		Fvector diff[2];
 		diff[0] = target;
 		diff[0].sub(current);
-		diff[0].mul(Device.fTimeDelta / .1f);
+		diff[0].mul(CRenderDevice::GetInstance()->fTimeDelta / .1f);
 		current.add(diff[0]);
 	}
 	else
@@ -618,7 +618,7 @@ void player_hud::Thumb02Callback(CBoneInstance* B)
 		Fvector diff[2];
 		diff[0] = target;
 		diff[0].sub(current);
-		diff[0].mul(Device.fTimeDelta / .1f);
+		diff[0].mul(CRenderDevice::GetInstance()->fTimeDelta / .1f);
 		current.add(diff[0]);
 	}
 	else
@@ -911,16 +911,16 @@ void player_hud::update(const Fmatrix& cam_trans)
 			continue;
 
 		if (anm->active)
-			anm->blend_amount += Device.fTimeDelta / .4f;
+			anm->blend_amount += CRenderDevice::GetInstance()->fTimeDelta / .4f;
 		else
-			anm->blend_amount -= Device.fTimeDelta / .4f;
+			anm->blend_amount -= CRenderDevice::GetInstance()->fTimeDelta / .4f;
 
 		clamp(anm->blend_amount, 0.f, 1.f);
 
 		if (anm->blend_amount > 0.f)
 		{
 			if (anm->anm->bLoop || anm->anm->anim_param().t_current < anm->anm->anim_param().max_t)
-				anm->anm->Update(Device.fTimeDelta);
+				anm->anm->Update(CRenderDevice::GetInstance()->fTimeDelta);
 			else
 				anm->Stop(false);
 		}
@@ -952,28 +952,28 @@ void player_hud::update(const Fmatrix& cam_trans)
 		{
 			if (need_blend[0])
 			{
-				anm->blend_amount[0] += Device.fTimeDelta / .4f;
+				anm->blend_amount[0] += CRenderDevice::GetInstance()->fTimeDelta / .4f;
 
 				if (!m_attached_items[1])
-					anm->blend_amount[1] += Device.fTimeDelta / .4f;
+					anm->blend_amount[1] += CRenderDevice::GetInstance()->fTimeDelta / .4f;
 				else if (!need_blend[1])
-					anm->blend_amount[1] -= Device.fTimeDelta / .4f;
+					anm->blend_amount[1] -= CRenderDevice::GetInstance()->fTimeDelta / .4f;
 			}
 
 			if (need_blend[1])
 			{
-				anm->blend_amount[1] += Device.fTimeDelta / .4f;
+				anm->blend_amount[1] += CRenderDevice::GetInstance()->fTimeDelta / .4f;
 
 				if (!m_attached_items[0])
-					anm->blend_amount[0] += Device.fTimeDelta / .4f;
+					anm->blend_amount[0] += CRenderDevice::GetInstance()->fTimeDelta / .4f;
 				else if (!need_blend[0])
-					anm->blend_amount[0] -= Device.fTimeDelta / .4f;
+					anm->blend_amount[0] -= CRenderDevice::GetInstance()->fTimeDelta / .4f;
 			}
 		}
 		else
 		{
-			anm->blend_amount[0] -= Device.fTimeDelta / .4f;
-			anm->blend_amount[1] -= Device.fTimeDelta / .4f;
+			anm->blend_amount[0] -= CRenderDevice::GetInstance()->fTimeDelta / .4f;
+			anm->blend_amount[1] -= CRenderDevice::GetInstance()->fTimeDelta / .4f;
 		}
 
 		clamp(anm->blend_amount[0], 0.f, 1.f);
@@ -985,7 +985,7 @@ void player_hud::update(const Fmatrix& cam_trans)
 			continue;
 		}
 
-		anm->anm->Update(Device.fTimeDelta);
+		anm->anm->Update(CRenderDevice::GetInstance()->fTimeDelta);
 
 		if (anm->blend_amount[0] == anm->blend_amount[1])
 		{
@@ -1015,13 +1015,13 @@ void player_hud::update(const Fmatrix& cam_trans)
 	// single hand offset smoothing + syncing back to other hand animation on end
 	if (script_anim_part != static_cast<u8>(-1))
 	{
-		script_anim_offset_factor += Device.fTimeDelta * 2.5f;
+		script_anim_offset_factor += CRenderDevice::GetInstance()->fTimeDelta * 2.5f;
 
-		if (m_bStopAtEndAnimIsRunning && Device.dwTimeGlobal >= script_anim_end)
+		if (m_bStopAtEndAnimIsRunning && CRenderDevice::GetInstance()->dwTimeGlobal >= script_anim_end)
 			StopScriptAnim();
 	}
 	else
-		script_anim_offset_factor -= Device.fTimeDelta * 5.f;
+		script_anim_offset_factor -= CRenderDevice::GetInstance()->fTimeDelta * 5.f;
 
 	clamp(script_anim_offset_factor, 0.f, 1.f);
 }
@@ -1110,7 +1110,7 @@ u32 player_hud::script_anim_play(u8 hand, LPCSTR section, LPCSTR anm_name, bool 
 	{
 		Msg("!script motion section [%s] does not exist", section);
 		m_bStopAtEndAnimIsRunning = true;
-		script_anim_end = Device.dwTimeGlobal;
+		script_anim_end = CRenderDevice::GetInstance()->dwTimeGlobal;
 		return 0;
 	}
 
@@ -1121,7 +1121,7 @@ u32 player_hud::script_anim_play(u8 hand, LPCSTR section, LPCSTR anm_name, bool 
 	{
 		Msg("!script motion [%s] not found in section [%s]", anm_name, section);
 		m_bStopAtEndAnimIsRunning = true;
-		script_anim_end = Device.dwTimeGlobal;
+		script_anim_end = CRenderDevice::GetInstance()->dwTimeGlobal;
 		return 0;
 	}
 
@@ -1189,7 +1189,7 @@ u32 player_hud::script_anim_play(u8 hand, LPCSTR section, LPCSTR anm_name, bool 
 	if (length > 0)
 	{
 		m_bStopAtEndAnimIsRunning = true;
-		script_anim_end = Device.dwTimeGlobal + length;
+		script_anim_end = CRenderDevice::GetInstance()->dwTimeGlobal + length;
 	}
 	else
 		m_bStopAtEndAnimIsRunning = false;
@@ -1495,7 +1495,7 @@ void player_hud::update_inertion(Fmatrix& trans)
 			_origin_offset *= power_factor;
 		}
 
-		st_last_dir.mad(diff_dir, _tendto_speed * Device.fTimeDelta);
+		st_last_dir.mad(diff_dir, _tendto_speed * CRenderDevice::GetInstance()->fTimeDelta);
 		origin.mad(diff_dir, _origin_offset);
 		*/
 		// pitch compensation

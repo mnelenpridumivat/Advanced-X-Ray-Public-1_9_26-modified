@@ -444,14 +444,14 @@ void CUIMainIngameWnd::Update()
 //	UIHealthBar.SetProgressPos	(m_pActor->GetfHealth()*100.0f);
 //	UIMotionIcon->SetPower		(m_pActor->conditions().GetPower()*100.0f);
 	
-	fuzzyShowInfo_ += SHOW_INFO_SPEED * Device.fTimeDelta;
+	fuzzyShowInfo_ += SHOW_INFO_SPEED * CRenderDevice::GetInstance()->fTimeDelta;
 
 	if (uiPickUpItemIconNew_ && fuzzyShowInfo_ > 0.f)
 	{
 		uiPickUpItemIconNew_->Update();
 	}
 
-	if( Device.dwFrame % 10 )
+	if(CRenderDevice::GetInstance()->dwFrame % 10 )
 		return;
 
 	game_PlayerState* lookat_player = Game().local_player;

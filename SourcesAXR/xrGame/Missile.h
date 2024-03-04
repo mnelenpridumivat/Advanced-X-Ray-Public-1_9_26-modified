@@ -98,7 +98,7 @@ public:
 	void			activate_physic_shell	() override;
 	void			setup_physic_shell		() override;
 	void			create_physic_shell		() override;
-	IC		void			set_destroy_time		(u32 delta_destroy_time) {m_dwDestroyTime = delta_destroy_time + Device.dwTimeGlobal;}
+	IC		void			set_destroy_time		(u32 delta_destroy_time) {m_dwDestroyTime = delta_destroy_time + CRenderDevice::GetInstance()->dwTimeGlobal;}
 	void			PH_A_CrPr				() override;
 
 			void			SetQuickThrowActive		(bool status) { m_bQuickThrowActive = status; }
@@ -109,6 +109,6 @@ protected:
 public:
 	u32				ef_weapon_type			() const override;
 	IC		u32				destroy_time			() const { return m_dwDestroyTime; }
-	IC		int				time_from_begin_throw	() const { return (Device.dwTimeGlobal + m_dwDestroyTimeMax - m_dwDestroyTime); }
+	IC		int				time_from_begin_throw	() const { return (CRenderDevice::GetInstance()->dwTimeGlobal + m_dwDestroyTimeMax - m_dwDestroyTime); }
 	static	void			ExitContactCallback		(bool& do_colide,bool bo1,dContact& c,SGameMtl *material_1,SGameMtl* material_2);
 };

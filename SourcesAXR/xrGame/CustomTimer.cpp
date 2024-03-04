@@ -12,7 +12,7 @@
 #include "ai_space.h"
 #include "alife_simulator.h"
 #include "alife_time_manager.h"
-#include "../xrEngine/device.h"
+#include "../xrEngine/Device.h"
 
 #include "script_engine.h"
 #include <luabind/luabind.hpp>

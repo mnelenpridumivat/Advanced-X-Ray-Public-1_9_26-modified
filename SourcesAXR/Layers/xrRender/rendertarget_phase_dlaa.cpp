@@ -7,8 +7,8 @@ void CRenderTarget::phase_dlaa()
 	float d_W = 1.0f;
 	u32	C = color_rgba(0, 0, 0, 255);
 
-	const float w = float(Device.dwWidth);
-	const float h = float(Device.dwHeight);
+	const float w = float(CRenderDevice::GetInstance()->dwWidth);
+	const float h = float(CRenderDevice::GetInstance()->dwHeight);
 
 	// Half-pixel offset (DX9 only)
 #ifdef USE_DX11

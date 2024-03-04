@@ -319,7 +319,7 @@ void CArtefact::UpdateCL		()
 	inherited::UpdateCL			();
 	
 	if (o_fastmode || m_activationObj)
-		UpdateWorkload			(Device.dwTimeDelta);	
+		UpdateWorkload			(CRenderDevice::GetInstance()->dwTimeDelta);
 
 	if (m_fChargeLevel <= 0.5f)
 	{
@@ -347,7 +347,7 @@ void CArtefact::Interpolate()
 
 void CArtefact::UpdateDegradation()
 {
-	float uncharge_coef = (m_fDegradationSpeed / 16) * Device.fTimeDelta;
+	float uncharge_coef = (m_fDegradationSpeed / 16) * CRenderDevice::GetInstance()->fTimeDelta;
 
 	m_fChargeLevel -= uncharge_coef;
 	clamp(m_fChargeLevel, 0.f, 1.f);
@@ -448,8 +448,8 @@ void CArtefact::shedule_Update		(u32 dt)
 	if (H_Parent())			o_switch_2_slow	();
 	else					{
 		Fvector	center;			Center(center);
-		BOOL	rendering		= (Device.dwFrame==o_render_frame);
-		float	cam_distance	= Device.vCameraPosition.distance_to(center)-Radius();
+		BOOL	rendering		= (CRenderDevice::GetInstance()->dwFrame==o_render_frame);
+		float	cam_distance	= CRenderDevice::GetInstance()->vCameraPosition.distance_to(center)-Radius();
 		if (rendering || (cam_distance < FASTMODE_DISTANCE))	o_switch_2_fast	();
 		else													o_switch_2_slow	();
 	}
@@ -561,9 +561,9 @@ void CArtefact::MoveTo(Fvector const &  position)
 #include "Entity_alive.h"
 void CArtefact::UpdateXForm()
 {
-	if (Device.dwFrame!=dwXF_Frame)
+	if (CRenderDevice::GetInstance()->dwFrame!=dwXF_Frame)
 	{
-		dwXF_Frame			= Device.dwFrame;
+		dwXF_Frame			= CRenderDevice::GetInstance()->dwFrame;
 
 		if (0==H_Parent())	return;
 
@@ -735,7 +735,7 @@ SArtefactDetectorsSupport::~SArtefactDetectorsSupport()
 
 void SArtefactDetectorsSupport::SetVisible(bool b)
 {
-	m_switchVisTime			= Device.dwTimeGlobal; 
+	m_switchVisTime			= CRenderDevice::GetInstance()->dwTimeGlobal;
 	if(b == !!m_parent->getVisible())	return;
 	
 	if(b)
@@ -820,14 +820,14 @@ void SArtefactDetectorsSupport::UpdateOnFrame()
 		}
 	}
 
-	if(m_parent->getVisible() && m_parent->GetAfRank()!=0 && m_switchVisTime+5000 < Device.dwTimeGlobal)
+	if(m_parent->getVisible() && m_parent->GetAfRank()!=0 && m_switchVisTime+5000 < CRenderDevice::GetInstance()->dwTimeGlobal)
 		SetVisible(false);
 
 	u32 dwDt = 2*3600*1000/10; //2 hour of game time
-	if(!m_parent->getVisible() && m_switchVisTime+dwDt < Device.dwTimeGlobal)
+	if(!m_parent->getVisible() && m_switchVisTime+dwDt < CRenderDevice::GetInstance()->dwTimeGlobal)
 	{
-		m_switchVisTime		= Device.dwTimeGlobal;
-		if(m_parent->Position().distance_to(Device.vCameraPosition)>40.0f)
+		m_switchVisTime		= CRenderDevice::GetInstance()->dwTimeGlobal;
+		if(m_parent->Position().distance_to(CRenderDevice::GetInstance()->vCameraPosition)>40.0f)
 			Blink			();
 	}
 }

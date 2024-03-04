@@ -1013,7 +1013,7 @@ bool CScriptGameObject::weapon_strapped	() const
 	}
 
 	bool const result	= stalker->weapon_strapped();
-//	Msg					( "[%6d][%s] weapon_strapped = %s", Device.dwTimeGlobal, stalker->cName().c_str(), result ? "true" : "false" );
+//	Msg					( "[%6d][%s] weapon_strapped = %s", CRenderDevice::GetInstance()->dwTimeGlobal, stalker->cName().c_str(), result ? "true" : "false" );
 	return			(result);
 }
 
@@ -1025,7 +1025,7 @@ bool CScriptGameObject::weapon_unstrapped	() const
 		return		(false);
 	}
 	bool const result	= stalker->weapon_unstrapped();
-//	Msg					( "[%6d][%s] weapon_unstrapped = %s", Device.dwTimeGlobal, stalker->cName().c_str(), result ? "true" : "false" );
+//	Msg					( "[%6d][%s] weapon_unstrapped = %s", CRenderDevice::GetInstance()->dwTimeGlobal, stalker->cName().c_str(), result ? "true" : "false" );
 	return			(result);
 }
 

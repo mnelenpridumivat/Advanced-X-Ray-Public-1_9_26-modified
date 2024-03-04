@@ -15,12 +15,12 @@ void CRenderTarget::accum_point		(light* L)
 	if (L->flags.bHudMode)
 	{
 		extern ENGINE_API float		psHUD_FOV;
-		Pold				= Device.mProject;
-		FTold				= Device.mFullTransform;
-		Device.mProject.build_projection(psHUD_FOV, Device.fASPECT, HUD_VIEWPORT_NEAR, g_pGamePersistent->Environment().CurrentEnv->far_plane);
+		Pold				= CRenderDevice::GetInstance()->mProject;
+		FTold				= CRenderDevice::GetInstance()->mFullTransform;
+		CRenderDevice::GetInstance()->mProject.build_projection(psHUD_FOV, CRenderDevice::GetInstance()->fASPECT, HUD_VIEWPORT_NEAR, g_pGamePersistent->Environment().CurrentEnv->far_plane);
 
-		Device.mFullTransform.mul	(Device.mProject, Device.mView);
-		RCache.set_xform_project	(Device.mProject);
+		CRenderDevice::GetInstance()->mFullTransform.mul	(CRenderDevice::GetInstance()->mProject, CRenderDevice::GetInstance()->mView);
+		RCache.set_xform_project	(CRenderDevice::GetInstance()->mProject);
 		RImplementation.rmNear		();
 	}
 
@@ -31,13 +31,13 @@ void CRenderTarget::accum_point		(light* L)
 	float		L_R					= L->range*0.95f;
 	Fvector		L_clr;				L_clr.set		(L->color.r,L->color.g,L->color.b);
 	L_spec							= u_diffuse2s	(L_clr);
-	Device.mView.transform_tiny		(L_pos,L->position);
+	CRenderDevice::GetInstance()->mView.transform_tiny		(L_pos,L->position);
 
 	// Xforms
 	L->xform_calc					();
 	RCache.set_xform_world			(L->m_xform);
-	RCache.set_xform_view			(Device.mView);
-	RCache.set_xform_project		(Device.mProject);
+	RCache.set_xform_view			(CRenderDevice::GetInstance()->mView);
+	RCache.set_xform_project		(CRenderDevice::GetInstance()->mProject);
 	enable_scissor					(L);
 	enable_dbt_bounds				(L);
 
@@ -134,8 +134,8 @@ void CRenderTarget::accum_point		(light* L)
 	{
 		RImplementation.rmNormal					();
 		// Restore projection
-		Device.mProject				= Pold;
-		Device.mFullTransform		= FTold;
-		RCache.set_xform_project	(Device.mProject);
+		CRenderDevice::GetInstance()->mProject				= Pold;
+		CRenderDevice::GetInstance()->mFullTransform		= FTold;
+		RCache.set_xform_project	(CRenderDevice::GetInstance()->mProject);
 	}
 }

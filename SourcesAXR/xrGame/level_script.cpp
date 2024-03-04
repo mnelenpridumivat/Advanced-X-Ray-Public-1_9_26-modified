@@ -160,7 +160,7 @@ LPCSTR get_weather	()
 void set_weather	(LPCSTR weather_name, bool forced)
 {
 #ifdef INGAME_EDITOR
-	if (!Device.editor())
+	if (!CRenderDevice::GetInstance()->editor())
 #endif // #ifdef INGAME_EDITOR
 		g_pGamePersistent->Environment().SetWeather(weather_name,forced);
 }
@@ -168,7 +168,7 @@ void set_weather	(LPCSTR weather_name, bool forced)
 bool set_weather_fx	(LPCSTR weather_name)
 {
 #ifdef INGAME_EDITOR
-	if (!Device.editor())
+	if (!CRenderDevice::GetInstance()->editor())
 #endif // #ifdef INGAME_EDITOR
 		return		(g_pGamePersistent->Environment().SetWeatherFX(weather_name));
 	
@@ -180,7 +180,7 @@ bool set_weather_fx	(LPCSTR weather_name)
 bool start_weather_fx_from_time	(LPCSTR weather_name, float time)
 {
 #ifdef INGAME_EDITOR
-	if (!Device.editor())
+	if (!CRenderDevice::GetInstance()->editor())
 #endif // #ifdef INGAME_EDITOR
 		return		(g_pGamePersistent->Environment().StartWeatherFXFromTime(weather_name, time));
 	
@@ -210,7 +210,7 @@ void set_time_factor(float time_factor)
 		return;
 
 #ifdef INGAME_EDITOR
-	if (Device.editor())
+	if (CRenderDevice::GetInstance()->editor())
 		return;
 #endif // #ifdef INGAME_EDITOR
 
@@ -227,13 +227,13 @@ void set_global_time_factor(float tf)
 	if (!OnServer())
 		return;
 
-	Device.time_factor(tf);
+	CRenderDevice::GetInstance()->time_factor(tf);
 	psSpeedOfSound = tf;
 }
 
 float get_global_time_factor()
 {
-	return			(Device.time_factor());
+	return			(CRenderDevice::GetInstance()->time_factor());
 }
 
 void set_game_difficulty(ESingleGameDifficulty dif)

@@ -45,7 +45,7 @@
 extern	BOOL death_anim_debug;
 #endif // DEBUG
 
-#include "../xrEngine/device.h"
+#include "../xrEngine/Device.h"
 
 #define USE_SMART_HITS
 #define USE_IK
@@ -1254,13 +1254,13 @@ if( dbg_draw_ragdoll_spawn )
 
 
 
-	//if( false &&  anim_mov_ctrl && anim_mov_blend && anim_mov_blend->blend != CBlend::eFREE_SLOT &&  anim_mov_blend->timeCurrent + Device.fTimeDelta*anim_mov_blend->speed < anim_mov_blend->timeTotal-SAMPLE_SPF-EPS)//.
+	//if( false &&  anim_mov_ctrl && anim_mov_blend && anim_mov_blend->blend != CBlend::eFREE_SLOT &&  anim_mov_blend->timeCurrent + CRenderDevice::GetInstance()->fTimeDelta*anim_mov_blend->speed < anim_mov_blend->timeTotal-SAMPLE_SPF-EPS)//.
 	//{
 	//	const Fmatrix sv_xform = mXFORM;
 	//	mXFORM.set( start_xform );
 	//	//anim_mov_blend->blendPower = 1;
-	//	anim_mov_blend->timeCurrent  += Device.fTimeDelta * anim_mov_blend->speed;
-	//	m_pPhysicsShell->AnimToVelocityState( Device.fTimeDelta, 2 * default_l_limit, 10.f * default_w_limit );
+	//	anim_mov_blend->timeCurrent  += CRenderDevice::GetInstance()->fTimeDelta * anim_mov_blend->speed;
+	//	m_pPhysicsShell->AnimToVelocityState( CRenderDevice::GetInstance()->fTimeDelta, 2 * default_l_limit, 10.f * default_w_limit );
 	//	mXFORM.set( sv_xform );
 	//}
 	IKinematics* K=smart_cast<IKinematics*>( m_EntityAlife.Visual( ) );
@@ -1453,7 +1453,7 @@ bool	CCharacterPhysicsSupport::	can_drop_active_weapon	( )
 
 void		CCharacterPhysicsSupport::in_Die(bool hit)
 {
-	if( m_hit_valide_time < Device.dwTimeGlobal || !m_sv_hit.is_valide() )
+	if( m_hit_valide_time < CRenderDevice::GetInstance()->dwTimeGlobal || !m_sv_hit.is_valide() )
 	{
 		if( m_EntityAlife.use_simplified_visual( ) )
 			return;

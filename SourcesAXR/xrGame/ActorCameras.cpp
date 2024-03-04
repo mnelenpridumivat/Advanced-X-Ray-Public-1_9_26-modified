@@ -105,8 +105,8 @@ float CActor::CameraHeight()
 
 IC float viewport_near(float& w, float& h)
 {
-	w = 2.f*VIEWPORT_NEAR*tan(deg2rad(Device.fFOV)/2.f);
-	h = w*Device.fASPECT;
+	w = 2.f*VIEWPORT_NEAR*tan(deg2rad(CRenderDevice::GetInstance()->fFOV)/2.f);
+	h = w* CRenderDevice::GetInstance()->fASPECT;
 	float	c	= _sqrt					(w*w + h*h);
 	return	_max(_max(VIEWPORT_NEAR,_max(w,h)),c);
 }
@@ -419,7 +419,7 @@ void CActor::cam_Update(float dt, float fFOV)
 	//}
 	//-Alundaio
 
-	fCurAVelocity			= vPrevCamDir.sub(cameras[eacFirstEye]->vDirection).magnitude()/Device.fTimeDelta;
+	fCurAVelocity			= vPrevCamDir.sub(cameras[eacFirstEye]->vDirection).magnitude()/ CRenderDevice::GetInstance()->fTimeDelta;
 	vPrevCamDir				= cameras[eacFirstEye]->vDirection;
 
 	// Высчитываем разницу между предыдущим и текущим Yaw \ Pitch от 1-го лица //--#SM+ Begin#--
@@ -429,8 +429,8 @@ void CActor::cam_Update(float dt, float fFOV)
 	float& cam_pitch_cur = cameras[eacFirstEye]->pitch;
 	static float cam_pitch_prev = cam_pitch_cur;
 
-	fFPCamYawMagnitude = angle_difference_signed(cam_yaw_prev, cam_yaw_cur) / Device.fTimeDelta; // L+ / R-
-	fFPCamPitchMagnitude = angle_difference_signed(cam_pitch_prev, cam_pitch_cur) / Device.fTimeDelta; //U+ / D-
+	fFPCamYawMagnitude = angle_difference_signed(cam_yaw_prev, cam_yaw_cur) / CRenderDevice::GetInstance()->fTimeDelta; // L+ / R-
+	fFPCamPitchMagnitude = angle_difference_signed(cam_pitch_prev, cam_pitch_cur) / CRenderDevice::GetInstance()->fTimeDelta; //U+ / D-
 
 	cam_yaw_prev = cam_yaw_cur;
 	cam_pitch_prev = cam_pitch_cur;

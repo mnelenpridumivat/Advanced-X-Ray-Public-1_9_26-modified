@@ -139,9 +139,9 @@ void character_shell_control::CalculateTimeDelta()
 	}
 	else
 	{
-		m_time_delta=Device.fTimeGlobal-m_Pred_Time;					
+		m_time_delta= CRenderDevice::GetInstance()->fTimeGlobal-m_Pred_Time;
 	}
-	m_Pred_Time=Device.fTimeGlobal;
+	m_Pred_Time= CRenderDevice::GetInstance()->fTimeGlobal;
 };
 
 void character_shell_control::UpdateFrictionAndJointResistanse( CPhysicsShell	* sh )

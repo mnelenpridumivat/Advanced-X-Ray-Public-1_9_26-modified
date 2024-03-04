@@ -41,12 +41,12 @@ CLightProjector::CLightProjector()
 	c_factor			= "m_plmap_factor";
 
 	cache.resize		(P_o_count);
-	Device.seqAppActivate.Add		(this);
+	CRenderDevice::GetInstance()->seqAppActivate.Add		(this);
 }
 
 CLightProjector::~CLightProjector()
 {
-	Device.seqAppActivate.Remove	(this);
+	CRenderDevice::GetInstance()->seqAppActivate.Remove	(this);
 	RT.destroy			();
 }
 
@@ -55,7 +55,7 @@ void CLightProjector::set_object	(IRenderable* O)
 	if ((0==O) || (receivers.size()>=P_o_count))	current		= 0;
 	else
 	{
-		if (!O->renderable_ShadowReceive() || RImplementation.val_bInvisible || ((CROS_impl*)O->renderable_ROS())->shadow_recv_frame==Device.dwFrame)	
+		if (!O->renderable_ShadowReceive() || RImplementation.val_bInvisible || ((CROS_impl*)O->renderable_ROS())->shadow_recv_frame== CRenderDevice::GetInstance()->dwFrame)
 		{
 			current		= 0;
 			return;
@@ -64,7 +64,7 @@ void CLightProjector::set_object	(IRenderable* O)
 		const vis_data &vis = O->renderable.visual->getVisData();
 		Fvector		C;	O->renderable.xform.transform_tiny		(C,vis.sphere.P);
 		float		R	= vis.sphere.R;
-		float		D	= C.distance_to	(Device.vCameraPosition)+R;
+		float		D	= C.distance_to	(CRenderDevice::GetInstance()->vCameraPosition)+R;
 
 		if (D < clipD(R))	current	= O;
 		else				current = 0;
@@ -83,7 +83,7 @@ void CLightProjector::set_object	(IRenderable* O)
 		}
 		if (current)				{
 			CROS_impl*	LT			= (CROS_impl*)current->renderable_ROS	();
-			LT->shadow_recv_frame	= Device.dwFrame;
+			LT->shadow_recv_frame	= CRenderDevice::GetInstance()->dwFrame;
 			receivers.push_back		(current);
 		}
 	}
@@ -98,7 +98,7 @@ void CLightProjector::setup		(int id)
 	}
 	recv&			R			= cache[id];
 	float			Rd			= R.O->renderable.visual->getVisData().sphere.R;
-	float			dist		= R.C.distance_to	(Device.vCameraPosition)+Rd;
+	float			dist		= R.C.distance_to	(CRenderDevice::GetInstance()->vCameraPosition)+Rd;
 	float			factor		= _sqr(dist/clipD(Rd))*(1-ps_r1_lmodel_lerp) + ps_r1_lmodel_lerp;
 	RCache.set_c	(c_xform,	R.UVgen);
 	Fvector&	m	= R.UVclamp_min;
@@ -143,14 +143,14 @@ void CLightProjector::calculate	()
 			Fbox	bb;		bb.xform		(O->renderable.visual->getVisData().box,O->renderable.xform);
 			if (cache[slot].BB.contains(bb))	{
 				// inside, but maybe timelimit exceeded?
-				if (Device.dwTimeGlobal > cache[slot].dwTimeValid)	bValid = FALSE;	// timeout
+				if (CRenderDevice::GetInstance()->dwTimeGlobal > cache[slot].dwTimeValid)	bValid = FALSE;	// timeout
 			} else													bValid = FALSE;	// out of bounds
 		}
 
 		// 
 		if (bValid)			{
 			// Ok, use cached version
-			cache[slot].dwFrame	= Device.dwFrame;
+			cache[slot].dwFrame	= CRenderDevice::GetInstance()->dwFrame;
 		} else {
 			taskid.push_back	(r_it);
 		}
@@ -158,7 +158,7 @@ void CLightProjector::calculate	()
 	if (taskid.empty())			return;
 
 	// Begin
-	Device.Statistic->RenderDUMP_Pcalc.Begin	();
+	CRenderDevice::GetInstance()->Statistic->RenderDUMP_Pcalc.Begin	();
 	RCache.set_RT				(RT->pRT);
 	RCache.set_ZB				(RImplementation.Target->pTempZB);
 	CHK_DX(HW.pDevice->Clear	(0,0, D3DCLEAR_ZBUFFER | (HW.Caps.bStencil?D3DCLEAR_STENCIL:0), 0,1,0 ));
@@ -168,7 +168,7 @@ void CLightProjector::calculate	()
 	for (u32 c_it=0; c_it<cache.size(); c_it++)
 	{
 		if (taskid.empty())							break;
-		if (Device.dwFrame==cache[c_it].dwFrame)	continue;
+		if (CRenderDevice::GetInstance()->dwFrame==cache[c_it].dwFrame)	continue;
 
 		// found not used slot
 		int				tid		= taskid.back();	taskid.pop_back();
@@ -184,7 +184,7 @@ void CLightProjector::calculate	()
 		R.C						= C;
 		R.C.y					+= vis.sphere.R*0.1f;		//. YURA: 0.1 can be more
 		R.BB.xform				(vis.box,O->renderable.xform).scale(0.1f);
-		R.dwTimeValid			= Device.dwTimeGlobal + ::Random.randI(time_min,time_max);
+		R.dwTimeValid			= CRenderDevice::GetInstance()->dwTimeGlobal + ::Random.randI(time_min,time_max);
 		LT->shadow_recv_slot	= c_it; 
 
 		// Msg					("[%f,%f,%f]-%f",C.C.x,C.C.y,C.C.z,C.O->renderable.visual->vis.sphere.R);
@@ -244,8 +244,8 @@ void CLightProjector::calculate	()
 		// handle invalid object-bug
 		if ((v.x*v.x+v.y*v.y+v.z*v.z)<=flt_zero)	{
 			// invalidate record, so that object will be unshadowed, but doesn't crash
-			R.dwTimeValid			= Device.dwTimeGlobal;
-			LT->shadow_recv_frame	= Device.dwFrame-1;
+			R.dwTimeValid			= CRenderDevice::GetInstance()->dwTimeGlobal;
+			LT->shadow_recv_frame	= CRenderDevice::GetInstance()->dwFrame-1;
 			LT->shadow_recv_slot	= -1; 
 			continue				;
 		}
@@ -318,10 +318,10 @@ void CLightProjector::calculate	()
 	*/
 
 	// Finita la comedia
-	Device.Statistic->RenderDUMP_Pcalc.End	();
+	CRenderDevice::GetInstance()->Statistic->RenderDUMP_Pcalc.End	();
 	
-	RCache.set_xform_project	(Device.mProject);
-	RCache.set_xform_view		(Device.mView);
+	RCache.set_xform_project	(CRenderDevice::GetInstance()->mProject);
+	RCache.set_xform_view		(CRenderDevice::GetInstance()->mView);
 }
 
 #ifdef DEBUG

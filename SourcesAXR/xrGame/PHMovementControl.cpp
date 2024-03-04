@@ -197,7 +197,7 @@ void CPHMovementControl::Calculate(Fvector& vAccel,const Fvector& camDir,float /
 	{
 		if( fis_zero(gcontact_HealthLost) )
 				m_character->SetHitType( DefineCollisionHitType( mat_injurios ) );
-		gcontact_HealthLost+=Device.fTimeDelta*GMLib.GetMaterialByIdx( mat_injurios )->fInjuriousSpeed;
+		gcontact_HealthLost+=CRenderDevice::GetInstance()->fTimeDelta*GMLib.GetMaterialByIdx( mat_injurios )->fInjuriousSpeed;
 	}
 
 */

@@ -183,7 +183,7 @@ void CGameTaskManager::SetTaskState(const shared_str& id, ETaskState state)
 
 void CGameTaskManager::UpdateTasks						()
 {
-	if(Device.Paused())		return;
+	if(CRenderDevice::GetInstance()->Paused())		return;
 
 	Level().MapManager().DisableAllPointers();
 
@@ -244,7 +244,7 @@ void CGameTaskManager::UpdateActiveTask()
 	}
 
 	m_flags.set					(eChanged, FALSE);
-	m_actual_frame				= Device.dwFrame;
+	m_actual_frame				= CRenderDevice::GetInstance()->dwFrame;
 	DiscordUpdateTask();
 }
 
