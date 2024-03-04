@@ -2,6 +2,9 @@
 #define LAYERS_XRRENDER_LIGHT_H_INCLUDED
 
 #include "../../xrcdb/ispatial.h"
+//#ifdef _EDITOR
+//#include "../../xrEngine/IGame_Persistent.h"
+//#endif
 
 #if (RENDER==R_R2) || (RENDER==R_R4)
 #	include "light_package.h"
@@ -10,6 +13,7 @@
 #endif //(RENDER==R_R2) || (RENDER==R_R4)
 
 extern ENGINE_API Fvector3 ps_ssfx_volumetric;
+
 
 class	light		:	public IRender_Light, public ISpatial
 {

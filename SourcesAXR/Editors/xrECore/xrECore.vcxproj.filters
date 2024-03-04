@@ -910,5 +910,6 @@
     <None Include="Editor\ImageEditor.ddp">
       <Filter>Editor</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

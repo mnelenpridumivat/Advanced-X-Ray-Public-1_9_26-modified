@@ -1077,4 +1077,7 @@
     <Image Include="resources\icon_LE.ico" />
     <Image Include="resources\Splash_LE.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>

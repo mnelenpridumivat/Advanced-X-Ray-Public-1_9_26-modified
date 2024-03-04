@@ -108,3 +108,15 @@ SourcesAXR/xrEngine/xrEngine.vcxproj.user
 packages/
 *.sqlite
 .vs/ProjectSettings.json
+
+# ispc generated files
+"SourcesAXR/3rd\ party/RedImage/ispc_texcomp/kernel_astc_ispc.h"
+"SourcesAXR/3rd party/RedImage/ispc_texcomp/kernel_astc_ispc_avx.h"
+"SourcesAXR/3rd party/RedImage/ispc_texcomp/kernel_astc_ispc_avx2.h"
+"SourcesAXR/3rd party/RedImage/ispc_texcomp/kernel_astc_ispc_sse2.h"
+"SourcesAXR/3rd party/RedImage/ispc_texcomp/kernel_astc_ispc_sse4.h"
+"SourcesAXR/3rd party/RedImage/ispc_texcomp/kernel_ispc.h"
+"SourcesAXR/3rd party/RedImage/ispc_texcomp/kernel_ispc_avx.h"
+"SourcesAXR/3rd party/RedImage/ispc_texcomp/kernel_ispc_avx2.h"
+"SourcesAXR/3rd party/RedImage/ispc_texcomp/kernel_ispc_sse2.h"
+"SourcesAXR/3rd party/RedImage/ispc_texcomp/kernel_ispc_sse4.h"

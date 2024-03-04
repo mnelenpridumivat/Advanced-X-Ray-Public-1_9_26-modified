@@ -4,7 +4,8 @@
 #pragma once
 // DirectX headers
 #include <d3d9.h>
-#include "directx/d3dx9.h"
+#include <d3dx9.h>
+//#include "directx/d3dx9.h"
 #include "../../Layers/xrRender/xrD3dDefs.h"
 #include "../../xrCore/Utils.hpp"
 
