@@ -307,7 +307,22 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 		}
 	}
 
-	m_all.push_back						(pIItem);
+	if (auto Repacker = smart_cast<IRepackerInterface*>(pIItem))
+	{
+		for(auto& elem : m_all)
+		{
+			if(elem->m_section_id != pIItem->m_section_id)
+			{
+				continue;
+			}
+			if(!Repacker->Repack(elem))
+			{
+				return;
+			}
+		}
+		
+	}
+	m_all.push_back(pIItem);
 
 	if(!strict_placement)
 		pIItem->m_ItemCurrPlace.type	= eItemPlaceUndefined;

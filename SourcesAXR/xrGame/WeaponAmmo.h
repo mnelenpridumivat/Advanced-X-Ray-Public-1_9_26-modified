@@ -2,6 +2,7 @@
 #include "inventory_item_object.h"
 #include "anticheat_dumpable_object.h"
 #include "CartrigeParam.h"
+#include "RepackerInterface.h"
 
 class CCartridge : public IAnticheatDumpable
 {
@@ -31,7 +32,8 @@ public:
 };
 
 class CWeaponAmmo :	
-	public CInventoryItemObject {
+	public CInventoryItemObject,
+	public IRepackerInterface {
 	typedef CInventoryItemObject		inherited;
 public:
 									CWeaponAmmo			(void);
@@ -53,6 +55,9 @@ public:
 	u32						Cost				() const override;
 
 	bool							Get					(CCartridge &cartridge);
+
+	virtual bool Repack(PIItem Other) override;
+	virtual bool IsValid() const override;
 
 	SCartridgeParam cartridge_param;
 

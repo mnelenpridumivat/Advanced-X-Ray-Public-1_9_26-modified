@@ -2063,6 +2063,11 @@ float	CWeaponMagazined::GetWeaponDeterioration	()
 	return (m_iShotNum==1) ? conditionDecreasePerShot : conditionDecreasePerQueueShot;
 };
 
+BOOL CWeaponMagazined::IsEmptyMagazine() const
+{
+	return iAmmoElapsed <= m_bNeedBulletInGun;
+}
+
 void CWeaponMagazined::save(NET_Packet &output_packet)
 {
 	inherited::save	(output_packet);

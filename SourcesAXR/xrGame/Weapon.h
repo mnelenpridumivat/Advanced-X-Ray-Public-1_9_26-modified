@@ -183,7 +183,7 @@ public:
 
 	virtual BOOL			IsMisfire			() const;
 	BOOL					CheckForMisfire		();
-	BOOL					IsEmptyMagazine		() const;
+	virtual BOOL					IsEmptyMagazine		() const;
 
 
 	BOOL					AutoSpawnAmmo		() const		{ return m_bAutoSpawnAmmo; };

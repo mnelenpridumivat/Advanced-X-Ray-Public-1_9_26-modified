@@ -940,6 +940,9 @@ void CBulletManager::Render	()
 			sphere.c					= *i;
 			renderer.draw_ellipse		(sphere, color_xrgb(255, 0, 0));
 
+			Fvector A = *i;
+			Fvector B = *(i + 1);
+
 			renderer.draw_line			(Fidentity, *i, *(i + 1), color_xrgb(0, 255, 0));
 
 			sphere.c					= *(i + 1);

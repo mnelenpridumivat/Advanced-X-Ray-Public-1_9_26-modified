@@ -81,7 +81,10 @@ namespace collide
 		ray_defs(Fvector _start, Fvector _end, u32 _flags, rq_target _tgt)
 		{
 			start = _start;
-			dir = (_end - _start).normalize();
+			dir = _end - _start;
+			dir.normalize();
+			//auto EndCopy = _end;
+			//dir = (EndCopy - _start).normalize();
 			range = _end.distance_to(_start);
 			flags = _flags;
 			tgt = _tgt;

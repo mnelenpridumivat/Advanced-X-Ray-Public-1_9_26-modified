@@ -161,6 +161,8 @@ public:
 			bool	HasFireModes		() { return m_bHasDifferentFireModes; };
 	int		GetCurrentFireMode	() override { return m_aFireModes[m_iCurFireMode]; };
 
+	virtual BOOL					IsEmptyMagazine() const override;
+
 	void	save				(NET_Packet &output_packet) override;
 	void	load				(IReader &input_packet) override;
 

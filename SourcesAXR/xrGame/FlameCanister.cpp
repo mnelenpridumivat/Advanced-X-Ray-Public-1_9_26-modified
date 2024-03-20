@@ -125,3 +125,30 @@ u32 CFlameCanister::Cost() const
 
 	return res;
 }
+
+bool CFlameCanister::Repack(PIItem Other)
+{
+	CFlameCanister* OtherCasted = smart_cast<CFlameCanister*>(Other);
+	VERIFY(OtherCasted);
+	if (OtherCasted->GetCondition() == 1.0f)
+	{
+		return true;
+	}
+	float Sum = OtherCasted->GetCondition() + GetCondition();
+	if (Sum > 1.0f)
+	{
+		SetCondition(Sum - OtherCasted->GetCondition());
+		OtherCasted->SetCondition(1.0f);
+		return true;
+	}
+	OtherCasted->SetCondition(Sum);
+	if (OnServer()) {
+		SetDropManual(TRUE);
+	}
+	return false;
+}
+
+bool CFlameCanister::IsValid() const
+{
+	return GetCondition();
+}

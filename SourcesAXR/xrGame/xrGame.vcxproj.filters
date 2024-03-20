@@ -7596,6 +7596,9 @@
     <ClInclude Include="FlamethrowerTraceCollision.h">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Flamethrower</Filter>
     </ClInclude>
+    <ClInclude Include="RepackerInterface.h">
+      <Filter>Core\Client\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -11382,6 +11385,9 @@
     </ClCompile>
     <ClCompile Include="FlamethrowerTraceCollision.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Flamethrower</Filter>
+    </ClCompile>
+    <ClCompile Include="RepackerInterface.cpp">
+      <Filter>Core\Client\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

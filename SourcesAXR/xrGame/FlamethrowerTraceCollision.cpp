@@ -29,87 +29,20 @@ BOOL CFlamethrowerTraceCollision::test_callback(const collide::ray_defs& rd, COb
 	*		ID()
 	*/
 
-	bool bRes = TRUE;
-	if (object) {
+	//bool bRes = true;
+	if(object)
+	{
 		CEntity* entity = smart_cast<CEntity*>(object);
-		if (entity && entity->g_Alive() && (entity->ID() != pData->TracedObj->GetParentWeapon()->H_Parent()->ID())) {
-			ICollisionForm* cform = entity->collidable.model;
-			if ((NULL != cform) && (cftObject == cform->Type())) {
-
-				// TODO: add check for big enemies (like pseudogiant)
-				return false;
-
-				CActor* actor = smart_cast<CActor*>(entity);
-				CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(entity);
-				// в кого попали?
-				if (actor && IsGameTypeSingle()/**/ || stalker/**/) {
-					// попали в актера или сталкера
-					Fsphere S = cform->getSphere();
-					entity->XFORM().transform_tiny(S.P);
-					float dist = rd.range;
-					// проверим попали ли мы в описывающую сферу 
-					if (Fsphere::rpNone != S.intersect_full(pData->TracedObj->GetPosition(), pData->TracedObj->GetDirection(), dist))
-					{
-						// да попали, найдем кто стрелял
-						bool play_whine = true;
-						CObject* initiator = Level().Objects.net_Find(pData->TracedObj->GetParentWeapon()->H_Parent()->ID());
-						if (actor) {
-							// попали в актера
-							float hpf = 1.f;
-							float ahp = actor->HitProbability();
-
-							float					game_difficulty_hit_probability = actor->HitProbability();
-							CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(initiator);
-							if (stalker)
-							{
-								hpf = stalker->SpecificCharacter().hit_probability_factor();
-							}
-
-							float					dist_factor = 1.f;
-							ahp = dist_factor * game_difficulty_hit_probability + (1.f - dist_factor) * 1.f;
-
-							if (Random.randF(0.f, 1.f) > (ahp * hpf)) {
-								bRes = FALSE;	// don't hit actor
-								play_whine = true;		// play whine sound
-							}
-							else {
-								// real test actor CFORM
-								//Level().BulletManager().m_rq_results.r_clear();
-
-								/*if (cform->_RayQuery(rd, Level().BulletManager().m_rq_results)) {
-									bRes = TRUE;		// hit actor
-									play_whine = false;	// don't play whine sound
-								}
-								else {
-									bRes = FALSE;	// don't hit actor
-									play_whine = true;		// play whine sound
-								}*/
-							}
-						}
-						// play whine sound
-						if (play_whine)
-						{
-							Fvector					pt;
-							//pt.mad(bullet->bullet_pos, bullet->dir, dist);
-							//Level().BulletManager().PlayWhineSound(bullet, initiator, pt);
-
-							luabind::functor<void> m_functor;
-							if (ai().script_engine().functor("mfs_functions.on_play_whine_sound", m_functor))
-								m_functor();
-						}
-					}
-					else
-					{
-						// don't test this object again (return FALSE)
-						bRes = FALSE;
-					}
-
-				}
-			}
+		if(!entity)
+		{
+			return false;
+		}
+		if(entity->ID() == pData->TracedObj->GetParentWeapon()->H_Parent()->ID())
+		{
+			return false;
 		}
 	}
-
-	return bRes;
+	return true;
 }
 
 void CFlamethrowerTraceCollision::UpdateParticles()
@@ -162,6 +95,7 @@ inline CFlamethrower* CFlamethrowerTraceCollision::GetParentWeapon() const
 
 bool CFlamethrowerTraceCollision::IsReadyToUpdateCollisions()
 {
+	return true;
 	float Dist = GetCurrentRadius()*0.8;
 	if(IsCollided())
 	{
@@ -266,7 +200,10 @@ void CFlamethrowerTraceCollision::Update(float DeltaTime)
 	collide::ray_defs RD(old_pos, m_position, CDB::OPT_FULL_TEST, collide::rqtBoth);
 	FlamethrowerTraceData data;
 	data.TracedObj = this;
-	m_direction = (m_position - old_pos).normalize();
+	m_direction = m_position - old_pos;
+	m_direction.normalize();
+	//auto PosCopy = m_position;
+	//m_direction = (PosCopy - old_pos).normalize();
 	if(Level().ObjectSpace.RayQuery(storage, RD, CFlamethrowerTraceCollision::hit_callback, &data, CFlamethrowerTraceCollision::test_callback, NULL))
 	{
 		m_position = old_pos + m_direction * data.HitDist;

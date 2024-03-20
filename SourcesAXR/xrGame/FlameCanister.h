@@ -2,9 +2,11 @@
 
 #include "CartrigeParam.h"
 #include "inventory_item_object.h"
+#include "RepackerInterface.h"
 
 class CFlameCanister :
-	public CInventoryItemObject {
+	public CInventoryItemObject,
+	public IRepackerInterface {
 	typedef CInventoryItemObject		inherited;
 public:
 	CFlameCanister(void);
@@ -25,6 +27,9 @@ public:
 	bool					Useful() const override;
 	float					Weight() const override;
 	u32						Cost() const override;
+
+	virtual bool Repack(PIItem Other) override;
+	virtual bool IsValid() const override;
 
 	SCartridgeParam cartridge_param;
 
