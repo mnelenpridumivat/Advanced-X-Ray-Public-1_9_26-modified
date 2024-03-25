@@ -12,30 +12,25 @@
 
 BOOL CFlamethrowerTraceCollision::hit_callback(collide::rq_result& result, LPVOID params)
 {
-	if (result.O == nullptr) {
-		FlamethrowerTraceData* pData = static_cast<FlamethrowerTraceData*>(params);
+	FlamethrowerTraceData* pData = static_cast<FlamethrowerTraceData*>(params);
+	if(!result.O)
+	{
 		pData->HitDist = result.range;
-		return true;
+		return false;
 	}
-	return false;
+	return true;
 }
 
 BOOL CFlamethrowerTraceCollision::test_callback(const collide::ray_defs& rd, CObject* object, LPVOID params)
 {
 	FlamethrowerTraceData* pData = static_cast<FlamethrowerTraceData*>(params);
 
-	/*
-	* H_Parent()->ID(),
-	*		ID()
-	*/
-
-	//bool bRes = true;
 	if(object)
 	{
 		CEntity* entity = smart_cast<CEntity*>(object);
 		if(!entity)
 		{
-			return false;
+			return true;
 		}
 		if(entity->ID() == pData->TracedObj->GetParentWeapon()->H_Parent()->ID())
 		{
@@ -71,6 +66,9 @@ CFlamethrowerTraceCollision::CFlamethrowerTraceCollision(CFlamethrowerTraceManag
 
 CFlamethrowerTraceCollision::~CFlamethrowerTraceCollision()
 {
+	if (IsActive()) {
+		Deactivate();
+	}
 }
 
 void CFlamethrowerTraceCollision::Load(LPCSTR section)
@@ -81,6 +79,7 @@ void CFlamethrowerTraceCollision::Load(LPCSTR section)
 	m_RadiusMaxTime = pSettings->r_float(section, "RadiusMaxTime");
 	m_Velocity = pSettings->r_float(section, "Velocity");
 	m_LifeTime = pSettings->r_float(section, "LifeTime");
+	m_GravityAcceleration = pSettings->r_float(section, "GravityAcceleration");
 
 	string256 full_name;
 	// flames
@@ -95,7 +94,12 @@ inline CFlamethrower* CFlamethrowerTraceCollision::GetParentWeapon() const
 
 bool CFlamethrowerTraceCollision::IsReadyToUpdateCollisions()
 {
-	return true;
+	//return true;
+	if(!m_launched)
+	{
+		m_launched = true;
+		return false;
+	}
 	float Dist = GetCurrentRadius()*0.8;
 	if(IsCollided())
 	{
@@ -167,8 +171,22 @@ void CFlamethrowerTraceCollision::Activate()
 
 void CFlamethrowerTraceCollision::Deactivate()
 {
+
+#ifdef DEBUG
+	if(Next)
+	{
+		Next->Prev = nullptr;
+		Next = nullptr;
+	}
+	if (Prev)
+	{
+		Prev->Next = nullptr;
+		Prev = nullptr;
+	}
+#endif
 	m_IsActive = false;
 	m_IsCollided = false;
+	m_launched = false;
 	m_GravityVelocity = 0.0f;
 	m_current_time = 0.0f;
 	m_particles->Stop();
@@ -189,7 +207,7 @@ void CFlamethrowerTraceCollision::Update(float DeltaTime)
 	if (IsCollided()) {
 		return;
 	}
-	m_GravityVelocity += physics_world()->Gravity() * DeltaTime;
+	m_GravityVelocity += m_GravityAcceleration * DeltaTime;
 	auto old_pos = m_position;
 	//invXFORM.transform(old_pos);
 	m_position = m_position + m_direction *m_Velocity* DeltaTime - Fvector{ 0.0f, m_GravityVelocity * DeltaTime, 0.0f };
@@ -210,9 +228,9 @@ void CFlamethrowerTraceCollision::Update(float DeltaTime)
 		m_IsCollided = true;
 	}
 
-#ifdef DEBUG
-	Level().BulletManager().AddBulletMoveChunk(old_pos, m_position);
-#endif
+//#ifdef DEBUG
+//	Level().BulletManager().AddBulletMoveChunk(old_pos, m_position);
+//#endif
 
 	UpdateParticles();
 
@@ -220,6 +238,10 @@ void CFlamethrowerTraceCollision::Update(float DeltaTime)
 
 CFlamethrowerTraceManager::CFlamethrowerTraceManager(CFlamethrower* flamethrower) : m_flamethrower(flamethrower)
 {
+
+#ifdef DEBUG
+	Level().BulletManager().MarkFlamethrowerTraceToDraw(this);
+#endif
 }
 
 CFlamethrowerTraceManager::~CFlamethrowerTraceManager()
@@ -325,6 +347,15 @@ const CFlamethrowerTraceManager::FOverlappedObjects& CFlamethrowerTraceManager::
 
 void CFlamethrowerTraceManager::LaunchTrace(const Fvector& StartPos, const Fvector& StartDir)
 {
+	if(LastLaunched && LastLaunched->IsActive())
+	{
+		auto PrevLoc = LastLaunched->GetCurrentPosition();
+		auto CurR = LastLaunched->GetCurrentRadius();
+		auto dists = LastLaunched->GetCurrentPosition().distance_to_sqr(StartPos);
+		if (dists <= CurR * CurR) {
+			return;
+		}
+	}
 	auto First = CollisionsPool.front();
 	if(First->IsActive())
 	{
@@ -334,8 +365,17 @@ void CFlamethrowerTraceManager::LaunchTrace(const Fvector& StartPos, const Fvect
 	{
 		CollisionsPool.pop_front();
 	}
+
+#ifdef DEBUG
+	if(LastLaunched && LastLaunched->IsActive())
+	{
+		LastLaunched->Next = First;
+		First->Prev = LastLaunched;
+	}
+	LastLaunched = First;
+#endif
 	First->SetTransform(StartPos, StartDir);
 	First->Activate();
 	CollisionsPool.push_back(First);
-	Msg("Current collisions num in pool: [%d]", CollisionsPool.size());
+	//Msg("Current collisions num in pool: [%d]", CollisionsPool.size());
 }

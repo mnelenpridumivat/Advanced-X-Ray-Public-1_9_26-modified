@@ -16,6 +16,7 @@ class CFlamethrowerTraceCollision :
 	CFlamethrowerTraceManager* m_flamethrower;
 	bool m_IsActive = false;
 	bool m_IsCollided = false;
+	bool m_launched = false;
 	float m_current_time = 0.0f;
 	//Fmatrix XFORM;
 	//Fmatrix invXFORM;
@@ -34,6 +35,7 @@ class CFlamethrowerTraceCollision :
 	float m_RadiusCollided = 0.0f;
 	float m_Velocity = 0.0f;
 	float m_GravityVelocity = 0.0f;
+	float m_GravityAcceleration = 0.0f;
 
 	CParticlesObject* m_particles = nullptr;
 
@@ -48,6 +50,11 @@ class CFlamethrowerTraceCollision :
 	void UpdateParticles();
 
 public:
+
+#ifdef DEBUG
+	CFlamethrowerTraceCollision* Next = nullptr;
+	CFlamethrowerTraceCollision* Prev = nullptr;
+#endif
 
 	CFlamethrowerTraceCollision(CFlamethrowerTraceManager* flamethrower);
 	~CFlamethrowerTraceCollision();
@@ -97,6 +104,11 @@ class CFlamethrowerTraceManager :
 	float LifeTimeGroundAddition;
 
 public:
+
+#ifdef DEBUG
+	CFlamethrowerTraceCollision* LastLaunched = nullptr;
+#endif
+
 	CFlamethrowerTraceManager(CFlamethrower* flamethrower);
 	~CFlamethrowerTraceManager();
 

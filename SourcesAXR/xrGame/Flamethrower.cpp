@@ -779,7 +779,7 @@ void CFlamethrower::OnShot()
 
 	//дым из ствола
 	ForceUpdateFireParticles();
-	StartSmokeParticles(get_LastFP(), vel);
+	//StartSmokeParticles(get_LastFP(), vel);
 
 	// Проиграем звук помпы отдельно, если не будет работать то будем думать что делать и как быть
 	if (m_sounds.FindSoundItem("sndPumpGun", false))
@@ -1322,7 +1322,8 @@ void CFlamethrower::InitAddons()
 	}
 
 	{
-		m_sFlameParticlesCurrent = m_sFlameParticles;
+		//m_sFlameParticlesCurrent = m_sFlameParticles;
+		m_sFlameParticlesCurrent = "";
 		m_sSmokeParticlesCurrent = m_sSmokeParticles;
 		m_sSndShotCurrent = "sndShot";
 
@@ -1565,6 +1566,9 @@ void CFlamethrower::save(NET_Packet& output_packet)
 	inherited::save(output_packet);
 	save_data(m_is_overheated, output_packet);
 	save_data(m_overheating_state, output_packet);
+	save_data(m_current_charge, output_packet);
+	save_data(m_current_fuel_level, output_packet);
+	save_data(m_fuel_section_name, output_packet);
 }
 
 void CFlamethrower::load(IReader& input_packet)
@@ -1572,6 +1576,9 @@ void CFlamethrower::load(IReader& input_packet)
 	inherited::load(input_packet);
 	load_data(m_is_overheated, input_packet);
 	load_data(m_overheating_state, input_packet);
+	load_data(m_current_charge, input_packet);
+	load_data(m_current_fuel_level, input_packet);
+	load_data(m_fuel_section_name, input_packet);
 }
 
 void CFlamethrower::SpawnFuelCanister(float Condition, LPCSTR ammoSect, u32 ParentID)

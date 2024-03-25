@@ -20,6 +20,7 @@
 #	include "debug_renderer.h"
 #endif
 
+#include "FlamethrowerTraceCollision.h"
 #include "Weapon.h"
 
 #define HIT_POWER_EPSILON 0.05f
@@ -930,30 +931,79 @@ float SqrDistancePointToSegment(const Fvector& pt, const Fvector& orig, const Fv
 void CBulletManager::Render	()
 {
 #ifdef DEBUG
-	if (g_bDrawBulletHit && !m_bullet_points.empty()) {
-		VERIFY							(!(m_bullet_points.size() % 2));
-		CDebugRenderer& renderer		= Level().debug_renderer();
-		Fmatrix	sphere					= Fmatrix().scale(.05f, .05f, .05f);
-		BulletPoints::const_iterator	i = m_bullet_points.begin();
-		BulletPoints::const_iterator	e = m_bullet_points.end();
-		for ( ; i != e; i+=2) {
-			sphere.c					= *i;
-			renderer.draw_ellipse		(sphere, color_xrgb(255, 0, 0));
+	if (g_bDrawBulletHit){
+		if (!m_bullet_points.empty()) {
+			VERIFY(!(m_bullet_points.size() % 2));
+			CDebugRenderer& renderer = Level().debug_renderer();
+			Fmatrix	sphere = Fmatrix().scale(.05f, .05f, .05f);
+			BulletPoints::const_iterator	i = m_bullet_points.begin();
+			BulletPoints::const_iterator	e = m_bullet_points.end();
+			for (; i != e; i += 2) {
+				sphere.c = *i;
+				renderer.draw_ellipse(sphere, color_xrgb(255, 0, 0));
 
-			Fvector A = *i;
-			Fvector B = *(i + 1);
+				Fvector A = *i;
+				Fvector B = *(i + 1);
 
-			renderer.draw_line			(Fidentity, *i, *(i + 1), color_xrgb(0, 255, 0));
+				renderer.draw_line(Fidentity, *i, *(i + 1), color_xrgb(0, 255, 0));
 
-			sphere.c					= *(i + 1);
-			renderer.draw_ellipse		(sphere, color_xrgb(255, 0, 0));
+				sphere.c = *(i + 1);
+				renderer.draw_ellipse(sphere, color_xrgb(255, 0, 0));
+			}
+
+			if (m_bullet_points.size() > 32768) {
+				m_bullet_points.clear_not_free();
+			}
 		}
+		if(!m_flamethrower_managers.empty())
+		{
+			CDebugRenderer& renderer = Level().debug_renderer();
+			Fmatrix	sphere = Fmatrix().scale(.05f, .05f, .05f);
+			for(auto& elem : m_flamethrower_managers)
+			{
+				auto RecentlyLaunched = elem->LastLaunched;
+				if (!RecentlyLaunched)
+				{
+					continue;
+				}
+				auto PrevRecently = RecentlyLaunched->Prev;
+				if(!PrevRecently)
+				{
+					continue;
+				}
+				do
+				{
+					sphere.scale(
+						RecentlyLaunched->GetCurrentRadius(),
+						RecentlyLaunched->GetCurrentRadius(),
+						RecentlyLaunched->GetCurrentRadius()
+					);
+					sphere.c = RecentlyLaunched->GetCurrentPosition();
+					renderer.draw_ellipse(sphere, color_xrgb(255, 0, 0));
 
-		if (m_bullet_points.size() > 32768)
-			m_bullet_points.clear_not_free	();
+					renderer.draw_line(
+						Fidentity, 
+						RecentlyLaunched->GetCurrentPosition(), 
+						PrevRecently->GetCurrentPosition(), 
+						color_xrgb(0, 255, 0));
+
+					sphere.scale(
+						PrevRecently->GetCurrentRadius(),
+						PrevRecently->GetCurrentRadius(),
+						PrevRecently->GetCurrentRadius()
+					);
+					sphere.c = PrevRecently->GetCurrentPosition();
+					renderer.draw_ellipse(sphere, color_xrgb(255, 0, 0));
+					RecentlyLaunched = PrevRecently;
+					PrevRecently = RecentlyLaunched->Prev;
+				} while (PrevRecently && PrevRecently->IsActive());
+			}
+		}
 	}
-	else
-		m_bullet_points.clear_not_free	();
+	else {
+		m_bullet_points.clear_not_free();
+		m_flamethrower_managers.erase(m_flamethrower_managers.begin(), m_flamethrower_managers.end());
+	}
 
 	//0-рикошет
 	//1-застрявание пули в материале
@@ -1034,6 +1084,11 @@ void CBulletManager::AddBulletMoveChunk(Fvector A, Fvector B)
 {
 	m_bullet_points.push_back(A);
 	m_bullet_points.push_back(B);
+}
+
+void CBulletManager::MarkFlamethrowerTraceToDraw(CFlamethrowerTraceManager* Manager)
+{
+	m_flamethrower_managers.insert(Manager);
 }
 #endif
 
