@@ -98,7 +98,7 @@ void CPsyDogAura::update_schedule()
 	if (active()) {
 		if (!need_be_active) {
 			m_effector->switch_off	();
-			m_effector				= 0;
+			m_effector				= nullptr;
 		}
 	} else {
 		if (need_be_active) {
@@ -114,7 +114,7 @@ void CPsyDogAura::on_death()
 {
 	if (active()) {
 		m_effector->switch_off	();
-		m_effector				= 0;
+		m_effector				= nullptr;
 	}
 }
 

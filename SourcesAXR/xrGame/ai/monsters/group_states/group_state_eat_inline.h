@@ -210,7 +210,7 @@ void CStateGroupEatAbstract::setup_substates()
 		// Определить позицию ближайшей боны у трупа
 		Fvector nearest_bone_pos;
 		const CEntityAlive *corpse = object->EatedCorpse;
-		if ((corpse->m_pPhysicsShell == NULL) || (!corpse->m_pPhysicsShell->isActive())) {
+		if ((corpse->m_pPhysicsShell == nullptr) || (!corpse->m_pPhysicsShell->isActive())) {
 			nearest_bone_pos	= corpse->Position(); 
 		} else nearest_bone_pos = object->character_physics_support()->movement()->PHCaptureGetNearestElemPos(corpse);
 
@@ -291,7 +291,7 @@ void CStateGroupEatAbstract::setup_substates()
 			}
 		#endif //#ifdef DEBUG
 
-		if ( (corpse->m_pPhysicsShell == NULL) || (!corpse->m_pPhysicsShell->isActive()) ) {
+		if ( (corpse->m_pPhysicsShell == nullptr) || (!corpse->m_pPhysicsShell->isActive()) ) {
 			nearest_bone_pos	= corpse->Position();
 		} else nearest_bone_pos = object->character_physics_support()->movement()->PHCaptureGetNearestElemPos(corpse);
 
@@ -343,7 +343,7 @@ TEMPLATE_SPECIALIZATION
 void CStateGroupEatAbstract::remove_links	(CObject* object)
 {
 	if (corpse == object)
-		corpse	= 0;
+		corpse	= nullptr;
 }
 
 #undef TEMPLATE_SPECIALIZATION

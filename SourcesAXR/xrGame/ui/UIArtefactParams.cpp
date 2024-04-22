@@ -19,24 +19,24 @@ CUIArtefactParams::CUIArtefactParams()
 {
 	for ( u32 i = 0; i < ALife::infl_max_count; ++i )
 	{
-		m_immunity_item[i] = NULL;
+		m_immunity_item[i] = nullptr;
 	}
 
-	m_fHealthRestoreSpeed = NULL;
-	m_fRadiationRestoreSpeed = NULL;
-	m_fSatietyRestoreSpeed = NULL;
-	m_fPowerRestoreSpeed = NULL;
-	m_fBleedingRestoreSpeed = NULL;
-	m_fThirstRestoreSpeed = NULL;
-	m_fIntoxicationRestoreSpeed = NULL;
-	m_fSleepenessRestoreSpeed = NULL;
-	m_fAlcoholismRestoreSpeed = NULL;
-	m_fPsyHealthRestoreSpeed = NULL;
-	m_fWalkAccel = NULL;
-	m_fJumpSpeed = NULL;
-	m_additional_weight = NULL;
-	m_iArtefactRank = NULL;
-	m_fChargeLevel = NULL;
+	m_fHealthRestoreSpeed = nullptr;
+	m_fRadiationRestoreSpeed = nullptr;
+	m_fSatietyRestoreSpeed = nullptr;
+	m_fPowerRestoreSpeed = nullptr;
+	m_fBleedingRestoreSpeed = nullptr;
+	m_fThirstRestoreSpeed = nullptr;
+	m_fIntoxicationRestoreSpeed = nullptr;
+	m_fSleepenessRestoreSpeed = nullptr;
+	m_fAlcoholismRestoreSpeed = nullptr;
+	m_fPsyHealthRestoreSpeed = nullptr;
+	m_fWalkAccel = nullptr;
+	m_fJumpSpeed = nullptr;
+	m_additional_weight = nullptr;
+	m_iArtefactRank = nullptr;
+	m_fChargeLevel = nullptr;
 }
 
 CUIArtefactParams::~CUIArtefactParams()
@@ -521,8 +521,8 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 
 UIArtefactParamItem::UIArtefactParamItem()
 {
-	m_caption   = NULL;
-	m_value     = NULL;
+	m_caption   = nullptr;
+	m_value     = nullptr;
 	m_magnitude = 1.0f;
 	m_sign_inverse = false;
 	m_show_sign = false;

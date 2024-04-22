@@ -59,7 +59,7 @@ void character_hit_animation_controller::SetupHitMotions(IKinematicsAnimated &ca
 
 	base_bone	= smart_cast<IKinematics*>(&ca)->LL_BoneID("bip01_spine1");//bip01_spine1
 	for( u16 i = 0; num_anims>i; ++i )
-		block_blends[i] = 0;
+		block_blends[i] = nullptr;
 
 }
 ICF int sign(float x)
@@ -89,7 +89,7 @@ IC void	play_cycle( IKinematicsAnimated* CA, const MotionID &m, u8 channel, CBle
 		if( blend_pecent < g_params.reduce_blend )
 			power *= g_params.reduce_power_factor;
 	}
-	CBlend*	B = ( CA->PlayCycle( m, mixin, 0, 0 ,channel ) ) ;
+	CBlend*	B = ( CA->PlayCycle( m, mixin, nullptr, nullptr ,channel ) ) ;
 	B->blendAmount = power;
 	B->blendPower  = power;	
 	blend_block	   = B;

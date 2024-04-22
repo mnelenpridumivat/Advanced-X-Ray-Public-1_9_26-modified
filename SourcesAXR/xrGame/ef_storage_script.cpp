@@ -32,13 +32,13 @@ float evaluate(CEF_Storage *ef_storage, LPCSTR function, CScriptGameObject *_0, 
 		return		(0.f);
 	}
 
-	ef_storage->non_alife().member()	= smart_cast<CEntityAlive*>(_0 ? &_0->object() : 0);
+	ef_storage->non_alife().member()	= smart_cast<CEntityAlive*>(_0 ? &_0->object() : nullptr);
 	if (_0 && !ef_storage->non_alife().member()) {
 		ai().script_engine().script_log(eLuaMessageTypeError,"object %s is not herited from CSE_ALifeSchedulable!",*_0->cName());
 		return		(0.f);
 	}
 	
-	ef_storage->non_alife().enemy()	= smart_cast<CEntityAlive*>(_1 ? &_1->object() : 0);
+	ef_storage->non_alife().enemy()	= smart_cast<CEntityAlive*>(_1 ? &_1->object() : nullptr);
 	if (_1 && !ef_storage->non_alife().enemy()) {
 		ai().script_engine().script_log(eLuaMessageTypeError,"object %s is not herited from CSE_ALifeSchedulable!",*_1->cName());
 		return		(0.f);
@@ -52,17 +52,17 @@ float evaluate(CEF_Storage *ef_storage, LPCSTR function, CScriptGameObject *_0, 
 
 float evaluate(CEF_Storage *ef_storage, LPCSTR function, CScriptGameObject *_0, CScriptGameObject *_1, CScriptGameObject *_2)
 {
-	return			(evaluate(ef_storage,function,_0,_1,_2,0));
+	return			(evaluate(ef_storage,function,_0,_1,_2,nullptr));
 }
 
 float evaluate(CEF_Storage *ef_storage, LPCSTR function, CScriptGameObject *_0, CScriptGameObject *_1)
 {
-	return			(evaluate(ef_storage,function,_0,_1,0,0));
+	return			(evaluate(ef_storage,function,_0,_1,nullptr,nullptr));
 }
 
 float evaluate(CEF_Storage *ef_storage, LPCSTR function, CScriptGameObject *_0)
 {
-	return			(evaluate(ef_storage,function,_0,0,0,0));
+	return			(evaluate(ef_storage,function,_0,nullptr,nullptr,nullptr));
 }
 
 float evaluate(CEF_Storage *ef_storage, LPCSTR function, CSE_ALifeObject *_0, CSE_ALifeObject *_1, CSE_ALifeObject *_2, CSE_ALifeObject *_3)
@@ -95,17 +95,17 @@ float evaluate(CEF_Storage *ef_storage, LPCSTR function, CSE_ALifeObject *_0, CS
 
 float evaluate(CEF_Storage *ef_storage, LPCSTR function, CSE_ALifeObject *_0, CSE_ALifeObject *_1, CSE_ALifeObject *_2)
 {
-	return			(evaluate(ef_storage,function,_0,_1,_2,0));
+	return			(evaluate(ef_storage,function,_0,_1,_2,nullptr));
 }
 
 float evaluate(CEF_Storage *ef_storage, LPCSTR function, CSE_ALifeObject *_0, CSE_ALifeObject *_1)
 {
-	return			(evaluate(ef_storage,function,_0,_1,0,0));
+	return			(evaluate(ef_storage,function,_0,_1,nullptr,nullptr));
 }
 
 float evaluate(CEF_Storage *ef_storage, LPCSTR function, CSE_ALifeObject *_0)
 {
-	return			(evaluate(ef_storage,function,_0,0,0,0));
+	return			(evaluate(ef_storage,function,_0,nullptr,nullptr,nullptr));
 }
 
 #pragma optimize("s",on)

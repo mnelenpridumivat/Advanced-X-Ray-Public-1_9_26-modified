@@ -101,7 +101,7 @@ _action  actions[]		= {
 //	{ "alife_command",		kALIFE_CMD				,_sp},		
 	
 																
-	{ NULL, 				kLASTACTION				,_both}		
+	{nullptr, 				kLASTACTION				,_both}		
 };															
 
 _keyboard keyboards[] = {
@@ -169,7 +169,7 @@ _keyboard keyboards[] = {
 	{ "mouse2",			MOUSE_2			},	{ "mouse3",			MOUSE_3			},
 	{ "mouse4",			MOUSE_4			},	{ "mouse5",			MOUSE_5			},
 	{ "mouse6",			MOUSE_6			},	{ "mouse7",			MOUSE_7			},
-	{ "mouse8",			MOUSE_8			},	{ NULL, 			0				}
+	{ "mouse8",			MOUSE_8			},	{nullptr, 			0				}
 };
 
 void initialize_bindings()
@@ -179,12 +179,12 @@ void initialize_bindings()
 	while(true)
 	{
 		_keyboard& _k1			= keyboards[i1];
-		if(_k1.key_name==NULL)	break;
+		if(_k1.key_name== nullptr)	break;
 		int i2 = i1;
 		while (true)
 		{
 			_keyboard& _k2			= keyboards[i2];
-			if(_k2.key_name==NULL)	break;
+			if(_k2.key_name== nullptr)	break;
 			if(_k1.dik==_k2.dik && i1!=i2)
 			{
 				Msg("%s==%s",_k1.key_name,_k2.key_name);
@@ -229,7 +229,7 @@ LPCSTR id_to_action_name(EGameActions _id)
 		++idx;
 	}
 	Msg				("! cant find corresponding [action_name] for id");
-	return			NULL;
+	return nullptr;
 }
 
 EGameActions action_name_to_id(LPCSTR _name)
@@ -251,7 +251,7 @@ _action* action_name_to_ptr(LPCSTR _name)
 		++idx;
 	}
 	Msg				("! cant find corresponding [id] for action_name %s", _name);
-	return			NULL;
+	return nullptr;
 }
 
 LPCSTR	dik_to_keyname			(int _dik)
@@ -260,7 +260,7 @@ LPCSTR	dik_to_keyname			(int _dik)
 	if(kb)
 		return kb->key_name;
 	else
-		return NULL;
+		return nullptr;
 }
 
 _keyboard* dik_to_ptr(int _dik, bool bSafe)
@@ -275,7 +275,7 @@ _keyboard* dik_to_ptr(int _dik, bool bSafe)
 	}	
 	if (!bSafe)
 		Msg			("! cant find corresponding [_keyboard] for dik");
-	return			NULL;
+	return nullptr;
 }
 
 int	keyname_to_dik (LPCSTR _name)
@@ -296,7 +296,7 @@ _keyboard*	keyname_to_ptr(LPCSTR _name)
 	}	
 
 	Msg				("! cant find corresponding [_keyboard*] for keyname %s", _name);
-	return			NULL;
+	return nullptr;
 }
 
 bool is_group_not_conflicted(_key_group g1, _key_group g2)
@@ -385,7 +385,7 @@ bool GetActionAllBinding(LPCSTR _action, char* dst_buff, int dst_buff_sz)
 	{
 		xr_strcpy(sec, pbinding->m_keyboard[1]->key_local_name.c_str());
 	}
-	if(NULL==pbinding->m_keyboard[0] && NULL==pbinding->m_keyboard[1])
+	if(nullptr ==pbinding->m_keyboard[0] && nullptr ==pbinding->m_keyboard[1])
 	{
 		xr_sprintf		(dst_buff, dst_buff_sz, "%s", CStringTable().translate("st_key_notbinded").c_str());
 	}
@@ -448,10 +448,10 @@ public:
 				bool b_conflict = !is_group_not_conflicted(binding->m_action->key_group, curr_pbinding->m_action->key_group);
 
 				if(binding->m_keyboard[0]==pkeyboard && b_conflict)
-					binding->m_keyboard[0]=NULL;
+					binding->m_keyboard[0]= nullptr;
 				
 				if(binding->m_keyboard[1]==pkeyboard && b_conflict)
-					binding->m_keyboard[1]=NULL;
+					binding->m_keyboard[1]= nullptr;
 			}
 		}
 
@@ -489,7 +489,7 @@ public:
 	{
 		int action_id						= action_name_to_id			(args);
 		_binding*	pbinding				= &g_key_bindings[action_id];
-		pbinding->m_keyboard[m_work_idx]	= NULL;
+		pbinding->m_keyboard[m_work_idx]	= nullptr;
 
 		CStringTable::ReparseKeyBindings();
 	}
@@ -524,8 +524,8 @@ public:
 		for(int idx=0; idx<bindings_count;++idx)
 		{
 			_binding* pbinding		= &g_key_bindings[idx];
-			pbinding->m_keyboard[0]	= NULL;
-			pbinding->m_keyboard[1]	= NULL;
+			pbinding->m_keyboard[0]	= nullptr;
+			pbinding->m_keyboard[1]	= nullptr;
 		}
 		bindConsoleCmds.clear();
 	}

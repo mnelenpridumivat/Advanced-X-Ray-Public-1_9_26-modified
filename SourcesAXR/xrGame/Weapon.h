@@ -99,7 +99,7 @@ public:
 	void			net_Import			(NET_Packet& P) override;
 
 	CWeapon			*cast_weapon			() override {return this;}
-	virtual CWeaponMagazined*cast_weapon_magazined	()					{return 0;}
+	virtual CWeaponMagazined*cast_weapon_magazined	()					{return nullptr;}
 	virtual CFlamethrower* cast_flamethrower() override { return nullptr; }
 
 
@@ -547,7 +547,7 @@ public:
 
 	virtual void			OnMagazineEmpty		();
 			void			SpawnAmmo			(u32 boxCurr = 0xffffffff, 
-													LPCSTR ammoSect = NULL, 
+													LPCSTR ammoSect = nullptr, 
 													u32 ParentID = 0xffffffff);
 			bool			SwitchAmmoType		(u32 flags);
 

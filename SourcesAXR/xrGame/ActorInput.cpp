@@ -207,7 +207,7 @@ void CActor::IR_OnKeyboardPress(int cmd)
 			if(det_active)
 			{
 				CCustomDetector* det			= smart_cast<CCustomDetector*>(det_active);
-				det->ToggleDetector				(g_player_hud->attached_item(0)!=NULL);
+				det->ToggleDetector				(g_player_hud->attached_item(0)!= nullptr);
 				return;
 			}
 		}break;
@@ -492,10 +492,10 @@ bool CActor::use_Holder				(CHolderCustom* holder)
 		CGameObject* holderGO			= smart_cast<CGameObject*>(m_holder);
 		
 		if(smart_cast<CCar*>(holderGO))
-			b = use_Vehicle(0);
+			b = use_Vehicle(nullptr);
 		else
 			if (holderGO->CLS_ID==CLSID_OBJECT_W_STATMGUN)
-				b = use_MountedWeapon(0);
+				b = use_MountedWeapon(nullptr);
 
 		if(inventory().ActiveItem()){
 			CHudItem* hi = smart_cast<CHudItem*>(inventory().ActiveItem());
@@ -550,7 +550,7 @@ void CActor::ActorUse()
 
 	
 
-	if(m_pUsableObject && NULL==m_pObjectWeLookingAt->cast_inventory_item())
+	if(m_pUsableObject && nullptr ==m_pObjectWeLookingAt->cast_inventory_item())
 	{
 		m_pUsableObject->use(this);
 	}
@@ -825,7 +825,7 @@ void CActor::NoClipFly(int cmd)
 			if(det_active)
 			{
 				CCustomDetector* det = smart_cast<CCustomDetector*>(det_active);
-				det->ToggleDetector(g_player_hud->attached_item(0)!=NULL);
+				det->ToggleDetector(g_player_hud->attached_item(0)!= nullptr);
 				return;
 			}
 		}

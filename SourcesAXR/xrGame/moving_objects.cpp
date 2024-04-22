@@ -13,7 +13,7 @@
 #include "moving_object.h"
 
 moving_objects::moving_objects				() :
-	m_tree					(0)
+	m_tree					(nullptr)
 {
 }
 

@@ -29,6 +29,12 @@ protected:
 public:
 						CParticlesObject	(LPCSTR p_name, BOOL bAutoRemove, bool destroy_on_game_load);
 
+	void Manual_UpdateSize(Fvector NewSize);
+	void Manual_UpdateSize(float NewSize);
+	void Manual_UpdateAlpha(float NewAlpha);
+
+	void Manual_AddAlpha(float DeltaAlpha);
+
 	bool		shedule_Needed		() override {return true;};
 	float		shedule_Scale		() override;
 	void		shedule_Update		(u32 dt) override;
@@ -63,7 +69,7 @@ public:
 	{
 		if (p){ 
 			p->PSI_destroy		();
-			p					= 0;
+			p					= nullptr;
 		}
 	}
 };

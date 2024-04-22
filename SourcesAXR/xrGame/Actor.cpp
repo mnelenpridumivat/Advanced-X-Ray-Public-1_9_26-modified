@@ -162,7 +162,7 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	fFPCamPitchMagnitude	= 0.0f; //--#SM+#--
 
 	// эффекторы
-	pCamBobbing				= 0;
+	pCamBobbing				= nullptr;
 
 
 	r_torso.yaw				= 0;
@@ -184,12 +184,12 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	m_fFallTime				=	s_fFallTime;
 	m_bAnimTorsoPlayed		=	false;
 
-	m_pPhysicsShell			=	NULL;
+	m_pPhysicsShell			= nullptr;
 
 	m_fFeelGrenadeRadius	=	10.0f;
 	m_fFeelGrenadeTime      =	1.0f;
 	
-	m_holder				=	NULL;
+	m_holder				= nullptr;
 	m_holderID				=	static_cast<u16>(-1);
 
 
@@ -200,34 +200,34 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	//разрешить использование пояса в inventory
 	inventory().SetBeltUseful(true);
 
-	m_pPersonWeLookingAt	= NULL;
-	m_pVehicleWeLookingAt	= NULL;
-	m_pObjectWeLookingAt	= NULL;
+	m_pPersonWeLookingAt	= nullptr;
+	m_pVehicleWeLookingAt	= nullptr;
+	m_pObjectWeLookingAt	= nullptr;
 	m_bPickupMode			= false;
 
-	pStatGraph				= NULL;
+	pStatGraph				= nullptr;
 
-	m_pActorEffector		= NULL;
+	m_pActorEffector		= nullptr;
 
 	SetZoomAimingMode		(false);
 
-	m_sDefaultObjAction		= NULL;
+	m_sDefaultObjAction		= nullptr;
 
 	m_fSprintFactor			= 4.f;
 
 	//hFriendlyIndicator.create(FVF::F_LIT,RCache.Vertex.Buffer(),RCache.QuadIB);
 
-	m_pUsableObject			= NULL;
+	m_pUsableObject			= nullptr;
 
 
 	m_anims					= xr_new<SActorMotions>();
 	m_vehicle_anims			= xr_new<SActorVehicleAnims>();
-	m_entity_condition		= NULL;
+	m_entity_condition		= nullptr;
 	m_iLastHitterID			= static_cast<u16>(-1);
 	m_iLastHittingWeaponID	= static_cast<u16>(-1);
-	m_statistic_manager		= NULL;
+	m_statistic_manager		= nullptr;
 	//-----------------------------------------------------------------------------------
-	m_memory				= g_dedicated_server ? 0 : xr_new<CActorMemory>(this);
+	m_memory				= g_dedicated_server ? nullptr : xr_new<CActorMemory>(this);
 	m_bOutBorder			= false;
 	m_hit_probability		= 1.f;
 	m_feel_touch_characters = 0;
@@ -245,7 +245,7 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	// Alex ADD: for smooth crouch fix
 	CurrentHeight			= -1.f;
 
-	m_night_vision			= NULL;
+	m_night_vision			= nullptr;
 	m_bNightVisionAllow		= true;
 	m_bNightVisionOn		= false;
 
@@ -314,11 +314,11 @@ void CActor::reinit	()
 	character_physics_support()->in_Init		();
 	material().reinit							();
 
-	m_pUsableObject								= NULL;
+	m_pUsableObject								= nullptr;
 	if (!g_dedicated_server)
 		memory().reinit							();
 	
-	set_input_external_handler					(0);
+	set_input_external_handler					(nullptr);
 	m_time_lock_accel							= 0;
 }
 
@@ -539,7 +539,7 @@ struct playing_pred
 {
 	IC	bool	operator()			(ref_sound &s)
 	{
-		return	(NULL != s._feedback() );
+		return	(nullptr != s._feedback() );
 	}
 };
 
@@ -584,7 +584,7 @@ void	CActor::Hit(SHit* pHDS)
 				CParticlesPlayer::MakeXFORM(this,HDS.bone(),HDS.dir,HDS.p_in_bone_space,pos);
 
 				// установить particles
-				CParticlesObject* ps = NULL;
+				CParticlesObject* ps = nullptr;
 
 				if (eacFirstEye == cam_active && this == Level().CurrentEntity())
 					ps = CParticlesObject::Create(invincibility_fire_shield_1st,TRUE);
@@ -974,7 +974,7 @@ void CActor::g_Physics			(Fvector& _accel, float jump, float dt)
 			VERIFY( di );
 			bool b_hit_initiated =  di->GetAndResetInitiated();
 			Fvector hdir;di->HitDir(hdir);
-			SetHitInfo(this, NULL, 0, Fvector().set(0, 0, 0), hdir);
+			SetHitInfo(this, nullptr, 0, Fvector().set(0, 0, 0), hdir);
 			//				Hit	(m_PhysicMovementControl->gcontact_HealthLost,hdir,di->DamageInitiator(),m_PhysicMovementControl->ContactBone(),di->HitPos(),0.f,ALife::eHitTypeStrike);//s16(6 + 2*::Random.randI(0,2))
 			if (Level().CurrentControlEntity() == this)
 			{
@@ -1270,7 +1270,7 @@ void CActor::shedule_Update	(u32 DT)
 
 	if(m_holder || !getEnabled() || !Ready())
 	{
-		m_sDefaultObjAction				= NULL;
+		m_sDefaultObjAction				= nullptr;
 		inherited::shedule_Update		(DT);
 		return;
 	}
@@ -1513,19 +1513,19 @@ void CActor::shedule_Update	(u32 DT)
 				}
 				else 
 				{
-					m_sDefaultObjAction = NULL;
+					m_sDefaultObjAction = nullptr;
 				}
 			}
 		}
 	}
 	else 
 	{
-		m_pPersonWeLookingAt	= NULL;
-		m_sDefaultObjAction		= NULL;
-		m_pUsableObject			= NULL;
-		m_pObjectWeLookingAt	= NULL;
-		m_pVehicleWeLookingAt	= NULL;
-		m_pInvBoxWeLookingAt	= NULL;
+		m_pPersonWeLookingAt	= nullptr;
+		m_sDefaultObjAction		= nullptr;
+		m_pUsableObject			= nullptr;
+		m_pObjectWeLookingAt	= nullptr;
+		m_pVehicleWeLookingAt	= nullptr;
+		m_pInvBoxWeLookingAt	= nullptr;
 	}
 
 //	UpdateSleep									();
@@ -1613,7 +1613,7 @@ void CActor::g_PerformDrop	( )
 	b_DropActivated			= FALSE;
 
 	PIItem pItem			= inventory().ActiveItem();
-	if (0==pItem)			return;
+	if (nullptr==pItem)			return;
 
 	if(pItem->IsQuestItem()) return;
 
@@ -1879,8 +1879,8 @@ void CActor::OnItemDrop(CInventoryItem *inventory_item, bool just_before_destroy
 	}
 
 	if(		!just_before_destroy && 
-			inventory_item->BaseSlot()==GRENADE_SLOT && 
-			NULL==inventory().ItemFromSlot(GRENADE_SLOT) )
+			inventory_item->BaseSlot()==GRENADE_SLOT &&
+			nullptr ==inventory().ItemFromSlot(GRENADE_SLOT) )
 	{
 		PIItem grenade =  inventory().SameSlot(GRENADE_SLOT, inventory_item, true);
 		
@@ -2818,7 +2818,7 @@ void CActor::StartNVGAnimation()
 
 		shared_str snd_name = pSettings->r_string(anim_sect, "snd_using");
 		m_action_anim_sound.create(snd_name.c_str(), st_Effect, sg_SourceType);
-		m_action_anim_sound.play(NULL, sm_2D);
+		m_action_anim_sound.play(nullptr, sm_2D);
 	}
 
 	m_iActionTiming = Device.dwTimeGlobal + anim_timer;
@@ -2926,7 +2926,7 @@ void CActor::CleanMask()
 
 		shared_str snd_name = pSettings->r_string(anim_sect, "snd_using");
 		m_action_anim_sound.create(snd_name.c_str(), st_Effect, sg_SourceType);
-		m_action_anim_sound.play(NULL, sm_2D);
+		m_action_anim_sound.play(nullptr, sm_2D);
 	}
 
 	m_iActionTiming = Device.dwTimeGlobal + anim_timer;
@@ -3013,7 +3013,7 @@ void CActor::QuickKick()
 
 		shared_str snd_name = pSettings->r_string(anim_sect, "snd_using");
 		m_action_anim_sound.create(snd_name.c_str(), st_Effect, sg_SourceType);
-		m_action_anim_sound.play(NULL, sm_2D);
+		m_action_anim_sound.play(nullptr, sm_2D);
 	}
 
 	m_iActionTiming = Device.dwTimeGlobal + anim_timer;
@@ -3193,7 +3193,7 @@ bool CActor::use_HolderEx(CHolderCustom* object, bool bForce)
 
 				SetCallbacks();
 
-				m_holder = NULL;
+				m_holder = nullptr;
 				m_holderID = static_cast<u16>(-1);
 
 				IKinematicsAnimated* V = smart_cast<IKinematicsAnimated*>(Visual()); R_ASSERT(V);
@@ -3234,7 +3234,7 @@ bool CActor::use_HolderEx(CHolderCustom* object, bool bForce)
 
 				if (pCamBobbing) {
 					Cameras().RemoveCamEffector(eCEBobbing);
-					pCamBobbing = NULL;
+					pCamBobbing = nullptr;
 				}
 
 				if (actor_camera_shell)
@@ -3251,7 +3251,7 @@ bool CActor::use_HolderEx(CHolderCustom* object, bool bForce)
 					SVehicleAnimCollection& anims = m_vehicle_anims->m_vehicles_type_collections[anim_type];
 					IKinematicsAnimated* V = smart_cast<IKinematicsAnimated*>(Visual()); R_ASSERT(V);
 					V->PlayCycle(anims.idles[0], FALSE);
-					CStepManager::on_animation_start(MotionID(), 0);
+					CStepManager::on_animation_start(MotionID(), nullptr);
 				}
 
 				CGameObject* go = smart_cast<CGameObject*>(object);

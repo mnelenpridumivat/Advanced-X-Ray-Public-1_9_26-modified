@@ -77,7 +77,7 @@
 xr_token			qhud_type_token[] = {
 	{ "hud_1",					1},
 	{ "hud_2",					2},
-	{ 0,						0}
+	{ nullptr,						0}
 };
 
 // M.F.S. Crosshair Type
@@ -86,7 +86,7 @@ xr_token							crosshair_type_token[] = {
 	{ "default_crosshair",			1												},
 	{ "builds_crosshair",			2												},
 	{ "point_crosshair",			3												},
-	{ 0,							0												}
+	{ nullptr,							0												}
 };
 
 extern u32	death_camera_mode;
@@ -94,7 +94,7 @@ xr_token							death_camera_mode_token[] = {
 	{ "freelook",					1												},
 	{ "fixedlook",					2												},
 	{ "firsteye",					3												},
-	{ 0,							0												}
+	{ nullptr,							0												}
 };
 
 string_path		g_last_saved_game;
@@ -214,8 +214,8 @@ XRCORE_API full_memory_stats_callback_type g_full_memory_stats_callback;
 static void full_memory_stats	( )
 {
 	Memory.mem_compact		();
-	u32		_crt_heap		= mem_usage_impl((HANDLE)_get_heap_handle(),0,0);
-	u32		_process_heap	= mem_usage_impl(GetProcessHeap(),0,0);
+	u32		_crt_heap		= mem_usage_impl((HANDLE)_get_heap_handle(),nullptr,nullptr);
+	u32		_process_heap	= mem_usage_impl(GetProcessHeap(),nullptr,nullptr);
 #ifdef SEVERAL_ALLOCATORS
 	u32		_game_lua		= game_lua_memory_usage();
 	u32		_render			= ::Render->memory_usage();
@@ -921,7 +921,7 @@ public:
 		//	return;
 		//};
 		#endif
-		  if (0==g_pGameLevel)
+		  if (nullptr==g_pGameLevel)
 		  {
 			  Msg	("! There are no level(s) started");
 		  } else {
@@ -1518,8 +1518,14 @@ public:
 
 	void Execute				(LPCSTR args) override
 	{
+		if (!m_ui) {
+			m_ui = xr_new<CUIDebugFonts>();
+		}
 		xr_new<CUIDebugFonts>()->ShowDialog(true);		
 	}
+
+private:
+	CUIDebugFonts* m_ui = nullptr;
 };
 
 class CCC_DebugNode : public IConsole_Command {
@@ -1968,7 +1974,7 @@ public:
 	CCC_RadioMask(LPCSTR N, Flags32* V, u32 M):
 	  CCC_Mask(N,V,M)
 	 {
-		group=NULL;
+		group= nullptr;
 	 }
 		void	SetGroup	(CCC_RadioGroupMask2		*G)
 	{
@@ -2046,7 +2052,7 @@ public		:
 	void	Execute	(LPCSTR args) override
 	{
 		if( CAttachableItem::m_dbgItem){
-			CAttachableItem::m_dbgItem = NULL;	
+			CAttachableItem::m_dbgItem = nullptr;	
 			Msg("CCC_TuneAttachableItem switched to off");
 			return;
 		};
@@ -2086,7 +2092,7 @@ public:
 	void Execute(LPCSTR /**args/**/) override
 	{
 		VERIFY3					(false,"This is a test crash","Do not post it as a bug");
-		int						*pointer = 0;
+		int						*pointer = nullptr;
 		*pointer				= 0;
 	}
 };
@@ -2126,7 +2132,7 @@ public:
 
 		LPCSTR					name;
 
-		if (0==strext(arguments))
+		if (nullptr==strext(arguments))
 			STRCONCAT			(name, arguments, ".ogf");
 		else
 			STRCONCAT			(name, arguments);

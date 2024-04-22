@@ -15,7 +15,7 @@ class CScriptGameObject;
 class CScriptActionPlannerActionWrapper : public CScriptActionPlannerAction, public luabind::wrap_base {
 	typedef CScriptActionPlannerAction inherited;
 public:
-	IC			 CScriptActionPlannerActionWrapper	(CScriptGameObject *object = 0, LPCSTR action_name = "");
+	IC			 CScriptActionPlannerActionWrapper	(CScriptGameObject *object = nullptr, LPCSTR action_name = "");
 	void				setup				(CScriptGameObject *object, CPropertyStorage *storage) override;
 	static	void				setup_static		(CScriptActionPlannerAction *action, CScriptGameObject *object, CPropertyStorage *storage);
 	void				initialize			() override;

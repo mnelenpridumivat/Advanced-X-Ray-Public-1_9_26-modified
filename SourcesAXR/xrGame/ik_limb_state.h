@@ -17,7 +17,7 @@ const	CIKLimb					   *limb;
 #endif
 
 public:
-						ik_limb_state		( ): state( ), limb( 0 )	{ }
+						ik_limb_state		( ): state( ), limb( nullptr )	{ }
 						ik_limb_state		( const CIKLimb *l, const ik_limb_state& s ): state( s.state ), limb( l )	{ }
 				void	set_limb			( CIKLimb *l )				;
 

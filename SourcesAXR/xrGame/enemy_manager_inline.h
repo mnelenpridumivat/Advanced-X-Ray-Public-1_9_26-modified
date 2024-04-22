@@ -51,5 +51,5 @@ IC	void CEnemyManager::set_enemy									(CEntityAlive const	*enemy)
 
 IC	void CEnemyManager::invalidate_enemy							()
 {
-	m_smart_cover_enemy			= 0;
+	m_smart_cover_enemy			= nullptr;
 }

@@ -34,10 +34,10 @@ CCustomZone::CCustomZone(void)
 	m_fEffectiveRadius			= 1.0f;
 	m_zone_flags.set			(eZoneIsActive, FALSE);
 	m_eHitTypeBlowout			= ALife::eHitTypeWound;
-	m_pIdleParticles			= NULL;
-	m_pLight					= NULL;
-	m_pIdleLight				= NULL;
-	m_pIdleLAnim				= NULL;
+	m_pIdleParticles			= nullptr;
+	m_pLight					= nullptr;
+	m_pIdleLight				= nullptr;
+	m_pIdleLAnim				= nullptr;
 	
 
 	m_StateTime.resize(eZoneStateMax);
@@ -51,7 +51,7 @@ CCustomZone::CCustomZone(void)
 	m_ef_weapon_type			= static_cast<u32>(-1);
 	m_owner_id					= static_cast<u32>(-1);
 
-	m_actor_effector			= NULL;
+	m_actor_effector			= nullptr;
 	m_zone_flags.set			(eIdleObjectParticlesDontStop, FALSE);
 	m_zone_flags.set			(eBlowoutWindActive, FALSE);
 	m_zone_flags.set			(eFastMode, TRUE);
@@ -118,7 +118,7 @@ void CCustomZone::Load(LPCSTR section)
 	if (self)		self->spatial.type	|=	(STYPE_COLLIDEABLE|STYPE_SHAPE);
 //////////////////////////////////////////////////////////////////////////
 
-	LPCSTR sound_str = NULL;
+	LPCSTR sound_str = nullptr;
 
 	// -- Interactive Grass - IDLE
 	m_BendGrass_idle_anim		= READ_IF_EXISTS(pSettings, r_s8, section, "bend_grass_idle_anim", -1);
@@ -376,7 +376,7 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 		}
 	}
 	else
-		m_pIdleLight = NULL;
+		m_pIdleLight = nullptr;
 
 	if ( m_zone_flags.test(eBlowoutLight) ) 
 	{
@@ -387,7 +387,7 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 		m_pLight->set_volumetric_distance(m_fVolumetricDistance);
 		m_pLight->set_volumetric_intensity(m_fVolumetricIntensity);
 	}else
-		m_pLight = NULL;
+		m_pLight = nullptr;
 
 	setEnabled					(TRUE);
 
@@ -704,7 +704,7 @@ BOOL CCustomZone::feel_touch_contact(CObject* O)
 {
 	if (smart_cast<CCustomZone*>(O))				return FALSE;
 	if (smart_cast<CBreakableObject*>(O))			return FALSE;
-	if (0==smart_cast<IKinematics*>(O->Visual()))	return FALSE;
+	if (nullptr==smart_cast<IKinematics*>(O->Visual()))	return FALSE;
 
 	if (O->ID() == ID())
 		return		(FALSE);
@@ -739,7 +739,7 @@ float CCustomZone::Power(float dist, float nearest_shape_radius)
 
 void CCustomZone::PlayIdleParticles(bool bIdleLight)
 {
-	m_idle_sound.play_at_pos(0, Position(), true);
+	m_idle_sound.play_at_pos(nullptr, Position(), true);
 
 	if(*m_sIdleParticles)
 	{
@@ -825,9 +825,9 @@ void CCustomZone::PlayBlowoutParticles()
 
 void CCustomZone::PlayHitParticles(CGameObject* pObject)
 {
-	m_hit_sound.play_at_pos(0, pObject->Position());
+	m_hit_sound.play_at_pos(nullptr, pObject->Position());
 
-	shared_str particle_str = NULL;
+	shared_str particle_str = nullptr;
 
 	if(pObject->Radius()<SMALL_OBJECT_RADIUS)
 	{
@@ -853,9 +853,9 @@ void CCustomZone::PlayHitParticles(CGameObject* pObject)
 #include "bolt.h"
 void CCustomZone::PlayEntranceParticles(CGameObject* pObject)
 {
-	m_entrance_sound.play_at_pos		(0, pObject->Position());
+	m_entrance_sound.play_at_pos		(nullptr, pObject->Position());
 
-	LPCSTR particle_str				= NULL;
+	LPCSTR particle_str				= nullptr;
 
 	if(pObject->Radius()<SMALL_OBJECT_RADIUS)
 	{
@@ -916,7 +916,7 @@ void CCustomZone::PlayBoltEntranceParticles()
 	xr_vector<CCF_Shape::shape_def>& Shapes = Sh->Shapes();
 	Fvector				sP0, sP1, vel;
 
-	CParticlesObject* pParticles = NULL;
+	CParticlesObject* pParticles = nullptr;
 
 	xr_vector<CCF_Shape::shape_def>::iterator it = Shapes.begin();
 	xr_vector<CCF_Shape::shape_def>::iterator it_e = Shapes.end();
@@ -969,7 +969,7 @@ void CCustomZone::PlayBoltEntranceParticles()
 
 void CCustomZone::PlayBulletParticles(Fvector& pos)
 {
-	m_entrance_sound.play_at_pos(0, pos);
+	m_entrance_sound.play_at_pos(nullptr, pos);
 
 	if(!m_sEntranceParticlesSmall) return;
 	
@@ -989,7 +989,7 @@ void CCustomZone::PlayObjectIdleParticles(CGameObject* pObject)
 	CParticlesPlayer* PP = smart_cast<CParticlesPlayer*>(pObject);
 	if(!PP) return;
 
-	shared_str particle_str = NULL;
+	shared_str particle_str = nullptr;
 
 	//разные партиклы для объектов разного размера
 	if(pObject->Radius()<SMALL_OBJECT_RADIUS)
@@ -1026,7 +1026,7 @@ void CCustomZone::StopObjectIdleParticles(CGameObject* pObject)
 	if(m_ObjectInfoMap.end() == it) return;
 	
 	
-	shared_str particle_str = NULL;
+	shared_str particle_str = nullptr;
 	//разные партиклы для объектов разного размера
 	if(pObject->Radius()<SMALL_OBJECT_RADIUS)
 	{
@@ -1130,7 +1130,7 @@ void CCustomZone::UpdateBlowout()
 
 	if(m_dwBlowoutSoundTime>=static_cast<u32>(m_iPreviousStateTime) && 
 		m_dwBlowoutSoundTime<static_cast<u32>(m_iStateTime))
-		m_blowout_sound.play_at_pos	(0, Position());
+		m_blowout_sound.play_at_pos	(nullptr, Position());
 
 	if(m_zone_flags.test(eBlowoutWind) && m_dwBlowoutWindTimeStart>=static_cast<u32>(m_iPreviousStateTime) && 
 		m_dwBlowoutWindTimeStart<static_cast<u32>(m_iStateTime))
@@ -1416,7 +1416,7 @@ void CCustomZone::PlayAccumParticles()
 	}
 
 	if(m_accum_sound._handle())
-		m_accum_sound.play_at_pos	(0, Position());
+		m_accum_sound.play_at_pos	(nullptr, Position());
 }
 
 void CCustomZone::PlayAwakingParticles()
@@ -1430,7 +1430,7 @@ void CCustomZone::PlayAwakingParticles()
 	}
 
 	if(m_awaking_sound._handle())
-		m_awaking_sound.play_at_pos	(0, Position());
+		m_awaking_sound.play_at_pos	(nullptr, Position());
 }
 
 void CCustomZone::UpdateOnOffState()
@@ -1557,7 +1557,7 @@ void CCustomZone::CalcDistanceTo(const Fvector& P, float& dist, float& radius)
 	//full test
 	const Fmatrix& XF	= XFORM();
 	xr_vector<CCF_Shape::shape_def>& Shapes = Sh->Shapes();
-	CCF_Shape::shape_def* nearest_s = NULL;
+	CCF_Shape::shape_def* nearest_s = nullptr;
 	float nearest = flt_max;
 
 

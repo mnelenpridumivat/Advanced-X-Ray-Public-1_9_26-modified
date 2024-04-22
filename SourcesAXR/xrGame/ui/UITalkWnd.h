@@ -37,7 +37,7 @@ public:
 			void		InitTalkWnd				();
 
 	bool		StopAnyMove				() override {return true;}
-	void		SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
+	void		SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
 
 	void		Draw					() override;
 	void		Update					() override;

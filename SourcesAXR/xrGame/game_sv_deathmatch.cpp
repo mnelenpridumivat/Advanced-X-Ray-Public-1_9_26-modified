@@ -58,7 +58,7 @@ game_sv_Deathmatch::game_sv_Deathmatch()
 
 	m_bSpectatorMode = false;
 	m_dwSM_CurViewEntity = 0;
-	m_pSM_CurViewEntity = NULL;
+	m_pSM_CurViewEntity = nullptr;
 	m_dwSM_LastSwitchTime = 0;
 
 	//-------------------------------
@@ -362,7 +362,7 @@ game_PlayerState*	game_sv_Deathmatch::GetWinningPlayer		()
 		game_PlayerState* res;
 		winner_searcher()
 		{
-			res			= NULL;
+			res			= nullptr;
 			MaxFrags	= -10000;
 		}
 		void operator()(IClient* client)
@@ -430,7 +430,7 @@ void	game_sv_Deathmatch::Update()
 			{
 				if (!m_pSM_CurViewEntity || !smart_cast<CActor*>(m_pSM_CurViewEntity) || m_dwSM_LastSwitchTime<Level().timeServer())
 					SM_SwitchOnNextActivePlayer();
-				CUIGameDM* GameDM = NULL;
+				CUIGameDM* GameDM = nullptr;
 				if (CurrentGameUI())
 					GameDM = smart_cast<CUIGameDM*>(CurrentGameUI());
 
@@ -528,7 +528,7 @@ bool game_sv_Deathmatch::checkForFragLimit()
 			}
 		};
 		frag_limit_searcher tmp_predicate;
-		if (m_server->FindClient(tmp_predicate) != NULL)
+		if (m_server->FindClient(tmp_predicate) != nullptr)
 		{
 			OnFraglimitExceed();
 			return true;
@@ -575,7 +575,7 @@ void	game_sv_Deathmatch::SM_SwitchOnNextActivePlayer()
 	m_server->ForEachClientDo(tmp_functor);
 
 	
-	CObject* pNewObject				= NULL;
+	CObject* pNewObject				= nullptr;
 	if (!tmp_functor.PPlayersCount)
 	{
 		xrClientData*	C			= static_cast<xrClientData*>(m_server->GetServerClient());
@@ -599,7 +599,7 @@ void	game_sv_Deathmatch::SM_SwitchOnNextActivePlayer()
 void game_sv_Deathmatch::net_Relcase(CObject* O)
 {
 	if(m_pSM_CurViewEntity==O)
-		m_pSM_CurViewEntity = NULL;
+		m_pSM_CurViewEntity = nullptr;
 	
 }
 
@@ -1582,9 +1582,9 @@ BOOL	game_sv_Deathmatch::OnTouch			(u16 eid_who, u16 eid_what, BOOL bForced)
 			for (u32 it=0; it<C.size(); ++it)
 			{
 				CSE_Abstract*		Et	= m_server->ID_to_entity				(C[it]);
-				if (0==Et)				continue;
+				if (nullptr==Et)				continue;
 				CSE_ALifeItemWeapon*		T	= smart_cast<CSE_ALifeItemWeapon*>	(Et);
-				if (0==T)				continue;
+				if (nullptr==T)				continue;
 				if (slot == T->get_slot())	
 				{
 					if (bForced)
@@ -1698,7 +1698,7 @@ void game_sv_Deathmatch::OnDetach(u16 eid_who, u16 eid_what)
 {	
 	CSE_Abstract*		e_parent	= get_entity_from_eid	(eid_who);
 	CSE_Abstract*		e_entity	= get_entity_from_eid	(eid_what);
-	CSE_ActorMP*		actor		= e_parent ? smart_cast<CSE_ActorMP*>(e_parent) : NULL;
+	CSE_ActorMP*		actor		= e_parent ? smart_cast<CSE_ActorMP*>(e_parent) : nullptr;
 	
 	if (e_entity->m_tClassID == CLSID_OBJECT_PLAYERS_BAG && actor)
 	{

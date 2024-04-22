@@ -114,7 +114,7 @@ BOOL CActor::CanPickItem(const CFrustum& frustum, const Fvector& from, CObject* 
 			collide::ray_defs			RD(from, dir, range, CDB::OPT_CULL, collide::rqtBoth);
 			VERIFY						(!fis_zero(RD.dir.square_magnitude()));
 			RQR.r_clear					();
-			Level().ObjectSpace.RayQuery(RQR, RD, info_trace_callback, &bOverlaped, NULL, item);
+			Level().ObjectSpace.RayQuery(RQR, RD, info_trace_callback, &bOverlaped, nullptr, item);
 		}
 	}
 	return !bOverlaped;
@@ -176,7 +176,7 @@ void	CActor::PickupModeUpdate_COD	()
 		
 	if (!g_Alive() || eacFirstEye != cam_active) 
 	{
-		CurrentGameUI()->UIMainIngameWnd->SetPickUpItem(NULL);
+		CurrentGameUI()->UIMainIngameWnd->SetPickUpItem(nullptr);
 		return;
 	};
 	
@@ -187,15 +187,15 @@ void	CActor::PickupModeUpdate_COD	()
 	g_SpatialSpace->q_frustum		(ISpatialResult, 0, STYPE_COLLIDEABLE, frustum);
 
 	float maxlen					= 1000.0f;
-	CInventoryItem* pNearestItem	= NULL;
+	CInventoryItem* pNearestItem	= nullptr;
 
 	for (u32 o_it=0; o_it<ISpatialResult.size(); o_it++)
 	{
 		ISpatial*		spatial	= ISpatialResult[o_it];
 		CInventoryItem*	pIItem	= smart_cast<CInventoryItem*> (spatial->dcast_CObject        ());
 
-		if (0 == pIItem)											continue;
-		if (pIItem->object().H_Parent() != NULL)					continue;
+		if (nullptr == pIItem)											continue;
+		if (pIItem->object().H_Parent() != nullptr)					continue;
 		if (!pIItem->CanTake())										continue;
 		if ( smart_cast<CExplosiveRocket*>( &pIItem->object() ) )	continue;
 
@@ -226,17 +226,17 @@ void	CActor::PickupModeUpdate_COD	()
 		CFrustum					frustum;
 		frustum.CreateFromMatrix	(Device.mFullTransform,FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 		if (!CanPickItem(frustum, Device.vCameraPosition, &pNearestItem->object()))
-			pNearestItem = NULL;
+			pNearestItem = nullptr;
 	}
 	if (pNearestItem && pNearestItem->cast_game_object())
 	{
 		if (Level().m_feel_deny.is_object_denied(pNearestItem->cast_game_object()))
-				pNearestItem = NULL;
+				pNearestItem = nullptr;
 	}
 	if (pNearestItem && pNearestItem->cast_game_object())
 	{
 		if(!pNearestItem->cast_game_object()->getVisible())
-				pNearestItem = NULL;
+				pNearestItem = nullptr;
 	}
 
 	CurrentGameUI()->UIMainIngameWnd->SetPickUpItem(pNearestItem);
@@ -285,7 +285,7 @@ void	CActor::Check_for_AutoPickUp()
 		ISpatial*		spatial	= ISpatialResult[o_it];
 		CInventoryItem*	pIItem	= smart_cast<CInventoryItem*> (spatial->dcast_CObject());
 
-		if (0 == pIItem)														continue;
+		if (nullptr == pIItem)														continue;
 		if (!pIItem->CanTake())													continue;
 		if (Level().m_feel_deny.is_object_denied(spatial->dcast_CObject()) )	continue;
 
@@ -312,7 +312,7 @@ void	CActor::Check_for_AutoPickUp()
 
 void CActor::PickupInfoDraw(CObject* object)
 {
-	LPCSTR draw_str = NULL;
+	LPCSTR draw_str = nullptr;
 	
 	CInventoryItem* item = smart_cast<CInventoryItem*>(object);
 	if(!item)		return;
@@ -355,7 +355,7 @@ void CActor::Feel_Grenade_Update( float rad )
 	Center( pos_actor );
 
 	q_nearest.clear_not_free();
-	g_pGameLevel->ObjectSpace.GetNearest( q_nearest, pos_actor, rad, NULL );
+	g_pGameLevel->ObjectSpace.GetNearest( q_nearest, pos_actor, rad, nullptr);
 
 	xr_vector<CObject*>::iterator	it_b = q_nearest.begin();
 	xr_vector<CObject*>::iterator	it_e = q_nearest.end();

@@ -35,7 +35,7 @@ xr_token	round_end_result_str[]=
 	{ "Frag limit",				eRoundEnd_FragLimit			},
 	{ "Artefact limit",			eRoundEnd_ArtrefactLimit	},
 	{ "Unknown",				eRoundEnd_Force				},
-	{ 0,						0							}
+	{ nullptr,						0							}
 };
 
 // Main
@@ -49,7 +49,7 @@ xr_token	round_end_result_str[]=
 game_PlayerState*	game_sv_GameState::get_id					(ClientID id)							
 {
 	xrClientData*	C	= (xrClientData*)m_server->ID_to_client	(id);
-	if (0==C)			return NULL;
+	if (nullptr==C)			return nullptr;
 	else				return C->ps;
 }
 
@@ -73,13 +73,13 @@ LPCSTR				game_sv_GameState::get_name_it				(u32 it)
 LPCSTR				game_sv_GameState::get_name_id				(ClientID id)							
 {
 	xrClientData*	C	= (xrClientData*)m_server->ID_to_client	(id);
-	return C == NULL ? NULL : C->ps->getName();
+	return C == nullptr ? nullptr : C->ps->getName();
 }
 
 LPCSTR				game_sv_GameState::get_player_name_id				(ClientID id)								
 {
 	xrClientData* xrCData	=	m_server->ID_to_client(id);
-	return xrCData == NULL ? "unknown" : xrCData->ps->getName();
+	return xrCData == nullptr ? "unknown" : xrCData->ps->getName();
 }
 
 u32					game_sv_GameState::get_players_count		()
@@ -90,9 +90,9 @@ u32					game_sv_GameState::get_players_count		()
 u16					game_sv_GameState::get_id_2_eid				(ClientID id)
 {
 	xrClientData*	C	= (xrClientData*)m_server->ID_to_client	(id);
-	if (0==C)			return 0xffff;
+	if (nullptr==C)			return 0xffff;
 	CSE_Abstract*	E	= C->owner;
-	if (0==E)			return 0xffff;
+	if (nullptr==E)			return 0xffff;
 	return E->ID;
 }
 
@@ -129,7 +129,7 @@ game_PlayerState*	game_sv_GameState::get_eid (u16 id) //if exist
 		m_server->FindClient(tmp_predicate));
 	if (tmp_client)
 		return tmp_client->ps;
-	return NULL;
+	return nullptr;
 }
 
 void* game_sv_GameState::get_client (u16 id) //if exist
@@ -187,9 +187,9 @@ u32					game_sv_GameState::get_alive_count(u32 team)
 xr_vector<u16>*		game_sv_GameState::get_children				(ClientID id)
 {
 	xrClientData*	C	= (xrClientData*)m_server->ID_to_client	(id);
-	if (0==C)			return 0;
+	if (nullptr==C)			return nullptr;
 	CSE_Abstract* E	= C->owner;
-	if (0==E)			return 0;
+	if (nullptr==E)			return nullptr;
 	return	&(E->children);
 }
 
@@ -371,10 +371,10 @@ void game_sv_GameState::Create					(shared_str &options)
 	if (FS.exist(fn_game, "$level$", "level.game")) 
 	{
 		IReader *F = FS.r_open	(fn_game);
-		IReader *O = 0;
+		IReader *O = nullptr;
 
 		// Load RPoints
-		if (0!=(O = F->open_chunk	(RPOINT_CHUNK)))
+		if (nullptr!=(O = F->open_chunk	(RPOINT_CHUNK)))
 		{ 
 			for (int id=0; O->find_chunk(id); ++id)
 			{
@@ -772,7 +772,7 @@ void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, Cli
 		{
 			IClient* CL					= (IClient*)m_server->ID_to_client(sender);
 			VERIFY2(CL, "bad create client message GAME_EVENT_CREATE_CLIENT");
-			if ( CL == NULL ) { break; }
+			if ( CL == nullptr) { break; }
 			
 			CL->flags.bConnected		= TRUE;
 			m_server->AttachNewClient	(CL);
@@ -818,7 +818,7 @@ bool game_sv_GameState::CheckNewPlayer(xrClientData* CL)
 	xrGameSpyServer*		gs_server = smart_cast<xrGameSpyServer*>(m_server);
 	R_ASSERT				(gs_server);
 	
-	char const *			error_msg = NULL;
+	char const *			error_msg = nullptr;
 	ClientID				tmp_client_id(CL->ID);
 	
 	if (gs_server->IsPublicServer())
@@ -889,8 +889,8 @@ void game_sv_GameState::AddDelayedEvent(NET_Packet &tNetPacket, u16 type, u32 ti
 
 void game_sv_GameState::ProcessDelayedEvent		()
 {
-	GameEvent* ge = NULL;
-	while ((ge = m_event_queue->Retreive()) != 0) {
+	GameEvent* ge = nullptr;
+	while ((ge = m_event_queue->Retreive()) != nullptr) {
 		OnEvent(ge->P,ge->type,ge->time,ge->sender);
 		m_event_queue->Release();
 	}
@@ -1261,7 +1261,7 @@ bool game_sv_GameState::FindPlayerName			(char const * name, IClient const * to_
 	R_ASSERT(name);
 	NameSearcherPredicate	tmp_predicate(name, to_exclude);
 	IClient* tmp_client		= m_server->FindClient(tmp_predicate);
-	return tmp_client != NULL;
+	return tmp_client != nullptr;
 }
 
 void game_sv_GameState::GenerateNewName			(char const * old_name, char * dest, u32 const dest_size)
@@ -1299,7 +1299,7 @@ void game_sv_GameState::CheckPlayerName(xrClientData* CL)
 	R_ASSERT	(CL && CL->ps);
 	R_ASSERT	(!CL->ps->m_account.is_online());
 
-	char const *	current_name = NULL;
+	char const *	current_name = nullptr;
 	if (CL->ps->m_account.name().size())	//in case of logging from gamespy login page
 	{
 		current_name = CL->ps->getName();

@@ -7,7 +7,7 @@
 #include "../../Include/xrRender/UIShader.h"
 
 CUIEncyclopediaArticleWnd::CUIEncyclopediaArticleWnd	()
-:m_Article(NULL)
+:m_Article(nullptr)
 {
 }
 

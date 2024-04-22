@@ -15,7 +15,7 @@ void CBaseMonster::net_Save			(NET_Packet& P)
 
 BOOL CBaseMonster::net_SaveRelevant	()
 {
-	return (inherited::net_SaveRelevant() || static_cast<BOOL>(PPhysicsShell() != NULL));
+	return (inherited::net_SaveRelevant() || static_cast<BOOL>(PPhysicsShell() != nullptr));
 }
 
 void CBaseMonster::net_Export(NET_Packet& P) 

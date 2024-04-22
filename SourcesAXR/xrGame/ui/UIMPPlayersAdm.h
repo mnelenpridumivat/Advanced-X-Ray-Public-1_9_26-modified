@@ -32,7 +32,7 @@ public:
 							~CUIMpPlayersAdm() override;
 				void		Init(CUIXml& xml_doc);
 				void		RefreshPlayersList();
-		void 		SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
+		void 		SendMessage(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
 		void	xr_stdcall	FillPlayersList(u32 const);
 				void		SetMaxPingLimit();
 				void		SetMaxPingLimitText();

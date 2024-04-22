@@ -177,7 +177,7 @@ smart_cover::loophole *cover::best_loophole	(Fvector const &position, float &val
 {
 	value						= flt_max;
 
-	loophole					*result = 0;
+	loophole					*result = nullptr;
 	Loopholes::const_iterator	I = loopholes().begin();
 	Loopholes::const_iterator	E = loopholes().end();
 	for ( ; I != E; ++I) {
@@ -281,7 +281,7 @@ bool cover::loophole_path					(shared_str const &source_raw, shared_str const &t
 			m_description->transitions(),
 			source,
 			target,
-			0,
+			nullptr,
 			parameters
 		);
 

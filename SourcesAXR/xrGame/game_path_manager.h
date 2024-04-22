@@ -42,7 +42,7 @@ protected:
 
 public:
 	IC					CBasePathManager			(CRestrictedObject *object);
-	IC	virtual	void	reinit						(const CGameGraph *graph = 0);
+	IC	virtual	void	reinit						(const CGameGraph *graph = nullptr);
 	IC			bool	actual						() const;
 	IC void	select_intermediate_vertex	() override;
 	IC bool	completed					() const override;

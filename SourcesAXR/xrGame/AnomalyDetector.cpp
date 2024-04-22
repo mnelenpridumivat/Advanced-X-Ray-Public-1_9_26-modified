@@ -16,7 +16,7 @@
 
 ZONE_INFO::ZONE_INFO	()
 {
-	pParticle=NULL;
+	pParticle= nullptr;
 }
 
 ZONE_INFO::~ZONE_INFO	()
@@ -42,8 +42,8 @@ CDetectorAnomaly::~CDetectorAnomaly(void)
 
 BOOL CDetectorAnomaly::net_Spawn(CSE_Abstract* DC)
 {
-	m_pCurrentActor		 = NULL;
-	m_pCurrentInvOwner	 = NULL;
+	m_pCurrentActor		 = nullptr;
+	m_pCurrentInvOwner	 = nullptr;
 
 	return		(inherited::net_Spawn(DC));
 }
@@ -187,7 +187,7 @@ void CDetectorAnomaly::UpdateCL()
 		if(static_cast<float>(zone_info.snd_time) > current_snd_time)
 		{
 			zone_info.snd_time	= 0;
-			HUD_SOUND_ITEM::PlaySound(zone_type.detect_snds, Fvector().set(0, 0, 0), NULL, true, false);
+			HUD_SOUND_ITEM::PlaySound(zone_type.detect_snds, Fvector().set(0, 0, 0), nullptr, true, false);
 
 		} 
 		else 
@@ -215,7 +215,7 @@ void CDetectorAnomaly::feel_touch_delete(CObject* O)
 
 BOOL CDetectorAnomaly::feel_touch_contact(CObject* O)
 {
-	return (NULL != smart_cast<CCustomZone*>(O));
+	return (nullptr != smart_cast<CCustomZone*>(O));
 }
 
 void CDetectorAnomaly::OnH_A_Chield()
@@ -229,8 +229,8 @@ void CDetectorAnomaly::OnH_B_Independent(bool just_before_destroy)
 {
 	inherited::OnH_B_Independent(just_before_destroy);
 	
-	m_pCurrentActor				= NULL;
-	m_pCurrentInvOwner			= NULL;
+	m_pCurrentActor				= nullptr;
+	m_pCurrentInvOwner			= nullptr;
 
 	StopAllSounds				();
 

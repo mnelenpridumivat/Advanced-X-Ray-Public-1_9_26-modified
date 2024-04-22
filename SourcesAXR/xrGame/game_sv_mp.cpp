@@ -256,7 +256,7 @@ void	game_sv_mp::KillPlayer				(ClientID id_who, u16 GameID)
 	if (xrCData) 
 	{
 		//-------------------------------------------------------
-		OnPlayerKillPlayer(xrCData->ps, xrCData->ps, KT_HIT, SKT_NONE, NULL);
+		OnPlayerKillPlayer(xrCData->ps, xrCData->ps, KT_HIT, SKT_NONE, nullptr);
 		if (xrCData->ps)
 			xrCData->ps->m_bClearRun = false;
 	};
@@ -272,7 +272,7 @@ void	game_sv_mp::KillPlayer				(ClientID id_who, u16 GameID)
 		pActor->set_death_time		();
 	}
 	//-------------------------------------------------------
-	u16 PlayerID = (xrCData != 0) ? xrCData->ps->GameID : GameID;
+	u16 PlayerID = (xrCData != nullptr) ? xrCData->ps->GameID : GameID;
 	//-------------------------------------------------------
 	SendPlayerKilledMessage(PlayerID, KT_HIT, PlayerID, 0, SKT_NONE);
 	//-------------------------------------------------------
@@ -595,7 +595,7 @@ void	game_sv_mp::SpawnPlayer(ClientID id, LPCSTR N)
 			}
 		};
 	
-	Msg		("* %s [%d] respawned as %s", get_name_id(id), E->ID, (0 == pA) ? "spectator" : "actor");
+	Msg		("* %s [%d] respawned as %s", get_name_id(id), E->ID, (nullptr == pA) ? "spectator" : "actor");
 	spawn_end				(E,id);
 
 	ps_who->SetGameID(CL->owner->ID);
@@ -708,10 +708,10 @@ TeamStruct* game_sv_mp::GetTeamData				(u32 Team)
 {
 	VERIFY(TeamList.size());
 	if (TeamList.empty())
-		return NULL;
+		return nullptr;
 
 	if (TeamList.size()<=Team)
-		return NULL;
+		return nullptr;
 
 	return &(TeamList[Team]);
 };
@@ -968,7 +968,7 @@ _votecommands	votecommands[] = {
 	{ "changemap",		"sv_changelevel",			flVoteMap			},
 	{ "changeweather",	"sv_setenvtime",			flVoteWeather		},
 	{ "changegametype",	"sv_changegametype",		flVoteGameType		},
-	{ NULL, 			NULL }
+	{nullptr, nullptr}
 };
 
 s32 game_sv_mp::ExcludeBanTimeFromVoteStr(char const * vote_string, char* new_vote_str, u32 new_vote_str_size)
@@ -1070,7 +1070,7 @@ void game_sv_mp::OnVoteStart				(LPCSTR VoteCommand, ClientID sender)
 			LevelName[255] = 0;
 			LevelVersion[255] = 0;
 			
-			LPCSTR sv_vote_command = NULL;
+			LPCSTR sv_vote_command = nullptr;
 			STRCONCAT(sv_vote_command, votecommands[i].command, " ", LevelName, " ", LevelVersion);
 			m_pVoteCommand = sv_vote_command;
 			xr_sprintf(resVoteCommand, 
@@ -1143,7 +1143,7 @@ void game_sv_mp::OnVoteStart				(LPCSTR VoteCommand, ClientID sender)
 	};
 	vote_status_setter tmp_functor;
 	tmp_functor.senderID = sender;
-	tmp_functor.pStartedPlayer = NULL;
+	tmp_functor.pStartedPlayer = nullptr;
 	m_server->ForEachClientDo(tmp_functor);
 
 	signal_Syncronize();
@@ -2201,19 +2201,19 @@ IClient* game_sv_mp::BanPlayer(ClientID const & client_id, s32 ban_time_sec, xrC
 	if (client_id == m_server->GetServerClient()->ID)
 	{
 		Msg("! ERROR: can't ban server client.");
-		return NULL;
+		return nullptr;
 	}
 	xrClientData* client_to_ban = static_cast<xrClientData*>(
 		m_server->ID_to_client(client_id)
 	);
 	
 	if (!client_to_ban)
-		return NULL;
+		return nullptr;
 	
 	if (client_to_ban->m_admin_rights.m_has_admin_rights)
 	{
 		Msg("! ERROR: Can't ban player with admin rights");
-		return NULL;
+		return nullptr;
 	}
 	m_cdkey_ban_list.ban_player(client_to_ban, ban_time_sec, initiator);
 	return client_to_ban;
@@ -2229,7 +2229,7 @@ void game_sv_mp::UnBanPlayer(size_t banned_player_index)
 	m_cdkey_ban_list.unban_player_by_index(banned_player_index);
 }
 
-void game_sv_mp::PrintBanList(char const * filter = NULL)
+void game_sv_mp::PrintBanList(char const * filter = nullptr)
 {
 	m_cdkey_ban_list.print_ban_list(filter);
 }

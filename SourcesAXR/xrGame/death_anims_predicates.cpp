@@ -303,7 +303,7 @@ class	type_motion6: public type_motion
 			return false;
 		}
 
-		if( smart_cast<CExplosive*>( O ) != 0 )
+		if( smart_cast<CExplosive*>( O ) != nullptr )
 		{	
 			edirection dr = dir( ea, H, angle );
 			m = motion(  dr );

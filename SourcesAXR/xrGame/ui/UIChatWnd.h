@@ -20,7 +20,7 @@ public:
 	void				ChatToAll			(bool b) { sendNextMessageToAll = b; }
 	void				PendingMode			(bool const is_pending_mode);
 	bool		NeedCursor			()const override {return false;}
-	void		SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
+	void		SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
 
 
 protected:

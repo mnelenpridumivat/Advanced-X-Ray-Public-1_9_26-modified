@@ -35,7 +35,7 @@ public:
 protected:
 	CObject*		m_locked_enemy;
 public:
-					CCameraLook2	( CObject* p, u32 flags=0):CCameraLook(p, flags){m_locked_enemy=NULL;};
+					CCameraLook2	( CObject* p, u32 flags=0):CCameraLook(p, flags){m_locked_enemy= nullptr;};
 	~CCameraLook2	() override {}
 	void	OnActivate		( CCameraBase* old_cam ) override;
 	void	Update			( Fvector& point, Fvector& noise_dangle ) override;

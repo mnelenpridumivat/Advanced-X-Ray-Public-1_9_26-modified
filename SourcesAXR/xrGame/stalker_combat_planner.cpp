@@ -132,7 +132,7 @@ void CStalkerCombatPlanner::initialize			()
 
 	CScriptActionPlanner::m_storage.set_property(eWorldPropertyStartedToThrowGrenade,	false);
 
-	object().agent_manager().member().member(m_object).cover(0);
+	object().agent_manager().member().member(m_object).cover(nullptr);
 	// this is fake, should be revisited
 	// we must clear path, since it can be built using eMentalStateFree velocities
 	// and our new path may not be ready
@@ -210,11 +210,11 @@ void CStalkerCombatPlanner::add_evaluators		()
 	add_evaluator			(eWorldPropertyEnemyCriticallyWounded	,xr_new<CStalkerPropertyEvaluatorEnemyCriticallyWounded>	(m_object,"enemy_critically_wounded"));
 	add_evaluator			(eWorldPropertyTooFarToKillEnemy,xr_new<CStalkerPropertyEvaluatorTooFarToKillEnemy>	(m_object,"too far to kill"));
 	
-	add_evaluator			(eWorldPropertyInCover			,xr_new<CStalkerPropertyEvaluatorMember>			(static_cast<CPropertyStorage*>(0),eWorldPropertyInCover,true,true,"in cover"));
-	add_evaluator			(eWorldPropertyLookedOut		,xr_new<CStalkerPropertyEvaluatorMember>			(static_cast<CPropertyStorage*>(0),eWorldPropertyLookedOut,true,true,"looked out"));
-	add_evaluator			(eWorldPropertyPositionHolded	,xr_new<CStalkerPropertyEvaluatorMember>			(static_cast<CPropertyStorage*>(0),eWorldPropertyPositionHolded,true,true,"position holded"));
-	add_evaluator			(eWorldPropertyEnemyDetoured	,xr_new<CStalkerPropertyEvaluatorMember>			(static_cast<CPropertyStorage*>(0),eWorldPropertyEnemyDetoured,true,true,"enemy detoured"));
-	add_evaluator			(eWorldPropertyUseSuddenness	,xr_new<CStalkerPropertyEvaluatorMember>			(static_cast<CPropertyStorage*>(0),eWorldPropertyUseSuddenness,true,true,"use suddenness"));
+	add_evaluator			(eWorldPropertyInCover			,xr_new<CStalkerPropertyEvaluatorMember>			(static_cast<CPropertyStorage*>(nullptr),eWorldPropertyInCover,true,true,"in cover"));
+	add_evaluator			(eWorldPropertyLookedOut		,xr_new<CStalkerPropertyEvaluatorMember>			(static_cast<CPropertyStorage*>(nullptr),eWorldPropertyLookedOut,true,true,"looked out"));
+	add_evaluator			(eWorldPropertyPositionHolded	,xr_new<CStalkerPropertyEvaluatorMember>			(static_cast<CPropertyStorage*>(nullptr),eWorldPropertyPositionHolded,true,true,"position holded"));
+	add_evaluator			(eWorldPropertyEnemyDetoured	,xr_new<CStalkerPropertyEvaluatorMember>			(static_cast<CPropertyStorage*>(nullptr),eWorldPropertyEnemyDetoured,true,true,"enemy detoured"));
+	add_evaluator			(eWorldPropertyUseSuddenness	,xr_new<CStalkerPropertyEvaluatorMember>			(static_cast<CPropertyStorage*>(nullptr),eWorldPropertyUseSuddenness,true,true,"use suddenness"));
 	add_evaluator			(eWorldPropertyCriticallyWounded,xr_new<CStalkerPropertyEvaluatorMember>			(&object().brain().CStalkerPlanner::m_storage,eWorldPropertyCriticallyWounded,true,true,"critically wounded"));
 	add_evaluator			(eWorldPropertyKilledWounded	,xr_new<CStalkerPropertyEvaluatorMember>			(&object().brain().CStalkerPlanner::m_storage,eWorldPropertyKilledWounded,true,true,"killed critically wounded"));
 

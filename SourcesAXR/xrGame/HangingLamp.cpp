@@ -30,11 +30,11 @@ void CHangingLamp::Init()
 	fHealth					= 100.f;
 	light_bone				= BI_NONE;
 	ambient_bone			= BI_NONE;
-	lanim					= 0;
+	lanim					= nullptr;
 	ambient_power			= 0.f;
-	light_render			= 0;
-	light_ambient			= 0;
-	glow_render				= 0;
+	light_render			= nullptr;
+	light_ambient			= nullptr;
+	glow_render				= nullptr;
 	m_bState				= 1;
 }
 

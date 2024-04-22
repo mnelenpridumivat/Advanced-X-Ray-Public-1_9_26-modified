@@ -11,6 +11,13 @@
 #include "../xrEngine/render.h"
 #include "../xrEngine/IGame_Persistent.h"
 #include "../xrEngine/environment.h"
+#include "../Layers/xrRender/ParticleEffect.h"
+#include "../xrParticles/psystem.h"
+
+namespace PAPI
+{
+	struct Particle;
+}
 
 const Fvector zero_vel		= {0.f,0.f,0.f};
 

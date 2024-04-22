@@ -131,7 +131,7 @@ void CLevel::g_sv_Spawn		(CSE_Abstract* E)
 #ifdef DEBUG_MEMORY_MANAGER
 	mem_alloc_gather_stats		(false);
 #endif // DEBUG_MEMORY_MANAGER
-	if (0==O || (!O->net_Spawn	(E))) 
+	if (nullptr==O || (!O->net_Spawn	(E))) 
 	{
 		O->net_Destroy			( );
 		if(!g_dedicated_server)
@@ -162,7 +162,7 @@ void CLevel::g_sv_Spawn		(CSE_Abstract* E)
 				}
 			} else
 			{
-				if (CurrentEntity() != NULL) 
+				if (CurrentEntity() != nullptr) 
 				{
 					CGameObject* pGO = smart_cast<CGameObject*>(CurrentEntity());
 					if (pGO) pGO->On_B_NotCurrentEntity();
@@ -250,7 +250,7 @@ CSE_Abstract* CLevel::spawn_item(LPCSTR section, const Fvector& position, std::u
 		abstract->Spawn_Write	(P,TRUE);
 		Send					(P,net_flags(TRUE));
 		F_entity_Destroy		(abstract);
-		return					(0);
+		return					(nullptr);
 	}
 	else
 		return				(abstract);

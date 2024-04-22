@@ -7,6 +7,11 @@ class IParticleCustom
 public:
 	virtual ~IParticleCustom() {;}
 
+	virtual void Manual_UpdateSize(const Fvector& NewSize) = 0;
+	virtual void Manual_UpdateAlpha(float NewAlpha) = 0;
+
+	virtual void Manual_AddAlpha(float DeltaAlpha) = 0;
+
 	virtual void 	OnDeviceCreate		()=0;
 	virtual void 	OnDeviceDestroy		()=0;
 

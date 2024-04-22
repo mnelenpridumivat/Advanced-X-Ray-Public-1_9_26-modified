@@ -20,7 +20,7 @@ xr_token rpoint_game_type[]={
 	{ "TeamDeathmatch",		rpgtGameTeamDeathmatch		},
 	{ "ArtefactHunt",		rpgtGameArtefactHunt		},
 	{ "CaptureTheArtefact",	rpgtGameCaptureTheArtefact	},
-	{ 0,					0	}
+	{ nullptr,					0	}
 };
 
 

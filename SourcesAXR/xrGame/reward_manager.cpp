@@ -51,7 +51,7 @@ void reward_manager::load_rewards		()
 	CInifile	rewards_config(tmp_reader);
 	
 	u32			reward_index = 0;
-	LPCSTR		section_name = NULL;
+	LPCSTR		section_name = nullptr;
 	char		tmp_dst_buff[16];
 
 	STRCONCAT	(section_name,
@@ -133,7 +133,7 @@ void reward_manager::process_reward		(u32 const award_id)
 		tmp_iter->second->m_width,
 		tmp_iter->second->m_height);
 
-	tmp_iter->second->m_play_sound.play(NULL, sm_2D);
+	tmp_iter->second->m_play_sound.play(nullptr, sm_2D);
 	m_reward_process_time			= tmp_iter->second->m_process_time;
 	m_last_reward_time				= Device.dwTimeGlobal;
 }

@@ -12,7 +12,7 @@
 #include "rat_state_base.h"
 
 rat_state_manager::rat_state_manager	() :
-	m_object				(0),
+	m_object				(nullptr),
 	m_last_state_id			(static_cast<u32>(-1))
 {
 }
@@ -32,7 +32,7 @@ rat_state_base *rat_state_manager::state(state_id_type const &state_id)
 {
 	States::iterator		I = m_states.find(state_id);
 	if (I == m_states.end())
-		return				(0);
+		return				(nullptr);
 
 	return					(I->second);
 }

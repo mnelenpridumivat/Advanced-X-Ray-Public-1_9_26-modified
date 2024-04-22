@@ -37,7 +37,7 @@ void execute_console_command_deferred	(CConsole* c, LPCSTR string_to_execute)
 IConsole_Command* find_cmd(CConsole* c, LPCSTR cmd)
 {
 	CConsole::vecCMD_IT I = c->Commands.find(cmd);
-	IConsole_Command* icmd = NULL;
+	IConsole_Command* icmd = nullptr;
 
 	if (I != c->Commands.end())
 		icmd = I->second;

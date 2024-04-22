@@ -25,14 +25,14 @@
 #define BLOOD_MARKS_SECT		"bloody_marks"
 
 //отметки крови на стенах 
-FactoryPtr<IWallMarkArray>* CEntityAlive::m_pBloodMarksVector = NULL;
+FactoryPtr<IWallMarkArray>* CEntityAlive::m_pBloodMarksVector = nullptr;
 float CEntityAlive::m_fBloodMarkSizeMin = 0.f;
 float CEntityAlive::m_fBloodMarkSizeMax = 0.f;
 float CEntityAlive::m_fBloodMarkDistance = 0.f;
 float CEntityAlive::m_fNominalHit = 0.f;
 
 //капание крови
-FactoryPtr<IWallMarkArray>* CEntityAlive::m_pBloodDropsVector = NULL;
+FactoryPtr<IWallMarkArray>* CEntityAlive::m_pBloodDropsVector = nullptr;
 float CEntityAlive::m_fStartBloodWoundSize = 0.3f;
 float CEntityAlive::m_fStopBloodWoundSize = 0.1f;
 float CEntityAlive::m_fBloodDropSize = 0.03f;
@@ -46,7 +46,7 @@ float CEntityAlive::m_fStartBurnWoundSize = 0.3f;
 //размер раны, чтоб остановить партиклы
 float CEntityAlive::m_fStopBurnWoundSize = 0.1f;
 
-STR_VECTOR* CEntityAlive::m_pFireParticlesVector = NULL;
+STR_VECTOR* CEntityAlive::m_pFireParticlesVector = nullptr;
 
 /////////////////////////////////////////////
 // CEntityAlive
@@ -66,7 +66,7 @@ CEntityAlive::CEntityAlive() :
 	m_used_time				= Device.dwTimeGlobal;
 	m_squad_index			= static_cast<u8>(-1);
 
-	m_material_manager		= 0;
+	m_material_manager		= nullptr;
 }
 
 CEntityAlive::~CEntityAlive()
@@ -85,10 +85,10 @@ void CEntityAlive::Load		(LPCSTR section)
 	m_fFood					= 100*pSettings->r_float	(section,"ph_mass");
 
 	//bloody wallmarks
-	if(0==m_pBloodMarksVector)
+	if(nullptr==m_pBloodMarksVector)
 		LoadBloodyWallmarks (BLOOD_MARKS_SECT);
 
-	if(0==m_pFireParticlesVector)
+	if(nullptr==m_pFireParticlesVector)
 		LoadFireParticles	("entity_fire_particles");
 
 	//биолог. вид к торому принадлежит монстр или персонаж
@@ -314,7 +314,7 @@ void CEntityAlive::Die	(CObject* who)
 	inherited::Die(who);
 	
 	const CGameObject *who_object = smart_cast<const CGameObject*>(who);
-	callback(GameObject::eDeath)(lua_game_object(), who_object ? who_object->lua_game_object() : 0);
+	callback(GameObject::eDeath)(lua_game_object(), who_object ? who_object->lua_game_object() : nullptr);
 
 	if (!getDestroy() && (GameID() == eGameIDSingle)) {
 		NET_Packet		P;
@@ -713,7 +713,7 @@ CIKLimbsController*	CEntityAlive::character_ik_controller()
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 CPHSoundPlayer* CEntityAlive::ph_sound_player()
@@ -724,7 +724,7 @@ CPHSoundPlayer* CEntityAlive::ph_sound_player()
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -732,7 +732,7 @@ ICollisionHitCallback*	CEntityAlive::	get_collision_hit_callback		()
 {
   CCharacterPhysicsSupport *cs=character_physics_support();
   if(cs)return cs->get_collision_hit_callback();
-  else return false;
+  else return nullptr;
 }
 
 void					CEntityAlive::	set_collision_hit_callback		(ICollisionHitCallback *cc)

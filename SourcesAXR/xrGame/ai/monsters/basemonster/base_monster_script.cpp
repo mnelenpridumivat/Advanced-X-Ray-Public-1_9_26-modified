@@ -196,8 +196,7 @@ bool CBaseMonster::bfAssignMovement (CScriptEntityAction *tpEntityAction)
 			ALife::_OBJECT_ID leader_id		=	group.commander_id();
 			bool const should_follow_leader	=	leader_id != static_cast<ALife::_OBJECT_ID>(-1) && leader_id != ID();
 			CCustomMonster* const leader	=	should_follow_leader ? 
-												smart_cast<CCustomMonster*>( Level().Objects.net_Find(leader_id) ) : 
-												NULL;
+												smart_cast<CCustomMonster*>( Level().Objects.net_Find(leader_id) ) : nullptr;
 
 			if ( !should_follow_leader || !leader || (leader && !leader->GetScriptControl()) )
 			{
@@ -472,24 +471,24 @@ void CBaseMonster::ProcessScripts()
 CEntity *CBaseMonster::GetCurrentEnemy()
 {
 	VERIFY		(g_Alive());
-	CEntity *enemy = 0;
+	CEntity *enemy = nullptr;
 	
 	if (EnemyMan.get_enemy()) 
 		enemy = const_cast<CEntity*>(static_cast<CEntity const*>(EnemyMan.get_enemy()));
 
-	if (!enemy || enemy->getDestroy() || !enemy->g_Alive()) enemy = 0;
+	if (!enemy || enemy->getDestroy() || !enemy->g_Alive()) enemy = nullptr;
 
 	return (enemy);
 }
 
 CEntity *CBaseMonster::GetCurrentCorpse()
 {
-	CEntity *corpse = 0;
+	CEntity *corpse = nullptr;
 
 	if (CorpseMan.get_corpse()) 
 		corpse = const_cast<CEntity *>(smart_cast<const CEntity*>(CorpseMan.get_corpse()));
 
-	if (!corpse || corpse->getDestroy() || corpse->g_Alive()) corpse = 0;
+	if (!corpse || corpse->getDestroy() || corpse->g_Alive()) corpse = nullptr;
 
 	return (corpse);
 }

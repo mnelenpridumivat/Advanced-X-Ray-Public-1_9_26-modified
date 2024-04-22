@@ -8,7 +8,7 @@
 
 CMonsterCorpseMemory::CMonsterCorpseMemory()
 {
-	monster			= 0;
+	monster			= nullptr;
 	time_memory		= 10000; 
 }
 
@@ -94,11 +94,11 @@ const CEntityAlive *CMonsterCorpseMemory::get_corpse()
 {
 	CORPSE_MAP_IT	it = find_best_corpse();
 	if (it != m_objects.end()) {
-		if (const_cast<CEntityAlive *>(it->first)->is_locked_corpse()) return (0);
+		if (const_cast<CEntityAlive *>(it->first)->is_locked_corpse()) return (nullptr);
 
 		return it->first;
 	}
-	return (0);
+	return (nullptr);
 }
 
 SMonsterCorpse CMonsterCorpseMemory::get_corpse_info()

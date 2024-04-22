@@ -45,7 +45,7 @@ CScriptEntity::~CScriptEntity()
 
 void CScriptEntity::init()
 {
-	m_current_sound						= 0;
+	m_current_sound						= nullptr;
 	ResetScriptData						();
 }
 
@@ -81,7 +81,7 @@ void CScriptEntity::ClearActionQueue()
 	}
 
 	m_tpScriptAnimation.invalidate		();
-	m_tpCurrentEntityAction				= 0;
+	m_tpCurrentEntityAction				= nullptr;
 	m_tpNextAnimation.invalidate		();
 	m_use_animation_movement_controller	= false;
 }
@@ -191,7 +191,7 @@ void CScriptEntity::AddAction(const CScriptEntityAction *tpEntityAction, bool bH
 CScriptEntityAction *CScriptEntity::GetCurrentAction()
 {
 	if (m_tpActionQueue.empty())
-		return(0);
+		return(nullptr);
 	else
 		return(m_tpActionQueue.front());
 }
@@ -235,7 +235,7 @@ void CScriptEntity::vfFinishAction(CScriptEntityAction *tpEntityAction)
 
 void CScriptEntity::ProcessScripts()
 {
-	CScriptEntityAction	*l_tpEntityAction = 0;
+	CScriptEntityAction	*l_tpEntityAction = nullptr;
 #ifdef DEBUG
 	bool			empty_queue = m_tpActionQueue.empty();
 #endif
@@ -596,11 +596,11 @@ bool CScriptEntity::bfScriptAnimation()
 			IKinematicsAnimated	*skeleton_animated = smart_cast<IKinematicsAnimated*>(object().Visual());
 			LPCSTR				animation_id = *GetCurrentAction()->m_tAnimationAction.m_caAnimationToPlay;
 			MotionID			animation = skeleton_animated->ID_Cycle(animation_id);
-			CBlend				*result = 0;
+			CBlend				*result = nullptr;
 			for (u16 i=0; i<MAX_PARTS; ++i) {
-				CBlend			*blend = 0;
+				CBlend			*blend = nullptr;
 				if (result) {
-					skeleton_animated->LL_PlayCycle(i,animation,TRUE,0,0);
+					skeleton_animated->LL_PlayCycle(i,animation,TRUE,nullptr,nullptr);
 					continue;
 				}
 
@@ -611,7 +611,7 @@ bool CScriptEntity::bfScriptAnimation()
 				CMotionDef	*MD = skeleton_animated->LL_GetMotionDef( animation );
 				VERIFY( MD );
 				if ( m_use_animation_movement_controller )
-					m_object->create_anim_mov_ctrl	( blend, 0, true );
+					m_object->create_anim_mov_ctrl	( blend, nullptr, true );
 			}
 
 			return				(true);
@@ -657,11 +657,11 @@ void CScriptEntity::sound_callback	(const CObject *object, int sound_type, const
 
 CEntity	*CScriptEntity::GetCurrentEnemy()
 {
-	return (0);
+	return (nullptr);
 }
 CEntity	*CScriptEntity::GetCurrentCorpse()
 {
-	return (0);
+	return (nullptr);
 }
 
 int CScriptEntity::get_enemy_strength()

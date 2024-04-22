@@ -44,11 +44,11 @@ net_updateInvData* CInventoryItem::NetSync()
 
 CInventoryItem::CInventoryItem() 
 {
-	m_net_updateData	= NULL;
+	m_net_updateData	= nullptr;
 	m_flags.set			(Fbelt,FALSE);
 	m_flags.set			(Fruck,TRUE);
 	m_flags.set			(FRuckDefault,TRUE);
-	m_pInventory		= NULL;
+	m_pInventory		= nullptr;
 
 	SetDropManual		(FALSE);
 
@@ -61,7 +61,7 @@ CInventoryItem::CInventoryItem()
 	m_fUnchargeSpeed	= 0.0f;
 	m_fMaxChargeLevel	= 0.0f;
 
-	m_name = m_nameShort = NULL;
+	m_name = m_nameShort = nullptr;
 
 	m_ItemCurrPlace.value			= 0;
 	m_ItemCurrPlace.type			= eItemPlaceUndefined;
@@ -69,7 +69,7 @@ CInventoryItem::CInventoryItem()
 	m_ItemCurrPlace.slot_id			= NO_ACTIVE_SLOT;
 
 	m_Description					= "";
-	m_section_id					= 0;
+	m_section_id					= nullptr;
 	m_bCanUse						= true;
 	m_flags.set						(FIsHelperItem,FALSE);
 
@@ -362,7 +362,7 @@ void CInventoryItem::OnEvent (NET_Packet& P, u16 type)
 		{
 			Fvector p; 
 			P.r_vec3(p);
-			CPHSynchronize* pSyncObj = NULL;
+			CPHSynchronize* pSyncObj = nullptr;
 			pSyncObj = object().PHGetSyncItem(0);
 			if (!pSyncObj) return;
 			SPHNetState state;
@@ -733,7 +733,7 @@ void CInventoryItem::net_Export			(NET_Packet& P)
 		return;
 	}
 
-	CPHSynchronize* pSyncObj				= NULL;
+	CPHSynchronize* pSyncObj				= nullptr;
 	SPHNetState								State;
 	pSyncObj = object().PHGetSyncItem		(0);
 
@@ -1307,7 +1307,7 @@ void CInventoryItem::reload		(LPCSTR section)
 
 void CInventoryItem::reinit		()
 {
-	m_pInventory	= NULL;
+	m_pInventory	= nullptr;
 	m_ItemCurrPlace.type = eItemPlaceUndefined;
 }
 
@@ -1318,17 +1318,17 @@ bool CInventoryItem::can_kill			() const
 
 CInventoryItem *CInventoryItem::can_kill	(CInventory *inventory) const
 {
-	return				(0);
+	return				(nullptr);
 }
 
 const CInventoryItem *CInventoryItem::can_kill			(const xr_vector<const CGameObject*> &items) const
 {
-	return				(0);
+	return				(nullptr);
 }
 
 CInventoryItem *CInventoryItem::can_make_killing	(const CInventory *inventory) const
 {
-	return				(0);
+	return				(nullptr);
 }
 
 bool CInventoryItem::ready_to_kill		() const
@@ -1351,7 +1351,7 @@ void CInventoryItem::activate_physic_shell()
 
 void CInventoryItem::UpdateXForm	()
 {
-	if (0==object().H_Parent())	return;
+	if (nullptr==object().H_Parent())	return;
 
 	// Get access to entity and its visual
 	CEntityAlive*	E		= smart_cast<CEntityAlive*>(object().H_Parent());

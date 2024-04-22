@@ -92,7 +92,7 @@ void CALifeSimulator::destroy			()
 //	validate					();
 	CALifeUpdateManager::destroy();
 	VERIFY						(ai().get_alife());
-	ai().set_alife				(0);
+	ai().set_alife				(nullptr);
 }
 
 void CALifeSimulator::setup_simulator	(CSE_ALifeObject *object)
@@ -133,7 +133,7 @@ IReader const* CALifeSimulator::get_config	( shared_str config ) const
 	string_path						file_name;
 	FS.update_path					( file_name,"$game_config$", config.c_str() );
 	if ( !FS.exist(file_name) )
-		return						0;
+		return						nullptr;
 
 	m_configs_lru.insert			( m_configs_lru.begin(), std::make_pair(config, FS.r_open(file_name)) );
 	return							m_configs_lru.front().second;
@@ -146,7 +146,7 @@ bool object_exists_in_alife_registry (u32 id)
 {
 	if ( ai().get_alife() )
 	{
-		return ai().alife().objects().object(static_cast<ALife::_OBJECT_ID>(id), true) != 0;
+		return ai().alife().objects().object(static_cast<ALife::_OBJECT_ID>(id), true) != nullptr;
 	}
 	return false;
 }

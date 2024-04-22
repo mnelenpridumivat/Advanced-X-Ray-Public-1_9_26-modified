@@ -78,7 +78,7 @@ void CStalkerActionGetItemToKill::initialize	()
 
 	object().sound().remove_active_sounds(static_cast<u32>(eStalkerSoundMaskNoHumming));
 
-	object().sight().setup	(CSightAction(object().m_best_found_item_to_kill ? &object().m_best_found_item_to_kill->object() : 0,true));
+	object().sight().setup	(CSightAction(object().m_best_found_item_to_kill ? &object().m_best_found_item_to_kill->object() : nullptr,true));
 
 	object().movement().set_mental_state		(eMentalStateDanger);
 }
@@ -109,7 +109,7 @@ void CStalkerActionGetItemToKill::execute	()
 
 	object().movement().set_level_dest_vertex	(object().m_best_found_item_to_kill->object().ai_location().level_vertex_id());
 	object().movement().set_desired_position	(&object().m_best_found_item_to_kill->object().Position());
-	object().movement().set_desired_direction	(0);
+	object().movement().set_desired_direction	(nullptr);
 	object().movement().set_path_type			(MovementManager::ePathTypeLevelPath);
 	object().movement().set_detail_path_type	(DetailPathManager::eDetailPathTypeSmooth);
 	object().movement().set_body_state			(object().movement().body_state() == eBodyStateCrouch ? eBodyStateCrouch : eBodyStateStand);
@@ -165,7 +165,7 @@ void CStalkerActionMakeItemKilling::execute	()
 
 	object().movement().set_level_dest_vertex	(object().m_best_found_ammo->object().ai_location().level_vertex_id());
 	object().movement().set_desired_position	(&object().m_best_found_ammo->object().Position());
-	object().movement().set_desired_direction	(0);
+	object().movement().set_desired_direction	(nullptr);
 	object().movement().set_path_type			(MovementManager::ePathTypeLevelPath);
 	object().movement().set_detail_path_type	(DetailPathManager::eDetailPathTypeSmooth);
 	object().movement().set_body_state			(eBodyStateStand);
@@ -214,7 +214,7 @@ void CStalkerActionRetreatFromEnemy::execute		()
 	object().movement().set_mental_state			(eMentalStatePanic);
 	object().movement().set_body_state				(eBodyStateStand);
 
-	CCoverPoint const* point			= 0;
+	CCoverPoint const* point			= nullptr;
 	CMemoryInfo							mem_object = object().memory().memory(object().memory().enemy().selected());
 	if ( mem_object.m_object ) {
 		object().m_ce_far->setup		(mem_object.m_object_params.m_position,0.f,300.f);
@@ -275,7 +275,7 @@ void CStalkerActionGetReadyToKill::initialize	()
 //	m_movement_type										= Random.randI(2) ? eMovementTypeRun : eMovementTypeWalk;
 //	m_movement_type										= eMovementTypeRun;
 
-	object().movement().set_desired_direction			(0);
+	object().movement().set_desired_direction			(nullptr);
 	object().movement().set_path_type					(MovementManager::ePathTypeLevelPath);
 	object().movement().set_detail_path_type			(DetailPathManager::eDetailPathTypeSmooth);
 	object().movement().set_nearest_accessible_position	();
@@ -383,7 +383,7 @@ CStalkerActionKillEnemy::CStalkerActionKillEnemy(CAI_Stalker *object, LPCSTR act
 void CStalkerActionKillEnemy::initialize		()
 {
 	inherited::initialize				();
-	object().movement().set_desired_direction	(0);
+	object().movement().set_desired_direction	(nullptr);
 	object().movement().set_path_type			(MovementManager::ePathTypeLevelPath);
 	object().movement().set_detail_path_type	(DetailPathManager::eDetailPathTypeSmooth);
 	object().movement().set_nearest_accessible_position		();
@@ -446,7 +446,7 @@ void CStalkerActionTakeCover::initialize		()
 //	m_movement_type								= Random.randI(2) ? eMovementTypeRun : eMovementTypeWalk;
 	m_movement_type								= eMovementTypeWalk;
 
-	object().movement().set_desired_direction	(0);
+	object().movement().set_desired_direction	(nullptr);
 	object().movement().set_path_type			(MovementManager::ePathTypeLevelPath);
 	object().movement().set_detail_path_type	(DetailPathManager::eDetailPathTypeSmooth);
 	object().movement().set_mental_state		(eMentalStateDanger);
@@ -545,7 +545,7 @@ void CStalkerActionLookOut::initialize		()
 		m_last_change_time						= Device.dwTimeGlobal;
 	}
 
-	object().movement().set_desired_direction	(0);
+	object().movement().set_desired_direction	(nullptr);
 	object().movement().set_path_type			(MovementManager::ePathTypeLevelPath);
 	object().movement().set_detail_path_type	(DetailPathManager::eDetailPathTypeSmooth);
 	object().movement().set_mental_state		(eMentalStateDanger);
@@ -577,7 +577,7 @@ float current_cover						(CAI_Stalker *object)
 		10.f,
 		collide::rqtStatic,
 		ray_query_result,
-		NULL
+		nullptr
 	);
 
 	if (!result)
@@ -653,7 +653,7 @@ CStalkerActionHoldPosition::CStalkerActionHoldPosition(CAI_Stalker *object, LPCS
 void CStalkerActionHoldPosition::initialize		()
 {
 	inherited::initialize				();
-	object().movement().set_desired_direction	(0);
+	object().movement().set_desired_direction	(nullptr);
 	object().movement().set_path_type			(MovementManager::ePathTypeLevelPath);
 	object().movement().set_detail_path_type	(DetailPathManager::eDetailPathTypeSmooth);
 	object().movement().set_nearest_accessible_position		();
@@ -732,7 +732,7 @@ void CStalkerActionDetourEnemy::initialize		()
 {
 	inherited::initialize						();
 	object().agent_manager().member().member	(&object()).detour	(true);
-	object().movement().set_desired_direction	(0);
+	object().movement().set_desired_direction	(nullptr);
 	object().movement().set_path_type			(MovementManager::ePathTypeLevelPath);
 	object().movement().set_detail_path_type	(DetailPathManager::eDetailPathTypeSmooth);
 	object().movement().set_mental_state		(eMentalStateDanger);
@@ -754,7 +754,7 @@ void CStalkerActionDetourEnemy::initialize		()
 		);
 #endif
 
-	object().agent_manager().member().member(m_object).cover(0);
+	object().agent_manager().member().member(m_object).cover(nullptr);
 
 //#ifndef SILENT_COMBAT
 	if (object().memory().enemy().selected()->human_being() && object().agent_manager().member().group_behaviour())
@@ -872,7 +872,7 @@ void CStalkerActionHideFromGrenade::initialize				()
 
 	m_storage->set_property						(eWorldPropertyUseSuddenness,false);
 
-	object().movement().set_desired_direction	(0);
+	object().movement().set_desired_direction	(nullptr);
 	object().movement().set_path_type			(MovementManager::ePathTypeLevelPath);
 	object().movement().set_detail_path_type	(DetailPathManager::eDetailPathTypeSmooth);
 	object().movement().set_mental_state		(eMentalStateDanger);
@@ -955,7 +955,7 @@ void CStalkerActionSuddenAttack::initialize					()
 {
 	inherited::initialize	();
 
-	object().movement().set_desired_direction	(0);
+	object().movement().set_desired_direction	(nullptr);
 	object().movement().set_path_type			(MovementManager::ePathTypeLevelPath);
 	object().movement().set_detail_path_type	(DetailPathManager::eDetailPathTypeSmooth);
 	object().movement().set_mental_state		(eMentalStateDanger);

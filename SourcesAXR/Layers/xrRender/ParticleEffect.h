@@ -51,6 +51,11 @@ namespace PS
 							CParticleEffect		();
 		virtual 			~CParticleEffect	();
 
+		virtual void Manual_UpdateSize(const Fvector& NewSize) override;
+		virtual void Manual_UpdateAlpha(float NewAlpha) override;
+
+		virtual void Manual_AddAlpha(float DeltaAlpha) override;
+
 		void	 			OnFrame				(u32 dt);
 
 		u32					RenderTO			();

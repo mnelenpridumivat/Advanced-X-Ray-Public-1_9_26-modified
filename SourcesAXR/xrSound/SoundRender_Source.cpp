@@ -11,8 +11,8 @@ CSoundRender_Source::CSoundRender_Source	()
 	m_fMaxAIDist	= 300.f;
 	m_fBaseVolume	= 1.f;
 	m_uGameType		= 0;
-	fname			= 0;
-    CAT.table		= 0;
+	fname			= nullptr;
+    CAT.table		= nullptr;
 	CAT.size		= 0;
 }
 

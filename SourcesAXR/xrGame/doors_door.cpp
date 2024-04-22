@@ -160,7 +160,7 @@ void door::change_state			( )
 	if ( m_state == m_target_state )
 		return;
 
-	m_object.callback(GameObject::eUseObject)( m_object.lua_game_object(), static_cast<CScriptGameObject*>(0) );
+	m_object.callback(GameObject::eUseObject)( m_object.lua_game_object(), static_cast<CScriptGameObject*>(nullptr) );
 #ifdef DEBUG
 	if ( g_debug_doors)
 		Msg						( "door[%s] started to change its state to [%s]", m_object.cName().c_str(), m_target_state == door_state_open ? "open" : "closed" );

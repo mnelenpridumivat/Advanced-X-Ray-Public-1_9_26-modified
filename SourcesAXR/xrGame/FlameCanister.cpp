@@ -107,7 +107,7 @@ CInventoryItem* CFlameCanister::can_make_killing(const CInventory* inventory) co
 			return			(weapon);
 	}
 
-	return					(0);
+	return					(nullptr);
 }
 
 float CFlameCanister::Weight() const

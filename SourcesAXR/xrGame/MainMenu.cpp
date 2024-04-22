@@ -70,23 +70,23 @@ CMainMenu*	MainMenu()	{return static_cast<CMainMenu*>(g_pGamePersistent->m_pMain
 CMainMenu::CMainMenu	()
 {
 	m_Flags.zero					();
-	m_startDialog					= NULL;
+	m_startDialog					= nullptr;
 	m_screenshotFrame				= static_cast<u32>(-1);
 	g_pGamePersistent->m_pMainMenu	= this;
 	if (Device.b_is_Ready)			OnDeviceCreate();  	
 	ReadTextureInfo					();
 	CUIXmlInit::InitColorDefs		();
-	g_btnHint						= NULL;
-	g_statHint						= NULL;
+	g_btnHint						= nullptr;
+	g_statHint						= nullptr;
 	m_deactivated_frame				= 0;	
 	
 	m_sPatchURL						= "";
-	m_pGameSpyFull					= NULL;
-	m_account_mngr					= NULL;
-	m_login_mngr					= NULL;
-	m_profile_store					= NULL;
-	m_stats_submitter				= NULL;
-	m_atlas_submit_queue			= NULL;
+	m_pGameSpyFull					= nullptr;
+	m_account_mngr					= nullptr;
+	m_login_mngr					= nullptr;
+	m_profile_store					= nullptr;
+	m_stats_submitter				= nullptr;
+	m_atlas_submit_queue			= nullptr;
 
 	m_sPDProgress.IsInProgress		= false;
 	m_downloaded_mp_map_url._set	("");
@@ -98,7 +98,7 @@ CMainMenu::CMainMenu	()
 
 	GetPlayerName					();
 	GetCDKeyFromRegistry			();
-	m_demo_info_loader				= NULL;
+	m_demo_info_loader				= nullptr;
 
 	if(!g_dedicated_server)
 	{
@@ -139,7 +139,7 @@ CMainMenu::~CMainMenu	()
 	xr_delete						(g_btnHint);
 	xr_delete						(g_statHint);
 	xr_delete						(m_startDialog);
-	g_pGamePersistent->m_pMainMenu	= NULL;
+	g_pGamePersistent->m_pMainMenu	= nullptr;
 	
 	xr_delete						(m_account_mngr);
 	xr_delete						(m_login_mngr);
@@ -163,7 +163,7 @@ void CMainMenu::ReadTextureInfo()
 	for( ;fit!=fit_e; ++fit)
 	{
     	string_path	fn1, fn2,fn3;
-        _splitpath	(fit->name.c_str(),fn1,fn2,fn3,0);
+        _splitpath	(fit->name.c_str(),fn1,fn2,fn3,nullptr);
 		xr_strcat(fn3,".xml");
 
 		CUITextureMaster::ParseShTexInfo(fn3);
@@ -498,7 +498,7 @@ void CMainMenu::OnFrame()
 		if(b_is_16_9 !=m_activatedScreenRatio)
 		{
 			ReloadUI();
-			m_startDialog->SendMessage(m_startDialog, MAIN_MENU_RELOADED, NULL);
+			m_startDialog->SendMessage(m_startDialog, MAIN_MENU_RELOADED, nullptr);
 		}
 	}
 }
@@ -610,7 +610,7 @@ void CMainMenu::OnDownloadPatch(CUIWindow*, void*)
 	if (!fileName) return;
 
 	string4096 FilePath = "";
-	char* FileName = NULL;
+	char* FileName = nullptr;
 	GetFullPathName(fileName, 4096, FilePath, &FileName);
 
 	string_path		fname;
@@ -832,7 +832,7 @@ LPCSTR CMainMenu::GetPlayerName()
 {
 	gamespy_gp::login_manager* l_mngr		= GetLoginMngr();
 	gamespy_gp::profile const * tmp_prof	= l_mngr ? 
-		l_mngr->get_current_profile() : NULL;
+		l_mngr->get_current_profile() : nullptr;
 
 	if (tmp_prof)
 	{
@@ -875,9 +875,9 @@ void CMainMenu::OnDownloadMPMap_CopyURL(CUIWindow* w, void* d)
 void CMainMenu::OnDownloadMPMap(CUIWindow* w, void* d)
 {
 	LPCSTR url = m_downloaded_mp_map_url.c_str();
-	LPCSTR params = NULL;
+	LPCSTR params = nullptr;
 	STRCONCAT(params, "/C start ", url);
-	ShellExecute(0, "open", "cmd.exe", params, NULL, SW_SHOW);
+	ShellExecute(nullptr, "open", "cmd.exe", params, nullptr, SW_SHOW);
 }
 
 demo_info const * CMainMenu::GetDemoInfo(LPCSTR file_name)

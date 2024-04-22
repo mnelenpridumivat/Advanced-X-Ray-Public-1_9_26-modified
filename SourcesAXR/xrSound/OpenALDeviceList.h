@@ -8,7 +8,7 @@
 #define AL_GENERIC_SOFTWARE "Generic Software"
 
 struct ALDeviceDesc{
-	string256			name;
+	string256			name = {0};
 	int					minor_ver;
 	int					major_ver;
 	union ESndProps

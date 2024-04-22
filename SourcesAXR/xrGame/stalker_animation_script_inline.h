@@ -26,7 +26,7 @@ IC	CStalkerAnimationScript::CStalkerAnimationScript				(
 		return;
 	}
 
-	m_transform_ptr				= 0;
+	m_transform_ptr				= nullptr;
 	m_transform.i.set			(flt_max, flt_max, flt_max);
 	m_transform.j.set			(flt_max, flt_max, flt_max);
 	m_transform.k.set			(flt_max, flt_max, flt_max);
@@ -36,7 +36,7 @@ IC	CStalkerAnimationScript::CStalkerAnimationScript				(
 IC CStalkerAnimationScript::CStalkerAnimationScript					(CStalkerAnimationScript const& object)
 {
 	m_transform					= object.m_transform;
-	m_transform_ptr				= object.m_transform_ptr ? &m_transform : 0;
+	m_transform_ptr				= object.m_transform_ptr ? &m_transform : nullptr;
 	m_animation					= object.m_animation;
 	m_hand_usage				= object.m_hand_usage;
 	m_use_movement_controller	= object.m_use_movement_controller;
