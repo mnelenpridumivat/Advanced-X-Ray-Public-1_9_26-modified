@@ -35,12 +35,11 @@ public:
 
 	ICF	Self operator+(const Self& v)
 	{
-		auto Copy(*this);
-		return Copy.add(v);
+		return Self(x + v.x, y + v.y, z + v.z);
 	};
 	ICF	SelfRef operator+=(const Self& v)
 	{
-		return add(v);
+		x += v.x; y += v.y; z += v.z;	return *this;
 	};
 	ICF	Self operator+(T s)
 	{
@@ -59,12 +58,11 @@ public:
 
 	ICF	Self operator-(const Self& v)
 	{
-		auto Copy(*this);
-		return Copy.sub(v);
+		return Self(x - v.x, y - v.y, z - v.z);
 	};
 	ICF	SelfRef operator-=(const Self& v)
 	{
-		return sub(v);
+		x -= v.x; y -= v.y; z -= v.z;	return *this;
 	};
 	ICF	Self operator-(T s)
 	{
@@ -534,6 +532,10 @@ public:
 			up.z		= -dir.y * right.x ;
 		}
 	}
+	IC float 	length() const { return _sqrt(x * x + y * y + z * z); }
+	IC float 	length2() const { return (x * x + y * y + z * z); }
+	IC Self& operator=	(const Self& a) { x = a.x; y = a.y; z = a.z; return *this; }
+	IC Self 	operator^	(const Self& b) const { return Self(y * b.z - z * b.y, z * b.x - x * b.z, x * b.y - y * b.x); }
 };
 typedef _vector3<float>		Fvector;
 typedef _vector3<float>		Fvector3;

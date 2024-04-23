@@ -19,6 +19,7 @@ class CFlamethrowerTraceCollision :
 	bool m_launched = false;
 	float m_current_time = 0.0f;
 	float m_time_on_collide = 0.0f;
+	float m_current_alpha = 0.0f;
 	//Fmatrix XFORM;
 	//Fmatrix invXFORM;
 	Fvector m_LastUpdatedPos;
@@ -28,6 +29,7 @@ class CFlamethrowerTraceCollision :
 	float RadiusOnCollide;
 
 	shared_str m_sFlameParticles;
+	shared_str m_sEarthFlameParticles;
 
 	float m_last_update_time;
 
@@ -54,7 +56,7 @@ class CFlamethrowerTraceCollision :
 	static BOOL	hit_callback(collide::rq_result& result, LPVOID params);
 	static BOOL test_callback(const collide::ray_defs& rd, CObject* object, LPVOID params);
 
-	void UpdateParticles();
+	void UpdateParticles(float DeltaTime);
 
 public:
 

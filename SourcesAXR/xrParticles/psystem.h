@@ -26,6 +26,7 @@
 //#define drand48() (((float) rand())/((float) RAND_MAX))
 
 namespace PAPI{
+	//using pVector = Fvector;
 	class pVector	: public Fvector
 	{
 	public:

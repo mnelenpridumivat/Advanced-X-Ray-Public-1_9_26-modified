@@ -7,6 +7,9 @@
     <Filter Include="PAPI">
       <UniqueIdentifier>{55523da6-f66b-4928-b8e4-5b57741f2181}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PAPI\Domains">
+      <UniqueIdentifier>{07378003-6f41-46d6-b245-945ec17f0b24}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="psystem.h">
@@ -33,6 +36,39 @@
     <ClInclude Include="particle_manager.h">
       <Filter>PAPI</Filter>
     </ClInclude>
+    <ClInclude Include="particle_domain_box.h">
+      <Filter>PAPI\Domains</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_domain_blob.h">
+      <Filter>PAPI\Domains</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_domain_cone.h">
+      <Filter>PAPI\Domains</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_domain_cylinder.h">
+      <Filter>PAPI\Domains</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_domain_disc.h">
+      <Filter>PAPI\Domains</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_domain_line.h">
+      <Filter>PAPI\Domains</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_domain_plane.h">
+      <Filter>PAPI\Domains</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_domain_point.h">
+      <Filter>PAPI\Domains</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_domain_rectangle.h">
+      <Filter>PAPI\Domains</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_domain_sphere.h">
+      <Filter>PAPI\Domains</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_domain_triangle.h">
+      <Filter>PAPI\Domains</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -58,6 +94,39 @@
     </ClCompile>
     <ClCompile Include="particle_manager.cpp">
       <Filter>PAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_domain_blob.cpp">
+      <Filter>PAPI\Domains</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_domain_box.cpp">
+      <Filter>PAPI\Domains</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_domain_cone.cpp">
+      <Filter>PAPI\Domains</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_domain_cylinder.cpp">
+      <Filter>PAPI\Domains</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_domain_disc.cpp">
+      <Filter>PAPI\Domains</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_domain_line.cpp">
+      <Filter>PAPI\Domains</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_domain_plane.cpp">
+      <Filter>PAPI\Domains</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_domain_point.cpp">
+      <Filter>PAPI\Domains</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_domain_rectangle.cpp">
+      <Filter>PAPI\Domains</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_domain_sphere.cpp">
+      <Filter>PAPI\Domains</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_domain_triangle.cpp">
+      <Filter>PAPI\Domains</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -448,4 +448,3 @@ void pDomain::transform_dir(const pDomain& domain, const Fmatrix& m)
 	M.c.set(0,0,0);
 	transform(domain,M);
 }
- 
