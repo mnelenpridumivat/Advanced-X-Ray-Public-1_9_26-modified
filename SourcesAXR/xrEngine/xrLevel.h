@@ -68,6 +68,8 @@ struct hdrLEVEL
 {
 	u16		XRLC_version;
 	u16		XRLC_quality;
+
+	hdrLEVEL(){}
 };
 
 struct hdrCFORM
@@ -76,6 +78,8 @@ struct hdrCFORM
 	u32		vertcount;
 	u32		facecount;
 	Fbox	aabb;
+
+	hdrCFORM(){}
 };
 
 struct	hdrNODES
@@ -86,6 +90,8 @@ struct	hdrNODES
 	float	size_y;
 	Fbox	aabb;
 	xrGUID	guid;
+
+	hdrNODES(){}
 };
 #pragma pack(pop)
 

@@ -4,6 +4,7 @@
 #include "UIGameMP.h"
 #include "game_base.h"
 #include "inventory.h"
+#include "../xrCore/buffer_vector.h"
 
 
 class UITeamPanels;

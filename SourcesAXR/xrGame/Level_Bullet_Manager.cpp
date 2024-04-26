@@ -952,7 +952,7 @@ void CBulletManager::Render	()
 			}
 
 			if (m_bullet_points.size() > 32768) {
-				m_bullet_points.clear_not_free();
+				m_bullet_points.erase(m_bullet_points.begin(), m_bullet_points.end());
 			}
 		}
 		if(!m_flamethrower_managers.empty())
@@ -1001,7 +1001,7 @@ void CBulletManager::Render	()
 		}
 	}
 	else {
-		m_bullet_points.clear_not_free();
+		m_bullet_points.erase(m_bullet_points.begin(), m_bullet_points.end());
 		m_flamethrower_managers.erase(m_flamethrower_managers.begin(), m_flamethrower_managers.end());
 	}
 
@@ -1132,7 +1132,7 @@ void CBulletManager::CommitEvents			()	// @ the start of frame
 			}break;
 		}		
 	}
-	m_Events.clear_and_reserve	()	;
+	m_Events.erase(m_Events.begin(), m_Events.end());
 }
 
 void CBulletManager::RegisterEvent			(EventType Type, BOOL _dynamic, SBullet* bullet, const Fvector& end_point, collide::rq_result& R, u16 tgt_material)

@@ -11,8 +11,8 @@
 IC	Fvector	CSpaceRestrictionShape::position		(const CCF_Shape::shape_def &data) const
 {
 	switch (data.type) {
-		case 0	: return(data.data.sphere.P);
-		case 1	: return(data.data.box.c);
+		case 0	: return(reinterpret_cast<CCF_Shape::shape_sphere*>(data.data.get())->sphere.P);
+		case 1	: return(reinterpret_cast<CCF_Shape::shape_box*>(data.data.get())->box.c);
 		default : NODEFAULT;
 	}
 #ifdef DEBUG
@@ -23,8 +23,8 @@ IC	Fvector	CSpaceRestrictionShape::position		(const CCF_Shape::shape_def &data) 
 IC	float CSpaceRestrictionShape::radius			(const CCF_Shape::shape_def &data) const
 {
 	switch (data.type) {
-		case 0	: return(data.data.sphere.R);
-		case 1	: return(Fbox().set(Fvector().set(-.5f,-.5f,-.5f),Fvector().set(.5f,.5f,.5f)).xform(data.data.box).getradius());
+	case CCF_Shape::type_sphere	: return(reinterpret_cast<CCF_Shape::shape_sphere*>(data.data.get())->sphere.R);
+	case CCF_Shape::type_box	: return(Fbox().set(Fvector().set(-.5f,-.5f,-.5f),Fvector().set(.5f,.5f,.5f)).xform(reinterpret_cast<CCF_Shape::shape_box*>(data.data.get())->box).getradius());
 		default : NODEFAULT;
 	}
 #ifdef DEBUG

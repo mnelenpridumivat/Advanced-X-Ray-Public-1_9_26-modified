@@ -1,4 +1,8 @@
 #include "stdafx.h"
+
+#pragma message("Remove this file!")
+
+#if 0
 #pragma hdrstop
 
 #include <errno.h>
@@ -319,3 +323,5 @@ u32 __stdcall xr_aligned_msize(void *memblock)
 	ptr = *((uintptr_t *)ptr);
 	return	(u32)	_msize	((void *)ptr);
 }
+
+#endif

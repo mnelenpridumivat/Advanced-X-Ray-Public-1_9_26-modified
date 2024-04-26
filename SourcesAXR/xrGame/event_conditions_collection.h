@@ -2,6 +2,7 @@
 #define EVENT_CONDITIONS_COLLECTION_INCLUDED
 
 #include "state_arguments_functions.h"
+#include "../xrCore/buffer_vector.h"
 
 namespace award_system
 {

@@ -30,7 +30,7 @@ namespace PAPI{
 	class pVector	: public Fvector
 	{
 	public:
-		IC 			pVector		(float ax, float ay, float az)	{ set(ax,ay,az);								}
+		ICF 			pVector		(float ax, float ay, float az) : Fvector(ax, ay, az)	{ /*set(ax,ay,az);*/								}
 		IC 			pVector		()								{}
 		IC float 	length		() const						{	return _sqrt(x*x+y*y+z*z);					}
 		IC float 	length2		() const						{	return (x*x+y*y+z*z);						}

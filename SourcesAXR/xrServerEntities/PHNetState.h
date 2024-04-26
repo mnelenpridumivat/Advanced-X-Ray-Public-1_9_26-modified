@@ -20,6 +20,34 @@ struct SPHNetState
 	};
 	Fquaternion	previous_quaternion;
 	bool		enabled;
+
+	ICF SPHNetState() {};
+
+	ICF SPHNetState(const SPHNetState& other)
+	{
+		linear_vel = other.linear_vel;
+		angular_vel = other.angular_vel;
+		force = other.force;
+		torque = other.torque;
+		position = other.position;
+		previous_position = other.previous_position;
+		previous_quaternion = other.previous_quaternion;
+		enabled = other.enabled;
+	}
+
+	SPHNetState& operator=(const SPHNetState& other)
+	{
+		linear_vel = other.linear_vel;
+		angular_vel = other.angular_vel;
+		force = other.force;
+		torque = other.torque;
+		position = other.position;
+		previous_position = other.previous_position;
+		previous_quaternion = other.previous_quaternion;
+		enabled = other.enabled;
+		return *this;
+	}
+
 	void								net_Export			(		NET_Packet&		P);					
 	void								net_Import			(		NET_Packet&		P);
 	void								net_Import			(		IReader&		P);

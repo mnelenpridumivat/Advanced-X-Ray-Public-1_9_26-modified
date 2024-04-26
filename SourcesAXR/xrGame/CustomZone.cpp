@@ -928,13 +928,13 @@ void CCustomZone::PlayBoltEntranceParticles()
 		{
 		case 0: // sphere
 			{
-			sP0						= s.data.sphere.P;
+			sP0						= reinterpret_cast<CCF_Shape::shape_sphere*>(s.data.get())->sphere.P;
 			XF.transform_tiny		(sP0);
 
 			
 			
-			float ki				= 10.0f * s.data.sphere.R;
-			float c					= 2.0f * s.data.sphere.R;
+			float ki				= 10.0f * reinterpret_cast<CCF_Shape::shape_sphere*>(s.data.get())->sphere.R;
+			float c					= 2.0f * reinterpret_cast<CCF_Shape::shape_sphere*>(s.data.get())->sphere.R;
 
 			float quant_h			= (PI_MUL_2/static_cast<float>(ki))*c;
 			float quant_p			= (PI_DIV_2/static_cast<float>(ki));
@@ -945,7 +945,7 @@ void CCustomZone::PlayBoltEntranceParticles()
 											::Random.randF(quant_p/2.0f, quant_p)*i
 										);
 
-				vel.mul					(s.data.sphere.R);
+				vel.mul					(reinterpret_cast<CCF_Shape::shape_sphere*>(s.data.get())->sphere.R);
 
 				sP1.add					(sP0, vel);
 
@@ -1571,11 +1571,11 @@ void CCustomZone::CalcDistanceTo(const Fvector& P, float& dist, float& radius)
 		float d = 0.0f;
 		switch (s.type)
 		{
-		case 0: // sphere
-			sP = s.data.sphere.P;
+		case CCF_Shape::type_sphere:
+			sP = reinterpret_cast<CCF_Shape::shape_sphere*>(s.data.get())->sphere.P;
 			break;
-		case 1: // box
-			sP = s.data.box.c;
+		case CCF_Shape::type_box:
+			sP = reinterpret_cast<CCF_Shape::shape_box*>(s.data.get())->box.c;
 			break;
 		}
 
@@ -1591,15 +1591,21 @@ void CCustomZone::CalcDistanceTo(const Fvector& P, float& dist, float& radius)
 	
 	dist	= nearest;
 
-	if(nearest_s->type==0)
-		radius	= nearest_s->data.sphere.R;
-	else
+	switch(nearest_s->type)
 	{
-		float r1 = nearest_s->data.box.i.magnitude();
-		float r2 = nearest_s->data.box.j.magnitude();
-		float r3 = nearest_s->data.box.k.magnitude();
-		radius = _max(r1,r2);
-		radius = _max(radius,r3);
+	case CCF_Shape::type_sphere:
+		{
+		radius = reinterpret_cast<CCF_Shape::shape_sphere*>(nearest_s->data.get())->sphere.R;
+		break;
+		}
+	case CCF_Shape::type_box:
+		{
+		float r1 = reinterpret_cast<CCF_Shape::shape_box*>(nearest_s->data.get())->box.i.magnitude();
+		float r2 = reinterpret_cast<CCF_Shape::shape_box*>(nearest_s->data.get())->box.j.magnitude();
+		float r3 = reinterpret_cast<CCF_Shape::shape_box*>(nearest_s->data.get())->box.k.magnitude();
+		radius = _max(r1, r2);
+		radius = _max(radius, r3);
+		}
 	}
 
 }

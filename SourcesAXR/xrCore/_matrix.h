@@ -50,6 +50,36 @@ public:
 		T m[4][4];					// Array
 	};
 
+	ICF	_matrix() {}
+
+	ICF _matrix(	T _11, T _12, T _13, T _14,
+					T _21, T _22, T _23, T _24,
+					T _31, T _32, T _33, T _34,
+					T _41, T _42, T _43, T _44)
+	{
+		this->_11 = _11; this->_12 = _12; this->_13 = _13; this->_14 = _14;
+		this->_21 = _21; this->_22 = _22; this->_23 = _23; this->_24 = _24;
+		this->_31 = _31; this->_32 = _32; this->_33 = _33; this->_34 = _34;
+		this->_41 = _41; this->_42 = _42; this->_43 = _43; this->_44 = _44;
+	}
+
+	ICF _matrix(SelfCRef other)
+	{
+		i = other.i;
+		j = other.j;
+		k = other.k;
+		c = other.c;
+	}
+
+	ICF SelfRef operator=(SelfCRef other)
+	{
+		i = other.i;
+		j = other.j;
+		k = other.k;
+		c = other.c;
+		return *this;
+	}
+
 	// Class members
 	ICF	SelfRef	set			(const Self &a) 
 	{

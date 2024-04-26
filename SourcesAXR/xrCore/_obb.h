@@ -10,6 +10,7 @@ public:
 	typedef _vector3<T>	Tvector;
 	typedef _matrix<T>	Tmatrix;
 protected:
+
     static bool		clip		(T fDenom, T fNumer, T& rfT0, T& rfT1)
     {
         // Return value is 'true' if line segment intersects the current test
@@ -46,6 +47,23 @@ public:
 	_matrix33<T>	m_rotate;
 	Tvector			m_translate;
 	Tvector			m_halfsize;
+
+	ICF _obb() {}
+
+	ICF _obb(const _obb& other)
+	{
+		m_rotate = other.m_rotate;
+		m_translate = other.m_translate;
+		m_halfsize = other.m_halfsize;
+	}
+
+	_obb& operator=(const _obb& other)
+	{
+		m_rotate = other.m_rotate;
+		m_translate = other.m_translate;
+		m_halfsize = other.m_halfsize;
+		return *this;
+	}
 
 	IC SelfRef		invalidate() {
 		m_rotate.identity	();
@@ -124,7 +142,7 @@ typedef		_obb<double>	Dobb;
 template <class T>
 BOOL	_valid			(const _obb<T>& m)		
 { 
-	return _valid(m_rotate) && _valid(m_translate) && _valid(m_halfsize);
+	return _valid(m.m_rotate) && _valid(m.m_translate) && _valid(m.m_halfsize);
 }
 
 #endif

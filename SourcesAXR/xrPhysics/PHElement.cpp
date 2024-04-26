@@ -1230,7 +1230,7 @@ void CPHElement::add_Mass(const SBoneShape& shape,const Fmatrix& offset,const Fv
 	dMatrix3 DMatx;
 	switch(shape.type) 
 	{
-	case SBoneShape::stBox	:
+	case EBoneShapeType::stBox	:
 		{
 			dMassSetBox(&m,1.f,shape.box.m_halfsize.x*2.f,shape.box.m_halfsize.y*2.f,shape.box.m_halfsize.z*2.f);
 			dMassAdjust(&m,mass);
@@ -1241,7 +1241,7 @@ void CPHElement::add_Mass(const SBoneShape& shape,const Fmatrix& offset,const Fv
 			dMassTranslate(&m,shape.box.m_translate.x-mass_center.x,shape.box.m_translate.y-mass_center.y,shape.box.m_translate.z-mass_center.z);
 			break;
 		}
-	case SBoneShape::stSphere	:
+	case EBoneShapeType::stSphere	:
 		{
 			shape.sphere;
 			dMassSetSphere(&m,1.f,shape.sphere.R);
@@ -1251,7 +1251,7 @@ void CPHElement::add_Mass(const SBoneShape& shape,const Fmatrix& offset,const Fv
 		}
 
 
-	case SBoneShape::stCylinder :
+	case EBoneShapeType::stCylinder :
 		{
 			const Fvector& pos=shape.cylinder.m_center;
 			Fvector l;
@@ -1268,7 +1268,7 @@ void CPHElement::add_Mass(const SBoneShape& shape,const Fmatrix& offset,const Fv
 			break;
 		}
 
-	case SBoneShape::stNone :
+	case EBoneShapeType::stNone :
 		break;
 	default: NODEFAULT;
 	}

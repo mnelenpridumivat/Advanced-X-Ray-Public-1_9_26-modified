@@ -10,7 +10,6 @@ namespace PAPI {
 		float 		radius1;		// Outer radius
 		float 		radius2;		// Inner radius
 		float 		radius1Sqr;		// Used for fast Within test of spheres,
-		float 		radius2Sqr;		// and for mag. of u and v vectors for plane.
 
 		virtual BOOL 		Within(const pVector&) const;
 		virtual void 		Generate(pVector&) const;

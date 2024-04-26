@@ -1,4 +1,9 @@
 #pragma once
+
+#pragma message("xr_map.h is deprecated, use xrCommon/xr_map.h instead")
+
+#if 0
+
 #include <map>
 #include "xalloc.h"
 
@@ -23,4 +28,6 @@ using xr_multimap = std::multimap<K, V, P, allocator>;
 #define DEFINE_MMAP(K, T, N, I)\
     typedef xr_multimap<K, T> N;\
     typedef N::iterator I;
+
+#endif
     

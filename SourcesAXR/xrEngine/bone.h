@@ -1,6 +1,9 @@
 //----------------------------------------------------
-#ifndef BoneH
-#define BoneH
+#pragma once
+
+//#include "stdafx.h"
+#include "../xrCore/FixedVector.h"
+
 
 // refs
 class CBone;
@@ -141,7 +144,7 @@ enum EJointType
     jtForceU32 = u32(-1)
 };
 
-struct ECORE_API SJointLimit
+struct SJointLimit
 {
 	Fvector2		limit;
     float 			spring_factor;
@@ -155,16 +158,25 @@ struct ECORE_API SJointLimit
     }
 };
 
-struct ECORE_API SBoneShape
+ENGINE_API enum class EBoneShapeType
 {
-    enum EShapeType
+	stNone,
+	stBox,
+	stSphere,
+	stCylinder,
+	stForceU32 = u16(-1)
+};
+
+struct SBoneShape
+{
+    /*enum EShapeType
 	{
     	stNone,
         stBox,
         stSphere,
         stCylinder,
         stForceU32 = u16(-1)
-    };
+    };*/
 
 	enum EShapeFlags{
 		sfNoPickable		= (1<<0), 	// use only in RayPick
@@ -173,7 +185,8 @@ struct ECORE_API SBoneShape
         sfNoFogCollider		= (1<<3),	
 	};
 
-	u16				type;		// 2
+	EBoneShapeType		type;		// 2
+	byte			spacer;		// use to compensate shrinking of struct size (bugs with reading binaries) 
 	Flags16			flags;		// 2
   	Fobb			box;      	// 15*4
     Fsphere			sphere;		// 4*4
@@ -182,22 +195,22 @@ struct ECORE_API SBoneShape
     void			Reset()
     {
 		flags.zero	();
-    	type		= stNone;
+    	type		= EBoneShapeType::stNone;
         box.invalidate();
         sphere.P.set(0.f,0.f,0.f); sphere.R = 0.f;
         cylinder.invalidate();
     }
     bool			Valid(){  
     	switch (type){
-        case stBox: 	return !fis_zero(box.m_halfsize.x)&&!fis_zero(box.m_halfsize.x)&&!fis_zero(box.m_halfsize.x);
-        case stSphere: 	return !fis_zero(sphere.R);
-        case stCylinder:return !fis_zero(cylinder.m_height)&&!fis_zero(cylinder.m_radius)&&!fis_zero(cylinder.m_direction.square_magnitude());
+        case EBoneShapeType::stBox: 	return !fis_zero(box.m_halfsize.x)&&!fis_zero(box.m_halfsize.x)&&!fis_zero(box.m_halfsize.x);
+        case EBoneShapeType::stSphere: 	return !fis_zero(sphere.R);
+        case EBoneShapeType::stCylinder:return !fis_zero(cylinder.m_height)&&!fis_zero(cylinder.m_radius)&&!fis_zero(cylinder.m_direction.square_magnitude());
         };
         return true;
     }
 };
 
-struct ECORE_API SJointIKData
+struct SJointIKData
 {
     // IK
     EJointType		type;
@@ -275,7 +288,7 @@ struct ECORE_API SJointIKData
 
 
 
-class 	IBoneData
+class	IBoneData
 {
 	public:
 
@@ -302,7 +315,7 @@ class 	IBoneData
 class CBone;
 DEFINE_VECTOR		    (CBone*,BoneVec,BoneIt);
 
-class ECORE_API CBone:
+class CBone:
 	public CBoneInstance,
 	public IBoneData
 {
@@ -538,4 +551,3 @@ IC void		CBoneInstance::construct	()
 }
 
 
-#endif

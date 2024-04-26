@@ -572,7 +572,7 @@ float	CPoltergeist::get_detection_success_level ()
 
 void CPoltergeist::PhysicalImpulse(const Fvector& position)
 {
-	m_nearest.clear_not_free();
+	m_nearest.erase(m_nearest.begin(), m_nearest.end());
 	Level().ObjectSpace.GetNearest(m_nearest, position, IMPULSE_RADIUS, nullptr);
 	//xr_vector<CObject*> &m_nearest = Level().ObjectSpace.q_nearest;
 	if (m_nearest.empty())			return;

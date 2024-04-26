@@ -3,6 +3,11 @@
 
 #include "../xrcdb/xr_collide_defs.h"
 
+#include <algorithm>
+#include <xutility>
+
+#include "bone.h"
+
 // refs
 class ENGINE_API	CObject;
 class ENGINE_API	CInifile;
@@ -109,7 +114,7 @@ class ENGINE_API	CCF_Skeleton : public ICollisionForm
 {
 public:
 	struct ENGINE_API SElement {
-		union{
+		/*union{
 			struct{
 				Fmatrix	b_IM;		// world 2 bone xform
 				Fvector	b_hsize;
@@ -120,15 +125,90 @@ public:
 			struct{
 				Fcylinder c_cylinder;
 			};
+		};*/
+		struct shape_data
+		{
+			virtual xr_unique_ptr<shape_data> GetCopy() = 0;
 		};
-		u16				type;
+		struct bone_shape_data : public shape_data
+		{
+			Fmatrix	b_IM;		// world 2 bone xform
+			Fvector	b_hsize;
+
+			bone_shape_data(const Fmatrix& b_IM, const Fvector& b_hsize) : b_IM(b_IM), b_hsize(b_hsize) {}
+
+			virtual xr_unique_ptr<shape_data> GetCopy() override
+			{
+				return xr_unique_ptr<shape_data>(xr_new<bone_shape_data>(b_IM, b_hsize));
+			}
+
+		};
+		struct sphere_shape_data : public shape_data
+		{
+			Fsphere	s_sphere;
+
+			sphere_shape_data(const Fsphere& s_sphere) : s_sphere(s_sphere) {}
+
+			virtual xr_unique_ptr<shape_data> GetCopy() override
+			{
+				return xr_unique_ptr<shape_data>(xr_new<sphere_shape_data>(s_sphere));
+			}
+
+		};
+		struct cylinder_shape_data : public shape_data
+		{
+			Fcylinder	c_cylinder;
+
+			cylinder_shape_data(const Fcylinder& c_cylinder) : c_cylinder(c_cylinder) {}
+
+			virtual xr_unique_ptr<shape_data> GetCopy() override
+			{
+				return xr_unique_ptr<shape_data>(xr_new<cylinder_shape_data>(c_cylinder));
+			}
+
+		};
+		/*enum class shape_type
+		{
+			invalid = 0,
+			bone,
+			sphere,
+			cylinder,
+		};*/
+		EBoneShapeType type;
+		xr_unique_ptr<shape_data> data;
 		u16				elem_id;
+
+		ICF SElement(const SElement& other)
+		{
+			type = other.type;
+			data = other.data->GetCopy();
+			elem_id = other.elem_id;
+		}
+
+		ICF SElement& operator=(const SElement& other)
+		{
+			type = other.type;
+			data = other.data->GetCopy();
+			elem_id = other.elem_id;
+			return *this;
+		}
+
 	public:
-						SElement	()				:elem_id(u16(-1)),type(0)	{}
-						SElement	(u16 id, u16 t)	:elem_id(id),type(t)		{}
-		BOOL			valid		() const									{return (elem_id!=(u16(-1)))&&(type!=0);}
+						SElement	()				:elem_id(u16(-1)),type(type_invalid)	{}
+						SElement	(u16 id, EBoneShapeType t)	:elem_id(id),type(t)		{}
+		BOOL			valid		() const									{return (elem_id!=(u16(-1)))&&(type!= type_invalid);}
 		void			center		(Fvector& center) const;
 	};
+
+	using shape = SElement::shape_data;
+	using shape_bone = SElement::bone_shape_data;
+	using shape_sphere = SElement::sphere_shape_data;
+	using shape_cylinder = SElement::cylinder_shape_data;
+	inline static constexpr auto type_bone = EBoneShapeType::stBox;
+	inline static constexpr auto type_sphere = EBoneShapeType::stSphere;
+	inline static constexpr auto type_cylinder = EBoneShapeType::stCylinder;
+	inline static constexpr auto type_invalid = EBoneShapeType::stNone;
+
 	DEFINE_VECTOR		(SElement,ElementVec,ElementVecIt);
 private:
 	u64					vis_mask;
@@ -136,6 +216,15 @@ private:
 
 	u32					dwFrame;		// The model itself
 	u32					dwFrameTL;		// Top level
+
+	ICF CCF_Skeleton& operator=(const CCF_Skeleton& other)
+	{
+		std::copy(other.elements.begin(), other.elements.end(), elements.begin());
+		vis_mask = other.vis_mask;
+		dwFrame = other.dwFrame;
+		dwFrameTL = other.dwFrameTL;
+		return *this;
+	}
 
 	void				BuildState		();
 	void				BuildTopLevel	();
@@ -166,22 +255,89 @@ public:
 class ENGINE_API	CCF_Shape	: public ICollisionForm
 {
 public:
-	union shape_data
+
+	/*union shape_data
 	{
 		Fsphere		sphere;
 		struct{
 			Fmatrix	box;
 			Fmatrix	ibox;
 		};
-	};
+	};*/
+
 	struct shape_def
 	{
-		int			type;
-		shape_data	data;
+		struct shape_data
+		{
+			virtual xr_unique_ptr<shape_data> GetCopy() = 0;
+		};
+		struct sphere_shape_data: public shape_data
+		{
+			Fsphere	sphere;
+
+			sphere_shape_data(const Fsphere& sphere): sphere(sphere) {}
+
+			virtual xr_unique_ptr<shape_data> GetCopy() override
+			{
+				return xr_unique_ptr<shape_data>(xr_new<sphere_shape_data>(sphere));
+			}
+
+		};
+		struct box_shape_data : public shape_data
+		{
+			Fmatrix	box;
+			Fmatrix	ibox;
+
+			box_shape_data(const Fmatrix& box, const Fmatrix& ibox) : box(box), ibox(ibox) {}
+
+			virtual xr_unique_ptr<shape_data> GetCopy() override
+			{
+				return xr_unique_ptr<shape_data>(xr_new<box_shape_data>(box, ibox));
+			}
+
+		};
+		enum class shape_type
+		{
+			sphere = 0,
+			box = 1,
+		};
+		shape_type	type;
+		xr_unique_ptr<shape_data> data;
+
+		ICF shape_def() : type(type_sphere), data(nullptr){}
+
+		ICF shape_def(const shape_def& other)
+		{
+			type = other.type;
+			data = other.data->GetCopy();
+		}
+
+		ICF shape_def& operator=(const shape_def& other)
+		{
+			type = other.type;
+			data = other.data->GetCopy();
+			return *this;
+		}
+
+		
+		
 	};
+
+	using shape = shape_def::shape_data;
+	using shape_sphere = shape_def::sphere_shape_data;
+	using shape_box = shape_def::box_shape_data;
+	inline static constexpr auto type_sphere = shape_def::shape_type::sphere;
+	inline static constexpr auto type_box = shape_def::shape_type::box;
+
 	xr_vector<shape_def>	shapes;
 public:
 					CCF_Shape		( CObject* _owner );
+
+	ICF CCF_Shape& operator=(const CCF_Shape& other)
+	{
+		std::copy(other.shapes.begin(), other.shapes.end(), shapes.begin());
+		return *this;
+	}
 
 	virtual BOOL	_RayQuery		( const collide::ray_defs& Q, collide::rq_results& R);
 	//virtual void	_BoxQuery		( const Fbox& B, const Fmatrix& M, u32 flags);

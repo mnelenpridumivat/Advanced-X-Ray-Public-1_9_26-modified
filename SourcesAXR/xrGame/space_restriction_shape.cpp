@@ -56,14 +56,14 @@ void CSpaceRestrictionShape::fill_shape		(const CCF_Shape::shape_def &shape)
 {
 	Fvector							start,dest;
 	switch (shape.type) {
-		case 0 : {
-			start.sub				(Fvector().set(shape.data.sphere.P),Fvector().set(shape.data.sphere.R,0.f,shape.data.sphere.R));
-			dest.add				(Fvector().set(shape.data.sphere.P),Fvector().set(shape.data.sphere.R,0.f,shape.data.sphere.R));
+	case CCF_Shape::type_sphere : {
+			start.sub				(Fvector().set(reinterpret_cast<CCF_Shape::shape_sphere*>(shape.data.get())->sphere.P),Fvector().set(reinterpret_cast<CCF_Shape::shape_sphere*>(shape.data.get())->sphere.R,0.f, reinterpret_cast<CCF_Shape::shape_sphere*>(shape.data.get())->sphere.R));
+			dest.add				(Fvector().set(reinterpret_cast<CCF_Shape::shape_sphere*>(shape.data.get())->sphere.P),Fvector().set(reinterpret_cast<CCF_Shape::shape_sphere*>(shape.data.get())->sphere.R,0.f, reinterpret_cast<CCF_Shape::shape_sphere*>(shape.data.get())->sphere.R));
 			start.add				(m_restrictor->Position());
 			dest.add				(m_restrictor->Position());
 			break;
 		}
-		case 1 : {
+	case CCF_Shape::type_box : {
 			Fvector					points[8] = {
 				Fvector().set(-.5f,-.5f,-.5f),
 				Fvector().set(-.5f,-.5f,+.5f),
@@ -77,7 +77,7 @@ void CSpaceRestrictionShape::fill_shape		(const CCF_Shape::shape_def &shape)
 			start					= Fvector().set(flt_max,flt_max,flt_max);
 			dest					= Fvector().set(flt_min,flt_min,flt_min);
 			Fmatrix					Q;
-			Q.mul_43				(m_restrictor->XFORM(),shape.data.box);
+			Q.mul_43				(m_restrictor->XFORM(), reinterpret_cast<CCF_Shape::shape_box*>(shape.data.get())->box);
 			Fvector					temp;
 			for (int i=0; i<8; ++i) {
                 Q.transform_tiny	(temp,points[i]);

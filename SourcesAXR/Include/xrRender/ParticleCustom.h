@@ -1,8 +1,6 @@
-#ifndef	ParticleCustom_included
-#define	ParticleCustom_included
 #pragma once
 
-#define PSParam_Enum(...) \
+/*#define PSParam_Enum(...) \
 enum class EParams{ \
 	__VA_ARGS__ \
 }; \
@@ -289,7 +287,7 @@ PSParam_Param(
 			PSParam_Struct(BasisV, Fvector)
 		)
 	)
-)
+)*/
 
 /*
 struct SPSDomainPoint{
@@ -494,7 +492,7 @@ struct SPSDomainRectangleBasisV
 	Fvector BasisV;
 };*/
 
-struct SPSParamUnion
+/*struct SPSParamUnion
 {
 
 	union Param
@@ -514,7 +512,7 @@ struct SPSParamUnion
 			}
 		}
 	};
-};
+};*/
 
 class IParticleCustom
 {
@@ -546,5 +544,3 @@ public:
 	virtual void	SetHudMode			(BOOL b)=0;
 	virtual BOOL	GetHudMode			()=0;
 };
-
-#endif	//	ParticleCustom_included

@@ -652,6 +652,7 @@
     <ClCompile Include="stream_reader.cpp" />
     <ClCompile Include="string_concatenations.cpp" />
     <ClCompile Include="Threading\Event.cpp" />
+    <ClCompile Include="xrCommon\Memory\xrMemory_align.cpp" />
     <ClCompile Include="xrCore.cpp" />
     <ClCompile Include="xrDebug.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -776,6 +777,24 @@
     <ClInclude Include="Threading\Event.hpp" />
     <ClInclude Include="vector.h" />
     <ClInclude Include="xalloc.h" />
+    <ClInclude Include="xrCommon\math_constants.h" />
+    <ClInclude Include="xrCommon\math_funcs.h" />
+    <ClInclude Include="xrCommon\math_funcs_inline.h" />
+    <ClInclude Include="xrCommon\Memory\xalloc.h" />
+    <ClInclude Include="xrCommon\Memory\xrMemory_align.h" />
+    <ClInclude Include="xrCommon\misc_math_types.h" />
+    <ClInclude Include="xrCommon\predicates.h" />
+    <ClInclude Include="xrCommon\xr_allocator.h" />
+    <ClInclude Include="xrCommon\xr_array.h" />
+    <ClInclude Include="xrCommon\xr_deque.h" />
+    <ClInclude Include="xrCommon\xr_list.h" />
+    <ClInclude Include="xrCommon\xr_map.h" />
+    <ClInclude Include="xrCommon\xr_set.h" />
+    <ClInclude Include="xrCommon\xr_smart_pointers.h" />
+    <ClInclude Include="xrCommon\xr_stack.h" />
+    <ClInclude Include="xrCommon\xr_string.h" />
+    <ClInclude Include="xrCommon\xr_unordered_map.h" />
+    <ClInclude Include="xrCommon\xr_vector.h" />
     <ClInclude Include="xrCore.h" />
     <ClInclude Include="xrCore_platform.h" />
     <ClInclude Include="xrDebug.h" />

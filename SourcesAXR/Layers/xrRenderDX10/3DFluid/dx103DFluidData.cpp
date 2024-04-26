@@ -225,7 +225,7 @@ void dx103DFluidData::ParseProfile(const xr_string &Profile)
 #ifdef	DEBUG
 void dx103DFluidData::ReparseProfile(const xr_string &Profile)
 {
-	m_Emitters.clear_not_free();
+	m_Emitters.erase(m_Emitters.begin(), m_Emitters.end());
 	ParseProfile(Profile);
 }
 #endif	//	DEBUG

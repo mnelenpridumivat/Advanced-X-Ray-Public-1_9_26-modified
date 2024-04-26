@@ -1527,25 +1527,28 @@ void	CActor::OnRender_Network()
 					for (CCF_Skeleton::ElementVec::const_iterator I=Elements.begin(); I!=Elements.end(); I++){
 						if (!I->valid())		continue;
 						switch (I->type){
-							case SBoneShape::stBox:{
+							case EBoneShapeType::stBox:{
 								Fmatrix M;
-								M.invert			(I->b_IM);
-								Fvector h_size		= I->b_hsize;
+								auto casted_data = reinterpret_cast<CCF_Skeleton::shape_bone*>(I->data.get());
+								M.invert			(casted_data->b_IM);
+								Fvector h_size		= casted_data->b_hsize;
 								Level().debug_renderer().draw_obb	(M, h_size, color_rgba(0, 255, 0, 255));
 							}break;
-							case SBoneShape::stCylinder:{
+							case EBoneShapeType::stCylinder:{
 								Fmatrix M;
-								M.c.set				(I->c_cylinder.m_center);
-								M.k.set				(I->c_cylinder.m_direction);
+								auto casted_data = reinterpret_cast<CCF_Skeleton::shape_cylinder*>(I->data.get());
+								M.c.set				(casted_data->c_cylinder.m_center);
+								M.k.set				(casted_data->c_cylinder.m_direction);
 								Fvector				h_size;
-								h_size.set			(I->c_cylinder.m_radius,I->c_cylinder.m_radius,I->c_cylinder.m_height*0.5f);
+								h_size.set			(casted_data->c_cylinder.m_radius, casted_data->c_cylinder.m_radius, casted_data->c_cylinder.m_height*0.5f);
 								Fvector::generate_orthonormal_basis(M.k,M.j,M.i);
 								Level().debug_renderer().draw_obb	(M, h_size, color_rgba(0, 127, 255, 255));
 							}break;
-							case SBoneShape::stSphere:{
+							case EBoneShapeType::stSphere:{
 								Fmatrix				l_ball;
-								l_ball.scale		(I->s_sphere.R, I->s_sphere.R, I->s_sphere.R);
-								l_ball.translate_add(I->s_sphere.P);
+								auto casted_data = reinterpret_cast<CCF_Skeleton::shape_sphere*>(I->data.get());
+								l_ball.scale		(casted_data->s_sphere.R, casted_data->s_sphere.R, casted_data->s_sphere.R);
+								l_ball.translate_add(casted_data->s_sphere.P);
 								Level().debug_renderer().draw_ellipse(l_ball, color_rgba(0, 255, 0, 255));
 							}break;
 						};

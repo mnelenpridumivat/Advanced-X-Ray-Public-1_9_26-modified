@@ -347,7 +347,7 @@ void stalker_movement_manager_smart_cover::loophole_path					(smart_cover::cover
 
 	typedef GraphEngineSpace::CBaseParameters	CBaseParameters;
 	CBaseParameters			parameters(static_cast<u32>(-1),static_cast<u32>(-1),static_cast<u32>(-1));
-	path.clear_not_free		();
+	path.erase(path.begin(), path.end());
 	R_ASSERT2				(
 		ai().graph_engine().search(
 			cover.description()->transitions(),

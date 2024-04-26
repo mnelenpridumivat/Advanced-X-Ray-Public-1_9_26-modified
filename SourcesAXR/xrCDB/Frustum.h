@@ -42,10 +42,14 @@ public:
 	struct fplane	: public Fplane
 	{
 		u32			aabb_overlap_id;	// [0..7]
-		void		cache	();	
+		void		cache	();
+
+		ICF fplane() : Fplane() {}
 	};
 	fplane			planes	[FRUSTUM_MAXPLANES];
 	int				p_count;
+
+	ICF CFrustum(){}
 
 public:
 	ICF EFC_Visible		AABB_OverlapPlane	(const fplane& P, const float* mM) const

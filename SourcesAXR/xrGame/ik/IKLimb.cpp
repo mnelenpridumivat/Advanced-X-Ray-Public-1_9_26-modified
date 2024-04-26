@@ -10,6 +10,8 @@
 #include "../game_object_space.h"
 #include "../ik_anim_state.h"
 
+#include "../xrCore/buffer_vector.h"
+
 //#include "../ode_include.h"
 #include "../../xrphysics/MathUtils.h"
 #include "../../xrphysics/matrix_utils.h"

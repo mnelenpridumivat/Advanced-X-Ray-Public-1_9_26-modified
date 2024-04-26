@@ -195,8 +195,8 @@ void CParticleGroup::SItem::Clear()
 	//	Igor: zero all pointers! Previous code didn't zero _source_ pointers,
 	//	just temporary ones.
 	_effect = 0;
-	_children_related.clear_not_free();
-	_children_free.clear_not_free();
+	_children_related.erase(_children_related.begin(), _children_related.end());
+	_children_free.erase(_children_related.begin(), _children_related.end());
 }
 void CParticleGroup::SItem::StartRelatedChild(CParticleEffect* emitter, LPCSTR eff_name, PAPI::Particle& m)
 {

@@ -1,6 +1,7 @@
 #pragma once
 #include "level_bullet_manager.h"
 #include "game_base_kill_type.h"
+#include "../xrCore/buffer_vector.h"
 
 #define STAT_TEAM_COUNT 3
 
@@ -185,7 +186,7 @@ struct Bullet_Check_Array
 	bool			operator	==		(u32 ID){return	ID == SenderID;}
 	bool			operator	!=		(u32 ID){return	ID != SenderID;}
 	Bullet_Check_Array(u32 ID) : SenderID(ID) {Requests.clear(); NumTrue = 0; NumFalse = 0;};
-	~Bullet_Check_Array () {Requests.clear_and_free();};
+	~Bullet_Check_Array () {Requests.erase(Requests.begin(), Requests.end());};
 };	
 
 DEF_VECTOR(BChA, Bullet_Check_Array);

@@ -65,7 +65,7 @@ void obstacles_query::compute_area		()
 {
 	m_actual					= true;
 
-	m_area.clear_not_free		();
+	m_area.erase(m_area.begin(), m_area.end());
 
 	m_crc						= 0;
 	OBSTACLES::iterator			I = m_obstacles.begin();

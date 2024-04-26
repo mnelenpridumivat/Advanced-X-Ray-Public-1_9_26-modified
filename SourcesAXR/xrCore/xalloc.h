@@ -1,4 +1,9 @@
 #pragma once
+
+#pragma message("xalloc.h moved to xrCommon/Memory/xalloc.h!")
+#include "xrCommon/Memory/xalloc.h"
+
+#if 0
 #include "xrMemory.h"
 
 template <typename T>
@@ -73,6 +78,7 @@ bool operator!=(const xalloc<T>&, const xalloc<Other>&)
 
 template <typename T>
 using xr_allocator = xalloc<T>;
+#endif
 
 /*namespace std
 {

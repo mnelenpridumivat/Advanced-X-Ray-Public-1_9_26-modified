@@ -21,7 +21,7 @@ IC	void obstacles_query::init									()
 
 IC	void obstacles_query::clear									()
 {
-	m_area.clear_not_free	();
+	m_area.erase(m_area.begin(), m_area.end());
 	m_obstacles.clear		();
 	init					();
 }

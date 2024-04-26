@@ -9,6 +9,9 @@
 #pragma once
 #include <type_traits>
 
+#include "../xrCore/buffer_vector.h"
+#include "../xrCore/FixedVector.h"
+
 template <class M, typename P>
 struct CLoader {
 	

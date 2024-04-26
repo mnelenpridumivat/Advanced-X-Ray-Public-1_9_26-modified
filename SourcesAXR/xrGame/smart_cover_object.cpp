@@ -111,16 +111,16 @@ void object::OnRender		()
 	CDebugRenderer					&renderer = Level().debug_renderer();
 	for (l_pShape = l_shapes.begin(); l_shapes.end() != l_pShape; ++l_pShape) {
 		switch(l_pShape->type) {
-			case 0:	{
-				Fsphere				&l_sphere = l_pShape->data.sphere;
+			case CCF_Shape::type_sphere:	{
+				Fsphere				&l_sphere = reinterpret_cast<CCF_Shape::shape_sphere*>(l_pShape->data.get())->sphere;
 				l_ball.scale		(l_sphere.R, l_sphere.R, l_sphere.R);
 				Fvector				l_p; XFORM().transform(l_p, l_sphere.P);
 				l_ball.translate_add(l_p);
 				renderer.draw_ellipse(l_ball, Color);
 				break;
 			}
-			case 1:	{
-				l_box.mul			(XFORM(), l_pShape->data.box);
+			case CCF_Shape::type_box:	{
+				l_box.mul			(XFORM(), reinterpret_cast<CCF_Shape::shape_box*>(l_pShape->data.get())->box);
 				renderer.draw_obb	(l_box, l_half, Color);
 				break;
 			}
@@ -160,15 +160,15 @@ bool object::inside			(Fvector const &position) const
 	Shapes::const_iterator			e = shape->shapes.end();
 	for ( ; i != e; ++i) {
 		switch (i->type) {
-			case 0 : {
-				if (i->data.sphere.P.distance_to(position) <= i->data.sphere.R)
+			case CCF_Shape::type_sphere: {
+				if (reinterpret_cast<CCF_Shape::shape_sphere*>(i->data.get())->sphere.P.distance_to(position) <= reinterpret_cast<CCF_Shape::shape_sphere*>(i->data.get())->sphere.R)
 					return			(true);
 
 				continue;
 			}
-			case 1 : {
+			case CCF_Shape::type_box: {
 				Fmatrix				matrix;
-				const Fmatrix		&box = i->data.box;
+				const Fmatrix		&box = reinterpret_cast<CCF_Shape::shape_box*>(i->data.get())->box;
 				matrix.mul_43		(XFORM(),box);
 				Fvector				A,B[8];
 				Fplane				plane;

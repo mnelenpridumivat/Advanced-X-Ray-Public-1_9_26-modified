@@ -250,7 +250,7 @@ void CPseudoGigant::on_threaten_execute()
 	Fvector& position = Position();
 
 	// разбросить объекты
-	m_nearest_pseudogig_kick.clear_not_free		();
+	m_nearest_pseudogig_kick.erase(m_nearest_pseudogig_kick.begin(), m_nearest_pseudogig_kick.end());
 	Level().ObjectSpace.GetNearest(m_nearest_pseudogig_kick, position, 15.f, nullptr);
 	for (u32 i=0;i<m_nearest_pseudogig_kick.size();i++)
 	{

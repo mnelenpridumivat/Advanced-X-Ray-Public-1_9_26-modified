@@ -200,7 +200,7 @@ void CPHGeometryOwner::add_Cylinder	(const Fcylinder& V)
 void CPHGeometryOwner::add_Shape(const SBoneShape& shape,const Fmatrix& offset)
 {
 	switch(shape.type) {
-	case SBoneShape::stBox	:
+	case EBoneShapeType::stBox	:
 		{
 			Fobb box=shape.box;
 			Fmatrix m;
@@ -215,7 +215,7 @@ void CPHGeometryOwner::add_Shape(const SBoneShape& shape,const Fmatrix& offset)
 			add_Box(box);
 			break;
 		}
-	case SBoneShape::stSphere	:
+	case EBoneShapeType::stSphere	:
 		{
 			Fsphere sphere=shape.sphere;
 			offset.transform_tiny(sphere.P);
@@ -224,7 +224,7 @@ void CPHGeometryOwner::add_Shape(const SBoneShape& shape,const Fmatrix& offset)
 		}
 
 
-	case SBoneShape::stCylinder :
+	case EBoneShapeType::stCylinder :
 		{
 			Fcylinder C=shape.cylinder;
 			offset.transform_tiny(C.m_center);
@@ -234,7 +234,7 @@ void CPHGeometryOwner::add_Shape(const SBoneShape& shape,const Fmatrix& offset)
 		}
 
 
-	case SBoneShape::stNone :
+	case EBoneShapeType::stNone :
 		break;
 	default: NODEFAULT;
 	}
@@ -243,25 +243,25 @@ void CPHGeometryOwner::add_Shape(const SBoneShape& shape,const Fmatrix& offset)
 void CPHGeometryOwner::add_Shape(const SBoneShape& shape)
 {
 	switch(shape.type) {
-	case SBoneShape::stBox	:
+	case EBoneShapeType::stBox	:
 		{
 			add_Box(shape.box);
 			break;
 		}
-	case SBoneShape::stSphere	:
+	case EBoneShapeType::stSphere	:
 		{
 			add_Sphere(shape.sphere);
 			break;
 		}
 
 
-	case SBoneShape::stCylinder :
+	case EBoneShapeType::stCylinder :
 		{
 			add_Cylinder(shape.cylinder);
 			break;
 		}
 
-	case SBoneShape::stNone :
+	case EBoneShapeType::stNone :
 		break;
 	default: NODEFAULT;
 	}

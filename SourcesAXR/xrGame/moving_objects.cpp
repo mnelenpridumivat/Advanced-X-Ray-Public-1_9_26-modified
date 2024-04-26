@@ -77,5 +77,5 @@ void moving_objects::on_object_move			(moving_object *moving_object)
 
 void moving_objects::clear					()
 {
-	m_previous_collisions.clear_not_free	();
+	m_previous_collisions.erase(m_previous_collisions.begin(), m_previous_collisions.end());
 }

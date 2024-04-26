@@ -4,6 +4,7 @@
 #include "game_state_accumulator.h"
 #include "level.h"
 #include "game_cl_base.h"
+#include "../xrCore/buffer_vector.h"
 
 namespace award_system
 {

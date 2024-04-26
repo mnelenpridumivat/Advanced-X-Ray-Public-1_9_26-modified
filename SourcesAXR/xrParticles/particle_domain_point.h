@@ -5,12 +5,7 @@ namespace PAPI {
 #pragma pack (push,4)
 	struct PARTICLES_API pDomainPoint
 	{
-		pVector 	p1, p2;			// Box vertices, Sphere center, Cylinder/Cone ends
-		pVector 	u, v;			// Orthonormal basis vectors for Cylinder/Cone
-		float 		radius1;		// Outer radius
-		float 		radius2;		// Inner radius
-		float 		radius1Sqr;		// Used for fast Within test of spheres,
-		float 		radius2Sqr;		// and for mag. of u and v vectors for plane.
+		pVector 	p1;			// Box vertices, Sphere center, Cylinder/Cone ends
 
 		virtual BOOL 		Within(const pVector&) const;
 		virtual void 		Generate(pVector&) const;

@@ -6,6 +6,7 @@
 #include "iinputreceiver.h"
 #include "xr_object_list.h"
 #include "../xrcdb/xr_area.h"
+#include "../xrCore/FixedVector.h"
 
 // refs
 class ENGINE_API CCameraManager;

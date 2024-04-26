@@ -1,5 +1,20 @@
-#ifndef _STL_EXT_internal
-#define _STL_EXT_internal
+#pragma once
+
+#pragma message("_stl_extensions.h is deprecated and will be removed with set of individual headers per each extension!")
+#include "xrCommon/xr_allocator.h"
+#include "xrCommon/xr_array.h"
+#include "xrCommon/xr_deque.h"
+#include "xrCommon/xr_list.h"
+#include "xrCommon/xr_map.h"
+#include "xrCommon/xr_set.h"
+#include "xrCommon/xr_smart_pointers.h"
+#include "xrCommon/xr_stack.h"
+#include "xrCommon/xr_string.h"
+#include "xrCommon/xr_unordered_map.h"
+#include "xrCommon/xr_vector.h"
+#include "xrCommon/predicates.h"
+
+#if 0
 
 #include <functional>
 

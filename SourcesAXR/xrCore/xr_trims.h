@@ -4,6 +4,9 @@
 // refs
 struct xr_token;
 
+DEFINE_VECTOR(LPSTR, LPSTRVec, LPSTRIt);
+DEFINE_VECTOR(xr_string, SStringVec, SStringVecIt);
+
 #ifdef __BORLANDC__
 	XRCORE_API 	AnsiString&	_Trim					( AnsiString& str );
 	XRCORE_API 	LPCSTR		_GetItem				( LPCSTR src, int, AnsiString& p, char separator=',', LPCSTR ="", bool trim=true);

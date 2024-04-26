@@ -5,6 +5,7 @@
 #include "..\xrEngine\StatGraph.h"
 #include "filetransfer_node.h"
 #include "filereceiver_node.h"
+#include "../xrCore/buffer_vector.h"
 
 
 //this module is an implementation of file transfering ...

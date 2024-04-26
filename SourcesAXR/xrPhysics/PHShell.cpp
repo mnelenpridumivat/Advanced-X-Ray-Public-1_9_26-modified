@@ -700,7 +700,7 @@ void CPHShell::ClearBreakInfo()
 	
 ICF bool no_physics_shape(const SBoneShape& shape)
 {
-	return shape.type==SBoneShape::stNone||shape.flags.test(SBoneShape::sfNoPhysics);
+	return shape.type== EBoneShapeType::stNone||shape.flags.test(SBoneShape::sfNoPhysics);
 }
 
 bool shape_is_physic( const SBoneShape& shape )

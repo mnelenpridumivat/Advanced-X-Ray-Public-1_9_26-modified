@@ -16,6 +16,7 @@
 #ifdef	DEBUG
 #include "phdebug.h"
 #endif
+#include "../xrCore/buffer_vector.h"
 
 #ifdef	DEBUG
 BOOL dbg_imotion_draw_skeleton = FALSE;

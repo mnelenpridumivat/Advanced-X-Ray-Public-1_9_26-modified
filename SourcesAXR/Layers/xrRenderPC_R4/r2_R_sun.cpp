@@ -889,12 +889,12 @@ void CRender::render_sun_near	()
 
 		// build viewport xform
 		float	view_dim			= float(RImplementation.o.smapsize);
-		Fmatrix	m_viewport			= {
+		Fmatrix	m_viewport(
 			view_dim/2.f,	0.0f,				0.0f,		0.0f,
 			0.0f,			-view_dim/2.f,		0.0f,		0.0f,
 			0.0f,			0.0f,				1.0f,		0.0f,
 			view_dim/2.f,	view_dim/2.f,		0.0f,		1.0f
-		};
+		);
 		Fmatrix				m_viewport_inv;
 		D3DXMatrixInverse	((D3DXMATRIX*)&m_viewport_inv,0,(D3DXMATRIX*)&m_viewport);
 
@@ -1136,12 +1136,12 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 
 		// build viewport xform
 		float	view_dim			= float(RImplementation.o.smapsize);
-		Fmatrix	m_viewport			= {
+		Fmatrix	m_viewport(
 			view_dim/2.f,	0.0f,				0.0f,		0.0f,
 			0.0f,			-view_dim/2.f,		0.0f,		0.0f,
 			0.0f,			0.0f,				1.0f,		0.0f,
 			view_dim/2.f,	view_dim/2.f,		0.0f,		1.0f
-		};
+		);
 		Fmatrix				m_viewport_inv;
 		D3DXMatrixInverse	((D3DXMATRIX*)&m_viewport_inv,0,(D3DXMATRIX*)&m_viewport);
 

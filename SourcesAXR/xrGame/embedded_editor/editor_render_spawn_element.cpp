@@ -35,10 +35,10 @@ void renderLevelChanger(CSE_ALifeLevelChanger* lc)
     transform.mk_xform(q, lc->position());
 
     UIRender->CacheSetCullMode(IUIRender::cmNONE);
-    for (auto shape : lc->shapes) {
+    for (auto& shape : lc->shapes) {
         switch (shape.type) {
         case CShapeData::cfSphere: {
-            Fsphere& S = shape.data.sphere;
+            const Fsphere& S = shape.data.sphere;
             Fmatrix B;
             B.scale(S.R, S.R, S.R);
             B.translate_over(S.P);

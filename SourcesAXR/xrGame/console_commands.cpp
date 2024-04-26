@@ -959,7 +959,7 @@ bool valid_saved_game_name(LPCSTR file_name)
 void get_files_list( xr_vector<shared_str>& files, LPCSTR dir, LPCSTR file_ext )
 {
 	VERIFY( dir && file_ext );
-	files.clear_not_free();
+	files.erase(files.begin(), files.end());
 
 	FS_Path* P = FS.get_path( dir );
 	P->m_Flags.set( FS_Path::flNeedRescan, TRUE );
@@ -1260,7 +1260,7 @@ public:
 
 	void Execute(LPCSTR) override
 	{
-		LogFile->clear_not_free	();
+		LogFile->erase(LogFile->begin(), LogFile->end());
 		FlushLog				();
 		Msg						("* Log file has been cleaned successfully!");
 	}

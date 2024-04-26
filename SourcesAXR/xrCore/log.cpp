@@ -107,31 +107,39 @@ void Log				(const char *msg, const char *dop) {
 	Log			(buf);
 }
 
-void Log				(const char *msg, u32 dop) {
+//void Log				(const char *msg, u32 dop) {
+//	u32			buffer_size = (xr_strlen(msg) + 1 + 10 + 1) * sizeof(char);
+//	PSTR buf	= (PSTR)_alloca( buffer_size );
+//
+//	xr_sprintf	(buf, buffer_size, "%s %d", msg, dop);
+//	Log			(buf);
+//}
+
+//void Log				(const char *msg, int dop) {
+//	u32			buffer_size = (xr_strlen(msg) + 1 + 11 + 1) * sizeof(char);
+//	PSTR buf	= (PSTR)_alloca( buffer_size );
+//
+//	xr_sprintf	(buf, buffer_size, "%s %i", msg, dop);
+//	Log			(buf);
+//}
+
+void Log(const char* msg, size_t dop) {
 	u32			buffer_size = (xr_strlen(msg) + 1 + 10 + 1) * sizeof(char);
-	PSTR buf	= (PSTR)_alloca( buffer_size );
+	PSTR buf = (PSTR)_alloca(buffer_size);
 
-	xr_sprintf	(buf, buffer_size, "%s %d", msg, dop);
-	Log			(buf);
+	xr_sprintf(buf, buffer_size, "%s %d", msg, dop);
+	Log(buf);
 }
 
-void Log				(const char *msg, int dop) {
-	u32			buffer_size = (xr_strlen(msg) + 1 + 11 + 1) * sizeof(char);
-	PSTR buf	= (PSTR)_alloca( buffer_size );
-
-	xr_sprintf	(buf, buffer_size, "%s %i", msg, dop);
-	Log			(buf);
-}
-
-void Log				(const char *msg, float dop) {
+//void Log				(const char *msg, float dop) {
 	// actually, float string representation should be no more, than 40 characters,
 	// but we will count with slight overhead
-	u32			buffer_size = (xr_strlen(msg) + 1 + 64 + 1) * sizeof(char);
-	PSTR buf	= (PSTR)_alloca( buffer_size );
-
-	xr_sprintf	(buf, buffer_size, "%s %f", msg, dop);
-	Log			(buf);
-}
+//	u32			buffer_size = (xr_strlen(msg) + 1 + 64 + 1) * sizeof(char);
+//	PSTR buf	= (PSTR)_alloca( buffer_size );
+//
+//	xr_sprintf	(buf, buffer_size, "%s %f", msg, dop);
+//	Log			(buf);
+//}
 
 void Log				(const char *msg, const Fvector &dop) {
 	u32			buffer_size = (xr_strlen(msg) + 2 + 3*(64 + 1) + 1) * sizeof(char);

@@ -2,6 +2,7 @@
 #include "xrServer_info.h"
 #include "level.h"
 #include "xrserver.h"
+#include "../xrCore/buffer_vector.h"
 
 #define SERVER_LOGO_FN	"server_logo.jpg"
 #define SERVER_RULES_FN "server_rules.txt"

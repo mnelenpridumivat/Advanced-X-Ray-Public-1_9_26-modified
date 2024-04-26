@@ -40,16 +40,18 @@ ICollisionForm::~ICollisionForm( )
 void CCF_Skeleton::SElement::center(Fvector& center) const
 {
 	switch (type){
-	case SBoneShape::stBox:
-		center.set(	-b_IM.c.dotproduct(b_IM.i),
-					-b_IM.c.dotproduct(b_IM.j),
-					-b_IM.c.dotproduct(b_IM.k));
+	case EBoneShapeType::stBox: {
+		const auto casted_data = reinterpret_cast<bone_shape_data*>(data.get());
+		center.set(-(casted_data->b_IM.c.dotproduct(casted_data->b_IM.i)),
+			-(casted_data->b_IM.c.dotproduct(casted_data->b_IM.j)),
+			-(casted_data->b_IM.c.dotproduct(casted_data->b_IM.k)));
+		break;
+	}
+	case EBoneShapeType::stSphere:
+		center.set(reinterpret_cast<sphere_shape_data*>(data.get())->s_sphere.P);
 	break;
-	case SBoneShape::stSphere: 
-		center.set(s_sphere.P);
-	break;
-	case SBoneShape::stCylinder: 
-		center.set(c_cylinder.m_center);
+	case EBoneShapeType::stCylinder:
+		center.set(reinterpret_cast<cylinder_shape_data*>(data.get())->c_cylinder.m_center);
 	break;
 	default:
 		NODEFAULT;
@@ -70,7 +72,7 @@ bool CCF_Skeleton::_ElementCenter(u16 elem_id, Fvector& e_center)
 
 IC bool RAYvsOBB(const Fmatrix& IM, const Fvector& b_hsize, const Fvector &S, const Fvector &D, float &R, BOOL bCull)
 {
-	Fbox E	= {-b_hsize.x, -b_hsize.y, -b_hsize.z,	b_hsize.x,	b_hsize.y,	b_hsize.z};
+	Fbox E(-b_hsize.x, -b_hsize.y, -b_hsize.z,	b_hsize.x,	b_hsize.y,	b_hsize.z);
 	// XForm world-2-local
 	Fvector	SL,DL,PL;
 	IM.transform_tiny	(SL,S);
@@ -124,13 +126,13 @@ void CCF_Skeleton::BuildState()
 	
 	if (vis_mask!=K->LL_GetBonesVisible()){
 		vis_mask		= K->LL_GetBonesVisible();
-		elements.clear_not_free();
+		elements.erase(elements.begin(), elements.end());
 		bv_box.set		(pVisual->getVisData().box);
 		bv_box.getsphere(bv_sphere.P,bv_sphere.R);
 		for (u16 i=0; i<K->LL_BoneCount(); i++){
 			if (!K->LL_GetBoneVisible(i))					continue;
 			SBoneShape&	shape	= K->LL_GetData(i).shape;
-			if (SBoneShape::stNone==shape.type)				continue;
+			if (EBoneShapeType::stNone==shape.type)				continue;
 			if (shape.flags.is(SBoneShape::sfNoPickable))	continue;
 			elements.push_back	(SElement(i,shape.type));
 		}
@@ -145,17 +147,17 @@ void CCF_Skeleton::BuildState()
 		VERIFY2( DET(Mbone)>EPS, ( make_string("0 scale bone matrix, %d \n", I->elem_id ) + dbg_object_full_dump_string( owner ) ).c_str()  );
 
 		switch (I->type){
-			case SBoneShape::stBox:{
+			case EBoneShapeType::stBox:{
 				const Fobb& B		= shape.box;
 				B.xform_get			(ME			);
 
 				//VERIFY2( DET(ME)>EPS, ( make_string("0 scale bone matrix, %d \n", I->elem_id ) + dbg_object_full_dump_string( owner ) ).c_str()  );
 
-				I->b_hsize.set		(B.m_halfsize);
+				reinterpret_cast<shape_bone*>(I->data.get())->b_hsize.set		(B.m_halfsize);
 				// prepare matrix World to Element
 				T.mul_43					(Mbone,ME	);		// model space
 				TW.mul_43					(L2W,T		);		// world space
-				bool b						= I->b_IM.invert_b	(TW);
+				bool b						= reinterpret_cast<shape_bone*>(I->data.get())->b_IM.invert_b	(TW);
 				// check matrix validity
 				if (!b)	{
 					Msg						("! ERROR: invalid bone xform . Bone disabled.");
@@ -168,20 +170,22 @@ void CCF_Skeleton::BuildState()
 					I->elem_id				= u16(-1);				//. hack - disable invalid bone
 				}
 								   }break;
-			case SBoneShape::stSphere:{
+			case EBoneShapeType::stSphere:{
 				const Fsphere& S	= shape.sphere;
-				Mbone.transform_tiny(I->s_sphere.P,S.P);
-				L2W.transform_tiny	(I->s_sphere.P);
-				I->s_sphere.R		= S.R;
+				auto casted_data = reinterpret_cast<shape_sphere*>(I->data.get());
+				Mbone.transform_tiny(casted_data->s_sphere.P,S.P);
+				L2W.transform_tiny	(casted_data->s_sphere.P);
+				casted_data->s_sphere.R		= S.R;
 			}break;
-			case SBoneShape::stCylinder:{
+			case EBoneShapeType::stCylinder:{
 				const Fcylinder& C	= shape.cylinder;
-				Mbone.transform_tiny(I->c_cylinder.m_center,C.m_center);
-				L2W.transform_tiny	(I->c_cylinder.m_center);
-				Mbone.transform_dir	(I->c_cylinder.m_direction,C.m_direction);
-				L2W.transform_dir	(I->c_cylinder.m_direction);
-				I->c_cylinder.m_height	= C.m_height;
-				I->c_cylinder.m_radius	= C.m_radius;
+				auto casted_data = reinterpret_cast<shape_cylinder*>(I->data.get());
+				Mbone.transform_tiny(casted_data->c_cylinder.m_center,C.m_center);
+				L2W.transform_tiny	(casted_data->c_cylinder.m_center);
+				Mbone.transform_dir	(casted_data->c_cylinder.m_direction,C.m_direction);
+				L2W.transform_dir	(casted_data->c_cylinder.m_direction);
+				casted_data->c_cylinder.m_height	= C.m_height;
+				casted_data->c_cylinder.m_radius	= C.m_radius;
 			}break;
 		}
 	}
@@ -234,16 +238,19 @@ BOOL CCF_Skeleton::_RayQuery( const collide::ray_defs& Q, collide::rq_results& R
 		bool res1		= false;
 		float range		= Q.range;
 		switch (I->type){
-		case SBoneShape::stBox:
-			res1			= RAYvsOBB		(I->b_IM,I->b_hsize,Q.start,Q.dir,range,Q.flags&CDB::OPT_CULL);
-		break;
-		case SBoneShape::stSphere: 
-			res1			= RAYvsSPHERE	(I->s_sphere,Q.start,Q.dir,range,Q.flags&CDB::OPT_CULL);
-
-		break;
-		case SBoneShape::stCylinder: 
-			res1			= RAYvsCYLINDER	(I->c_cylinder,Q.start,Q.dir,range,Q.flags&CDB::OPT_CULL);
-		break;
+		case EBoneShapeType::stBox: {
+			auto casted_data = reinterpret_cast<shape_bone*>(I->data.get());
+			res1 = RAYvsOBB(casted_data->b_IM, casted_data->b_hsize, Q.start, Q.dir, range, Q.flags & CDB::OPT_CULL);
+			break;
+		}
+		case EBoneShapeType::stSphere: {
+			res1 = RAYvsSPHERE(reinterpret_cast<shape_sphere*>(I->data.get())->s_sphere, Q.start, Q.dir, range, Q.flags & CDB::OPT_CULL);
+			break;
+		}
+		case EBoneShapeType::stCylinder: {
+			res1 = RAYvsCYLINDER(reinterpret_cast<shape_cylinder*>(I->data.get())->c_cylinder, Q.start, Q.dir, range, Q.flags & CDB::OPT_CULL);
+			break;
+		}
 		}
 		if (res1){
 			bHIT		= TRUE;
@@ -332,9 +339,9 @@ BOOL CCF_Shape::_RayQuery(const collide::ray_defs& Q, collide::rq_results& R)
 		float range		= Q.range;
 		switch (shape.type)
 		{
-		case 0:
+		case shape_def::shape_type::sphere:
 			{ // sphere
-				Fsphere::ERP_Result	rp_res 	= shape.data.sphere.intersect(dS,dD,range);
+				Fsphere::ERP_Result	rp_res 	= reinterpret_cast<shape_def::sphere_shape_data*>(shape.data.get())->sphere.intersect(dS,dD,range);
 				if ((rp_res==Fsphere::rpOriginOutside)||(!(Q.flags&CDB::OPT_CULL)&&(rp_res==Fsphere::rpOriginInside))){
 					bHIT	= TRUE;
 					R.append_result(owner,range,el,Q.flags&CDB::OPT_ONLYNEAREST);
@@ -342,11 +349,11 @@ BOOL CCF_Shape::_RayQuery(const collide::ray_defs& Q, collide::rq_results& R)
 				}
 			}
 			break;
-		case 1: // box
+		case shape_def::shape_type::box: // box
 			{
 				Fbox				box;
 				box.identity		();
-				Fmatrix& B			= shape.data.ibox;
+				Fmatrix& B			= reinterpret_cast<shape_def::box_shape_data*>(shape.data.get())->ibox;
 				Fvector				S1,D1,P;
 				B.transform_tiny	(S1,dS);
 				B.transform_dir		(D1,dD);
@@ -373,16 +380,15 @@ void CCF_Shape::_BoxQuery(const Fbox& B, const Fmatrix& M, u32 flags)
 void CCF_Shape::add_sphere	(Fsphere& S )
 {
 	shapes.push_back(shape_def());
-	shapes.back().type	= 0;
-	shapes.back().data.sphere.set(S);
+	shapes.back().type = shape_def::shape_type::sphere;
+	shapes.back().data = xr_make_unique<shape_def::shape_data, shape_def::sphere_shape_data>(S);
 }
 
 void CCF_Shape::add_box		(Fmatrix& B )
 {
 	shapes.push_back(shape_def());
-	shapes.back().type	= 1;
-	shapes.back().data.box.set(B);
-	shapes.back().data.ibox.invert(B);
+	shapes.back().type = shape_def::shape_type::box;
+	shapes.back().data = xr_make_unique<shape_def::shape_data, shape_def::box_shape_data>(B, Fmatrix(B).invert());
 }
 
 void CCF_Shape::ComputeBounds()
@@ -394,19 +400,19 @@ void CCF_Shape::ComputeBounds()
 	{
 		switch (shapes[el].type)
 		{
-		case 0: // sphere
+		case shape_def::shape_type::sphere: // sphere
 			{
-				Fsphere		T		= shapes[el].data.sphere;
+				const Fsphere&		T		= reinterpret_cast<shape_def::sphere_shape_data*>(shapes[el].data.get())->sphere;
 				Fvector		P;
 				P.set		(T.P);	P.sub(T.R);	bv_box.modify(P);
 				P.set		(T.P);	P.add(T.R);	bv_box.modify(P);
 				bv_sphere	= T;
 			}
 			break;
-		case 1:	// box
+		case shape_def::shape_type::box:	// box
 			{
 				Fvector		A,B;
-				Fmatrix&	T		= shapes[el].data.box;
+				Fmatrix&	T		= reinterpret_cast<shape_def::box_shape_data*>(shapes[el].data.get())->box;
 				
 				// Build points
 				A.set( -.5f, -.5f, -.5f); T.transform_tiny	(B,A); bv_box.modify(B);
@@ -449,7 +455,7 @@ BOOL CCF_Shape::Contact		( CObject* O )
 		case 0: // sphere
 			{
 				Fsphere		Q;
-				Fsphere&	T		= shapes[el].data.sphere;
+				const Fsphere&	T		= reinterpret_cast<shape_def::sphere_shape_data*>(shapes[el].data.get())->sphere;
 				XF.transform_tiny	(Q.P,T.P);
 				Q.R					= T.R;
 				if (S.intersect(Q))	return TRUE;
@@ -458,7 +464,7 @@ BOOL CCF_Shape::Contact		( CObject* O )
 		case 1:	// box
 			{
 				Fmatrix		Q;
-				Fmatrix&	T		= shapes[el].data.box;
+				Fmatrix&	T		= reinterpret_cast<shape_def::box_shape_data*>(shapes[el].data.get())->box;
 				Q.mul_43			( XF,T);
 
 				// Build points

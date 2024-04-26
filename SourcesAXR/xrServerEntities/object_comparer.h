@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "../xrCore/FixedVector.h"
+
 template <typename P>
 struct CComparer {
 	template <typename T>

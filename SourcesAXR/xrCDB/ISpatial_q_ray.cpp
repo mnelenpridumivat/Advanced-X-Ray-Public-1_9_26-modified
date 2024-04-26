@@ -281,7 +281,7 @@ void	ISpatial_DB::q_ray	(xr_vector<ISpatial*>& R, u32 _o, u32 _mask_and, const F
 {
 	cs.Enter						();
 	q_result						= &R;
-	q_result->clear_not_free		();
+	q_result->erase(q_result->begin(), q_result->end());
 
 	if (CPU::Info.hasFeature(CPUFeature::SSE2))
 	{

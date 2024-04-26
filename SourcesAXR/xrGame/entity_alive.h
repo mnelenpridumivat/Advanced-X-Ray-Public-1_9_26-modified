@@ -35,7 +35,7 @@ protected:
 public:
 
 	IC void SetInEmi(CObject* Zone) { AffectedEmiZones.push_back(Zone); }
-	IC void SetOutEmi(CObject* Zone) { AffectedEmiZones.remove(Zone); }
+	IC void SetOutEmi(CObject* Zone) { std::remove(AffectedEmiZones.begin(), AffectedEmiZones.end(), Zone); }
 	IC bool IsInEmi() { return !AffectedEmiZones.empty(); }
 
 	// end EMI events

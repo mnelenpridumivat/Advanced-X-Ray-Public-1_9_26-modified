@@ -3,6 +3,7 @@
 
 #include "filetransfer_common.h"
 #include <boost/noncopyable.hpp>
+#include "../xrCore/buffer_vector.h"
 
 namespace file_transfer
 {

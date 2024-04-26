@@ -711,7 +711,7 @@ void CPda::OnHiddenItem()
 
 void CPda::UpdateActiveContacts()
 {
-	m_active_contacts.clear_not_free();
+	m_active_contacts.erase(m_active_contacts.begin(), m_active_contacts.end());
 	auto Owner = smart_cast<CEntityAlive*>(GetOwnerObject());
 	//VERIFY(Owner);
 	if(Owner && Owner->IsInEmi())
@@ -829,7 +829,7 @@ CInventoryOwner* CPda::GetOriginalOwner()
 
 void CPda::ActivePDAContacts(xr_vector<CPda*>& res)
 {
-	res.clear_not_free();
+	res.erase(res.begin(), res.end());
 	xr_vector<CObject*>::iterator it = m_active_contacts.begin();
 	xr_vector<CObject*>::iterator it_e = m_active_contacts.end();
 

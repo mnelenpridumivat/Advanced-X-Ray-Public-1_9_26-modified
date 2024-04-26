@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "../xrCore/FixedVector.h"
+
 struct CCloner {
 	template <typename T>
 	struct CHelper {

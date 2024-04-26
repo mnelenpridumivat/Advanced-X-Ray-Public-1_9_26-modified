@@ -9,6 +9,7 @@
 #include "string_table.h"
 #include "level.h"
 #include "associative_vector.h"
+#include "../xrCore/buffer_vector.h"
 
 class UITeamState;
 class UITeamPanels;	//for switching teams

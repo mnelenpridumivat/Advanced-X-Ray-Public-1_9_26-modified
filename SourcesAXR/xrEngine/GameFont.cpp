@@ -191,7 +191,7 @@ u32 CGameFont::smart_strlen( const char* S )
 void CGameFont::OnRender()
 {
 	pFontRender->OnRender(*this);
-	strings.clear_not_free();
+	strings.erase(strings.begin(), strings.end());
 }
 
 u16 CGameFont::GetCutLengthPos( float fTargetWidth , const char * pszText )

@@ -2,6 +2,7 @@
 #define FILERECEIVER_NODE
 
 #include "filetransfer_common.h"
+#include "../xrCore/buffer_vector.h"
 
 namespace file_transfer
 {

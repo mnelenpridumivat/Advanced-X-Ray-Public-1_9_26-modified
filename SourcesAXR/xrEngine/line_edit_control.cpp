@@ -11,6 +11,7 @@
 #include "../xrCore/os_clipboard.h"
 #include "../xrServerEntities/object_broker.h"
 #include "xr_input.h"
+#include "../xrCore/buffer_vector.h"
 
 #include "edit_actions.h"
 

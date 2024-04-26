@@ -110,7 +110,7 @@ IC int dcTriListCollider::dSortTriPrimitiveCollide (
 		debug_output().dbg_total_saved_tries()-=data->cashed_tries.size();
 		debug_output().dbg_new_queries_per_step()++;
 #endif
-		data->cashed_tries								.clear_not_free()		;
+		data->cashed_tries.erase(data->cashed_tries.begin(), data->cashed_tries.end());
 		for (CDB::RESULT* Res=R_begin; Res!=R_end; ++Res)
 		{
 			data->cashed_tries.push_back(Res->id);

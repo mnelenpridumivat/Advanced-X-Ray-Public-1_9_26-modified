@@ -18,7 +18,7 @@ bool CTrade::CanTrade()
 {
 	CEntity *pEntity;
 
-	m_nearest.clear_not_free		();
+	m_nearest.erase(m_nearest.begin(), m_nearest.end());
 	Level().ObjectSpace.GetNearest	(m_nearest,pThis.base->Position(),2.f, nullptr);
 	if (!m_nearest.empty()) 
 	{
@@ -80,8 +80,9 @@ void CTrade::TransferItem(CInventoryItem* pItem, bool bBuying)
 	CGameObject* O1			= smart_cast<CGameObject *>(pPartner.inv_owner);
 	CGameObject* O2			= smart_cast<CGameObject *>(pThis.inv_owner);
 	
-	if(!bBuying)
-		swap(O1,O2);
+	if (!bBuying) {
+		std::swap(O1, O2);
+	}
 
 	NET_Packet				P;
 	O1->u_EventGen			(P,GE_TRADE_SELL,O1->ID());

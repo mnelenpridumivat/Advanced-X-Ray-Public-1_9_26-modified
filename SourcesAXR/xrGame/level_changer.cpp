@@ -215,9 +215,9 @@ void CLevelChanger::OnRender	()
 	{
 		switch(l_pShape->type)
 		{
-		case 0:
+		case CCF_Shape::type_sphere:
 			{
-                Fsphere &l_sphere = l_pShape->data.sphere;
+                Fsphere &l_sphere = reinterpret_cast<CCF_Shape::shape_sphere*>(l_pShape->data.get())->sphere;
 				l_ball.scale(l_sphere.R, l_sphere.R, l_sphere.R);
 				//l_ball.scale(1.f, 1.f, 1.f);
 				Fvector l_p; XFORM().transform(l_p, l_sphere.P);
@@ -227,9 +227,9 @@ void CLevelChanger::OnRender	()
 				Level().debug_renderer().draw_ellipse(l_ball, Color);
 			}
 			break;
-		case 1:
+		case CCF_Shape::type_box:
 			{
-				l_box.mul(XFORM(), l_pShape->data.box);
+				l_box.mul(XFORM(), reinterpret_cast<CCF_Shape::shape_box*>(l_pShape->data.get())->box);
 				Level().debug_renderer().draw_obb(l_box, l_half, Color);
 			}
 			break;

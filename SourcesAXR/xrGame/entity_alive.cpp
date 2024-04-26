@@ -808,11 +808,11 @@ void CEntityAlive::fill_hit_bone_surface_areas		( ) const
 	VERIFY								( kinematics );
 	VERIFY								( kinematics->LL_BoneCount() );
 
-	m_hit_bone_surface_areas.clear_not_free	( );
+	m_hit_bone_surface_areas.erase(m_hit_bone_surface_areas.begin(), m_hit_bone_surface_areas.end());
 
 	for (u16 i=0, n=kinematics->LL_BoneCount(); i < n; ++i ) {
 		SBoneShape const& shape			= kinematics->LL_GetData(i).shape;
-		if ( SBoneShape::stNone == shape.type )
+		if (EBoneShapeType::stNone == shape.type )
 			continue;
 
 		if ( shape.flags.is(SBoneShape::sfNoPickable) )
@@ -820,16 +820,16 @@ void CEntityAlive::fill_hit_bone_surface_areas		( ) const
 
 		float surface_area				= flt_max;
 		switch ( shape.type ) {
-			case SBoneShape::stBox : {
+			case EBoneShapeType::stBox : {
 				Fvector const& half_size= shape.box.m_halfsize;
 				surface_area			= 2.f * ( half_size.x*(half_size.y + half_size.z) + half_size.y*half_size.z );
 				break;
 			}
-			case SBoneShape::stSphere : {
+			case EBoneShapeType::stSphere : {
 				surface_area			= 4.f * PI * _sqr(shape.sphere.R);
 				break;
 			}
-			case SBoneShape::stCylinder : {
+			case EBoneShapeType::stCylinder : {
 				surface_area			= 2.f * PI * shape.cylinder.m_radius*( shape.cylinder.m_radius + shape.cylinder.m_height );
 				break;
 			}
@@ -870,7 +870,7 @@ Fvector	CEntityAlive::get_new_local_point_on_mesh	( u16& bone_id ) const
 			continue;
 
 		SBoneShape const& shape			= kinematics->LL_GetData(i->first).shape;
-		VERIFY							( shape.type != SBoneShape::stNone );
+		VERIFY							( shape.type != EBoneShapeType::stNone );
 		VERIFY							( !shape.flags.is(SBoneShape::sfNoPickable) );
 
 		hit_bones_surface_area			+= i->second;
@@ -885,7 +885,7 @@ Fvector	CEntityAlive::get_new_local_point_on_mesh	( u16& bone_id ) const
 			continue;
 
 		SBoneShape const& shape			= kinematics->LL_GetData(i->first).shape;
-		VERIFY							( shape.type != SBoneShape::stNone );
+		VERIFY							( shape.type != EBoneShapeType::stNone );
 		VERIFY							( !shape.flags.is(SBoneShape::sfNoPickable) );
 
 		accumulator						+= i->second;
@@ -898,7 +898,7 @@ Fvector	CEntityAlive::get_new_local_point_on_mesh	( u16& bone_id ) const
 	bone_id								= i->first;
 	Fvector result						= Fvector().set( flt_max, flt_max, flt_max );
 	switch ( shape.type ) {
-		case SBoneShape::stBox : {
+		case EBoneShapeType::stBox : {
 			Fmatrix	transform;
 			shape.box.xform_full		( transform );
 
@@ -916,11 +916,11 @@ Fvector	CEntityAlive::get_new_local_point_on_mesh	( u16& bone_id ) const
 			transform.transform_tiny	( result, direction );
 			break;
 		}
-		case SBoneShape::stSphere : {
+		case EBoneShapeType::stSphere : {
 			result.random_dir().mul(shape.sphere.R).add(shape.sphere.P);
 			break;
 		}
-		case SBoneShape::stCylinder : {
+		case EBoneShapeType::stCylinder : {
 			float const total_square	= (shape.cylinder.m_height + shape.cylinder.m_radius); // *2*PI*c_cylinder.m_radius
 			float const random_value	= ::Random.randF(total_square);
 			float const angle			= ::Random.randF(2.f*PI);

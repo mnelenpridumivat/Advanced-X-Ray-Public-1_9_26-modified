@@ -895,7 +895,7 @@ bool	CPhysicObject::get_door_vectors	( Fvector& closed, Fvector& open ) const
 		return false;
 	const CBoneData &bd = K->LL_GetData( door_bone );
 	const SBoneShape &shape = bd.shape;
-	if( shape.type != SBoneShape::stBox )
+	if( shape.type != EBoneShapeType::stBox )
 		return false;
 
 	if( shape.flags.test( SBoneShape::sfNoPhysics ) )

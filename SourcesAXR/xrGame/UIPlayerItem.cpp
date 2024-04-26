@@ -9,6 +9,11 @@
 #include "game_cl_capture_the_artefact.h"
 #include "game_cl_artefacthunt.h"
 
+#include <algorithm>
+#include <xutility>
+
+#include "../xrCore/buffer_vector.h"
+
 
 UIPlayerItem::UIPlayerItem()
 {

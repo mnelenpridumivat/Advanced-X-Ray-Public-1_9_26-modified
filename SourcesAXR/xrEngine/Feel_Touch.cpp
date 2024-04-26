@@ -37,9 +37,9 @@ void Touch::feel_touch_update	(Fvector& C, float R)
 	}
 
 	// Find nearest objects
-	q_nearest.clear_not_free				();
+	q_nearest.erase(q_nearest.begin(), q_nearest.end());
 	q_nearest.reserve						(feel_touch.size());
-	g_pGameLevel->ObjectSpace.GetNearest	(q_nearest,C,R, NULL);
+	g_pGameLevel->ObjectSpace.GetNearest	(q_nearest,C,R, nullptr);
 	xr_vector<CObject*>::iterator	n_begin	= q_nearest.begin	();
 	xr_vector<CObject*>::iterator	n_end	= q_nearest.end		();
 	if (n_end!=n_begin)						{
@@ -52,7 +52,7 @@ void Touch::feel_touch_update	(Fvector& C, float R)
 			if (std::find(feel_touch.begin(),feel_touch.end(),O) == feel_touch.end()){
 				// check for deny
 				BOOL bDeny = FALSE;
-				for (dit=0; dit<feel_touch_disable.size(); dit++)
+				for (u32 dit=0; dit<feel_touch_disable.size(); dit++)
 					if (O == feel_touch_disable[dit].O)	{ bDeny=TRUE; break; }
 
 				// _new _

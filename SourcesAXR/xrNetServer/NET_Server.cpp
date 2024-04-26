@@ -7,6 +7,8 @@
 #include "NET_Log.h"
 #include "../xrGameSpy/xrGameSpy_MainDefs.h"
 
+#include "../xrCore/buffer_vector.h"
+
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <malloc.h>

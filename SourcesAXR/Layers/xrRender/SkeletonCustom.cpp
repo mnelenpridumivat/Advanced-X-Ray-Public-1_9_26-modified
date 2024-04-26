@@ -295,8 +295,9 @@ void	CKinematics::Load(const char* N, IReader *data, u32 dwFlags)
 				std::sort						(faces.begin(),faces.end());
 				CBoneData::FacesVecIt new_end	= std::unique(faces.begin(),faces.end());
 				faces.erase						(new_end,faces.end());
-				B->child_faces[child_idx].clear_and_free();
-				B->child_faces[child_idx]		= faces;
+				auto& child_faces = B->child_faces[child_idx];
+				child_faces.erase(child_faces.begin(), child_faces.end());
+				child_faces = faces;
 			}
 		}
 	}
@@ -489,7 +490,7 @@ void CKinematics::Visibility_Update	()
 		if				(!_c->has_visible_bones())	{
 			// move into invisible list
 			children_invisible.push_back	(children[c_it]);	
-			swap(children[c_it],children.back());
+			std::swap(children[c_it],children.back());
 			children.pop_back				();
 			Update_Visibility = TRUE;
 		}
@@ -501,7 +502,7 @@ void CKinematics::Visibility_Update	()
 		if				(_c->has_visible_bones())	{
 			// move into visible list
 			children.push_back				(children_invisible[_it]);	
-			swap(children_invisible[_it],children_invisible.back());
+			std::swap(children_invisible[_it],children_invisible.back());
 			children_invisible.pop_back		();
 			Update_Visibility = TRUE;
 		}

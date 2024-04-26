@@ -52,9 +52,9 @@ CObjectSpace::~CObjectSpace	( )
 //----------------------------------------------------------------------
 int CObjectSpace::GetNearest		( xr_vector<ISpatial*>& q_spatial, xr_vector<CObject*>&	q_nearest, const Fvector &point, float range, CObject* ignore_object )
 {
-	q_spatial.clear_not_free		( );
+	q_spatial.erase(q_spatial.begin(), q_spatial.end());
 	// Query objects
-	q_nearest.clear_not_free		( );
+	q_nearest.erase(q_nearest.begin(), q_nearest.end());
 	Fsphere				Q;	Q.set	(point,range);
 	Fvector				B;	B.set	(range,range,range);
 	g_SpatialSpace->q_box(q_spatial,0,STYPE_COLLIDEABLE,point,B);

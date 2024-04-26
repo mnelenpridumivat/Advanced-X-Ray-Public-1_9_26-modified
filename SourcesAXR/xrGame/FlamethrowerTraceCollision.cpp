@@ -274,7 +274,7 @@ void CFlamethrowerTraceCollision::Update(float DeltaTime)
 //	Level().BulletManager().AddBulletMoveChunk(old_pos, m_position);
 //#endif
 
-	UpdateParticles();
+	UpdateParticles(DeltaTime);
 
 }
 
@@ -302,7 +302,7 @@ void CFlamethrowerTraceManager::feel_touch_new(CObject* O)
 void CFlamethrowerTraceManager::feel_touch_delete(CObject* O)
 {
 	Touch::feel_touch_delete(O);
-	Overlapped.remove(smart_cast<CCustomMonster*>(O));
+	std::remove(Overlapped.begin(), Overlapped.end(), smart_cast<CCustomMonster*>(O));
 }
 
 BOOL CFlamethrowerTraceManager::feel_touch_contact(CObject* O)
@@ -379,7 +379,7 @@ void CFlamethrowerTraceManager::RegisterOverlapped(CCustomMonster* enemy)
 
 void CFlamethrowerTraceManager::UnregisterOverlapped(CCustomMonster* enemy)
 {
-	Overlapped.remove(enemy);
+	std::remove(Overlapped.begin(), Overlapped.end(), enemy);
 }
 
 const CFlamethrowerTraceManager::FOverlappedObjects& CFlamethrowerTraceManager::GetOverlapped()

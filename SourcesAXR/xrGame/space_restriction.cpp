@@ -13,6 +13,7 @@
 #include "level_graph.h"
 #include "space_restriction_base.h"
 #include "profiler.h"
+#include "../xrCore/buffer_vector.h"
 
 const float dependent_distance = 100.f;
 

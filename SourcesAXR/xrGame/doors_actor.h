@@ -9,6 +9,7 @@
 
 #include <boost/noncopyable.hpp>
 #include "doors.h"
+#include "../xrCore/buffer_vector.h"
 
 class CAI_Stalker;
 

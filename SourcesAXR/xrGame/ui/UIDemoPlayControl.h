@@ -3,6 +3,7 @@
 
 #include "UIDialogWnd.h"
 #include "UIWndCallback.h"
+#include "../xrCore/buffer_vector.h"
 
 class CUI3tButton;
 class CUIProgressBar;

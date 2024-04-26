@@ -11,10 +11,10 @@
 #ifdef	DEBUG
 static BOOL _cdb_bDebug = false;
 extern XRCDB_API BOOL *cdb_bDebug = &_cdb_bDebug;
-bool bDebug()
+/*bool bDebug()
 {
 	return !!(*cdb_bDebug);
-}
+}*/
 #endif
 using namespace	collide;
 
@@ -137,7 +137,7 @@ BOOL CObjectSpace::_RayPick	( const Fvector &start, const Fvector &dir, float ra
 					R.set_if_less	(r_temp.r_begin());
 				}
 #ifdef DEBUG
-				if (bDebug()){
+				if (*cdb_bDebug){
 					Fsphere	S;		S.P = spatial->spatial.sphere.P; S.R = spatial->spatial.sphere.R;
 					(*m_pRender)->dbgAddSphere(S,C);
 					//dbg_S.push_back	(std::make_pair(S,C));
@@ -156,7 +156,7 @@ BOOL CObjectSpace::RayQuery		(collide::rq_results& dest, const collide::ray_defs
 {
 	Lock.Enter					();
 	BOOL						_res = _RayQuery2(dest,R,CB,user_data,tb,ignore_object);
-	r_spatial.clear_not_free	();
+	r_spatial.erase(r_spatial.begin(), r_spatial.end());
 	Lock.Leave					();
 	return						(_res);
 }

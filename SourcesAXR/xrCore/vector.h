@@ -23,6 +23,10 @@
 #define M_BORLAND
 #endif
 
+#include "xrCommon/math_constants.h"
+
+#if 0
+
 // Constants
 #ifdef M_VISUAL
 const	float		EPS_S		= 0.0000001f;
@@ -66,6 +70,8 @@ const	float		PI_DIV_8	= 0.3926990816987241548078304229099f;
 #define				PI_DIV_4	0.7853981633974483096156608458199f
 #define				PI_DIV_6	0.5235987755982988730771072305466f
 #define				PI_DIV_8	0.3926990816987241548078304229099f
+#endif
+
 #endif
 
 

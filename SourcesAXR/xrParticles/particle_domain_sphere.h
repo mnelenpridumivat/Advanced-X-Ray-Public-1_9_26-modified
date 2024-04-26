@@ -5,8 +5,7 @@ namespace PAPI {
 #pragma pack (push,4)
 	struct PARTICLES_API pDomainSphere
 	{
-		pVector 	p1, p2;			// Box vertices, Sphere center, Cylinder/Cone ends
-		pVector 	u, v;			// Orthonormal basis vectors for Cylinder/Cone
+		pVector 	p1;			// Box vertices, Sphere center, Cylinder/Cone ends
 		float 		radius1;		// Outer radius
 		float 		radius2;		// Inner radius
 		float 		radius1Sqr;		// Used for fast Within test of spheres,

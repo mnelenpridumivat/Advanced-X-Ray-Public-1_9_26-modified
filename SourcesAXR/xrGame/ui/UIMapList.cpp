@@ -11,6 +11,7 @@
 #include "UIListBoxItem.h"
 #include "../../xrEngine/xr_ioconsole.h"
 #include "../string_table.h"
+#include "../xrCore/buffer_vector.h"
 
 #include "object_broker.h"
 #include "game_base.h"

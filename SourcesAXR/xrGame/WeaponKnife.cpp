@@ -686,31 +686,32 @@ void CWeaponKnife::fill_shots_list(victims_shapes_list_t & victims_shapres,
 		victim_bone_data & curr_bone = i->first;
 		switch (curr_bone.m_bone_element->type)
 		{
-		case SBoneShape::stBox:
+		case EBoneShapeType::stBox:
 			{
 				Fobb	tmp_obb;
 				Fmatrix tmp_xform;
-				if (!tmp_xform.invert_b(curr_bone.m_bone_element->b_IM))
+				auto casted_data = reinterpret_cast<CCF_Skeleton::shape_bone*>(curr_bone.m_bone_element->data.get());
+				if (!tmp_xform.invert_b(casted_data->b_IM))
 				{
 					VERIFY2(false, "invalid bone xform");
 					break;
 				}
 				tmp_obb.xform_set(tmp_xform);
-				tmp_obb.m_halfsize = curr_bone.m_bone_element->b_hsize;
+				tmp_obb.m_halfsize = casted_data->b_hsize;
 #ifdef DEBUG
 				m_dbg_data.m_target_boxes.push_back(tmp_obb);
 #endif
 				intersect_res = intersect(tmp_obb, query);
 				break;
 			};
-		case SBoneShape::stSphere:
+		case EBoneShapeType::stSphere:
 			{
-				intersect_res = intersect(curr_bone.m_bone_element->s_sphere, query);
+				intersect_res = intersect(reinterpret_cast<CCF_Skeleton::shape_sphere*>(curr_bone.m_bone_element->data.get())->s_sphere, query);
 				break;
 			}break;
-		case SBoneShape::stCylinder:
+		case EBoneShapeType::stCylinder:
 			{
-				intersect_res = intersect(curr_bone.m_bone_element->c_cylinder, query);
+				intersect_res = intersect(reinterpret_cast<CCF_Skeleton::shape_cylinder*>(curr_bone.m_bone_element->data.get())->c_cylinder, query);
 				break;
 			}break;
 		};//switch (tmp_bone_data.shape.type)*/

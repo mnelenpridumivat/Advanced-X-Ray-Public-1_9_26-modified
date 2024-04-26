@@ -124,6 +124,13 @@ struct					net_update_A
 //	u32					dwTime0;
 //	u32					dwTime1;
 	SPHNetState			State;
+
+	net_update_A& operator=(const net_update_A& other)
+	{
+		dwTimeStamp = other.dwTimeStamp;
+		State = other.State;
+		return *this;
+	}
 };
 
 ///////////////////////////////////////////////////////

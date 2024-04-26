@@ -22,6 +22,8 @@
 #include "ui/UIMainIngameWnd.h"
 #include "ui/UIStatic.h"
 
+#include "../xrCore/net_utils.h"
+
 #include "AdvancedXrayGameConstants.h"
 #include "CustomOutfit.h"
 /*#include "zone_effector.h"
