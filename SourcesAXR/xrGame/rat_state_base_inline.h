@@ -10,7 +10,7 @@
 #define RAT_STATE_BASE_INLINE_H_INCLUDED
 
 IC	rat_state_base::rat_state_base	() :
-	m_object(nullptr)
+	m_object(0)
 {
 }
 

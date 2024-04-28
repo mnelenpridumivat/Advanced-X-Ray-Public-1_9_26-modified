@@ -232,7 +232,7 @@ lua_Debug* engine::lua_debug_create				()
 
 void engine::lua_debug_destroy					(lua_Debug*& instance)
 {
-	instance	= nullptr;
+	instance	= 0;
 	--m_instance_count;
 }
 

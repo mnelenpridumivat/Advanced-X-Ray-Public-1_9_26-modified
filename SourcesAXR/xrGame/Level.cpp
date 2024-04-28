@@ -101,9 +101,9 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 {
 	g_bDebugEvents				= strstr(Core.Params,"-debug_ge")?TRUE:FALSE;
 
-	Server						= nullptr;
+	Server						= NULL;
 
-	game						= nullptr;
+	game						= NULL;
 	game_events					= xr_new<NET_Queue_Event>();
 
 	game_configured				= FALSE;
@@ -125,8 +125,8 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 		m_game_task_manager			= xr_new<CGameTaskManager>();
 	}else
 	{
-		m_map_manager				= nullptr;
-		m_game_task_manager			= nullptr;
+		m_map_manager				= NULL;
+		m_game_task_manager			= NULL;
 	}
 
 //----------------------------------------------------
@@ -155,13 +155,13 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 
 	}else
 	{
-		m_level_sound_manager		= nullptr;
-		m_client_spawn_manager		= nullptr;
-		m_autosave_manager			= nullptr;
-		m_space_restriction_manager = nullptr;
+		m_level_sound_manager		= NULL;
+		m_client_spawn_manager		= NULL;
+		m_autosave_manager			= NULL;
+		m_space_restriction_manager = NULL;
 	#ifdef DEBUG
-		m_debug_renderer			= nullptr;
-		m_level_debug				= nullptr;
+		m_debug_renderer			= NULL;
+		m_level_debug				= NULL;
 	#endif
 	}
 
@@ -175,13 +175,13 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_bSynchronization			= false;
 #endif	
 	//---------------------------------------------------------
-	pStatGraphR = nullptr;
-	pStatGraphS = nullptr;
+	pStatGraphR = NULL;
+	pStatGraphS = NULL;
 	//---------------------------------------------------------
 	pObjects4CrPr.clear();
 	pActors4CrPr.clear();
 	//---------------------------------------------------------
-	pCurrentControlEntity = nullptr;
+	pCurrentControlEntity = NULL;
 
 	//---------------------------------------------------------
 	m_dwCL_PingLastSendTime = 0;
@@ -189,24 +189,24 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_dwRealPing = 0;
 
 	//---------------------------------------------------------	
-	m_writer = nullptr;
-	m_reader = nullptr;
+	m_writer = NULL;
+	m_reader = NULL;
 	m_DemoPlay = FALSE;
 	m_DemoPlayStarted	= FALSE;
 	m_DemoPlayStoped	= FALSE;
 	m_DemoSave = FALSE;
 	m_DemoSaveStarted = FALSE;
-	m_current_spectator = nullptr;
-	m_msg_filter = nullptr;
-	m_demoplay_control = nullptr;
-	m_demo_info	= nullptr;
+	m_current_spectator = NULL;
+	m_msg_filter = NULL;
+	m_demoplay_control = NULL;
+	m_demo_info	= NULL;
 	m_is_removing_objects = false;
 
 	R_ASSERT				(NULL==g_player_hud);
 	g_player_hud			= xr_new<player_hud>();
 	g_player_hud->load_default();
 	
-	hud_zones_list = nullptr;
+	hud_zones_list = NULL;
 
 //	if ( !strstr( Core.Params, "-tdemo " ) && !strstr(Core.Params,"-tdemof "))
 //	{
@@ -239,10 +239,10 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	}
 	*/
 	//---------------------------------------------------------	
-	m_file_transfer					= nullptr;
-	m_trained_stream				= nullptr;
-	m_lzo_working_memory			= nullptr;
-	m_lzo_working_buffer			= nullptr;
+	m_file_transfer					= NULL;
+	m_trained_stream				= NULL;
+	m_lzo_working_memory			= NULL;
+	m_lzo_working_buffer			= NULL;
 }
 
 extern CAI_Space *g_ai_space;
@@ -251,7 +251,7 @@ CLevel::~CLevel()
 {
 	xr_delete					(g_player_hud);
 	delete_data					(hud_zones_list);
-	hud_zones_list				= nullptr;
+	hud_zones_list				= NULL;
 
 	Msg							("- Destroying level");
 
@@ -337,10 +337,10 @@ CLevel::~CLevel()
 	CTradeParameters::clean		();
 
 	if(g_tutorial && g_tutorial->m_pStoredInputReceiver==this)
-		g_tutorial->m_pStoredInputReceiver = nullptr;
+		g_tutorial->m_pStoredInputReceiver = NULL;
 
 	if(g_tutorial2 && g_tutorial2->m_pStoredInputReceiver==this)
-		g_tutorial2->m_pStoredInputReceiver = nullptr;
+		g_tutorial2->m_pStoredInputReceiver = NULL;
 
 
 	if (IsDemoPlay())
@@ -349,7 +349,7 @@ CLevel::~CLevel()
 		if (m_reader)
 		{
 			FS.r_close			(m_reader);
-			m_reader			= nullptr;
+			m_reader			= NULL;
 		}
 	}
 	xr_delete(m_msg_filter);
@@ -419,7 +419,7 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 {
 	//			Msg				("--- event[%d] for [%d]",type,dest);
 	CObject*	 O	= Objects.net_Find	(dest);
-	if (nullptr==O)		{
+	if (0==O)		{
 #ifdef DEBUG
 		Msg("* WARNING: c_EVENT[%d] to [%d]: unknown dest",type,dest);
 #endif // DEBUG
@@ -455,7 +455,7 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 		bool			ok = true;
 
 		CObject			*D	= Objects.net_Find	(id);
-		if (nullptr==D)		{
+		if (0==D)		{
 #ifndef MASTER_GOLD
 			Msg			("! ERROR: c_EVENT[%d] : unknown dest",id);
 #endif // #ifndef MASTER_GOLD
@@ -521,7 +521,7 @@ void CLevel::ProcessGameEvents		()
 						P.r_vec3(NewDir);
 
 						CActor*	OActor	= smart_cast<CActor*>(Objects.net_Find		(ID));
-						if (nullptr == OActor)		break;
+						if (0 == OActor)		break;
 						OActor->MoveActor(NewPos, NewDir);
 					};
 
@@ -577,8 +577,8 @@ void CLevel::MakeReconnect()
 	if (!Engine.Event.Peek("KERNEL:disconnect"))
 	{
 		Engine.Event.Defer	("KERNEL:disconnect");
-		char const * server_options = nullptr;
-		char const * client_options = nullptr;
+		char const * server_options = NULL;
+		char const * client_options = NULL;
 		if (m_caServerOptions.c_str())
 		{
 			server_options = xr_strdup(*m_caServerOptions);
@@ -1426,10 +1426,10 @@ ICF static BOOL GetPickDist_Callback(collide::rq_result& result, LPVOID params)
 
 collide::rq_result CLevel::GetPickResult(Fvector pos, Fvector dir, float range, CObject* ignore)
 {
-	collide::rq_result        RQ; RQ.set(nullptr, range, -1);
+	collide::rq_result        RQ; RQ.set(NULL, range, -1);
 	collide::rq_results        RQR;
 	collide::ray_defs    RD(pos, dir, RQ.range, CDB::OPT_FULL_TEST, collide::rqtBoth);
-	Level().ObjectSpace.RayQuery(RQR, RD, GetPickDist_Callback, &RQ, nullptr, ignore);
+	Level().ObjectSpace.RayQuery(RQR, RD, GetPickDist_Callback, &RQ, NULL, ignore);
 	return RQ;
 }
 

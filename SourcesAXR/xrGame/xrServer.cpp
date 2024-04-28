@@ -35,13 +35,13 @@ extern bool g_saves_locked;
 xrClientData::xrClientData	() :
 	IClient(Device.GetTimerGlobal())
 {
-	ps = nullptr;
+	ps = NULL;
 	Clear		();
 }
 
 void	xrClientData::Clear()
 {
-	owner									= nullptr;
+	owner									= NULL;
 	net_Ready								= FALSE;
 	net_Accepted							= FALSE;
 	net_PassUpdates							= TRUE;
@@ -59,10 +59,10 @@ xrClientData::~xrClientData()
 
 xrServer::xrServer() : IPureServer(Device.GetTimerGlobal(), g_dedicated_server)
 {
-	m_file_transfers	= nullptr;
+	m_file_transfers	= NULL;
 	m_aDelayedPackets.clear();
-	m_server_logo		= nullptr;
-	m_server_rules		= nullptr;
+	m_server_logo		= NULL;
+	m_server_rules		= NULL;
 	m_last_updates_size	= 0;
 	m_last_update_time	= 0;
 }
@@ -94,10 +94,10 @@ xrServer::~xrServer()
 CSE_Abstract*	xrServer::ID_to_entity		(u16 ID)
 {
 	// #pragma todo("??? to all : ID_to_entity - must be replaced to 'game->entity_from_eid()'")	
-	if (0xffff==ID)				return nullptr;
+	if (0xffff==ID)				return 0;
 	xrS_entities::iterator	I	= entities.find	(ID);
 	if (entities.end()!=I)		return I->second;
-	else						return nullptr;
+	else						return 0;
 }
 
 //--------------------------------------------------------------------
@@ -298,7 +298,7 @@ void xrServer::MakeUpdatePackets()
 	{//all entities
 		CSE_Abstract&	Test			= *(I->second);
 
-		if (nullptr==Test.owner)								continue;
+		if (0==Test.owner)								continue;
 		if (!Test.net_Ready)							continue;
 		if (Test.s_flags.is(M_SPAWN_OBJECT_PHANTOM))	continue;	// Surely: phantom
 		if (!Test.Net_Relevant() )						continue;
@@ -414,7 +414,7 @@ u32 xrServer::OnDelayedMessage	(NET_Packet& P, ClientID sender)			// Non-Zero me
 				xr_sprintf(tmp_number_str, " raid:%u", CL->ID.value());
 				STRCONCAT(result_command, buff, tmp_number_str);
 				Console->Execute	(result_command);
-				SetLogCB			(nullptr);
+				SetLogCB			(NULL);
 
 				NET_Packet			P_answ;			
 				for(u32 i=0; i<_tmp_log.size(); ++i)
@@ -616,7 +616,7 @@ u32 xrServer::OnMessage	(NET_Packet& P, ClientID sender)			// Non-Zero means bro
 					if (static_cast<IClient*>(CL) != GetServerClient())
 					{
 						game_PlayerState* tmp_ps = CL->ps;
-						u32 tmp_pid = tmp_ps != nullptr ? tmp_ps->m_account.profile_id() : 0;
+						u32 tmp_pid = tmp_ps != NULL ? tmp_ps->m_account.profile_id() : 0;
 						Game().m_WeaponUsageStatistic->OnUpdateRespond(&P, CL->m_cdkey_digest, tmp_pid);
 					}
 				} else
@@ -791,9 +791,9 @@ if( dbg_net_Draw_Flags.test( dbg_destroy ) )
 	m_tID_Generator.vfFreeID	(P->ID,Device.TimerAsync());
 
 	if(P->owner && P->owner->owner==P)
-		P->owner->owner		= nullptr;
+		P->owner->owner		= NULL;
 
-	P->owner = nullptr;
+	P->owner = NULL;
 	if (!ai().get_alife() || !P->m_bALifeControl)
 	{
 		F_entity_Destroy		(P);
@@ -807,7 +807,7 @@ void			xrServer::Server_Client_Check	( IClient* CL )
 	{
 		if (!CL->flags.bConnected)
 		{
-			SV_Client = nullptr;
+			SV_Client = NULL;
 		};
 		return;
 	};
@@ -847,7 +847,7 @@ CSE_Abstract*	xrServer::GetEntity			(u32 Num)
 	{
 		if (C == Num) return I->second;
 	};
-	return nullptr;
+	return NULL;
 };
 
 

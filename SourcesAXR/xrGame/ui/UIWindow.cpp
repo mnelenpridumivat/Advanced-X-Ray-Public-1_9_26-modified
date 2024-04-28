@@ -95,10 +95,10 @@ void CUIWindow::ResetPPMode()
 }
 
 CUIWindow::CUIWindow()
-:m_pParentWnd(nullptr),
-m_pMouseCapturer(nullptr),
-m_pMessageTarget(nullptr),
-m_pKeyboardCapturer(nullptr),
+:m_pParentWnd(NULL),
+m_pMouseCapturer(NULL),
+m_pMessageTarget(NULL),
+m_pKeyboardCapturer(NULL),
 m_bAutoDelete(false),
 m_bCursorOverWindow(false),
 m_bPP(false),
@@ -213,7 +213,7 @@ void CUIWindow::AttachChild(CUIWindow* pChild)
 void CUIWindow::DetachChild(CUIWindow* pChild)
 {
 	R_ASSERT(pChild);
-	if(nullptr ==pChild)
+	if(NULL==pChild)
 		return;
 	
 	if(m_pMouseCapturer == pChild)
@@ -224,7 +224,7 @@ void CUIWindow::DetachChild(CUIWindow* pChild)
 	R_ASSERT				(it!=m_ChildWndList.end());
 	m_ChildWndList.erase	(it);
 
-	pChild->SetParent		(nullptr);
+	pChild->SetParent		(NULL);
 
 	if(pChild->IsAutoDelete())
 		xr_delete(pChild);
@@ -239,7 +239,7 @@ void CUIWindow::DetachAll()
 
 void CUIWindow::GetAbsoluteRect(Frect& r) 
 {
-	if(GetParent() == nullptr){
+	if(GetParent() == NULL){
 		GetWndRect		(r);
 		return;
 	}
@@ -281,7 +281,7 @@ bool CUIWindow::OnMouseAction(float x, float y, EUIMessages mouse_action)
 		m_dwLastClickTime = dwCurTime;
 	}
 
-	if(GetParent()== nullptr)
+	if(GetParent()== NULL)
 	{
 		if(!wndRect.in(cursor_pos))
             return false;
@@ -385,7 +385,7 @@ void CUIWindow::OnFocusReceive()
 	m_bCursorOverWindow		= true;	
 
 	if (GetMessageTarget())
-        GetMessageTarget()->SendMessage(this, WINDOW_FOCUS_RECEIVED, nullptr);
+        GetMessageTarget()->SendMessage(this, WINDOW_FOCUS_RECEIVED, NULL);
 }
 
 void CUIWindow::OnFocusLost()
@@ -394,7 +394,7 @@ void CUIWindow::OnFocusLost()
 	m_bCursorOverWindow		= false;	
 
 	if (GetMessageTarget())
-        GetMessageTarget()->SendMessage(this, WINDOW_FOCUS_LOST, nullptr);
+        GetMessageTarget()->SendMessage(this, WINDOW_FOCUS_LOST, NULL);
 }
 
 
@@ -412,14 +412,14 @@ void CUIWindow::SetCapture(CUIWindow *pChildWindow, bool capture_status)
 	if(capture_status)
 	{
 		//оповестить дочернее окно о потере фокуса мыши
-		if(nullptr !=m_pMouseCapturer)
+		if(NULL!=m_pMouseCapturer)
 			m_pMouseCapturer->SendMessage(this, WINDOW_MOUSE_CAPTURE_LOST);
 
 		m_pMouseCapturer = pChildWindow;
 	}
 	else
 	{
-			m_pMouseCapturer = nullptr;
+			m_pMouseCapturer = NULL;
 	}
 }
 
@@ -431,7 +431,7 @@ bool CUIWindow::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 
 	//если есть дочернее окно,захватившее клавиатуру, то
 	//сообщение направляем ему сразу
-	if(nullptr !=m_pKeyboardCapturer)
+	if(NULL!=m_pKeyboardCapturer)
 	{
 		result = m_pKeyboardCapturer->OnKeyboardAction(dik, keyboard_action);
 		
@@ -456,7 +456,7 @@ bool CUIWindow::OnKeyboardHold(int dik)
 {
 	bool result;
 
-	if(nullptr !=m_pKeyboardCapturer)
+	if(NULL!=m_pKeyboardCapturer)
 	{
 		result = m_pKeyboardCapturer->OnKeyboardHold(dik);
 		
@@ -480,19 +480,19 @@ bool CUIWindow::OnKeyboardHold(int dik)
 
 void CUIWindow::SetKeyboardCapture(CUIWindow* pChildWindow, bool capture_status)
 {
-	if(nullptr != GetParent())
+	if(NULL != GetParent())
 		GetParent()->SetKeyboardCapture(this, capture_status);
 
 	if(capture_status)
 	{
 		//оповестить дочернее окно о потере фокуса клавиатуры
-		if(nullptr !=m_pKeyboardCapturer)
+		if(NULL!=m_pKeyboardCapturer)
 			m_pKeyboardCapturer->SendMessage(this, WINDOW_KEYBOARD_CAPTURE_LOST);
 			
 		m_pKeyboardCapturer = pChildWindow;
 	}
 	else
-		m_pKeyboardCapturer = nullptr;
+		m_pKeyboardCapturer = NULL;
 }
 
 
@@ -539,7 +539,7 @@ CUIWindow* CUIWindow::GetChildMouseHandler(){
 //для перевода окна и потомков в исходное состояние
 void CUIWindow::Reset()
 {
-	m_pMouseCapturer = nullptr;
+	m_pMouseCapturer = NULL;
 }
 
 void CUIWindow::ResetAll()
@@ -571,10 +571,10 @@ CUIWindow*	CUIWindow::FindChild(const shared_str name)
 	WINDOW_LIST::const_iterator it_e = m_ChildWndList.end();
 	for(;it!=it_e;++it){
 		CUIWindow* pRes = (*it)->FindChild(name);
-		if(pRes != nullptr)
+		if(pRes != NULL)
 			return pRes;
 	}
-	return nullptr;
+	return NULL;
 }
 
 void CUIWindow::SetParent(CUIWindow* pNewParent) 

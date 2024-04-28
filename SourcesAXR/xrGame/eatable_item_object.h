@@ -24,11 +24,11 @@ public:
 							CPhysicsShellHolder	*cast_physics_shell_holder	() override {return this;}
 							CInventoryItem		*cast_inventory_item		() override {return this;}
 							CAttachableItem		*cast_attachable_item		() override {return this;}
-							CWeapon				*cast_weapon				() override {return nullptr;}
-							CFoodItem			*cast_food_item				() override {return nullptr;}
-							CMissile			*cast_missile				() override {return nullptr;}
-							CHudItem			*cast_hud_item				() override {return nullptr;}
-							CWeaponAmmo			*cast_weapon_ammo			() override {return nullptr;}
+							CWeapon				*cast_weapon				() override {return 0;}
+							CFoodItem			*cast_food_item				() override {return 0;}
+							CMissile			*cast_missile				() override {return 0;}
+							CHudItem			*cast_hud_item				() override {return 0;}
+							CWeaponAmmo			*cast_weapon_ammo			() override {return 0;}
 							CGameObject			*cast_game_object			() override {return this;};
 
 public:

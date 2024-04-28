@@ -42,11 +42,11 @@ CSoundRender_Core::CSoundRender_Core	()
 	bPresent					= FALSE;
 	bEFX						= false;
 	bUserEnvironment			= FALSE;
-	geom_MODEL					= nullptr;
-	geom_ENV					= nullptr;
-	geom_SOM					= nullptr;
-	s_environment				= nullptr;
-	Handler						= nullptr;
+	geom_MODEL					= NULL;
+	geom_ENV					= NULL;
+	geom_SOM					= NULL;
+	s_environment				= NULL;
+	Handler						= NULL;
 	s_targets_pu				= 0;
 	s_emitters_u				= 0;
     e_current.set_identity		();
@@ -230,7 +230,7 @@ void CSoundRender_Core::set_geometry_som(IReader* I)
 #else
 	xr_delete				(geom_SOM);
 #endif
-	if (nullptr==I)		return;
+	if (0==I)		return;
 
 	// check version
 	R_ASSERT		(I->find_chunk(0));
@@ -271,8 +271,8 @@ void CSoundRender_Core::set_geometry_env(IReader* I)
 	xr_delete				(geom_ENV);
 	s_environment_ids.clear	();
 #endif
-	if (nullptr==I)				return;
-	if (nullptr==s_environment)	return;
+	if (0==I)				return;
+	if (0==s_environment)	return;
 
 	// Assosiate names
 	IReader*				names	= I->open_chunk(0);
@@ -352,7 +352,7 @@ void	CSoundRender_Core::clone				( ref_sound& S, const ref_sound& from, esound_t
 
 void	CSoundRender_Core::play					( ref_sound& S, CObject* O, u32 flags, float delay)
 {
-	if (!bPresent || nullptr==S._handle())return;
+	if (!bPresent || 0==S._handle())return;
 	S._p->g_object		= O;
 	if (S._feedback())	((CSoundRender_Emitter*)S._feedback())->rewind ();
 	else				i_play					(&S,flags&sm_Looped,delay);
@@ -363,7 +363,7 @@ void	CSoundRender_Core::play					( ref_sound& S, CObject* O, u32 flags, float de
 
 void	CSoundRender_Core::play_no_feedback		( ref_sound& S, CObject* O, u32 flags, float delay, Fvector* pos, float* vol, float* freq, Fvector2* range)
 {
-	if (!bPresent || nullptr==S._handle())return;
+	if (!bPresent || 0==S._handle())return;
 	ref_sound_data_ptr	orig = S._p;
 	S._p				= xr_new<ref_sound_data>();
 	S._p->handle		= orig->handle;
@@ -388,7 +388,7 @@ void	CSoundRender_Core::play_no_feedback		( ref_sound& S, CObject* O, u32 flags,
 
 void	CSoundRender_Core::play_at_pos			( ref_sound& S, CObject* O, const Fvector &pos, u32 flags, float delay)
 {
-	if (!bPresent || nullptr == S._handle())
+	if (!bPresent || 0 == S._handle())
 		return;
 
 	S._p->g_object = O;
@@ -417,7 +417,7 @@ void	CSoundRender_Core::destroy	(ref_sound& S )
 		CSoundRender_Emitter* E		= (CSoundRender_Emitter*)S._feedback();
 		E->stop						(FALSE);
 	}
-	S._p				= nullptr;
+	S._p				= 0;
 }                                                    
 
 void CSoundRender_Core::_create_data( ref_sound_data& S, LPCSTR fName, esound_type sound_type, int game_type)
@@ -428,9 +428,9 @@ void CSoundRender_Core::_create_data( ref_sound_data& S, LPCSTR fName, esound_ty
 	S.handle			= (CSound_source*)SoundRender->i_create_source(fn);
 	S.g_type			= (game_type==sg_SourceType)?S.handle->game_type():game_type;
 	S.s_type			= sound_type;
-	S.feedback			= nullptr; 
-    S.g_object			= nullptr; 
-    S.g_userdata		= nullptr;
+	S.feedback			= 0; 
+    S.g_object			= 0; 
+    S.g_userdata		= 0;
 	S.dwBytesTotal		= S.handle->bytes_total();
 	S.fTimeTotal		= S.handle->length_sec();
 }
@@ -442,7 +442,7 @@ void CSoundRender_Core::_destroy_data( ref_sound_data& S)
 	}
 	R_ASSERT						(0==S.feedback);
 	
-	S.handle						= nullptr;
+	S.handle						= NULL;
 }
 
 CSoundRender_Environment*	CSoundRender_Core::get_environment			( const Fvector& P )

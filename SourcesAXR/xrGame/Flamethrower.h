@@ -149,7 +149,7 @@ public:
 	void	save(NET_Packet& output_packet) override;
 	void	load(IReader& input_packet) override;
 
-	void	SpawnFuelCanister(float Condition, LPCSTR ammoSect = nullptr, u32 ParentID = 0xffffffff);
+	void	SpawnFuelCanister(float Condition, LPCSTR ammoSect = NULL, u32 ParentID = 0xffffffff);
 
 protected:
 	bool	install_upgrade_impl(LPCSTR section, bool test) override;

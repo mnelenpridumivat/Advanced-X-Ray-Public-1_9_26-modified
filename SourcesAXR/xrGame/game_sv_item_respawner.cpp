@@ -9,14 +9,14 @@ using namespace std::placeholders;
 
 item_respawn_manager::spawn_item::spawn_item()
 {
-	item_object = nullptr;
+	item_object = NULL;
 	respawn_time = 0;
 	last_spawn_time = 0;
 	last_game_id = static_cast<u16>(-1);
 }
 item_respawn_manager::spawn_item::spawn_item(u32 r_time)
 {
-	item_object = nullptr;
+	item_object = NULL;
 	respawn_time = r_time;
 	last_game_id = static_cast<u16>(-1);
 	last_spawn_time = 0;
@@ -52,7 +52,7 @@ void item_respawn_manager::clear_respawns()
 		if (i->item_object)
 		{
 			F_entity_Destroy(i->item_object);
-			i->item_object = nullptr;
+			i->item_object = NULL;
 		}
 	}
 	m_respawns.clear();

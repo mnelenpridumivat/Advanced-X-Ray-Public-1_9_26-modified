@@ -11,7 +11,7 @@
 
 CWeaponBinoculars::CWeaponBinoculars()
 {
-	m_binoc_vision	= nullptr;
+	m_binoc_vision	= NULL;
 	m_bVision		= false;
 }
 

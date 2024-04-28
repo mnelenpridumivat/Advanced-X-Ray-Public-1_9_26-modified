@@ -35,7 +35,7 @@ public:
 
 	virtual void		Init						();
 	void		Show						(bool status) override;
-	void		SendMessage					(CUIWindow *pWnd, s16 msg, void* pData = nullptr) override;
+	void		SendMessage					(CUIWindow *pWnd, s16 msg, void* pData = NULL) override;
 	void		Draw						() override;
 
 	void				AddArticle					(shared_str, bool bReaded);

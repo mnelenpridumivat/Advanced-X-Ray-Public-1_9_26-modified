@@ -31,7 +31,7 @@ void CMovementManager::process_level_path()
 				object().ai_location().level_vertex_id(),
 				level_dest_vertex_id(),
 				extrapolate_path(),
-				nullptr
+				0
 			);
 
 			if (can_use_distributed_computations(mtLevelPath)) {

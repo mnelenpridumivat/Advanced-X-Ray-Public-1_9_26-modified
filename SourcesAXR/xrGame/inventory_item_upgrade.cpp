@@ -257,12 +257,12 @@ void CInventoryItem::pre_install_upgrade()
 	CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>(this);
 	CHelmet* pHelmet = smart_cast<CHelmet*>(this);
 
-	if (!pHelmet && pOutfit && Actor()->GetOutfit() && Actor()->GetOutfit()->ID() == pOutfit->ID() && pOutfit->m_NightVisionSect != nullptr && Actor()->GetNightVisionStatus())
+	if (!pHelmet && pOutfit && Actor()->GetOutfit() && Actor()->GetOutfit()->ID() == pOutfit->ID() && pOutfit->m_NightVisionSect != 0 && Actor()->GetNightVisionStatus())
 	{
 		Actor()->SwitchNightVision(false);
 		return;
 	}
 
-	if (!pOutfit && pHelmet && Actor()->GetHelmet() && Actor()->GetHelmet()->ID() == pHelmet->ID() && pHelmet->m_NightVisionSect != nullptr && Actor()->GetNightVisionStatus())
+	if (!pOutfit && pHelmet && Actor()->GetHelmet() && Actor()->GetHelmet()->ID() == pHelmet->ID() && pHelmet->m_NightVisionSect != 0 && Actor()->GetNightVisionStatus())
 		Actor()->SwitchNightVision(false);
 }

@@ -187,7 +187,7 @@ public:
 		{
 			bone_id=BI_NONE;
 			car=acar;
-			joint= nullptr;
+			joint=NULL;
 			inited=false;
 		}
 	};
@@ -250,8 +250,8 @@ public:
 		{
 			bone_id=BI_NONE;
 			pcar=acar;
-			p_pgobject= nullptr;
-			pelement= nullptr;
+			p_pgobject=NULL;
+			pelement=NULL;
 		}
 		~SExhaust();
 	};
@@ -325,7 +325,7 @@ public:
 		{
 			bone_id=BI_NONE;
 			pcar=acar;
-			joint= nullptr;
+			joint=NULL;
 			state=closed;
 			torque=500.f;
 			a_vel=M_PI;
@@ -589,7 +589,7 @@ public:
 	void			OnBeforeExplosion			() override;
 	void			GetRayExplosionSourcePos	(Fvector &pos) override;
 	void			ActivateExplosionBox		(const Fvector &size,Fvector &in_out_pos) override {};
-	void			ResetScriptData				(void *P=nullptr) override;
+	void			ResetScriptData				(void *P=0) override;
 
 	void			Action						(u16 id, u32 flags) override;
 	void			SetParam					(int id, Fvector2 val) override;
@@ -614,7 +614,7 @@ public:
 	void					SetExplodeTime				(u32 et)	;
 			u32				ExplodeTime					()			;
 	// Inventory for the car	
-	CInventory*						GetInventory						() override {return nullptr/*inventory*/;}
+	CInventory*						GetInventory						() override {return NULL/*inventory*/;}
 		  void						VisualUpdate						(float fov=90.0f);
 		  void						AddAvailableItems					(TIItemContainer& items_container) const;
 		  void						ShowTrunk							();

@@ -474,7 +474,7 @@ namespace SmartDynamicCast {
 			add_smart_cast_stats(typeid(T2*).name(),typeid(void*).name());
 #endif
 			if (!p)
-				return			static_cast<void*>(nullptr);
+				return			static_cast<void*>(0);
 			return				(dynamic_cast<void*>(p));
 		}
 	};

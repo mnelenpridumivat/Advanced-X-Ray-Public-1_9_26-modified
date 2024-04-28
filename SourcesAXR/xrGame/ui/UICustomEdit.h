@@ -21,7 +21,7 @@ public:
 			void	Init			(u32 max_char_count, bool number_only_mode = false, bool read_mode = false, bool fn_mode = false );
 		
 	virtual void	InitCustomEdit	(Fvector2 pos, Fvector2 size);
-	void	SendMessage		(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
+	void	SendMessage		(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 
 	bool	OnMouseAction			(float x, float y, EUIMessages mouse_action) override;
 	bool	OnKeyboardAction		(int dik, EUIMessages keyboard_action) override;

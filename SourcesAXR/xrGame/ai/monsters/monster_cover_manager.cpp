@@ -158,7 +158,7 @@ void CCoverEvaluator::evaluate_smart_cover(smart_cover::cover const *smart_cover
 
 CMonsterCoverManager::CMonsterCoverManager(CBaseMonster *monster) : m_object(monster)
 {
-	m_ce_best = nullptr;
+	m_ce_best = 0;
 }
 CMonsterCoverManager::~CMonsterCoverManager()
 {

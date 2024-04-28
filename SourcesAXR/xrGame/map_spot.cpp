@@ -20,7 +20,7 @@ CMapSpot::CMapSpot(CMapLocation* ml)
 {
 	m_bScale			= false;
 	m_location_level    = 0;
-	m_border_static		= nullptr;
+	m_border_static		= NULL;
 	m_scale_bounds.set	(-1.0f, -1.0f);
 }
 
@@ -81,7 +81,7 @@ void CMapSpot::Update()
 	{
 		if ( Device.dwTimeGlobal > ( m_dwFocusReceiveTime + 500 ) )
 		{
-			GetMessageTarget()->SendMessage(this, MAP_SHOW_HINT, nullptr);
+			GetMessageTarget()->SendMessage(this, MAP_SHOW_HINT, NULL);
 		}
 	}
 }
@@ -108,7 +108,7 @@ bool CMapSpot::OnMouseDown( int mouse_btn )
 void CMapSpot::OnFocusLost()
 {
 	inherited::OnFocusLost();
-	GetMessageTarget()->SendMessage(this, MAP_HIDE_HINT, nullptr);
+	GetMessageTarget()->SendMessage(this, MAP_HIDE_HINT, NULL);
 }
 
 void CMapSpot::show_static_border( bool status )
@@ -137,7 +137,7 @@ CMapSpotPointer::~CMapSpotPointer()
 
 LPCSTR CMapSpotPointer::GetHint()
 {
-	return nullptr;
+	return NULL;
 }
 
 //////////////////////////////////////////////////
@@ -155,7 +155,7 @@ void CMiniMapSpot::Load(CUIXml* xml, LPCSTR path)
 	inherited::Load(xml,path);
 
 	string256 buf;
-	XML_NODE* n = nullptr;
+	XML_NODE* n = NULL;
 	
 	Frect base_rect;
 	base_rect.x1 = 0;
@@ -168,7 +168,7 @@ void CMiniMapSpot::Load(CUIXml* xml, LPCSTR path)
 	strconcat(sizeof(buf), buf, path, ":texture_above");
 	n = xml->NavigateToNode(buf,0);
 	if(n){
-		LPCSTR texture  = xml->Read(buf, 0, nullptr);
+		LPCSTR texture  = xml->Read(buf, 0, NULL);
 		CUITextureMaster::InitTexture	(texture, &m_UIStaticItem);
 		if(strchr(texture,'\\'))
 		{
@@ -186,7 +186,7 @@ void CMiniMapSpot::Load(CUIXml* xml, LPCSTR path)
 	strconcat(sizeof(buf),buf, path, ":texture_below");
 	n = xml->NavigateToNode(buf,0);
 	if(n){
-		LPCSTR texture  = xml->Read(buf, 0, nullptr);
+		LPCSTR texture  = xml->Read(buf, 0, NULL);
 		CUITextureMaster::InitTexture	(texture, &m_UIStaticItem);
 		if(strchr(texture,'\\'))
 		{
@@ -203,7 +203,7 @@ void CMiniMapSpot::Load(CUIXml* xml, LPCSTR path)
 	strconcat(sizeof(buf),buf, path, ":texture");
 	n = xml->NavigateToNode(buf,0);
 	if(n){
-		LPCSTR texture  = xml->Read(buf, 0, nullptr);
+		LPCSTR texture  = xml->Read(buf, 0, NULL);
 		CUITextureMaster::InitTexture	(texture, &m_UIStaticItem);
 		if(strchr(texture,'\\'))
 		{
@@ -263,10 +263,10 @@ CComplexMapSpot::CComplexMapSpot(CMapLocation* ml)
 	m_infinity_time = false;
 	m_last_delay	= 0;
 	m_timer_finish	= 0;
-	m_left_icon		= nullptr;
-	m_right_icon	= nullptr;
-	m_top_icon		= nullptr;
-	m_timer			= nullptr;
+	m_left_icon		= NULL;
+	m_right_icon	= NULL;
+	m_top_icon		= NULL;
+	m_timer			= NULL;
 }
 
 CComplexMapSpot::~CComplexMapSpot()

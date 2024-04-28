@@ -13,7 +13,7 @@ public:
 					CUIButtonHint	();
 	~CUIButtonHint	() override;
 	CUIWindow*		Owner			()	{return m_ownerWnd;}
-	void			Discard			()	{m_ownerWnd= nullptr;};
+	void			Discard			()	{m_ownerWnd=NULL;};
 	void			OnRender		();
 	void			Draw_			()	{m_enabledOnFrame = true;};
 	void			SetHintText		(CUIWindow* w, LPCSTR text);

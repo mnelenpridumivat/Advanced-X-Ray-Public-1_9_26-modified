@@ -26,7 +26,7 @@ public:
 	~CUISkinSelectorWnd() override;
 	
 	virtual void	Init(const char* strSectionName);
-	void	SendMessage(CUIWindow *pWnd, s16 msg, void *pData = nullptr) override;
+	void	SendMessage(CUIWindow *pWnd, s16 msg, void *pData = NULL) override;
 	bool	OnMouseAction(float x, float y, EUIMessages mouse_action) override;
 	bool	OnKeyboardAction(int dik, EUIMessages keyboard_action) override;
 			void	SetVisibleForBtn(ESKINMENU_BTN btn, bool state);

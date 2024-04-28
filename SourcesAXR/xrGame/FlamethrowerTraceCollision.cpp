@@ -9,7 +9,6 @@
 #include "debug_renderer.h"
 #include "Level_Bullet_Manager.h"
 #include "seniority_hierarchy_space.h"
-#include "../xrParticles/psystem.h"
 
 BOOL CFlamethrowerTraceCollision::hit_callback(collide::rq_result& result, LPVOID params)
 {
@@ -53,17 +52,6 @@ void CFlamethrowerTraceCollision::UpdateParticles()
 
 	m_particles->SetXFORM(particles_pos);
 
-	m_particles->Manual_UpdateSize(GetCurrentRadius()*m_RadiusCollisionCoeff);
-	float NewAlpha;
-	if(IsCollided())
-	{
-		NewAlpha = (m_LifeTimeCollidedMax - std::max(m_current_time, m_LifeTimeCollidedMax - m_FlameFadeTime)) / m_FlameFadeTime;
-	} else
-	{
-		NewAlpha = (m_LifeTime - std::max(m_current_time, m_LifeTime - m_FlameFadeTime)) / m_FlameFadeTime;
-	}
-	m_particles->Manual_UpdateAlpha(NewAlpha);
-
 	if (!m_particles->IsAutoRemove() && !m_particles->IsLooped()
 		&& !m_particles->PSI_alive())
 	{
@@ -88,13 +76,9 @@ void CFlamethrowerTraceCollision::Load(LPCSTR section)
 	m_RadiusMin = pSettings->r_float(section, "RadiusMin");
 	m_RadiusMax = pSettings->r_float(section, "RadiusMax");
 	m_RadiusCollided = pSettings->r_float(section, "RadiusCollided");
-	m_RadiusCollidedInterpTime = pSettings->r_float(section, "RadiusCollidedInterpTime");
-	m_RadiusCollisionCoeff = pSettings->r_float(section, "RadiusCollisionCoeff");
 	m_RadiusMaxTime = pSettings->r_float(section, "RadiusMaxTime");
 	m_Velocity = pSettings->r_float(section, "Velocity");
 	m_LifeTime = pSettings->r_float(section, "LifeTime");
-	m_LifeTimeCollidedMax = pSettings->r_float(section, "LifeTimeCollidedMax");
-	m_FlameFadeTime = pSettings->r_float(section, "FlameFadeTime");
 	m_GravityAcceleration = pSettings->r_float(section, "GravityAcceleration");
 
 	string256 full_name;
@@ -131,8 +115,7 @@ bool CFlamethrowerTraceCollision::IsReadyToUpdateCollisions()
 
 float CFlamethrowerTraceCollision::GetCurrentRadius()
 {
-	return RadiusCurrent;
-	/*if (!IsActive()) {
+	if (!IsActive()) {
 		return 0.0f;
 	}
 	if (IsCollided()) {
@@ -143,7 +126,7 @@ float CFlamethrowerTraceCollision::GetCurrentRadius()
 	}
 	float CurRadius = m_RadiusMin + (m_RadiusMax - m_RadiusMin) * (m_current_time / m_RadiusMaxTime);
 	clamp(CurRadius, m_RadiusMin, m_RadiusMax);
-	return CurRadius;*/
+	return CurRadius;
 }
 
 void CFlamethrowerTraceCollision::SetTransform(const Fvector& StartPos, const Fvector& StartDir)
@@ -206,8 +189,6 @@ void CFlamethrowerTraceCollision::Deactivate()
 	m_launched = false;
 	m_GravityVelocity = 0.0f;
 	m_current_time = 0.0f;
-	m_time_on_collide = 0.0f;
-	RadiusOnCollide = 0.0f;
 	m_particles->Stop();
 	CParticlesObject::Destroy(m_particles);
 }
@@ -219,47 +200,32 @@ void CFlamethrowerTraceCollision::Update(float DeltaTime)
 	}
 	m_current_time += DeltaTime;
 	m_last_update_time += DeltaTime;
-	if ((!IsCollided() && m_current_time > m_LifeTime)
-		|| (IsCollided() && m_current_time > m_LifeTimeCollidedMax)) {
+	if (m_current_time > m_LifeTime) {
 		Deactivate();
 		return;
 	}
-	if (!IsCollided()) {
-		m_GravityVelocity += m_GravityAcceleration * DeltaTime;
-		auto old_pos = m_position;
-		//invXFORM.transform(old_pos);
-		m_position = m_position + m_direction * m_Velocity * DeltaTime - Fvector{ 0.0f, m_GravityVelocity * DeltaTime, 0.0f };
-		//invXFORM.transform(new_pos);
-		//Msg("pos = [%f, %f, %f]", m_position.x, m_position.y, m_position.z);
-		//m_position = m_position.add(m_direction.mul(m_Velocity * DeltaTime)).sub({ 0.0f, m_GravityVelocity * DeltaTime, 0.0f });
-		collide::rq_results storage;
-		collide::ray_defs RD(old_pos, m_position, CDB::OPT_FULL_TEST, collide::rqtBoth);
-		FlamethrowerTraceData data;
-		data.TracedObj = this;
-		m_direction = m_position - old_pos;
-		m_direction.normalize();
-		//auto PosCopy = m_position;
-		//m_direction = (PosCopy - old_pos).normalize();
-		if (Level().ObjectSpace.RayQuery(storage, RD, CFlamethrowerTraceCollision::hit_callback, &data, CFlamethrowerTraceCollision::test_callback, nullptr))
-		{
-			m_position = old_pos + m_direction * data.HitDist;
-			m_IsCollided = true;
-			VERIFY2(m_RadiusCollided > 0.01, "Too small RadiusCollided in flamethrower config!");
-			RadiusOnCollide = RadiusCurrent;
-			m_time_on_collide = m_current_time;
-		}
+	if (IsCollided()) {
+		return;
 	}
-
-	if (!IsActive()) {
-		RadiusCurrent = 0.0f;
-	}else if (IsCollided()) {
-		float interpTime = std::min((m_current_time - m_time_on_collide)/m_RadiusCollidedInterpTime, 1.0f);
-		RadiusCurrent = RadiusOnCollide+(m_RadiusCollided-RadiusOnCollide)*interpTime;
-		clamp(RadiusCurrent, m_RadiusMin, m_RadiusCollided);
-	} else if (m_current_time <= m_RadiusMaxTime) {
-		float interpTime = std::min(m_current_time / m_RadiusMaxTime, 1.0f);
-		RadiusCurrent = m_RadiusMin + (m_RadiusMax - m_RadiusMin) * interpTime;
-		clamp(RadiusCurrent, m_RadiusMin, m_RadiusMax);
+	m_GravityVelocity += m_GravityAcceleration * DeltaTime;
+	auto old_pos = m_position;
+	//invXFORM.transform(old_pos);
+	m_position = m_position + m_direction *m_Velocity* DeltaTime - Fvector{ 0.0f, m_GravityVelocity * DeltaTime, 0.0f };
+	//invXFORM.transform(new_pos);
+	Msg("pos = [%f, %f, %f]", m_position.x, m_position.y, m_position.z);
+	//m_position = m_position.add(m_direction.mul(m_Velocity * DeltaTime)).sub({ 0.0f, m_GravityVelocity * DeltaTime, 0.0f });
+	collide::rq_results storage;
+	collide::ray_defs RD(old_pos, m_position, CDB::OPT_FULL_TEST, collide::rqtBoth);
+	FlamethrowerTraceData data;
+	data.TracedObj = this;
+	m_direction = m_position - old_pos;
+	m_direction.normalize();
+	//auto PosCopy = m_position;
+	//m_direction = (PosCopy - old_pos).normalize();
+	if(Level().ObjectSpace.RayQuery(storage, RD, CFlamethrowerTraceCollision::hit_callback, &data, CFlamethrowerTraceCollision::test_callback, NULL))
+	{
+		m_position = old_pos + m_direction * data.HitDist;
+		m_IsCollided = true;
 	}
 
 //#ifdef DEBUG
@@ -381,7 +347,6 @@ const CFlamethrowerTraceManager::FOverlappedObjects& CFlamethrowerTraceManager::
 
 void CFlamethrowerTraceManager::LaunchTrace(const Fvector& StartPos, const Fvector& StartDir)
 {
-#ifdef DEBUG
 	if(LastLaunched && LastLaunched->IsActive())
 	{
 		auto PrevLoc = LastLaunched->GetCurrentPosition();
@@ -391,7 +356,6 @@ void CFlamethrowerTraceManager::LaunchTrace(const Fvector& StartPos, const Fvect
 			return;
 		}
 	}
-#endif
 	auto First = CollisionsPool.front();
 	if(First->IsActive())
 	{

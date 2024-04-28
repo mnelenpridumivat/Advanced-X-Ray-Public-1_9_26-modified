@@ -39,7 +39,7 @@ public:
 			void		SetItemIDX				(int idx);
 			void		SetItemToken			(int tok);
 
-	void		SendMessage				(CUIWindow *pWnd, s16 msg, void* pData = nullptr) override;
+	void		SendMessage				(CUIWindow *pWnd, s16 msg, void* pData = 0) override;
 	void		OnFocusLost				() override;
 	void		OnFocusReceive			() override;
 			int			CurrentID				()	{return m_itoken_id;}

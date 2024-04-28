@@ -19,7 +19,7 @@ CBattery::CBattery()
 	m_iPortionsNum = -1;
 	m_iUseFor = 0;
 	m_fBatteryChargeLevel = 1.0f;
-	m_physic_item = nullptr;
+	m_physic_item = 0;
 }
 
 CBattery::~CBattery()

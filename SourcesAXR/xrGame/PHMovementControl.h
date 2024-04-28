@@ -42,7 +42,7 @@ public:
 CObject					*ParentObject		(){ return pObject; }
 IElevatorState			*ElevatorState		();
 void 					in_shedule_Update	( u32 DT );
-void					PHCaptureObject 	( CPhysicsShellHolder* object, CPHCaptureBoneCallback* cb =nullptr );
+void					PHCaptureObject 	( CPhysicsShellHolder* object, CPHCaptureBoneCallback* cb =0 );
 void					PHCaptureObject 	( CPhysicsShellHolder* object, u16 element );
 IPHCapture*				PHCapture			( );
 CPHCharacter*			PHCharacter			( ){ return m_character; }

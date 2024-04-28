@@ -36,13 +36,13 @@ void CUIActorMenu::DeInitUpgradeMode()
 {
 	m_PartnerCharacterInfo->Show( false );
 	m_pUpgradeWnd->Show( false );
-	m_pUpgradeWnd->set_info_cur_upgrade(nullptr);
+	m_pUpgradeWnd->set_info_cur_upgrade( NULL );
 	m_pUpgradeWnd->m_btn_repair->Enable( false );
 
 	if ( m_upgrade_selected )
 	{
 		m_upgrade_selected->Mark( false );
-		m_upgrade_selected = nullptr;
+		m_upgrade_selected = NULL;
 	}
 	if ( m_pPartnerInvOwner )
 	{
@@ -115,7 +115,7 @@ bool CUIActorMenu::SetInfoCurUpgrade( Upgrade_type* upgrade_type, CInventoryItem
 
 PIItem CUIActorMenu::get_upgrade_item()
 {
-	return	(m_upgrade_selected)? static_cast<PIItem>(m_upgrade_selected->m_pData) : nullptr;
+	return	(m_upgrade_selected)? static_cast<PIItem>(m_upgrade_selected->m_pData) : NULL;
 }
 
 void CUIActorMenu::SeparateUpgradeItem()

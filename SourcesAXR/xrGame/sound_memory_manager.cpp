@@ -54,7 +54,7 @@ void CSoundMemoryManager::Load					(LPCSTR section)
 
 void CSoundMemoryManager::reinit				()
 {
-	m_sounds				= nullptr;
+	m_sounds				= 0;
 	m_priorities.clear		();
 	m_last_sound_time		= 0;
 	m_sound_threshold		= m_min_sound_threshold;
@@ -443,7 +443,7 @@ void CSoundMemoryManager::load	(IReader &packet)
 		if (delayed_object.m_object_id != static_cast<ALife::_OBJECT_ID>(-1))
 			object.m_object			= smart_cast<CGameObject*>(Level().Objects.net_Find(delayed_object.m_object_id));
 		else
-			object.m_object			= nullptr;
+			object.m_object			= 0;
 
 		// object params
 		object.m_object_params.m_level_vertex_id	= packet.r_u32();

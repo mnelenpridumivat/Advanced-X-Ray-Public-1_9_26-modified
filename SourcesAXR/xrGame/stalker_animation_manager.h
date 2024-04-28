@@ -106,9 +106,9 @@ public:
 
 		inline	void		invalidate		()
 		{
-			m_rotation				= nullptr;
-			m_object				= nullptr;
-			m_blend					= nullptr;
+			m_rotation				= 0;
+			m_object				= 0;
+			m_blend					= 0;
 			m_forward				= false;
 		}
 	}; // struct callback_params

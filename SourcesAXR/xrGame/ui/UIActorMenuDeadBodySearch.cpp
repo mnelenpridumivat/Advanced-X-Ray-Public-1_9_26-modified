@@ -134,8 +134,8 @@ void CUIActorMenu::DeInitDeadBodySearchMode()
 	{
 		m_pInvBox->set_in_use( false );
 	}
-	m_pInvBox = nullptr;
-	m_pCar = nullptr;
+	m_pInvBox = NULL;
+	m_pCar = NULL;
 }
 
 bool CUIActorMenu::ToDeadBodyBag(CUICellItem* itm, bool b_use_cursor_pos)
@@ -160,7 +160,7 @@ bool CUIActorMenu::ToDeadBodyBag(CUICellItem* itm, bool b_use_cursor_pos)
 		return false;
 
 	CUIDragDropListEx*	old_owner		= itm->OwnerList();
-	CUIDragDropListEx*	new_owner		= nullptr;
+	CUIDragDropListEx*	new_owner		= NULL;
 
 	if(b_use_cursor_pos)
 	{

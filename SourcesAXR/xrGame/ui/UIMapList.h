@@ -22,7 +22,7 @@ public:
 					CUIMapList();
 					~CUIMapList() override;
 					void	Update() override;
-					void	SendMessage(CUIWindow* pWnd, s16 msg, void* pData  = nullptr) override;
+					void	SendMessage(CUIWindow* pWnd, s16 msg, void* pData  = NULL) override;
 			void	InitFromXml(CUIXml& xml_doc, const char* path);	
 
 			void	SetWeatherSelector(CUIComboBox* ws);

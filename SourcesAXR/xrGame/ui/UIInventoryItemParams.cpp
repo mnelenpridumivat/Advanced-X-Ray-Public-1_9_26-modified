@@ -440,8 +440,8 @@ void CUIInventoryItem::SetInfo(CInventoryItem& pInvItem)
 
 CUIInventoryItemInfo::CUIInventoryItemInfo()
 {
-	m_caption = nullptr;
-	m_value = nullptr;
+	m_caption = NULL;
+	m_value = NULL;
 	m_magnitude = 1.0f;
 	m_show_sign = false;
 

@@ -18,7 +18,7 @@ class CStepManager {
 	{
 		u8				m_last_step_sound_played;
 		SGameMtlPair*	last_mtl_pair;
-						material_sound		():m_last_step_sound_played(static_cast<u8>(-1)), last_mtl_pair(nullptr){}
+						material_sound		():m_last_step_sound_played(static_cast<u8>(-1)), last_mtl_pair(0){}
 		void			play_next			(SGameMtlPair* mtl_pair, CEntityAlive* object, float volume, bool b_hud_mode);
 	}					m_step_sound;
 

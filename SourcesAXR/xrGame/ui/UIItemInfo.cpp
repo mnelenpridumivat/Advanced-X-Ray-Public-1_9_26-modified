@@ -41,21 +41,21 @@ CUIItemInfo::CUIItemInfo()
 {
 	UIItemImageSize.set			(0.0f,0.0f);
 	
-	UICost						= nullptr;
-	UITradeTip					= nullptr;
-	UIWeight					= nullptr;
-	UIItemImage					= nullptr;
-	UIDesc						= nullptr;
+	UICost						= NULL;
+	UITradeTip					= NULL;
+	UIWeight					= NULL;
+	UIItemImage					= NULL;
+	UIDesc						= NULL;
 	//UIConditionWnd				= NULL;
-	UIWpnParams					= nullptr;
-	UIProperties				= nullptr;
-	UIOutfitItem				= nullptr;
-	UIBoosterInfo				= nullptr;
-	UIArtefactParams			= nullptr;
-	UIInventoryItem				= nullptr;
-	UIName						= nullptr;
-	UIBackground				= nullptr;
-	m_pInvItem					= nullptr;
+	UIWpnParams					= NULL;
+	UIProperties				= NULL;
+	UIOutfitItem				= NULL;
+	UIBoosterInfo				= NULL;
+	UIArtefactParams			= NULL;
+	UIInventoryItem				= NULL;
+	UIName						= NULL;
+	UIBackground				= NULL;
+	m_pInvItem					= NULL;
 	m_b_FitToHeight				= false;
 	m_complex_desc				= false;
 }
@@ -199,14 +199,14 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 {
 	if(!pCellItem)
 	{
-		m_pInvItem			= nullptr;
+		m_pInvItem			= NULL;
 		Enable				(false);
 		return;
 	}
 
 	PIItem pInvItem			= static_cast<PIItem>(pCellItem->m_pData);
 	m_pInvItem				= pInvItem;
-	Enable					(nullptr != m_pInvItem);
+	Enable					(NULL != m_pInvItem);
 	if(!m_pInvItem)			return;
 
 	Fvector2				pos;	pos.set( 0.0f, 0.0f );
@@ -275,7 +275,7 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 			pos.y = UIWeight->GetWndPos().y + UIWeight->GetHeight() + 4.0f;
 		}
 
-		if(trade_tip== nullptr)
+		if(trade_tip==NULL)
 			UITradeTip->Show(false);
 		else
 		{
@@ -292,7 +292,7 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 		if ( UIWeight )
 			pos.y = UIWeight->GetWndPos().y + UIWeight->GetHeight() + 4.0f;
 
-		if(UITradeTip && trade_tip!= nullptr)
+		if(UITradeTip && trade_tip!=NULL)
 			pos.y = UITradeTip->GetWndPos().y + UITradeTip->GetHeight() + 4.0f;
 
 		UIDesc->SetWndPos		(pos);

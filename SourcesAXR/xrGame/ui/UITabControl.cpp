@@ -20,7 +20,7 @@ void CUITabControl::SetCurrentOptValue()
 	CUIOptionsItem::SetCurrentOptValue();
 	shared_str v			= GetOptStringValue();
 	CUITabButton* b			= GetButtonById(v);
-	if(nullptr ==b)
+	if(NULL==b)
 	{
 #ifndef MASTER_GOLD
 		Msg("! tab named [%s] doesnt exist", v.c_str());
@@ -144,11 +144,11 @@ void CUITabControl::OnTabChange(const shared_str& sCur, const shared_str& sPrev)
 	CUITabButton* tb_cur					= GetButtonById			(sCur);
 	CUITabButton* tb_prev					= GetButtonById			(sPrev);
 	if(tb_prev)	
-		tb_prev->SendMessage				(tb_cur, TAB_CHANGED, nullptr);
+		tb_prev->SendMessage				(tb_cur, TAB_CHANGED, NULL);
 
-	tb_cur->SendMessage						(tb_cur, TAB_CHANGED, nullptr);	
+	tb_cur->SendMessage						(tb_cur, TAB_CHANGED, NULL);	
 
-	GetMessageTarget()->SendMessage			(this, TAB_CHANGED, nullptr);
+	GetMessageTarget()->SendMessage			(this, TAB_CHANGED, NULL);
 }
 
 void CUITabControl::SetActiveTab(const shared_str& sNewTab)
@@ -190,7 +190,7 @@ CUITabButton* CUITabControl::GetButtonById(const shared_str& id)
 	if(it!=m_TabsArr.end())
 		return *it;
 	else
-		return nullptr;
+		return NULL;
 }
 /*
 const shared_str CUITabControl::GetCommandName(const shared_str& id)

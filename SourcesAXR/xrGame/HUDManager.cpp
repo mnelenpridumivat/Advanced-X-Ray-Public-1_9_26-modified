@@ -42,7 +42,7 @@ CFontManager::CFontManager()
 	FONTS_VEC_IT it		= m_all_fonts.begin();
 	FONTS_VEC_IT it_e	= m_all_fonts.end();
 	for(;it!=it_e;++it)
-		(**it) = nullptr;
+		(**it) = NULL;
 
 	InitializeFonts();
 
@@ -133,7 +133,7 @@ void CFontManager::OnDeviceReset()
 }
 
 //--------------------------------------------------------------------
-CHUDManager::CHUDManager() : pUIGame(nullptr), m_pHUDTarget(xr_new<CHUDTarget>())
+CHUDManager::CHUDManager() : pUIGame(NULL), m_pHUDTarget(xr_new<CHUDTarget>())
 {
 }
 //--------------------------------------------------------------------
@@ -169,9 +169,9 @@ ENGINE_API extern float psHUD_FOV;
 void CHUDManager::Render_First()
 {
 	if (!psHUD_Flags.is(HUD_WEAPON|HUD_WEAPON_RT|HUD_WEAPON_RT2|HUD_DRAW_RT2))return;
-	if (nullptr==pUIGame)					return;
+	if (0==pUIGame)					return;
 	CObject*	O					= g_pGameLevel->CurrentViewEntity();
-	if (nullptr==O)						return;
+	if (0==O)						return;
 	CActor*		A					= smart_cast<CActor*> (O);
 	if (!A)							return;
 	if (A && !A->HUDview())			return;
@@ -186,8 +186,8 @@ void CHUDManager::Render_First()
 
 bool need_render_hud()
 {
-	CObject*	O					= g_pGameLevel ? g_pGameLevel->CurrentViewEntity() : nullptr;
-	if (nullptr==O)						
+	CObject*	O					= g_pGameLevel ? g_pGameLevel->CurrentViewEntity() : NULL;
+	if (0==O)						
 		return false;
 
 	CActor*		A					= smart_cast<CActor*> (O);
@@ -203,7 +203,7 @@ bool need_render_hud()
 void CHUDManager::Render_Last()
 {
 	if (!psHUD_Flags.is(HUD_WEAPON|HUD_WEAPON_RT|HUD_WEAPON_RT2|HUD_DRAW_RT2))return;
-	if (nullptr==pUIGame)					return;
+	if (0==pUIGame)					return;
 
 	if(!need_render_hud())			return;
 
@@ -217,9 +217,9 @@ void CHUDManager::Render_Last()
 
 void CHUDManager::Render_Actor_Shadow() // added by KD
 {
-	if (nullptr == pUIGame) return;
+	if (0 == pUIGame) return;
 	CObject* O = g_pGameLevel->CurrentViewEntity();
-	if (nullptr == O) return;
+	if (0 == O) return;
 	CActor* A = smart_cast<CActor*> (O);
 	if (!A) return;
 	if (A->active_cam() != eacFirstEye) return; // KD: we need to render actor shadow only in first eye cam mode because

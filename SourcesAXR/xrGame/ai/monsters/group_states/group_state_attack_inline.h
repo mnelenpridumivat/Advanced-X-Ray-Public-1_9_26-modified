@@ -516,7 +516,7 @@ void CStateGroupAttackAbstract::remove_links(CObject* object)
 {
 	if ( m_enemy == object )
 	{
-		m_enemy	= nullptr;
+		m_enemy	= 0;
 	}
 }
 

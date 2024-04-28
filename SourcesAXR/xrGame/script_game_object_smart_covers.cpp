@@ -191,7 +191,7 @@ CCoverPoint const* CScriptGameObject::get_dest_smart_cover			()
 	CAI_Stalker*						stalker = smart_cast<CAI_Stalker*>(&object());
 	if (!stalker) {
 		ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"CAI_Stalker : cannot access class member get_dest_smart_cover!");
-		return							(nullptr);
+		return							(0);
 	}
 
 	return								(stalker->movement().target_params().cover());
@@ -201,7 +201,7 @@ LPCSTR CScriptGameObject::get_dest_smart_cover_name		()
 	CAI_Stalker*						stalker = smart_cast<CAI_Stalker*>(&object());
 	if (!stalker) {
 		ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"CAI_Stalker : cannot access class member get_dest_smart_cover!");
-		return							(nullptr);
+		return							(0);
 	}
 
 	return								(stalker->movement().target_params().cover_id().c_str());
@@ -248,7 +248,7 @@ void CScriptGameObject::set_smart_cover_target						()
 		return;
 	}
 
-	stalker->movement().target_params().cover_fire_position		(nullptr);
+	stalker->movement().target_params().cover_fire_position		(0);
 }
 
 void CScriptGameObject::set_smart_cover_target						(CScriptGameObject *enemy_object)

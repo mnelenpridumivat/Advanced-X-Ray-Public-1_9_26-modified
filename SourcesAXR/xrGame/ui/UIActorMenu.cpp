@@ -87,7 +87,7 @@ void CUIActorMenu::SetPartner(CInventoryOwner* io)
 		else 
 			m_PartnerCharacterInfo->InitCharacter(m_pPartnerInvOwner);
 
-		SetInvBox(nullptr);
+		SetInvBox( NULL );
 	}else
 		m_PartnerCharacterInfo->ClearInfo();
 }
@@ -99,7 +99,7 @@ void CUIActorMenu::SetInvBox(CInventoryBox* box)
 	if ( box )
 	{
 		m_pInvBox->set_in_use( true );
-		SetPartner(nullptr);
+		SetPartner( NULL );
 	}
 }
 
@@ -109,14 +109,14 @@ void CUIActorMenu::SetCarTrunk(CCar* pCar)
 	m_pCar = pCar;
 	if (m_pCar)
 	{
-		SetPartner(nullptr);
+		SetPartner(NULL);
 	}
 }
 
 void CUIActorMenu::SetMenuMode(EMenuMode mode)
 {
-	SetCurrentItem(nullptr);
-	m_hint_wnd->set_text(nullptr);
+	SetCurrentItem( NULL );
+	m_hint_wnd->set_text( NULL );
 	
 	if ( mode != m_currMenuMode )
 	{
@@ -202,7 +202,7 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
 void CUIActorMenu::PlaySnd(eActorMenuSndAction a)
 {
 	if (sounds[a]._handle())
-        sounds[a].play					(nullptr, sm_2D);
+        sounds[a].play					(NULL, sm_2D);
 }
 
 void CUIActorMenu::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
@@ -442,7 +442,7 @@ CUIDragDropListEx* CUIActorMenu::GetListByType(EDDListType t)
 				R_ASSERT("invalid call");
 			}break;
 	}
-	return nullptr;
+	return NULL;
 }
 
 CUICellItem* CUIActorMenu::CurrentItem()
@@ -452,7 +452,7 @@ CUICellItem* CUIActorMenu::CurrentItem()
 
 PIItem CUIActorMenu::CurrentIItem()
 {
-	return	(m_pCurrentCellItem)? static_cast<PIItem>(m_pCurrentCellItem->m_pData) : nullptr;
+	return	(m_pCurrentCellItem)? static_cast<PIItem>(m_pCurrentCellItem->m_pData) : NULL;
 }
 
 void CUIActorMenu::SetCurrentItem(CUICellItem* itm)
@@ -461,7 +461,7 @@ void CUIActorMenu::SetCurrentItem(CUICellItem* itm)
 	m_pCurrentCellItem = itm;
 	if ( !itm )
 	{
-		InfoCurItem(nullptr);
+		InfoCurItem( NULL );
 	}
 	TryHidePropertiesBox();
 
@@ -475,12 +475,12 @@ void CUIActorMenu::InfoCurItem( CUICellItem* cell_item )
 {
 	if ( !cell_item )
 	{
-		m_ItemInfo->InitItem(nullptr);
+		m_ItemInfo->InitItem( NULL );
 		return;
 	}
 	PIItem current_item = static_cast<PIItem>(cell_item->m_pData);
 
-	PIItem compare_item = nullptr;
+	PIItem compare_item = NULL;
 	u16    compare_slot = current_item->BaseSlot();
 	if ( compare_slot != NO_ACTIVE_SLOT )
 	{
@@ -520,7 +520,7 @@ void CUIActorMenu::InfoCurItem( CUICellItem* cell_item )
 		}
 
 		if(	!current_item->CanTrade() || 
-			(!m_pPartnerInvOwner->trade_parameters().enabled(static_cast<CTradeParameters::action_buy>(nullptr), 
+			(!m_pPartnerInvOwner->trade_parameters().enabled(static_cast<CTradeParameters::action_buy>(0), 
 															current_item->object().cNameSect()) &&
 			item_owner && item_owner==m_pActorInvOwner)
 		)
@@ -1171,9 +1171,9 @@ void CUIActorMenu::CallMessageBoxOK( LPCSTR text )
 void CUIActorMenu::ResetMode()
 {
 	ClearAllLists				();
-	m_pMouseCapturer			= nullptr;
+	m_pMouseCapturer			= NULL;
 	m_UIPropertiesBox->Hide		();
-	SetCurrentItem				(nullptr);
+	SetCurrentItem				(NULL);
 
 	if (SSFX_UI_DoF_active)
 	{

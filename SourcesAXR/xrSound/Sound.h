@@ -117,8 +117,8 @@ public:
 							ref_sound				(){ }
 							~ref_sound				(){ }
 
-	IC CSound_source*		_handle					()		const			{return _p?_p->handle: nullptr;}
-	IC CSound_emitter*		_feedback				()						{return _p?_p->feedback:nullptr;}
+	IC CSound_source*		_handle					()		const			{return _p?_p->handle:NULL;}
+	IC CSound_emitter*		_feedback				()						{return _p?_p->feedback:0;}
 	IC CObject*				_g_object				()						{VERIFY(_p); return _p->g_object;}
 	IC int					_g_type					()						{VERIFY(_p); return _p->g_type;}
 	IC esound_type			_sound_type				()						{VERIFY(_p); return _p->s_type;}
@@ -133,7 +133,7 @@ public:
 
 	IC void					play					( CObject* O, u32 flags=0, float delay=0.f);
 	IC void					play_at_pos				( CObject* O, const Fvector &pos ,	u32 flags=0, float delay=0.f);
-	IC void					play_no_feedback		( CObject* O, u32 flags=0, float delay=0.f, Fvector* pos=nullptr, float* vol=nullptr, float* freq=nullptr, Fvector2* range=nullptr);
+	IC void					play_no_feedback		( CObject* O, u32 flags=0, float delay=0.f, Fvector* pos=0, float* vol=0, float* freq=0, Fvector2* range=0);
 
 	IC void					stop 					( );
 	IC void					stop_deffered			( );
@@ -308,7 +308,7 @@ public:
 
 	virtual void					play					( ref_sound& S, CObject* O,						u32 flags=0, float delay=0.f)			= 0;
 	virtual void					play_at_pos				( ref_sound& S, CObject* O,	const Fvector &pos,	u32 flags=0, float delay=0.f)			= 0;
-	virtual void					play_no_feedback		( ref_sound& S, CObject* O,						u32 flags=0, float delay=0.f, Fvector* pos=nullptr, float* vol=nullptr, float* freq=nullptr, Fvector2* range=nullptr)= 0;
+	virtual void					play_no_feedback		( ref_sound& S, CObject* O,						u32 flags=0, float delay=0.f, Fvector* pos=0, float* vol=0, float* freq=0, Fvector2* range=0)= 0;
 
 	virtual void					set_master_volume		( float f=1.f )																			= 0;
 	virtual void					set_geometry_env		( IReader* I )																			= 0;
@@ -337,7 +337,7 @@ class  CSound_manager_interface;
 extern XRSOUND_API CSound_manager_interface*		Sound;
 
 /// ********* Sound ********* (utils, accessors, helpers)
-IC ref_sound_data::ref_sound_data				()																{	handle=nullptr;feedback=nullptr;g_type=0;g_object=nullptr;s_type=st_Effect;			}
+IC ref_sound_data::ref_sound_data				()																{	handle=0;feedback=0;g_type=0;g_object=0;s_type=st_Effect;			}
 IC ref_sound_data::ref_sound_data				( LPCSTR fName, esound_type sound_type, int	game_type )	{	::Sound->_create_data			(*this,fName, sound_type, game_type);							}
 IC ref_sound_data::~ref_sound_data				()																{	::Sound->_destroy_data			(*this);																}
 
@@ -356,7 +356,7 @@ IC void	ref_sound::set_volume					( float vol )											{	VERIFY(!::Sound->i_l
 IC void	ref_sound::set_priority					( float p )												{	VERIFY(!::Sound->i_locked()); 	if (_feedback())	_feedback()->set_priority(p);								}
 IC void	ref_sound::stop							( )														{	VERIFY(!::Sound->i_locked()); 	if (_feedback())	_feedback()->stop(FALSE);									}
 IC void	ref_sound::stop_deffered				( )														{	VERIFY(!::Sound->i_locked()); 	if (_feedback())	_feedback()->stop(TRUE);									}
-IC const CSound_params*	ref_sound::get_params	( )														{	VERIFY(!::Sound->i_locked()); 	if (_feedback())	return _feedback()->get_params(); else return nullptr;			}
+IC const CSound_params*	ref_sound::get_params	( )														{	VERIFY(!::Sound->i_locked()); 	if (_feedback())	return _feedback()->get_params(); else return NULL;			}
 IC void	ref_sound::set_params					( CSound_params* p )									
 {	
 	VERIFY(!::Sound->i_locked()); 	

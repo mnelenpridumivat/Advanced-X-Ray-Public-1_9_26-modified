@@ -34,8 +34,8 @@ static const float depth_resolve = 0.01f;
 imotion_position::imotion_position(): 
 interactive_motion(), 
 time_to_end(0.f), 
-saved_visual_callback( nullptr ), 
-blend(nullptr), 
+saved_visual_callback( 0 ), 
+blend(0), 
 shell_motion_has_history( false )
 {
 
@@ -67,7 +67,7 @@ void imotion_position::	interactive_motion_diagnostic( LPCSTR message )
 
 }
 #ifdef DEBUG
-CPhysicsShellHolder* collide_obj = nullptr;
+CPhysicsShellHolder* collide_obj = 0;
 #endif
 
 static float depth = 0;
@@ -77,7 +77,7 @@ static void  get_depth( bool& do_colide, bool bo1, dContact& c, SGameMtl * /*mat
 #ifdef DEBUG
 	if( depth != c.geom.depth )
 		return;
-	dxGeomUserData* ud = nullptr;
+	dxGeomUserData* ud = 0;
 	if( bo1 )
 		ud = PHRetrieveGeomUserData( c.geom.g2 );
 	else
@@ -85,7 +85,7 @@ static void  get_depth( bool& do_colide, bool bo1, dContact& c, SGameMtl * /*mat
 	if(ud)
 		collide_obj = static_cast<CPhysicsShellHolder*>(ud->ph_ref_object);
 	else
-		collide_obj = nullptr;
+		collide_obj = 0;
 #endif
 }
 static std::string collide_diag()
@@ -106,7 +106,7 @@ void disable_bone_calculation(IKinematics &K, bool v )
 	for(u16 i = 1; i< bn; ++i )//ommit real root
 	{
 		CBoneInstance &bi = K.LL_GetBoneInstance( i );
-		if( bi.callback_param()!=nullptr )
+		if( bi.callback_param()!=0 )
 			continue;
 #ifdef DEBUG
 		if( v && bi.callback_overwrite() == static_cast<BOOL>(v) )
@@ -122,7 +122,7 @@ void imotion_position::state_start( )
 	
 	IKinematics			*K	= shell->PKinematics();
 	saved_visual_callback = K->GetUpdateCallback();
-	K->SetUpdateCallback( nullptr );
+	K->SetUpdateCallback( 0 );
 	IKinematicsAnimated	*KA = smart_cast<IKinematicsAnimated*>( shell->PKinematics() );
 	VERIFY( KA );
 	KA->SetUpdateTracksCalback( &update_callback );
@@ -134,7 +134,7 @@ void imotion_position::state_start( )
 	{
 		CBlend					*blend;
 		const	PlayCallback	cb;
-		get_controled_blend(const	PlayCallback	_cb):blend( nullptr ),cb(_cb){}
+		get_controled_blend(const	PlayCallback	_cb):blend( 0 ),cb(_cb){}
 
 		void	operator () ( CBlend &B ) override
 		{
@@ -288,8 +288,8 @@ void	imotion_position::state_end( )
 
 	IKinematicsAnimated	*KA = smart_cast<IKinematicsAnimated*>( shell->PKinematics() );
 	VERIFY( KA );
-	update_callback.motion = nullptr;
-	KA->SetUpdateTracksCalback( nullptr );
+	update_callback.motion = 0;
+	KA->SetUpdateTracksCalback( 0 );
 
 #if 0
 
@@ -454,7 +454,7 @@ class sblend_save
 	CBlend sv;
 	CBlend *b;
 public:
-	sblend_save(): b( nullptr ){};
+	sblend_save(): b( 0 ){};
 	void save( CBlend *B )
 	{
 		b = B;
@@ -464,7 +464,7 @@ public:
 	{
 		VERIFY( b );
 		*b = sv;
-		b = nullptr;
+		b = 0;
 	}
 };
 
@@ -725,7 +725,7 @@ void	imotion_position::rootbone_callback	( CBoneInstance *BI )
 	SKeyTable	keys;
 	KA->LL_BuldBoneMatrixDequatize( &K->LL_GetData( 0 ), static_cast<u8>(-1), keys );
 	
-	CKey *key = nullptr;
+	CKey *key = 0;
 	for( int i = 0; i < keys.chanel_blend_conts[0]; ++i )
 	{
 		if ( keys.blends[0][i] == im->blend)

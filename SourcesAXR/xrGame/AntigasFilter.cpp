@@ -18,7 +18,7 @@ CAntigasFilter::CAntigasFilter()
 	m_iPortionsNum = -1;
 	m_iUseFor = 0;
 	m_fCondition = 1.0f;
-	m_physic_item = nullptr;
+	m_physic_item = 0;
 }
 
 CAntigasFilter::~CAntigasFilter()

@@ -83,8 +83,8 @@ struct CNotYetVisibleObjectPredicate{
 CVisualMemoryManager::CVisualMemoryManager		(CCustomMonster *object)
 {
 	m_object			= object;
-	m_stalker			= nullptr;
-	m_client			= nullptr;
+	m_stalker			= 0;
+	m_client			= 0;
 	initialize			();
 }
 
@@ -92,14 +92,14 @@ CVisualMemoryManager::CVisualMemoryManager		(CAI_Stalker *stalker)
 {
 	m_object			= stalker;
 	m_stalker			= stalker;
-	m_client			= nullptr;
+	m_client			= 0;
 	initialize			();
 }
 
 CVisualMemoryManager::CVisualMemoryManager		(vision_client *client)
 {
-	m_object			= nullptr;
-	m_stalker			= nullptr;
+	m_object			= 0;
+	m_stalker			= 0;
 	m_client			= client;
 	initialize			();
 	
@@ -110,7 +110,7 @@ void CVisualMemoryManager::initialize			()
 {
 	m_max_object_count	= 128;
 	m_enabled			= true;
-	m_objects			= nullptr;
+	m_objects			= 0;
 }
 
 CVisualMemoryManager::~CVisualMemoryManager		()
@@ -126,7 +126,7 @@ CVisualMemoryManager::~CVisualMemoryManager		()
 void CVisualMemoryManager::reinit					()
 {
 	if (!m_client)
-		m_objects						= nullptr;
+		m_objects						= 0;
 	else {
 		VERIFY							(m_objects);
 		m_objects->clear				();
@@ -367,7 +367,7 @@ CNotYetVisibleObject *CVisualMemoryManager::not_yet_visible_object(const CGameOb
 		CNotYetVisibleObjectPredicate(game_object)
 		);
 	if (I == m_not_yet_visible_objects.end())
-		return							(nullptr);
+		return							(0);
 	return								(&*I);
 	STOP_PROFILE
 }
@@ -581,7 +581,7 @@ float CVisualMemoryManager::feel_vision_mtl_transp(CObject* O, u32 element)
 	float vis				= 1.f;
 	if (O){
 		IKinematics* V		= smart_cast<IKinematics*>(O->Visual());
-		if (nullptr!=V){
+		if (0!=V){
 			CBoneData& B	= V->LL_GetData(static_cast<u16>(element));
 			vis				= GMLib.GetMaterialByIdx(B.game_mtl_idx)->fVisTransparencyFactor;
 		}
@@ -648,7 +648,7 @@ CVisibleObject *CVisualMemoryManager::visible_object	(const CGameObject *game_ob
 {
 	VISIBLES::iterator			I = std::find_if(m_objects->begin(),m_objects->end(),CVisibleObjectPredicateEx(game_object));
 	if (I == m_objects->end())
-		return					(nullptr);
+		return					(0);
 	return						(&*I);
 }
 

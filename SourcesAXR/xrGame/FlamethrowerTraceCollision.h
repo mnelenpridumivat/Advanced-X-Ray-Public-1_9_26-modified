@@ -18,28 +18,21 @@ class CFlamethrowerTraceCollision :
 	bool m_IsCollided = false;
 	bool m_launched = false;
 	float m_current_time = 0.0f;
-	float m_time_on_collide = 0.0f;
 	//Fmatrix XFORM;
 	//Fmatrix invXFORM;
 	Fvector m_LastUpdatedPos;
 	Fvector m_position;
 	Fvector m_direction;
-	float RadiusCurrent;
-	float RadiusOnCollide;
 
 	shared_str m_sFlameParticles;
 
 	float m_last_update_time;
 
 	float m_LifeTime = 0.0f;
-	float m_LifeTimeCollidedMax = 0.0f;
-	float m_FlameFadeTime = 0.0f;
 	float m_RadiusMin = 0.0f;
 	float m_RadiusMax = 0.0f;
 	float m_RadiusMaxTime = 0.0f;
 	float m_RadiusCollided = 0.0f;
-	float m_RadiusCollidedInterpTime = 0.0f;
-	float m_RadiusCollisionCoeff = 0.0f;
 	float m_Velocity = 0.0f;
 	float m_GravityVelocity = 0.0f;
 	float m_GravityAcceleration = 0.0f;

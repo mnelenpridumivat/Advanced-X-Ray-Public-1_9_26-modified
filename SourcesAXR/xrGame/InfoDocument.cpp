@@ -11,7 +11,7 @@
 
 CInfoDocument::CInfoDocument(void) 
 {
-	m_Info = nullptr;
+	m_Info = NULL;
 }
 
 CInfoDocument::~CInfoDocument(void) 

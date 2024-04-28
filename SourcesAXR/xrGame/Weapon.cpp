@@ -37,7 +37,7 @@
 
 BOOL	b_toggle_weapon_aim		= FALSE;
 BOOL	b_hud_collision			= FALSE;
-extern CUIXml*	pWpnScopeXml = nullptr;
+extern CUIXml*	pWpnScopeXml = NULL;
 
 CWeapon::CWeapon()
 {
@@ -62,21 +62,21 @@ CWeapon::CWeapon()
 
 	m_zoom_params.m_fCurrentZoomFactor			= GameConstants::GetOGSE_WpnZoomSystem() ? 1.f : g_fov;
 	m_zoom_params.m_fZoomRotationFactor			= 0.f;
-	m_zoom_params.m_pVision						= nullptr;
-	m_zoom_params.m_pNight_vision				= nullptr;
+	m_zoom_params.m_pVision						= NULL;
+	m_zoom_params.m_pNight_vision				= NULL;
 	m_zoom_params.m_fSecondVPFovFactor			= 0.0f;
 	m_zoom_params.m_f3dZoomFactor				= 0.0f;
 
-	m_pCurrentAmmo			= nullptr;
+	m_pCurrentAmmo			= NULL;
 
-	m_pFlameParticles2		= nullptr;
-	m_sFlameParticles2		= nullptr;
+	m_pFlameParticles2		= NULL;
+	m_sFlameParticles2		= NULL;
 
 
 	m_fCurrentCartirdgeDisp = 1.f;
 
-	m_strap_bone0			= nullptr;
-	m_strap_bone1			= nullptr;
+	m_strap_bone0			= 0;
+	m_strap_bone1			= 0;
 	m_strap_bone0_id = -1;
 	m_strap_bone1_id = -1;
 	m_StrapOffset.identity	();
@@ -87,7 +87,7 @@ CWeapon::CWeapon()
 	m_can_be_strapped		= false;
 	m_ef_main_weapon_type	= static_cast<u32>(-1);
 	m_ef_weapon_type		= static_cast<u32>(-1);
-	m_UIScope				= nullptr;
+	m_UIScope				= NULL;
 	m_set_next_ammoType_on_reload = undefined_ammo_type;
 	m_crosshair_inertion	= 0.f;
 	m_activation_speed_is_overriden	=	false;
@@ -1068,7 +1068,7 @@ bool CWeapon::bReloadSectionScope(LPCSTR section)
 	if (!pSettings->line_exist(section, "scopes"))
 		return false;
 
-	if (pSettings->r_string(section, "scopes") == nullptr)
+	if (pSettings->r_string(section, "scopes") == NULL)
 		return false;
 
 	if (xr_strcmp(pSettings->r_string(section, "scopes"), "none") == 0)
@@ -1082,7 +1082,7 @@ bool CWeapon::bLoadAltScopesParams(LPCSTR section)
 	if (!pSettings->line_exist(section, "scopes"))
 		return false;
 
-	if (pSettings->r_string(section, "scopes") == nullptr)
+	if (pSettings->r_string(section, "scopes") == NULL)
 		return false;
 
 	if (xr_strcmp(pSettings->r_string(section, "scopes"), "none") == 0)
@@ -1569,7 +1569,7 @@ void CWeapon::UpdateCL		()
 				GetState()==eIdle && 
 				(Device.dwTimeGlobal-m_dw_curr_substate_time>20000) && 
 				!IsZoomed()&&
-				g_player_hud->attached_item(1)== nullptr)
+				g_player_hud->attached_item(1)==NULL)
 			{
 				if(AllowBore())
 					SwitchState		(eBore);
@@ -2240,7 +2240,7 @@ void CWeapon::UpdateHUDAddonsVisibility()
 	for (int i = 0; i < m_all_scope_bones.size(); i++)
 		SetBoneVisible(m_all_scope_bones[i], FALSE);
 
-	if (m_cur_scope_bone != nullptr)
+	if (m_cur_scope_bone != NULL)
 		SetBoneVisible(m_cur_scope_bone, TRUE);
 
 	if (bone_id != BI_NONE)
@@ -2346,7 +2346,7 @@ void CWeapon::UpdateAddonsVisibility()
 	for (int i = 0; i < m_all_scope_bones.size(); i++)
 		SetBoneVisible(m_all_scope_bones[i], FALSE);
 
-	if (m_cur_scope_bone != nullptr)
+	if (m_cur_scope_bone != NULL)
 		SetBoneVisible(m_cur_scope_bone, TRUE);
 
 	if(ScopeAttachable())
@@ -2565,7 +2565,7 @@ void CWeapon::OnZoomIn()
 	if (GetHUDmode())
 		GamePersistent().SetPickableEffectorDOF(true);
 
-	if (m_zoom_params.m_sUseBinocularVision.size() && IsScopeAttached() && nullptr == m_zoom_params.m_pVision)
+	if (m_zoom_params.m_sUseBinocularVision.size() && IsScopeAttached() && NULL == m_zoom_params.m_pVision)
 		m_zoom_params.m_pVision = xr_new<CBinocularsVision>(m_zoom_params.m_sUseBinocularVision);
 
 	if (pA && IsScopeAttached())
@@ -2579,7 +2579,7 @@ void CWeapon::OnZoomIn()
 		}
 		else if (m_zoom_params.m_sUseZoomPostprocess.size())
 		{
-			if (nullptr == m_zoom_params.m_pNight_vision)
+			if (NULL == m_zoom_params.m_pNight_vision)
 			{
 				m_zoom_params.m_pNight_vision = xr_new<CNightVisionEffector>(m_zoom_params.m_sUseZoomPostprocess);
 			}
@@ -2626,7 +2626,7 @@ CUIWindow* CWeapon::ZoomTexture()
 	if (UseScopeTexture() && !bIsSecondVPZoomPresent() && !m_bAltZoomActive)
 		return m_UIScope;
 	else
-		return nullptr;
+		return NULL;
 }
 
 void CWeapon::SwitchState(u32 S)
@@ -2842,7 +2842,7 @@ CInventoryItem *CWeapon::can_kill	(CInventory *inventory) const
 			return			(inventory_item);
 	}
 
-	return					(nullptr);
+	return					(0);
 }
 
 const CInventoryItem *CWeapon::can_kill	(const xr_vector<const CGameObject*> &items) const
@@ -2862,7 +2862,7 @@ const CInventoryItem *CWeapon::can_kill	(const xr_vector<const CGameObject*> &it
 			return			(inventory_item);
 	}
 
-	return					(nullptr);
+	return					(0);
 }
 
 bool CWeapon::ready_to_kill	() const
@@ -2915,7 +2915,7 @@ static float GetRayQueryDist()
 			collide::rq_results RQR;
 			RQ2.range = 3.0f;
 			collide::ray_defs RD(Device.vCameraPosition, Device.vCameraDirection, RQ2.range, CDB::OPT_CULL, collide::rqtStatic);
-			if (Level().ObjectSpace.RayQuery(RQR, RD, pick_trace_callback, &RQ2, nullptr, Level().CurrentEntity()))
+			if (Level().ObjectSpace.RayQuery(RQR, RD, pick_trace_callback, &RQ2, NULL, Level().CurrentEntity()))
 			{
 				clamp(RQ2.range, RQ.range, RQ2.range);
 				return RQ2.range;
@@ -3434,7 +3434,7 @@ BOOL CWeapon::ParentMayHaveAimBullet	()
 {
 	CObject* O=H_Parent();
 	CEntityAlive* EA=smart_cast<CEntityAlive*>(O);
-	return EA->cast_actor()!=nullptr;
+	return EA->cast_actor()!=0;
 }
 
 BOOL CWeapon::ParentIsActor	()
@@ -3447,7 +3447,7 @@ BOOL CWeapon::ParentIsActor	()
 	if (!EA)
 		return FALSE;
 
-	return EA->cast_actor()!=nullptr;
+	return EA->cast_actor()!=0;
 }
 
 extern int hud_adj_mode;
@@ -3549,7 +3549,7 @@ bool CWeapon::MovingAnimAllowedNow()
 
 bool CWeapon::IsHudModeNow()
 {
-	return (HudItemData()!= nullptr);
+	return (HudItemData()!=NULL);
 }
 
 void CWeapon::ZoomDynamicMod(bool bIncrement, bool bForceLimit)
@@ -3646,7 +3646,7 @@ float CWeapon::GetSecondVPFov() const
 //      
 void CWeapon::UpdateSecondVP(bool bInGrenade)
 {
-	bool b_is_active_item = (m_pInventory != nullptr) && (m_pInventory->ActiveItem() == this);
+	bool b_is_active_item = (m_pInventory != NULL) && (m_pInventory->ActiveItem() == this);
 	R_ASSERT(ParentIsActor() && b_is_active_item); //           
 
 	CActor* pActor = smart_cast<CActor*>(H_Parent());

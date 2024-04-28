@@ -58,10 +58,10 @@ void	game_sv_ArtefactHunt::Create					(shared_str& options)
 	if (FS.exist(fn_game, "$level$", "level.game")) 
 	{
 		IReader *F = FS.r_open	(fn_game);
-		IReader *O = nullptr;
+		IReader *O = 0;
 
 		// Load RPoints
-		if (nullptr!=(O = F->open_chunk	(RPOINT_CHUNK)))
+		if (0!=(O = F->open_chunk	(RPOINT_CHUNK)))
 		{ 
 			for (int id=0; O->find_chunk(id); ++id)
 			{
@@ -752,7 +752,7 @@ void game_sv_ArtefactHunt::SpawnArtefact()
 {
 //	if (OnClient()) return;
 
-	CSE_Abstract			*E = nullptr;
+	CSE_Abstract			*E = NULL;
 	if (pSettings->line_exist("artefacthunt_gamedata", "artefact"))
 		E	=	spawn_begin	(pSettings->r_string("artefacthunt_gamedata", "artefact"));
 	else

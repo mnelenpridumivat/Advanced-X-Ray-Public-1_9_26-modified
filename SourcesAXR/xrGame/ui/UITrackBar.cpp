@@ -66,7 +66,7 @@ bool CUITrackBar::OnMouseAction(float x, float y, EUIMessages mouse_action)
 				m_i_val -= GetInvert()?-m_i_step:m_i_step;
 				clamp(m_i_val, m_i_min, m_i_max);
 			}
-			GetMessageTarget()->SendMessage(this, BUTTON_CLICKED, nullptr);
+			GetMessageTarget()->SendMessage(this, BUTTON_CLICKED, NULL);
 			UpdatePos			();
 			OnChangedOptValue	();
 		}
@@ -83,7 +83,7 @@ bool CUITrackBar::OnMouseAction(float x, float y, EUIMessages mouse_action)
 				m_i_val += GetInvert()?-m_i_step:m_i_step;
 				clamp(m_i_val, m_i_min, m_i_max);
 			}
-			GetMessageTarget()->SendMessage(this, BUTTON_CLICKED, nullptr);
+			GetMessageTarget()->SendMessage(this, BUTTON_CLICKED, NULL);
 			UpdatePos();
 			OnChangedOptValue	();
 		}
@@ -273,7 +273,7 @@ void CUITrackBar::UpdatePosRelativeToMouse()
 	}
 
 	if(b_ch)
-		GetMessageTarget()->SendMessage(this, BUTTON_CLICKED, nullptr);
+		GetMessageTarget()->SendMessage(this, BUTTON_CLICKED, NULL);
 
 	UpdatePos	();
 	OnChangedOptValue	();
@@ -311,11 +311,11 @@ void CUITrackBar::UpdatePos()
 		string256 buff;
 		if (m_b_is_float)
 		{
-			xr_sprintf(buff, (m_static_format == nullptr ? "%.1f" : m_static_format.c_str()), m_f_val);
+			xr_sprintf(buff, (m_static_format == NULL ? "%.1f" : m_static_format.c_str()), m_f_val);
 		}
 		else
 		{
-			xr_sprintf(buff, (m_static_format == nullptr ? "%d" : m_static_format.c_str()), m_i_val);
+			xr_sprintf(buff, (m_static_format == NULL ? "%d" : m_static_format.c_str()), m_i_val);
 		}
 		m_static->TextItemControl()->SetTextST(buff);
 	}

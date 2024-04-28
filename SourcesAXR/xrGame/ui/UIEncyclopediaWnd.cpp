@@ -114,7 +114,7 @@ void CUIEncyclopediaWnd::SendMessage(CUIWindow *pWnd, s16 msg, void* pData)
 
 			UIEncyclopediaInfoHeader->TextItemControl()->SetText(caption.c_str());
 			//UIArticleHeader->SetText(caption.c_str());
-			SetCurrentArtice		(nullptr);
+			SetCurrentArtice		(NULL);
 		}else
 		{
 			int idx = pTVItem->GetValue();

@@ -17,7 +17,7 @@ public:
 					CUIVote		();
 			void 	Init		();
 					void 	Update		() override;
-					void 	SendMessage	(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
+					void 	SendMessage	(CUIWindow* pWnd, s16 msg, void* pData = 0) override;
 			void 	OnBtnYes	();
 			void 	OnBtnNo		();
 			void 	OnBtnCancel	();

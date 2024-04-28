@@ -174,7 +174,7 @@ void	CSoundRender_Core::statistic			(CSound_stats*  dest, CSound_stats_ext*  ext
 				_I.game_type		= _E->owner_data->g_type;
 				_I.type				= _E->owner_data->s_type;
 			}else{
-				_I.game_object		= nullptr;
+				_I.game_object		= 0;
 				_I.game_type		= 0;
 				_I.type				= st_Effect;
 			}
@@ -189,7 +189,7 @@ float CSoundRender_Core::get_occlusion_to( const Fvector& hear_pt, const Fvector
 {
 	float occ_value			= 1.f;
 
-	if (nullptr!=geom_SOM){
+	if (0!=geom_SOM){
 		// Calculate RAY params
 		Fvector	pos,dir;
 		pos.random_dir			();
@@ -229,7 +229,7 @@ float CSoundRender_Core::get_occlusion(Fvector& P, float R, Fvector* occ)
 	range = dir.magnitude	();
 	dir.div					(range);
 
-	if (nullptr != geom_MODEL) {
+	if (0 != geom_MODEL) {
 		bool bNeedFullTest = true;
 		// 1. Check cached polygon
 		float _u, _v, _range;
@@ -253,7 +253,7 @@ float CSoundRender_Core::get_occlusion(Fvector& P, float R, Fvector* occ)
 					}
 				}
 			}
-		if (nullptr != geom_SOM) {
+		if (0 != geom_SOM) {
 			geom_DB.ray_options(CDB::OPT_CULL);
 			geom_DB.ray_query(geom_SOM, base, dir, range);
 			size_t r_cnt = geom_DB.r_count();

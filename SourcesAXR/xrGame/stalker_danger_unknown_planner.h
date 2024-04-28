@@ -21,7 +21,7 @@ protected:
 			void		add_actions						();
 
 public:
-						CStalkerDangerUnknownPlanner	(CAI_Stalker *object = nullptr, LPCSTR action_name = "");
+						CStalkerDangerUnknownPlanner	(CAI_Stalker *object = 0, LPCSTR action_name = "");
 	virtual	void		setup							(CAI_Stalker *object, CPropertyStorage *storage);
 	void		initialize						() override;
 	void		update							() override;

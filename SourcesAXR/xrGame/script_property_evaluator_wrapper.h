@@ -16,7 +16,7 @@ typedef CPropertyEvaluator<CScriptGameObject> CScriptPropertyEvaluator;
 
 class CScriptPropertyEvaluatorWrapper : public CScriptPropertyEvaluator, public luabind::wrap_base {
 public:
-	IC					CScriptPropertyEvaluatorWrapper	(CScriptGameObject *object = nullptr, LPCSTR evaluator_name = "");
+	IC					CScriptPropertyEvaluatorWrapper	(CScriptGameObject *object = 0, LPCSTR evaluator_name = "");
 	void		setup						(CScriptGameObject *object, CPropertyStorage *storage) override;
 	static	void		setup_static				(CScriptPropertyEvaluator *evaluator, CScriptGameObject *object, CPropertyStorage *storage);
 	bool		evaluate					() override;

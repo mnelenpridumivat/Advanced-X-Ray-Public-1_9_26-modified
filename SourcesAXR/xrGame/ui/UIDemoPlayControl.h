@@ -21,7 +21,7 @@ public:
 	~CUIDemoPlayControl	() override;
 
 	virtual void	Init			();
-	void	SendMessage		(CUIWindow *pWnd, s16 msg, void *pData = nullptr) override;
+	void	SendMessage		(CUIWindow *pWnd, s16 msg, void *pData = NULL) override;
 	bool OnKeyboardAction	(int dik, EUIMessages keyboard_action) override;
 	bool WorkInPause			() const override {return true;}
 

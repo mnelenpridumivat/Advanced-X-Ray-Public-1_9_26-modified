@@ -132,12 +132,12 @@ void CAttachmentOwner::detach(CInventoryItem *inventory_item)
 
 bool CAttachmentOwner::attached				(const CInventoryItem *inventory_item) const
 {
-	return (attachedItem(inventory_item->object().ID())!= nullptr);
+	return (attachedItem(inventory_item->object().ID())!= NULL);
 }
 
 bool  CAttachmentOwner::attached			(shared_str sect_name) const
 {
-	return (attachedItem(sect_name)!= nullptr);
+	return (attachedItem(sect_name)!= NULL);
 }
 
 bool CAttachmentOwner::can_attach			(const CInventoryItem *inventory_item) const
@@ -179,7 +179,7 @@ CAttachableItem* CAttachmentOwner::attachedItem			(CLASS_ID clsid) const
 		if ((*I)->item().object().CLS_ID == clsid)
 			return (*I);
 
-	return nullptr;
+	return NULL;
 
 }
 
@@ -191,7 +191,7 @@ CAttachableItem* CAttachmentOwner::attachedItem			(u16 id) const
 		if ((*I)->item().object().ID() == id)
 			return (*I);
 
-	return nullptr;
+	return NULL;
 }
 
 CAttachableItem* CAttachmentOwner::attachedItem			(shared_str& section) const
@@ -202,6 +202,6 @@ CAttachableItem* CAttachmentOwner::attachedItem			(shared_str& section) const
 		if (!xr_strcmp((*I)->item().object().cNameSect(), section) && !(*I)->item().IsInvalid())
 			return		(*I);
 
-	return nullptr;
+	return				NULL;
 
 }

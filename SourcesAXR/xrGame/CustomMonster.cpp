@@ -92,13 +92,13 @@ CCustomMonster::CCustomMonster() :
 	// just to remove warning C4355 if we use this instead
 	Feel::Vision				( cast_game_object() ) 
 {
-	m_sound_user_data_visitor	= nullptr;
-	m_memory_manager			= nullptr;
-	m_movement_manager			= nullptr;
-	m_sound_player				= nullptr;
+	m_sound_user_data_visitor	= 0;
+	m_memory_manager			= 0;
+	m_movement_manager			= 0;
+	m_sound_player				= 0;
 	m_already_dead				= false;
 	m_invulnerable				= false;
-	m_moving_object				= nullptr;
+	m_moving_object				= 0;
 }
 
 CCustomMonster::~CCustomMonster	()
@@ -570,7 +570,7 @@ void CCustomMonster::UpdatePositionAnimation()
 BOOL CCustomMonster::feel_visible_isRelevant (CObject* O)
 {
 	CEntityAlive* E = smart_cast<CEntityAlive*>		(O);
-	if (nullptr==E)								return FALSE;
+	if (0==E)								return FALSE;
 	if (E->g_Team() == g_Team())			return FALSE;
 	return TRUE;
 }
@@ -664,7 +664,7 @@ void CCustomMonster::UpdateCamera()
 	float									new_range = eye_range, new_fov = eye_fov;
 	if (g_Alive())
 		update_range_fov					(new_range, new_fov, memory().visual().current_state().m_max_view_distance*eye_range, eye_fov);
-	g_pGameLevel->Cameras().Update(eye_matrix.c,eye_matrix.k,eye_matrix.j,new_fov,.75f,new_range, 0, csFirstEye, nullptr); //Не уверен, что так можно. Будем смотреть.
+	g_pGameLevel->Cameras().Update(eye_matrix.c,eye_matrix.k,eye_matrix.j,new_fov,.75f,new_range, 0, csFirstEye, 0); //Не уверен, что так можно. Будем смотреть.
 }
 
 void CCustomMonster::HitSignal(float /**perc/**/, Fvector& /**vLocalDir/**/, CObject* /**who/**/)

@@ -264,7 +264,7 @@ void CWeaponShotgun::PlayAnimAim()
 	}
 
 	if (isHUDAnimationExist("anm_idle_aim"))
-		PlayHUDMotion("anm_idle_aim", TRUE, nullptr, GetState());
+		PlayHUDMotion("anm_idle_aim", TRUE, NULL, GetState());
 }
 
 bool CWeaponShotgun::HaveCartridgeInInventory(u8 cnt)

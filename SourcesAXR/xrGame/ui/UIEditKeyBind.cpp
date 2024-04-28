@@ -10,9 +10,9 @@ CUIEditKeyBind::CUIEditKeyBind(bool bPrim)
 	m_bPrimary					= bPrim;
     m_bIsEditMode				= false;
 	TextItemControl()->SetTextComplexMode(false);
-	m_keyboard					= nullptr;
-	m_opt_backup_value			= nullptr;
-	m_action					= nullptr;
+	m_keyboard					= NULL;
+	m_opt_backup_value			= NULL;
+	m_action					= NULL;
 }
 CUIEditKeyBind::~CUIEditKeyBind()
 {}
@@ -142,7 +142,7 @@ void CUIEditKeyBind::SetEditMode(bool b)
 		TextureOn			();
 	}else
 	{
-		SetColorAnimation	(nullptr, 0);
+		SetColorAnimation	(NULL, 0);
 		TextureOff			();
 	}
 }
@@ -158,7 +158,7 @@ void CUIEditKeyBind::SetValue()
 	if(m_keyboard)
 		SetText				(m_keyboard->key_local_name.c_str());
 	else
-		SetText				(nullptr);
+		SetText				(NULL);
 }
 
 void CUIEditKeyBind::SetCurrentOptValue()
@@ -237,5 +237,5 @@ void CUIEditKeyBind::OnMessage(LPCSTR message)
 		return;
 
 	SetText				("---");
-	m_keyboard			= nullptr;
+	m_keyboard			= NULL;
 }

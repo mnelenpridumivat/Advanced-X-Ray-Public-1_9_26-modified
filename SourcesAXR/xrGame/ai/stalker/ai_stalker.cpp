@@ -79,14 +79,14 @@ CAI_Stalker::CAI_Stalker			() :
 	m_take_items_enabled			(true),
 	m_death_sound_enabled			(true)
 {
-	m_sound_user_data_visitor		= nullptr;
-	m_movement_manager				= nullptr;
+	m_sound_user_data_visitor		= 0;
+	m_movement_manager				= 0;
 	m_group_behaviour				= true;
-	m_boneHitProtection				= nullptr;
+	m_boneHitProtection				= NULL;
 	m_power_fx_factor				= flt_max;
 	m_wounded						= false;
 #ifdef DEBUG
-	m_debug_planner					= nullptr;
+	m_debug_planner					= 0;
 	m_dbg_hud_draw					= false;
 #endif // DEBUG
 	m_registered_in_combat_on_migration	= false;
@@ -129,11 +129,11 @@ void CAI_Stalker::reinit			()
 
 	m_pPhysics_support->in_Init		();
 	
-	m_best_item_to_kill				= nullptr;
+	m_best_item_to_kill				= 0;
 	m_best_item_value				= 0.f;
-	m_best_ammo						= nullptr;
-	m_best_found_item_to_kill		= nullptr;
-	m_best_found_ammo				= nullptr;
+	m_best_ammo						= 0;
+	m_best_found_item_to_kill		= 0;
+	m_best_found_ammo				= 0;
 	m_item_actuality				= false;
 	m_sell_info_actuality			= false;
 
@@ -158,7 +158,7 @@ void CAI_Stalker::reinit			()
 
 	m_weapon_shot_random_seed		= static_cast<s32>(Level().timeServer_Async());
 
-	m_best_cover					= nullptr;
+	m_best_cover					= 0;
 	m_best_cover_actual				= false;
 	m_best_cover_value				= flt_max;
 
@@ -167,7 +167,7 @@ void CAI_Stalker::reinit			()
 	m_computed_object_direction		= Fvector().set(flt_max,flt_max,flt_max);
 
 	m_throw_target_position			= Fvector().set(flt_max,flt_max,flt_max);
-	m_throw_ignore_object			= nullptr;
+	m_throw_ignore_object			= 0;
 
 	m_throw_position				= Fvector().set(flt_max,flt_max,flt_max);
 	m_throw_velocity				= Fvector().set(flt_max,flt_max,flt_max);
@@ -199,7 +199,7 @@ void CAI_Stalker::LoadSounds		(LPCSTR section)
 {
 	LPCSTR							head_bone_name = pSettings->r_string(section,"bone_head");
 	sound().add						(pSettings->r_string(section,"sound_death"),						100, SOUND_TYPE_MONSTER_DYING,		0, static_cast<u32>(eStalkerSoundMaskDie),						eStalkerSoundDie,						head_bone_name, xr_new<CStalkerSoundData>(this));
-	sound().add						(pSettings->r_string(section,"sound_anomaly_death"),				100, SOUND_TYPE_MONSTER_DYING,		0, static_cast<u32>(eStalkerSoundMaskDieInAnomaly),				eStalkerSoundDieInAnomaly,				head_bone_name, nullptr);
+	sound().add						(pSettings->r_string(section,"sound_anomaly_death"),				100, SOUND_TYPE_MONSTER_DYING,		0, static_cast<u32>(eStalkerSoundMaskDieInAnomaly),				eStalkerSoundDieInAnomaly,				head_bone_name, 0);
 	sound().add						(pSettings->r_string(section,"sound_hit"),							100, SOUND_TYPE_MONSTER_INJURING,	1, static_cast<u32>(eStalkerSoundMaskInjuring),					eStalkerSoundInjuring,					head_bone_name, xr_new<CStalkerSoundData>(this));
 	sound().add						(pSettings->r_string(section,"sound_friendly_fire"),				100, SOUND_TYPE_MONSTER_INJURING,	1, static_cast<u32>(eStalkerSoundMaskInjuringByFriend),			eStalkerSoundInjuringByFriend,			head_bone_name, xr_new<CStalkerSoundData>(this));
 	sound().add						(pSettings->r_string(section,"sound_panic_human"),					100, SOUND_TYPE_MONSTER_TALKING,	2, static_cast<u32>(eStalkerSoundMaskPanicHuman),				eStalkerSoundPanicHuman,				head_bone_name, xr_new<CStalkerSoundData>(this));
@@ -218,7 +218,7 @@ void CAI_Stalker::LoadSounds		(LPCSTR section)
 	sound().add						(pSettings->r_string(section,"sound_search1_with_allies"),			100, SOUND_TYPE_MONSTER_TALKING,	5, static_cast<u32>(eStalkerSoundMaskSearch1WithAllies),			eStalkerSoundSearch1WithAllies,			head_bone_name, xr_new<CStalkerSoundData>(this));
 	sound().add						(pSettings->r_string(section,"sound_enemy_lost_no_allies"),			100, SOUND_TYPE_MONSTER_TALKING,	5, static_cast<u32>(eStalkerSoundMaskEnemyLostNoAllies),			eStalkerSoundEnemyLostNoAllies,			head_bone_name, xr_new<CStalkerSoundData>(this));
 	sound().add						(pSettings->r_string(section,"sound_enemy_lost_with_allies"),		100, SOUND_TYPE_MONSTER_TALKING,	5, static_cast<u32>(eStalkerSoundMaskEnemyLostWithAllies),		eStalkerSoundEnemyLostWithAllies,		head_bone_name, xr_new<CStalkerSoundData>(this));
-	sound().add						(pSettings->r_string(section,"sound_humming"),						100, SOUND_TYPE_MONSTER_TALKING,	6, static_cast<u32>(eStalkerSoundMaskHumming),					eStalkerSoundHumming,					head_bone_name, nullptr);
+	sound().add						(pSettings->r_string(section,"sound_humming"),						100, SOUND_TYPE_MONSTER_TALKING,	6, static_cast<u32>(eStalkerSoundMaskHumming),					eStalkerSoundHumming,					head_bone_name, 0);
 	sound().add						(pSettings->r_string(section,"sound_need_backup"),					100, SOUND_TYPE_MONSTER_TALKING,	4, static_cast<u32>(eStalkerSoundMaskNeedBackup),				eStalkerSoundNeedBackup,				head_bone_name, xr_new<CStalkerSoundData>(this));
 	sound().add						(pSettings->r_string(section,"sound_running_in_danger"),			100, SOUND_TYPE_MONSTER_TALKING,	6, static_cast<u32>(eStalkerSoundMaskMovingInDanger),			eStalkerSoundRunningInDanger,			head_bone_name, xr_new<CStalkerSoundData>(this));
 //	sound().add						(pSettings->r_string(section,"sound_walking_in_danger"),			100, SOUND_TYPE_MONSTER_TALKING,	6, u32(eStalkerSoundMaskMovingInDanger),			eStalkerSoundWalkingInDanger,			head_bone_name, xr_new<CStalkerSoundData>(this));
@@ -698,7 +698,7 @@ void CAI_Stalker::net_Save			(NET_Packet& P)
 
 BOOL CAI_Stalker::net_SaveRelevant	()
 {
-	return (inherited::net_SaveRelevant() || static_cast<BOOL>(PPhysicsShell() != nullptr));
+	return (inherited::net_SaveRelevant() || static_cast<BOOL>(PPhysicsShell() != NULL));
 }
 
 void CAI_Stalker::net_Export		(NET_Packet& P)
@@ -1236,7 +1236,7 @@ void CAI_Stalker::UpdateCamera			()
 			temp						= weapon_shot_effector_direction(temp);
 	}
 
-	g_pGameLevel->Cameras().Update		(eye_matrix.c,temp,eye_matrix.j,new_fov,.75f,new_range, 0, csFirstEye, nullptr); //Не уверен, что так можно. Будем смотреть.
+	g_pGameLevel->Cameras().Update		(eye_matrix.c,temp,eye_matrix.j,new_fov,.75f,new_range, 0, csFirstEye, 0); //Не уверен, что так можно. Будем смотреть.
 }
 
 bool CAI_Stalker::can_attach			(const CInventoryItem *inventory_item) const
@@ -1357,7 +1357,7 @@ BOOL CAI_Stalker::AlwaysTheCrow					()
 smart_cover::cover const* CAI_Stalker::get_current_smart_cover	( )
 {
 	if ( movement().current_params().cover_id() != movement().target_params().cover_id() )
-		return				nullptr;
+		return				0;
 
 	return					movement().current_params().cover();
 }
@@ -1365,10 +1365,10 @@ smart_cover::cover const* CAI_Stalker::get_current_smart_cover	( )
 smart_cover::loophole const* CAI_Stalker::get_current_loophole	( )
 {
 	if ( movement().current_params().cover_id() != movement().target_params().cover_id() )
-		return				nullptr;
+		return				0;
 
 	if ( movement().current_params().cover_loophole_id() != movement().target_params().cover_loophole_id() )
-		return				nullptr;
+		return				0;
 
 	return					movement().current_params().cover_loophole();
 }

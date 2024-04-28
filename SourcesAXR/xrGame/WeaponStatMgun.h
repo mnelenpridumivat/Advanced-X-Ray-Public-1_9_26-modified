@@ -86,7 +86,7 @@ public:
 	void			OnKeyboardPress		(int dik) override;
 	void			OnKeyboardRelease	(int dik) override;
 	void			OnKeyboardHold		(int dik) override;
-	CInventory*		GetInventory		() override {return nullptr;};
+	CInventory*		GetInventory		() override {return NULL;};
 	void			cam_Update			(float dt, float fov=90.0f) override;
 
 	void			renderable_Render	() override;

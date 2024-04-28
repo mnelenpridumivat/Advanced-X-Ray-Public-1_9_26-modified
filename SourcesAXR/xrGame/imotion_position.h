@@ -10,7 +10,7 @@ class imotion_position:
 private:
 struct tracks_update: public IUpdateTracksCallback
 	{
-		tracks_update( ): motion( nullptr ), update( false ) {}
+		tracks_update( ): motion( 0 ), update( false ) {}
 		bool	operator () ( float dt, IKinematicsAnimated& k ) override;
 		imotion_position *motion;
 		bool update;

@@ -43,7 +43,7 @@ void CMPPlayersBag::OnEvent(NET_Packet& P, u16 type)
 				Msg("--- Rukzak [%d] rejects [%d][%s]", ID(), O->ID(), O->cNameSect().c_str());
 #endif // MP_LOGGING
 
-				O->H_SetParent(nullptr,!P.r_eof() && P.r_u8());
+				O->H_SetParent(0,!P.r_eof() && P.r_u8());
 			}break;
 
 	}

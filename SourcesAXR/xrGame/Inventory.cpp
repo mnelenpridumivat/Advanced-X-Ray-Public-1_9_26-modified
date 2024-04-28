@@ -43,7 +43,7 @@ u16 INV_STATE_HIDE_WEAPON	= (1 << KNIFE_SLOT | 1 << INV_SLOT_2 | 1 << INV_SLOT_3
 
 CInventorySlot::CInventorySlot() 
 {
-	m_pIItem				= nullptr;
+	m_pIItem				= NULL;
 	m_bAct					= true;
 	m_bPersistent			= false;
 }
@@ -130,7 +130,7 @@ void CInventory::Clear()
 	for(u16 i=FirstSlot(); i<=LastSlot(); i++)
 		m_slots[i].m_pIItem				= NULL;
 
-	m_pOwner							= nullptr;
+	m_pOwner							= NULL;
 
 	ReloadInv							();
 	CalcTotalWeight						();
@@ -225,7 +225,7 @@ void CInventory::TakeItemAnim(CGameObject* GameObj, CObject* Obj, bool use_picku
 
 		shared_str snd_name = pSettings->r_string(anim_sect, "snd_using");
 		m_action_anim_sound.create(snd_name.c_str(), st_Effect, sg_SourceType);
-		m_action_anim_sound.play(nullptr, sm_2D);
+		m_action_anim_sound.play(NULL, sm_2D);
 	}
 
 	m_iActionTiming = Device.dwTimeGlobal + anim_timer;
@@ -484,7 +484,7 @@ bool CInventory::DropItem(CGameObject *pObj, bool just_before_destroy, bool dont
 	else
 		Msg("! CInventory::Drop item not found in inventory!!!");
 
-	pIItem->m_pInventory = nullptr;
+	pIItem->m_pInventory = NULL;
 
 
 	m_pOwner->OnItemDrop	(smart_cast<CInventoryItem*>(pObj), just_before_destroy);
@@ -505,7 +505,7 @@ bool CInventory::DropItem(CGameObject *pObj, bool just_before_destroy, bool dont
 				Actor()->ChangeInventoryFullness(-pIItem->GetOccupiedInvSpace());
 		}
 	};
-	pObj->H_SetParent(nullptr, dont_create_shell);
+	pObj->H_SetParent(0, dont_create_shell);
 	return							true;
 }
 
@@ -723,7 +723,7 @@ void CInventory::Activate(u16 slot, bool bForce)
 		return;
 	}
 
-	PIItem tmp_item = nullptr;
+	PIItem tmp_item = NULL;
 	if (slot != NO_ACTIVE_SLOT)
 		tmp_item = ItemFromSlot(slot);
 
@@ -775,7 +775,7 @@ void CInventory::Activate(u16 slot, bool bForce)
 		{
 			if(slot==GRENADE_SLOT)//fake for grenade
 			{
-				PIItem gr = SameSlot(GRENADE_SLOT, nullptr, true);
+				PIItem gr = SameSlot(GRENADE_SLOT, NULL, true);
 				if(gr)
 					Slot(GRENADE_SLOT,gr);
 			}
@@ -1142,14 +1142,14 @@ PIItem CInventory::Same(const PIItem pIItem, bool bSearchRuck) const
 				pIItem->object().cNameSect())) 
 			return l_pIItem;
 	}
-	return nullptr;
+	return NULL;
 }
 
 //ищем на поясе вещь для слота 
 
 PIItem CInventory::SameSlot(const u16 slot, PIItem pIItem, bool bSearchRuck) const
 {
-	if(slot == NO_ACTIVE_SLOT) 	return nullptr;
+	if(slot == NO_ACTIVE_SLOT) 	return NULL;
 
 	const TIItemContainer &list = bSearchRuck ? m_ruck : m_belt;
 	
@@ -1159,7 +1159,7 @@ PIItem CInventory::SameSlot(const u16 slot, PIItem pIItem, bool bSearchRuck) con
 		if(_pIItem != pIItem && _pIItem->BaseSlot() == slot) return _pIItem;
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 //найти в инвенторе вещь с указанным именем
@@ -1174,7 +1174,7 @@ PIItem CInventory::Get(LPCSTR name, bool bSearchRuck) const
 								pIItem->Useful()) 
 				return pIItem;
 	}
-	return nullptr;
+	return NULL;
 }
 
 PIItem CInventory::Get(CLASS_ID cls_id, bool bSearchRuck) const
@@ -1188,7 +1188,7 @@ PIItem CInventory::Get(CLASS_ID cls_id, bool bSearchRuck) const
 								pIItem->Useful()) 
 				return pIItem;
 	}
-	return nullptr;
+	return NULL;
 }
 
 PIItem CInventory::Get(const u16 id, bool bSearchRuck) const
@@ -1201,7 +1201,7 @@ PIItem CInventory::Get(const u16 id, bool bSearchRuck) const
 		if(pIItem->object().ID() == id) 
 			return pIItem;
 	}
-	return nullptr;
+	return NULL;
 }
 
 //search both (ruck and belt)
@@ -1224,7 +1224,7 @@ PIItem CInventory::item(CLASS_ID cls_id) const
 			pIItem->Useful()) 
 			return pIItem;
 	}
-	return nullptr;
+	return NULL;
 }
 
 void CInventory::GetAll(LPCSTR name, xr_vector<PIItem>& Output) {
@@ -1316,7 +1316,7 @@ CInventoryItem *CInventory::get_object_by_id(ALife::_OBJECT_ID tObjectID)
 		if (l_pIItem->object().ID() == tObjectID)
 			return	(l_pIItem);
 	}
-	return		(nullptr);
+	return		(0);
 }
 
 //скушать предмет 
@@ -1432,8 +1432,8 @@ bool CInventory::CanPutInSlot(PIItem pIItem, u16 slot_id) const
 			return false;
 	}
 
-	if(slot_id!=NO_ACTIVE_SLOT &&
-		nullptr ==ItemFromSlot(slot_id) )
+	if(slot_id!=NO_ACTIVE_SLOT && 
+		NULL==ItemFromSlot(slot_id) )
 		return true;
 	
 	return false;
@@ -1473,10 +1473,10 @@ CInventoryItem	*CInventory::tpfGetObjectByIndex(int iIndex)
 	}
 	else {
 		ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"invalid inventory index!");
-		return	(nullptr);
+		return	(0);
 	}
 	R_ASSERT	(false);
-	return		(nullptr);
+	return		(0);
 }
 
 CInventoryItem	*CInventory::GetItemFromInventory(LPCSTR caItemName)
@@ -1490,7 +1490,7 @@ CInventoryItem	*CInventory::GetItemFromInventory(LPCSTR caItemName)
 			VERIFY(	0 == xr_strcmp( (*l_it)->object().cNameSect().c_str(), caItemName)  );
 			return	(*l_it);
 		}
-	return	(nullptr);
+	return	(0);
 }
 
 
@@ -1680,9 +1680,9 @@ void CInventory::TryDeactivateActiveSlot	()
 		return;
 	
 	PIItem		active_item = (ActiveSlot != NO_ACTIVE_SLOT) ? 
-		ItemFromSlot(ActiveSlot) : nullptr;
+		ItemFromSlot(ActiveSlot) : NULL;
 	PIItem		next_active_item = (NextActiveSlot != NO_ACTIVE_SLOT) ?
-		ItemFromSlot(NextActiveSlot) : nullptr;
+		ItemFromSlot(NextActiveSlot) : NULL;
 
 	if (active_item &&
 		(IsSlotBlocked(active_item) || !m_slots[ActiveSlot].CanBeActivated())

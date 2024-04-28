@@ -326,7 +326,7 @@ void CActor::g_SetSprintAnimation( u32 mstate_rl,MotionID &head,MotionID &torso,
 CMotion*        FindMotionKeys(MotionID motion_ID,IRenderVisual* V)
 {
 	IKinematicsAnimated* VA = smart_cast<IKinematicsAnimated*>(V);
-	return (VA && motion_ID.valid())?VA->LL_GetRootMotion(motion_ID):nullptr;
+	return (VA && motion_ID.valid())?VA->LL_GetRootMotion(motion_ID):0;
 }
 
 #ifdef DEBUG
@@ -344,7 +344,7 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 
 	if (!g_Alive()) {
 		if (m_current_legs||m_current_torso){
-			SActorState*				ST = nullptr;
+			SActorState*				ST = 0;
 			if (mstate_rl&mcCrouch)		ST = &m_anims->m_crouch;
 			else						ST = &m_anims->m_normal;
 			mstate_real					= 0;
@@ -357,8 +357,8 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 		return;
 	}
 	STorsoWpn::eMovingState	moving_idx 		= STorsoWpn::eIdle;
-	SActorState*					ST 		= nullptr;
-	SAnimState*						AS 		= nullptr;
+	SActorState*					ST 		= 0;
+	SAnimState*						AS 		= 0;
 	
 	if		(mstate_rl&mcCrouch)	
 		ST 		= &m_anims->m_crouch;

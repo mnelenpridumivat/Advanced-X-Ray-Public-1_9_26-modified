@@ -14,7 +14,7 @@ typedef CALLBACKS::iterator			CALLBACK_IT;
 
 private:
 			CALLBACKS			m_callbacks;
-void				SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
+void				SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 			SCallbackInfo*		NewCallback			();
 protected:
 			bool				Load				(LPCSTR xml_name);

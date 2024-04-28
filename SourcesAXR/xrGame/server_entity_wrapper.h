@@ -17,7 +17,7 @@ private:
 	CSE_Abstract			*m_object;
 
 public:
-	IC						CServerEntityWrapper	(CSE_Abstract *object = nullptr);
+	IC						CServerEntityWrapper	(CSE_Abstract *object = 0);
 	virtual					~CServerEntityWrapper	();
 	void			save					(IWriter &stream) override;
 	void			load					(IReader &stream) override;

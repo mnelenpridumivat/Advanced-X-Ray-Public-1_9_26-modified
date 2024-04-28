@@ -91,7 +91,7 @@ public:
 
 	virtual void Init();
 
-	void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
+	void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 
 	void Draw() override;
 	void Update() override;

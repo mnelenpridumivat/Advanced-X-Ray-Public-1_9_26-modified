@@ -46,7 +46,7 @@ ALDeviceList::~ALDeviceList()
 		xr_free					(snd_devices_token[i].name);
 	}
 	xr_free						(snd_devices_token);
-	snd_devices_token			= nullptr;
+	snd_devices_token			= NULL;
 }
 
 
@@ -63,23 +63,23 @@ void ALDeviceList::Enumerate()
 	
 	CoUninitialize();
 	// grab function pointers for 1.0-API functions, and if successful proceed to enumerate all devices
-	if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATION_EXT")) 
+	if (alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT")) 
 	{
 		Msg("SOUND: OpenAL: EnumerationExtension Present");
 
-		devices				= (char *)alcGetString(nullptr, ALC_DEVICE_SPECIFIER);
+		devices				= (char *)alcGetString(NULL, ALC_DEVICE_SPECIFIER);
 		Msg					("devices %s",devices);
-		xr_strcpy(			m_defaultDeviceName, (char *)alcGetString(nullptr, ALC_DEFAULT_DEVICE_SPECIFIER));
+		xr_strcpy(			m_defaultDeviceName, (char *)alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER));
 		Msg("SOUND: OpenAL: system  default SndDevice name is %s", m_defaultDeviceName);
 
 		index				= 0;
 		// go through device list (each device terminated with a single NULL, list terminated with double NULL)
-		while(*devices != '\0') 
+		while(*devices != NULL) 
 		{
 			ALCdevice *device		= alcOpenDevice(devices);
 			if (device) 
 			{
-				ALCcontext *context = alcCreateContext(device, nullptr);
+				ALCcontext *context = alcCreateContext(device, NULL);
 				if (context) 
 				{
 					alcMakeContextCurrent(context);
@@ -121,7 +121,7 @@ void ALDeviceList::Enumerate()
 	u32 _cnt								= GetNumDevices();
 	snd_devices_token						= xr_alloc<xr_token>(_cnt+1);
 	snd_devices_token[_cnt].id				= -1;
-	snd_devices_token[_cnt].name			= nullptr;
+	snd_devices_token[_cnt].name			= NULL;
 	for(u32 i=0; i<_cnt;++i)
 	{
 		snd_devices_token[i].id				= i;
@@ -141,7 +141,7 @@ void ALDeviceList::Enumerate()
 		GetDeviceVersion		(j, &majorVersion, &minorVersion);
 	}
 	if (!strstr(GetCommandLine(),"-editor"))
-		CoInitializeEx (nullptr, COINIT_MULTITHREADED);
+		CoInitializeEx (NULL, COINIT_MULTITHREADED);
 }
 
 LPCSTR ALDeviceList::GetDeviceName(u32 index)

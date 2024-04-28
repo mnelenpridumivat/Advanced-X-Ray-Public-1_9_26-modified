@@ -13,7 +13,7 @@ BOOL CFlare::net_Spawn(CSE_Abstract* DC)
 {
 	inherited::net_Spawn	(DC);
 	SwitchState				(eFlareHidden);
-	m_pFlareParticles		= nullptr;
+	m_pFlareParticles		= NULL;
 	return					TRUE;
 }
 
@@ -34,7 +34,7 @@ void CFlare::ActivateFlare()
 
 bool CFlare::IsFlareActive()
 {
-	if (nullptr ==HudItemData() )	return false;
+	if ( NULL==HudItemData() )	return false;
 
 	VERIFY( g_player_hud->attached_item(HudItemData()->m_attach_place_idx)==HudItemData() );
 

@@ -54,7 +54,7 @@ CTorch::CTorch(void)
 
 	m_switched_on				= false;
 	glow_render					= ::Render->glow_create();
-	lanim						= nullptr;
+	lanim						= 0;
 	fBrightness					= 1.f;
 
 	m_prev_hp.set				(0,0);
@@ -238,7 +238,7 @@ void CTorch::ProcessSwitch()
 
 		shared_str snd_name = pSettings->r_string(anim_sect, "snd_using");
 		m_action_anim_sound.create(snd_name.c_str(), st_Effect, sg_SourceType);
-		m_action_anim_sound.play(nullptr, sm_2D);
+		m_action_anim_sound.play(NULL, sm_2D);
 	}
 
 	m_iActionTiming = Device.dwTimeGlobal + anim_timer;
@@ -285,12 +285,12 @@ void CTorch::Switch(bool light_on)
 		if (light_on && !m_switched_on)
 		{
 			if (m_sounds.FindSoundItem("sndTurnOn", false))
-				m_sounds.PlaySound("sndTurnOn", pActor->Position(), nullptr, !!pActor->HUDview());
+				m_sounds.PlaySound("sndTurnOn", pActor->Position(), NULL, !!pActor->HUDview());
 		}
 		else if (!light_on && m_switched_on)
 		{
 			if (m_sounds.FindSoundItem("sndTurnOff", false))
-				m_sounds.PlaySound("sndTurnOff", pActor->Position(), nullptr, !!pActor->HUDview());
+				m_sounds.PlaySound("sndTurnOff", pActor->Position(), NULL, !!pActor->HUDview());
 		}
 	}
 

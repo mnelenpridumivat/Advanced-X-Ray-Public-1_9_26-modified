@@ -70,7 +70,7 @@ public:
 
 stalker_movement_manager_base::stalker_movement_manager_base	(CAI_Stalker *object) :
 	inherited					(object),
-	m_last_query_object			(nullptr),
+	m_last_query_object			(0),
 	m_last_query_position		(Fvector().set(flt_max,flt_max,flt_max)),
 	m_last_query_object_position(Fvector().set(flt_max,flt_max,flt_max)),
 	m_last_query_result			(false),
@@ -79,7 +79,7 @@ stalker_movement_manager_base::stalker_movement_manager_base	(CAI_Stalker *objec
 {
 	VERIFY						(object);
 	m_object					= object;
-	m_velocities				= nullptr;
+	m_velocities				= 0;
 }
 
 stalker_movement_manager_base::~stalker_movement_manager_base	()
@@ -187,7 +187,7 @@ void stalker_movement_manager_base::initialize()
 	set_body_state			(eBodyStateStand);
 	set_movement_type		(eMovementTypeStand);
 	set_mental_state		(eMentalStateDanger);
-	set_desired_direction	(nullptr);
+	set_desired_direction	(0);
 
 #ifdef DEBUG
 	restrictions().initialize();
@@ -246,7 +246,7 @@ void stalker_movement_manager_base::setup_movement_params	(stalker_movement_para
 	switch (movement_params.m_path_type) {
 		case MovementManager::ePathTypeGamePath :
 		case MovementManager::ePathTypePatrolPath : {
-			set_desired_position			(nullptr);
+			set_desired_position			(0);
 			break;
 		}
 	}
@@ -607,7 +607,7 @@ void stalker_movement_manager_base::setup_speed_from_animation(const float &spee
 
 void stalker_movement_manager_base::on_build_path				()
 {
-	m_last_query_object					= nullptr;
+	m_last_query_object					= 0;
 	m_last_query_position				= Fvector().set(flt_max,flt_max,flt_max);
 	m_last_query_object_position		= Fvector().set(flt_max,flt_max,flt_max);
 	m_last_query_result					= false;
@@ -774,5 +774,5 @@ void stalker_movement_manager_base::set_level_dest_vertex	(u32 const& level_vert
 
 void stalker_movement_manager_base::remove_links			(CObject *object)
 {
-	m_last_query_object					= nullptr;
+	m_last_query_object					= 0;
 }

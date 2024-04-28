@@ -17,7 +17,7 @@ class CUIServerInfo :
 public:
 					CUIServerInfo	();
 					~CUIServerInfo	() override;
-					void	SendMessage		(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
+					void	SendMessage		(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 
 			void	Init			();
 			void	SetServerLogo	(u8 const * data_ptr, u32 const data_size);

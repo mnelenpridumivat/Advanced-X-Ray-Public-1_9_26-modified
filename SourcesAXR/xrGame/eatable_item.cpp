@@ -41,7 +41,7 @@ CEatableItem::CEatableItem()
 	anim_sect				= nullptr;
 	m_bHasAnimation			= false;
 	m_bUnlimited			= false;
-	m_physic_item			= nullptr;
+	m_physic_item			= 0;
 	m_fEffectorIntensity	= 1.0f;
 	m_iAnimHandsCnt			= 1;
 	m_iAnimLength			= 0;
@@ -256,7 +256,7 @@ void CEatableItem::StartAnimation()
 			snd_name = pSettings->r_string(anim_sect, "snd_using");
 
 		m_using_sound.create(snd_name.c_str(), st_Effect, sg_SourceType);
-		m_using_sound.play(nullptr, sm_2D);
+		m_using_sound.play(NULL, sm_2D);
 	}
 }
 

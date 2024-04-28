@@ -21,8 +21,8 @@
 
 CCoverManager::CCoverManager				()
 {
-	m_covers				= nullptr;
-	m_smart_covers_storage	= nullptr;
+	m_covers				= 0;
+	m_smart_covers_storage	= 0;
 	m_smart_covers_actual	= false;
 }
 

@@ -43,7 +43,7 @@ CWeaponMagazined::CWeaponMagazined(ESoundTypes eSoundType) : CWeapon()
 
 	psWpnAnimsFlag = { 0 };
 
-	m_sSilencerFlameParticles	= m_sSilencerSmokeParticles = nullptr;
+	m_sSilencerFlameParticles	= m_sSilencerSmokeParticles = NULL;
 
 	m_bFireSingleShot			= false;
 	m_iShotNum					= 0;
@@ -506,7 +506,7 @@ void CWeaponMagazined::ReloadMagazine()
 	
 	if (!m_bLockType)
 	{
-		m_pCurrentAmmo		= nullptr;
+		m_pCurrentAmmo		= NULL;
 	}
 	
 	if (!m_pInventory) return;
@@ -742,14 +742,14 @@ void CWeaponMagazined::state_Fire(float dt)
 		d.set(get_LastFD());
 
 		if (!H_Parent()) return;
-		if (smart_cast<CMPPlayersBag*>(H_Parent()) != nullptr)
+		if (smart_cast<CMPPlayersBag*>(H_Parent()) != NULL)
 		{
 			Msg("! WARNING: state_Fire of object [%d][%s] while parent is CMPPlayerBag...", ID(), cNameSect().c_str());
 			return;
 		}
 
 		CInventoryOwner* io		= smart_cast<CInventoryOwner*>(H_Parent());
-		if(nullptr == io->inventory().ActiveItem())
+		if(NULL == io->inventory().ActiveItem())
 		{
 				Log("current_state", GetState() );
 				Log("next_state", GetNextState());
@@ -1569,7 +1569,7 @@ bool CWeaponMagazined::DetachScope(const char* item_section_name, bool b_spawn_i
 		if(!xr_strcmp(iter_scope_name, item_section_name))
 		{
 			m_cur_scope = NULL;
-			m_cur_scope_bone = nullptr;
+			m_cur_scope_bone = NULL;
 			detached = true;
 		}
 	}
@@ -1829,7 +1829,7 @@ void CWeaponMagazined::PlayAnimBore()
 void CWeaponMagazined::PlayAnimIdleSprint()
 {
 	if (iAmmoElapsed == 0 && psWpnAnimsFlag.test(ANM_SPRINT_EMPTY))
-		PlayHUDMotion("anm_idle_sprint_empty", TRUE, nullptr, GetState());
+		PlayHUDMotion("anm_idle_sprint_empty", TRUE, NULL, GetState());
 	else if (IsMisfire() && isHUDAnimationExist("anm_idle_sprint_jammed"))
 		PlayHUDMotion("anm_idle_sprint_jammed", true, nullptr, GetState());
 	else
@@ -1839,7 +1839,7 @@ void CWeaponMagazined::PlayAnimIdleSprint()
 void CWeaponMagazined::PlayAnimIdleMoving()
 {
 	if (iAmmoElapsed == 0 && psWpnAnimsFlag.test(ANM_MOVING_EMPTY))
-		PlayHUDMotion("anm_idle_moving_empty", TRUE, nullptr, GetState());
+		PlayHUDMotion("anm_idle_moving_empty", TRUE, NULL, GetState());
 	else if (IsMisfire() && isHUDAnimationExist("anm_idle_moving_jammed"))
 		PlayHUDMotion("anm_idle_moving_jammed", true, nullptr, GetState());
 	else
@@ -1901,11 +1901,11 @@ void CWeaponMagazined::PlayAnimAim()
 	}
 
 	if (iAmmoElapsed == 0 && psWpnAnimsFlag.test(ANM_AIM_EMPTY))
-		PlayHUDMotion("anm_idle_aim_empty", TRUE, nullptr, GetState());
+		PlayHUDMotion("anm_idle_aim_empty", TRUE, NULL, GetState());
 	else if (IsMisfire() && isHUDAnimationExist("anm_idle_aim_jammed"))
 		PlayHUDMotion("anm_idle_aim_jammed", true, nullptr, GetState());
 	else
-		PlayHUDMotion("anm_idle_aim", TRUE, nullptr, GetState());
+		PlayHUDMotion("anm_idle_aim", TRUE, NULL, GetState());
 }
 
 void CWeaponMagazined::PlayAnimIdle()
@@ -1917,7 +1917,7 @@ void CWeaponMagazined::PlayAnimIdle()
 	if(IsZoomed())
 		PlayAnimAim();
 	else if (iAmmoElapsed == 0 && psWpnAnimsFlag.test(ANM_IDLE_EMPTY))
-		PlayHUDMotion("anm_idle_empty", TRUE, nullptr, GetState());
+		PlayHUDMotion("anm_idle_empty", TRUE, NULL, GetState());
 	else if (IsMisfire() && isHUDAnimationExist("anm_idle_jammed") && !TryPlayAnimIdle())
 		PlayHUDMotion("anm_idle_jammed", true, nullptr, GetState());
 	else

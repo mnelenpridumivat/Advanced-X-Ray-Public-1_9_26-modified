@@ -192,7 +192,7 @@ IC	const typename CConditionStateAbstract::COperatorCondition *CConditionStateAb
 {
 	xr_vector<COperatorCondition>::const_iterator	I = std::lower_bound(conditions().begin(),conditions().end(),COperatorCondition(condition,COperatorCondition::_value_type(0)));
 	if (I == m_conditions.end())
-		return				(nullptr);
+		return				(0);
 	else
 		return				(&*I);
 }

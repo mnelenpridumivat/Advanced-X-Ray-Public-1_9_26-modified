@@ -29,8 +29,8 @@ CCoverEvaluatorBase::CCoverEvaluatorBase					(CRestrictedObject *object)
 	m_best_value			= flt_max;
 	m_initialized			= false;
 	m_start_position.set	(flt_max,flt_max,flt_max);
-	m_selected				= nullptr;
-	m_previous_selected		= nullptr;
+	m_selected				= 0;
+	m_previous_selected		= 0;
 	m_object				= object;
 	m_stalker				= smart_cast<CAI_Stalker*>( &object->object() );
 	m_actuality				= true;
@@ -226,7 +226,7 @@ void CCoverEvaluatorBest::evaluate_cover			(const CCoverPoint *cover_point, floa
 
 	m_selected				= cover_point;
 	m_best_value			= value;
-	m_loophole				= nullptr;
+	m_loophole				= 0;
 //	Msg						("Loophole is NULL CCoverEvaluatorBest::evaluate_cover");
 }
 

@@ -22,8 +22,8 @@ CUISequenceVideoItem::CUISequenceVideoItem(CUISequencer* owner):CUISequenceItem(
 	//m_texture				= NULL;
 	m_flags.set				(etiPlaying|etiNeedStart|etiDelayed|etiBackVisible,FALSE);
 	m_delay					= 0.f;
-	m_wnd					= nullptr;
-	m_wnd_bg				= nullptr;
+	m_wnd					= NULL;
+	m_wnd_bg				= NULL;
 	m_delay					= 0.f;
 	m_time_start			= 0;
 	m_sync_time				= 0;
@@ -126,7 +126,7 @@ void CUISequenceVideoItem::Update()
 		}
 	}else return;
 
-	u32 sync_tm				= (nullptr==m_sound._handle())?Device.dwTimeContinual:(m_sound._feedback()?m_sound._feedback()->play_time():m_sync_time);
+	u32 sync_tm				= (0==m_sound._handle())?Device.dwTimeContinual:(m_sound._feedback()?m_sound._feedback()->play_time():m_sync_time);
 	m_sync_time				= sync_tm;
 	// processing A&V
 
@@ -141,7 +141,7 @@ void CUISequenceVideoItem::Update()
 			// sync start
 			if (m_flags.test(etiNeedStart))
 			{
-				m_sound.play_at_pos		(nullptr, Fvector().set(0.0f,0.f,0.0f), sm_2D);
+				m_sound.play_at_pos		(NULL, Fvector().set(0.0f,0.f,0.0f), sm_2D);
 				m_texture->video_Play	(FALSE, m_sync_time);
 				m_flags.set				(etiNeedStart,FALSE);
 				CUIWindow* w			= m_owner->MainWnd()->FindChild("back");

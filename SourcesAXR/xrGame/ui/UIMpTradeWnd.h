@@ -82,7 +82,7 @@ public:
 public:
 								CUIMpTradeWnd				();
 		~CUIMpTradeWnd				() override;
-		void				SendMessage					(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
+		void				SendMessage					(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 	
 	//
 		void				Update						() override;

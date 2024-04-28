@@ -48,7 +48,7 @@ const IPhysicsShell	*CPhysicsShellHolder::physics_shell() const
 		return m_pPhysicsShell;
 	const CCharacterPhysicsSupport	*char_support = character_physics_support();
 	if( !char_support || !char_support->animation_collision() )
-				return nullptr;
+				return 0;
 	return  char_support->animation_collision()->shell(); 
 }
 
@@ -60,7 +60,7 @@ const IPhysicsElement* CPhysicsShellHolder::physics_character()  const
 {
 	const CCharacterPhysicsSupport	*char_support = character_physics_support();
 	if( !char_support )
-				return nullptr;
+				return 0;
 	const CPHMovementControl		*mov		  = character_physics_support()->movement();
 	VERIFY( mov );
 	return mov->IElement();
@@ -142,7 +142,7 @@ void CPhysicsShellHolder::create_physic_shell	()
 
 void CPhysicsShellHolder::init			()
 {
-	m_pPhysicsShell				= nullptr;
+	m_pPhysicsShell				=	NULL		;
 	b_sheduled					=	false		;
 }
 bool	 CPhysicsShellHolder::has_shell_collision_place( const CPhysicsShellHolder* obj ) const
@@ -323,7 +323,7 @@ u16	CPhysicsShellHolder::PHGetSyncItemsNumber()
 CPHSynchronize*	CPhysicsShellHolder::PHGetSyncItem	(u16 item)
 {
 	if(m_pPhysicsShell) return m_pPhysicsShell->get_ElementSync(item);
-	else				return nullptr;
+	else				return 0;
 }
 void	CPhysicsShellHolder::PHUnFreeze	()
 {
@@ -340,7 +340,7 @@ void CPhysicsShellHolder::OnChangeVisual()
 {
 	inherited::OnChangeVisual();
 
-	if (nullptr==renderable.visual) 
+	if (0==renderable.visual) 
 	{
 		CCharacterPhysicsSupport	*char_support = character_physics_support();
 		if( char_support )
@@ -560,10 +560,10 @@ IPHCapture*	CPhysicsShellHolder::PHCapture()
 {
 	CCharacterPhysicsSupport* ph_sup = character_physics_support();
 	if( !ph_sup )
-		return nullptr;
+		return 0;
 	CPHMovementControl	*mov = ph_sup->movement();
 	if( !mov )
-		return nullptr;
+		return 0;
 	return mov->PHCapture();
 }
 bool CPhysicsShellHolder::IsInventoryItem()

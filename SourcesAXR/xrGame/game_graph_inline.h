@@ -36,7 +36,7 @@ IC CGameGraph::CGameGraph											(const IReader &_stream)
 	u8								*temp = (u8*)(m_nodes + header().vertex_count());
 	temp							+= header().edge_count()*sizeof(CGameGraph::CEdge);
 	m_cross_tables					= (u32*)(((CLevelPoint*)temp) + header().death_point_count());
-	m_current_level_cross_table		= nullptr;
+	m_current_level_cross_table		= 0;
 }
 
 IC CGameGraph::~CGameGraph											()
@@ -184,7 +184,7 @@ IC	const GameGraph::SLevel *GameGraph::CHeader::level				(LPCSTR level_name, boo
 		if (!xr_strcmp(I->second.name(),level_name))
 			return				(&I->second);
 	
-	return						(nullptr);
+	return						(0);
 }
 
 IC	const xrGUID &CGameGraph::CHeader::guid							() const

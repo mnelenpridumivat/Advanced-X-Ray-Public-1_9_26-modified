@@ -59,7 +59,7 @@ void target_selector::add_evaluators	()
 	add_evaluator			(
 		eWorldPropertyLookedOut,
 		xr_new<CPropertyEvaluatorMember<animation_planner> >(
-			static_cast<CPropertyStorage*>(nullptr),
+			static_cast<CPropertyStorage*>(0),
 			eWorldPropertyLookedOut,
 			true,
 			true,
@@ -69,7 +69,7 @@ void target_selector::add_evaluators	()
 	add_evaluator			(
 		eWorldPropertyLoopholeTooMuchTimeFiring,
 		xr_new<CPropertyEvaluatorMember<animation_planner> >(
-			static_cast<CPropertyStorage*>(nullptr),
+			static_cast<CPropertyStorage*>(0),
 			eWorldPropertyLoopholeTooMuchTimeFiring,
 			true,
 			true,

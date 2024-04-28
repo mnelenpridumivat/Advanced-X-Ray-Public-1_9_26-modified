@@ -9,7 +9,7 @@
 #include "../xrEngine/IGame_Persistent.h"
 #include "Weapon.h"
 
-player_hud* g_player_hud = nullptr;
+player_hud* g_player_hud = NULL;
 Fvector _ancor_pos;
 Fvector _wpn_root_pos;
 
@@ -53,7 +53,7 @@ player_hud_motion* player_hud_motion_container::find_motion(const shared_str& na
 		if( s == name)
 			return &(*it);
 	}
-	return nullptr;
+	return NULL;
 }
 
 void player_hud_motion_container::load(IKinematicsAnimated* model, const shared_str& sect)
@@ -61,7 +61,7 @@ void player_hud_motion_container::load(IKinematicsAnimated* model, const shared_
 	CInifile::Sect& _sect		= pSettings->r_section(sect);
 	CInifile::SectCIt _b		= _sect.Data.begin();
 	CInifile::SectCIt _e		= _sect.Data.end();
-	player_hud_motion* pm		= nullptr;
+	player_hud_motion* pm		= NULL;
 	
 	string512					buff;
 	MotionID					motion_ID;
@@ -369,7 +369,7 @@ attachable_hud_item::~attachable_hud_item()
 {
 	IRenderVisual* v			= m_model->dcast_RenderVisual();
 	::Render->model_Delete		(v);
-	m_model						= nullptr;
+	m_model						= NULL;
 }
 
 void attachable_hud_item::load(const shared_str& sect_name)
@@ -478,10 +478,10 @@ u32 attachable_hud_item::anim_play(const shared_str& anm_name_b, BOOL bMixIn, co
 
 player_hud::player_hud()
 {
-	m_model					= nullptr;
-	m_model_2				= nullptr;
-	m_attached_items[0]		= nullptr;
-	m_attached_items[1]		= nullptr;
+	m_model					= NULL;
+	m_model_2				= NULL;
+	m_attached_items[0]		= NULL;
+	m_attached_items[1]		= NULL;
 	m_transform.identity();
 	m_transform_2.identity();
 	script_anim_part = static_cast<u8>(-1);
@@ -518,11 +518,11 @@ player_hud::~player_hud()
 {
 	IRenderVisual* v			= m_model->dcast_RenderVisual();
 	::Render->model_Delete		(v);
-	m_model						= nullptr;
+	m_model						= NULL;
 
 	v = m_model_2->dcast_RenderVisual();
 	::Render->model_Delete		(v);
-	m_model_2					= nullptr;
+	m_model_2					= NULL;
 
 	xr_vector<attachable_hud_item*>::iterator it	= m_pool.begin();
 	xr_vector<attachable_hud_item*>::iterator it_e	= m_pool.end();
@@ -643,7 +643,7 @@ void player_hud::Thumb02Callback(CBoneInstance* B)
 void player_hud::load(const shared_str& player_hud_sect)
 {
 	if(player_hud_sect ==m_sect_name)	return;
-	bool b_reload = (m_model!= nullptr);
+	bool b_reload = (m_model!=NULL);
 
 	if(m_model)
 	{
@@ -1418,7 +1418,7 @@ void player_hud::update_inertion(Fmatrix& trans)
 
 		// load params
 		hud_item_measures::inertion_params inertion_data;
-		if (pMainHud != nullptr)
+		if (pMainHud != NULL)
 		{ // Загружаем параметры инерции из основного худа
 			inertion_data.m_pitch_offset_r = pMainHud->m_measures.m_inertion_params.m_pitch_offset_r;
 			inertion_data.m_pitch_offset_n = pMainHud->m_measures.m_inertion_params.m_pitch_offset_n;
@@ -1501,7 +1501,7 @@ void player_hud::update_inertion(Fmatrix& trans)
 		// pitch compensation
 		float pitch							= angle_normalize_signed(xform.k.getP());
 
-		if (pMainHud != nullptr)
+		if (pMainHud != NULL)
 			pitch *= pMainHud->m_parent_hud_item->GetInertionFactor();
 
 		// Отдаление\приближение
@@ -1602,12 +1602,12 @@ void player_hud::re_sync_anim(u8 part)
 
 void player_hud::detach_item_idx(u16 idx)
 {
-	if (nullptr == m_attached_items[idx]) return;
+	if (NULL == m_attached_items[idx]) return;
 
 	m_attached_items[idx]->m_parent_hud_item->on_b_hud_detach();
 
-	m_attached_items[idx]->m_parent_hud_item		= nullptr;
-	m_attached_items[idx]							= nullptr;
+	m_attached_items[idx]->m_parent_hud_item		= NULL;
+	m_attached_items[idx]							= NULL;
 
 	if (idx == 1)
 	{
@@ -1643,7 +1643,7 @@ void player_hud::detach_item_idx(u16 idx)
 
 void player_hud::detach_item(CHudItem* item)
 {
-	if(nullptr ==item->HudItemData() )		return;
+	if( NULL==item->HudItemData() )		return;
 	u16 item_idx						= item->HudItemData()->m_attach_place_idx;
 
 	if( m_attached_items[item_idx]==item->HudItemData() )

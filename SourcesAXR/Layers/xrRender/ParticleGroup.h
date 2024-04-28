@@ -87,12 +87,6 @@ namespace PS
                 visuals.insert				(visuals.end(),_children_free.begin(),_children_free.end());
                 return visuals.size();
             }
-
-
-			void Manual_UpdateSize(const Fvector& NewSize);
-			void Manual_UpdateAlpha(float NewAlpha);
-
-			void Manual_AddAlpha(float DeltaAlpha);
             
             void			OnDeviceCreate	();
             void			OnDeviceDestroy	();
@@ -119,12 +113,6 @@ namespace PS
 		Flags8				m_RT_Flags;
 	public:
 		CParticleGroup	();
-
-		virtual void Manual_UpdateSize(const Fvector& NewSize) override;
-		virtual void Manual_UpdateAlpha(float NewAlpha) override;
-
-		virtual void Manual_AddAlpha(float DeltaAlpha) override;
-
 		virtual				~CParticleGroup	();
 		virtual void	 	OnFrame			(u32 dt);
 

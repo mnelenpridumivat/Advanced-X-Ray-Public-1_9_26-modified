@@ -16,7 +16,7 @@
 CCartridge::CCartridge() 
 {
 	m_flags.assign			(cfTracer | cfRicochet);
-	m_ammoSect = nullptr;
+	m_ammoSect = NULL;
 	param_s.Init();
 	bullet_material_idx = static_cast<u16>(-1);
 }
@@ -264,7 +264,7 @@ CInventoryItem *CWeaponAmmo::can_make_killing	(const CInventory *inventory) cons
 			return			(weapon);
 	}
 
-	return					(nullptr);
+	return					(0);
 }
 
 float CWeaponAmmo::Weight() const

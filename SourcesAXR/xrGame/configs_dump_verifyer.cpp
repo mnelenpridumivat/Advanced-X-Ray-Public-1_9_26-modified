@@ -42,7 +42,7 @@ static char* search_info_section(u8* buffer, u32 buffer_size)
 		--r_size;
 	}
 	while (r_size > 0);
-	return nullptr;
+	return NULL;
 }
 
 bool const configs_verifyer::verify_dsign(u8* data,
@@ -72,7 +72,7 @@ bool const configs_verifyer::verify_dsign(u8* data,
 		(data + data_size) - (u8*)dst_buffer);
 	u32			src_data_size = data_size - dst_size;
 
-	LPCSTR		add_str = nullptr;
+	LPCSTR		add_str = NULL;
 	STRCONCAT	(add_str,
 		tmp_ini.r_string(cd_info_secion, cd_player_name_key),
 		tmp_ini.r_string(cd_info_secion, cd_player_digest_key),
@@ -97,7 +97,7 @@ bool const configs_verifyer::verify_dsign(u8* data,
 
 LPCSTR configs_verifyer::get_section_diff(CInifile::Sect* sect_ptr, CInifile & active_params, string256 & dst_diff)
 {
-	LPCSTR diff_str = nullptr;
+	LPCSTR diff_str = NULL;
 	bool	tmp_active_param = false;
 	if (!strncmp(sect_ptr->Name.c_str(), "ap_", 3))
 	{
@@ -116,7 +116,7 @@ LPCSTR configs_verifyer::get_section_diff(CInifile::Sect* sect_ptr, CInifile & a
 				real_value = active_params.r_string(sect_ptr->Name.c_str(), cit->first.c_str());
 				if (tmp_value != real_value)
 				{
-					LPCSTR	tmp_key_str = nullptr;
+					LPCSTR	tmp_key_str = NULL;
 					STRCONCAT(tmp_key_str,
 						sect_ptr->Name.c_str(), "::", cit->first.c_str());
 					STRCONCAT(diff_str,
@@ -147,7 +147,7 @@ LPCSTR configs_verifyer::get_section_diff(CInifile::Sect* sect_ptr, CInifile & a
 		real_value = pSettings->r_string(sect_ptr->Name.c_str(), cit->first.c_str());
 		if (tmp_value != real_value)
 		{
-			LPCSTR	tmp_key_str = nullptr;
+			LPCSTR	tmp_key_str = NULL;
 			STRCONCAT(tmp_key_str,
 				sect_ptr->Name.c_str(), "::", cit->first.c_str());
 			STRCONCAT(diff_str,
@@ -161,14 +161,14 @@ LPCSTR configs_verifyer::get_section_diff(CInifile::Sect* sect_ptr, CInifile & a
 			return dst_diff;
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 LPCSTR configs_verifyer::get_diff(CInifile & received,
 								  CInifile & active_params,
 								  string256 & dst_diff)
 {
-	LPCSTR diff_str = nullptr;
+	LPCSTR diff_str = NULL;
 	for (CInifile::RootIt sit = received.sections().begin(),
 		siet = received.sections().end(); sit != siet; ++sit)
 	{
@@ -203,7 +203,7 @@ bool const configs_verifyer::verify(u8* data, u32 data_size, string256 & diff)
 
 	IReader		tmp_reader(data, data_size);
 	CInifile	tmp_ini(&tmp_reader);
-	CInifile	tmp_active_params(nullptr, FALSE, FALSE, FALSE);
+	CInifile	tmp_active_params(NULL, FALSE, FALSE, FALSE);
 	
 	string16	tmp_digit;
 	u32			ap_index = 1;
@@ -230,7 +230,7 @@ bool const configs_verifyer::verify(u8* data, u32 data_size, string256 & diff)
 		return false;
 	}
 
-	LPCSTR		add_str = nullptr;
+	LPCSTR		add_str = NULL;
 	STRCONCAT	(add_str,
 		tmp_ini.r_string(cd_info_secion, cd_player_name_key),
 		tmp_ini.r_string(cd_info_secion, cd_player_digest_key),

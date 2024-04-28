@@ -237,7 +237,7 @@ public:
 	virtual CInventoryItem				*GetFood				() const;
 	bool						bfAssignMovement		(CScriptEntityAction			*tpEntityAction) override;
 	bool						bfAssignWatch			(CScriptEntityAction			*tpEntityAction) override;
-	void						ResetScriptData			(void					*P = nullptr) override;
+	void						ResetScriptData			(void					*P = 0) override;
 	bool						bfAssignObject			(CScriptEntityAction			*tpEntityAction) override;
 	bool						bfAssignAnimation		(CScriptEntityAction			*tpEntityAction) override;
 	

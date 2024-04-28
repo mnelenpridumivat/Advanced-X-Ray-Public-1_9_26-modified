@@ -61,7 +61,7 @@ void CPHSkeleton::Init()
 {
 	m_remove_time = static_cast<u32>(-1);
 	b_removing=false;
-	m_startup_anim= nullptr;
+	m_startup_anim=NULL;
 }
 
 bool CPHSkeleton::Spawn(CSE_Abstract *D)
@@ -74,7 +74,7 @@ bool CPHSkeleton::Spawn(CSE_Abstract *D)
 	CSE_Visual				*visual = smart_cast<CSE_Visual*>(D);
 	VERIFY					(visual);
 	m_startup_anim			= visual->startup_animation;
-	CPHSkeleton* source		= nullptr;
+	CPHSkeleton* source		= 0;
 	if(po->_flags.test(CSE_PHSkeleton::flSpawnCopy))
 	{
 		source=smart_cast<CPHSkeleton*>(Level().Objects.net_Find(po->source_id));
@@ -93,7 +93,7 @@ bool CPHSkeleton::Spawn(CSE_Abstract *D)
 	else 
 	{
 		CPhysicsShellHolder	*obj	=	PPhysicsShellHolder();
-		IKinematics			*K		= nullptr;
+		IKinematics			*K		=	NULL;
 		if (obj->Visual())
 		{
 			K= smart_cast<IKinematics*>(obj->Visual());

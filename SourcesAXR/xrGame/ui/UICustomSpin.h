@@ -23,7 +23,7 @@ public:
 
 	// CUIWindow
 	virtual void	InitSpin			(Fvector2 pos, Fvector2 size);
-					void	SendMessage			(CUIWindow* pWnd, s16 msg, void* pData  = nullptr) override;
+					void	SendMessage			(CUIWindow* pWnd, s16 msg, void* pData  = NULL) override;
 					void	Draw				() override;
 					void	Update				() override;
 					void	Enable				(bool status) override;

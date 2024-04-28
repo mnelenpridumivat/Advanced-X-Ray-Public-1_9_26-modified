@@ -21,7 +21,7 @@ private:
 			void	add_actions					();
 
 public:
-					CStalkerGetDistancePlanner	(CAI_Stalker *object = nullptr, LPCSTR action_name = "");
+					CStalkerGetDistancePlanner	(CAI_Stalker *object = 0, LPCSTR action_name = "");
 	~CStalkerGetDistancePlanner	() override;
 	virtual	void	setup						(CAI_Stalker *object, CPropertyStorage *storage);
 };

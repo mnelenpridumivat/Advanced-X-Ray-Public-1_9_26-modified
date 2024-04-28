@@ -14,7 +14,7 @@ void turn_zone()
 		g_zone->turn_on_script();
 }
 */
-CZoneCampfire::CZoneCampfire() : m_pDisabledParticles(nullptr),m_pEnablingParticles(nullptr),m_turned_on(true),m_turn_time(0)
+CZoneCampfire::CZoneCampfire() : m_pDisabledParticles(NULL),m_pEnablingParticles(NULL),m_turned_on(true),m_turn_time(0)
 {
 //.	g_zone = this;
 }

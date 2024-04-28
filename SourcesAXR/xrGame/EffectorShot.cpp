@@ -183,7 +183,7 @@ CCameraShotEffector::CCameraShotEffector(const CameraRecoil& cam_recoil)
  : CEffectorCam(eCEShot,100000.0f)
 {
 	CWeaponShotEffector::Initialize( cam_recoil );
-	m_pActor		= nullptr;
+	m_pActor		= NULL;
 }
 
 CCameraShotEffector::~CCameraShotEffector()

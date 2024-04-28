@@ -40,7 +40,7 @@ void CActorMP::net_Import	( NET_Packet &P)
 		}
 	}
 
-	if (PPhysicsShell() != nullptr)
+	if (PPhysicsShell() != NULL)
 	{
 		return;
 	}

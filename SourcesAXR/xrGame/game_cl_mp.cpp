@@ -61,10 +61,10 @@ BOOL g_draw_downloads = FALSE;
 game_cl_mp::game_cl_mp()
 {
 	m_bVotingActive = false;
-	m_pVoteStartWindow = nullptr;
-	m_pAdminMenuWindow = nullptr;
-	m_pVoteRespondWindow = nullptr;
-	m_pMessageBox = nullptr;
+	m_pVoteStartWindow = NULL;
+	m_pAdminMenuWindow = NULL;
+	m_pVoteRespondWindow = NULL;
+	m_pMessageBox = NULL;
 	
 	m_pSndMessages.clear();
 	LoadSndMessages();
@@ -84,7 +84,7 @@ game_cl_mp::game_cl_mp()
 	//-------------------------------------
 	LoadBonuses();
 	//-------------------------------------	
-	buffer_for_compress = nullptr;
+	buffer_for_compress = NULL;
 	buffer_for_compress_size = 0;
 	//-----------------------------------------------------------
 	//-----------------------------------------------------------
@@ -97,9 +97,9 @@ game_cl_mp::game_cl_mp()
 		abs(m_iSpawn_Cost));
 	pBuySpawnMsgBox->SetText(BuySpawnText);
 */	//-----------------------------------------------------------
-	m_reward_generator			= nullptr;
+	m_reward_generator			= NULL;
 	m_ready_to_open_buy_menu	= true;
-	m_reward_manager			= nullptr;
+	m_reward_manager			= NULL;
 	crypto::xr_crypto_init();
 };
 
@@ -150,7 +150,7 @@ game_cl_mp::~game_cl_mp()
 
 	xr_delete(m_reward_generator);
 	xr_delete(m_reward_manager);
-	local_player = nullptr;
+	local_player = NULL;
 };
 
 bool game_cl_mp::CanBeReady	()
@@ -842,7 +842,7 @@ void game_cl_mp::OnPlayerKilled			(NET_Packet& P)
 	KMS.m_victim.m_name = pPlayer->getName();
 	KMS.m_victim.m_color = Color_Teams_u32[ModifyTeam(pPlayer->team) + 1];
 
-	KMS.m_killer.m_name = nullptr;
+	KMS.m_killer.m_name = NULL;
 	KMS.m_killer.m_color = color_rgba(255,255,255,255);
 
 	switch (KillType)
@@ -981,7 +981,7 @@ void game_cl_mp::OnPlayerKilled			(NET_Packet& P)
 			//suicide
 			if (KilledID == KillerID)
 			{
-				KMS.m_victim.m_name = nullptr;
+				KMS.m_victim.m_name = NULL;
 
 				KMS.m_ext_info.m_shader = GetKillEventIconsShader();
 				KMS.m_ext_info.m_rect.x1 = 32;
@@ -1584,7 +1584,7 @@ void game_cl_mp::start_receive_server_info	(ClientID const & svclient_id)
 void game_cl_mp::PrepareToReceiveFile(ClientID const & from_client, shared_str const & client_session_id, clientdata_event_t response_event)
 {
 	string_path screen_shot_fn;
-	LPCSTR dest_file_name = nullptr;
+	LPCSTR dest_file_name = NULL;
 	STRCONCAT(dest_file_name,
 		make_file_name(client_session_id.c_str(), screen_shot_fn)		
 	);
@@ -1714,19 +1714,19 @@ void __stdcall game_cl_mp::fr_callback_binder::receiving_serverinfo_callback(
 		}break;
 	case file_transfer::receiving_aborted_by_peer:
 		{
-			m_owner->extract_server_info(nullptr, 0);
+			m_owner->extract_server_info(NULL, 0);
 			Msg("* serverinfo: server logo transfer aborted ...");
 			m_active = false;
 		}break;
 	case file_transfer::receiving_aborted_by_user:
 		{
-			m_owner->extract_server_info(nullptr, 0);
+			m_owner->extract_server_info(NULL, 0);
 			Msg("* serverinfo: receiving aborted by user...");
 			m_active = false;
 		}break;
 	case file_transfer::receiving_timeout:
 		{
-			m_owner->extract_server_info(nullptr, 0);
+			m_owner->extract_server_info(NULL, 0);
 			Msg("* serverinfo: receiving timeout...");
 			m_active = false;
 		}break;
@@ -1829,7 +1829,7 @@ game_cl_mp::fr_callback_binder*	game_cl_mp::get_receiver_cb_binder()
 			return &m_client_receiver_cbs[i];
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 void game_cl_mp::add_detected_cheater(shared_str const & file_name, string256 diff)
@@ -1899,7 +1899,7 @@ void game_cl_mp::extract_server_info(u8* data_ptr, u32 data_size)
 	UIGameMP*	tmp_ui_mp_game		= smart_cast<UIGameMP*>(m_game_ui_custom);
 	if (!data_ptr)
 	{
-		tmp_ui_mp_game->SetServerLogo(nullptr, 0);
+		tmp_ui_mp_game->SetServerLogo(NULL, 0);
 		return;
 	}
 	using namespace file_transfer;

@@ -185,7 +185,7 @@ void animation_planner::add_evaluators	()
 	add_evaluator			(
 		eWorldPropertyReadyToIdle,
 		xr_new<CStalkerPropertyEvaluatorMember>(
-			static_cast<CPropertyStorage*>(nullptr),
+			static_cast<CPropertyStorage*>(0),
 			eWorldPropertyReadyToIdle,
 			true,
 			true,
@@ -195,7 +195,7 @@ void animation_planner::add_evaluators	()
 	add_evaluator			(
 		eWorldPropertyReadyToLookout,
 		xr_new<CStalkerPropertyEvaluatorMember>(
-			static_cast<CPropertyStorage*>(nullptr),
+			static_cast<CPropertyStorage*>(0),
 			eWorldPropertyReadyToLookout,
 			true,
 			true,
@@ -205,7 +205,7 @@ void animation_planner::add_evaluators	()
 	add_evaluator			(
 		eWorldPropertyReadyToFire,
 		xr_new<CStalkerPropertyEvaluatorMember>(
-			static_cast<CPropertyStorage*>(nullptr),
+			static_cast<CPropertyStorage*>(0),
 			eWorldPropertyReadyToFire,
 			true,
 			true,
@@ -215,7 +215,7 @@ void animation_planner::add_evaluators	()
 	add_evaluator			(
 		eWorldPropertyReadyToFireNoLookout,
 		xr_new<CStalkerPropertyEvaluatorMember>(
-			static_cast<CPropertyStorage*>(nullptr),
+			static_cast<CPropertyStorage*>(0),
 			eWorldPropertyReadyToFireNoLookout,
 			true,
 			true,

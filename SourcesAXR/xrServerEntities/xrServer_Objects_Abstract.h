@@ -53,7 +53,7 @@ public:
 	};
 	Flags8							flags;
 public:
-									CSE_Visual				(LPCSTR name=nullptr);
+									CSE_Visual				(LPCSTR name=0);
 	virtual							~CSE_Visual				();
 
 	void							visual_read				(NET_Packet& P, u16 version);
@@ -75,7 +75,7 @@ SERVER_ENTITY_DECLARE_BEGIN0(CSE_Motion)
 public:
 	shared_str						motion_name;
 public:
-									CSE_Motion 				(LPCSTR name=nullptr);
+									CSE_Motion 				(LPCSTR name=0);
 	virtual							~CSE_Motion				();
 
 	void							motion_read				(NET_Packet& P);

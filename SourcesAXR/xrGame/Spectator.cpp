@@ -54,7 +54,7 @@ CSpectator::CSpectator() : CGameObject()
 	cam_active				= eacFreeLook;
 	m_last_camera			= eacFreeLook;
 	look_idx				= 0;
-	m_pActorToLookAt			= nullptr;
+	m_pActorToLookAt			= NULL;
 }
 
 CSpectator::~CSpectator()
@@ -160,7 +160,7 @@ void CSpectator::UpdateCL()
 			if (0==idx) cam_Set(eacFreeFly);
 		}
 		// по умолчанию eacFreeFly
-		cam_Update		(nullptr);
+		cam_Update		(0);
 	}
 }
 
@@ -229,7 +229,7 @@ void CSpectator::IR_OnKeyboardPress(int cmd)
 			if (new_camera == eacFreeFly)
 			{
 				cam_Set			(eacFreeFly);	
-				m_pActorToLookAt = nullptr;
+				m_pActorToLookAt = NULL;
 			}
 			else
 			{
@@ -315,7 +315,7 @@ void CSpectator::IR_OnMouseMove(int dx, int dy)
 void CSpectator::FirstEye_ToPlayer(CObject* pObject)
 {
 	CObject*	pCurViewEntity = Level().CurrentEntity();
-	CActor*		pOldActor = nullptr;
+	CActor*		pOldActor = NULL;
 	if (pCurViewEntity)
 	{
 		pOldActor = smart_cast<CActor*>(pCurViewEntity);
@@ -514,7 +514,7 @@ bool			CSpectator::SelectNextPlayerToLook	(bool const search_next)
 	
 	game_PlayerState* PS = Game().local_player;
 	if (!PS) return false;
-	m_pActorToLookAt = nullptr;
+	m_pActorToLookAt = NULL;
 
 	game_cl_mp* pMPGame = smart_cast<game_cl_mp*> (&Game());
 
@@ -573,17 +573,17 @@ void			CSpectator::net_Relcase				(CObject *O)
 	
 	if (m_pActorToLookAt != Level().CurrentEntity()) //new spectator was spawned
 	{
-		m_pActorToLookAt = nullptr;
+		m_pActorToLookAt = NULL;
 		return;
 	}
 
-	m_pActorToLookAt = nullptr;
+	m_pActorToLookAt = NULL;
 	if (cam_active != eacFreeFly)
 	{
 		SelectNextPlayerToLook(false);
 		if (m_pActorToLookAt == O)	//selected to look at player that will be destroyed
 		{
-			m_pActorToLookAt = nullptr;
+			m_pActorToLookAt = NULL;
 		}
 	}
 	if (!m_pActorToLookAt) cam_Set(eacFreeFly);

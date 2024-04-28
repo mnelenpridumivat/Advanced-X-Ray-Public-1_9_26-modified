@@ -12,7 +12,7 @@ struct SAnimationPart {
 	
 	void	init	() {
 		motion.invalidate	();
-		blend				= nullptr;
+		blend				= 0;
 		actual				= true;
 		time_started		= 0;
 	}

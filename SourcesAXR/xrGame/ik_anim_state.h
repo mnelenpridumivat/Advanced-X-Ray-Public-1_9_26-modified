@@ -11,7 +11,7 @@ class	ik_anim_state
 			bool			is_blending;
 			const CBlend	*current_blend;
 public:
-						ik_anim_state	(  ): is_step( false ), do_glue( true ), is_idle(false), is_blending(false) ,current_blend( nullptr )	{};
+						ik_anim_state	(  ): is_step( false ), do_glue( true ), is_idle(false), is_blending(false) ,current_blend( 0 )	{};
 			void		update			( IKinematicsAnimated *K, const	CBlend *b, u16 interval );
 IC			bool		step			( ) const { return is_step; }
 IC			bool		glue			( ) const { return do_glue; }

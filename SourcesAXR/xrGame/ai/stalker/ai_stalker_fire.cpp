@@ -395,10 +395,10 @@ void CAI_Stalker::update_best_item_info_impl()
 	m_item_actuality							= true;
 	ai().ef_storage().non_alife().member()		= this;
 	ai().ef_storage().non_alife().enemy()		= memory().enemy().selected() ? memory().enemy().selected() : this;
-	m_best_item_to_kill			= nullptr;
-	m_best_ammo					= nullptr;
-	m_best_found_item_to_kill	= nullptr;
-	m_best_found_ammo			= nullptr;
+	m_best_item_to_kill			= 0;
+	m_best_ammo					= 0;
+	m_best_found_item_to_kill	= 0;
+	m_best_found_ammo			= 0;
 	m_best_item_value			= 0.f;
 
 	// try to find the best item which can kill
@@ -456,7 +456,7 @@ void CAI_Stalker::update_best_item_info_impl()
 				if (value > m_best_item_value) {
 					m_best_item_value				= value;
 					m_best_found_item_to_kill		= inventory_item;
-					m_best_found_ammo				= nullptr;
+					m_best_found_ammo				= 0;
 					m_best_ammo						= item;
 				}
 			}
@@ -470,7 +470,7 @@ void CAI_Stalker::update_best_item_info_impl()
 				if (value > m_best_item_value) {
 					m_best_item_value				= value;
 					m_best_item_to_kill				= item;
-					m_best_found_item_to_kill		= nullptr;
+					m_best_found_item_to_kill		= 0;
 					m_best_found_ammo				= inventory_item;
 				}
 			}
@@ -615,7 +615,7 @@ void CAI_Stalker::can_kill_entity		(const Fvector &position, const Fvector &dire
 	
 	ray_query_param					params(this,memory().visual().transparency_threshold(),distance);
 
-	Level().ObjectSpace.RayQuery	(rq_storage,ray_defs,ray_query_callback,&params, nullptr,this);
+	Level().ObjectSpace.RayQuery	(rq_storage,ray_defs,ray_query_callback,&params,NULL,this);
 	m_can_kill_enemy				= m_can_kill_enemy  || params.m_can_kill_enemy;
 	m_can_kill_member				= m_can_kill_member || params.m_can_kill_member;
 	m_pick_distance					= _max(m_pick_distance,params.m_pick_distance);
@@ -690,7 +690,7 @@ void CAI_Stalker::update_can_kill_info	()
 
 	Fvector					position, direction;
 	VERIFY					(inventory().ActiveItem());
-	g_fireParams			(nullptr,position,direction);
+	g_fireParams			(0,position,direction);
 	can_kill_entity_from	(position,direction,start_pick_distance());
 }
 
@@ -966,8 +966,8 @@ void CAI_Stalker::check_throw_trajectory	(const float &throw_time)
 {
 	m_throw_enabled			= false;
 
-	xr_vector<trajectory_pick> * trajectory_picks	= nullptr;
-	xr_vector<Fvector> *		collide_tris		= nullptr;
+	xr_vector<trajectory_pick> * trajectory_picks	=	NULL;
+	xr_vector<Fvector> *		collide_tris		=	NULL;
 #ifdef DEBUG
 	trajectory_picks				=	& m_throw_picks;
 	collide_tris					=	& m_throw_collide_tris;

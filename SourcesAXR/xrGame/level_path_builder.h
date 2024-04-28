@@ -58,7 +58,7 @@ public:
 
 		m_extrapolate_path		= extrapolate_path;
 		if (!precise_position)
-			m_precise_position	= nullptr;
+			m_precise_position	= 0;
 		else {
 			m_temp			= *precise_position;
 			m_precise_position	= &m_temp;

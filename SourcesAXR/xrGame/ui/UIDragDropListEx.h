@@ -11,13 +11,13 @@ class CUIDragItem;
 
 
 struct CUICell{
-							CUICell					()						{m_item= nullptr; Clear();}
+							CUICell					()						{m_item=NULL; Clear();}
 
 		CUICellItem*		m_item;
 		bool				m_bMainItem;
 
 		void				SetItem					(CUICellItem* itm, bool bMain)		{m_item = itm; VERIFY(m_item);m_bMainItem = bMain;}
-		bool				Empty					()						{return m_item == nullptr;}
+		bool				Empty					()						{return m_item == NULL;}
 		bool				MainItem				()						{return m_bMainItem;}
 		void				Clear					();
 		bool				operator ==				(const CUICell& C) const{return (m_item == C.m_item);}
@@ -142,7 +142,7 @@ public:
 	void		Draw				() override;
 	void		Update				() override;
 	bool		OnMouseAction		(float x, float y, EUIMessages mouse_action) override;
-	void		SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
+	void		SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 
 				void		OnDragEvent			(CUIDragItem* drag_item, bool b_receive);
 };

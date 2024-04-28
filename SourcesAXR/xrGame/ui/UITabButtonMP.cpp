@@ -6,7 +6,7 @@ CUITabButtonMP::CUITabButtonMP()
 	m_orientationVertical		= true;
 	m_text_ident_cursor_over.set(0,0);
 	m_text_ident_normal.set		(0,0);
-	m_hint						= nullptr;
+	m_hint						= NULL;
 }
 
 void CUITabButtonMP::CreateHint()

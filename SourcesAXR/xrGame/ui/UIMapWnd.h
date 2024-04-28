@@ -142,7 +142,7 @@ public:
 	bool				OnKeyboardAction				(int dik, EUIMessages keyboard_action) override;
 	bool				OnKeyboardHold			(int dik) override;
 
-	void				SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
+	void				SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 
 	void						SetTargetMap			(CUICustomMap* m, bool bZoomIn = false);
 	void						SetTargetMap			(CUICustomMap* m, const Fvector2& pos, bool bZoomIn = false);

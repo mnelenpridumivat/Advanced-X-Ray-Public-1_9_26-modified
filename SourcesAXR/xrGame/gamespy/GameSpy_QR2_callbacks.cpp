@@ -42,7 +42,7 @@ void __cdecl callback_serverkey(int keyid, qr2_buffer_t outbuf, void *userdata)
 	case GAMETYPE_KEY:		ADD_KEY_VAL(pServer->game, pQR2, BufferAdd, outbuf, type_name()); break; //		pQR2->BufferAdd(outbuf, pServer->game->type_name()); break;
 	case GAMEMODE_KEY:		pQR2->BufferAdd(outbuf, "openplaying"); break;
 	case PASSWORD_KEY:
-		if ( nullptr == *(pServer->Password) )
+		if ( 0 == *(pServer->Password) )
 		{
 			pQR2->BufferAdd_Int( outbuf, 0 );
 		}
@@ -113,7 +113,7 @@ void __cdecl callback_playerkey(int keyid, int index, qr2_buffer_t outbuf, void 
 	CGameSpy_QR2* pQR2 = pServer->QR2();
 	if (!pQR2) return;
 
-	xrGameSpyClientData* pCD = nullptr;
+	xrGameSpyClientData* pCD = NULL;
 
 	struct index_searcher
 	{

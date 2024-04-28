@@ -44,7 +44,7 @@ void check_path	(const CBaseMonster *monster, const CPatrolPath *path)
 
 void CMonsterHome::load(LPCSTR line)
 {
-	m_path				= nullptr;
+	m_path				= 0;
 	m_level_vertex_id	= static_cast<u32>(-1);
 	m_radius_min		= 20.f;
 	m_radius_middle		= 30.f;
@@ -105,7 +105,7 @@ void CMonsterHome::setup(LPCSTR path_name, float min_radius, float max_radius, b
 }
 void CMonsterHome::setup(u32 lv_ID, float min_radius, float max_radius, bool aggressive, float middle_radius)
 {
-	m_path			= nullptr;
+	m_path			= 0;
 	m_level_vertex_id = lv_ID;
 	m_radius_min	= min_radius;
 	m_radius_max	= max_radius;
@@ -455,7 +455,7 @@ bool CMonsterHome::at_home(const Fvector &pos, float const radius)
 
 void CMonsterHome::remove_home()
 {
-	m_path			= nullptr;
+	m_path			= 0;
 	m_level_vertex_id = static_cast<u32>(-1);
 	m_aggressive	= false;
 }

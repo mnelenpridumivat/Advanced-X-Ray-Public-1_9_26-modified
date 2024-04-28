@@ -64,7 +64,7 @@ CGamePersistent::CGamePersistent(void)
 	m_game_params.m_e_game_type	= eGameIDNoGame;
 	ambient_effect_next_time	= 0;
 	ambient_effect_stop_time	= 0;
-	ambient_particles			= nullptr;
+	ambient_particles			= 0;
 
 	ambient_effect_wind_start	= 0.f;
 	ambient_effect_wind_in_time	= 0.f;
@@ -77,9 +77,9 @@ CGamePersistent::CGamePersistent(void)
 	ZeroMemory					(ambient_sound_next_time, sizeof(ambient_sound_next_time));
 	
 
-	m_pUI_core					= nullptr;
-	m_pMainMenu					= nullptr;
-	m_intro						= nullptr;
+	m_pUI_core					= NULL;
+	m_pMainMenu					= NULL;
+	m_intro						= NULL;
 	m_intro_event.bind			(this, &CGamePersistent::start_logo_intro);
 #ifdef DEBUG
 	m_frame_counter				= 0;
@@ -91,7 +91,7 @@ CGamePersistent::CGamePersistent(void)
 	//dSetFreeHandler				(ode_free		);
 
 	// 
-	BOOL	bDemoMode	= (nullptr!=strstr(Core.Params,"-demomode "));
+	BOOL	bDemoMode	= (0!=strstr(Core.Params,"-demomode "));
 	if (bDemoMode)
 	{
 		string256	fname;
@@ -104,8 +104,8 @@ CGamePersistent::CGamePersistent(void)
 		eDemoStart			=	Engine.Event.Handler_Attach("GAME:demo",this);	
 		uTime2Change		=	0;
 	} else {
-		pDemoFile			= nullptr;
-		eDemoStart			= nullptr;
+		pDemoFile			=	NULL;
+		eDemoStart			=	NULL;
 	}
 
 	eQuickLoad				= Engine.Event.Handler_Attach("Game:QuickLoad",this);
@@ -327,7 +327,7 @@ void CGamePersistent::WeathersUpdate()
 					pos.z				= _sin(angle);
 					pos.normalize		().mul(ch.get_rnd_sound_dist()).add(Device.vCameraPosition);
 					pos.y				+= 10.f;
-					snd.play_at_pos		(nullptr,pos);
+					snd.play_at_pos		(0,pos);
 
 #ifdef DEBUG
 					if (!snd._handle() && strstr(Core.Params,"-nosound"))
@@ -359,7 +359,7 @@ void CGamePersistent::WeathersUpdate()
 			}
 */
 			// start effect
-			if ((FALSE==bIndoor) && (nullptr==ambient_particles) && Device.dwTimeGlobal>ambient_effect_next_time){
+			if ((FALSE==bIndoor) && (0==ambient_particles) && Device.dwTimeGlobal>ambient_effect_next_time){
 				CEnvAmbient::SEffect* eff			= env_amb->get_rnd_effect(); 
 				if (eff){
 					Environment().wind_gust_factor	= eff->wind_gust_factor;
@@ -374,7 +374,7 @@ void CGamePersistent::WeathersUpdate()
 					ambient_particles				= CParticlesObject::Create(eff->particles.c_str(),FALSE,false);
 					Fvector pos; pos.add			(Device.vCameraPosition,eff->offset); 
 					ambient_particles->play_at_pos	(pos);
-					if (eff->sound._handle())		eff->sound.play_at_pos(nullptr,pos);
+					if (eff->sound._handle())		eff->sound.play_at_pos(0,pos);
 
 
 					Environment().wind_blast_strength_start_value=Environment().wind_strength_factor;
@@ -458,7 +458,7 @@ bool allow_intro ()
 #ifdef MASTER_GOLD
 	if (g_SASH.IsRunning())
 #else	// #ifdef MASTER_GOLD
-	if ((nullptr!=strstr(Core.Params, "-nointro")) || g_SASH.IsRunning())
+	if ((0!=strstr(Core.Params, "-nointro")) || g_SASH.IsRunning())
 #endif	// #ifdef MASTER_GOLD
 	{
 		return false;
@@ -471,7 +471,7 @@ void CGamePersistent::start_logo_intro()
 	if (Device.dwPrecacheFrame==0)
 	{
 		m_intro_event.bind		(this, &CGamePersistent::update_logo_intro);
-		if (!g_dedicated_server && 0==xr_strlen(m_game_params.m_game_or_spawn) && nullptr ==g_pGameLevel)
+		if (!g_dedicated_server && 0==xr_strlen(m_game_params.m_game_or_spawn) && NULL==g_pGameLevel)
 		{
 			VERIFY				(NULL==m_intro);
 			m_intro				= xr_new<CUISequencer>();
@@ -486,14 +486,14 @@ void CGamePersistent::update_logo_intro()
 {
 	if(m_intro && (false==m_intro->IsActive()))
 	{
-		m_intro_event			= nullptr;
+		m_intro_event			= 0;
 		xr_delete				(m_intro);
 		Msg("intro_delete ::update_logo_intro");
 		Console->Execute		("main_menu on");
 	}
 	else if (!m_intro)
 	{
-		m_intro_event = nullptr;
+		m_intro_event = 0;
 	}
 }
 
@@ -514,7 +514,7 @@ void CGamePersistent::game_loaded()
 			Msg					("intro_start game_loaded");
 			m_intro->m_on_destroy_event.bind(this, &CGamePersistent::update_game_loaded);
 		}
-		m_intro_event			= nullptr;
+		m_intro_event			= 0;
 
 		for (u32 i = 0; i < GameLoadedCallback.size(); i++)
 			GameLoadedCallback[i]();
@@ -534,7 +534,7 @@ void CGamePersistent::start_game_intro		()
 {
 	if (!allow_intro())
 	{
-		m_intro_event			= nullptr;
+		m_intro_event			= 0;
 		return;
 	}
 
@@ -557,11 +557,11 @@ void CGamePersistent::update_game_intro()
 	{
 		xr_delete				(m_intro);
 		Msg("intro_delete ::update_game_intro");
-		m_intro_event			= nullptr;
+		m_intro_event			= 0;
 	}
 	else if (!m_intro)
 	{
-		m_intro_event			= nullptr;
+		m_intro_event			= 0;
 	}
 }
 
@@ -623,7 +623,7 @@ void CGamePersistent::OnFrame	()
 			}
 			else 
 			{
-				CCameraBase* C = nullptr;
+				CCameraBase* C = NULL;
 				if (g_actor)
 				{
 					if(!Actor()->Holder())
@@ -692,7 +692,7 @@ void CGamePersistent::OnFrame	()
 	if(!Device.Paused())
 		WeathersUpdate				();
 
-	if	(nullptr!=pDemoFile)
+	if	(0!=pDemoFile)
 	{
 		if	(Device.dwTimeGlobal>uTime2Change){
 			// Change level + play demo

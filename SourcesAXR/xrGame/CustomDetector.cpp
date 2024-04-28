@@ -16,8 +16,8 @@
 
 ITEM_INFO::ITEM_INFO()
 {
-	pParticle	= nullptr;
-	curr_ref	= nullptr;
+	pParticle	= NULL;
+	curr_ref	= NULL;
 }
 
 ITEM_INFO::~ITEM_INFO()
@@ -28,7 +28,7 @@ ITEM_INFO::~ITEM_INFO()
 
 bool CCustomDetector::CheckCompatibilityInt(CHudItem* itm, u16* slot_to_activate)
 {
-	if(itm== nullptr)
+	if(itm==NULL)
 		return true;
 
 	CInventoryItem& iitm			= itm->item();
@@ -77,7 +77,7 @@ bool  CCustomDetector::CheckCompatibility(CHudItem* itm)
 	if(!inherited::CheckCompatibility(itm) )	
 		return false;
 
-	if(!CheckCompatibilityInt(itm, nullptr))
+	if(!CheckCompatibilityInt(itm, NULL))
 	{
 		HideDetector	(true);
 		return			false;
@@ -105,7 +105,7 @@ void CCustomDetector::ToggleDetector(bool bFastMode)
 	if (GetState() == eHidden)
 	{
 		PIItem iitem = m_pInventory->ActiveItem();
-		CHudItem* itm = (iitem) ? iitem->cast_hud_item() : nullptr;
+		CHudItem* itm = (iitem) ? iitem->cast_hud_item() : NULL;
 		u16 slot_to_activate = NO_ACTIVE_SLOT;
 
 		if (CheckCompatibilityInt(itm, &slot_to_activate))
@@ -187,7 +187,7 @@ void CCustomDetector::OnHiddenItem()
 
 CCustomDetector::CCustomDetector() 
 {
-	m_ui				= nullptr;
+	m_ui				= NULL;
 	m_bFastAnimMode		= false;
 	m_bNeedActivation	= false;
 
@@ -481,8 +481,8 @@ void CCustomDetector::UpdateVisibility()
 		bool bClimb					= ((Actor()->MovingState()&mcClimb) != 0);
 		if (!bClimb)
 		{
-			CHudItem* huditem		= (i0) ? i0->m_parent_hud_item : nullptr;
-			bool bChecked			= !huditem || CheckCompatibilityInt(huditem, nullptr);
+			CHudItem* huditem		= (i0) ? i0->m_parent_hud_item : NULL;
+			bool bChecked			= !huditem || CheckCompatibilityInt(huditem, 0);
 			
 			if (bChecked)
 				ShowDetector		(true);
@@ -538,7 +538,7 @@ void CCustomDetector::OnMoveToSlot(const SInvItemPlace& prev)
 void CCustomDetector::TurnDetectorInternal(bool b)
 {
 	m_bWorking				= b;
-	if(b && m_ui== nullptr)
+	if(b && m_ui==NULL)
 	{
 		CreateUI			();
 	}else

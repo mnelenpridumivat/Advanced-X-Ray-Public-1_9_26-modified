@@ -39,7 +39,7 @@ public:
 	void feel_touch_delete	(CObject* O) override;
 	BOOL feel_touch_contact	(CObject* O) override;
 
-	bool IsAttacking() {return nullptr !=m_AttakingEntity;}
+	bool IsAttacking() {return NULL!=m_AttakingEntity;}
 
 protected:
 	void	UpdateCLChild	() override;

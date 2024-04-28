@@ -57,7 +57,7 @@ public:
 				return &le_function;
 			}break;
 		}; //switch (ftype)
-		return nullptr;
+		return NULL;
 	}
 private:
 	static ge_function<T> ge_function;

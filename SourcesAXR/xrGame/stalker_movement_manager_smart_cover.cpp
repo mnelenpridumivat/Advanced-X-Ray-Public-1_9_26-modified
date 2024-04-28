@@ -32,12 +32,12 @@ namespace smart_cover {
 
 stalker_movement_manager_smart_cover::stalker_movement_manager_smart_cover	(CAI_Stalker* object) :
 	inherited								(object),
-	m_property_storage						(nullptr),
-	m_current_transition					(nullptr),
-	m_current_transition_animation			(nullptr),
+	m_property_storage						(0),
+	m_current_transition					(0),
+	m_current_transition_animation			(0),
 	m_non_animated_loophole_change			(false),
 	m_apply_loophole_direction_distance		(4.f),
-	m_animation_selector					(nullptr),
+	m_animation_selector					(0),
 	m_entering_smart_cover_with_animation	(false),
 	m_default_behaviour						(false),
 	m_enter_cover_id						(""),
@@ -307,8 +307,8 @@ void stalker_movement_manager_smart_cover::on_smart_cover_exit		()
 	VERIFY								(object().character_physics_support());
 	object().character_physics_support()->set_use_hit_anims	(true);
 
-	m_current_transition				= nullptr;
-	m_current_transition_animation		= nullptr;
+	m_current_transition				= 0;
+	m_current_transition_animation		= 0;
 	m_non_animated_loophole_change		= false;
 	m_animation_selector->finalize		();
 	unbind_global_selector				();
@@ -571,8 +571,8 @@ void stalker_movement_manager_smart_cover::remove_links			(CObject *object)
 	inherited::remove_links			( object );
 
 	if ( m_target.cover_fire_object() == object )
-		m_target.cover_fire_object	( nullptr );
+		m_target.cover_fire_object	( 0 );
 
 	if ( m_current.cover_fire_object() == object )
-		m_current.cover_fire_object	( nullptr );
+		m_current.cover_fire_object	( 0 );
 }

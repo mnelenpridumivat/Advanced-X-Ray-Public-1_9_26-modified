@@ -29,7 +29,7 @@
 	{
 		NODEFAULT;
 #	ifdef DEBUG
-		return(*static_cast<IPropHelper*>(nullptr));
+		return(*static_cast<IPropHelper*>(0));
 #	endif
 	}
 
@@ -85,13 +85,13 @@ CSE_Abstract::CSE_Abstract					(LPCSTR caSection)
 	ID							= 0xffff;
 	ID_Parent					= 0xffff;
 	ID_Phantom					= 0xffff;
-	owner						= nullptr;
+	owner						= 0;
 	m_gameType.SetDefaults		();
 //.	s_gameid					= 0;
 	s_RP						= 0xFE;			// Use supplied coords
 	s_flags.assign				(0);
 	s_name						= caSection;
-	s_name_replace				= nullptr;			//xr_strdup("");
+	s_name_replace				= 0;			//xr_strdup("");
 	o_Angle.set					(0.f,0.f,0.f);
 	o_Position.set				(0.f,0.f,0.f);
 	m_bALifeControl				= false;
@@ -113,11 +113,11 @@ CSE_Abstract::CSE_Abstract					(LPCSTR caSection)
 //	m_next_spawn_time			= 0;
 //	m_min_spawn_interval		= 0;
 //	m_max_spawn_interval		= 0;
-	m_ini_file					= nullptr;
+	m_ini_file					= 0;
 
 	if (pSettings->line_exist(caSection,"custom_data")) {
 		pcstr const raw_file_name	= pSettings->r_string(caSection,"custom_data");
-		IReader const* config	= nullptr;
+		IReader const* config	= 0;
 #ifdef XRGAME_EXPORTS
 		if ( ai().get_alife() )
 			config				= ai().alife().get_config( raw_file_name );
@@ -138,7 +138,7 @@ CSE_Abstract::CSE_Abstract					(LPCSTR caSection)
 			m_ini_string		= temp;
 
 #ifdef XRGAME_EXPORTS
-		if (nullptr ==ai().get_alife() )
+		if ( NULL==ai().get_alife() )
 #endif // #ifdef XRGAME_EXPORTS
 		{
 			IReader* _r	= (IReader*)config;
@@ -163,17 +163,17 @@ CSE_Abstract::~CSE_Abstract					()
 
 CSE_Visual* CSE_Abstract::visual			()
 {
-	return						(nullptr);
+	return						(0);
 }
 
 ISE_Shape*  CSE_Abstract::shape				()
 {
-	return						(nullptr);
+	return						(0);
 }
 
 CSE_Motion* CSE_Abstract::motion			()
 {
-	return						(nullptr);
+	return						(0);
 }
 
 CInifile &CSE_Abstract::spawn_ini			()
@@ -353,7 +353,7 @@ BOOL CSE_Abstract::Spawn_Read				(NET_Packet	&tNetPacket)
 	u16							size;
 	tNetPacket.r_u16			(size);	// size
 	bool b1						= (m_tClassID == CLSID_SPECTATOR);
-	bool b2						= (size > sizeof(size)) || (tNetPacket.inistream!= nullptr);
+	bool b2						= (size > sizeof(size)) || (tNetPacket.inistream!=NULL);
 	R_ASSERT3					( (b1 || b2),"cannot read object, which is not successfully saved :(",name_replace());
 	STATE_Read					(tNetPacket,size);
 	return						TRUE;
@@ -428,7 +428,7 @@ xr_token game_types[]={
 	{ "capture_the_artefact",	eGameIDCaptureTheArtefact	},
 	//eGameIDDominationZone
 	//eGameIDTeamDominationZone
-	{ nullptr,				0				}
+	{ 0,				0				}
 };
 
 #ifndef XRGAME_EXPORTS

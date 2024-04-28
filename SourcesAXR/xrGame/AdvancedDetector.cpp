@@ -120,7 +120,7 @@ void CUIArtefactDetectorAdv::SetValue(const float val1, const Fvector& val2)
 
 void CUIArtefactDetectorAdv::update()
 {
-	if(nullptr ==m_parent->HudItemData() || m_bid == static_cast<u16>(-1))	return;
+	if(NULL==m_parent->HudItemData() || m_bid == static_cast<u16>(-1))	return;
 	inherited::update();
 	attachable_hud_item* itm		= m_parent->HudItemData();
 	R_ASSERT						(itm);

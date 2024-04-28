@@ -12,14 +12,14 @@ cphysics_element_scripted*	cphysics_shell_scripted::get_Element( LPCSTR bone_nam
 { 
 	CPhysicsElement* E = 	physics_impl().get_Element( bone_name );
 	if( !E )
-		return nullptr;
+		return 0;
 	return get_script_wrapper<cphysics_element_scripted>( *E ) ;
 }
 cphysics_element_scripted*	cphysics_shell_scripted::get_Element( u16 bone_id )
 {
 	CPhysicsElement* E = 	physics_impl().get_Element( bone_id );
 	if( !E )
-		return nullptr;
+		return 0;
 	return get_script_wrapper<cphysics_element_scripted>( *E ) ;
 }
 
@@ -35,7 +35,7 @@ cphysics_joint_scripted	*cphysics_shell_scripted::get_Joint( LPCSTR bone_name )
 {
 	CPhysicsJoint* J = 	physics_impl().get_Joint( bone_name );
 	if(!J)
-		return nullptr;
+		return 0;
 	return get_script_wrapper<cphysics_joint_scripted>( *J ) ;
 }
 
@@ -43,7 +43,7 @@ cphysics_joint_scripted	*cphysics_shell_scripted::get_Joint(  u16 bone_id  )
 {
 	CPhysicsJoint* J = 	physics_impl().get_Joint( bone_id );
 	if(!J)
-		return nullptr;
+		return 0;
 	return get_script_wrapper<cphysics_joint_scripted>( *J ) ;
 }
 cphysics_joint_scripted	*cphysics_shell_scripted::get_JointByStoreOrder( u16 idx )	

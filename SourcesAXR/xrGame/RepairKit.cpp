@@ -20,7 +20,7 @@ CRepairKit::CRepairKit()
 	m_iPortionsNum = -1;
 	m_iUseFor = 0;
 	m_fRestoreCondition = 0.0f;
-	m_physic_item = nullptr;
+	m_physic_item = 0;
 }
 
 CRepairKit::~CRepairKit()

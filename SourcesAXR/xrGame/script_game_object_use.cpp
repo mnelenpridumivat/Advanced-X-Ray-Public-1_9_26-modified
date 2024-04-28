@@ -57,7 +57,7 @@ Fvector CScriptGameObject::GetCurrentDirection()
 
 CScriptGameObject::CScriptGameObject		(CGameObject *game_object) :
 	m_game_object	( game_object ),
-	m_door			( nullptr )
+	m_door			( 0 )
 {
 	R_ASSERT2		( m_game_object, "Null actual object passed!" );
 }
@@ -76,7 +76,7 @@ CScriptGameObject *CScriptGameObject::Parent				() const
 	if (l_tpGameObject)
 		return		(l_tpGameObject->lua_game_object());
 	else
-		return		(nullptr);
+		return		(0);
 }
 
 int	CScriptGameObject::clsid				() const

@@ -20,7 +20,7 @@ namespace detail
 } // namespace detail
 
 monster_aura::monster_aura (CBaseMonster* const object, pcstr const name) 
-						: m_object(object), m_pp_effector_name(nullptr), m_pp_index(0)
+						: m_object(object), m_pp_effector_name(NULL), m_pp_index(0)
 {
 	xr_strcpy							(m_name, sizeof(m_name), name); 
 	m_detect_snd_time	=	0.0f;
@@ -96,31 +96,31 @@ float   monster_aura::calculate(float distance) const
 void   monster_aura::load_from_ini (CInifile const* ini, pcstr const section, bool enable_for_dead_default)
 {
 	using namespace						detail;
-	char* pp_effector_name_string	= nullptr;
+	char* pp_effector_name_string	=	NULL;
 	STRCONCAT							(pp_effector_name_string, m_name, s_pp_effector_name_string);
 	
-	char* pp_highest_at_string		= nullptr;
+	char* pp_highest_at_string		=	NULL;
 	STRCONCAT							(pp_highest_at_string, m_name, s_pp_highest_at_string);
 
-	char* linear_factor_string		= nullptr;
+	char* linear_factor_string		=	NULL;
 	STRCONCAT							(linear_factor_string, m_name, s_linear_factor_string);
 
-	char* quadratic_factor_string	= nullptr;
+	char* quadratic_factor_string	=	NULL;
 	STRCONCAT							(quadratic_factor_string, m_name, s_quadratic_factor_string);
 
-	char* max_power_string			= nullptr;
+	char* max_power_string			=	NULL;
 	STRCONCAT							(max_power_string, m_name, s_max_power_string);
 
-	char* max_distance_string		= nullptr;
+	char* max_distance_string		=	NULL;
 	STRCONCAT							(max_distance_string, m_name, s_max_distance_string);
 
-	char* sound_string				= nullptr;
+	char* sound_string				=	NULL;
 	STRCONCAT							(sound_string, m_name, s_sound_string);
 	
-	char* detect_sound_string		= nullptr;
+	char* detect_sound_string		=	NULL;
 	STRCONCAT							(detect_sound_string, m_name, s_detect_sound_string);
 
-	char* enable_for_dead_string	= nullptr;
+	char* enable_for_dead_string	=	NULL;
 	STRCONCAT							(enable_for_dead_string, m_name, s_enable_for_dead_string);
 
 	m_pp_effector_name				=	READ_IF_EXISTS(ini, r_string, section, pp_effector_name_string, NULL);

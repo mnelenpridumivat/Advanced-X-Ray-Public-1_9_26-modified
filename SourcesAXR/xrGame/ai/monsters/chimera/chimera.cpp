@@ -135,8 +135,8 @@ void   CChimera::reinit ()
 											 "Velocity_JumpGround",
 											 MonsterMovement::eChimeraVelocityParameterJumpGround);
 
-	com_man().load_jump_data				(nullptr,//"jump_attack_0",
-											 nullptr,//"jump_attack_0",
+	com_man().load_jump_data				(0,//"jump_attack_0",
+											 0,//"jump_attack_0",
 											 "jump_attack_1", 
 											 "jump_attack_2", 
 											 static_cast<u32>(-1),//MonsterMovement::eVelocityParameterRunNormal,

@@ -25,7 +25,7 @@ public:
 	CExplosive					*cast_explosive			() override {return this;}
 	CInventoryItem				*cast_inventory_item	() override {return this;}
 	CAttachableItem				*cast_attachable_item	() override {return this;}
-	CWeapon						*cast_weapon			() override {return nullptr;}
+	CWeapon						*cast_weapon			() override {return NULL;}
 	CGameObject					*cast_game_object		() override {return this;}
 	IDamageSource*				cast_IDamageSource() override {return CExplosive::cast_IDamageSource();}
 	void						on_activate_physic_shell() override;

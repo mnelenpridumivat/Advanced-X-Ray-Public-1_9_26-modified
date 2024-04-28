@@ -4,13 +4,13 @@
 #include "SoundRender_CoreA.h"
 #include "SoundRender_TargetA.h"
 
-CSoundRender_CoreA*	SoundRenderA= nullptr; 
+CSoundRender_CoreA*	SoundRenderA= 0; 
 
 CSoundRender_CoreA::CSoundRender_CoreA	():CSoundRender_Core()
 {
-	pDevice						= nullptr;
-	pDeviceList					= nullptr;
-	pContext					= nullptr;
+	pDevice						= 0;
+	pDeviceList					= 0;
+	pContext					= 0;
 
 	Listener.position.set(0, 0, 0);
 }
@@ -49,7 +49,7 @@ void CSoundRender_CoreA::_initialize(int stage)
 		if (pDevice != nullptr) break;
 	}
 
-	if (pDevice == nullptr)
+	if (pDevice == NULL)
 	{
 		CHECK_OR_EXIT			(0,"[OpenAL] Failed to create context.");
 		bPresent				= FALSE;
@@ -61,11 +61,11 @@ void CSoundRender_CoreA::_initialize(int stage)
     deviceSpecifier         	= alcGetString		(pDevice, ALC_DEVICE_SPECIFIER);
 
     // Create context
-    pContext					= alcCreateContext	(pDevice, nullptr);
-	if (nullptr==pContext){
+    pContext					= alcCreateContext	(pDevice,NULL);
+	if (0==pContext){
 		CHECK_OR_EXIT			(0,"SOUND: OpenAL: Failed to create context.");
 		bPresent				= FALSE;
-		alcCloseDevice			(pDevice); pDevice = nullptr;
+		alcCloseDevice			(pDevice); pDevice = 0;
 		return;
 	}
     
@@ -104,7 +104,7 @@ void CSoundRender_CoreA::_initialize(int stage)
 	if(stage==1)//first initialize
 	{
 		// Pre-create targets
-		CSoundRender_Target*	T	= nullptr;
+		CSoundRender_Target*	T	= 0;
 		for (u32 tit=0; tit<u32(psSoundTargets); tit++)
 		{
 			T						=	xr_new<CSoundRender_TargetA>();
@@ -135,7 +135,7 @@ void CSoundRender_CoreA::_clear	()
 {
 	inherited::_clear			();
     // remove targets
-	CSoundRender_Target*	T	= nullptr;
+	CSoundRender_Target*	T	= 0;
 	for (u32 tit=0; tit<s_targets.size(); tit++)
 	{
 		T						= s_targets[tit];
@@ -143,10 +143,10 @@ void CSoundRender_CoreA::_clear	()
         xr_delete				(T);
 	}
     // Reset the current context to NULL.
-    alcMakeContextCurrent		(nullptr);         
+    alcMakeContextCurrent		(NULL);         
     // Release the context and the device.
-    alcDestroyContext			(pContext);		pContext	= nullptr;
-    alcCloseDevice				(pDevice);		pDevice		= nullptr;
+    alcDestroyContext			(pContext);		pContext	= 0;
+    alcCloseDevice				(pDevice);		pDevice		= 0;
 	xr_delete					(pDeviceList);
 }
 

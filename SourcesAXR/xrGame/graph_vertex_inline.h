@@ -50,7 +50,7 @@ IC	const typename CSGraphVertex::_edge_type *CSGraphVertex::edge	(const _vertex_
 {
 	EDGES::const_iterator	I = std::find(edges().begin(),edges().end(),vertex_id);
 	if (m_edges.end() == I)
-		return				(nullptr);
+		return				(0);
 	return					(&*I);
 }
 
@@ -59,7 +59,7 @@ IC	typename CSGraphVertex::_edge_type *CSGraphVertex::edge			(const _vertex_id_t
 {
 	EDGES::iterator			I = std::find(m_edges.begin(),m_edges.end(),vertex_id);
 	if (m_edges.end() == I)
-		return				(nullptr);
+		return				(0);
 	return					(&*I);
 }
 

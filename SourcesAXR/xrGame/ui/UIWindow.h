@@ -27,7 +27,7 @@ public:
 													uialloc			(const uialloc<T>&)						{	}
 	template<class _Other>							uialloc			(const uialloc<_Other>&)					{	}
 	template<class _Other>	uialloc<T>&				operator=		(const uialloc<_Other>&)					{	return (*this);	}
-							pointer					allocate		(size_type n, const void* p=nullptr) const	
+							pointer					allocate		(size_type n, const void* p=0) const	
 							{	VERIFY(1==n);
 								return static_cast<pointer>(ui_allocator.create());	
 							};
@@ -88,7 +88,7 @@ public:
 	CUIWindow*				GetParent			()	const							{return m_pParentWnd;}
 	
 	//получить окно самого верхнего уровня
-	CUIWindow*				GetTop				()								{if(m_pParentWnd == nullptr) return  this; 
+	CUIWindow*				GetTop				()								{if(m_pParentWnd == NULL) return  this; 
 																				else return  m_pParentWnd->GetTop();}
 	CUIWindow*				GetCurrentMouseHandler();
 	CUIWindow*				GetChildMouseHandler();
@@ -123,7 +123,7 @@ public:
 	//ф-ция должна переопределяться
 	//pWnd - указатель на окно, которое послало сообщение
 	//pData - указатель на дополнительные данные, которые могут понадобиться
-	virtual void			SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = nullptr);
+	virtual void			SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
 	
 	
 
@@ -160,7 +160,7 @@ public:
 
 	virtual void			SetFont				(CGameFont* pFont)			{ m_pFont = pFont;}
 	CGameFont*				GetFont				()							{if(m_pFont) return m_pFont;
-																				if(m_pParentWnd== nullptr)	
+																				if(m_pParentWnd== NULL)	
 																					return  m_pFont;
 																				else
 																					return  m_pParentWnd->GetFont();}

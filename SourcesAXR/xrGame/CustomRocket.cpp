@@ -42,7 +42,7 @@ CCustomRocket::CCustomRocket()
 
 	m_vPrevVel.set				(0,0,0);
 
-	m_pTrailLight				= nullptr;
+	m_pTrailLight				= NULL;
 	m_LaunchXForm.identity		();
 	m_vLaunchVelocity.set		(0,0,0);
 	m_vLaunchAngularVelocity.set(0,0,0);
@@ -63,10 +63,10 @@ void CCustomRocket::reinit		()
 	m_pTrailLight				= ::Render->light_create();
 	m_pTrailLight->set_shadow	(true);
 
-	m_pEngineParticles			= nullptr;
-	m_pFlyParticles				= nullptr;
+	m_pEngineParticles			= NULL;
+	m_pFlyParticles				= NULL;
 
-	m_pOwner					= nullptr;
+	m_pOwner					= NULL;
 
 	m_vPrevVel.set(0,0,0);
 }
@@ -134,7 +134,7 @@ void CCustomRocket::activate_physic_shell	()
 	Position().set(m_pPhysicsShell->mXFORM.c);
 	m_pPhysicsShell->set_PhysicsRefObject(this);
 	m_pPhysicsShell->set_ObjectContactCallback(ObjectContactCallback);
-	m_pPhysicsShell->set_ContactCallback(nullptr);
+	m_pPhysicsShell->set_ContactCallback(NULL);
 	m_pPhysicsShell->SetAirResistance(0.f,0.f);
 	m_pPhysicsShell->set_DynamicScales(1.f,1.f);
 	m_pPhysicsShell->SetAllGeomTraced();
@@ -188,16 +188,16 @@ void CCustomRocket::ObjectContactCallback(bool& do_colide,bool bo1,dContact& c ,
 	do_colide = false;
 	
 
-	dxGeomUserData *l_pUD1 = nullptr;
-	dxGeomUserData *l_pUD2 = nullptr;
+	dxGeomUserData *l_pUD1 = NULL;
+	dxGeomUserData *l_pUD2 = NULL;
 	l_pUD1 = PHRetrieveGeomUserData(c.geom.g1);
 	l_pUD2 = PHRetrieveGeomUserData(c.geom.g2);
 
-	SGameMtl* material=nullptr;
-	CCustomRocket *l_this = l_pUD1 ? smart_cast<CCustomRocket*>(l_pUD1->ph_ref_object) : nullptr;
+	SGameMtl* material=0;
+	CCustomRocket *l_this = l_pUD1 ? smart_cast<CCustomRocket*>(l_pUD1->ph_ref_object) : NULL;
 	Fvector vUp;
 	if(!l_this){
-		l_this = l_pUD2 ? smart_cast<CCustomRocket*>(l_pUD2->ph_ref_object) : nullptr;
+		l_this = l_pUD2 ? smart_cast<CCustomRocket*>(l_pUD2->ph_ref_object) : NULL;
 		vUp.invert(*(Fvector*)&c.geom.normal);
 
 		//if(dGeomGetClass(c.geom.g1)==dTriListClass)
@@ -221,8 +221,8 @@ void CCustomRocket::ObjectContactCallback(bool& do_colide,bool bo1,dContact& c ,
 
 	if(!l_this||l_this->m_contact.contact) return;
 
-	CGameObject *l_pOwner = l_pUD1 ? smart_cast<CGameObject*>(l_pUD1->ph_ref_object) : nullptr;
-	if(!l_pOwner || l_pOwner == static_cast<CGameObject*>(l_this)) l_pOwner = l_pUD2 ? smart_cast<CGameObject*>(l_pUD2->ph_ref_object) : nullptr;
+	CGameObject *l_pOwner = l_pUD1 ? smart_cast<CGameObject*>(l_pUD1->ph_ref_object) : NULL;
+	if(!l_pOwner || l_pOwner == static_cast<CGameObject*>(l_this)) l_pOwner = l_pUD2 ? smart_cast<CGameObject*>(l_pUD2->ph_ref_object) : NULL;
 	if(!l_pOwner || l_pOwner != l_this->m_pOwner) 
 	{
 		if(l_this->m_pOwner) 
@@ -237,7 +237,7 @@ void CCustomRocket::ObjectContactCallback(bool& do_colide,bool bo1,dContact& c ,
 #endif
 			if(!l_pUD1||!l_pUD2) 
 			{
-				dGeomID g				= nullptr;
+				dGeomID g				=NULL						;
 				dxGeomUserData *&l_pUD	=		l_pUD1?l_pUD1:l_pUD2;
 				if(l_pUD1)	g=c.geom.g1;else	g=c.geom.g2;
 
@@ -349,7 +349,7 @@ void CCustomRocket::PlayContact()
 	{
 		m_pPhysicsShell->set_LinearVel(zero_vel);
 		m_pPhysicsShell->set_AngularVel(zero_vel);
-		m_pPhysicsShell->set_ObjectContactCallback(nullptr);
+		m_pPhysicsShell->set_ObjectContactCallback(NULL);
 		m_pPhysicsShell->Disable();
 	}
 //	if (OnClient()) return;
@@ -377,7 +377,7 @@ void CCustomRocket::OnH_B_Independent(bool just_before_destroy)
 {
 	inherited::OnH_B_Independent(just_before_destroy);
 	//-------------------------------------------
-	m_pOwner = H_Parent() ? smart_cast<CGameObject*>(H_Parent()->H_Root()) : nullptr;
+	m_pOwner = H_Parent() ? smart_cast<CGameObject*>(H_Parent()->H_Root()) : NULL;
 	//-------------------------------------------
 }
 
@@ -595,15 +595,15 @@ void CCustomRocket::StartEngineParticles()
 }
 void CCustomRocket::StopEngineParticles()
 {
-	if(m_pEngineParticles == nullptr) return;
+	if(m_pEngineParticles == NULL) return;
 	m_pEngineParticles->Stop();
 	m_pEngineParticles->SetAutoRemove(true);
-	m_pEngineParticles = nullptr;
+	m_pEngineParticles = NULL;
 }
 void CCustomRocket::StartFlyParticles()
 {
 	if(m_flyingSound._handle())
-		m_flyingSound.play_at_pos(nullptr, XFORM().c, sm_Looped );
+		m_flyingSound.play_at_pos(0, XFORM().c, sm_Looped );
 
 	VERIFY(m_pFlyParticles == NULL);
 
@@ -621,10 +621,10 @@ void CCustomRocket::StopFlyParticles()
 	if(m_flyingSound._handle())
 		m_flyingSound.stop();
 
-	if(m_pFlyParticles == nullptr) return;
+	if(m_pFlyParticles == NULL) return;
 	m_pFlyParticles->Stop();
 	m_pFlyParticles->SetAutoRemove(true);
-	m_pFlyParticles = nullptr;
+	m_pFlyParticles = NULL;
 }
 
 void CCustomRocket::StartFlying				()

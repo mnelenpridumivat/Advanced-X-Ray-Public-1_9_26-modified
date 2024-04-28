@@ -51,7 +51,7 @@ class CControlledEntity : public CControlledEntityBase {
 	CController			*m_controller;
 
 public:
-	bool			is_under_control		() override {return (m_controller != nullptr);}
+	bool			is_under_control		() override {return (m_controller != 0);}
 
 	void			set_data				(const SControlledInfo &info) override {m_data = info;}
 	SControlledInfo &get_data				() override {return m_data;}

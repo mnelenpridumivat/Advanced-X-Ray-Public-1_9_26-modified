@@ -135,7 +135,7 @@ void SCarLight::Update()
 
 CCarLights::CCarLights()
 {
-	m_pcar= nullptr;
+	m_pcar=NULL;
 }
 
 void CCarLights::Init(CCar* pcar)
@@ -192,7 +192,7 @@ void CCarLights::TurnOffHeadLights()
 
 bool CCarLights::IsLight(u16 bone_id)
 {
-	SCarLight* light= nullptr;
+	SCarLight* light=NULL;
 	return findLight(bone_id,light);
 }
 bool CCarLights::findLight(u16 bone_id,SCarLight* &light)

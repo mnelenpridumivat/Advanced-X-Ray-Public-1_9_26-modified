@@ -356,7 +356,7 @@ public:
 	CParticlesPlayer*	cast_particles_player		() override {return this;}
 	CCustomMonster*		cast_custom_monster			() override {return this;}
 	CScriptEntity*		cast_script_entity			() override {return this;}
-	CWeapon*			cast_weapon					() override {return nullptr;}
+	CWeapon*			cast_weapon					() override {return NULL;}
 	virtual CAI_Rat				*dcast_Rat					()	{return this;};
 
 public:

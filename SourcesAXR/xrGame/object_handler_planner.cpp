@@ -277,7 +277,7 @@ void CObjectHandlerPlanner::setup	(CAI_Stalker *object)
 	add_effect					(action,0xffff,eWorldPropertyIdle,	true);
 	add_operator				(static_cast<u32>(eWorldOperatorNoItemsIdle),action);
 
-	set_goal					(MonsterSpace::eObjectActionIdle,nullptr,0,0,0,0);
+	set_goal					(MonsterSpace::eObjectActionIdle,0,0,0,0,0);
 
 #ifdef LOG_ACTION
 	set_use_log					(!!psAI_Flags.test(aiGOAPObject));
@@ -306,7 +306,7 @@ void CObjectHandlerPlanner::remove_item		(CInventoryItem *inventory_item)
 	VERIFY					(target_state().conditions().size() == 1);
 	if (action_object_id(target_state().conditions().back().condition()) == inventory_item->object().ID()) {
 		init_storage		();
-		set_goal			(MonsterSpace::eObjectActionIdle,nullptr,0,0,0,0);
+		set_goal			(MonsterSpace::eObjectActionIdle,0,0,0,0,0);
 	}
 
 	if (!Level().is_removing_objects())

@@ -9,7 +9,7 @@ public:
     typedef float (*Function)(const float*,void*);
 
     MinimizeND (Function oF, int iMaxLevel, int iMaxBracket,
-        int iMaxIterations, void* pvUserData = nullptr);
+        int iMaxIterations, void* pvUserData = 0);
 
     int& MaxLevel ();
     int& MaxBracket ();

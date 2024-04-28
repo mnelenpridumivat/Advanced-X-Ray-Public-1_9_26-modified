@@ -6,7 +6,7 @@
 
 CUIListBox::CUIListBox()
 {
-	m_pFont					= nullptr;
+	m_pFont					= NULL;
 	m_flags.set				(eItemsSelectabe, TRUE);
 
 	m_def_item_height		 = 20;
@@ -114,7 +114,7 @@ CUIListBoxItem* CUIListBox::GetSelectedItem()
 	if(w)
 		return smart_cast<CUIListBoxItem*>(w);
 	else
-		return nullptr;
+		return NULL;
 
 }
 
@@ -127,7 +127,7 @@ LPCSTR CUIListBox::GetSelectedText()
 		CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(w);
 		return item->GetText();
 	}else
-		return nullptr;
+		return NULL;
 }
 
 u32 CUIListBox::GetSelectedIDX()
@@ -151,7 +151,7 @@ u32 CUIListBox::GetSelectedIDX()
 
 LPCSTR CUIListBox::GetText(int idx)
 {
-	if(idx==-1) return nullptr;
+	if(idx==-1) return NULL;
 
 	CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(GetItem(idx));
 	return item->GetText();
@@ -251,7 +251,7 @@ CUIListBoxItem* CUIListBox::GetItemByTAG(u32 tag_val)
 		}
 		
 	}
-	return nullptr;
+	return NULL;
 }
 
 CUIListBoxItem* CUIListBox::GetItemByIDX(int idx)
@@ -267,7 +267,7 @@ CUIListBoxItem* CUIListBox::GetItemByIDX(int idx)
 			++_idx;
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 CUIListBoxItem* CUIListBox::GetItemByText(LPCSTR txt)
@@ -282,7 +282,7 @@ CUIListBoxItem* CUIListBox::GetItemByText(LPCSTR txt)
 		}
 		
 	}
-	return nullptr;
+	return NULL;
 }
 
 

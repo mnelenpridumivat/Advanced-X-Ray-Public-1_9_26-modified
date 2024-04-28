@@ -126,7 +126,7 @@ CSavedGameWrapper::CSavedGameWrapper			(LPCSTR saved_game_name)
 			return;
 		}
 
-		IReader* spawn			= nullptr;
+		IReader* spawn			= NULL;
 		bool b_destroy_spawn = true;
 		if(ai().get_alife() && ai().alife().spawns().get_spawn_name()==spawn_file_name)
 		{

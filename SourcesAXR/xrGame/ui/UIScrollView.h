@@ -40,7 +40,7 @@ public:
 					CUIScrollView		(CUIFixedScrollBar* scroll_bar);
 ~CUIScrollView		() override;
 			void	InitScrollView		();// need parent to be initialized
-void	SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
+void	SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 bool	OnMouseAction				(float x, float y, EUIMessages mouse_action) override;
 void	Draw				() override;
 void	Update				() override;

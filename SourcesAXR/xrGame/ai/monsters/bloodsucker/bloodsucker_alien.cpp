@@ -192,7 +192,7 @@ BOOL CAlienEffector::ProcessCam(SCamEffectorInfo& info)
 
 CBloodsuckerAlien::CBloodsuckerAlien()
 {
-	m_object	= nullptr;
+	m_object	= 0;
 }
 
 CBloodsuckerAlien::~CBloodsuckerAlien()
@@ -252,12 +252,12 @@ void CBloodsuckerAlien::deactivate()
 
 	// Stop camera effector
 	Actor()->Cameras().RemoveCamEffector	(EFFECTOR_ID_GEN(ECamEffectorType));
-	m_effector						= nullptr;
+	m_effector						= 0;
 	
 	// Stop postprocess effector
 	Actor()->Cameras().RemovePPEffector	(EFFECTOR_ID_GEN(EEffectorPPType));
 	m_effector_pp->Destroy			();
-	m_effector_pp					= nullptr;
+	m_effector_pp					= 0;
 
 	m_active						= false;
 

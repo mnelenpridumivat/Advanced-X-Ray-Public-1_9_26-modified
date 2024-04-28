@@ -307,8 +307,8 @@ void CUICharacterInfo::Update()
 		m_bForceUpdate = false;
 
 		CSE_ALifeTraderAbstract* T = detail::object_exists_in_alife_registry(m_ownerID) ?
-									 ch_info_get_from_id(m_ownerID) : nullptr;
-		if (nullptr ==T){
+									 ch_info_get_from_id(m_ownerID) : NULL;
+		if (NULL==T){
 			m_ownerID = static_cast<u16>(-1);
 			return;
 		}
@@ -348,8 +348,8 @@ void CUICharacterInfo::ClearInfo()
 bool CUICharacterInfo::get_actor_community( shared_str* our, shared_str* enemy )
 {
 	VERIFY( our && enemy );
-	our->_set(nullptr);
-	enemy->_set(nullptr);
+	our->_set( NULL );
+	enemy->_set( NULL );
 	shared_str const& actor_team = Actor()->CharacterInfo().Community().id();
 
 	LPCSTR vs_teams  = pSettings->r_string( "actor_communities", actor_team.c_str() );

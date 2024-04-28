@@ -31,7 +31,7 @@ UITeamState::UITeamState(ETeam teamId, UITeamPanels *teamPanels)
 	AttachChild(myTeamHeader);
 	AttachChild(myScrollList);*/
 
-	mainUiXml = nullptr;
+	mainUiXml = NULL;
 	m_teamPanels = teamPanels;
 }
 

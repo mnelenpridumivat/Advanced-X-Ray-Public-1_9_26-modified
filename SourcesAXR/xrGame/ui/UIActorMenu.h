@@ -319,7 +319,7 @@ protected:
 	bool						ToDeadBodyBag				(CUICellItem* itm, bool b_use_cursor_pos);
 
 	void						AttachAddon					(PIItem item_to_upgrade);
-	void						DetachAddon					(LPCSTR addon_name, PIItem itm = nullptr);
+	void						DetachAddon					(LPCSTR addon_name, PIItem itm = NULL);
 
 	void						SendEvent_Item2Slot			(PIItem	pItem, u16 parent, u16 slot_id);
 	void						SendEvent_Item2Belt			(PIItem	pItem, u16 parent);
@@ -344,7 +344,7 @@ public:
 	~CUIActorMenu				() override;
 
 	bool				StopAnyMove					() override;
-	void				SendMessage					(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
+	void				SendMessage					(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
 	void				Draw						() override;
 	void				Update						() override;
 	void				Show						(bool status) override;

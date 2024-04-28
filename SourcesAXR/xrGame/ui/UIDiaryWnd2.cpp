@@ -113,7 +113,7 @@ void CUIDiaryWnd::SendMessage(CUIWindow *pWnd, s16 msg, void* pData)
 
 			UIDiaryInfoHeader->TextItemControl()->SetText(caption.c_str());
 			//UIArticleHeader->SetText(caption.c_str());
-			SetCurrentArtice		(nullptr);
+			SetCurrentArtice		(NULL);
 		}else
 		{
 			int idx = pTVItem->GetValue();

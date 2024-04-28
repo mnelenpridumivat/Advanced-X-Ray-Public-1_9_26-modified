@@ -18,7 +18,7 @@ bool		IsGameTypeSingle();
 #include "UIPdaMsgListItem.h"
 
 CUIMessagesWindow::CUIMessagesWindow()
-:m_pChatLog(nullptr),m_pChatWnd(nullptr),m_pGameLog(nullptr)
+:m_pChatLog(NULL),m_pChatWnd(NULL),m_pGameLog(NULL)
 {
 	Init(0, 0, UI_BASE_WIDTH, UI_BASE_HEIGHT);
 }

@@ -65,7 +65,7 @@ void CLevel::StartPlayDemo()
 {
 	R_ASSERT(IsDemoPlay() && !m_DemoPlayStarted);
 
-	m_current_spectator	= nullptr;
+	m_current_spectator	= NULL;
 	m_DemoPlayStarted	= TRUE;
 	m_StartGlobalTime	= Device.dwTimeGlobal;
 	SetDemoPlaySpeed	(1.0f);
@@ -236,7 +236,7 @@ void CLevel::SimulateServerUpdate()
 void CLevel::SpawnDemoSpectator()
 {
 	R_ASSERT(Server && Server->game);
-	m_current_spectator = nullptr;
+	m_current_spectator = NULL;
 	game_sv_mp*	tmp_sv_game		= smart_cast<game_sv_mp*>(Server->game);
 	game_cl_mp*	mp_cl_game		= smart_cast<game_cl_mp*>(Level().game);
 

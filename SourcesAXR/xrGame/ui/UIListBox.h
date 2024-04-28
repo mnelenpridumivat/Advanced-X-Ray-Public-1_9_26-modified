@@ -35,7 +35,7 @@ public:
 		void		SetImmediateSelection			(bool f);
 
 					bool		OnMouseAction							(float x, float y, EUIMessages mouse_action) override;
-					void		SendMessage						(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
+					void		SendMessage						(CUIWindow* pWnd, s16 msg, void* pData = 0) override;
 
 			void			SetTextColor			(u32 color);
 			u32				GetTextColor			();

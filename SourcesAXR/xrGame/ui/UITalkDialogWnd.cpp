@@ -91,7 +91,7 @@ void CUITalkDialogWnd::InitTalkDialogWnd()
 	// шрифт для индикации имени персонажа в окне разговора
 	CUIXmlInit::InitFont		(*m_uiXml, "font", 0, m_iNameTextColor, m_pNameTextFont);
 
-	CGameFont * pFont			= nullptr;
+	CGameFont * pFont			= NULL;
 	CUIXmlInit::InitFont		(*m_uiXml, "font", 1, m_uOurReplicsColor, pFont);
 
 
@@ -153,7 +153,7 @@ void CUITalkDialogWnd::OnUpgradeClicked(CUIWindow* w, void*)
 
 void CUITalkDialogWnd::SetTradeMode()
 {
-	OnTradeClicked( &UIToTradeButton, nullptr );
+	OnTradeClicked( &UIToTradeButton, 0 );
 }
 
 //пересылаем сообщение родительскому окну для обработки

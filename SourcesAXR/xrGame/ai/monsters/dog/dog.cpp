@@ -312,7 +312,7 @@ void CAI_Dog::start_animation()
 {
 	// Lain: check if animation is captured
 	CControl_Com* capturer = control().get_capturer(ControlCom::eControlAnimation);
-	if ( capturer && capturer->ced() != nullptr)
+	if ( capturer && capturer->ced() != NULL )
 	{
 		return;
 	}
@@ -375,7 +375,7 @@ LPCSTR CAI_Dog::get_current_animation()
 void CAI_Dog::reload(LPCSTR section)
 {
 	inherited::reload (section);
-	com_man().load_jump_data(nullptr, "jump_ataka_01", "jump_ataka_02", "jump_ataka_03",
+	com_man().load_jump_data(0, "jump_ataka_01", "jump_ataka_02", "jump_ataka_03",
 	 						 MonsterMovement::eVelocityParameterRunNormal,
 						     MonsterMovement::eVelocityParameterRunNormal, 0);
 }

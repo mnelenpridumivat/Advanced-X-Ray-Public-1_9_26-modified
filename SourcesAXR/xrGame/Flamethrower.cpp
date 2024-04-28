@@ -149,24 +149,6 @@ void CFlamethrower::Load(LPCSTR section)
 
 	}
 
-	// TODO: Completely remove magazine with bullets implementation from flamethrower
-
-	// load ammo classes
-	m_ammoTypes.clear();
-	LPCSTR				S = pSettings->r_string(section, "ammo_class");
-	if (S && S[0])
-	{
-		string128		_ammoItem;
-		int				count = _GetItemCount(S);
-		for (int it = 0; it < count; ++it)
-		{
-			_GetItem(S, it, _ammoItem);
-			m_ammoTypes.push_back(_ammoItem);
-		}
-	}
-
-	m_current_fuel_level = pSettings->r_float(section, "current_fuel_level");
-
 	m_charge_speed = pSettings->r_float(section, "charge_speed");
 
 	m_overheating_decrease_speed = pSettings->r_float(section, "overheating_decrease_speed");
@@ -439,7 +421,7 @@ void CFlamethrower::ReloadMagazine()
 
 	if (!m_bLockType)
 	{
-		AmmoCanister = nullptr;
+		AmmoCanister = NULL;
 	}
 
 	if (!m_pInventory) return;
@@ -655,14 +637,14 @@ void CFlamethrower::state_Fire(float dt)
 		d.set(get_LastFD());
 
 		if (!H_Parent()) return;
-		if (smart_cast<CMPPlayersBag*>(H_Parent()) != nullptr)
+		if (smart_cast<CMPPlayersBag*>(H_Parent()) != NULL)
 		{
 			Msg("! WARNING: state_Fire of object [%d][%s] while parent is CMPPlayerBag...", ID(), cNameSect().c_str());
 			return;
 		}
 
 		CInventoryOwner* io = smart_cast<CInventoryOwner*>(H_Parent());
-		if (nullptr == io->inventory().ActiveItem())
+		if (NULL == io->inventory().ActiveItem())
 		{
 			Log("current_state", GetState());
 			Log("next_state", GetNextState());
@@ -1266,7 +1248,7 @@ bool CFlamethrower::DetachScope(const char* item_section_name, bool b_spawn_item
 		if (!xr_strcmp(iter_scope_name, item_section_name))
 		{
 			m_cur_scope = NULL;
-			m_cur_scope_bone = nullptr;
+			m_cur_scope_bone = NULL;
 			detached = true;
 		}
 	}
@@ -1391,7 +1373,7 @@ void CFlamethrower::PlayAnimBore()
 void CFlamethrower::PlayAnimIdleSprint()
 {
 	if (iAmmoElapsed == 0 && psWpnAnimsFlag.test(ANM_SPRINT_EMPTY))
-		PlayHUDMotion("anm_idle_sprint_empty", TRUE, nullptr, GetState());
+		PlayHUDMotion("anm_idle_sprint_empty", TRUE, NULL, GetState());
 	else if (IsMisfire() && isHUDAnimationExist("anm_idle_sprint_jammed"))
 		PlayHUDMotion("anm_idle_sprint_jammed", true, nullptr, GetState());
 	else
@@ -1401,7 +1383,7 @@ void CFlamethrower::PlayAnimIdleSprint()
 void CFlamethrower::PlayAnimIdleMoving()
 {
 	if (iAmmoElapsed == 0 && psWpnAnimsFlag.test(ANM_MOVING_EMPTY))
-		PlayHUDMotion("anm_idle_moving_empty", TRUE, nullptr, GetState());
+		PlayHUDMotion("anm_idle_moving_empty", TRUE, NULL, GetState());
 	else if (IsMisfire() && isHUDAnimationExist("anm_idle_moving_jammed"))
 		PlayHUDMotion("anm_idle_moving_jammed", true, nullptr, GetState());
 	else
@@ -1479,7 +1461,7 @@ void CFlamethrower::PlayAnimIdle()
 	//if (IsZoomed())
 		//PlayAnimAim();
 	/*else */if (!m_current_fuel_level && psWpnAnimsFlag.test(ANM_IDLE_EMPTY))
-		PlayHUDMotion("anm_idle_empty", TRUE, nullptr, GetState());
+		PlayHUDMotion("anm_idle_empty", TRUE, NULL, GetState());
 	else if (IsMisfire() && isHUDAnimationExist("anm_idle_jammed") && !TryPlayAnimIdle())
 		PlayHUDMotion("anm_idle_jammed", true, nullptr, GetState());
 	else

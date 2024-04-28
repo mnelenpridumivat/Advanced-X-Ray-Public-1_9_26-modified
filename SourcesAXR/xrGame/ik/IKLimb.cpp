@@ -117,7 +117,7 @@ void CIKLimb::Invalidate()
 	m_bones[1]				=BI_NONE											;	
 	m_bones[2]				=BI_NONE											;	
 	m_bones[3]				=BI_NONE											;
-	m_K						=nullptr													;
+	m_K						=0													;
 	m_collide				= false												;
 #ifdef	DEBUG
 		dbg_disabled		= false												;
@@ -362,7 +362,7 @@ void CIKLimb::Create( u16 id, IKinematicsAnimated* K, bool collide_ )
 		parse_bones_string(CK, CK->LL_UserData()->r_string( section, "bones" ), m_bones );
 		m_foot.Create( CK, section, m_bones );
 	} else
-		m_foot.Create( CK, nullptr, m_bones );
+		m_foot.Create( CK, 0, m_bones );
 	////////////////////////////////////////////////////////////////////
 	sv_state.set_limb	( this );
 	m_collide =collide_;
@@ -490,7 +490,7 @@ IC void get_blend_speed_limits(float& l,float& a, const SCalculateData& cd, cons
 }
 
 #ifdef DEBUG
-static Fmatrix* dm = nullptr;
+static Fmatrix* dm = 0;
 void	print_det()
 {
 	if(dm)
@@ -1053,7 +1053,7 @@ u16	CIKLimb::foot_matrix_predict ( Fmatrix& foot, Fmatrix& toe, float time, IKin
 	for(u32 i = 0; i<blends_count; ++i )
 	{
 		CBlend	&B = *K->LL_PartBlend( 0, i );
-		if( B.update( time, nullptr ) )
+		if( B.update( time, 0 ) )
 				B.blendAmount = 0;
 	}
 

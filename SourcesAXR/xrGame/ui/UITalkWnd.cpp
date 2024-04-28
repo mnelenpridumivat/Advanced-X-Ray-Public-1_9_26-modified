@@ -22,13 +22,13 @@
 
 CUITalkWnd::CUITalkWnd()
 {
-	m_pActor				= nullptr;
+	m_pActor				= NULL;
 
-	m_pOurInvOwner			= nullptr;
-	m_pOthersInvOwner		= nullptr;
+	m_pOurInvOwner			= NULL;
+	m_pOthersInvOwner		= NULL;
 
-	m_pOurDialogManager		= nullptr;
-	m_pOthersDialogManager	= nullptr;
+	m_pOurDialogManager		= NULL;
+	m_pOthersDialogManager	= NULL;
 
 	ToTopicMode				();
 
@@ -206,7 +206,7 @@ void CUITalkWnd::Update()
 		CGameObject* pOurGO = smart_cast<CGameObject*>(m_pOurInvOwner);
 		CGameObject* pOtherGO = smart_cast<CGameObject*>(m_pOthersInvOwner);
 	
-		if(nullptr ==pOurGO || nullptr ==pOtherGO )
+		if(	NULL==pOurGO || NULL==pOtherGO )
 			HideDialog();
 	}
 
@@ -251,19 +251,19 @@ void CUITalkWnd::Show(bool status)
 			if (m_pActor->IsTalking()) 
 				m_pActor->StopTalk();
 
-			m_pActor = nullptr;
+			m_pActor = NULL;
 		}
 	}
 }
 
 bool  CUITalkWnd::TopicMode			() 
 {
-	return nullptr == m_pCurrentDialog.get();
+	return NULL == m_pCurrentDialog.get();
 }
 
 void  CUITalkWnd::ToTopicMode		() 
 {
-	m_pCurrentDialog = DIALOG_SHARED_PTR((CPhraseDialog*)nullptr);
+	m_pCurrentDialog = DIALOG_SHARED_PTR((CPhraseDialog*)NULL);
 }
 
 void CUITalkWnd::AskQuestion()
@@ -420,7 +420,7 @@ void CUITalkWnd::PlaySnd(LPCSTR text)
 			Fvector P = pOtherGO->Position();
 			P.y			+= 1.8f;
 			m_sound.create( fn, st_Effect, sg_SourceType );
-			m_sound.play_at_pos( nullptr, P );
+			m_sound.play_at_pos( 0, P );
 		}
 	}
 }

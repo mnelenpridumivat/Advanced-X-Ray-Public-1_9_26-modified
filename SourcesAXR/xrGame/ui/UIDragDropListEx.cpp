@@ -6,13 +6,13 @@
 #include "UICursor.h"
 
 
-CUIDragItem* CUIDragDropListEx::m_drag_item = nullptr;
+CUIDragItem* CUIDragDropListEx::m_drag_item = NULL;
 
 void CUICell::Clear()
 {
 	m_bMainItem = false;
-	if(m_item)	m_item->SetOwnerList(nullptr);
-	m_item		= nullptr; 
+	if(m_item)	m_item->SetOwnerList(NULL);
+	m_item		= NULL; 
 }
 
 CUIDragDropListEx::CUIDragDropListEx()
@@ -21,7 +21,7 @@ CUIDragDropListEx::CUIDragDropListEx()
 	m_container					= xr_new<CUICellContainer>(this);
 	m_vScrollBar				= xr_new<CUIScrollBar>();
 	m_vScrollBar->SetAutoDelete	(true);
-	m_selected_item				= nullptr;
+	m_selected_item				= NULL;
 	m_bConditionProgBarVisible	= false;
 
 	SetCellSize					(Ivector2().set(50,50));
@@ -138,7 +138,7 @@ void CUIDragDropListEx::DestroyDragItem()
 	if(m_selected_item && m_drag_item && m_drag_item->ParentItem()==m_selected_item)
 	{
 		VERIFY(GetParent()->GetMouseCapturer()==m_drag_item);
-		GetParent()->SetCapture				(nullptr, false);
+		GetParent()->SetCapture				(NULL, false);
 
 		delete_data							(m_drag_item);
 	}
@@ -189,7 +189,7 @@ void CUIDragDropListEx::OnItemDrop(CUIWindow* w, void* pData)
 		CUICellItem* i					= old_owner->RemoveItem(itm, (old_owner==new_owner) );
 		while(i->ChildsCount())
 		{
-			CUICellItem* _chld				= i->PopChild(nullptr);
+			CUICellItem* _chld				= i->PopChild(NULL);
 			new_owner->SetItem				(_chld, old_owner->GetDragItemPosition());
 		}
 		new_owner->SetItem				(i,old_owner->GetDragItemPosition());
@@ -289,7 +289,7 @@ void CUIDragDropListEx::ClearAll(bool bDestroy)
 {
 	DestroyDragItem			();
 	m_container->ClearAll	(bDestroy);
-	m_selected_item			= nullptr;
+	m_selected_item			= NULL;
 	m_container->SetWndPos	(Fvector2().set(0,0));
 	ResetCellsCapacity		();
 }
@@ -334,11 +334,11 @@ void CUIDragDropListEx::Update()
 		GetAbsoluteRect(wndRect);
 		Fvector2 cp			= GetUICursor().GetCursorPosition();
 		if(wndRect.in(cp)){
-			if(nullptr ==m_drag_item->BackList())
+			if(NULL==m_drag_item->BackList())
 				m_drag_item->SetBackList(this);
 		}else
 			if( this==m_drag_item->BackList() )
-				m_drag_item->SetBackList(nullptr);
+				m_drag_item->SetBackList(NULL);
 	}
 }
 
@@ -469,7 +469,7 @@ bool CUIDragDropListEx::CanSetItem(CUICellItem* itm){
 CUICellItem* CUIDragDropListEx::RemoveItem(CUICellItem* itm, bool force_root)
 {
 	CUICellItem* i				= m_container->RemoveItem		(itm, force_root);
-	i->SetOwnerList				((CUIDragDropListEx*)nullptr);
+	i->SetOwnerList				((CUIDragDropListEx*)NULL);
 	return						i;
 }
 
@@ -573,7 +573,7 @@ bool CUICellContainer::AddSimilar(CUICellItem* itm)
 		itm->SetOwnerList		(m_pParentDragDropList);
 	}
 	
-	return (i!= nullptr);
+	return (i!=NULL);
 }
 
 CUICellItem* CUICellContainer::FindSimilar(CUICellItem* itm)
@@ -589,7 +589,7 @@ CUICellItem* CUICellContainer::FindSimilar(CUICellItem* itm)
 		if(i->EqualTo(itm))
 			return i;
 	}
-	return nullptr;
+	return NULL;
 }
 
 void CUICellContainer::PlaceItemAtPos(CUICellItem* itm, Ivector2& cell_pos)
@@ -646,7 +646,7 @@ CUICellItem* CUICellContainer::RemoveItem(CUICellItem* itm, bool force_root)
 
 	if(!force_root && itm->ChildsCount())
 	{
-		CUICellItem* iii	=	itm->PopChild(nullptr);
+		CUICellItem* iii	=	itm->PopChild(NULL);
 		R_ASSERT			(0==iii->ChildsCount());
 		return				iii;
 	}
@@ -666,7 +666,7 @@ CUICellItem* CUICellContainer::RemoveItem(CUICellItem* itm, bool force_root)
 			}
 	}
 
-	itm->SetOwnerList		(nullptr);
+	itm->SetOwnerList		(NULL);
 	DetachChild				(itm);
 	return					itm;
 }
@@ -859,7 +859,7 @@ void CUICellContainer::ClearAll(bool bDestroy)
 		
 		while( wc->ChildsCount() )
 		{
-			CUICellItem* ci		= wc->PopChild(nullptr);
+			CUICellItem* ci		= wc->PopChild(NULL);
 			R_ASSERT			(ci->ChildsCount()==0);
 
 			if(bDestroy)

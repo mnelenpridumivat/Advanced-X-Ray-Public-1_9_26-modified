@@ -235,7 +235,7 @@ struct attachable_hud_item
 
 	player_hud_motion_container		m_hand_motions;
 			
-			attachable_hud_item		(player_hud* pparent):m_parent(pparent),m_upd_firedeps_frame(static_cast<u32>(-1)),m_parent_hud_item(nullptr){}
+			attachable_hud_item		(player_hud* pparent):m_parent(pparent),m_upd_firedeps_frame(static_cast<u32>(-1)),m_parent_hud_item(NULL){}
 			~attachable_hud_item	();
 	void load						(const shared_str& sect_name);
 	void update						(bool bForce);
@@ -292,7 +292,7 @@ public:
 	attachable_hud_item* attached_item	(u16 item_idx)	{return m_attached_items[item_idx];};
 	void			detach_item_idx		(u16 idx);
 	void			detach_item			(CHudItem* item);
-	void			detach_all_items	(){m_attached_items[0]= nullptr; m_attached_items[1]= nullptr;};
+	void			detach_all_items	(){m_attached_items[0]=NULL; m_attached_items[1]=NULL;};
 	bool			allow_script_anim	();
 
 	void			calc_transform		(u16 attach_slot_idx, const Fmatrix& offset, Fmatrix& result);

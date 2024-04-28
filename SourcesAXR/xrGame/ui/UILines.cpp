@@ -16,7 +16,7 @@
 
 CUILines::CUILines()
 {
-	m_pFont							= nullptr;
+	m_pFont							= NULL;
 	m_eTextAlign					= CGameFont::alLeft;
 	m_eVTextAlign					= valTop;
 	m_dwTextColor					= 0xffffffff;
@@ -113,12 +113,12 @@ void CUILines::ParseText(bool force)
 	if (!force && (!uFlags.test(flComplexMode) || !uFlags.test(flNeedReparse)) )
 		return;
 
-	if(nullptr == m_pFont)
+	if(NULL == m_pFont)
 		return;
 
 	Reset		();
 
-	CUILine* line = nullptr;
+	CUILine* line = NULL;
 	if (uFlags.test(flColoringMode))
 		line = ParseTextToColoredLine(m_text.c_str());
 	else
@@ -140,14 +140,14 @@ void CUILines::ParseText(bool force)
 			VERIFY( vsz );
 			for ( int i = 0 ; i < vsz ; i++ ) 
 			{
-				char *pszTemp = nullptr;
+				char *pszTemp = NULL;
 				const u32 tcolor = line->m_subLines[i].m_color;
-				char szTempLine[ MAX_MB_CHARS ] , *pszSearch = nullptr;
+				char szTempLine[ MAX_MB_CHARS ] , *pszSearch = NULL;
 				size_t llen = xr_strlen( line->m_subLines[i].m_text.c_str() );
 				VERIFY( llen < MAX_MB_CHARS );
 				xr_strcpy( szTempLine , line->m_subLines[i].m_text.c_str() );
 				pszSearch = szTempLine;
-				while ( ( pszTemp = strstr( pszSearch , "\\n" ) ) != nullptr) 
+				while ( ( pszTemp = strstr( pszSearch , "\\n" ) ) != NULL ) 
 				{
 					bNewLines = TRUE;
 					*pszTemp = '\0';

@@ -57,7 +57,7 @@ xr_token motion_dirs[]={
 		{ "back",	type_motion::back 	},
 		{ "left",	type_motion::left 	},
 		{ "right",	type_motion::right	},
-		{ nullptr,						0	}
+		{ 0,						0	}
 	};
 
 void type_motion::set_motion( IKinematicsAnimated* k, u16 id_motion, LPCSTR dir_anim )
@@ -75,7 +75,7 @@ void type_motion::set_motion( IKinematicsAnimated* k, u16 id_motion, LPCSTR dir_
 
 type_motion* type_motion::setup( IKinematicsAnimated* k, CInifile const * ini, LPCSTR section, LPCSTR type )
 {
-	anims.resize( dirs_number, nullptr );
+	anims.resize( dirs_number, 0 );
 	if( ini->line_exist( section ,type ) )
 	{
 		LPCSTR line = ini->r_string( section, type );

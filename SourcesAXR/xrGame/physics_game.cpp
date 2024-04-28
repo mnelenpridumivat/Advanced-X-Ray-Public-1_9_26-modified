@@ -164,7 +164,7 @@ static void play_object( dxGeomUserData* data, SGameMtlPair* mtl_pair, const dCo
 						VERIFY( mtl_pair );
 						VERIFY( c );
 						
-						CPHSoundPlayer* sp= nullptr;
+						CPHSoundPlayer* sp=NULL;
 #ifdef	DEBUG
 						__try{
 							sp=data->ph_ref_object->ObjectPhSoundPlayer();
@@ -250,7 +250,7 @@ void  TContactShotMark(CDB::TRI* T,dContactGeom* c)
 	//dBodyGetMass(b,&m);
 	//dBodyGetPointVel(b,c->pos[0],c->pos[1],c->pos[2],vel);
 	//float vel_cret=_abs(dDOT(vel,c->normal))* _sqrt(m.mass);
-	dxGeomUserData* data	=nullptr;
+	dxGeomUserData* data	=0;
 	float vel_cret			=0;
 	bool b_invert_normal	=false;
 	if(!ContactShotMarkGetEffectPars( c, data, vel_cret, b_invert_normal ))

@@ -30,7 +30,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 			Msg			("- SERVER: Entity [%s] incompatible with current game type.",*E->s_name);
 #endif // #ifndef MASTER_GOLD
 			F_entity_Destroy(E);
-			return nullptr;
+			return			NULL;
 		}
 
 //		E->m_bALifeControl = false;
@@ -46,19 +46,19 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 //		E->m_bALifeControl = true;
 	}
 
-	CSE_Abstract			*e_parent = nullptr;
+	CSE_Abstract			*e_parent = 0;
 	if (E->ID_Parent != 0xffff) {
 		e_parent			= ID_to_entity(E->ID_Parent);
 		if (!e_parent) {
 			R_ASSERT		(!tpExistedEntity);
 //			VERIFY3			(smart_cast<CSE_ALifeItemBolt*>(E) || smart_cast<CSE_ALifeItemGrenade*>(E),*E->s_name,E->name_replace());
 			F_entity_Destroy(E);
-			return nullptr;
+			return			NULL;
 		}
 	}
 
 	// check if we can assign entity to some client
-	if (nullptr==CL)
+	if (0==CL)
 	{
 		CL	= SelectBestClientToMigrateTo	(E);
 	}
@@ -71,7 +71,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 		Phantom->Spawn_Read		(P);
 		Phantom->ID				=	PerformIDgen	(0xffff);
 		Phantom->ID_Phantom		=	Phantom->ID;						// Self-linked to avoid phantom-breeding
-		Phantom->owner			= nullptr;
+		Phantom->owner			=	NULL;
 		entities.insert			(std::make_pair(Phantom->ID,Phantom));
 
 		Phantom->s_flags.set	(M_SPAWN_OBJECT_PHANTOM,TRUE);

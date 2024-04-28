@@ -65,7 +65,7 @@ void CStalkerActionSolveZonePuzzle::initialize	()
 		m_stop_weapon_handling_time				+= ::Random32.random(30000) + 30000;
 
 //	object().movement().set_desired_position	(0);
-	object().movement().set_desired_direction	(nullptr);
+	object().movement().set_desired_direction	(0);
 	object().movement().set_path_type			(MovementManager::ePathTypeGamePath);
 	object().movement().set_detail_path_type	(DetailPathManager::eDetailPathTypeSmooth);
 	object().movement().set_body_state			(eBodyStateStand);
@@ -188,7 +188,7 @@ void CStalkerActionSmartTerrain::initialize				()
 {
 	inherited::initialize							();
 //	object().movement().set_desired_position		(0);
-	object().movement().set_desired_direction		(nullptr);
+	object().movement().set_desired_direction		(0);
 	object().movement().game_selector().set_selection_type		(eSelectionTypeMask);
 	object().movement().set_detail_path_type		(DetailPathManager::eDetailPathTypeSmooth);
 	object().movement().set_body_state				(eBodyStateStand);

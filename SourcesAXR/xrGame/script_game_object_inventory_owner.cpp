@@ -556,12 +556,12 @@ LPCSTR CScriptGameObject::ProfileName			()
 	CInventoryOwner* pInventoryOwner = smart_cast<CInventoryOwner*>(&object());
 	if (!pInventoryOwner) {
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"ProfileName available only for InventoryOwner");
-		return nullptr;
+		return NULL;
 	}
 	
 	shared_str profile_id =  pInventoryOwner->CharacterInfo().Profile();
 	if(!profile_id || !profile_id.size() )
-		return nullptr;
+		return NULL;
 	else
 		return *profile_id;
 }
@@ -573,7 +573,7 @@ LPCSTR CScriptGameObject::CharacterName			()
 
 	if (!pInventoryOwner) {
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CharacterName available only for InventoryOwner");
-		return nullptr;
+		return NULL;
 	}
 	return pInventoryOwner->Name();
 }
@@ -584,7 +584,7 @@ LPCSTR CScriptGameObject::CharacterIcon()
 
 	if (!pInventoryOwner) {
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CharacterIconName available only for InventoryOwner");
-		return nullptr;
+		return NULL;
 	}
 	return pInventoryOwner->IconName();
 }
@@ -654,7 +654,7 @@ LPCSTR CScriptGameObject::CharacterCommunity	()
 
 	if (!pInventoryOwner) {
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CharacterCommunity available only for InventoryOwner");
-		return nullptr;
+		return NULL;
 	}
 	return *pInventoryOwner->CharacterInfo().Community().id();
 }
@@ -741,7 +741,7 @@ LPCSTR CScriptGameObject::sound_voice_prefix () const
 	CInventoryOwner* pInventoryOwner = smart_cast<CInventoryOwner*>(&object());
 	if (!pInventoryOwner) {
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"sound_voice_prefix available only for InventoryOwner");
-		return nullptr;
+		return NULL;
 	}
 
 	return pInventoryOwner->SpecificCharacter().sound_voice_prefix();
@@ -753,7 +753,7 @@ ETaskState CScriptGameObject::GetGameTaskState	(LPCSTR task_id)
 	shared_str shared_name				= task_id;
 	CGameTask* t						= Level().GameTaskManager().HasGameTask(shared_name, true);
 	
-	if(nullptr ==t) 
+	if(NULL==t) 
 		return eTaskStateDummy;
 
 	return t->GetTaskState();
@@ -964,18 +964,18 @@ CScriptGameObject* CScriptGameObject::ItemOnBelt(u32 item_id) const
 	{
 		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError,
 		                                "CInventoryOwner : cannot access class member item_on_belt!");
-		return (nullptr);
+		return (0);
 	}
 
 	TIItemContainer* belt = &(inventory_owner->inventory().m_belt);
 	if (belt->size() < item_id)
 	{
 		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "item_on_belt: item id outside belt!");
-		return (nullptr);
+		return (0);
 	}
 
 	CInventoryItem* result = belt->at(item_id);
-	return (result ? result->object().lua_game_object() : nullptr);
+	return (result ? result->object().lua_game_object() : 0);
 }
 
 void CScriptGameObject::ItemAllowTrade(CScriptGameObject* pItem)
@@ -1422,16 +1422,16 @@ CScriptGameObject *CScriptGameObject::active_detector	() const
 	CInventoryOwner	*inventory_owner = smart_cast<CInventoryOwner*>(&object());
 	if (!inventory_owner) {
 		ai().script_engine().script_log			(ScriptStorage::eLuaMessageTypeError,"CInventoryOwner : cannot access class member active_detector!");
-		return		(nullptr);
+		return		(0);
 	}
 
 	CInventoryItem	*result = inventory_owner->inventory().ItemFromSlot(DETECTOR_SLOT);
 	if (result) {
 		CCustomDetector *detector = smart_cast<CCustomDetector*>(result);
 		VERIFY(detector);
-		return			(detector->IsWorking() ? result->object().lua_game_object() : nullptr);
+		return			(detector->IsWorking() ? result->object().lua_game_object() : 0);
 	}
-	return (nullptr);
+	return (0);
 }
 
 
@@ -1441,11 +1441,11 @@ CScriptGameObject *CScriptGameObject::item_in_slot	(u32 slot_id) const
 	CInventoryOwner	*inventory_owner = smart_cast<CInventoryOwner*>(&object());
 	if (!inventory_owner) {
 		ai().script_engine().script_log			(ScriptStorage::eLuaMessageTypeError,"CInventoryOwner : cannot access class member item_in_slot!");
-		return		(nullptr);
+		return		(0);
 	}
 
 	CInventoryItem	*result = inventory_owner->inventory().ItemFromSlot(static_cast<u16>(slot_id));
-	return			(result ? result->object().lua_game_object() : nullptr);
+	return			(result ? result->object().lua_game_object() : 0);
 }
 
 void CScriptGameObject::GiveTaskToActor(CGameTask* t, u32 dt, bool bCheckExisting, u32 t_timer)
@@ -1694,7 +1694,7 @@ LPCSTR CScriptGameObject::aim_bone_id				() const
 	CAI_Stalker							*stalker = smart_cast<CAI_Stalker*>(&object());
 	if (!stalker) {
 		ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"CAI_Stalker : cannot access class member aim_bone_id!");
-		return							(nullptr);
+		return							(false);
 	}
 
 	return								(stalker->aim_bone_id().c_str());
@@ -1727,7 +1727,7 @@ CCoverPoint const* CScriptGameObject::find_best_cover			(Fvector position_to_cov
 	CAI_Stalker							*stalker = smart_cast<CAI_Stalker*>(&object());
 	if (!stalker) {
 		ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError, "CAI_Stalker : cannot access class member find_best_cover!");
-		return							(nullptr);
+		return							(0);
 	}
 
 	return								(stalker->find_best_cover(position_to_cover_from));
@@ -1834,7 +1834,7 @@ void CScriptGameObject::unregister_door							()
 	VERIFY2								( m_door, make_string("object %s is not a door", m_game_object->cName().c_str()) );
 //	Msg									( "UNregistering door 0x%-08x", m_door );
 	ai().doors().unregister_door		( m_door );
-	m_door								= nullptr;
+	m_door								= 0;
 }
 
 void CScriptGameObject::on_door_is_open							()

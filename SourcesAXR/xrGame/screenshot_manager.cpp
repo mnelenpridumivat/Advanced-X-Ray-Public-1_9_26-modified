@@ -51,14 +51,14 @@ screenshot_manager::screenshot_manager()
 {
 	m_state = 0;
 	
-	m_jpeg_buffer					= nullptr;
+	m_jpeg_buffer					= NULL;
 	m_jpeg_buffer_capacity			= 0;
 
-	m_buffer_for_compress			= nullptr;
+	m_buffer_for_compress			= NULL;
 	m_buffer_for_compress_capacity	= 0;
 
-	m_make_start_event	= nullptr;
-	m_make_done_event	= nullptr;
+	m_make_start_event	= NULL;
+	m_make_done_event	= NULL;
 }
 screenshot_manager::~screenshot_manager()
 {
@@ -289,8 +289,8 @@ void screenshot_manager::process_screenshot(bool singlecore)
 		SetEvent(m_make_start_event);
 		return;
 	}
-	m_make_start_event	= CreateEvent(nullptr, FALSE, TRUE, nullptr);
-	m_make_done_event	= CreateEvent(nullptr, FALSE, FALSE, nullptr);
+	m_make_start_event	= CreateEvent(NULL, FALSE, TRUE, NULL);
+	m_make_done_event	= CreateEvent(NULL, FALSE, FALSE, NULL);
 	std::thread t		(&screenshot_manager::screenshot_maker_thread, this);
 }
 void	__stdcall	screenshot_manager::jpeg_compress_cb(long progress)

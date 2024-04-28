@@ -20,10 +20,10 @@
 		typedef cs::lua_studio::create_world_function_type			create_world_function_type;
 		typedef cs::lua_studio::destroy_world_function_type			destroy_world_function_type;
 
-		static create_world_function_type	s_create_world				= nullptr;
-		static destroy_world_function_type	s_destroy_world				= nullptr;
-		static HMODULE						s_script_debugger_handle	= nullptr;
-		static LogCallback					s_old_log_callback			= nullptr;
+		static create_world_function_type	s_create_world				= 0;
+		static destroy_world_function_type	s_destroy_world				= 0;
+		static HMODULE						s_script_debugger_handle	= 0;
+		static LogCallback					s_old_log_callback			= 0;
 #	endif // #ifndef USE_LUA_STUDIO
 #endif
 
@@ -50,8 +50,8 @@ static void log_callback			(LPCSTR message)
 
 static void initialize_lua_studio	( lua_State* state, cs::lua_studio::world*& world, lua_studio_engine*& engine)
 {
-	engine							= nullptr;
-	world							= nullptr;
+	engine							= 0;
+	world							= 0;
 
 	u32 const old_error_mode		= SetErrorMode(SEM_FAILCRITICALERRORS);
 	s_script_debugger_handle		= LoadLibrary(CS_LUA_STUDIO_BACKEND_FILE_NAME);
@@ -95,13 +95,13 @@ static void finalize_lua_studio		( lua_State* state, cs::lua_studio::world*& wor
 
 	VERIFY							(world);
 	s_destroy_world					(world);
-	world							= nullptr;
+	world							= 0;
 
 	VERIFY							(engine);
 	xr_delete						(engine);
 
 	FreeLibrary						(s_script_debugger_handle);
-	s_script_debugger_handle		= nullptr;
+	s_script_debugger_handle		= 0;
 
 	SetLogCB						(s_old_log_callback);
 }
@@ -135,7 +135,7 @@ CScriptEngine::CScriptEngine			()
 		m_scriptDebugger	= NULL;
 		restartDebugger		();	
 #	else // #ifndef USE_LUA_STUDIO
-		m_lua_studio_world	= nullptr;
+		m_lua_studio_world	= 0;
 #	endif // #ifndef USE_LUA_STUDIO
 #endif
 }

@@ -398,34 +398,6 @@ void CParticleGroup::SItem::OnFrame(u32 u_dt, const CPGDef::SEffect& def, Fbox& 
     }
 //	Msg("C: %d CS: %d",_children.size(),_children_stopped.size());
 }
-
-void CParticleGroup::SItem::Manual_UpdateSize(const Fvector& NewSize)
-{
-    IParticleCustom* E = smart_cast<IParticleCustom*>(_effect);
-    if (E)
-    {
-        E->Manual_UpdateSize(NewSize);
-    }
-}
-
-void CParticleGroup::SItem::Manual_UpdateAlpha(float NewAlpha)
-{
-    IParticleCustom* E = smart_cast<IParticleCustom*>(_effect);
-    if (E)
-    {
-        E->Manual_UpdateAlpha(NewAlpha);
-    }
-}
-
-void CParticleGroup::SItem::Manual_AddAlpha(float DeltaAlpha)
-{
-    IParticleCustom* E = smart_cast<IParticleCustom*>(_effect);
-    if (E)
-    {
-        E->Manual_AddAlpha(DeltaAlpha);
-    }
-}
-
 void CParticleGroup::SItem::OnDeviceCreate()
 {
 	VisualVec 		visuals;
@@ -458,27 +430,6 @@ CParticleGroup::CParticleGroup()
 {
 	m_RT_Flags.zero			();
 	m_InitialPosition.set	(0,0,0);
-}
-
-void CParticleGroup::Manual_UpdateSize(const Fvector& NewSize)
-{
-    for (SItemVecIt i_it = items.begin(); i_it != items.end(); i_it++) {
-        i_it->Manual_UpdateSize(NewSize);
-    }
-}
-
-void CParticleGroup::Manual_UpdateAlpha(float NewAlpha)
-{
-    for (SItemVecIt i_it = items.begin(); i_it != items.end(); i_it++) {
-        i_it->Manual_UpdateAlpha(NewAlpha);
-    }
-}
-
-void CParticleGroup::Manual_AddAlpha(float DeltaAlpha)
-{
-    for (SItemVecIt i_it = items.begin(); i_it != items.end(); i_it++) {
-        i_it->Manual_AddAlpha(DeltaAlpha);
-    }
 }
 
 CParticleGroup::~CParticleGroup()

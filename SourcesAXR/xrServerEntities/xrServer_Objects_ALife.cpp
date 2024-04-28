@@ -373,7 +373,7 @@ CSE_ALifeObject::CSE_ALifeObject			(LPCSTR caSection) : CSE_Abstract(caSection)
 	m_story_id					= INVALID_STORY_ID;
 	m_spawn_story_id			= INVALID_SPAWN_STORY_ID;
 #ifdef XRGAME_EXPORTS
-	m_alife_simulator			= nullptr;
+	m_alife_simulator			= 0;
 #endif
 #ifdef XRSE_FACTORY_EXPORTS
     fp_data.inc					();
@@ -873,7 +873,7 @@ xr_token defaul_retrictor_types[]={
 	{ "NONE default restrictor",	RestrictionSpace::eDefaultRestrictorTypeNone},
 	{ "OUT default restrictor",		RestrictionSpace::eDefaultRestrictorTypeOut	},
 	{ "IN default restrictor",		RestrictionSpace::eDefaultRestrictorTypeIn	},
-	{ nullptr,							0}
+	{ 0,							0}
 };
 
 #ifndef XRGAME_EXPORTS
@@ -1268,7 +1268,7 @@ xr_token po_types[]={
 	{ "Fixed chain",	epotFixedChain	},
 	{ "Free chain",		epotFreeChain	},
 	{ "Skeleton",		epotSkeleton	},
-	{ nullptr,				0				}
+	{ 0,				0				}
 };
 
 #ifndef XRGAME_EXPORTS
@@ -1622,8 +1622,8 @@ bool CSE_ALifeObjectProjector::used_ai_locations() const
 
 CSE_ALifeSchedulable::CSE_ALifeSchedulable	(LPCSTR caSection)
 {
-	m_tpCurrentBestWeapon		= nullptr;
-	m_tpBestDetector			= nullptr;
+	m_tpCurrentBestWeapon		= 0;
+	m_tpBestDetector			= 0;
 	m_schedule_counter			= static_cast<u64>(-1);
 }
 

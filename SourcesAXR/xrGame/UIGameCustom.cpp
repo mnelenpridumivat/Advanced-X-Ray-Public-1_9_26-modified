@@ -47,7 +47,7 @@ struct predicate_find_stat
 };
 
 CUIGameCustom::CUIGameCustom()
-:m_msgs_xml(nullptr),m_ActorMenu(nullptr),m_PdaMenu(nullptr),m_window(nullptr),UIMainIngameWnd(nullptr),m_pMessagesWnd(nullptr)
+:m_msgs_xml(NULL),m_ActorMenu(NULL),m_PdaMenu(NULL),m_window(NULL),UIMainIngameWnd(NULL),m_pMessagesWnd(NULL)
 {
 	ShowGameIndicators		(true);
 	ShowCrosshair			(true);
@@ -196,7 +196,7 @@ SDrawStaticStruct* CUIGameCustom::GetCustomStatic(LPCSTR id)
 	if(it!=m_custom_statics.end())
 		return (*it);
 
-	return nullptr;
+	return NULL;
 }
 
 void CUIGameCustom::RemoveCustomStatic(LPCSTR id)
@@ -541,7 +541,7 @@ void CUIGameCustom::UpdateZones()
 			zone_info.snd_time = 0.0f;
 
 			if (!GameConstants::GetDosimeterSlotEnabled())
-				HUD_SOUND_ITEM::PlaySound(zone_type->detect_snds, Fvector().set(0, 0, 0), nullptr, true, false);
+				HUD_SOUND_ITEM::PlaySound(zone_type->detect_snds, Fvector().set(0, 0, 0), NULL, true, false);
 		}
 		else
 		{
@@ -562,7 +562,7 @@ float CUIGameCustom::get_zone_cur_power(ALife::EHitType hit_type)
 
 SDrawStaticStruct::SDrawStaticStruct	()
 {
-	m_static	= nullptr;
+	m_static	= NULL;
 	m_endTime	= -1.0f;	
 }
 
@@ -579,7 +579,7 @@ bool SDrawStaticStruct::IsActual() const
 
 void SDrawStaticStruct::SetText(LPCSTR text)
 {
-	m_static->Show(text!= nullptr);
+	m_static->Show(text!=NULL);
 	if(text)
 	{
 		m_static->TextItemControl()->SetTextST(text);
@@ -736,7 +736,7 @@ SGameTypeMaps* CMapListHelper::GetMapListInt(const shared_str& game_type)
 		if(game_type==it->m_game_type_name )
 			return &(*it);
 	}
-	return nullptr;
+	return NULL;
 }
 
 const SGameTypeMaps& CMapListHelper::GetMapListFor(const EGameIDs game_id)

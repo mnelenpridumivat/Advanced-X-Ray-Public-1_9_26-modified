@@ -41,7 +41,7 @@ CUIWindow* find_child_window(CUIWindow* parent, const shared_str& _name)
 	CUIWindow::WINDOW_LIST_it _I	= wl.begin();
 	CUIWindow::WINDOW_LIST_it _E	= wl.end();
 	for(;_I!=_E;++_I) if((*_I)->WindowName()==_name) return (*_I);
-	return nullptr;
+	return NULL;
 }
 
 void CUISequenceSimpleItem::Load(CUIXml* xml, int idx)
@@ -69,11 +69,11 @@ void CUISequenceSimpleItem::Load(CUIXml* xml, int idx)
 	LPCSTR skip_scene		= xml->Read				("skip_scene_rendering", 0, "false");
 	m_flags.set										(etiSkipSceneRendering,(0 == _stricmp(skip_scene, "true") || 0 == _stricmp(skip_scene, "1")));
 
-	str						= xml->Read				("guard_key",0, nullptr);
+	str						= xml->Read				("guard_key",0,NULL		);
 	m_continue_dik_guard	= -1;
 	if (str && !_stricmp(str,"any")){
 		m_continue_dik_guard = 9999;
-		str					= nullptr;
+		str					= NULL;
 	}
 	if(str){
 		EGameActions cmd		= action_name_to_id	(str);
@@ -85,7 +85,7 @@ void CUISequenceSimpleItem::Load(CUIXml* xml, int idx)
 	LPCSTR str_grab_input			= xml->Read("grab_input",0,"on");
 	m_flags.set						(etiGrabInput, (0==_stricmp(str_grab_input, "on")||0==_stricmp(str_grab_input, "1")) );
 	
-	int actions_count				= xml->GetNodesNum	(nullptr,0,"action");
+	int actions_count				= xml->GetNodesNum	(0,0,"action");
 	m_actions.resize				(actions_count);
 	for(int idx=0; idx<actions_count; ++idx)
 	{
@@ -244,7 +244,7 @@ void CUISequenceSimpleItem::Start()
 
 	m_owner->MainWnd()->AttachChild	(m_UIWindow);
 
-	if (m_sound._handle())		m_sound.play(nullptr, sm_2D);
+	if (m_sound._handle())		m_sound.play(NULL, sm_2D);
 
 	if (g_pGameLevel)
 	{

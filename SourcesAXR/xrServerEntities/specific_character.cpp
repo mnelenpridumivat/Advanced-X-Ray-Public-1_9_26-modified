@@ -15,13 +15,13 @@ namespace fs = std::experimental::filesystem;
 SSpecificCharacterData::SSpecificCharacterData()
 {
 	m_sGameName.clear		();
-	m_sBioText				= nullptr;
+	m_sBioText				= NULL;
 	m_sVisual.clear			();
 	m_sSupplySpawn.clear	();
 	m_sNpcConfigSect.clear	();
 
 
-	m_StartDialog			= nullptr;
+	m_StartDialog			= NULL;
 	m_ActorDialogs.clear	(); 
 
 	m_Rank					= NO_RANK;
@@ -46,7 +46,7 @@ SSpecificCharacterData::~SSpecificCharacterData()
 
 CSpecificCharacter::CSpecificCharacter()
 {
-	m_OwnId = nullptr;
+	m_OwnId = NULL;
 }
 
 
@@ -68,7 +68,7 @@ void CSpecificCharacter::Load(shared_str id)
 {
 	R_ASSERT(id.size());
 	m_OwnId = id;
-	inherited_shared::load_shared(m_OwnId, nullptr);
+	inherited_shared::load_shared(m_OwnId, NULL);
 }
 
 
@@ -109,13 +109,13 @@ void CSpecificCharacter::load_shared	(LPCSTR)
 	
 #ifdef  XRGAME_EXPORTS
 
-	LPCSTR start_dialog = pXML->Read("start_dialog", 0, nullptr);
+	LPCSTR start_dialog = pXML->Read("start_dialog", 0, NULL);
 	if(start_dialog)
 	{
 		data()->m_StartDialog	= start_dialog;
 	}
 	else
-		data()->m_StartDialog	= nullptr;
+		data()->m_StartDialog	= NULL;
 
 	int dialogs_num = pXML->GetNodesNum(pXML->GetLocalRoot(), "actor_dialog");
 	data()->m_ActorDialogs.clear();
@@ -185,7 +185,7 @@ void CSpecificCharacter::load_shared	(LPCSTR)
 
 #ifdef  XRGAME_EXPORTS
 
-	LPCSTR team = pXML->Read("community", 0, nullptr);
+	LPCSTR team = pXML->Read("community", 0, NULL);
 	R_ASSERT3(team != NULL, "'community' field not fulfiled for specific character", *m_OwnId);
 	
 	char* buf_str = xr_strdup(team);

@@ -6,7 +6,7 @@
 
 #include "basemonster/base_monster.h"
 
-CMonsterSquad::CMonsterSquad() : leader(nullptr), m_home_danger_end_tick(0), m_home_danger_mode_time(8000)
+CMonsterSquad::CMonsterSquad() : leader(0), m_home_danger_end_tick(0), m_home_danger_mode_time(8000)
 {
 	m_locked_covers.reserve	(20);
 	m_locked_corpses.reserve(10);
@@ -45,7 +45,7 @@ void CMonsterSquad::RemoveMember(CEntity *pE)
 
 	// если удаляемый елемент является лидером - переназначить лидера
 	if (leader == pE)  {
-		if (m_goals.empty()) leader = nullptr;
+		if (m_goals.empty()) leader = 0;
 		else leader = m_goals.begin()->first;
 	}
 
@@ -166,7 +166,7 @@ void CMonsterSquad::remove_links(CObject *O)
 	for (MEMBER_GOAL_MAP_IT it_goal = m_goals.begin(); it_goal != m_goals.end(); ++it_goal) {
 		SMemberGoal goal = it_goal->second;
 		if (goal.entity == O) {
-			it_goal->second.entity	= nullptr;
+			it_goal->second.entity	= 0;
 			it_goal->second.type	= MG_None;
 		}
 	}
@@ -175,7 +175,7 @@ void CMonsterSquad::remove_links(CObject *O)
 	for (MEMBER_COMMAND_MAP_IT it = m_commands.begin(); it != m_commands.end(); it++) {
 		SSquadCommand com = it->second;
 		if (com.entity == O) {
-			it->second.entity	= nullptr;
+			it->second.entity	= 0;
 			it->second.type		= SC_NONE;
 		}
 	}
@@ -218,7 +218,7 @@ u8 CMonsterSquad::get_count(const CEntity *object, float radius)
 
 	for (MEMBER_GOAL_MAP_IT it_goal = m_goals.begin(); it_goal != m_goals.end(); ++it_goal) {
 		SMemberGoal goal = it_goal->second;
-		if ((goal.entity != nullptr) && (goal.entity != object) && (goal.entity->g_Alive())) {
+		if ((goal.entity != 0) && (goal.entity != object) && (goal.entity->g_Alive())) {
 			if (goal.entity->Position().distance_to(object->Position()) < radius) count++;
 		}
 	}
@@ -259,7 +259,7 @@ squad_grouping_behaviour::squad_grouping_behaviour (CEntity* self,
 										            Fvector  cohesion_factor,
 				                                    Fvector  separate_factor,
 										            float    max_separate_range) : 
-                                                    self(self), squad(nullptr),
+                                                    self(self), squad(NULL),
 									                steering_behaviour::grouping::params
 									                (cohesion_factor, separate_factor, max_separate_range)
 {

@@ -55,17 +55,17 @@ public:
 	const IPhysicsShell			*physics_shell				()const override;
 	IPhysicsShell			*physics_shell				() override;
 	const IPhysicsElement		*physics_character			()const override;
-	virtual CPHDestroyable				*ph_destroyable				()							{return nullptr;}
-	virtual ICollisionDamageReceiver	*PHCollisionDamageReceiver	()							{return nullptr;}
-	virtual CPHSkeleton					*PHSkeleton					()							{return nullptr;}
+	virtual CPHDestroyable				*ph_destroyable				()							{return NULL;}
+	virtual ICollisionDamageReceiver	*PHCollisionDamageReceiver	()							{return NULL;}
+	virtual CPHSkeleton					*PHSkeleton					()							{return NULL;}
 	CPhysicsShellHolder			*cast_physics_shell_holder	() override {return this;}
 	CParticlesPlayer			*cast_particles_player		() override {return this;}
-	virtual IDamageSource				*cast_IDamageSource			()							{return nullptr;}
-	virtual CPHSoundPlayer				*ph_sound_player			()  						{return nullptr;}
-	virtual	CCharacterPhysicsSupport	*character_physics_support	()							{return nullptr;}
-	virtual	const CCharacterPhysicsSupport	*character_physics_support	() const					{return nullptr;}
-	virtual	CIKLimbsController			*character_ik_controller	()							{return nullptr;}
-	virtual ICollisionHitCallback		*get_collision_hit_callback ()							{return nullptr;}
+	virtual IDamageSource				*cast_IDamageSource			()							{return NULL;}
+	virtual CPHSoundPlayer				*ph_sound_player			()  						{return NULL;}
+	virtual	CCharacterPhysicsSupport	*character_physics_support	()							{return NULL;}
+	virtual	const CCharacterPhysicsSupport	*character_physics_support	() const					{return NULL;}
+	virtual	CIKLimbsController			*character_ik_controller	()							{return NULL;}
+	virtual ICollisionHitCallback		*get_collision_hit_callback ()							{return NULL;}
 	virtual void						set_collision_hit_callback	(ICollisionHitCallback *cc)	{;}
 	void			_BCL			enable_notificate			() override {;}
 public:

@@ -96,8 +96,8 @@ void	animation_movement_controller::	deinitialize					()
 	VERIFY( B.callback() == RootBoneCallback );
 	VERIFY( B.callback_param() == static_cast<void*>(this) );
 	B.reset_callback( );
-	m_pKinematicsA->SetBlendDestroyCallback( nullptr );
-	m_control_blend =  nullptr ;
+	m_pKinematicsA->SetBlendDestroyCallback( 0 );
+	m_control_blend =  0 ;
 
 #ifdef	DEBUG
 	if( dbg_draw_animation_movement_controller )
@@ -185,7 +185,7 @@ static void get_animation_root_position( Fmatrix &pos, IKinematics* K, IKinemati
 	KA->LL_BuldBoneMatrixDequatize( &K->LL_GetData( 0 ), static_cast<u8>(1 << 0), keys );
 	
 //find
-	CKey *key = nullptr;
+	CKey *key = 0;
 	for( int i = 0; i < keys.chanel_blend_conts[0]; ++i )
 	{
 		if ( keys.blends[0][i] == control_blend )

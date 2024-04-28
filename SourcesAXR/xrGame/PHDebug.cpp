@@ -30,7 +30,7 @@ bool		draw_frame=0;
 
 //LPCSTR	dbg_trace_object_name					=NULL;
 string64 s_dbg_trace_obj_name					="none";
-CObject	 *trace_object							= nullptr;
+CObject	 *trace_object							= NULL;
 u32	 	dbg_bodies_num							=0;
 u32	 	dbg_joints_num							=0;
 u32	 	dbg_islands_num							=0;
@@ -649,7 +649,7 @@ void DBG_DrawStatAfterFrameStep()
 
 CFunctionGraph::CFunctionGraph()
 {
-	m_stat_graph= nullptr;
+	m_stat_graph=NULL;
 	m_function.clear();
 }
 CFunctionGraph::~CFunctionGraph()
@@ -829,7 +829,7 @@ static void DBG_DrawTarckObj()
 {
 	if(!ph_dbg_draw_mask1.test(ph_m1_DbgTrackObject))
 	{
-		trace_object = nullptr;
+		trace_object = 0;
 		return;
 	}
 	DBG_TextOutSet		(450,150);
@@ -973,7 +973,7 @@ public:
 void DBG_PH_NetRelcase( CObject* obj )
 {
 	if( trace_object == obj )
-		trace_object = nullptr;
+		trace_object = NULL;
 }
 
 bool is_trace_obj( CPHObject *obj )
