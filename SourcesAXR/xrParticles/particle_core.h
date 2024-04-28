@@ -1,4 +1,6 @@
-#pragma once
+//---------------------------------------------------------------------------
+#ifndef particle_coreH
+#define particle_coreH
 
 #define SQRT2PI 2.506628274631000502415765284811045253006f
 #define ONEOVERSQRT2PI (1.f/SQRT2PI)
@@ -15,11 +17,11 @@ namespace PAPI{
 		float 		radius1Sqr;		// Used for fast Within test of spheres,
 		float 		radius2Sqr;		// and for mag. of u and v vectors for plane.
 
-		virtual BOOL 		Within(const pVector&) const;
-		virtual void 		Generate		(pVector &) const;
+		BOOL 		Within			(const pVector &) const;
+		void 		Generate		(pVector &) const;
 		// transformation
-		virtual void 		transform		(const pDomain& domain, const Fmatrix& m);
-		virtual void 		transform_dir	(const pDomain& domain, const Fmatrix& m);
+		void 		transform		(const pDomain& domain, const Fmatrix& m);
+		void 		transform_dir	(const pDomain& domain, const Fmatrix& m);
 		// This constructor is used when default constructing a
 		// ParticleAction that has a pDomain.
 		IC 			pDomain			(){}
@@ -33,4 +35,6 @@ namespace PAPI{
 	// misc    
 	float 			NRand			(float sigma = 1.0f);
 };
+//---------------------------------------------------------------------------
+#endif
  

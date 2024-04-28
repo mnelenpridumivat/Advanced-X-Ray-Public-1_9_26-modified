@@ -41,7 +41,7 @@ BOOL CFlamethrowerTraceCollision::test_callback(const collide::ray_defs& rd, COb
 	return true;
 }
 
-void CFlamethrowerTraceCollision::UpdateParticles(float DeltaTime)
+void CFlamethrowerTraceCollision::UpdateParticles()
 {
 	if (!m_particles)		return;
 
@@ -54,21 +54,15 @@ void CFlamethrowerTraceCollision::UpdateParticles(float DeltaTime)
 	m_particles->SetXFORM(particles_pos);
 
 	m_particles->Manual_UpdateSize(GetCurrentRadius()*m_RadiusCollisionCoeff);
-	//float NewAlpha;
+	float NewAlpha;
 	if(IsCollided())
 	{
-		//NewAlpha = (m_LifeTimeCollidedMax - std::max(m_current_time, m_LifeTimeCollidedMax - m_FlameFadeTime)) / m_FlameFadeTime;
-		float AddAlpha = (m_LifeTime - std::max(m_current_time+DeltaTime, m_LifeTime - m_FlameFadeTime)) / m_FlameFadeTime - m_current_alpha;
-		m_current_alpha += AddAlpha;
-		clamp(m_current_alpha, 0.0f, 1.0f);
-		m_particles->Manual_AddAlpha(AddAlpha);
+		NewAlpha = (m_LifeTimeCollidedMax - std::max(m_current_time, m_LifeTimeCollidedMax - m_FlameFadeTime)) / m_FlameFadeTime;
 	} else
 	{
-		m_current_alpha = (m_LifeTime - std::max(m_current_time, m_LifeTime - m_FlameFadeTime)) / m_FlameFadeTime;
-		clamp(m_current_alpha, 0.0f, 1.0f);
-		m_particles->Manual_UpdateAlpha(m_current_alpha);
+		NewAlpha = (m_LifeTime - std::max(m_current_time, m_LifeTime - m_FlameFadeTime)) / m_FlameFadeTime;
 	}
-	//m_particles->Manual_UpdateAlpha(NewAlpha);
+	m_particles->Manual_UpdateAlpha(NewAlpha);
 
 	if (!m_particles->IsAutoRemove() && !m_particles->IsLooped()
 		&& !m_particles->PSI_alive())
@@ -103,12 +97,10 @@ void CFlamethrowerTraceCollision::Load(LPCSTR section)
 	m_FlameFadeTime = pSettings->r_float(section, "FlameFadeTime");
 	m_GravityAcceleration = pSettings->r_float(section, "GravityAcceleration");
 
-	//string256 full_name = "flame_particles";
+	string256 full_name;
 	// flames
-	//strconcat(sizeof(full_name), full_name, "", "flame_particles");
-	m_sFlameParticles = pSettings->r_string(section, "flame_particles");
-	//strconcat(sizeof(full_name), full_name, "", "flame_particles");
-	m_sEarthFlameParticles = pSettings->r_string(section, "earth_flame_particles");
+	strconcat(sizeof(full_name), full_name, "", "flame_particles");
+	m_sFlameParticles = pSettings->r_string(section, full_name);
 }
 
 inline CFlamethrower* CFlamethrowerTraceCollision::GetParentWeapon() const
