@@ -36,9 +36,9 @@ IC	void CCoverEvaluatorBase::initialize				(const Fvector &start_position, bool 
 	VERIFY					(initialized());
 	m_start_position		= start_position;
 	m_previous_selected		= m_selected;
-	m_selected				= 0;
+	m_selected				= nullptr;
 	m_best_value			= 1000.f;
-	m_loophole				= 0;
+	m_loophole				= nullptr;
 	if (!fake_call)
 		m_last_update		= Device.dwTimeGlobal;
 }

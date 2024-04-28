@@ -25,7 +25,7 @@ inline void aimers::base::fill_bones	(
 	void* callback_params				= root_bone.callback_param();
 
 	if (!m_animation_start || !m_object.animation_movement() || !m_object.animation_movement()->IsBlending())
-		root_bone.set_callback			( bctCustom, 0, 0 );
+		root_bone.set_callback			( bctCustom, nullptr, nullptr );
 
 	u32 const channel_id				= 1;
 	u32 const channel_mask				= 1 << channel_id;
@@ -35,7 +35,7 @@ inline void aimers::base::fill_bones	(
 			u32 const blend_count		= m_animated.LL_PartBlendsCount(i);
 			for (u32 j=0; j<blend_count; ++j) {
 				CBlend* const blend		= m_animated.LL_PartBlend(i, j);
-				CBlend* const new_blend	= m_animated.LL_PlayCycle( i, blend->motionID, TRUE, 0, 0, channel_id );
+				CBlend* const new_blend	= m_animated.LL_PlayCycle( i, blend->motionID, TRUE, nullptr, nullptr, channel_id );
 				VERIFY				(new_blend);
 				*new_blend				= *blend;
 				new_blend->channel		= channel_id;
@@ -44,7 +44,7 @@ inline void aimers::base::fill_bones	(
 	}
 	else {
 		for (u16 i=0; i<MAX_PARTS; ++i) {
-			CBlend* const blend			= m_animated.LL_PlayCycle( i, m_animation_id, 0, 0, 0, channel_id );
+			CBlend* const blend			= m_animated.LL_PlayCycle( i, m_animation_id, 0, nullptr, nullptr, channel_id );
 			if (blend)
 				blend->timeCurrent		= m_animation_start ? 0.f : ( blend->timeTotal - (SAMPLE_SPF + EPS) );
 		}

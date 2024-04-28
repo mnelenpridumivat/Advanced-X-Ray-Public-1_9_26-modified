@@ -70,7 +70,7 @@ void CAnomalPseudoGigant::reinit()
 
 	move().load_velocity(*cNameSect(), "Velocity_JumpGround", MonsterMovement::eSnorkVelocityParameterJumpGround);
 	//com_man().load_jump_data("stand_attack_2_0", 0, "stand_attack_2_1", "stand_somersault_0", u32(-1), MonsterMovement::eSnorkVelocityParameterJumpGround, 0);
-	com_man().load_jump_data("stand_attack_jump_1", 0, "stand_attack_jump_2", "stand_attack_jump_3", static_cast<u32>(-1), MonsterMovement::eSnorkVelocityParameterJumpGround, 0);
+	com_man().load_jump_data("stand_attack_jump_1", nullptr, "stand_attack_jump_2", "stand_attack_jump_3", static_cast<u32>(-1), MonsterMovement::eSnorkVelocityParameterJumpGround, 0);
 }
 
 void CAnomalPseudoGigant::UpdateCL()

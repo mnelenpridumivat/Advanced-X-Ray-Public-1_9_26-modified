@@ -57,7 +57,7 @@ typedef CStalkerPropertyEvaluator::_value_type _value_type;
 //////////////////////////////////////////////////////////////////////////
 
 in_cover_evaluator::in_cover_evaluator				(CAI_Stalker *object, LPCSTR evaluator_name) :
-	inherited										(object ? object->lua_game_object() : 0, evaluator_name)
+	inherited										(object ? object->lua_game_object() : nullptr, evaluator_name)
 {
 }
 
@@ -71,7 +71,7 @@ _value_type in_cover_evaluator::evaluate			()
 //////////////////////////////////////////////////////////////////////////
 
 cover_actual_evaluator::cover_actual_evaluator		(CAI_Stalker *object, LPCSTR evaluator_name) :
-	inherited					(object ? object->lua_game_object() : 0, evaluator_name)
+	inherited					(object ? object->lua_game_object() : nullptr, evaluator_name)
 {
 }
 
@@ -86,7 +86,7 @@ _value_type cover_actual_evaluator::evaluate		()
 //////////////////////////////////////////////////////////////////////////
 
 cover_entered_evaluator::cover_entered_evaluator	(CAI_Stalker *object, LPCSTR evaluator_name) :
-	inherited					(object ? object->lua_game_object() : 0, evaluator_name)
+	inherited					(object ? object->lua_game_object() : nullptr, evaluator_name)
 {
 }
 
@@ -100,7 +100,7 @@ _value_type cover_entered_evaluator::evaluate		()
 //////////////////////////////////////////////////////////////////////////
 
 loophole_actual_evaluator::loophole_actual_evaluator(CAI_Stalker *object, LPCSTR evaluator_name, animation_planner *planner, u32 const &loophole_value) :
-	inherited					(object ? object->lua_game_object() : 0, evaluator_name),
+	inherited					(object ? object->lua_game_object() : nullptr, evaluator_name),
 	m_loophole_value			(loophole_value),
 	m_planner					(planner)
 {
@@ -177,7 +177,7 @@ _value_type loophole_planner_const_evaluator::evaluate		()
 //////////////////////////////////////////////////////////////////////////
 
 loophole_exitable_evaluator::loophole_exitable_evaluator(CAI_Stalker *object, LPCSTR evaluator_name) :
-	inherited					(object ? object->lua_game_object() : 0, evaluator_name)
+	inherited					(object ? object->lua_game_object() : nullptr, evaluator_name)
 {
 
 }
@@ -195,7 +195,7 @@ _value_type loophole_exitable_evaluator::evaluate			()
 //////////////////////////////////////////////////////////////////////////
 
 can_exit_loophole_with_animation::can_exit_loophole_with_animation(CAI_Stalker *object, LPCSTR evaluator_name) :
-	inherited					(object ? object->lua_game_object() : 0, evaluator_name)
+	inherited					(object ? object->lua_game_object() : nullptr, evaluator_name)
 {
 
 }

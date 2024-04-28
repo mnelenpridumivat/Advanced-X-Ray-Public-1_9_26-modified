@@ -163,7 +163,7 @@ TEMPLATE_SPECIALIZATION
 void CStateBloodsuckerVampireAbstract::remove_links	(CObject* object)
 {
 	if (enemy == object)
-		enemy					= 0;
+		enemy					= nullptr;
 }
 
 #undef TEMPLATE_SPECIALIZATION

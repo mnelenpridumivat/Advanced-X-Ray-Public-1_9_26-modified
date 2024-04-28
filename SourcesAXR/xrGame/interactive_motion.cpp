@@ -37,7 +37,7 @@ void interactive_motion::init( )
 {
 	flags.assign( 0 );
 
-	shell = 0;
+	shell = nullptr;
 	angle = 0;
 }
 void	interactive_motion::destroy	( )

@@ -326,7 +326,7 @@ void CController::set_controlled_task(u32 task)
 {
 	if (!HasUnderControl()) return;
 	
-	const CEntity *object = ((static_cast<ETask>(task) == eTaskNone) ? 0 : ((static_cast<ETask>(task) == eTaskFollow) ? this : EnemyMan.get_enemy()));
+	const CEntity *object = ((static_cast<ETask>(task) == eTaskNone) ? nullptr : ((static_cast<ETask>(task) == eTaskFollow) ? this : EnemyMan.get_enemy()));
 	
 	for	(u32 i=0; i<m_controlled_objects.size(); i++) {
 		CControlledEntityBase *entity = smart_cast<CControlledEntityBase *>(m_controlled_objects[i]);		
@@ -394,7 +394,7 @@ void CController::reinit()
 	control().path_builder().detail().add_velocity(MonsterMovement::eControllerVelocityParameterMoveFwd,	CDetailPathManager::STravelParams(m_velocity_move_fwd.velocity.linear,	m_velocity_move_fwd.velocity.angular_path,	m_velocity_move_fwd.velocity.angular_real));
 	control().path_builder().detail().add_velocity(MonsterMovement::eControllerVelocityParameterMoveBkwd,	CDetailPathManager::STravelParams(m_velocity_move_bkwd.velocity.linear,	m_velocity_move_bkwd.velocity.angular_path, m_velocity_move_bkwd.velocity.angular_real));
 
-	m_sndShockEffector		 = 0;
+	m_sndShockEffector		 = nullptr;
 	active_control_fx		 = false;
 }
 

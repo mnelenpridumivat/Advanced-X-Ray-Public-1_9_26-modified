@@ -28,7 +28,7 @@ public:
 
 			void InitTalkDialogWnd		();
 
-	void SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
+	void SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
 
 	virtual void Show();
 	virtual void Hide();
@@ -93,7 +93,7 @@ public:
 					CUIQuestionItem			(CUIXml* xml_doc, LPCSTR path);
 	void			Init					(LPCSTR val, LPCSTR text);
 
-	void	SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
+	void	SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
 	void __stdcall	OnTextClicked			(CUIWindow* w, void*);
 };
 

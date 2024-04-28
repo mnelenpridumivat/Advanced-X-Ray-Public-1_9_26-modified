@@ -62,7 +62,7 @@ CHUDTarget::CHUDTarget	()
 	hShader->create("hud\\cursor", "ui\\cursor");
 	hShaderCrosshairBuild->create("hud\\cursor", "ui\\crosshair_build");
 
-	PP.RQ.set				(NULL, 0.f, -1);
+	PP.RQ.set				(nullptr, 0.f, -1);
 
 	Load				();
 	m_bShowCrosshair	= false;
@@ -122,7 +122,7 @@ void CHUDTarget::CursorOnFrame ()
 	// Render cursor
 	if(Level().CurrentEntity())
 	{
-		PP.RQ.O			= 0; 
+		PP.RQ.O			= nullptr; 
 		PP.RQ.range		= g_pGamePersistent->Environment().CurrentEnv->far_plane*0.99f;
 		PP.RQ.element		= -1;
 		
@@ -133,7 +133,7 @@ void CHUDTarget::CursorOnFrame ()
 		PP.power			= 1.0f;
 		PP.pass				= 0;
 
-		if(Level().ObjectSpace.RayQuery(RQR,RD, pick_trace_callback, &PP, NULL, Level().CurrentEntity()))
+		if(Level().ObjectSpace.RayQuery(RQR,RD, pick_trace_callback, &PP, nullptr, Level().CurrentEntity()))
 			clamp			(PP.RQ.range, NEAR_LIM, PP.RQ.range);
 	}
 
@@ -386,7 +386,7 @@ void CHUDTarget::Render()
 void CHUDTarget::net_Relcase(CObject* O)
 {
 	if(PP.RQ.O == O)
-		PP.RQ.O = NULL;
+		PP.RQ.O = nullptr;
 
 	RQR.r_clear	();
 }

@@ -108,7 +108,7 @@ void CStepManager::reload(LPCSTR section)
 
 	
 	m_time_anim_started	= 0;
-	m_blend				= 0;
+	m_blend				= nullptr;
 }
 
 void CStepManager::on_animation_start(MotionID motion_id, CBlend *blend)
@@ -169,7 +169,7 @@ void CStepManager::update(bool b_hud_view)
 	float cycle_anim_time	= get_blend_time() / step.cycles;
 	
 	// пройти по всем ногам и проверить время
-	SGameMtlPair* mtl_pair = 0;
+	SGameMtlPair* mtl_pair = nullptr;
 	bool	material_picked = false;
 
 	for (u32 i=0; i<m_legs_count; i++) 

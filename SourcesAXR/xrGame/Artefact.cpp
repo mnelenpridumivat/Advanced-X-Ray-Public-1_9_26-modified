@@ -42,10 +42,10 @@ CArtefact::CArtefact()
 {
 	shedule.t_min				= 20;
 	shedule.t_max				= 50;
-	m_sParticlesName			= NULL;
-	m_pTrailLight				= NULL;
-	m_activationObj				= NULL;
-	m_detectorObj				= NULL;
+	m_sParticlesName			= nullptr;
+	m_pTrailLight				= nullptr;
+	m_activationObj				= nullptr;
+	m_detectorObj				= nullptr;
 	m_additional_weight			= 0.0f;
 
 	m_bVolumetricLights			= false;
@@ -226,8 +226,8 @@ void CArtefact::OnH_A_Chield()
 	}
 	if(m_detectorObj)
 	{
-		m_detectorObj->m_currPatrolPath = NULL;
-		m_detectorObj->m_currPatrolVertex = NULL;
+		m_detectorObj->m_currPatrolPath = nullptr;
+		m_detectorObj->m_currPatrolVertex = nullptr;
 	}
 
 	if (m_LastAfContainer) //Костыль для контейнеров, потом надо нормально как-то сделать
@@ -565,7 +565,7 @@ void CArtefact::UpdateXForm()
 	{
 		dwXF_Frame			= Device.dwFrame;
 
-		if (0==H_Parent())	return;
+		if (nullptr==H_Parent())	return;
 
 		// Get access to entity and its visual
 		CEntityAlive*		E		= smart_cast<CEntityAlive*>(H_Parent());
@@ -653,7 +653,7 @@ void CArtefact::OnStateSwitch(u32 S)
 
 void CArtefact::PlayAnimIdle()
 {
-	PlayHUDMotion("anm_idle", FALSE, NULL, eIdle);
+	PlayHUDMotion("anm_idle", FALSE, nullptr, eIdle);
 }
 
 void CArtefact::OnAnimationEnd(u32 state)
@@ -690,7 +690,7 @@ void CArtefact::FollowByPath(LPCSTR path_name, int start_idx, Fvector magic_forc
 
 bool CArtefact::CanBeInvisible()
 {
-	return (m_detectorObj!=NULL);
+	return (m_detectorObj!= nullptr);
 }
 
 void CArtefact::SwitchVisibility(bool b)
@@ -724,7 +724,7 @@ void CArtefact::CreateArtefactActivation()
 }
 
 SArtefactDetectorsSupport::SArtefactDetectorsSupport(CArtefact* A)
-:m_parent(A),m_currPatrolPath(NULL),m_currPatrolVertex(NULL),m_switchVisTime(0)
+:m_parent(A),m_currPatrolPath(nullptr),m_currPatrolVertex(nullptr),m_switchVisTime(0)
 {	
 }
 
@@ -762,7 +762,7 @@ void SArtefactDetectorsSupport::SetVisible(bool b)
 
 			curr = pSettings->r_string(m_parent->cNameSect().c_str(), (b) ? "det_show_snd" : "det_hide_snd");
 			m_sound.create(curr, st_Effect, sg_SourceType);
-			m_sound.play_at_pos(0, m_parent->Position(), 0);
+			m_sound.play_at_pos(nullptr, m_parent->Position(), 0);
 		}
 	}
 	

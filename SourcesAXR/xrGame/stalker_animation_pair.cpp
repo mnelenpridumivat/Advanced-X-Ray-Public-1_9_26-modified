@@ -54,14 +54,14 @@ void CStalkerAnimationPair::play_global_animation	(IKinematicsAnimated *skeleton
 	//DBG_DrawBones( *m_object );
 	//DBG_ClosedCashedDraw( 50000 );
 
-	m_blend				= 0;
+	m_blend				= nullptr;
 	for (u16 i=0; i<MAX_PARTS; ++i) {
 #ifdef USE_HEAD_BONE_PART_FAKE
 		if (!(bone_part & (1 << i)))
 			continue;
 #endif
 
-		CBlend			*blend = 0;
+		CBlend			*blend = nullptr;
 		if (!m_blend) {
 
 
@@ -80,7 +80,7 @@ void CStalkerAnimationPair::play_global_animation	(IKinematicsAnimated *skeleton
 			}
 		}
 		else
-			skeleton_animated->LL_PlayCycle	( i, animation(), mix_animations ? TRUE : FALSE, 0, 0 );
+			skeleton_animated->LL_PlayCycle	( i, animation(), mix_animations ? TRUE : FALSE, nullptr, nullptr );
 	}
 	//DBG_OpenCashedDraw();
 	//DBG_DrawBones( *m_object );
@@ -110,7 +110,7 @@ void CStalkerAnimationPair::play			(IKinematicsAnimated *skeleton_animated, Play
 
 	if (animation() != m_array_animation) {
 		m_array_animation.invalidate	();
-		m_array							= 0;
+		m_array							= nullptr;
 	}
 
 #ifdef DEBUG
@@ -182,7 +182,7 @@ void CStalkerAnimationPair::play			(IKinematicsAnimated *skeleton_animated, Play
 std::pair<LPCSTR,LPCSTR> *CStalkerAnimationPair::blend_id	(IKinematicsAnimated *skeleton_animated, std::pair<LPCSTR,LPCSTR> &result) const
 {
 	if (!blend())
-		return				(0);
+		return				(nullptr);
 
 	u32						bone_part_id = 0;
 	if (!global_animation())
@@ -191,7 +191,7 @@ std::pair<LPCSTR,LPCSTR> *CStalkerAnimationPair::blend_id	(IKinematicsAnimated *
 	//const BlendSVec			&blends = skeleton_animated->blend_cycle(bone_part_id);
 	const u32	part_blends_num = skeleton_animated->LL_PartBlendsCount(bone_part_id);
 	if (part_blends_num < 2)
-		return				(0);
+		return				(nullptr);
 	const u32	part_blend	=part_blends_num - 2;
 	CBlend		*b			=skeleton_animated->LL_PartBlend( bone_part_id,  part_blend );
 #if 0
@@ -261,7 +261,7 @@ MotionID CStalkerAnimationPair::select	(const ANIM_VECTOR &array, const ANIMATIO
 void CStalkerAnimationPair::on_animation_end	()
 {
 	make_inactual				();
-	m_blend						= 0;
+	m_blend						= nullptr;
 
 	if (m_callbacks.empty())
 		return;
@@ -302,8 +302,8 @@ void CStalkerAnimationPair::reset							()
 #endif // DEBUG
 
 	m_animation.invalidate		();
-	m_blend						= 0;
+	m_blend						= nullptr;
 	m_actual					= true;
-	m_array						= 0;
+	m_array						= nullptr;
 	m_array_animation.invalidate();
 }

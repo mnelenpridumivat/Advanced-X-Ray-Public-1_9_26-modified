@@ -276,15 +276,15 @@ void CWeaponBM16::PlayAnimIdle()
 		{
 		case 0:
 		{
-			PlayHUDMotion("anm_idle_0", TRUE, NULL, GetState());
+			PlayHUDMotion("anm_idle_0", TRUE, nullptr, GetState());
 		}break;
 		case 1:
 		{
-			PlayHUDMotion("anm_idle_1", TRUE, NULL, GetState());
+			PlayHUDMotion("anm_idle_1", TRUE, nullptr, GetState());
 		}break;
 		case 2:
 		{
-			PlayHUDMotion("anm_idle_2", TRUE, NULL, GetState());
+			PlayHUDMotion("anm_idle_2", TRUE, nullptr, GetState());
 		}break;
 		};
 	}

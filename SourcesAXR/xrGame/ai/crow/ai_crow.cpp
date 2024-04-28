@@ -286,7 +286,7 @@ void CAI_Crow::Die				(CObject* who)
 	CreateSkeleton	()		;
 
 	const CGameObject *who_object = smart_cast<const CGameObject*>(who);
-	callback(GameObject::eDeath)(lua_game_object(), who_object ? who_object->lua_game_object() : 0);
+	callback(GameObject::eDeath)(lua_game_object(), who_object ? who_object->lua_game_object() : nullptr);
 	
 };
 void CAI_Crow::UpdateWorkload	(float fdt)
@@ -442,7 +442,7 @@ void CAI_Crow::HitImpulse	(float	/**amount/**/,		Fvector& /**vWorldDir/**/, Fvec
 //---------------------------------------------------------------------
 void CAI_Crow::CreateSkeleton()
 {
-	m_pPhysicsShell=P_build_Shell(this,false,static_cast<BONE_P_MAP*>(0));//P_build_SimpleShell(this,0.3f,false);
+	m_pPhysicsShell=P_build_Shell(this,false,static_cast<BONE_P_MAP*>(nullptr));//P_build_SimpleShell(this,0.3f,false);
 	m_pPhysicsShell->SetMaterial(smart_cast<IKinematics*>(Visual())->LL_GetData(smart_cast<IKinematics*>(Visual())->LL_GetBoneRoot()).game_mtl_idx);
 }
 
@@ -455,7 +455,7 @@ void	CAI_Crow::Hit							(SHit* pHDS)
 	inherited::Hit(&HDS);
 
 	const CGameObject *who_object = smart_cast<const CGameObject*>(pHDS->who);
-	callback(GameObject::eHit)(lua_game_object(), who_object ? who_object->lua_game_object() : 0);
+	callback(GameObject::eHit)(lua_game_object(), who_object ? who_object->lua_game_object() : nullptr);
 }
 
 BOOL CAI_Crow::UsedAI_Locations()

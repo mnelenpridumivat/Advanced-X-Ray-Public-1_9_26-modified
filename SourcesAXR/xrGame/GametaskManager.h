@@ -41,7 +41,7 @@ public:
 	u32						GetTaskCount					(ETaskState state);
 	void					MapLocationRelcase				(CMapLocation* ml);
 
-	void					ResetStorage					() {m_gametasks = NULL;};
+	void					ResetStorage					() {m_gametasks = nullptr;};
 	void					DumpTasks						();
 	void					DiscordUpdateTask				();
 };

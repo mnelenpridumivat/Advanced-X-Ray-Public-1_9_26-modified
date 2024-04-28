@@ -56,7 +56,7 @@ CPHMovementControl::CPHMovementControl(CObject* parent)
 #endif
 
 	m_material			=0;
-	m_capture			=NULL;
+	m_capture			= nullptr;
 	b_exect_position	=true;
 	m_start_index		=0;
 	eOldEnvironment =	peInAir;
@@ -84,7 +84,7 @@ CPHMovementControl::CPHMovementControl(CObject* parent)
 
 	fContactSpeed		=	0.f;
 	fAirControlParam	=	0.f;
-	m_character			=	NULL;
+	m_character			= nullptr;
 	m_dwCurBox			=	0xffffffff;
 	fCollisionDamageFactor=1.f;
 	in_dead_area_count	=0;
@@ -912,7 +912,7 @@ void CPHMovementControl::Load					(LPCSTR section){
 		{ "medium_monster",	rtMonsterMedium},
 		{ "stalker",		rtStalker	},
 		{ "none",			rtNone	},
-		{ 0,							0}
+		{ nullptr,							0}
 	};
 
 	if(pSettings->line_exist(section,"actor_restrictor"))
@@ -1107,7 +1107,7 @@ void	CPHMovementControl::DestroyCharacter()
 	VERIFY( m_character );
 
 	// Remove Grass bender if PHCharacter is not NULL
-	if (m_character->PhysicsRefObject() != NULL)
+	if (m_character->PhysicsRefObject() != nullptr)
 		g_pGamePersistent->GrassBendersRemoveById(m_character->PhysicsRefObject()->ObjectID());
 
 	m_character->Destroy();
@@ -1217,7 +1217,7 @@ void CPHMovementControl::CreateCharacter()
 CPHSynchronize*	CPHMovementControl::GetSyncItem()
 {
 	if(m_character)	return smart_cast<CPHSynchronize*>(m_character);
-	else			return 0;
+	else			return nullptr;
 }
 void CPHMovementControl::Freeze()
 {
@@ -1300,7 +1300,7 @@ void CPHMovementControl::MulFrictionFactor(float f)
 
 IElevatorState	*CPHMovementControl::ElevatorState()
 {
-	if(!m_character || !m_character->b_exist)return NULL;
+	if(!m_character || !m_character->b_exist)return nullptr;
 	return m_character->ElevatorState();
 	//m_character->SetElevator()
 }
@@ -1322,7 +1322,7 @@ BOOL CPHMovementControl::BorderTraceCallback(collide::rq_result& result, LPVOID 
 {
 	STraceBorderQParams& p	= *static_cast<STraceBorderQParams*>(params);
 	u16 mtl_idx			=	GAMEMTL_NONE_IDX;
-	CDB::TRI* T			=	NULL;
+	CDB::TRI* T			= nullptr;
 	if(result.O){
 		return true;
 	}else{
@@ -1357,7 +1357,7 @@ void	CPHMovementControl::TraceBorder(const Fvector &prev_position)
 
 	STraceBorderQParams			p(this,dir);
 	storage.r_clear				();
-	g_pGameLevel->ObjectSpace.RayQuery(storage,RD,BorderTraceCallback,&p,NULL,smart_cast<CObject*>(m_character->PhysicsRefObject()));
+	g_pGameLevel->ObjectSpace.RayQuery(storage,RD,BorderTraceCallback,&p, nullptr,smart_cast<CObject*>(m_character->PhysicsRefObject()));
 }
 
 void	CPHMovementControl::				UpdateObjectBox(CPHCharacter *ach)
@@ -1401,7 +1401,7 @@ void CPHMovementControl::SetPathDir( const Fvector& v)
 const IPhysicsElement*	CPHMovementControl::IElement( )const
 {
 	if(!CharacterExist()) 
-		return 0;
+		return nullptr;
 	return m_character;
 }
 
@@ -1436,7 +1436,7 @@ void CPHMovementControl::VirtualMoveTo( const Fvector	&in_pos, Fvector &out_pos 
 			character_->SetObjectContactCallback(saved_callback_);
 			character_->SwitchInInitContact();
 			character_->SetApplyGravity( TRUE );
-			character_->SetObjectContactCallbackData( 0 );
+			character_->SetObjectContactCallbackData( nullptr );
 			character_->set_State( sv_state );
 		}
 
@@ -1593,7 +1593,7 @@ void		CPHMovementControl::		GetCharacterVelocity		(Fvector& velocity )
 	{
 		if(m_character)
 			return m_character->ObjectContactCallBack();
-		else return NULL; 
+		else return nullptr; 
 	}
 	u16	CPHMovementControl::ContactBone				()				
 	{

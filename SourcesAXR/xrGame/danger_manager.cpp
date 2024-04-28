@@ -91,7 +91,7 @@ void CDangerManager::reinit			()
 	m_objects.clear			();
 	m_ignored.clear			();
 	m_time_line				= 0;
-	m_selected				= 0;
+	m_selected				= nullptr;
 }
 
 void CDangerManager::reload			(LPCSTR section)
@@ -114,7 +114,7 @@ void CDangerManager::update			()
 	);
 
 	float					result = flt_max;
-	m_selected				= 0;
+	m_selected				= nullptr;
 	OBJECTS::const_iterator	I = m_objects.begin();
 	OBJECTS::const_iterator	E = m_objects.end();
 	for ( ; I != E; ++I) {
@@ -132,7 +132,7 @@ void CDangerManager::update			()
 void CDangerManager::remove(const CDangerObject& object)
 {
 	if (m_selected && m_selected == &object)
-		m_selected = 0;
+		m_selected = nullptr;
 
 	m_objects.erase(std::remove_if(m_objects.begin(), m_objects.end(), CFindPredicate(object)), m_objects.end());
 	update();
@@ -141,7 +141,7 @@ void CDangerManager::remove(const CDangerObject& object)
 void CDangerManager::remove_links	(const CObject *object)
 {
 	if (m_selected && (m_selected->object() == object))
-		m_selected			= 0;
+		m_selected			= nullptr;
 
 	m_objects.erase			(
 		std::remove_if(

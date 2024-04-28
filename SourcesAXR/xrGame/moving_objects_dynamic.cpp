@@ -352,13 +352,13 @@ bool moving_objects::fill_collisions			(moving_object *object, const Fvector &ob
 				if (exchange_all(i->second.second.second, object, collision_count))
 					continue;
 
-				i->second.second.first	= 0;
+				i->second.second.first	= nullptr;
 				continue;
 			}
 
 			VERIFY				(i->second.second.second == object);
 			if (!exchange_all(i->second.second.first, object, collision_count))
-				i->second.second.first	= 0;
+				i->second.second.first	= nullptr;
 		}
 
 		struct remove {

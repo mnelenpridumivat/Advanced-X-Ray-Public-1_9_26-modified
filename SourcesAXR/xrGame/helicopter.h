@@ -279,7 +279,7 @@ public:
 	void					SpawnInitPhysics	(CSE_Abstract	*D) override;
 	CPhysicsShellHolder*	PPhysicsShellHolder	() override {return PhysicsShellHolder();}
 	void					net_Save			(NET_Packet& P) override;
-	BOOL					net_SaveRelevant	() override {return (inherited::net_SaveRelevant() && static_cast<BOOL>(PPhysicsShell() != NULL))||m_exploded;};
+	BOOL					net_SaveRelevant	() override {return (inherited::net_SaveRelevant() && static_cast<BOOL>(PPhysicsShell() != nullptr))||m_exploded;};
 
 	void					renderable_Render				() override { inherited::renderable_Render();};
 	BOOL					renderable_ShadowGenerate		() override { return FALSE;	}

@@ -89,7 +89,7 @@ game_sv_CaptureTheArtefact::game_sv_CaptureTheArtefact()
 	m_dwSM_SwitchDelta = 0;
 	m_dwSM_LastSwitchTime = 0;
 	m_dwSM_CurViewEntity = 0;
-	m_pSM_CurViewEntity = NULL;
+	m_pSM_CurViewEntity = nullptr;
 }
 
 game_sv_CaptureTheArtefact::~game_sv_CaptureTheArtefact()
@@ -246,7 +246,7 @@ void game_sv_CaptureTheArtefact::SM_SwitchOnNextActivePlayer()
 	m_server->ForEachClientDo(tmp_functor);
 		
 	
-	CObject* pNewObject				= NULL;
+	CObject* pNewObject				= nullptr;
 	if (!tmp_functor.PPlayersCount)
 	{
 		xrClientData*	C			= static_cast<xrClientData*>(m_server->GetServerClient());
@@ -573,7 +573,7 @@ void game_sv_CaptureTheArtefact::OnRoundStart()
 	
 	m_dwSM_LastSwitchTime = 0;
 	m_dwSM_CurViewEntity = 0;
-	m_pSM_CurViewEntity = NULL;
+	m_pSM_CurViewEntity = nullptr;
 	
 	//warmap times
 	m_dwWarmUp_CurTime				= 0;
@@ -740,7 +740,7 @@ void game_sv_CaptureTheArtefact::BalanceTeams()
 			s16 MaxTeam;
 			lowest_player_searcher()
 			{
-				LowestPlayer = NULL;
+				LowestPlayer = nullptr;
 				LowestScore = 32767;
 			}
 
@@ -1162,10 +1162,10 @@ void game_sv_CaptureTheArtefact::LoadArtefactRPoints()
 	if (FS.exist(fn_game, "$level$", "level.game")) 
 	{
 		IReader *F = FS.r_open	(fn_game);
-		IReader *O = 0;
+		IReader *O = nullptr;
 
 		// Load RPoints
-		if ((O = F->open_chunk(RPOINT_CHUNK)) != 0)
+		if ((O = F->open_chunk(RPOINT_CHUNK)) != nullptr)
 		{ 
 			for (int id=0; O->find_chunk(id); ++id)
 			{

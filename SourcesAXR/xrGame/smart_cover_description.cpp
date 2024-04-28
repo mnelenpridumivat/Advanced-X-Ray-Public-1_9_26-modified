@@ -158,8 +158,8 @@ void description::process_loopholes()
 	
 	for (; I != E; ++I) {
 		::loophole				*current = *I;
-		current->enterable		(m_transitions.edge(transform_vertex("", true), current->id()) != 0);
-		current->exitable		(m_transitions.edge(current->id(), transform_vertex("", false)) != 0);
+		current->enterable		(m_transitions.edge(transform_vertex("", true), current->id()) != nullptr);
+		current->exitable		(m_transitions.edge(current->id(), transform_vertex("", false)) != nullptr);
 	}
 
 	VERIFY2						(
@@ -301,5 +301,5 @@ loophole const *description::loophole(shared_str const &loophole_id) const
 	if (found != m_loopholes.end())
 		return					(*found);
 
-	return						(0);
+	return						(nullptr);
 }

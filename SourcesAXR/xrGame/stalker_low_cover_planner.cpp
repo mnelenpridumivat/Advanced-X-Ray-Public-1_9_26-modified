@@ -56,7 +56,7 @@ void stalker_low_cover_planner::initialize				()
 	
 	object().movement().set_movement_type(eMovementTypeStand);
 	object().movement().set_nearest_accessible_position	();
-	object().movement().set_desired_direction			(0);
+	object().movement().set_desired_direction			(nullptr);
 	object().movement().set_path_type					(MovementManager::ePathTypeLevelPath);
 	object().movement().set_detail_path_type			(DetailPathManager::eDetailPathTypeSmooth);
 	object().movement().set_mental_state				(eMentalStateDanger);

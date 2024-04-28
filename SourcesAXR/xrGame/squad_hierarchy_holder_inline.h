@@ -13,9 +13,9 @@ IC	CSquadHierarchyHolder::CSquadHierarchyHolder									(CTeamHierarchyHolder *t
 	VERIFY						(team);
 	m_team						= team;
 #ifdef SQUAD_HIERARCHY_HOLDER_USE_LEADER
-	m_leader					= 0;
+	m_leader					= nullptr;
 #endif // SQUAD_HIERARCHY_HOLDER_USE_LEADER
-	SeniorityHierarchy::assign_svector	(m_groups,max_group_count,0);
+	SeniorityHierarchy::assign_svector	(m_groups,max_group_count,nullptr);
 }
 
 #ifdef SQUAD_HIERARCHY_HOLDER_USE_LEADER

@@ -26,7 +26,7 @@
 #include "ui/UIXmlInit.h"
 #include "physicsshellholder.h"
 
-CUIProgressShape* g_MissileForceShape = NULL;
+CUIProgressShape* g_MissileForceShape = nullptr;
 
 void create_force_progress()
 {
@@ -59,7 +59,7 @@ void CMissile::reinit		()
 	m_fThrowForce		= 0;
 	m_dwDestroyTime		= 0xffffffff;
 	SetPending			(FALSE);
-	m_fake_missile		= NULL;
+	m_fake_missile		= nullptr;
 	SetState			( eHidden );
 }
 
@@ -97,7 +97,7 @@ BOOL CMissile::net_Spawn(CSE_Abstract* DC)
 void CMissile::net_Destroy() 
 {
 	inherited::net_Destroy();
-	m_fake_missile = 0;
+	m_fake_missile = nullptr;
 	m_dwStateTime		= 0;
 }
 
@@ -414,7 +414,7 @@ void CMissile::UpdateXForm	()
 	{
 		dwXF_Frame			= Device.dwFrame;
 
-		if (0==H_Parent())	return;
+		if (nullptr==H_Parent())	return;
 
 		// Get access to entity and its visual
 		CEntityAlive*		E		= smart_cast<CEntityAlive*>(H_Parent());
@@ -468,7 +468,7 @@ void CMissile::setup_throw_params()
 	if (this == inventory_owner->inventory().ActiveItem())
 	{
 		CInventoryOwner* io		= smart_cast<CInventoryOwner*>(H_Parent());
-		if(NULL == io->inventory().ActiveItem())
+		if(nullptr == io->inventory().ActiveItem())
 		{
 				Log("current_state", GetState() );
 				Log("next_state", GetNextState());
@@ -548,7 +548,7 @@ void CMissile::OnEvent(NET_Packet& P, u16 type)
 			bool IsFakeMissile = false;
 			if (m_fake_missile && (id == m_fake_missile->ID()))
 			{
-				m_fake_missile	= NULL;
+				m_fake_missile	= nullptr;
 				IsFakeMissile = true;
 			}
 
@@ -557,7 +557,7 @@ void CMissile::OnEvent(NET_Packet& P, u16 type)
 			{
 				break;
 			}
-			missile->H_SetParent(0,!P.r_eof() && P.r_u8());
+			missile->H_SetParent(nullptr,!P.r_eof() && P.r_u8());
 			if (IsFakeMissile && OnClient()) 
 				missile->set_destroy_time(m_dwDestroyTimeMax);
 			break;
@@ -620,7 +620,7 @@ bool CMissile::Action(u16 cmd, u32 flags)
 
 void  CMissile::UpdateFireDependencies_internal	()
 {
-	if (0==H_Parent())		return;
+	if (nullptr==H_Parent())		return;
 
     if (Device.dwFrame!=dwFP_Frame){
 		dwFP_Frame = Device.dwFrame;
@@ -712,7 +712,7 @@ void	CMissile::net_Relcase(CObject* O)
 		if(O==smart_cast<CObject*>(static_cast<CPhysicsShellHolder*>(PPhysicsShell()->get_CallbackData())))
 		{
 			PPhysicsShell()->remove_ObjectContactCallback(ExitContactCallback);
-			PPhysicsShell()->set_CallbackData(NULL);
+			PPhysicsShell()->set_CallbackData(nullptr);
 		}
 	}
 
@@ -761,7 +761,7 @@ void CMissile::render_item_ui()
 
 void	 CMissile::ExitContactCallback(bool& do_colide, bool bo1, dContact& c, SGameMtl* material_1, SGameMtl* material_2)
 {
-	dxGeomUserData	*gd1=NULL,	*gd2=NULL;
+	dxGeomUserData	*gd1= nullptr,	*gd2= nullptr;
 	if(bo1)
 	{
 		gd1 =PHRetrieveGeomUserData(c.geom.g1);
@@ -775,13 +775,13 @@ void	 CMissile::ExitContactCallback(bool& do_colide, bool bo1, dContact& c, SGam
 	if (gd1 && gd2 && static_cast<CPhysicsShellHolder*>(gd1->callback_data) == gd2->ph_ref_object)
 		do_colide=false;
 
-	SGameMtl* material = 0;
-	CMissile* l_this = gd1 ? smart_cast<CMissile*>(gd1->ph_ref_object) : NULL;
+	SGameMtl* material = nullptr;
+	CMissile* l_this = gd1 ? smart_cast<CMissile*>(gd1->ph_ref_object) : nullptr;
 	Fvector vUp;
 
 	if (!l_this)
 	{
-		l_this = gd2 ? smart_cast<CMissile*>(gd2->ph_ref_object) : NULL;
+		l_this = gd2 ? smart_cast<CMissile*>(gd2->ph_ref_object) : nullptr;
 		material = material_1;
 
 	}
@@ -794,9 +794,9 @@ void	 CMissile::ExitContactCallback(bool& do_colide, bool bo1, dContact& c, SGam
 
 	if (!l_this || !l_this->m_bIsContactGrenade) return;
 
-	CGameObject* l_pOwner = gd1 ? smart_cast<CGameObject*>(gd1->ph_ref_object) : NULL;
+	CGameObject* l_pOwner = gd1 ? smart_cast<CGameObject*>(gd1->ph_ref_object) : nullptr;
 
-	if (!l_pOwner || l_pOwner == (CGameObject*)l_this) l_pOwner = gd2 ? smart_cast<CGameObject*>(gd2->ph_ref_object) : NULL;
+	if (!l_pOwner || l_pOwner == (CGameObject*)l_this) l_pOwner = gd2 ? smart_cast<CGameObject*>(gd2->ph_ref_object) : nullptr;
 
 	if (!l_pOwner || l_pOwner != l_this->m_pOwner)
 		l_this->set_destroy_time(5);

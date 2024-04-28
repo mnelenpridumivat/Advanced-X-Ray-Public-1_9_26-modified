@@ -51,18 +51,18 @@ ENGINE_API bool g_dedicated_server;
 
 CGameObject::CGameObject		()
 {
-	m_ai_obstacle				= 0;
+	m_ai_obstacle				= nullptr;
 
 	init						();
 	//-----------------------------------------
 	m_bCrPr_Activated			= false;
 	m_dwCrPr_ActivationStep		= 0;
 	m_spawn_time				= 0;
-	m_ai_location				= !g_dedicated_server ? xr_new<CAI_ObjectLocation>() : 0;
+	m_ai_location				= !g_dedicated_server ? xr_new<CAI_ObjectLocation>() : nullptr;
 	m_server_flags.one			();
 
 	m_callbacks					= xr_new<CALLBACK_MAP>();
-	m_anim_mov_ctrl				= 0;
+	m_anim_mov_ctrl				= nullptr;
 }
 
 CGameObject::~CGameObject		()
@@ -81,15 +81,15 @@ CSE_ALifeDynamicObject* CGameObject::alife_object() const
 	const CALifeSimulator* sim = ai().get_alife();
 	if (sim)
 		return sim->objects().object(ID(), true);
-	return NULL;
+	return nullptr;
 }
 
 
 void CGameObject::init			()
 {
-	m_lua_game_object			= 0;
+	m_lua_game_object			= nullptr;
 	m_script_clsid				= -1;
-	m_ini_file					= 0;
+	m_ini_file					= nullptr;
 	m_spawned					= false;
 }
 
@@ -134,7 +134,7 @@ void CGameObject::net_Destroy	()
 
 	m_script_clsid			= -1;
 	if (Visual() && smart_cast<IKinematics*>(Visual()))
-		smart_cast<IKinematics*>(Visual())->Callback	(0,0);
+		smart_cast<IKinematics*>(Visual())->Callback	(nullptr,nullptr);
 
 	inherited::net_Destroy						();
 	setReady									(FALSE);
@@ -151,9 +151,9 @@ void CGameObject::net_Destroy	()
 	{
 		if (!Level().IsDemoPlayStarted())
 		{
-			Level().SetControlEntity			(0);
+			Level().SetControlEntity			(nullptr);
 		}
-		Level().SetEntity						(0);	// do not switch !!!
+		Level().SetEntity						(nullptr);	// do not switch !!!
 	}
 
 	Level().RemoveObject_From_4CrPr(this);
@@ -550,17 +550,17 @@ void CGameObject::spawn_supplies()
 			if (n > 0)
 				j			= atoi(_GetItem(V,0,temp)); //count
 			
-			if(NULL!=strstr(V,"prob="))
+			if(nullptr !=strstr(V,"prob="))
 				p			=static_cast<float>(atof(strstr(V, "prob=") + 5));
 			if (fis_zero(p))p = 1.f;
 			if (!j)	j		= 1;
-			if(NULL!=strstr(V,"cond="))
+			if(nullptr !=strstr(V,"cond="))
 				f_cond		= static_cast<float>(atof(strstr(V, "cond=") + 5));
-			bScope			=	(NULL!=strstr(V,"scope"));
-			bSilencer		=	(NULL!=strstr(V,"silencer"));
-			bLauncher		=	(NULL!=strstr(V,"launcher"));
-			bLaser			=	(NULL!=strstr(V,"laser"));
-			bTorch			=	(NULL!=strstr(V,"torch"));
+			bScope			=	(nullptr !=strstr(V,"scope"));
+			bSilencer		=	(nullptr !=strstr(V,"silencer"));
+			bLauncher		=	(nullptr !=strstr(V,"launcher"));
+			bLaser			=	(nullptr !=strstr(V,"laser"));
+			bTorch			=	(nullptr !=strstr(V,"torch"));
 
 		}
 		for (u32 i=0; i<j; ++i)
@@ -809,7 +809,7 @@ void CGameObject::SetKinematicsCallback		(bool set)
 	if (set)
 		smart_cast<IKinematics*>(Visual())->Callback(VisualCallback,this);
 	else
-		smart_cast<IKinematics*>(Visual())->Callback(0,0);
+		smart_cast<IKinematics*>(Visual())->Callback(nullptr,nullptr);
 };
 
 void VisualCallback	(IKinematics *tpKinematics)

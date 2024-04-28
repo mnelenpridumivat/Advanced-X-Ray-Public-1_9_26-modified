@@ -20,7 +20,7 @@
 static const u32 time_before_selection	= 2000;
 
 stalker_movement_params::stalker_movement_params				() :
-	m_manager							(0),
+	m_manager							(nullptr),
 	m_body_state						(MonsterSpace::eBodyStateStand),
 	m_movement_type						(MonsterSpace::eMovementTypeStand),
 	m_mental_state						(MonsterSpace::eMentalStateDanger),
@@ -28,23 +28,23 @@ stalker_movement_params::stalker_movement_params				() :
 	m_detail_path_type					(DetailPathManager::eDetailPathTypeSmooth),
 
 	m_desired_position_impl				(Fvector().set(flt_max, flt_max, flt_max)),
-	m_desired_position					(0),
+	m_desired_position					(nullptr),
 
 	m_desired_direction_impl			(Fvector().set(flt_max, flt_max, flt_max)),
-	m_desired_direction					(0),
+	m_desired_direction					(nullptr),
 
 	m_cover_id							(""),
-	m_cover								(0),
+	m_cover								(nullptr),
 	m_cover_loophole_id					(""),
-	m_cover_loophole					(0),
-	m_cover_fire_object					(0),
+	m_cover_loophole					(nullptr),
+	m_cover_fire_object					(nullptr),
 
 	m_cover_fire_position_impl			(Fvector().set(flt_max, flt_max, flt_max)),
-	m_cover_fire_position				(0),
+	m_cover_fire_position				(nullptr),
 
 	m_selected_loophole_actual			(false),
 	m_last_selection_time				(0),
-	m_cover_selected_loophole			(0)
+	m_cover_selected_loophole			(nullptr)
 {
 }
 
@@ -57,17 +57,17 @@ stalker_movement_params &stalker_movement_params::operator=		(stalker_movement_p
 	m_detail_path_type					= rhs.m_detail_path_type;
 
 	m_desired_position_impl				= rhs.m_desired_position_impl;
-	m_desired_position					= rhs.m_desired_position ? &m_desired_position_impl : 0;
+	m_desired_position					= rhs.m_desired_position ? &m_desired_position_impl : nullptr;
 
 	m_desired_direction_impl			= rhs.m_desired_direction_impl;
-	m_desired_direction					= rhs.m_desired_direction ? &m_desired_direction_impl : 0;
+	m_desired_direction					= rhs.m_desired_direction ? &m_desired_direction_impl : nullptr;
 
 	m_cover_id							= rhs.m_cover_id;
 	m_cover_loophole_id					= rhs.m_cover_loophole_id;
 	m_cover_fire_object					= rhs.m_cover_fire_object;
 
 	m_cover_fire_position_impl			= rhs.m_cover_fire_position_impl;
-	m_cover_fire_position				= rhs.m_cover_fire_position ? &m_cover_fire_position_impl : 0;
+	m_cover_fire_position				= rhs.m_cover_fire_position ? &m_cover_fire_position_impl : nullptr;
 
 	m_selected_loophole_actual			= rhs.m_selected_loophole_actual;
 	m_last_selection_time				= rhs.m_last_selection_time;
@@ -131,10 +131,10 @@ void stalker_movement_params::cover_id							(shared_str const& cover_id)
 	VERIFY								(!m_cover_loophole);
 
 	m_selected_loophole_actual			= false;
-	m_cover_selected_loophole			= 0;
+	m_cover_selected_loophole			= nullptr;
 
 	if (!cover_id.size()) {
-		m_cover							= 0;
+		m_cover							= nullptr;
 		return;
 	}
 
@@ -157,18 +157,18 @@ struct loophole_id_predicate {
 
 void stalker_movement_params::cover_loophole_id					(shared_str const& loophole_id)
 {
-	cover_fire_object					(0);
-	cover_fire_position					(0);
+	cover_fire_object					(nullptr);
+	cover_fire_position					(nullptr);
 
 	if (m_cover_loophole_id == loophole_id)
 		return;
 
 	m_cover_loophole_id					= loophole_id;
 	m_selected_loophole_actual			= false;
-	m_cover_selected_loophole			= 0;
+	m_cover_selected_loophole			= nullptr;
 
 	if (!loophole_id.size()) {
-		m_cover_loophole				= 0;
+		m_cover_loophole				= nullptr;
 		return;
 	}
 

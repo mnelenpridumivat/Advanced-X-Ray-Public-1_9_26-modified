@@ -280,7 +280,7 @@ void CAI_Bloodsucker::reinit()
 	//com_man().add_rotation_jump_data("run_turn_r_0","run_turn_r_1","run_turn_r_0","run_turn_r_1", PI - 0.01f, SControlRotationJumpData::eStopAtOnce | SControlRotationJumpData::eRotateOnce);
 	com_man().add_rotation_jump_data("run_turn_l_0","run_turn_l_1","run_turn_r_0","run_turn_r_1", PI_DIV_2);
 	
-	com_man().load_jump_data("boloto_jump_prepare",0, "boloto_jump_fly", "boloto_jump_end", static_cast<u32>(-1), MonsterMovement::eBloodsuckerVelocityParameterJumpGround,0);
+	com_man().load_jump_data("boloto_jump_prepare",nullptr, "boloto_jump_fly", "boloto_jump_end", static_cast<u32>(-1), MonsterMovement::eBloodsuckerVelocityParameterJumpGround,0);
 
 	// save visual	
 	m_visual_default			= cNameVisual();

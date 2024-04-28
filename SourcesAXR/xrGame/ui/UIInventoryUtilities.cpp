@@ -72,25 +72,25 @@ void InventoryUtilities::CreateShaders()
 void InventoryUtilities::DestroyShaders()
 {
 	xr_delete(g_BuyMenuShader);
-	g_BuyMenuShader = 0;
+	g_BuyMenuShader = nullptr;
 
 	xr_delete(g_EquipmentIconsShader);
-	g_EquipmentIconsShader = 0;
+	g_EquipmentIconsShader = nullptr;
 
 	xr_delete(g_MPCharIconsShader);
-	g_MPCharIconsShader = 0;
+	g_MPCharIconsShader = nullptr;
 
 	xr_delete(g_OutfitUpgradeIconsShader);
-	g_OutfitUpgradeIconsShader = 0;
+	g_OutfitUpgradeIconsShader = nullptr;
 
 	xr_delete(g_WeaponUpgradeIconsShader);
-	g_WeaponUpgradeIconsShader = 0;
+	g_WeaponUpgradeIconsShader = nullptr;
 
 	xr_delete(g_DeviceUpgradeIconsShader);
-	g_DeviceUpgradeIconsShader = 0;
+	g_DeviceUpgradeIconsShader = nullptr;
 
 	xr_delete(g_tmpWMShader);
-	g_tmpWMShader = 0;
+	g_tmpWMShader = nullptr;
 }
 
 bool InventoryUtilities::GreaterRoomInRuck(PIItem item1, PIItem item2)

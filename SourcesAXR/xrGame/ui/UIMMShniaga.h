@@ -22,7 +22,7 @@ public:
 
 						bool 		OnMouseAction					(float x, float y, EUIMessages mouse_action) override;
 						bool 		OnKeyboardAction				(int dik, EUIMessages keyboard_action) override;
-						void 		SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = 0) override;
+						void 		SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
 			void 		SetVisibleMagnifier		(bool f);
 						void		OnDeviceReset			() override;
 	enum	enum_page_id

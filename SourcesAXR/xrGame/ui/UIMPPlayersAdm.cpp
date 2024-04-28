@@ -25,7 +25,7 @@ xr_token g_ban_times[] = {
 	{ "ui_mp_am_1_month",	2592000},
 	{ "ui_mp_am_3_monthes",	7776000},
 	{ "ui_mp_am_forever",	999999999},
-	{ 0,			0}
+	{ nullptr,			0}
 };
 
 CUIMpPlayersAdm::CUIMpPlayersAdm()

@@ -43,7 +43,7 @@ IC	void CALifeSmartTerrainTask::init							(const shared_str &patrol_path_name, 
 	m_patrol_path_name		= patrol_path_name;
 	m_patrol_point_index	= patrol_point_index;
 #endif
-	m_patrol_point			= 0;
+	m_patrol_point			= nullptr;
 	m_game_vertex_id		= static_cast<GameGraph::_GRAPH_ID>(-1);
 	m_level_vertex_id		= static_cast<u32>(-1);
 	setup_patrol_point		(patrol_path_name,patrol_point_index);

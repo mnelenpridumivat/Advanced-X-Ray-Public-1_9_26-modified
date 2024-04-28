@@ -42,7 +42,7 @@ using namespace RatSpace;
 // #include "../../../steering_behaviour_separation.h"
 
 CAI_Rat::CAI_Rat() :
-	m_behaviour_manager		(0)
+	m_behaviour_manager		(nullptr)
 {
 	init					();
 //	m_behaviour_manager				= xr_new<steering_behaviour::manager>(this);
@@ -62,7 +62,7 @@ void CAI_Rat::init()
 	m_hit_direction.set		(0,0,1);
 	m_hit_time				= 0;
 	m_tpCurrentGlobalAnimation.invalidate();
-	m_tpCurrentGlobalBlend	= 0;
+	m_tpCurrentGlobalBlend	= nullptr;
 	m_bActionStarted		= false;
 	m_bFiring				= false;
 	m_previous_query_time		= 0;
@@ -71,7 +71,7 @@ void CAI_Rat::init()
 	m_tHPB.set				(0,0,0);
 	m_fDHeading				= 0;
 	m_fGoalChangeTime		= 0.f;
-	m_tLastSound.tpEntity	= 0;
+	m_tLastSound.tpEntity	= nullptr;
 	m_tLastSound.dwTime		= 0;
 	m_tLastSound.eSoundType	= SOUND_TYPE_NO_SOUND;
 	m_bNoWay				= false;

@@ -44,7 +44,7 @@ CStalkerActionReachEnemyLocation::CStalkerActionReachEnemyLocation(
 void CStalkerActionReachEnemyLocation::initialize		()
 {
 	inherited::initialize				();
-	object().movement().set_desired_direction		(0);
+	object().movement().set_desired_direction		(nullptr);
 	object().movement().set_path_type				(MovementManager::ePathTypeLevelPath);
 	object().movement().set_detail_path_type		(DetailPathManager::eDetailPathTypeSmooth);
 	object().movement().set_mental_state			(eMentalStateDanger);
@@ -53,7 +53,7 @@ void CStalkerActionReachEnemyLocation::initialize		()
 
 	aim_ready										();
 
-	object().agent_manager().member().member(m_object).cover(0);
+	object().agent_manager().member().member(m_object).cover(nullptr);
 
 	const MemorySpace::CHitObject		*hit = object().memory().hit().hit(object().memory().enemy().selected());
 	if (!hit)

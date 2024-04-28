@@ -17,8 +17,8 @@ CPolterSpecialAbility::CPolterSpecialAbility(IPolterInterface* polter)
 {
 	m_object					= polter;
 
-	m_particles_object			= 0;
-	m_particles_object_electro	= 0;
+	m_particles_object			= nullptr;
+	m_particles_object_electro	= nullptr;
 }
 
 

@@ -8,7 +8,7 @@
 shared_str const CGameSpy_SAKE::TryToTranslate(SAKERequestResult const & request_result)
 {
 	string16 digit_dest;
-	LPCSTR tmp_string = NULL;
+	LPCSTR tmp_string = nullptr;
 	_itoa_s(request_result, digit_dest, 10);
 	STRCONCAT(
 		tmp_string,
@@ -20,7 +20,7 @@ shared_str const CGameSpy_SAKE::TryToTranslate(SAKERequestResult const & request
 shared_str const CGameSpy_SAKE::TryToTranslate(SAKEStartRequestResult const & request_result)
 {
 	string16 digit_dest;
-	LPCSTR tmp_string = NULL;
+	LPCSTR tmp_string = nullptr;
 	_itoa_s(request_result, digit_dest, 10);
 	STRCONCAT(
 		tmp_string,
@@ -53,7 +53,7 @@ void CGameSpy_SAKE::Init()
 
 CGameSpy_SAKE::CGameSpy_SAKE(HMODULE hGameSpyDLL)
 {
-	m_sake_inst		= NULL;
+	m_sake_inst		= nullptr;
 	LoadGameSpySAKE	(hGameSpyDLL);
 	Init			();
 }

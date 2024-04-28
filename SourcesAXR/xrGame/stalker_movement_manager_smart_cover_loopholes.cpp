@@ -97,8 +97,8 @@ void stalker_movement_manager_smart_cover::build_enter_path				()
 		m_current_transition_animation = &m_current_transition->animation();
 	}
 	else {
-		m_current_transition	= 0;
-		m_current_transition_animation = 0;
+		m_current_transition	= nullptr;
+		m_current_transition_animation = nullptr;
 	}
 }
 
@@ -153,7 +153,7 @@ bool stalker_movement_manager_smart_cover::test_pick	(Fvector source, Fvector de
 	float range					= distance;
 	parameters					params(range, object());
 	collide::ray_defs	ray_defs(source, direction, distance, CDB::OPT_CULL, collide::rqtStatic);
-	Level().ObjectSpace.RayQuery(m_ray_query_storage, ray_defs, &test_pick::callback, &params, NULL, NULL);
+	Level().ObjectSpace.RayQuery(m_ray_query_storage, ray_defs, &test_pick::callback, &params, nullptr, nullptr);
 	return						(range == distance);
 }
 
@@ -175,7 +175,7 @@ stalker_movement_manager_smart_cover::transition_action const &stalker_movement_
 	VERIFY					(edge);
 	ActionsList const		&actions = edge->data();
 	
-	transition_action const*result = 0;
+	transition_action const*result = nullptr;
 	float min_distance_sqr	= flt_max;
 
 	EBodyState				result_body_state = eBodyStateDummy;
@@ -322,8 +322,8 @@ void stalker_movement_manager_smart_cover::build_exit_path							()
 		m_current_transition_animation = &m_current_transition->animation();
 	}
 	else {
-		m_current_transition = 0;
-		m_current_transition_animation = 0;
+		m_current_transition = nullptr;
+		m_current_transition_animation = nullptr;
 	}
 }
 
@@ -332,7 +332,7 @@ void stalker_movement_manager_smart_cover::build_exit_path_to_cover					()
 	m_path.clear_not_free		();
 
 	float						value = flt_max;
-	smart_cover::transitions::action const*	selected_action = 0;
+	smart_cover::transitions::action const*	selected_action = nullptr;
 
 	VERIFY						(m_current.cover());
 	smart_cover::cover const&	current_cover = *m_current.cover();
@@ -387,7 +387,7 @@ void stalker_movement_manager_smart_cover::build_exit_path_to_cover					()
 		);
 		new_value				+=
 			enter_path(
-				0,
+				nullptr,
 				exit_position,
 				exit_vertex_id,
 				target_cover,
@@ -412,8 +412,8 @@ void stalker_movement_manager_smart_cover::build_exit_path_to_cover					()
 		m_current_transition_animation = &m_current_transition->animation();
 	}
 	else {
-		m_current_transition = 0;
-		m_current_transition_animation = 0;
+		m_current_transition = nullptr;
+		m_current_transition_animation = nullptr;
 	}
 }
 
@@ -459,8 +459,8 @@ void stalker_movement_manager_smart_cover::actualize_path				()
 		m_current_transition_animation = &m_current_transition->animation();
 	}
 	else {
-		m_current_transition = 0;
-		m_current_transition_animation = 0;
+		m_current_transition = nullptr;
+		m_current_transition_animation = nullptr;
 	}
 }
 

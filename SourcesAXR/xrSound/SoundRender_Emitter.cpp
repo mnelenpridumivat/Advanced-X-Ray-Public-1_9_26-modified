@@ -63,8 +63,8 @@ void CSoundRender_Emitter::Event_Propagade	()
 	fTimeToPropagade			+= ::Random.randF	(s_f_def_event_pulse-0.030f, s_f_def_event_pulse+0.030f);
 	if (!(owner_data))			return;
 	if (0==owner_data->g_type)	return;
-	if (0==owner_data->g_object)return;
-	if (0==SoundRender->Handler)return;
+	if (nullptr==owner_data->g_object)return;
+	if (nullptr==SoundRender->Handler)return;
 
 	VERIFY						(_valid(p_source.volume));
 	// Calculate range

@@ -46,7 +46,7 @@ protected:
 
 public:
 	IC					CBasePathManager			(CRestrictedObject *object);
-	IC			void	reinit						(const CLevelGraph *graph = 0);
+	IC			void	reinit						(const CLevelGraph *graph = nullptr);
 	IC			bool	actual						() const;
 	IC			void	on_restrictions_change		();
 	IC			void	build_path					(const _vertex_id_type start_vertex_id, const _vertex_id_type dest_vertex_id);

@@ -6,7 +6,7 @@ public:
     typedef float (*Function)(float,void*);
 
     Minimize1D (Function oF, int iMaxLevel, int iMaxBracket,
-        void* pvUserData = 0);
+        void* pvUserData = nullptr);
 
     int& MaxLevel ();
     int& MaxBracket ();

@@ -251,7 +251,7 @@ void CPseudoGigant::on_threaten_execute()
 
 	// разбросить объекты
 	m_nearest_pseudogig_kick.clear_not_free		();
-	Level().ObjectSpace.GetNearest(m_nearest_pseudogig_kick, position, 15.f, NULL);
+	Level().ObjectSpace.GetNearest(m_nearest_pseudogig_kick, position, 15.f, nullptr);
 	for (u32 i=0;i<m_nearest_pseudogig_kick.size();i++)
 	{
 		CPhysicsShellHolder  *obj = smart_cast<CPhysicsShellHolder *>(m_nearest_pseudogig_kick[i]);

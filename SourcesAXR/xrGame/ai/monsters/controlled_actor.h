@@ -29,7 +29,7 @@ public:
 			bool    is_installed		();
 
 			void	frame_update		();
-			bool	is_controlling		() {return m_actor != 0;}
+			bool	is_controlling		() {return m_actor != nullptr;}
 
 			void	dont_need_turn		(){m_need_turn = false;}
 

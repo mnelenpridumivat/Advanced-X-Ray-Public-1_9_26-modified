@@ -19,12 +19,12 @@
 #endif
 BOOL dbg_draw_doors = false;
 CPhysicObject::CPhysicObject(void): 
-m_anim_blend( 0 ),
+m_anim_blend( nullptr ),
 m_type( epotBox ),
 m_mass( 10.f ),
-m_collision_hit_callback( 0 ),
-bones_snd_player( 0 ),
-m_net_updateData ( 0 )
+m_collision_hit_callback( nullptr ),
+bones_snd_player( nullptr ),
+m_net_updateData ( nullptr )
 {
 }
 
@@ -40,8 +40,8 @@ BOOL CPhysicObject::net_Spawn(CSE_Abstract* DC)
 	R_ASSERT				(po);
 	m_type					= static_cast<EPOType>(po->type);
 	m_mass					= po->mass;
-	m_collision_hit_callback= NULL;
-	m_anim_blend			= 0;
+	m_collision_hit_callback= nullptr;
+	m_anim_blend			= nullptr;
 	inherited::net_Spawn	( DC );
 
 	create_collision_model  ( );
@@ -141,9 +141,9 @@ void		CPhysicObject::stop_bones_sound()
 
 static CPhysicsShellHolder* retrive_collide_object( bool bo1, dContact& c )
 {
-	CPhysicsShellHolder* collide_obj = 0;
+	CPhysicsShellHolder* collide_obj = nullptr;
 
-	dxGeomUserData* ud = 0;
+	dxGeomUserData* ud = nullptr;
 	if( bo1 )
 		ud = PHRetrieveGeomUserData( c.geom.g2 );
 	else
@@ -152,7 +152,7 @@ static CPhysicsShellHolder* retrive_collide_object( bool bo1, dContact& c )
 	if(ud)
 		collide_obj = static_cast<CPhysicsShellHolder*>(ud->ph_ref_object);
 	else
-		collide_obj = 0;
+		collide_obj = nullptr;
 	return collide_obj;
 
 }
@@ -208,7 +208,7 @@ void CPhysicObject::RunStartupAnim(CSE_Abstract *D)
 	if(Visual()&&smart_cast<IKinematics*>(Visual()))
 	{
 		//		CSE_PHSkeleton	*po	= smart_cast<CSE_PHSkeleton*>(D);
-		IKinematicsAnimated*	PKinematicsAnimated=NULL;
+		IKinematicsAnimated*	PKinematicsAnimated= nullptr;
 		R_ASSERT			(Visual()&&smart_cast<IKinematics*>(Visual()));
 		PKinematicsAnimated	=smart_cast<IKinematicsAnimated*>(Visual());
 		if(PKinematicsAnimated)
@@ -415,7 +415,7 @@ void CPhysicObject::AddElement(CPhysicsElement* root_e, int id)
 	E->set_ParentElement(root_e);
 	B.set_callback		(bctPhysics,m_pPhysicsShell->GetBonesCallback(),E);
 	m_pPhysicsShell->add_Element	(E);
-	if( !(m_type==epotFreeChain && root_e==0) )
+	if( !(m_type==epotFreeChain && root_e==nullptr) )
 	{		
 		CPhysicsJoint* J= P_create_Joint(CPhysicsJoint::full_control,root_e,E);
 		J->SetAnchorVsSecondElement	(0,0,0);
@@ -447,7 +447,7 @@ void CPhysicObject::CreateBody(CSE_ALifeObjectPhysic* po) {
 			{	
 				m_pPhysicsShell		= P_create_Shell();
 				m_pPhysicsShell->set_Kinematics(pKinematics);
-				AddElement(0,pKinematics->LL_GetBoneRoot());
+				AddElement(nullptr,pKinematics->LL_GetBoneRoot());
 				m_pPhysicsShell->setMass1(m_mass);
 			} break;
 
@@ -556,7 +556,7 @@ void CPhysicObject::net_Export			(NET_Packet& P)
 		return;
 	}
 
-	CPHSynchronize* pSyncObj				= NULL;
+	CPHSynchronize* pSyncObj				= nullptr;
 	SPHNetState								State;
 	pSyncObj = this->PHGetSyncItem		(0);
 

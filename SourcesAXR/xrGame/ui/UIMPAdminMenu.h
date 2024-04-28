@@ -36,7 +36,7 @@ public:
 							CUIMpAdminMenu();
 		~CUIMpAdminMenu() override;
 				void		Init();
-		void 		SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL) override;
+		void 		SendMessage(CUIWindow* pWnd, s16 msg, void* pData = nullptr) override;
 		bool		OnKeyboardAction(int dik, EUIMessages keyboard_action) override;
 				void		SetActiveSubdialog	(const shared_str& section);
 		void	xr_stdcall	RemoteAdminLogin(CUIWindow*, void*);

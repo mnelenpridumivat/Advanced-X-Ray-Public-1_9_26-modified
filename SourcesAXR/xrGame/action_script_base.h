@@ -21,8 +21,8 @@ public:
 	_object_type			*m_object;
 
 public:
-	IC						CActionScriptBase	(const xr_vector<COperatorCondition> &conditions, const xr_vector<COperatorCondition> &effects, _object_type *object = 0, LPCSTR action_name = "");
-	IC						CActionScriptBase	(_object_type *object = 0, LPCSTR action_name = "");
+	IC						CActionScriptBase	(const xr_vector<COperatorCondition> &conditions, const xr_vector<COperatorCondition> &effects, _object_type *object = nullptr, LPCSTR action_name = "");
+	IC						CActionScriptBase	(_object_type *object = nullptr, LPCSTR action_name = "");
 	~CActionScriptBase	() override;
 	void			setup				(_object_type *object, CPropertyStorage *storage);
 	void			setup				(CScriptGameObject *object, CPropertyStorage *storage);

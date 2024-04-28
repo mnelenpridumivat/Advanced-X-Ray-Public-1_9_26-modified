@@ -396,15 +396,15 @@ void ui_actor_state_wnd::Show( bool status )
 /// =============================================================================================
 ui_actor_state_item::ui_actor_state_item()
 {
-	m_static		= NULL;
-	m_static2		= NULL;
-	m_static3		= NULL;
-	m_progress		= NULL;
-	m_sensor		= NULL;
-	m_arrow			= NULL;
-	m_arrow_shadow	= NULL;
-	m_caption		= NULL;
-	m_value			= NULL;
+	m_static		= nullptr;
+	m_static2		= nullptr;
+	m_static3		= nullptr;
+	m_progress		= nullptr;
+	m_sensor		= nullptr;
+	m_arrow			= nullptr;
+	m_arrow_shadow	= nullptr;
+	m_caption		= nullptr;
+	m_value			= nullptr;
 	m_texture._set("");
 	m_magnitude		= 1.0f;
 }

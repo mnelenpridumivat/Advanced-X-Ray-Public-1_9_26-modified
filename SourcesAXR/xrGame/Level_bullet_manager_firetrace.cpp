@@ -50,7 +50,7 @@ BOOL CBulletManager::test_callback(const collide::ray_defs& rd, CObject* object,
 		CEntity*	entity			= smart_cast<CEntity*>(object);
 		if (entity&&entity->g_Alive()&&(entity->ID()!=bullet->parent_id)){
 			ICollisionForm*	cform	= entity->collidable.model;
-			if ((NULL!=cform) && (cftObject==cform->Type())){
+			if ((nullptr !=cform) && (cftObject==cform->Type())){
 				CActor* actor		= smart_cast<CActor*>(entity);
 				CAI_Stalker* stalker= smart_cast<CAI_Stalker*>(entity);
 				// в кого попали?
@@ -330,7 +330,7 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 
 		SHit	Hit = SHit(	hit_param.power,
 							original_dir,
-							NULL,
+							nullptr,
 							static_cast<u16>(E.R.element),
 							position_in_bone_space,
 							hit_param.impulse,

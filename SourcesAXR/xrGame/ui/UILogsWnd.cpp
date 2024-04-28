@@ -151,7 +151,7 @@ void CUILogsWnd::Init()
 void itemToCache(CUIWindow* w)
 {
 	w->SetAutoDelete	(false);
-	w->SetParent		(NULL);
+	w->SetParent		(nullptr);
 }
 
 extern CActor* g_actor;

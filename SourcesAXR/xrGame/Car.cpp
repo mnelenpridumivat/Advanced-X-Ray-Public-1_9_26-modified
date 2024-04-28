@@ -40,10 +40,10 @@ BONE_P_MAP CCar::bone_map=BONE_P_MAP();
 
 CCar::CCar()
 {
-	m_memory		= NULL;
+	m_memory		= nullptr;
 	m_driver_anim_type = 0;
 	m_bone_steer	= BI_NONE;
-	active_camera	= 0;
+	active_camera	= nullptr;
 	camera[ectFirst]= xr_new<CCameraFirstEye>	(this, CCameraBase::flRelativeLink|CCameraBase::flPositionRigid); 
 	camera[ectFirst]->tag	= ectFirst;
 	camera[ectFirst]->Load("car_firsteye_cam");
@@ -86,7 +86,7 @@ CCar::CCar()
 	m_breaks_to_back_rate=1.f;
 
 	b_exploded=false;
-	m_car_weapon=NULL;
+	m_car_weapon= nullptr;
 	m_power_neutral_factor=0.25f;
 	m_steer_angle=0.f;
 	m_current_rpm = 0.f;
@@ -1768,7 +1768,7 @@ void CCar::OnEvent(NET_Packet& P, u16 type)
 			m_items.erase(it);
 
 			bool dont_create_shell = !P.r_eof() && P.r_u8();
-			itm->H_SetParent(NULL, dont_create_shell);
+			itm->H_SetParent(nullptr, dont_create_shell);
 
 			if (CGameObject* obj = smart_cast<CGameObject*>(itm))
 			{

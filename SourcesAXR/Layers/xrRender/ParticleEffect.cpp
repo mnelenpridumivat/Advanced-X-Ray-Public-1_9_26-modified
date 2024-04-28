@@ -82,6 +82,60 @@ CParticleEffect::~CParticleEffect()
 	ParticleManager()->DestroyActionList	(m_HandleActionList);
 }
 
+void CParticleEffect::Manual_UpdateSize(const Fvector& NewSize)
+{
+	Particle* particles;
+	u32 p_cnt = 0;
+	ParticleManager()->GetParticles(m_HandleEffect, particles, p_cnt);
+	for(u32 i = 0; i < p_cnt; ++i)
+	{
+		Particle& m = particles[i];
+		//Msg("Starting size is [%f, %f, %f]", m.size.x, m.size.y, m.size.z);
+		m.size.x = NewSize.x;
+		m.size.y = NewSize.y;
+		m.size.z = NewSize.z;
+		//Msg("Ending size is [%f, %f, %f]", m.size.x, m.size.y, m.size.z);
+		/*pVector dif;
+		dif.x = NewSize.x - m.size.x;
+		dif.y = NewSize.y - m.size.y;
+		dif.z = NewSize.z - m.size.z;
+		m.size += dif;*/
+	}
+}
+
+void CParticleEffect::Manual_UpdateAlpha(float NewAlpha)
+{
+	Particle* particles;
+	u32 p_cnt = 0;
+	ParticleManager()->GetParticles(m_HandleEffect, particles, p_cnt);
+	for (u32 i = 0; i < p_cnt; ++i)
+	{
+		Fcolor c_p, c_t;
+		Particle& m = particles[i];
+
+		c_p.set(m.color);
+		c_t.set(c_p.r, c_p.g, c_p.b, NewAlpha);
+		m.color = c_t.get();
+	}
+}
+
+void CParticleEffect::Manual_AddAlpha(float DeltaAlpha)
+{
+	Particle* particles;
+	u32 p_cnt = 0;
+	ParticleManager()->GetParticles(m_HandleEffect, particles, p_cnt);
+	for (u32 i = 0; i < p_cnt; ++i)
+	{
+		Fcolor c_p, c_t;
+		Particle& m = particles[i];
+
+		c_p.set(m.color);
+		c_t.set(c_p.r, c_p.g, c_p.b, c_p.a+DeltaAlpha);
+		clamp(c_t.a, 0.0f, 1.0f);
+		m.color = c_t.get();
+	}
+}
+
 void CParticleEffect::Play()
 {
 	m_RT_Flags.set		(flRT_DefferedStop,FALSE);

@@ -169,7 +169,7 @@ void CLevel::ClientReceive()
 				P->r_u16		(ID);
 				u32 Ping = P->r_u32();
 				CGameObject*	O	= smart_cast<CGameObject*>(Objects.net_Find		(ID));
-				if (0 == O)		break;
+				if (nullptr == O)		break;
 				O->net_Import(*P);
 		//---------------------------------------------------
 				UpdateDeltaUpd(timeServer());
@@ -238,7 +238,7 @@ void CLevel::ClientReceive()
 				}*/
 				P->r_u16		(ID);
 				CObject*	O	= Objects.net_Find		(ID);
-				if (0 == O)		break;
+				if (nullptr == O)		break;
 				O->net_ImportInput(*P);
 			}break;
 		//---------------------------------------------------

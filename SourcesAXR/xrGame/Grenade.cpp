@@ -70,7 +70,7 @@ void CGrenade::net_Destroy()
 	if(m_destroy_callback)
 	{
 		m_destroy_callback				(this);
-		m_destroy_callback				= destroy_callback(NULL);
+		m_destroy_callback				= destroy_callback(nullptr);
 	}
 
 	inherited::net_Destroy				();
@@ -206,7 +206,7 @@ void CGrenade::Destroy()
 	if(m_destroy_callback)
 	{
 		m_destroy_callback		(this);
-		m_destroy_callback	=	destroy_callback(NULL);
+		m_destroy_callback	=	destroy_callback(nullptr);
 	}
 
 	FindNormal					(normal);

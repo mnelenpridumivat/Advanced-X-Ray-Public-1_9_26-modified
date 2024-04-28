@@ -76,14 +76,14 @@ void CRocketLauncher::DetachRocket(u16 rocket_id, bool bLaunch)
 	if( It != m_rockets.end() )
 	{
 		(*It)->m_bLaunched	= bLaunch;
-		(*It)->H_SetParent	(NULL);
+		(*It)->H_SetParent	(nullptr);
 		m_rockets.erase		(It);
 	};
 
 	if( It_l != m_launched_rockets.end() )
 	{
 		(*It)->m_bLaunched			= bLaunch;
-		(*It_l)->H_SetParent		(NULL);
+		(*It_l)->H_SetParent		(nullptr);
 		m_launched_rockets.erase	(It_l);
 	}
 }
@@ -106,7 +106,7 @@ CCustomRocket*	CRocketLauncher::getCurrentRocket()
 	if( m_rockets.size() )
 		return m_rockets.back();
 	else
-		return (CCustomRocket*)0;
+		return (CCustomRocket*)nullptr;
 }
 
 void CRocketLauncher::dropCurrentRocket()

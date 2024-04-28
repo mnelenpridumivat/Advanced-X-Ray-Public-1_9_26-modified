@@ -156,7 +156,7 @@ void CCustomOutfit::Load(LPCSTR section)
 	if (pSettings->line_exist(section, "actor_visual"))
 		m_ActorVisual = pSettings->r_string(section, "actor_visual");
 	else
-		m_ActorVisual = NULL;
+		m_ActorVisual = nullptr;
 
 	m_ef_equipment_type		= pSettings->r_u32(section,"ef_equipment_type");
 	m_fPowerLoss			= READ_IF_EXISTS(pSettings, r_float, section, "power_loss",    1.0f );
@@ -391,7 +391,7 @@ void CCustomOutfit::ApplySkinModel(CActor* pActor, bool bDress, bool bHUDOnly)
 	{
 		if(!bHUDOnly && m_ActorVisual.size())
 		{
-			shared_str NewVisual = NULL;
+			shared_str NewVisual = nullptr;
 			char* TeamSection = Game().getTeamSection(pActor->g_Team());
 			if (TeamSection)
 			{

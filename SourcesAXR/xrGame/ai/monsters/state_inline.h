@@ -191,7 +191,7 @@ void   CStateAbstract::add_debug_info (debug::text_tree& root_s)
 TEMPLATE_SPECIALIZATION
 CStateAbstract *CStateAbstract::get_state_current()
 {
-	if (substates.empty() || (current_substate == static_cast<u32>(-1))) return 0;
+	if (substates.empty() || (current_substate == static_cast<u32>(-1))) return nullptr;
 	
 	STATE_MAP_IT it = substates.find(current_substate);
 	VERIFY(it != substates.end());

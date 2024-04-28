@@ -9,7 +9,7 @@ cphysics_element_scripted*	cphysics_joint_scripted::	PFirst_element()
 {
 	CPhysicsElement* E = physics_impl().PFirst_element();
 	if(!E)
-		return 0;
+		return nullptr;
 	return get_script_wrapper<cphysics_element_scripted>(*E);
 	
 }
@@ -18,7 +18,7 @@ cphysics_element_scripted*	cphysics_joint_scripted::	PSecond_element	()
 {
 	CPhysicsElement* E = physics_impl().PSecond_element();
 	if(!E)
-		return 0;
+		return nullptr;
 	return get_script_wrapper<cphysics_element_scripted>(*E);
 }
 

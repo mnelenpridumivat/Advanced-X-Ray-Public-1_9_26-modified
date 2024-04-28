@@ -48,7 +48,7 @@ protected:
 public:
 	IC					CAbstractPathManager		(CRestrictedObject *object);
 	IC	virtual			~CAbstractPathManager		();
-	IC			void	reinit						(const _Graph *graph = 0);
+	IC			void	reinit						(const _Graph *graph = nullptr);
 	IC			bool	actual						(const _vertex_id_type start_vertex_id, const _vertex_id_type dest_vertex_id) const;
 	IC			void	make_inactual				();
 	IC			void	set_evaluator				(_VertexEvaluator *evaluator);

@@ -123,7 +123,7 @@ bool CUIInventoryCellItem::IsHelperOrHasHelperChild()
 
 CUIDragItem* CUIInventoryCellItem::CreateDragItem()
 {
-	return IsHelperOrHasHelperChild() ? NULL : inherited::CreateDragItem();
+	return IsHelperOrHasHelperChild() ? nullptr : inherited::CreateDragItem();
 }
 
 bool CUIInventoryCellItem::IsHelper ()
@@ -193,7 +193,7 @@ bool CUIAmmoCellItem::EqualTo(CUICellItem* itm)
 
 CUIDragItem* CUIAmmoCellItem::CreateDragItem()
 {
-	return IsHelper() ? NULL : inherited::CreateDragItem();
+	return IsHelper() ? nullptr : inherited::CreateDragItem();
 }
 
 u32 CUIAmmoCellItem::CalculateAmmoCount()
@@ -299,7 +299,7 @@ void CUIWeaponCellItem::CreateIcon(eAddonType t)
 void CUIWeaponCellItem::DestroyIcon(eAddonType t)
 {
 	DetachChild		(m_addons[t]);
-	m_addons[t]		= NULL;
+	m_addons[t]		= nullptr;
 }
 
 CUIStatic* CUIWeaponCellItem::GetIcon(eAddonType t)
@@ -571,7 +571,7 @@ void CUIWeaponCellItem::InitAddon(CUIStatic* s, LPCSTR section, Fvector2 addon_o
 CUIDragItem* CUIWeaponCellItem::CreateDragItem()
 {
 	CUIDragItem* i		= inherited::CreateDragItem();
-	CUIStatic* s		= NULL;
+	CUIStatic* s		= nullptr;
 
 	if(GetIcon(eSilencer))
 	{

@@ -37,7 +37,7 @@ void strreplaceall						(xr_string &str, LPCSTR S, LPCSTR N)
 {
 	LPCSTR	A;
 	int		S_len = xr_strlen(S);
-	while ((A = strstr(str.c_str(),S)) != 0)
+	while ((A = strstr(str.c_str(),S)) != nullptr)
 		str.replace(A - str.c_str(),S_len,N);
 }
 

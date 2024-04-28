@@ -16,7 +16,7 @@ CScriptParticlesCustom::CScriptParticlesCustom(CScriptParticles* owner, LPCSTR c
 	//	CScriptParticlesCustom* self = this;
 	//	Msg							("CScriptParticlesCustom: 0x%08x",*(int*)&self);
 	m_owner = owner;
-	m_animator = 0;
+	m_animator = nullptr;
 }
 
 //XRCORE_API		fastdelegate::FastDelegate< void () >	g_verify_stalkers;
@@ -37,14 +37,14 @@ CScriptParticlesCustom::~CScriptParticlesCustom()
 void CScriptParticlesCustom::PSI_internal_delete()
 {
 	if (m_owner)
-		m_owner->m_particles = NULL;
+		m_owner->m_particles = nullptr;
 	CParticlesObject::PSI_internal_delete();
 }
 
 void CScriptParticlesCustom::PSI_destroy()
 {
 	if (m_owner)
-		m_owner->m_particles = NULL;
+		m_owner->m_particles = nullptr;
 	CParticlesObject::PSI_destroy();
 }
 
@@ -65,7 +65,7 @@ void CScriptParticlesCustom::shedule_Update(u32 _dt)
 void CScriptParticlesCustom::LoadPath(LPCSTR caPathName)
 {
 	if (!m_animator) m_animator = xr_new<CObjectAnimator>();
-	if ((0 == m_animator->Name()) || (0 != xr_strcmp(m_animator->Name(), caPathName)))
+	if ((nullptr == m_animator->Name()) || (0 != xr_strcmp(m_animator->Name(), caPathName)))
 	{
 		m_animator->Clear();
 		m_animator->Load(caPathName);
@@ -93,7 +93,7 @@ void CScriptParticlesCustom::StopPath()
 void CScriptParticlesCustom::remove_owner()
 {
 	R_ASSERT(m_owner);
-	m_owner = 0;
+	m_owner = nullptr;
 }
 
 CScriptParticles::CScriptParticles(LPCSTR caParticlesName)
@@ -109,7 +109,7 @@ CScriptParticles::~CScriptParticles()
 		// destroy particles
 		m_particles->remove_owner();
 		m_particles->PSI_destroy();
-		m_particles = 0;
+		m_particles = nullptr;
 	}
 }
 

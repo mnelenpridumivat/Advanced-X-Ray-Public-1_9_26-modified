@@ -80,8 +80,8 @@ public:
 	virtual	void	reload								(LPCSTR section);
 			void	remove_links						(CObject *object);
 			void	Exec_Look							(float dt);
-			void	SetPointLookAngles					(const Fvector &tPosition, float &yaw, float &pitch, Fvector const& look_position, const CGameObject *object = 0);
-			void	SetFirePointLookAngles				(const Fvector &tPosition, float &yaw, float &pitch, Fvector const& look_position, const CGameObject *object = 0);
+			void	SetPointLookAngles					(const Fvector &tPosition, float &yaw, float &pitch, Fvector const& look_position, const CGameObject *object = nullptr);
+			void	SetFirePointLookAngles				(const Fvector &tPosition, float &yaw, float &pitch, Fvector const& look_position, const CGameObject *object = nullptr);
 			void	SetDirectionLook					();
 			void	SetLessCoverLook					(const LevelGraph::CVertex *tpNode, bool bDifferenceLook);
 			void	SetLessCoverLook					(const LevelGraph::CVertex *tpNode, float fMaxHeadTurnAngle, bool bDifferenceLook);

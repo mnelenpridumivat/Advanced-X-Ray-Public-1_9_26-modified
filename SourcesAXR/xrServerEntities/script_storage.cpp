@@ -37,7 +37,7 @@ this._G = _G \
 setfenv(1, this) \
 		";
 
-LPCSTR	file_header = 0;
+LPCSTR	file_header = nullptr;
 
 #ifndef ENGINE_BUILD
 #	include "script_engine.h"
@@ -88,7 +88,7 @@ static const u32			s_arena_size = 96*1024*1024;
 static char					s_fake_array[s_arena_size];
 static doug_lea_allocator	s_allocator( s_fake_array, s_arena_size, "lua" );
 #else // #ifdef USE_ARENA_ALLOCATOR
-static doug_lea_allocator	s_allocator( 0, 0, "lua" );
+static doug_lea_allocator	s_allocator( nullptr, 0, "lua" );
 #endif // #ifdef USE_ARENA_ALLOCATOR
 
 static void *lua_alloc		(void *ud, void *ptr, size_t osize, size_t nsize) {
@@ -108,7 +108,7 @@ static void *lua_alloc		(void *ud, void *ptr, size_t osize, size_t nsize) {
 	if ( !nsize )	{
 		memory_monitor::monitor_free(ptr);
 		s_allocator.free_impl		(ptr);
-		return						NULL;
+		return nullptr;
 	}
 
 	if ( !ptr ) {
@@ -139,7 +139,7 @@ static LPVOID __cdecl luabind_allocator	(
 	if (!size) {
 		LPVOID	non_const_pointer = const_cast<LPVOID>(pointer);
 		xr_free	(non_const_pointer);
-		return	( 0 );
+		return	( nullptr );
 	}
 
 	if (!pointer) {
@@ -161,7 +161,7 @@ static LPVOID __cdecl luabind_allocator	(
 void setup_luabind_allocator		()
 {
 	luabind::allocator				= &luabind_allocator;
-	luabind::allocator_parameter	= 0;
+	luabind::allocator_parameter	= nullptr;
 }
 
 /* ---- start of LuaJIT extensions */
@@ -172,7 +172,7 @@ static void l_message (lua_State* state, const char *msg) {
 static int report (lua_State *L, int status) {
 	if (status && !lua_isnil(L, -1)) {
 		const char *msg = lua_tostring(L, -1);
-		if (msg == NULL) msg = "(error object is not a string)";
+		if (msg == nullptr) msg = "(error object is not a string)";
 		l_message(L, msg);
 		lua_pop(L, 1);
 	}
@@ -238,13 +238,13 @@ static int dojitopt (lua_State *L, const char *opt) {
 
 CScriptStorage::CScriptStorage		()
 {
-	m_current_thread		= 0;
+	m_current_thread		= nullptr;
 
 #ifdef DEBUG
 	m_stack_is_ready		= false;
 #endif // DEBUG
 	
-	m_virtual_machine		= 0;
+	m_virtual_machine		= nullptr;
 
 #ifdef USE_LUA_STUDIO
 #	ifndef USE_DEBUGGER
@@ -497,7 +497,7 @@ bool CScriptStorage::load_buffer	(lua_State *L, LPCSTR caBuffer, size_t tSize, L
 		xr_sprintf		(insert,header,caNameSpaceName,a,b);
 		u32				str_len = xr_strlen(insert);
 		u32 const total_size = str_len + tSize;
-		LPSTR			script = 0;
+		LPSTR			script = nullptr;
 		bool dynamic_allocation	= false;
 
 		__try {

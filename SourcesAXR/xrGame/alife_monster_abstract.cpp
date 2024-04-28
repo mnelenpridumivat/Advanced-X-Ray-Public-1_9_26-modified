@@ -148,7 +148,7 @@ void CSE_ALifeMonsterAbstract::on_location_change			() const
 
 CSE_ALifeItemWeapon	*CSE_ALifeMonsterAbstract::tpfGetBestWeapon(ALife::EHitType &tHitType, float &fHitPower)
 {
-	m_tpCurrentBestWeapon		= 0;
+	m_tpCurrentBestWeapon		= nullptr;
 	fHitPower					= m_fHitPower;
 	tHitType					= m_tHitType;
 	return						(m_tpCurrentBestWeapon);
@@ -187,7 +187,7 @@ CSE_ALifeDynamicObject *CSE_ALifeMonsterAbstract::tpfGetBestDetector()
 		return					(this);
 	else {
 		if (!l_tpALifeGroupAbstract->m_wCount)
-			return				(0);
+			return				(nullptr);
 		else
 			return				(ai().alife().objects().object(l_tpALifeGroupAbstract->m_tpMembers[0]));
 	}
