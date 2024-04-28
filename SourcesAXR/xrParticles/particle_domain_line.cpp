@@ -3,7 +3,7 @@
 
 #include "particle_core.h"
 
-//static constexpr PAPI::pVector vHalf(0.5, 0.5, 0.5);
+static constexpr PAPI::pVector vHalf(0.5, 0.5, 0.5);
 
 ICF PAPI::pVector RandVec()
 {

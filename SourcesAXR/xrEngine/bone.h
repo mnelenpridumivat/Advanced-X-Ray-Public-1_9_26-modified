@@ -141,7 +141,7 @@ enum EJointType
     jtForceU32 = u32(-1)
 };
 
-struct SJointLimit
+struct ECORE_API SJointLimit
 {
 	Fvector2		limit;
     float 			spring_factor;
@@ -155,7 +155,7 @@ struct SJointLimit
     }
 };
 
-struct SBoneShape
+struct ECORE_API SBoneShape
 {
     enum EShapeType
 	{
@@ -197,7 +197,7 @@ struct SBoneShape
     }
 };
 
-struct SJointIKData
+struct ECORE_API SJointIKData
 {
     // IK
     EJointType		type;
@@ -302,7 +302,7 @@ class 	IBoneData
 class CBone;
 DEFINE_VECTOR		    (CBone*,BoneVec,BoneIt);
 
-class CBone:
+class ECORE_API CBone:
 	public CBoneInstance,
 	public IBoneData
 {

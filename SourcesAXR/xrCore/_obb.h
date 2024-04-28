@@ -47,23 +47,6 @@ public:
 	Tvector			m_translate;
 	Tvector			m_halfsize;
 
-	ICF _obb() {}
-
-	ICF _obb(const _obb& other)
-	{
-		m_rotate = other.m_rotate;
-		m_translate = other.m_translate;
-		m_halfsize = other.m_halfsize;
-	}
-
-	_obb& operator=(const _obb& other)
-	{
-		m_rotate = other.m_rotate;
-		m_translate = other.m_translate;
-		m_halfsize = other.m_halfsize;
-		return *this;
-	}
-
 	IC SelfRef		invalidate() {
 		m_rotate.identity	();
 		m_translate.set		(0,0,0);
@@ -141,7 +124,7 @@ typedef		_obb<double>	Dobb;
 template <class T>
 BOOL	_valid			(const _obb<T>& m)		
 { 
-	return _valid(m.m_rotate) && _valid(m.m_translate) && _valid(m.m_halfsize);
+	return _valid(m_rotate) && _valid(m_translate) && _valid(m_halfsize);
 }
 
 #endif

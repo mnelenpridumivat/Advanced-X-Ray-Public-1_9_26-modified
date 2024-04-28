@@ -22,35 +22,6 @@ public:
 			T x2, y2, z2;
 		};
 	};
-	ICF _box3() {}
-
-	ICF _box3(T x1, T y1, T z1,
-		T x2, T y2, T z2)
-	{
-		this->x1 = x1, this->y1 = y1, this->z1 = z1;
-		this->x2 = x2, this->y2 = y2, this->z2 = z2;
-	}
-
-	ICF _box3(T x1, T y1, T z1,	T x2)
-	{
-		this->x1 = x1;
-		this->y1 = y1,
-		this->z1 = z1;
-		this->x2 = x2;
-	}
-
-	ICF _box3(SelfCRef other)
-	{
-		x1 = other.x1, y1 = other.y1, z1 = other.z1;
-		x2 = other.x2, y2 = other.y2, z2 = other.z2;
-	}
-
-	ICF SelfRef operator=(SelfCRef other)
-	{
-		x1 = other.x1, y1 = other.y1, z1 = other.z1;
-		x2 = other.x2, y2 = other.y2, z2 = other.z2;
-		return *this;
-	}
 
 	IC	BOOL	is_valid	()											{return (x2>=x1)&&(y2>=y1)&&(z2>=z1);}
 

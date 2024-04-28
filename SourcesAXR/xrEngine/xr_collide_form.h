@@ -1,7 +1,6 @@
 #ifndef __XR_COLLIDE_FORM_H__
 #define __XR_COLLIDE_FORM_H__
 
-#include "bone.h"
 #include "../xrcdb/xr_collide_defs.h"
 
 // refs
@@ -124,59 +123,6 @@ public:
 		};
 		u16				type;
 		u16				elem_id;
-
-		ICF SElement(const SElement& other)
-		{
-			type = other.type;
-			switch(type)
-			{
-			case 1:
-			{
-				b_IM = other.b_IM;
-				b_hsize = other.b_hsize;
-				break;
-			}
-			case 2:
-			{
-				s_sphere = other.s_sphere;
-				break;
-			}
-			case 3:
-			{
-				c_cylinder = other.c_cylinder;
-				break;
-			}
-			}
-			//data = other.data->GetCopy();
-			elem_id = other.elem_id;
-		}
-
-		ICF SElement& operator=(const SElement& other)
-		{
-			type = other.type;
-			switch (type)
-			{
-			case 1:
-			{
-				b_IM = other.b_IM;
-				b_hsize = other.b_hsize;
-				break;
-			}
-			case 2:
-			{
-				s_sphere = other.s_sphere;
-				break;
-			}
-			case 3:
-			{
-				c_cylinder = other.c_cylinder;
-				break;
-			}
-			}
-			//data = other.data->GetCopy();
-			elem_id = other.elem_id;
-			return *this;
-		}
 	public:
 						SElement	()				:elem_id(u16(-1)),type(0)	{}
 						SElement	(u16 id, u16 t)	:elem_id(id),type(t)		{}
@@ -190,15 +136,6 @@ private:
 
 	u32					dwFrame;		// The model itself
 	u32					dwFrameTL;		// Top level
-
-	ICF CCF_Skeleton& operator=(const CCF_Skeleton& other)
-	{
-		std::copy(other.elements.begin(), other.elements.end(), elements.begin());
-		vis_mask = other.vis_mask;
-		dwFrame = other.dwFrame;
-		dwFrameTL = other.dwFrameTL;
-		return *this;
-	}
 
 	void				BuildState		();
 	void				BuildTopLevel	();
@@ -236,50 +173,13 @@ public:
 			Fmatrix	box;
 			Fmatrix	ibox;
 		};
-		shape_data(){};
 	};
 	struct shape_def
 	{
 		int			type;
 		shape_data	data;
-
-		ICF shape_def() : type(0)
-		{
-			//data.sphere = Fsphere();
-		}
-
-		ICF shape_def(const shape_def& other)
-		{
-			type = other.type;
-			if(!type)
-			{
-				data.sphere = other.data.sphere;
-			} else
-			{
-				data.box = other.data.box;
-				data.ibox = other.data.ibox;
-			}
-			//data = other.data->GetCopy();
-		}
-
-		ICF shape_def& operator=(const shape_def& other)
-		{
-			type = other.type;
-			if (!type)
-			{
-				data.sphere = other.data.sphere;
-			}
-			else
-			{
-				data.box = other.data.box;
-				data.ibox = other.data.ibox;
-			}
-			//data = other.data->GetCopy();
-			return *this;
-		}
 	};
 	xr_vector<shape_def>	shapes;
-
 public:
 					CCF_Shape		( CObject* _owner );
 

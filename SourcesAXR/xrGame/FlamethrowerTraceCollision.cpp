@@ -274,7 +274,7 @@ void CFlamethrowerTraceCollision::Update(float DeltaTime)
 //	Level().BulletManager().AddBulletMoveChunk(old_pos, m_position);
 //#endif
 
-	UpdateParticles(DeltaTime);
+	UpdateParticles();
 
 }
 

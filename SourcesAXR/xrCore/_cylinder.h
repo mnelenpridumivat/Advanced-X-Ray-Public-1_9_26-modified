@@ -14,11 +14,6 @@ public:
 	_vector3<T>	m_direction;
 	T			m_height;
 	T			m_radius;
-
-    ICF _cylinder() {}
-    ICF _cylinder(const _cylinder& other) : m_center(other.m_center), m_direction(other.m_direction), m_height(other.m_height), m_radius(other.m_radius) {}
-    ICF _cylinder(_vector3<T> m_center, _vector3<T> m_direction, T m_height, T m_radius) : m_center(m_center), m_direction(m_direction), m_height(m_height), m_radius(m_radius) {}
-
 public:
 	IC SelfRef	invalidate	()	{ m_center.set(0,0,0); m_direction.set(0,0,0); m_height=0; m_radius=0; return *this; }
 	enum ecode { cyl_cap, cyl_wall, cyl_none };

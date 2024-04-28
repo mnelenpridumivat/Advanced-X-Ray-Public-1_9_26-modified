@@ -49,15 +49,6 @@ private:
 		Fmatrix			mXForm;
 		Fsphere			bounds;
 		float			time;
-		ICF Particle() {}
-		ICF Particle(const Particle& other)
-		{
-			next = other.next;
-			prev = other.prev;
-			mXForm = other.mXForm;
-			bounds = other.bounds;
-			time = other.time;
-		}
 	};
 	enum	States
 	{

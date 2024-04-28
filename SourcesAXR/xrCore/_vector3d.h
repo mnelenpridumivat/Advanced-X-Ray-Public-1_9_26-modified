@@ -18,10 +18,6 @@ public:
 public:
 	T	x,y,z;
 
-	ICF			_vector3() {}
-	ICF			_vector3(SelfCRef other) : x(other.x), y(other.y), z(other.z) {}
-	ICF			_vector3(T x, T y, T z) : x(x), y(y), z(z) {}
-
 	// access operators
 	ICF	T&			operator[] (int i)					{ return *((T*)this + i); }
 	ICF	T&			operator[] (int i)	const			{ return *((T*)this + i); }
@@ -39,7 +35,7 @@ public:
 
 	ICF	Self operator+(const Self& v)
 	{
-		return Self{ x + v.x, y + v.y, z + v.z };
+		return Self(x + v.x, y + v.y, z + v.z);
 	};
 	ICF	SelfRef operator+=(const Self& v)
 	{
@@ -62,7 +58,7 @@ public:
 
 	ICF	Self operator-(const Self& v)
 	{
-		return Self{ x - v.x, y - v.y, z - v.z };
+		return Self(x - v.x, y - v.y, z - v.z);
 	};
 	ICF	SelfRef operator-=(const Self& v)
 	{
