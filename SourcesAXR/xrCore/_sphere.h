@@ -5,6 +5,9 @@ template <class T>
 struct _sphere {
 	_vector3<T>	P;
 	T			R;
+	ICF _sphere() {}
+	ICF _sphere(const _sphere& other) : P(P), R(R) {}
+	ICF _sphere(_vector3<T> P, T R) : P(P), R(R) {}
 public:
 	IC void		set(const _vector3<T> &_P, T _R)	{ P.set(_P); R = _R; }
 	IC void		set(const _sphere<T> &S)			{ P.set(S.P); R=S.R; }

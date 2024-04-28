@@ -22,6 +22,16 @@ public:
         };
 		float m[3][3];					// Array
 	};
+
+    ICF _matrix33() {}
+
+    _matrix33& operator=(const _matrix33& other)
+    {
+        i = other.i;
+        j = other.j;
+        k = other.k;
+        return *this;
+    }
 	// Class members
 	IC SelfRef set_rapid(const _matrix<T> &a) 
 	{

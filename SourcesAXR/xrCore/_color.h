@@ -31,6 +31,16 @@ public:
 public:
 	T r,g,b,a;
 
+	ICF _color() {}
+
+	ICF _color(T r, T g, T b, T a)
+	{
+		this->r = r;
+		this->g = g;
+		this->b = b;
+		this->a = a;
+	}
+
 	ICF	SelfRef	set		(u32 dw)
 	{
 		const T f = T(1.0) / T(255.0);

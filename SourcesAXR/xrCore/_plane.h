@@ -11,6 +11,9 @@ public:
 public:
 	_vector3<T>	n;
 	T			d;
+	ICF _plane() {}
+	ICF _plane(_vector3<T> n, T d) : n(n), d(d) {}
+	ICF _plane(T x, T y, T z, T d) : n(x, y, z), d(d) {}
 public:
 	IC	SelfRef	set		(Self &P)
 	{

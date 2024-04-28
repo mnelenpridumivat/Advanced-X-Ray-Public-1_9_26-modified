@@ -4,6 +4,7 @@
 #define ONEOVERSQRT2PI (1.f/SQRT2PI)
 
 namespace PAPI{
+	const pVector vHalf(0.5, 0.5, 0.5);
 	#pragma pack (push,4)
 	struct PARTICLES_API pDomain
 	{
