@@ -32,7 +32,7 @@ void CMPPlayersBag::OnEvent(NET_Packet& P, u16 type)
 #endif // MP_LOGGING
 
 				O->H_SetParent(this);
-				O->Position().Set(Position());
+				O->Position().set(Position());
 			}break;
 		case GE_OWNERSHIP_REJECT : 
 			{

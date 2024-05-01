@@ -1,8 +1,5 @@
-#pragma once
-
-#include "xrCoreInline.h"
-#include "xrCoreExport.h"
-#include "_types.h"
+#ifndef _LOCAL_RAND
+#define _LOCAL_RAND
 
 /*
 u32 dwRandSeed;
@@ -47,3 +44,5 @@ public:
 };
 
 XRCORE_API extern CRandom	Random;
+
+#endif

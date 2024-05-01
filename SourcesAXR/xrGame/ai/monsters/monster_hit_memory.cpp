@@ -146,7 +146,7 @@ Fvector CMonsterHitMemory::get_last_hit_position()
 {
 	SMonsterHit		last_hit;
 	last_hit.time	= 0;
-	last_hit.position.Set(0.f,0.f,0.f);
+	last_hit.position.set(0.f,0.f,0.f);
 
 	for (u32 i = 0; i < m_hits.size(); i++) {
 		if (m_hits[i].time > last_hit.time)	last_hit = m_hits[i];

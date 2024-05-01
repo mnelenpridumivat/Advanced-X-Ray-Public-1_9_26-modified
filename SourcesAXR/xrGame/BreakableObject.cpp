@@ -166,7 +166,7 @@ void CBreakableObject::CreateBroken()
 	//dMass m;
 	//dMassSetBox(&m,m_Shell->getMass()/100.f,1.f,1.f,1.f);
 	//m_Shell->addEquelInertiaToEls(m);
-	m_Shell->MassAddBox( m_Shell->getMass()/100.f, Fvector().Set(1,1,1) );
+	m_Shell->MassAddBox( m_Shell->getMass()/100.f, Fvector().set(1,1,1) );
 	m_Shell->SmoothElementsInertia(0.3f);
 	Fobb b;
 	Visual()->getVisData().box.getradius(b.m_halfsize);
@@ -227,8 +227,8 @@ void CBreakableObject::Break()
 	for(u16 i=0;i<el_num;i++)
 	{
 		Fvector pos,dir;
-		pos.Set(Random.randF(-0.3f,0.3f),Random.randF(-0.3f,0.3f),Random.randF(-0.3f,0.3f));
-		dir.Set(Random.randF(-0.3f,0.3f),Random.randF(-0.3f,0.3f),Random.randF(-0.3f,0.3f));
+		pos.set(Random.randF(-0.3f,0.3f),Random.randF(-0.3f,0.3f),Random.randF(-0.3f,0.3f));
+		dir.set(Random.randF(-0.3f,0.3f),Random.randF(-0.3f,0.3f),Random.randF(-0.3f,0.3f));
 		dir.normalize();
 		m_pPhysicsShell->get_ElementByStoreOrder(i)->applyImpulseTrace(pos,dir,Random.randF(0.5f,3.f),0);
 	}
@@ -259,9 +259,9 @@ void CBreakableObject::CollisionHit( u16 source_id, u16 bone_id, float c_damage,
 			b_resived_damage=true;
 			m_max_frame_damage=c_damage;
 			//this_object->m_contact_damage_pos.set(c.geom.pos[0],c.geom.pos[1],c.geom.pos[2]);
-			m_contact_damage_pos.Set( pos );
+			m_contact_damage_pos.set( pos );
 			//this_object->m_contact_damage_dir.set(-c.geom.normal[0]*norm_sign,-c.geom.normal[1]*norm_sign,-c.geom.normal[2]*norm_sign);
-			m_contact_damage_dir.Set( dir );
+			m_contact_damage_dir.set( dir );
 		}
 }
 
@@ -303,7 +303,7 @@ void CBreakableObject::CheckHitBreak(float power,ALife::EHitType hit_type)
 void CBreakableObject::ApplyExplosion(const Fvector &dir,float impulse)
 {
 	if(!m_pPhysicsShell) return;
-	Fvector pos;pos.Set(0.f,0.f,0.f);
+	Fvector pos;pos.set(0.f,0.f,0.f);
 	u16 el_num=m_pPhysicsShell->get_ElementsNumber();
 	for(u16 i=0;i<el_num;i++)
 	{	

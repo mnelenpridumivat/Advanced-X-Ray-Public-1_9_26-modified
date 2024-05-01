@@ -133,11 +133,11 @@ public:
 	{
 		if (bForce)
 		{
-			joystickrot.Set(0.f, 0.f, 0.f);
+			joystickrot.set(0.f, 0.f, 0.f);
 			buttonpress = 0.f;
 		}
 		
-		target_joystickrot.Set(0.f, 0.f, 0.f);
+		target_joystickrot.set(0.f, 0.f, 0.f);
 		target_buttonpress = 0.f;
 	}
 

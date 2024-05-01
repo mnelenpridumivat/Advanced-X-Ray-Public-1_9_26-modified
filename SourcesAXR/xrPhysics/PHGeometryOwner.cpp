@@ -8,7 +8,7 @@
 CPHGeometryOwner::CPHGeometryOwner()
 {
 	b_builded=false;
-	m_mass_center.Set(0,0,0);
+	m_mass_center.set(0,0,0);
 	VERIFY( ph_world );
 	//contact_callback=ContactShotMark;//ph_world->default_contact_shotmark();
 	contact_callback=ph_world->default_contact_shotmark();
@@ -102,7 +102,7 @@ void CPHGeometryOwner::set_body(dBodyID body)
 Fvector CPHGeometryOwner::			get_mc_data	(){
 	Fvector s;
 	float pv;
-	m_mass_center.Set(0,0,0);
+	m_mass_center.set(0,0,0);
 	m_volume=0.f;
 	GEOM_I i_geom=m_geoms.begin(),e=m_geoms.end();
 	for(;i_geom!=e;++i_geom)
@@ -119,13 +119,13 @@ Fvector CPHGeometryOwner::			get_mc_data	(){
 Fvector CPHGeometryOwner::			get_mc_geoms	(){
 	////////////////////to be implemented
 	Fvector mc;
-	mc.Set(0.f,0.f,0.f);
+	mc.set(0.f,0.f,0.f);
 	return mc;
 }
 void CPHGeometryOwner::get_mc_kinematics(IKinematics* K,Fvector& mc,float& mass)
 {
 
-	mc.Set(0.f,0.f,0.f);
+	mc.set(0.f,0.f,0.f);
 	mass=0.f;
 	m_volume=0.f;
 	GEOM_I i_geom=m_geoms.begin(),e=m_geoms.end();
@@ -135,7 +135,7 @@ void CPHGeometryOwner::get_mc_kinematics(IKinematics* K,Fvector& mc,float& mass)
 		Fvector add;
 		mass+=data.get_mass();
 		m_volume+=(*i_geom)->volume();
-		add.Set(data.get_center_of_mass());
+		add.set(data.get_center_of_mass());
 		add.mul(data.get_mass());
 		mc.add(add);
 	}
@@ -370,7 +370,7 @@ float CPHGeometryOwner::getRadius()
 
 void CPHGeometryOwner::get_mc_vs_transform(Fvector& mc,const Fmatrix& m)
 {
-	mc.Set(m_mass_center);
+	mc.set(m_mass_center);
 	m.transform_tiny(mc);
 	VERIFY2(_valid(mc),"invalid mc in_set_transform");
 }

@@ -29,10 +29,10 @@
  #undef USE_VDMDBG
 #endif
 
-#include <winsock2.h>
 #include <windows.h>
 #include <windowsx.h>
 #include <tchar.h>
+#include <winsock2.h>
 #include <shellapi.h>
 #include <psapi.h>
 #include <commctrl.h>

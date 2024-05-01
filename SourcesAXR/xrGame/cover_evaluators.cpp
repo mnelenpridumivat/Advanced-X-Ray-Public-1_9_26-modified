@@ -28,7 +28,7 @@ CCoverEvaluatorBase::CCoverEvaluatorBase					(CRestrictedObject *object)
 	m_inertia_time			= 0;
 	m_best_value			= flt_max;
 	m_initialized			= false;
-	m_start_position.Set	(flt_max,flt_max,flt_max);
+	m_start_position.set	(flt_max,flt_max,flt_max);
 	m_selected				= nullptr;
 	m_previous_selected		= nullptr;
 	m_object				= object;

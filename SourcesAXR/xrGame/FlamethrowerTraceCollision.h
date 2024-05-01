@@ -28,7 +28,6 @@ class CFlamethrowerTraceCollision :
 	float RadiusOnCollide;
 
 	shared_str m_sFlameParticles;
-	shared_str m_sEarthFlameParticles;
 
 	float m_last_update_time;
 

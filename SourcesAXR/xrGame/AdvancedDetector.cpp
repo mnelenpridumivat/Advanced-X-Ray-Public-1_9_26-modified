@@ -28,7 +28,7 @@ CUIArtefactDetectorAdv&  CAdvancedDetector::ui()
 
 void CAdvancedDetector::UpdateAf()
 {
-	ui().SetValue				(0.0f,Fvector().Set(0,0,0));
+	ui().SetValue				(0.0f,Fvector().set(0,0,0));
 	if(m_artefacts.m_ItemInfos.size()==0)	return;
 
 	CAfList<CObject>::ItemsMapIt it_b	= m_artefacts.m_ItemInfos.begin();
@@ -90,7 +90,7 @@ void CAdvancedDetector::UpdateAf()
 	if(af_info.snd_time > af_info.cur_period)
 	{
 		af_info.snd_time		= 0;
-		HUD_SOUND_ITEM::PlaySound	(item_type->detect_snds, Fvector().Set(0,0,0), this, true, false);
+		HUD_SOUND_ITEM::PlaySound	(item_type->detect_snds, Fvector().set(0,0,0), this, true, false);
 		if(item_type->detect_snds.m_activeSnd)
 			item_type->detect_snds.m_activeSnd->snd.set_frequency(snd_freq);
 	} 
@@ -103,7 +103,7 @@ void CAdvancedDetector::UpdateAf()
 void CUIArtefactDetectorAdv::construct(CAdvancedDetector* p)
 {
 	m_parent			= p;
-	m_target_dir.Set	(0,0,0);
+	m_target_dir.set	(0,0,0);
 	m_curr_ang_speed	= 0.0f;
 	m_cur_y_rot			= 0.0f;
 	m_bid				= static_cast<u16>(-1);

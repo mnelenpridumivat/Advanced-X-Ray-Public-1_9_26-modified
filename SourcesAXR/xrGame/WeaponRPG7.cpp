@@ -111,8 +111,8 @@ void CWeaponRPG7::switch2_Fire()
 	{
 		Fvector p1, d1, p; 
 		Fvector p2, d2, d; 
-		p1.Set								(get_LastFP()); 
-		d1.Set								(get_LastFD());
+		p1.set								(get_LastFP()); 
+		d1.set								(get_LastFD());
 		p = p1;
 		d = d1;
 		CEntity* E = smart_cast<CEntity*>	(H_Parent());
@@ -136,10 +136,10 @@ void CWeaponRPG7::switch2_Fire()
 
 		Fmatrix								launch_matrix;
 		launch_matrix.identity				();
-		launch_matrix.k.Set					(d);
+		launch_matrix.k.set					(d);
 		Fvector::generate_orthonormal_basis(launch_matrix.k,
 											launch_matrix.j, launch_matrix.i);
-		launch_matrix.c.Set					(p);
+		launch_matrix.c.set					(p);
 
 		d.normalize							();
 		d.mul								(m_fLaunchSpeed);

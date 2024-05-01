@@ -1,5 +1,5 @@
-#pragma once
-#include "../xrCore/_matrix33.h"
+#ifndef FOBB_H
+#define FOBB_H
 
 template <class T>
 struct _obb{
@@ -49,28 +49,28 @@ public:
 
 	IC SelfRef		invalidate() {
 		m_rotate.identity	();
-		m_translate.Set		(0,0,0);
-		m_halfsize.Set		(0,0,0);
+		m_translate.set		(0,0,0);
+		m_halfsize.set		(0,0,0);
 		return *this;
 	}
 	IC SelfRef		identity() {
 		invalidate();
-		m_halfsize.Set( T(0.5), T(0.5), T(0.5) );
+		m_halfsize.set( T(0.5), T(0.5), T(0.5) );
 		return *this;
 	}
 	IC void			xform_get(Tmatrix& D) const
 	{
-		D.i.Set(m_rotate.i); D._14_ = 0;
-		D.j.Set(m_rotate.j); D._24_ = 0;
-		D.k.Set(m_rotate.k); D._34_ = 0;
-		D.c.Set(m_translate);D._44_ = 1;
+		D.i.set(m_rotate.i); D._14_ = 0;
+		D.j.set(m_rotate.j); D._24_ = 0;
+		D.k.set(m_rotate.k); D._34_ = 0;
+		D.c.set(m_translate);D._44_ = 1;
 	}
 	IC SelfRef		xform_set(const Tmatrix& S)
 	{
-		m_rotate.i.Set	(S.i);
-		m_rotate.j.Set	(S.j);
-		m_rotate.k.Set	(S.k);
-		m_translate.Set	(S.c);
+		m_rotate.i.set	(S.i);
+		m_rotate.j.set	(S.j);
+		m_rotate.k.set	(S.k);
+		m_translate.set	(S.c);
 		return *this;
 	}
 	IC void			xform_full(Tmatrix& D) const
@@ -89,7 +89,7 @@ public:
 		src.xform_get	(srcR);
 		destR.mul_43	(M,srcR);
 		xform_set		(destR);
-		m_halfsize.Set	(src.m_halfsize);
+		m_halfsize.set	(src.m_halfsize);
 		return *this;
 	}
 
@@ -99,9 +99,9 @@ public:
         Tvector kDiff; 
         kDiff.sub(start,m_translate);
         Tvector kOrigin;
-        kOrigin.Set(kDiff.dotproduct(m_rotate.i), kDiff.dotproduct(m_rotate.j), kDiff.dotproduct(m_rotate.k));
+        kOrigin.set(kDiff.dotproduct(m_rotate.i), kDiff.dotproduct(m_rotate.j), kDiff.dotproduct(m_rotate.k));
         Tvector kDirection;
-        kDirection.Set(dir.dotproduct(m_rotate.i),dir.dotproduct(m_rotate.j),dir.dotproduct(m_rotate.k));
+        kDirection.set(dir.dotproduct(m_rotate.i),dir.dotproduct(m_rotate.j),dir.dotproduct(m_rotate.k));
 
         T fT0 = 0.0f, fT1 = type_max(T);
         if (intersect(kOrigin,kDirection,m_halfsize, fT0,fT1)){
@@ -124,5 +124,7 @@ typedef		_obb<double>	Dobb;
 template <class T>
 BOOL	_valid			(const _obb<T>& m)		
 { 
-	return _valid(m.m_rotate) && _valid(m.m_translate) && _valid(m.m_halfsize);
+	return _valid(m_rotate) && _valid(m_translate) && _valid(m_halfsize);
 }
+
+#endif

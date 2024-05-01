@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "mathutils.h"
 #include "../3rd party/ode/include/ode/common.h"
-#include "../xrCore/_cylinder.h"
 
 #ifdef _M_X64
 XRPHYSICS_API const float	phInfinity = std::numeric_limits<float>::max();
@@ -424,38 +423,38 @@ IC bool RAYvsCYLINDER(const Fcylinder& c_cylinder, const Fvector &S, const Fvect
 void capped_cylinder_ray_collision_test()
 {
 	Fcylinder c;
-	c.m_center.Set(0,0,0);
-	c.m_direction.Set(0,0,1);
+	c.m_center.set(0,0,0);
+	c.m_direction.set(0,0,1);
 	c.m_height=2;
 	c.m_radius=1;
 	//ray
 	Fvector dir,pos;float R;
-	dir.Set(1,0,0);pos.Set(0,0,0);R=3;
+	dir.set(1,0,0);pos.set(0,0,0);R=3;
 	
 	//inside
 	RAYvsCYLINDER(c,pos,dir,R,FALSE);//true , 1
 	RAYvsCYLINDER(c,pos,dir,R,TRUE);//false ,
-	dir.Set(0,0,1);
+	dir.set(0,0,1);
 	RAYvsCYLINDER(c,pos,dir,R,FALSE);//true , 2
 	RAYvsCYLINDER(c,pos,dir,R,TRUE);//false
 
 	//outside
-	pos.Set(-3,0,0);dir.Set(1,0,0);R=4;
+	pos.set(-3,0,0);dir.set(1,0,0);R=4;
 	RAYvsCYLINDER(c,pos,dir,R,FALSE);//true , 2
 	RAYvsCYLINDER(c,pos,dir,R,TRUE);//true , 2
 	R=1;
 	RAYvsCYLINDER(c,pos,dir,R,FALSE);//false
-	pos.Set(0,0,-3);dir.Set(0,0,1);R=4;
+	pos.set(0,0,-3);dir.set(0,0,1);R=4;
 	RAYvsCYLINDER(c,pos,dir,R,FALSE);//true , 1
 	RAYvsCYLINDER(c,pos,dir,R,TRUE);//true, 1
 
-	pos.Set(-3,-3,-3);dir.Set(1,1,1);dir.normalize();R=10;
+	pos.set(-3,-3,-3);dir.set(1,1,1);dir.normalize();R=10;
 	RAYvsCYLINDER(c,pos,dir,R,TRUE);//true, ?
 	float ir[2];
 	Fcylinder::ecode code[2];
 	c.intersect(pos,dir,ir,code);
 	//
-	pos.Set(0,0,0);
+	pos.set(0,0,0);
 	RAYvsCYLINDER(c,pos,dir,R,FALSE);//true, ?
 	//Fcylinder::ecode code[2];
 	c.intersect(pos,dir,ir,code);
@@ -464,13 +463,13 @@ void capped_cylinder_ray_collision_test()
 	for(int i=0;i<1000000;i++)
 	{
 		Fcylinder c1;
-		c1.m_center.random_point(Fvector().Set(2,2,2));
+		c1.m_center.random_point(Fvector().set(2,2,2));
 		c1.m_direction.random_dir();
 		c1.m_height=Random.randF(0.2f,2.f);
 		c1.m_radius=Random.randF(0.1f,2.f);
 		//ray
 		Fvector dir1,pos1;float R1=Random.randF(0.1f,2.f);
-		dir1.random_dir();pos1.random_point(Fvector().Set(2,2,2));
+		dir1.random_dir();pos1.random_point(Fvector().set(2,2,2));
 		RAYvsCYLINDER(c1,pos1,dir1,R1,TRUE);
 	}
 	Msg("my RAYvsCYLINDE time %f ms",t.GetElapsed_sec()*1000.f);
@@ -478,13 +477,13 @@ void capped_cylinder_ray_collision_test()
 	for(int i=0;i<1000000;i++)
 	{
 		Fcylinder c2;
-		c2.m_center.random_point(Fvector().Set(2,2,2));
+		c2.m_center.random_point(Fvector().set(2,2,2));
 		c2.m_direction.random_dir();
 		c2.m_height=Random.randF(0.2f,2.f);
 		c2.m_radius=Random.randF(0.1f,2.f);
 		//ray
 		Fvector dir2,pos2;//float R=Random.randF(0.1f,2.f);
-		dir2.random_dir();pos2.random_point(Fvector().Set(2,2,2));
+		dir2.random_dir();pos2.random_point(Fvector().set(2,2,2));
 		c2.intersect(pos2,dir2,ir,code);
 	}
 		Msg("current intersect time %f ms",t.GetElapsed_sec()*1000.f);

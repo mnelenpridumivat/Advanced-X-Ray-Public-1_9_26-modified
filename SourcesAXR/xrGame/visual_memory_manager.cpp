@@ -236,7 +236,7 @@ void CVisualMemoryManager::enable		(const CObject *object, bool enable)
 
 float CVisualMemoryManager::object_visible_distance(const CGameObject *game_object, float &object_distance) const
 {
-	Fvector								eye_position = Fvector().Set(0.f,0.f,0.f), eye_direction;
+	Fvector								eye_position = Fvector().set(0.f,0.f,0.f), eye_direction;
 	Fmatrix								eye_matrix;
 	float								object_range = flt_max, object_fov = flt_max;
 

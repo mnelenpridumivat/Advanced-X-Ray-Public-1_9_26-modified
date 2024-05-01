@@ -25,7 +25,7 @@ void	CCar::cam_Update			(float dt, float fov)
 {
 	VERIFY(!physics_world()->Processing());
 	Fvector							P,Da;
-	Da.Set							(0,0,0);
+	Da.set							(0,0,0);
 	//bool							owner = !!Owner();
 
 	switch(active_camera->tag) {

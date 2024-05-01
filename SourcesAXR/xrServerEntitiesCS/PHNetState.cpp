@@ -140,9 +140,9 @@ template<typename src>
 void	SPHNetState::read				(src&			P)
 {
 	linear_vel=P.r_vec3();
-	angular_vel.Set(0.f,0.f,0.f);		//P.r_vec3(angular_vel);
-	force.Set(0.f,0.f,0.f);				//P.r_vec3(force);
-	torque.Set(0.f,0.f,0.f);			//P.r_vec3(torque);
+	angular_vel.set(0.f,0.f,0.f);		//P.r_vec3(angular_vel);
+	force.set(0.f,0.f,0.f);				//P.r_vec3(force);
+	torque.set(0.f,0.f,0.f);			//P.r_vec3(torque);
 	position=P.r_vec3();
 	*((Fvector4*)&quaternion)=P.r_vec4();
 	previous_quaternion.set(quaternion);//P.r_vec4(*((Fvector4*)&previous_quaternion));
@@ -166,12 +166,12 @@ void SPHNetState::net_Save(NET_Packet &P)
 void SPHNetState::net_Load(NET_Packet &P)
 {
 	net_Import(P);
-	previous_position.Set(position);
+	previous_position.set(position);
 }
 void SPHNetState::net_Load(IReader &P)
 {
 	net_Import(P);
-	previous_position.Set(position);
+	previous_position.set(position);
 }
 void SPHNetState::net_Save(NET_Packet &P,const Fvector& min,const Fvector& max)
 {
@@ -190,12 +190,12 @@ template<typename src>
 void SPHNetState::read(src &P,const Fvector& min,const Fvector& max)
 {
 VERIFY( !(fsimilar(min.x,max.x)&&fsimilar(min.y,max.y)&&fsimilar(min.z,max.z)) );
-	linear_vel.Set(0.f,0.f,0.f);
-	angular_vel.Set(0.f,0.f,0.f);
-	force.Set(0.f,0.f,0.f);
-	torque.Set(0.f,0.f,0.f);
+	linear_vel.set(0.f,0.f,0.f);
+	angular_vel.set(0.f,0.f,0.f);
+	force.set(0.f,0.f,0.f);
+	torque.set(0.f,0.f,0.f);
 	r_vec_q8(P,position,min,max);
-	previous_position.Set(position);
+	previous_position.set(position);
 	r_qt_q8(P,quaternion);
 	previous_quaternion.set(quaternion);
 	enabled=!!P.r_u8();
@@ -219,8 +219,8 @@ SPHBonesData::SPHBonesData()
 
 	Fvector						_mn, _mx;
 
-	_mn.Set						(-100.f,-100.f,-100.f);
-	_mx.Set						(100.f,100.f,100.f);
+	_mn.set						(-100.f,-100.f,-100.f);
+	_mx.set						(100.f,100.f,100.f);
 	set_min_max					(_mn, _mx);
 }
 void SPHBonesData::net_Save(NET_Packet &P)

@@ -215,13 +215,13 @@ void CStepManager::update(bool b_hud_view)
 				Fmatrix pos; 
 
 				// установить направление
-				pos.k.Set(Fvector().Set(0.0f,1.0f,0.0f));
+				pos.k.set(Fvector().set(0.0f,1.0f,0.0f));
 				Fvector::generate_orthonormal_basis(pos.k, pos.j, pos.i);
 
 				// установить позицию
-				pos.c.Set(get_foot_position(ELegType(i)));
+				pos.c.set(get_foot_position(ELegType(i)));
 
-				ps->UpdateParent(pos,Fvector().Set(0.f,0.f,0.f));
+				ps->UpdateParent(pos,Fvector().set(0.f,0.f,0.f));
 				GamePersistent().ps_needtoplay.push_back(ps);
 			}
 
@@ -331,7 +331,7 @@ void CStepManager::material_sound::play_next(SGameMtlPair* mtl_pair, CEntityAliv
 
 	float vol = (b_hud_mode)? volume*psHUDStepSoundVolume : volume;
 	if(b_hud_mode)
-		sound_pos.Set(0,0,0);
+		sound_pos.set(0,0,0);
 
 	mtl_pair->StepSounds[m_last_step_sound_played].play_no_feedback(object, 
 																	b_hud_mode? sm_2D:0, 

@@ -1,8 +1,6 @@
 #ifndef xr_trimsH
 #define xr_trimsH
 
-#include "StructDefines.h"
-
 // refs
 struct xr_token;
 

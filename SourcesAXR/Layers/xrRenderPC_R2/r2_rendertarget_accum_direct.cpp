@@ -52,7 +52,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
-	L_clr.Set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
+	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
 	L_spec						= u_diffuse2s	(L_clr);
 	Device.mView.transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
@@ -139,7 +139,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 			float	w_speed				= g_pGamePersistent->Environment().CurrentEnv->clouds_velocity_0;
 			Fvector			normal	;	normal.setHP(w_dir,0);
 							w_shift		+= w_speed*Device.fTimeDelta;
-			Fvector			position;	position.Set(0,0,0);
+			Fvector			position;	position.set(0,0,0);
 			m_xform.build_camera_dir	(position,direction,normal)	;
 			Fvector			localnormal;m_xform.transform_dir(localnormal,normal); localnormal.normalize();
 			m_clouds_shadow.mul			(m_xform,xf_invview)		;
@@ -247,7 +247,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
-	L_clr.Set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
+	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
 	L_spec						= u_diffuse2s	(L_clr);
 	Device.mView.transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
@@ -335,7 +335,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 			float	w_speed				= g_pGamePersistent->Environment().CurrentEnv->clouds_velocity_0;
 			Fvector			normal	;	normal.setHP(w_dir,0);
 							w_shift		+=	w_speed*Device.fTimeDelta;
-			Fvector			position;	position.Set(0,0,0);
+			Fvector			position;	position.set(0,0,0);
 			m_xform.build_camera_dir	(position,direction,normal)	;
 			Fvector			localnormal;m_xform.transform_dir(localnormal,normal); localnormal.normalize();
 			m_clouds_shadow.mul			(m_xform,xf_invview)		;
@@ -405,7 +405,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 		// Needed for shadow fading.
 		if(sub_phase == SE_SUN_FAR)
 		{
-			Fvector3 view_viewspace;	view_viewspace.Set( 0, 0, 1 );
+			Fvector3 view_viewspace;	view_viewspace.set( 0, 0, 1 );
 			
 			m_shadow.transform_dir( view_viewspace );
 			Fvector4 view_projlightspace;
@@ -536,7 +536,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
-	L_clr.Set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
+	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
 	L_spec						= u_diffuse2s	(L_clr);
 	Device.mView.transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
@@ -664,7 +664,7 @@ void CRenderTarget::accum_direct_lum	()
 
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
-	L_clr.Set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
+	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
 	L_spec						= u_diffuse2s	(L_clr);
 	Device.mView.transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
@@ -790,7 +790,7 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 
 		// Common constants (light-related)
 		Fvector L_dir, L_clr;
-		L_clr.Set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
+		L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
 
 		Device.mView.transform_dir(L_dir, fuckingsun->direction);
 		L_dir.normalize();

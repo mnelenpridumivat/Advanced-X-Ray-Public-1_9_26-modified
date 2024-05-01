@@ -55,7 +55,7 @@ void CPoltergeisMovementManager::move_along_path(CPHMovementControl *movement_co
 		} else break;
 	}
 
-	target.Set			(detail().path()[detail().curr_travel_point_index() + 1].position);
+	target.set			(detail().path()[detail().curr_travel_point_index() + 1].position);
 	// определить направление к целевой точке
 	Fvector				dir_to_target;
 	dir_to_target.sub	(target, dest_position);
@@ -64,7 +64,7 @@ void CPoltergeisMovementManager::move_along_path(CPHMovementControl *movement_co
 	float				dist_to_target = dir_to_target.magnitude();
 
 	while (dist > dist_to_target) {
-		dest_position.Set	(target);
+		dest_position.set	(target);
 
 		if (detail().curr_travel_point_index() + 1 >= detail().path().size())	break;
 		else {
@@ -72,7 +72,7 @@ void CPoltergeisMovementManager::move_along_path(CPHMovementControl *movement_co
 			++detail().m_current_travel_point;
 			if ((detail().curr_travel_point_index()+1) >= detail().path().size())
 				break;
-			target.Set			(detail().path()[detail().curr_travel_point_index() + 1].position);
+			target.set			(detail().path()[detail().curr_travel_point_index() + 1].position);
 			dir_to_target.sub	(target, dest_position);
 			dist_to_target		= dir_to_target.magnitude();
 		}

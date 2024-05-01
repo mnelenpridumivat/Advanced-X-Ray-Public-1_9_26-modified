@@ -135,13 +135,13 @@ void CCustomDetector::OnStateSwitch(u32 S)
 	case eShowing:
 		{
 			g_player_hud->attach_item	(this);
-			m_sounds.PlaySound			("sndShow", Fvector().Set(0,0,0), this, true, false);
+			m_sounds.PlaySound			("sndShow", Fvector().set(0,0,0), this, true, false);
 			PlayHUDMotion				(m_bFastAnimMode ? "anm_show_fast" : "anm_show", FALSE/*TRUE*/, this, GetState());
 			SetPending					(TRUE);
 		}break;
 	case eHiding:
 		{
-			m_sounds.PlaySound			("sndHide", Fvector().Set(0,0,0), this, true, false);
+			m_sounds.PlaySound			("sndHide", Fvector().set(0,0,0), this, true, false);
 			PlayHUDMotion				(m_bFastAnimMode ? "anm_hide_fast" : "anm_hide", FALSE/*TRUE*/, this, GetState());
 			SetPending					(TRUE);
 		}break;
@@ -307,10 +307,10 @@ void CCustomDetector::shedule_Update(u32 dt)
 	
 	if( !IsWorking() )			return;
 
-	Position().Set(H_Parent()->Position());
+	Position().set(H_Parent()->Position());
 
 	Fvector						P; 
-	P.Set						(H_Parent()->Position());
+	P.set						(H_Parent()->Position());
 	m_artefacts.feel_touch_update(P,m_fAfDetectRadius);
 }
 
@@ -358,7 +358,7 @@ void CCustomDetector::UpdateLights()
 
 				Fmatrix lightXForm;
 				lightXForm.identity();
-				lightXForm.k.Set(fd.vLastFD);
+				lightXForm.k.set(fd.vLastFD);
 				Fvector::generate_orthonormal_basis_normalized(lightXForm.k, lightXForm.j, lightXForm.i);
 
 				detector_light->set_rotation(lightXForm.k, lightXForm.i);

@@ -110,8 +110,8 @@ BOOL CWeaponStatMgun::net_Spawn(CSE_Abstract* DC)
 	m_i_bind_y_xform.invert	(matrices[m_rotate_y_bone]);
 	m_bind_x_rot			= matrices[m_rotate_x_bone].k.getP();
 	m_bind_y_rot			= matrices[m_rotate_y_bone].k.getH();
-	m_bind_x.Set			(matrices[m_rotate_x_bone].c);
-	m_bind_y.Set			(matrices[m_rotate_y_bone].c);
+	m_bind_x.set			(matrices[m_rotate_x_bone].c);
+	m_bind_y.set			(matrices[m_rotate_y_bone].c);
 
 	m_cur_x_rot				= m_bind_x_rot;
 	m_cur_y_rot				= m_bind_y_rot;
@@ -181,9 +181,9 @@ void CWeaponStatMgun::UpdateBarrelDir()
 	m_fire_bone_xform	= K->LL_GetTransform(m_fire_bone);
 
 	m_fire_bone_xform.mulA_43		(XFORM());
-	m_fire_pos.Set					(0,0,0); 
+	m_fire_pos.set					(0,0,0); 
 	m_fire_bone_xform.transform_tiny(m_fire_pos);
-	m_fire_dir.Set					(0,0,1);
+	m_fire_dir.set					(0,0,1);
 	m_fire_bone_xform.transform_dir	(m_fire_dir);
 
 	m_allow_fire		= true;
@@ -214,7 +214,7 @@ void CWeaponStatMgun::UpdateBarrelDir()
 void CWeaponStatMgun::cam_Update			(float dt, float fov)
 {
 	Fvector							P,Da;
-	Da.Set							(0,0,0);
+	Da.set							(0,0,0);
 
 	IKinematics* K					= smart_cast<IKinematics*>(Visual());
 	K->CalculateBones_Invalidate	();

@@ -10,7 +10,6 @@
 #include "PHCollideValidator.h"
 #include "../xrengine/xr_object.h"
 #include "../xrengine/bone.h"
-#include "../xrCore/_obb.h"
 
 //#include "game_object_space.h"
 

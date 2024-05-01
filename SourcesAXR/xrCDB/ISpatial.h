@@ -5,7 +5,6 @@
 #include "../xrCore/xrPool.h"
 
 #include "xr_collide_defs.h"
-#include "../xrCore/_sphere.h"
 
 #pragma pack(push,4)
 

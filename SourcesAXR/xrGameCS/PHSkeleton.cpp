@@ -191,8 +191,8 @@ void CPHSkeleton::SaveNetState(NET_Packet& P)
 	/////////////////////////////
 	Fvector min,max;
 
-	min.Set(F_MAX,F_MAX,F_MAX);
-	max.Set(-F_MAX,-F_MAX,-F_MAX);
+	min.set(F_MAX,F_MAX,F_MAX);
+	max.set(-F_MAX,-F_MAX,-F_MAX);
 	/////////////////////////////////////
 
 	u16 bones_number=obj->PHGetSyncItemsNumber();

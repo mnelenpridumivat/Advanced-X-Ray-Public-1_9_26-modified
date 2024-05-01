@@ -14,7 +14,7 @@ IC	ai_obstacle::ai_obstacle							(CGameObject *object)
 	m_object				= object;
 	m_actual				= false;
 
-	m_min_box				= MagicBox3(Fidentity,Fvector().Set(.5,1.f,.5f));
+	m_min_box				= MagicBox3(Fidentity,Fvector().set(.5,1.f,.5f));
 	m_min_box.Center().y	+= 1.f;
 }
 

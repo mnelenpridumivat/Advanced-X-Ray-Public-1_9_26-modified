@@ -359,14 +359,14 @@ public:
 	{
 		if (bForce)
 		{
-			thumb0rot.Set(0.f, 0.f, 0.f);
-			thumb01rot.Set(0.f, 0.f, 0.f);
-			thumb02rot.Set(0.f, 0.f, 0.f);
+			thumb0rot.set(0.f, 0.f, 0.f);
+			thumb01rot.set(0.f, 0.f, 0.f);
+			thumb02rot.set(0.f, 0.f, 0.f);
 		}
 
-		target_thumb0rot.Set(0.f, 0.f, 0.f);
-		target_thumb01rot.Set(0.f, 0.f, 0.f);
-		target_thumb02rot.Set(0.f, 0.f, 0.f);
+		target_thumb0rot.set(0.f, 0.f, 0.f);
+		target_thumb01rot.set(0.f, 0.f, 0.f);
+		target_thumb02rot.set(0.f, 0.f, 0.f);
 	}
 };
 

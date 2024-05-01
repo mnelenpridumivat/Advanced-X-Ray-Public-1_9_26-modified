@@ -210,9 +210,9 @@ void CFrustum::SimplifyPoly_AABB(sPoly* poly, Fplane& plane)
 {
 	Fmatrix		mView,mInv;
 	Fvector		from,up,right,y;
-	from.Set	((*poly)[0]);
-	y.Set		(0,1,0);
-	if (_abs(plane.n.y)>0.99f) y.Set(1,0,0);
+	from.set	((*poly)[0]);
+	y.set		(0,1,0);
+	if (_abs(plane.n.y)>0.99f) y.set(1,0,0);
 	right.crossproduct		(y,plane.n);
 	up.crossproduct			(plane.n,right);
 	mView.build_camera_dir	(from,plane.n,up);

@@ -69,7 +69,7 @@ const CHitObject *CHitMemoryManager::hit					(const CEntityAlive *object) const
 
 void CHitMemoryManager::add					(const CEntityAlive *entity_alive)
 {
-	add						(0,Fvector().Set(0,0,1),entity_alive,0);
+	add						(0,Fvector().set(0,0,1),entity_alive,0);
 }
 
 void CHitMemoryManager::Load				(LPCSTR section)

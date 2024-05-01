@@ -26,7 +26,7 @@ void MK_Frustum(CFrustum& F, float FOV, float _FAR, float A, Fvector &P, Fvector
 	R.normalize		();
 	U.crossproduct	(R,D);
 	U.normalize		();
-	COP.Set			(P);
+	COP.set			(P);
 
 	// calculate the corner vertices of the window
 	Fvector			sPts[4];  // silhouette points (corners of window)
@@ -75,7 +75,7 @@ void dbg_draw_frustum	(float FOV, float _FAR, float A, Fvector &P, Fvector &D, F
 	R.normalize		();
 	U.crossproduct	(R,D);
 	U.normalize		();
-	COP.Set			(P);
+	COP.set			(P);
 
 	// calculate the corner vertices of the window
 	Fvector			sPts[4];  // silhouette points (corners of window)

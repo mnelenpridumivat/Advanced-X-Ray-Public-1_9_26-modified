@@ -99,7 +99,7 @@ void dbg_draw_frustum		(float FOV, float _FAR, float A, Fvector &P, Fvector &D, 
 void object::OnRender		()
 {
 	DRender->OnFrameEnd				();
-	Fvector							l_half; l_half.Set(.5f, .5f, .5f);
+	Fvector							l_half; l_half.set(.5f, .5f, .5f);
 	Fmatrix							l_ball, l_box;
 	u32								Color = color_xrgb(0,255,0);
 
@@ -170,14 +170,14 @@ bool object::inside			(Fvector const &position) const
 				matrix.mul_43		(XFORM(),box);
 				Fvector				A,B[8];
 				Fplane				plane;
-				A.Set				(-.5f, -.5f, -.5f);	matrix.transform_tiny(B[0],A);
-				A.Set				(-.5f, -.5f, +.5f);	matrix.transform_tiny(B[1],A);
-				A.Set				(-.5f, +.5f, +.5f);	matrix.transform_tiny(B[2],A);
-				A.Set				(-.5f, +.5f, -.5f);	matrix.transform_tiny(B[3],A);
-				A.Set				(+.5f, +.5f, +.5f);	matrix.transform_tiny(B[4],A);
-				A.Set				(+.5f, +.5f, -.5f);	matrix.transform_tiny(B[5],A);
-				A.Set				(+.5f, -.5f, +.5f);	matrix.transform_tiny(B[6],A);
-				A.Set				(+.5f, -.5f, -.5f);	matrix.transform_tiny(B[7],A);
+				A.set				(-.5f, -.5f, -.5f);	matrix.transform_tiny(B[0],A);
+				A.set				(-.5f, -.5f, +.5f);	matrix.transform_tiny(B[1],A);
+				A.set				(-.5f, +.5f, +.5f);	matrix.transform_tiny(B[2],A);
+				A.set				(-.5f, +.5f, -.5f);	matrix.transform_tiny(B[3],A);
+				A.set				(+.5f, +.5f, +.5f);	matrix.transform_tiny(B[4],A);
+				A.set				(+.5f, +.5f, -.5f);	matrix.transform_tiny(B[5],A);
+				A.set				(+.5f, -.5f, +.5f);	matrix.transform_tiny(B[6],A);
+				A.set				(+.5f, -.5f, -.5f);	matrix.transform_tiny(B[7],A);
 
 				plane.build			(B[0],B[3],B[5]); if (plane.classify(position) <= 0.f) return (true);
 				plane.build			(B[1],B[2],B[3]); if (plane.classify(position) <= 0.f) return (true);

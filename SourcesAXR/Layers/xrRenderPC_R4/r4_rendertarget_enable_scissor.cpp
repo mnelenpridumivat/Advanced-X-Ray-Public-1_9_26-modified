@@ -21,7 +21,7 @@ void CRenderTarget::enable_dbt_bounds		(light* L)
 
 	// xform BB
 	Fbox	BB;
-	Fvector	rr; rr.Set(L->spatial.sphere.R,L->spatial.sphere.R,L->spatial.sphere.R);
+	Fvector	rr; rr.set(L->spatial.sphere.R,L->spatial.sphere.R,L->spatial.sphere.R);
 	BB.setb	(L->spatial.sphere.P, rr);
 
 	Fbox	bbp; bbp.invalidate();
@@ -73,7 +73,7 @@ BOOL CRenderTarget::enable_scissor		(light* L)		// true if intersects near plane
 		plane.w							= -(M._44 + M._43);
 		float denom						= -1.0f / _sqrt(_sqr(plane.x)+_sqr(plane.y)+_sqr(plane.z));
 		plane.mul						(denom);
-		Fplane	P;	P.n.Set(plane.x,plane.y,plane.z); P.d = plane.w;
+		Fplane	P;	P.n.set(plane.x,plane.y,plane.z); P.d = plane.w;
 		float	p_dist					= P.classify	(L->spatial.sphere.P) - L->spatial.sphere.R;
 		near_intersect					= (p_dist<=0);
 	}

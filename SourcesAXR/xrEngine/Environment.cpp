@@ -76,7 +76,7 @@ CEnvironment::CEnvironment	() :
 	wind_gust_factor		= 0.f;
 
 	wind_blast_strength		= 0.f;
-	wind_blast_direction.Set(1.f,0.f,0.f);
+	wind_blast_direction.set(1.f,0.f,0.f);
 
 	wind_blast_strength_start_value	= 0.f;
 	wind_blast_strength_stop_value	= 0.f;
@@ -485,16 +485,16 @@ void CEnvironment::lerp		(float& current_weight)
 	// modifiers
 	CEnvModifier			EM;
 	EM.far_plane			= 0;
-	EM.fog_color.Set		( 0,0,0 );
+	EM.fog_color.set		( 0,0,0 );
 	EM.fog_density			= 0;
 	EM.lowland_fog_height	= 0;
 	EM.lowland_fog_density	= 0;
 
 	EM.color_grading.set	(0.0f, 0.0f, 0.0f, 0.0f);
 
-	EM.ambient.Set			( 0,0,0 );
-	EM.sky_color.Set		( 0,0,0 );
-	EM.hemi_color.Set		( 0,0,0 );
+	EM.ambient.set			( 0,0,0 );
+	EM.sky_color.set		( 0,0,0 );
+	EM.hemi_color.set		( 0,0,0 );
 	EM.use_flags.zero		();
 
 	Fvector	view			= Device.vCameraPosition;

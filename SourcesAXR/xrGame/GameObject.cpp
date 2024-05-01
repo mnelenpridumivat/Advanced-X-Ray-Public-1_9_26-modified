@@ -303,7 +303,7 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 	
 	// XForm
 	XFORM().setXYZ					(E->o_Angle);
-	Position().Set					(E->o_Position);
+	Position().set					(E->o_Position);
 #ifdef DEBUG
 	if(ph_dbg_draw_mask1.test(ph_m1_DbgTrackObject)&&stricmp(PH_DBG_ObjectTrackName(),*cName())==0)
 	{
@@ -399,12 +399,12 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 				Msg("! [%s]: %s has invalid Position[%f,%f,%f] level_vertex_id[%u][%f,%f,%f]",
 					__FUNCTION__, cName().c_str(), Position().x, Position().y, Position().z,
 					ai_location().level_vertex_id(), vertex_pos.x, vertex_pos.y, vertex_pos.z);
-				Position().Set(vertex_pos);
+				Position().set(vertex_pos);
 
 				auto se_obj = alife_object();
 
 				if (se_obj)
-					se_obj->o_Position.Set(Position());
+					se_obj->o_Position.set(Position());
 			}
 
 			validate_ai_locations				(false);
@@ -602,7 +602,7 @@ void CGameObject::setup_parent_ai_locations(bool assign_position)
 
 	// get parent's position
 	if ( assign_position && use_parent_ai_locations() )
-		Position().Set		(l_tpGameObject->Position());
+		Position().set		(l_tpGameObject->Position());
 
 	//if ( assign_position && 
 	//		( use_parent_ai_locations() &&
@@ -700,10 +700,10 @@ void			CGameObject::dbg_DrawSkeleton	()
 								   }break;
 			case SBoneShape::stCylinder:{
 				Fmatrix M;
-				M.c.Set				(I->c_cylinder.m_center);
-				M.k.Set				(I->c_cylinder.m_direction);
+				M.c.set				(I->c_cylinder.m_center);
+				M.k.set				(I->c_cylinder.m_direction);
 				Fvector				h_size;
-				h_size.Set			(I->c_cylinder.m_radius,I->c_cylinder.m_radius,I->c_cylinder.m_height*0.5f);
+				h_size.set			(I->c_cylinder.m_radius,I->c_cylinder.m_radius,I->c_cylinder.m_height*0.5f);
 				Fvector::generate_orthonormal_basis(M.k,M.j,M.i);
 				Level().debug_renderer().draw_obb	(M, h_size, color_rgba(0, 127, 255, 255));
 										}break;
@@ -1111,14 +1111,14 @@ void render_box						(IRenderVisual *visual, const Fmatrix &xform, const Fvector
 			renderer.draw_obb	(matrix,color);
 
 		static const Fvector	local_points[8] = {
-			Fvector().Set(-1.f,-1.f,-1.f),
-			Fvector().Set(-1.f,-1.f,+1.f),
-			Fvector().Set(-1.f,+1.f,+1.f),
-			Fvector().Set(-1.f,+1.f,-1.f),
-			Fvector().Set(+1.f,+1.f,+1.f),
-			Fvector().Set(+1.f,+1.f,-1.f),
-			Fvector().Set(+1.f,-1.f,+1.f),
-			Fvector().Set(+1.f,-1.f,-1.f)
+			Fvector().set(-1.f,-1.f,-1.f),
+			Fvector().set(-1.f,-1.f,+1.f),
+			Fvector().set(-1.f,+1.f,+1.f),
+			Fvector().set(-1.f,+1.f,-1.f),
+			Fvector().set(+1.f,+1.f,+1.f),
+			Fvector().set(+1.f,+1.f,-1.f),
+			Fvector().set(+1.f,-1.f,+1.f),
+			Fvector().set(+1.f,-1.f,-1.f)
 		};
 		
 		for (u32 i=0; i<8; ++i, ++I)
@@ -1161,9 +1161,9 @@ void CGameObject::OnRender			()
 	CDebugRenderer					&renderer = Level().debug_renderer();
 	if (/**bDebug && /**/Visual()) {
 		float						half_cell_size = 1.f*ai().level_graph().header().cell_size()*.5f;
-		Fvector						additional = Fvector().Set(half_cell_size,half_cell_size,half_cell_size);
+		Fvector						additional = Fvector().set(half_cell_size,half_cell_size,half_cell_size);
 
-		render_box					(Visual(),XFORM(),Fvector().Set(0.f,0.f,0.f),true,color_rgba(0,0,255,255));
+		render_box					(Visual(),XFORM(),Fvector().set(0.f,0.f,0.f),true,color_rgba(0,0,255,255));
 		render_box					(Visual(),XFORM(),additional,false,color_rgba(0,255,0,255));
 	}
 
@@ -1172,7 +1172,7 @@ void CGameObject::OnRender			()
 		Visual()->getVisData().box.get_CD	(bc,bd);
 		Fmatrix						M = Fidentity;
 		float						half_cell_size = ai().level_graph().header().cell_size()*.5f;
-		bd.add						(Fvector().Set(half_cell_size,half_cell_size,half_cell_size));
+		bd.add						(Fvector().set(half_cell_size,half_cell_size,half_cell_size));
 		M.scale						(bd);
 		Fmatrix						T = XFORM();
 		T.c.add						(bc);

@@ -110,7 +110,7 @@ void CBaseMonster::Load(LPCSTR section)
 		m_steer_manager = xr_new<steering_behaviour::manager>();
 
 		m_grouping_behaviour = xr_new<squad_grouping_behaviour>
-			(this, Fvector3().Set(0.f, 0.f, 0.f), Fvector3().Set(0.f, separate_factor, 0.f), separate_range);
+			(this, Fvector3().set(0.f, 0.f, 0.f), Fvector3().set(0.f, separate_factor, 0.f), separate_range);
 
 		get_steer_manager()->add( xr_new<steering_behaviour::grouping>(m_grouping_behaviour) );
 	}
@@ -550,7 +550,7 @@ void CBaseMonster::SwitchMonsterParticles(bool bOn)
 	if (bOn)
 	{
 		Fvector dir;
-		dir.Set(0, 1, 0);
+		dir.set(0, 1, 0);
 		CParticlesPlayer::StartParticles(m_sParticlesIdleName, bonePositionInWorld, ID(), -1, false);
 	}
 	else

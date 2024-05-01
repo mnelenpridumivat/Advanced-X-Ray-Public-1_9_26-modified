@@ -1,6 +1,5 @@
-#pragma once
-
-#include "_vector2.h"
+#ifndef __FRECT
+#define __FRECT
 
 template <class T>
 struct _rect {
@@ -87,3 +86,5 @@ BOOL	_valid			(const _rect<T>& m)
 { 
 	return lt._valid() && rb._valid();
 }
+
+#endif

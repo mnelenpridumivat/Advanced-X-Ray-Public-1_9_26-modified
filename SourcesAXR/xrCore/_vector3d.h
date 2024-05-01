@@ -1,8 +1,7 @@
 #pragma once
 
-#include <limits>
-
-#include "_random.h"
+#ifndef __V3D__
+#define __V3D__
 
 // Inline call
 #ifndef IC
@@ -23,11 +22,11 @@ public:
 	ICF	T&			operator[] (int i)					{ return *((T*)this + i); }
 	ICF	T&			operator[] (int i)	const			{ return *((T*)this + i); }
 
-	ICF	SelfRef	Set(T _x, T _y, T _z)					{ x = _x;		y = _y;		z = _z;		return *this;	};
-	ICF SelfRef	Set(const _vector3<float> &v)			{ x = T(v.x);	y = T(v.y);	z = T(v.z);	return *this;	};
-	ICF SelfRef	Set(const _vector3<double> &v)			{ x = T(v.x);	y = T(v.y);	z = T(v.z);	return *this;	};
-	ICF	SelfRef	Set(float* p)							{ x = p[0];	y = p[1];	z = p[2];		return *this;	};
-	ICF	SelfRef	Set(double* p)							{ x = p[0];	y = p[1];	z = p[2];		return *this;	};
+	ICF	SelfRef	set(T _x, T _y, T _z)					{ x = _x;		y = _y;		z = _z;		return *this;	};
+	ICF SelfRef	set(const _vector3<float> &v)			{ x = T(v.x);	y = T(v.y);	z = T(v.z);	return *this;	};
+	ICF SelfRef	set(const _vector3<double> &v)			{ x = T(v.x);	y = T(v.y);	z = T(v.z);	return *this;	};
+	ICF	SelfRef	set(float* p)							{ x = p[0];	y = p[1];	z = p[2];		return *this;	};
+	ICF	SelfRef	set(double* p)							{ x = p[0];	y = p[1];	z = p[2];		return *this;	};
 
 	ICF	SelfRef	add(const Self &v)						{ x+=v.x;	y+=v.y;		z+=v.z;			return *this;	};
 	ICF SelfRef	add(T s)								{ x+=s;		y+=s;		z+=s;			return *this;	};
@@ -512,7 +511,7 @@ public:
 		T fInvLength;
 		dir.normalize();
 		if (fsimilar(dir.y,1.f,EPS)){	
-			up.Set		(0.f,0.f,1.f);
+			up.set		(0.f,0.f,1.f);
 			fInvLength	= 1.f/_sqrt(dir.x*dir.x+dir.y*dir.y);
 			// cross (up,dir) and normalize (right)
 			right.x		= -dir.y * fInvLength;					
@@ -523,7 +522,7 @@ public:
 			up.y		= dir.z  * right.x;
 			up.z		= dir.x  * right.y  - dir.y  * right.x ;
 		}else{
-			up.Set		(0.f,1.f,0.f);
+			up.set		(0.f,1.f,0.f);
 			fInvLength	= 1.f/_sqrt(dir.x*dir.x+dir.z*dir.z);
 			// cross (up,dir) and normalize (right)
 			right.x		= dir.z  * fInvLength;
@@ -612,3 +611,5 @@ aa2_largest:	// aa2 is largest
 }
 IC BOOL	exact_normalize	(Fvector3& a)	{	return exact_normalize(&a.x);	}
 #pragma warning(pop)
+
+#endif

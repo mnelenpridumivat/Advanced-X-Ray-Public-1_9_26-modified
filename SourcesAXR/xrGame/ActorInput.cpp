@@ -51,7 +51,7 @@ void CActor::IR_OnKeyboardPress(int cmd)
 	{
 		if (pInput->iGetAsyncKeyState(DIK_RETURN) || pInput->iGetAsyncKeyState(DIK_BACKSPACE) ||
 			pInput->iGetAsyncKeyState(DIK_DELETE))
-			g_player_hud->tune(Ivector().Set(0, 0, 0));
+			g_player_hud->tune(Ivector().set(0, 0, 0));
 
 		return;
 	}
@@ -316,7 +316,7 @@ void CActor::IR_OnMouseWheel(int direction)
 {
 	if(hud_adj_mode)
 	{
-		g_player_hud->tune	(Ivector().Set(0,0,direction));
+		g_player_hud->tune	(Ivector().set(0,0,direction));
 		return;
 	}
 
@@ -374,19 +374,19 @@ void CActor::IR_OnKeyboardHold(int cmd)
 		bool bIsRot = (hud_adj_mode == 2) && (idx != 0);
 
 		if (pInput->iGetAsyncKeyState(bIsRot ? DIK_RIGHT : DIK_UP))
-			g_player_hud->tune(Ivector().Set(0, 1, 0));
+			g_player_hud->tune(Ivector().set(0, 1, 0));
 		if (pInput->iGetAsyncKeyState(bIsRot ? DIK_LEFT : DIK_DOWN))
-			g_player_hud->tune(Ivector().Set(0, -1, 0));
+			g_player_hud->tune(Ivector().set(0, -1, 0));
 		if (pInput->iGetAsyncKeyState(bIsRot ? DIK_DOWN : DIK_LEFT))
-			g_player_hud->tune(Ivector().Set(1, 0, 0));
+			g_player_hud->tune(Ivector().set(1, 0, 0));
 		if (pInput->iGetAsyncKeyState(bIsRot ? DIK_UP : DIK_RIGHT))
-			g_player_hud->tune(Ivector().Set(-1, 0, 0));
+			g_player_hud->tune(Ivector().set(-1, 0, 0));
 		if (pInput->iGetAsyncKeyState(DIK_PRIOR))
-			g_player_hud->tune(Ivector().Set(0, 0, 1));
+			g_player_hud->tune(Ivector().set(0, 0, 1));
 		if (pInput->iGetAsyncKeyState(DIK_NEXT))
-			g_player_hud->tune(Ivector().Set(0, 0, -1));
+			g_player_hud->tune(Ivector().set(0, 0, -1));
 		if (pInput->iGetAsyncKeyState(DIK_RETURN))
-			g_player_hud->tune(Ivector().Set(0, 0, 0));
+			g_player_hud->tune(Ivector().set(0, 0, 0));
 		return;
 	}
 
@@ -451,7 +451,7 @@ void CActor::IR_OnMouseMove(int dx, int dy)
 {
 	if(hud_adj_mode)
 	{
-		g_player_hud->tune	(Ivector().Set(dx,dy,0));
+		g_player_hud->tune	(Ivector().set(dx,dy,0));
 		return;
 	}
 
@@ -777,7 +777,7 @@ void CActor::SwitchTorch()
 void CActor::NoClipFly(int cmd)
 {
 	Fvector cur_pos;// = Position();
-	cur_pos.Set(0,0,0);
+	cur_pos.set(0,0,0);
 	float scale = 1.0f;
 	if(pInput->iGetAsyncKeyState(DIK_LSHIFT))
 		scale = 0.25f;

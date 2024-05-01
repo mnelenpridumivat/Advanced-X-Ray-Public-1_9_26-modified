@@ -438,7 +438,7 @@ void CSkeletonX::_FillVerticesSoft1W(const Fmatrix& view, CSkeletonWallmark& wm,
 			F.weight[k][2] = 0.f;
 
 			const Fmatrix& xform = Parent->LL_GetBoneInstance(F.bone_id[k][0]).mRenderTransform;
-			F.vert[k].Set(vert.P);
+			F.vert[k].set(vert.P);
 			xform.transform_tiny(p[k], F.vert[k]);
 		}
 		Fvector test_normal;
@@ -481,7 +481,7 @@ void CSkeletonX::_FillVerticesSoft2W(const Fmatrix& view, CSkeletonWallmark& wm,
 
 			Fmatrix& xform0 = Parent->LL_GetBoneInstance(F.bone_id[k][0]).mRenderTransform;
 			Fmatrix& xform1 = Parent->LL_GetBoneInstance(F.bone_id[k][1]).mRenderTransform;
-			F.vert[k].Set(vert.P);
+			F.vert[k].set(vert.P);
 			xform0.transform_tiny(P0, F.vert[k]);
 			xform1.transform_tiny(P1, F.vert[k]);
 			p[k].lerp(P0, P1, F.weight[k][0]);

@@ -163,7 +163,7 @@ void CScriptParticles::SetDirection(const Fvector& dir)
 {
 	Fmatrix matrix;
 	matrix.identity();
-	matrix.k.Set(dir);
+	matrix.k.set(dir);
 	Fvector::generate_orthonormal_basis_normalized(matrix.k, matrix.j, matrix.i);
 	matrix.translate_over(m_transform.c);
 	m_transform.set(matrix);

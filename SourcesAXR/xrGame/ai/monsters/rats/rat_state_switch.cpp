@@ -148,7 +148,7 @@ void CAI_Rat::set_dir()
 			m_enemy_position.add(m_enemy_position,m_dest_direction);
 		}
 
-		m_tGoalDir.Set(m_enemy_position);
+		m_tGoalDir.set(m_enemy_position);
 	}
 }
 
@@ -156,7 +156,7 @@ void CAI_Rat::set_dir_m()
 {
 
 	if ((Device.dwTimeGlobal - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
-		m_tGoalDir.Set(memory().memory(memory().enemy().selected()).m_object_params.m_position);
+		m_tGoalDir.set(memory().memory(memory().enemy().selected()).m_object_params.m_position);
 }
 
 void CAI_Rat::set_sp_dir()
@@ -304,7 +304,7 @@ void CAI_Rat::set_rew_cur_position()
 void CAI_Rat::set_home_pos()
 {
 	if ((Device.dwTimeGlobal - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
-		m_tGoalDir.Set			(m_home_position);
+		m_tGoalDir.set			(m_home_position);
 }
 
 void CAI_Rat::set_goal_time(float f_val)

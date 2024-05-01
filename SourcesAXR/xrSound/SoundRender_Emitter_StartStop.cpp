@@ -10,7 +10,7 @@ void CSoundRender_Emitter::start(ref_sound* _owner, BOOL _loop, float delay)
 	starting_delay			= delay;
 
 	owner_data				= _owner->_p;			VERIFY(owner_data);
-	p_source.position.Set	(0,0,0);
+	p_source.position.set	(0,0,0);
 	p_source.min_distance	= source()->m_fMinDist;	// DS3D_DEFAULTMINDISTANCE;
 	p_source.max_distance	= source()->m_fMaxDist;	// 300.f;
 	p_source.base_volume	= source()->m_fBaseVolume;// 1.f

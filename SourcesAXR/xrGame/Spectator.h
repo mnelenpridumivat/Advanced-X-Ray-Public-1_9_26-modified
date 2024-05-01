@@ -63,7 +63,7 @@ public:
 	BOOL			net_Spawn				( CSE_Abstract*	DC ) override;
 	void			net_Destroy			() override;
 
-	void			Center					(Fvector& C)	const override { C.Set(Position());	}
+	void			Center					(Fvector& C)	const override { C.set(Position());	}
 	float			Radius					()				const override { return EPS;}
 //	virtual const Fbox&		BoundingBox				()				const	{ VERIFY2(renderable.visual,*cName()); return renderable.visual->vis.box;									}
 	CGameObject*	cast_game_object		() override {return this;}

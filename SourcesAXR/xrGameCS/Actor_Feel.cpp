@@ -275,7 +275,7 @@ void CActor::PickupInfoDraw(CObject* object)
 	Fvector			shift;
 
 	draw_str = item->NameItem();
-	shift.Set(0,0,0);
+	shift.set(0,0,0);
 
 	res.transform(v_res,shift);
 

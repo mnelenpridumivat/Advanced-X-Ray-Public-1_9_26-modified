@@ -411,7 +411,7 @@ void CTorch::net_Destroy()
 void CTorch::OnH_A_Chield() 
 {
 	inherited::OnH_A_Chield			();
-	m_focus.Set						(Position());
+	m_focus.set						(Position());
 }
 
 void CTorch::OnH_B_Independent(bool just_before_destroy) 

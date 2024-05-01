@@ -161,7 +161,7 @@ Fvector   rotate_point (Fvector const&	point, float const angle)
 	float	const 	cos_alpha		=	_cos(angle);
 	float	const 	sin_alpha		=	_sin(angle);
 
-	return								Fvector().Set(point.x*cos_alpha - point.z*sin_alpha, 
+	return								Fvector().set(point.x*cos_alpha - point.z*sin_alpha, 
   													  0,
 													  point.x*sin_alpha + point.z*cos_alpha);
 }

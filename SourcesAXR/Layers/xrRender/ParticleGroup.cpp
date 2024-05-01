@@ -212,7 +212,7 @@ void CParticleGroup::SItem::StartRelatedChild(CParticleEffect* emitter, LPCSTR e
     };
     Fvector 				p;
     M.transform_tiny		(p,m.pos);
-    M.c.Set					(p);
+    M.c.set					(p);
     C->Play					();
     C->UpdateParent			(M,vel,FALSE);
     _children_related.push_back(C);
@@ -240,7 +240,7 @@ void CParticleGroup::SItem::StartFreeChild(CParticleEffect* emitter, LPCSTR nm, 
         };
         Fvector 				p;
         M.transform_tiny		(p,m.pos);
-        M.c.Set					(p);
+        M.c.set					(p);
         C->Play					();
         C->UpdateParent			(M,vel,FALSE);
         _children_free.push_back(C);
@@ -457,7 +457,7 @@ u32	CParticleGroup::SItem::ParticlesCount()
 CParticleGroup::CParticleGroup()
 {
 	m_RT_Flags.zero			();
-	m_InitialPosition.Set	(0,0,0);
+	m_InitialPosition.set	(0,0,0);
 }
 
 void CParticleGroup::Manual_UpdateSize(const Fvector& NewSize)

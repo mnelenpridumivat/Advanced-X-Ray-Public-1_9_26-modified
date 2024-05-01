@@ -197,7 +197,7 @@ void stalker_movement_manager_smart_cover::reach_enter_location			(u32 const& ti
 			position.y				= ai().level_graph().vertex_plane_y(level_vertex_id,position.x,position.z);
 
 		if (!restrictions().accessible(position)) {
-			level_vertex_id			= restrictions().accessible_nearest(Fvector().Set(position),position);
+			level_vertex_id			= restrictions().accessible_nearest(Fvector().set(position),position);
 			VERIFY					(restrictions().accessible(level_vertex_id));
 			VERIFY					(restrictions().accessible(position));
 		}

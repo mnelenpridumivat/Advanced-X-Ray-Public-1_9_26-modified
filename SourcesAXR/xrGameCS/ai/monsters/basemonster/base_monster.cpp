@@ -213,11 +213,11 @@ void CBaseMonster::update_pos_by_grouping_behaviour ()
 
 bool   accessible_epsilon (CBaseMonster * const object, Fvector const pos, float epsilon)
 {
-	Fvector const offsets[]			=	{	Fvector().Set( 0.f,			0.f,	0.f),
-											Fvector().Set(- epsilon, 	0.f,  	0.f),
-											Fvector().Set(+ epsilon, 	0.f,  	0.f),
-											Fvector().Set( 0.f,			0.f, 	- epsilon),
-											Fvector().Set( 0.f,			0.f, 	+ epsilon)	};
+	Fvector const offsets[]			=	{	Fvector().set( 0.f,			0.f,	0.f),
+											Fvector().set(- epsilon, 	0.f,  	0.f),
+											Fvector().set(+ epsilon, 	0.f,  	0.f),
+											Fvector().set( 0.f,			0.f, 	- epsilon),
+											Fvector().set( 0.f,			0.f, 	+ epsilon)	};
 	
 	for ( u32 i=0; i<sizeof(offsets)/sizeof(offsets[0]); ++i )
 	{
@@ -788,7 +788,7 @@ CParticlesObject* CBaseMonster::PlayParticles(const shared_str& name, const Fvec
 	Fmatrix	matrix; 
 
 	matrix.identity			();
-	matrix.k.Set			(dir);
+	matrix.k.set			(dir);
 	Fvector::generate_orthonormal_basis_normalized(matrix.k,matrix.j,matrix.i);
 	matrix.translate_over	(position);
 	

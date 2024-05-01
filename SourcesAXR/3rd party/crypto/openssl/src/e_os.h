@@ -463,8 +463,7 @@ static unsigned int _strlen31(const char *str)
 #      define SHUTDOWN(fd)		close(fd)
 #      define SHUTDOWN2(fd)		close(fd)
 #    elif !defined(__DJGPP__)
-//#      include <windows.h>
-#      include <winsock2.h>
+#      include <winsock.h>
 extern HINSTANCE _hInstance;
 #      ifdef _WIN64
 /*

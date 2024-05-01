@@ -339,15 +339,15 @@ public:
 	{
 		Fvector p1, p2, p3, p4, p5, p6, p7, p8;
 		
-		p1.Set(c.x+rx, c.y+ry, c.z+rz);
-		p2.Set(c.x+rx, c.y-ry, c.z+rz);
-		p3.Set(c.x-rx, c.y-ry, c.z+rz);
-		p4.Set(c.x-rx, c.y+ry, c.z+rz);
+		p1.set(c.x+rx, c.y+ry, c.z+rz);
+		p2.set(c.x+rx, c.y-ry, c.z+rz);
+		p3.set(c.x-rx, c.y-ry, c.z+rz);
+		p4.set(c.x-rx, c.y+ry, c.z+rz);
 		
-		p5.Set(c.x+rx, c.y+ry, c.z-rz);
-		p6.Set(c.x+rx, c.y-ry, c.z-rz);
-		p7.Set(c.x-rx, c.y-ry, c.z-rz);
-		p8.Set(c.x-rx, c.y+ry, c.z-rz);
+		p5.set(c.x+rx, c.y+ry, c.z-rz);
+		p6.set(c.x+rx, c.y-ry, c.z-rz);
+		p7.set(c.x-rx, c.y-ry, c.z-rz);
+		p8.set(c.x-rx, c.y+ry, c.z-rz);
 
 		dbg_addline(p1, p2, color);
 		dbg_addline(p2, p3, color);

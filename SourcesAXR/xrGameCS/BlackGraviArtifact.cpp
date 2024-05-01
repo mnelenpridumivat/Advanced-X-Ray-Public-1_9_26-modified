@@ -57,7 +57,7 @@ BOOL CBlackGraviArtefact::net_Spawn(CSE_Abstract* DC)
 	pos.translate_over(XFORM().c);
 	
 	Fvector vel;
-	vel.Set(0,0,0);
+	vel.set(0,0,0);
 	pStaticPG->UpdateParent(pos, vel); 
 	pStaticPG->Play(false);
 
@@ -94,7 +94,7 @@ void CBlackGraviArtefact::UpdateCLChild()
 	if (getVisible() && m_pPhysicsShell) {
 		if (m_bStrike) {
 			Fvector	P; 
-			P.Set(Position());
+			P.set(Position());
 			feel_touch_update(P,m_fRadius);
 
 			GraviStrike();
@@ -106,7 +106,7 @@ void CBlackGraviArtefact::UpdateCLChild()
 			Fvector vel; 
 			//vel.sub(Position(),ps_Element(0).vPosition); 
 			//vel.div((Level().timeServer()-ps_Element(0).dwTime)/1000.f);
-			vel.Set(0,0,0);
+			vel.set(0,0,0);
 			pStaticPG->UpdateParent(pos, vel); 
 			pStaticPG->Play(false);
 
@@ -187,7 +187,7 @@ void CBlackGraviArtefact::GraviStrike()
 		if(pGameObject->Visual()) 
 			pGameObject->Center(object_pos); 
 		else 
-			object_pos.Set(pGameObject->Position());
+			object_pos.set(pGameObject->Position());
 
 		strike_dir.sub(object_pos, Position()); 
 		float distance = strike_dir.magnitude(); 

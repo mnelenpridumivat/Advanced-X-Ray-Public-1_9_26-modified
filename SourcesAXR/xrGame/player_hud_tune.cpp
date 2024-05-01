@@ -51,17 +51,17 @@ void tune_remap(const Ivector& in_values, Ivector& out_values)
 	}
 	else
 	{
-		out_values.Set(0,0,0);
+		out_values.set(0,0,0);
 	}
 }
 
 void calc_cam_diff_pos(Fmatrix item_transform, Fvector diff, Fvector& res)
 {
 	Fmatrix							cam_m;
-	cam_m.i.Set						(Device.vCameraRight);
-	cam_m.j.Set						(Device.vCameraTop);
-	cam_m.k.Set						(Device.vCameraDirection);
-	cam_m.c.Set						(Device.vCameraPosition);
+	cam_m.i.set						(Device.vCameraRight);
+	cam_m.j.set						(Device.vCameraTop);
+	cam_m.k.set						(Device.vCameraDirection);
+	cam_m.c.set						(Device.vCameraPosition);
 
 
 	Fvector							res1;
@@ -75,10 +75,10 @@ void calc_cam_diff_pos(Fmatrix item_transform, Fvector diff, Fvector& res)
 void calc_cam_diff_rot(Fmatrix item_transform, Fvector diff, Fvector& res)
 {
 	Fmatrix							cam_m;
-	cam_m.i.Set						(Device.vCameraRight);
-	cam_m.j.Set						(Device.vCameraTop);
-	cam_m.k.Set						(Device.vCameraDirection);
-	cam_m.c.Set						(Device.vCameraPosition);
+	cam_m.i.set						(Device.vCameraRight);
+	cam_m.j.set						(Device.vCameraTop);
+	cam_m.k.set						(Device.vCameraDirection);
+	cam_m.c.set						(Device.vCameraPosition);
 
 	Fmatrix							R;
 	R.identity						();
@@ -112,7 +112,7 @@ void attachable_hud_item::tune(Ivector values)
 		return;
 
 	Fvector					diff;
-	diff.Set				(0,0,0);
+	diff.set				(0,0,0);
 
 	if(hud_adj_mode==3 || hud_adj_mode==4)
 	{
@@ -215,7 +215,7 @@ void player_hud::tune(Ivector _values)
 	if(hud_adj_mode==1 || hud_adj_mode==2)
 	{
 		Fvector			diff;
-		diff.Set		(0,0,0);
+		diff.set		(0,0,0);
 		
 		float _curr_dr = hud_adj_delta_rot;
 

@@ -50,7 +50,7 @@ bool activating_character_delay::do_position_correct()
 	Fvector sv_pos = obj->Position();
 	bool ret = char_support.CollisionCorrectObjPos();
 	if(!ret)
-		obj->Position().Set(sv_pos);
+		obj->Position().set(sv_pos);
 #if	0
 	else
 	{

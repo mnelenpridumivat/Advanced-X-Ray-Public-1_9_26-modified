@@ -338,8 +338,8 @@ IC float CLevelGraph::nearest(Fvector& Dest, const Fvector& P, const Fvector& A,
 	float t = V.dotproduct(c);
 	
 	// Check to see if ‘t’ is beyond the extents of the line segment
-	if (t <= 0.0f)	{ Dest.Set(A); return P.distance_to_sqr(Dest); }
-	if (t >= d)		{ Dest.Set(B); return P.distance_to_sqr(Dest); }
+	if (t <= 0.0f)	{ Dest.set(A); return P.distance_to_sqr(Dest); }
+	if (t >= d)		{ Dest.set(B); return P.distance_to_sqr(Dest); }
 	
 	// Return the point between ‘a’ and ‘b’
 	// set length of V to t. V is normalized so this is easy
@@ -364,10 +364,10 @@ IC void CLevelGraph::contour(CLevelGraph::SContour &_contour, const CLevelGraph:
 	// create vertices
 	float					st = header().cell_size()/2;
 
-	_contour.v1.Set			(vertex_position.x - st, vertex_position.y, vertex_position.z-st);	
-	_contour.v2.Set			(vertex_position.x + st, vertex_position.y, vertex_position.z-st);	
-	_contour.v3.Set			(vertex_position.x + st, vertex_position.y, vertex_position.z+st);	
-	_contour.v4.Set			(vertex_position.x - st, vertex_position.y, vertex_position.z+st);	
+	_contour.v1.set			(vertex_position.x - st, vertex_position.y, vertex_position.z-st);	
+	_contour.v2.set			(vertex_position.x + st, vertex_position.y, vertex_position.z-st);	
+	_contour.v3.set			(vertex_position.x + st, vertex_position.y, vertex_position.z+st);	
+	_contour.v4.set			(vertex_position.x - st, vertex_position.y, vertex_position.z+st);	
 
 	project_point			(plane,_contour.v1);	// minX,minZ
 	project_point			(plane,_contour.v2);	// maxX,minZ
@@ -386,19 +386,19 @@ IC float CLevelGraph::nearest(Fvector &destination, const Fvector &position, con
 	dist		= nearest(T,position,contour.v2,contour.v3);
 	if (dist<best) {
 		best	= dist;
-		destination.Set(T);
+		destination.set(T);
 	}
 	
 	dist		= nearest(T,position,contour.v3,contour.v4);
 	if (dist<best) {
 		best	= dist;
-		destination.Set(T);
+		destination.set(T);
 	}
 	
 	dist		= nearest(T,position,contour.v4,contour.v1);
 	if (dist<best) {
 		best	= dist;
-		destination.Set(T);
+		destination.set(T);
 	}
 
 	return		(best);
@@ -410,22 +410,22 @@ IC bool CLevelGraph::intersect(Fvector& dst, const Fvector& v1, const Fvector& v
 {
 	// corner check (v4 - end, v1-v2 - segm)
 	if (v4.similar(v1,corner_r)) {
-		dst.Set	(v1);
+		dst.set	(v1);
 		return	(true);
 	}
 	
 	if (v4.similar(v2,corner_r)){
-		dst.Set	(v2);
+		dst.set	(v2);
 		return	(true);
 	}
 	
 	if (v3.similar(v1,corner_r)){
-		dst.Set	(v1);
+		dst.set	(v1);
 		return	(true);
 	}
 	
 	if (v3.similar(v2,corner_r)){
-		dst.Set	(v2);
+		dst.set	(v2);
 		return	(true);
 	}
 

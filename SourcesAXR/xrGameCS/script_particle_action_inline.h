@@ -16,9 +16,9 @@ IC	CScriptParticleAction::CScriptParticleAction	()
 	m_bCompleted		= false;
 	m_bStartedToPlay	= false;
 	m_tpParticleSystem	= 0;
-	m_tParticlePosition.Set	(0,0,0);
-	m_tParticleAngles.Set	(0,0,0);
-	m_tParticleVelocity.Set	(0,0,0);
+	m_tParticlePosition.set	(0,0,0);
+	m_tParticleAngles.set	(0,0,0);
+	m_tParticleVelocity.set	(0,0,0);
 	m_bAutoRemove		= true;
 }
 

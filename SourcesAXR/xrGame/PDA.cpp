@@ -269,7 +269,7 @@ void CPda::JoystickCallback(CBoneInstance* B)
 		current.add(diff);
 	}
 	else
-		current.Set(target);
+		current.set(target);
 
 	if (!fsimilar(target_press, press, .0001f))
 	{
@@ -441,7 +441,7 @@ void CPda::shedule_Update(u32 dt)
 	inherited::shedule_Update(dt);
 
 	if (!H_Parent()) return;
-	Position().Set(H_Parent()->Position());
+	Position().set(H_Parent()->Position());
 
 	if (IsOn() && Level().CurrentEntity() && Level().CurrentEntity()->ID() == H_Parent()->ID())
 	{

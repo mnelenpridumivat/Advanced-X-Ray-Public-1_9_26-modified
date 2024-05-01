@@ -239,7 +239,7 @@ void CEffect_Thunderbolt::OnFrame(shared_str id, float period, float duration)
 		Fvector fClr;		
 		int frame;
 		u32 uClr		= current->color_anim->CalculateRGB(current_time/life_time,frame);
-		fClr.Set		(
+		fClr.set		(
 			clampr(float(color_get_R(uClr)/255.f), 0.f, 1.f),
 			clampr(float(color_get_G(uClr)/255.f), 0.f, 1.f),
 			clampr(float(color_get_B(uClr)/255.f), 0.f, 1.f)

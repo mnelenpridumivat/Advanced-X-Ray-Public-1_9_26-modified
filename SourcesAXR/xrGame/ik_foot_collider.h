@@ -6,9 +6,9 @@ class ik_pick_query
 {
 public:
 	ik_pick_query		( ): _point( ik_foot_geom::none ),
-						 _pos( Fvector().Set(std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min()) ),
-						 _dir( Fvector().Set(std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min()) ),
-						 _range(std::numeric_limits<float>::min())
+						 _pos( Fvector().set( -FLT_MAX, -FLT_MAX, -FLT_MAX ) ),
+						 _dir( Fvector().set( -FLT_MAX, -FLT_MAX, -FLT_MAX ) ),
+						 _range( -FLT_MAX )
 	{}
 
 	ik_pick_query(

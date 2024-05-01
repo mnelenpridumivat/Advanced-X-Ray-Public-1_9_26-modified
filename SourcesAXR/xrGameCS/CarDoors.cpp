@@ -134,13 +134,13 @@ void CCar::SDoor::Init()
 	switch(door_plane_axes.y) 
 	{
 		case 0:
-			door_dir_in_door.Set(door_dir_sign,0.f,0.f);
+			door_dir_in_door.set(door_dir_sign,0.f,0.f);
 			break;
 		case 1:
-			door_dir_in_door.Set(0.f,door_dir_sign,0.f);
+			door_dir_in_door.set(0.f,door_dir_sign,0.f);
 			break;
 		case 2:
-			door_dir_in_door.Set(0.f,0.f,door_dir_sign);
+			door_dir_in_door.set(0.f,0.f,door_dir_sign);
 			break;
 		default: NODEFAULT;
 	}
@@ -403,7 +403,7 @@ bool CCar::SDoor::IsFront(const Fvector& pos,const Fvector& dir)
 	//CBoneData& bd=K->LL_GetData(bone_id);
 	K->LL_GetBindTransform(bones_bind_forms);
 	//		Fobb bb=bd.obb;
-	Fvector tdir;tdir.Set(pcar->XFORM().i);if(tdir.dotproduct(dir)<0.f)tdir.invert();
+	Fvector tdir;tdir.set(pcar->XFORM().i);if(tdir.dotproduct(dir)<0.f)tdir.invert();
 	Fmatrix pf;
 	pf.mul(pcar->XFORM(),bones_bind_forms[bone_id]);
 	Fvector dif,dif1;
@@ -426,7 +426,7 @@ bool CCar::SDoor::IsInArea(const Fvector& pos,const Fvector& dir)
 		//CBoneData& bd=K->LL_GetData(bone_id);
 		K->LL_GetBindTransform(bones_bind_forms);
 		//		Fobb bb=bd.obb;
-		Fvector tdir;tdir.Set(pcar->XFORM().i);if(tdir.dotproduct(dir)<0.f)tdir.invert();
+		Fvector tdir;tdir.set(pcar->XFORM().i);if(tdir.dotproduct(dir)<0.f)tdir.invert();
 		Fmatrix pf;
 		pf.mul(pcar->XFORM(),bones_bind_forms[bone_id]);
 		Fvector dif,dif1;
@@ -494,14 +494,14 @@ void CCar::SDoor::GetExitPosition(Fvector& pos)
 		pf.mul(pcar->XFORM(),bones_bind_forms[bone_id]);
 		bb.transform(bd.obb,pf);
 		bb.xform_get(pf);
-		pos.Set(pf.c);
+		pos.set(pf.c);
 		Fvector add,add1;
-		MAX_OF(abs(pf.i.y),add.Set(pf.i);add.mul(bb.m_halfsize.x*fsignum(pf.i.y)),abs(pf.j.y),add.Set(pf.j);add.mul(bb.m_halfsize.y*fsignum(pf.j.y)),abs(pf.k.y),add.Set(pf.k);add.mul(bb.m_halfsize.z*fsignum(pf.k.y)));
+		MAX_OF(abs(pf.i.y),add.set(pf.i);add.mul(bb.m_halfsize.x*fsignum(pf.i.y)),abs(pf.j.y),add.set(pf.j);add.mul(bb.m_halfsize.y*fsignum(pf.j.y)),abs(pf.k.y),add.set(pf.k);add.mul(bb.m_halfsize.z*fsignum(pf.k.y)));
 		pos.sub(add);
 
-		MIN_OF(bb.m_halfsize.x,add1.Set(pf.i);add1.mul(bb.m_halfsize.x),
-			   bb.m_halfsize.y,add1.Set(pf.j);add1.mul(bb.m_halfsize.y),
-			  bb.m_halfsize.z,add1.Set(pf.k);add1.mul(bb.m_halfsize.z))
+		MIN_OF(bb.m_halfsize.x,add1.set(pf.i);add1.mul(bb.m_halfsize.x),
+			   bb.m_halfsize.y,add1.set(pf.j);add1.mul(bb.m_halfsize.y),
+			  bb.m_halfsize.z,add1.set(pf.k);add1.mul(bb.m_halfsize.z))
 		Fvector dir_from_car;dir_from_car.sub(pf.c,pcar->Position());
 		dir_from_car.y=0.f;
 		if(add1.dotproduct(dir_from_car)<0.f)add1.invert();	
@@ -524,11 +524,11 @@ void CCar::SDoor::GetExitPosition(Fvector& pos)
 	pcar->XFORM().transform_dir(closed_door_dir);
 
 
-	pos.Set(door_pos);
+	pos.set(door_pos);
 	door_axis.normalize();
 	float center_prg=door_axis.dotproduct(door_pos);
 	joint->PSecond_element()->get_Extensions(door_axis,center_prg,lo_ext,hi_ext);
-	add.Set(door_axis);
+	add.set(door_axis);
 	if(door_axis.dotproduct(root_form.j)>0.f) add.mul(lo_ext);
 	else									  add.mul(hi_ext);
 	pos.add(add);
@@ -585,7 +585,7 @@ bool CCar::SDoor::TestPass(const Fvector& pos,const Fvector& dir)
 	closed_door_norm.crossproduct(door_axis,closed_door_dir);
 
 	Fvector point_on_door,add,sub;
-	add.Set(dir);
+	add.set(dir);
 	sub.sub(pos,door_pos);
 	add.mul(-sub.dotproduct(closed_door_norm)/(dir.dotproduct(closed_door_norm)));
 	

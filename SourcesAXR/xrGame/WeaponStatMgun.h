@@ -95,7 +95,7 @@ public:
 	void			detach_Actor		() override;
 	bool			allowWeapon			()	const override {return false;};
 	bool			HUDView				()	const override {return true;};
-	Fvector			ExitPosition		() override {return Fvector().Set(0.0f,0.0f,0.0f);};
+	Fvector			ExitPosition		() override {return Fvector().set(0.0f,0.0f,0.0f);};
 
 	CCameraBase*	Camera				() override {return camera;};
 

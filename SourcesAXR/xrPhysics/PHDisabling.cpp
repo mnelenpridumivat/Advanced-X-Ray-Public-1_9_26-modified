@@ -17,12 +17,12 @@ SDisableVector::SDisableVector()
 
 void	SDisableVector::Reset()
 {
-	sum.Set(0.f,0.f,0.f);
+	sum.set(0.f,0.f,0.f);
 }
 
 void	SDisableVector::Init()
 {
-	previous.Set(0.f,0.f,0.f);
+	previous.set(0.f,0.f,0.f);
 	Reset();
 }
 
@@ -30,7 +30,7 @@ float	SDisableVector::Update(const Fvector& new_vector)
 {
 	Fvector dif;
 	dif.sub(new_vector,previous);
-	previous.Set(new_vector);
+	previous.set(new_vector);
 	sum.add(dif);
 	return dif.magnitude();
 }
@@ -39,7 +39,7 @@ float	SDisableVector::UpdatePrevious(const Fvector& new_vector)
 {
 	Fvector dif;
 	dif.sub(new_vector,previous);
-	previous.Set(new_vector);
+	previous.set(new_vector);
 	return dif.magnitude();
 }
 
@@ -217,7 +217,7 @@ void	CPHDisablingRotational::Reinit()
 	const	dReal	*rotation			=	dBodyGetRotation			(body)						;
 	const	dReal	*velocity			=	dBodyGetAngularVel			(body)						;
 	Fvector	vrotation																				;
-	vrotation.Set(rotation[9],rotation[2],rotation[4])												;
+	vrotation.set(rotation[9],rotation[2],rotation[4])												;
 	m_mean_velocity		.UpdatePrevious		(vrotation)												;
 	m_mean_acceleration	.UpdatePrevious		(* (Fvector*) velocity)									;
 }
@@ -228,7 +228,7 @@ void	CPHDisablingRotational::UpdateL1()
 	const	dReal	*rotation			=	dBodyGetRotation			(body)						;
 	const	dReal	*velocity			=	dBodyGetAngularVel			(body)						;
 			Fvector	vrotation																		;
-	vrotation.Set(rotation[9],rotation[2],rotation[4])												;
+	vrotation.set(rotation[9],rotation[2],rotation[4])												;
 
 	CPHDisablingBase::UpdateValues(vrotation,* (Fvector*) velocity);
 	//float			velocity_param		=	m_mean_velocity		.Update	(			 vrotation	)	;

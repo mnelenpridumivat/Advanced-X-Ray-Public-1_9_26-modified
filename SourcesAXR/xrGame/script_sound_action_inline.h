@@ -15,8 +15,8 @@ IC	CScriptSoundAction::CScriptSoundAction	()
 	m_tGoalType			= eGoalTypeDummy;
 	m_bStartedToPlay	= false;
 	m_bLooped			= false;
-	m_tSoundPosition.Set(0,0,0);
-	m_tSoundAngles.Set	(0,0,0);
+	m_tSoundPosition.set(0,0,0);
+	m_tSoundAngles.set	(0,0,0);
 	m_bCompleted		= true;
 	m_monster_sound		= MonsterSound::eMonsterSoundDummy;
 	m_tHeadAnimType		= MonsterSpace::eHeadAnimNone;
@@ -94,8 +94,8 @@ IC	CScriptSoundAction::CScriptSoundAction		(LPCSTR caSoundToPlay, LPCSTR caBoneN
 {
 	SetBone				(caBoneName);
 	SetSound			(caSoundToPlay);		
-	m_tSoundPosition.Set(0,0,0);
-	m_tSoundAngles.Set	(0,0,0);
+	m_tSoundPosition.set(0,0,0);
+	m_tSoundAngles.set	(0,0,0);
 	m_bCompleted		= false;
 	m_bLooped			= false;
 	m_tHeadAnimType		= head_anim_type;

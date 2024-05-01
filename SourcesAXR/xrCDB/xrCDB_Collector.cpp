@@ -281,9 +281,9 @@ namespace CDB
 	CollectorPacked::CollectorPacked(const Fbox &bb, int apx_vertices, int apx_faces)
 	{
 		// Params
-		VMscale.Set		(bb.max.x-bb.min.x, bb.max.y-bb.min.y, bb.max.z-bb.min.z);
-		VMmin.Set		(bb.min);
-		VMeps.Set		(VMscale.x/clpMX/2,VMscale.y/clpMY/2,VMscale.z/clpMZ/2);
+		VMscale.set		(bb.max.x-bb.min.x, bb.max.y-bb.min.y, bb.max.z-bb.min.z);
+		VMmin.set		(bb.min);
+		VMeps.set		(VMscale.x/clpMX/2,VMscale.y/clpMY/2,VMscale.z/clpMZ/2);
 		VMeps.x			= (VMeps.x<EPS_L)?VMeps.x:EPS_L;
 		VMeps.y			= (VMeps.y<EPS_L)?VMeps.y:EPS_L;
 		VMeps.z			= (VMeps.z<EPS_L)?VMeps.z:EPS_L;

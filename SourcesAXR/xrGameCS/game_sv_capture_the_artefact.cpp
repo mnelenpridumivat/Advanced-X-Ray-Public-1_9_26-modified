@@ -1594,7 +1594,7 @@ void game_sv_CaptureTheArtefact::ReSpawnArtefacts()
 		CSE_ALifeItemArtefact *tempSvEntity = smart_cast<CSE_ALifeItemArtefact*>(spawn_begin(ti->second.artefactName.c_str()));
 		tempSvEntity->s_flags.assign(M_SPAWN_OBJECT_LOCAL);
 		//MoveArtefactToPoint(tempSvEntity, ti->second.artefactRPoint);
-		tempSvEntity->o_Position.Set(ti->second.artefactRPoint.P);
+		tempSvEntity->o_Position.set(ti->second.artefactRPoint.P);
 		ti->second.artefact = smart_cast<CSE_ALifeItemArtefact*>(spawn_end(tempSvEntity, m_server->GetServerClient()->ID));
 		VERIFY(ti->second.artefact);
 		ti->second.freeArtefactTimeStart = 0;
@@ -1944,7 +1944,7 @@ void game_sv_CaptureTheArtefact::MoveArtefactToPoint(CSE_ALifeItemArtefact *arte
 	//artefact->o_Position.set(toPoint.P);
 
 	VERIFY(artefact->cast_inventory_item());
-	artefact->cast_inventory_item()->State.position.Set(toPoint.P);		//settings position to server object
+	artefact->cast_inventory_item()->State.position.set(toPoint.P);		//settings position to server object
 
 	CArtefact * OArtefact = smart_cast<CArtefact*>(Level().Objects.net_Find(artefact->ID));
 

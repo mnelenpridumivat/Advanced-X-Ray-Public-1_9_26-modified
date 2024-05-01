@@ -20,11 +20,11 @@ void CRenderTarget::draw_rain( light &RainSetup )
 	L_dir.normalize				();
 
 	Fvector		W_dirX;
-	Device.mView.transform_dir	(W_dirX,Fvector().Set(1.0f, 0.0f, 0.0f));
+	Device.mView.transform_dir	(W_dirX,Fvector().set(1.0f, 0.0f, 0.0f));
 	W_dirX.normalize				();
 
 	Fvector		W_dirZ;
-	Device.mView.transform_dir	(W_dirZ,Fvector().Set(0.0f, 0.0f, 1.0f));
+	Device.mView.transform_dir	(W_dirZ,Fvector().set(0.0f, 0.0f, 1.0f));
 	W_dirZ.normalize				();
 
 	// Perform masking (only once - on the first/near phase)

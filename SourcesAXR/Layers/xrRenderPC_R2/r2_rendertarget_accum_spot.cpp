@@ -101,7 +101,7 @@ void CRenderTarget::accum_spot	(light* L)
 
 	// Common constants
 	Fvector		L_dir,L_clr,L_pos;	float L_spec;
-	L_clr.Set					(L->color.r,L->color.g,L->color.b);
+	L_clr.set					(L->color.r,L->color.g,L->color.b);
 	L_clr.mul					(L->get_LOD());
 	L_spec						= u_diffuse2s	(L_clr);
 	Device.mView.transform_tiny	(L_pos,L->position);
@@ -276,7 +276,7 @@ void CRenderTarget::accum_volumetric(light* L)
 	
 	//float	scaledRadius = L->spatial.sphere.R * (1+L->m_volumetric_distance)*0.5f;
 	float	scaledRadius = L->spatial.sphere.R * L->m_volumetric_distance;
-	Fvector	rr = Fvector().Set(scaledRadius,scaledRadius,scaledRadius);
+	Fvector	rr = Fvector().set(scaledRadius,scaledRadius,scaledRadius);
 	Fvector pt = L->spatial.sphere.P;
 	pt.sub(L->position);
 	pt.mul(L->m_volumetric_distance);
@@ -310,7 +310,7 @@ void CRenderTarget::accum_volumetric(light* L)
 	//	Adjust slice intensity
 	fQuality	= ((float)iNumSlises)/VOLUMETRIC_SLICES;
 	Fvector		L_dir,L_clr,L_pos;	float L_spec;
-	L_clr.Set					(L->color.r,L->color.g,L->color.b);
+	L_clr.set					(L->color.r,L->color.g,L->color.b);
 	L_clr.mul					(L->m_volumetric_intensity);
 	L_clr.mul					(L->m_volumetric_distance);
 	L_clr.mul					(1/fQuality);

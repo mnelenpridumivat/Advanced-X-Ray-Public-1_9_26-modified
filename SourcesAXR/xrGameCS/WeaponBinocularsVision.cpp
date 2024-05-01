@@ -260,7 +260,7 @@ void CBinocularsVision::Update()
 			new_vis_obj->create_default		(m_frame_color.get());
 			new_vis_obj->m_upd_speed		= m_rotating_speed;
 			
-			m_sounds.PlaySound	("found_snd", Fvector().Set(0,0,0), NULL, true);
+			m_sounds.PlaySound	("found_snd", Fvector().set(0,0,0), NULL, true);
 		}
 	}
 	std::sort								(m_active_objects.begin(), m_active_objects.end());
@@ -280,7 +280,7 @@ void CBinocularsVision::Update()
 		(*it)->Update						();
 		
 		if(bLocked != visObj->m_flags.test(flTargetLocked))
-			m_sounds.PlaySound	("catch_snd", Fvector().Set(0,0,0), NULL, true);
+			m_sounds.PlaySound	("catch_snd", Fvector().set(0,0,0), NULL, true);
 	}
 
 }

@@ -40,7 +40,7 @@ void CBaseMonster::GenerateNewOffsetFromLeader ()
 													   "script_move_max_offset_from_leader", 9.f);
 
 	float const offset_magnitude	=	min_squad_offset + (max_squad_offset-min_squad_offset)*Random.randF(1.f);
-	Fvector		offset				=	Fvector().Set(offset_magnitude, 0, 0);
+	Fvector		offset				=	Fvector().set(offset_magnitude, 0, 0);
 
 	m_offset_from_leader				=	rotate_point(offset, deg2rad(360.f) * Random.randF(1.f));
 	m_offset_from_leader_chosen_tick	=	Device.dwTimeGlobal;
@@ -158,7 +158,7 @@ bool CBaseMonster::bfAssignMovement (CScriptEntityAction *tpEntityAction)
 		case CScriptMovementAction::eGoalTypeObject : {
 			CGameObject		*l_tpGameObject = smart_cast<CGameObject*>(l_tMovementAction.m_tpObjectToGo);
 		
-			if ( AssignGamePathIfNeeded(Fvector().Set(0.f, 0.f, 0.f), l_tpGameObject->ai_location().level_vertex_id()) )
+			if ( AssignGamePathIfNeeded(Fvector().set(0.f, 0.f, 0.f), l_tpGameObject->ai_location().level_vertex_id()) )
 				break;
 
 			path().set_target_point	(l_tpGameObject->Position(), l_tpGameObject->ai_location().level_vertex_id());
@@ -232,7 +232,7 @@ bool CBaseMonster::bfAssignMovement (CScriptEntityAction *tpEntityAction)
 				if ( !ai().level_graph().valid_vertex_id(vertex_id) )
 				{
 					vertex_id	=	leader->ai_location().level_vertex_id();
-					m_offset_from_leader.Set(0.f, 0.f, 0.f);
+					m_offset_from_leader.set(0.f, 0.f, 0.f);
 				}
 
 				path().set_target_point	(leader->Position() + m_offset_from_leader);

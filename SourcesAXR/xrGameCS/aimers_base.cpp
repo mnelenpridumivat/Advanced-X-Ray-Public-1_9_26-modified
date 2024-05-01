@@ -113,7 +113,7 @@ void base::aim_at_position		(
 	Fvector bone2current				= Fvector().sub(current_point, bone_position);
 	VERIFY							( _valid(bone2current) );
 	if (bone2current.magnitude() < EPS_L)
-		bone2current.Set				( 0.f, 0.f, EPS_L );
+		bone2current.set				( 0.f, 0.f, EPS_L );
 	VERIFY							( _valid(bone2current) );
 
 	float const sphere_radius_sqr		= bone2current.square_magnitude();
@@ -122,7 +122,7 @@ void base::aim_at_position		(
 	Fvector direction_target			= Fvector().sub(m_target, bone_position);
 	VERIFY							( _valid(direction_target) );
 	if (direction_target.magnitude() < EPS_L)
-		direction_target.Set			( 0.f, 0.f, EPS_L );
+		direction_target.set			( 0.f, 0.f, EPS_L );
 	VERIFY							( _valid(direction_target) );
 
 	float const invert_magnitude		= 1.f/direction_target.magnitude();
@@ -152,7 +152,7 @@ void base::aim_at_position		(
 	Fvector projection2circle_center	= Fvector().sub(projection, circle_center);
 	VERIFY							( _valid(projection2circle_center) );
 	if (projection2circle_center.magnitude() < EPS_L)
-		projection2circle_center.Set	( 0.f, 0.f, EPS_L );
+		projection2circle_center.set	( 0.f, 0.f, EPS_L );
 	VERIFY							( _valid(projection2circle_center) );
 	Fvector const center2projection_direction	= projection2circle_center.normalize();
 	VERIFY							( _valid(center2projection_direction) );
@@ -173,7 +173,7 @@ void base::aim_at_position		(
 	Fvector target2bone					= Fvector().sub(target_point,  bone_position);
 	VERIFY							( _valid(target2bone) );
 	if (target2bone.magnitude() < EPS_L)
-		target2bone.Set					( 0.f, 0.f, EPS_L);
+		target2bone.set					( 0.f, 0.f, EPS_L);
 	VERIFY							( _valid(target2bone) );
 	Fvector const target_direction		= target2bone.normalize();
 	VERIFY							( _valid(target_direction) );
@@ -201,7 +201,7 @@ void base::aim_at_position		(
 					VERIFY			( _valid(transform0) );
 				}
 				else {
-					transform0.rotation	( Fvector().Set(0.f, 0.f, 1.f) , dot_product > 0.f ? 0.f : PI);
+					transform0.rotation	( Fvector().set(0.f, 0.f, 1.f) , dot_product > 0.f ? 0.f : PI);
 					VERIFY			( _valid(transform0) );
 				}
 			}
@@ -212,7 +212,7 @@ void base::aim_at_position		(
 	{
 		Fvector target2target_point		= Fvector().sub(m_target, target_point);
 		if (target2target_point.magnitude() < EPS_L)
-			target2target_point.Set		(0.f, 0.f, EPS_L);
+			target2target_point.set		(0.f, 0.f, EPS_L);
 		Fvector const new_direction		= target2target_point.normalize();
 
 		Fvector							old_direction;

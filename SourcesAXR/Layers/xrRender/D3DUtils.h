@@ -2,10 +2,9 @@
 // file: D3DUtils.h
 //----------------------------------------------------
 
-#pragma once
+#ifndef D3DUtilsH
+#define D3DUtilsH
 #include "..\..\Include\xrRender\DrawUtils.h"
-#include "../../xrCore/_obb.h"
-#include "../../xrCore/_sphere.h"
 //----------------------------------------------------
 
 #ifdef _EDITOR
@@ -103,7 +102,7 @@ public:
     virtual void __stdcall DrawLine(const Fvector& p0,	const Fvector& p1, u32 clr);
     virtual void __stdcall DrawLink(const Fvector& p0, const Fvector& p1, float sz, u32 clr);
     IC virtual void __stdcall DrawFaceNormal(const Fvector& p0, const Fvector& p1, const Fvector& p2, float size, u32 clr){
-        Fvector N,C,P; N.mknormal(p0,p1,p2); C.Set(p0);C.add(p1);C.add(p2);C.div(3);
+        Fvector N,C,P; N.mknormal(p0,p1,p2); C.set(p0);C.add(p1);C.add(p2);C.div(3);
         P.mad(C,N,size);
         DrawLine(C,P,clr);}
     IC virtual void __stdcall DrawFaceNormal(const Fvector* p, float size, u32 clr){DrawFaceNormal(p[0],p[1],p[2],size,clr);}
@@ -151,4 +150,5 @@ public:
 };
 extern ECORE_API CDrawUtilities DUImpl;
 //----------------------------------------------------
+#endif /*_INCDEF_D3DUtils_H_*/
 

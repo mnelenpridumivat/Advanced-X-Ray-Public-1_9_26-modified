@@ -67,12 +67,12 @@ CPHMovementControl::CPHMovementControl(CObject* parent)
 	fMass				= 100;
 	fMinCrashSpeed		= 12.0f;
 	fMaxCrashSpeed		= 25.0f;
-	vVelocity.Set		(0,0,0);
-	vPosition.Set		(0,0,0);
-	vExternalImpulse.Set(0,0,0);
+	vVelocity.set		(0,0,0);
+	vPosition.set		(0,0,0);
+	vExternalImpulse.set(0,0,0);
 	bExernalImpulse		=false;
 	fLastMotionMag		= 1.f;
-	SetPathDir			(Fvector().Set(0,0,1));
+	SetPathDir			(Fvector().set(0,0,1));
 	//fAirFriction		= AIR_FRICTION;
 	//fWallFriction		= WALL_FRICTION;
 	//fGroundFriction		= GROUND_FRICTION;
@@ -127,7 +127,7 @@ void CPHMovementControl::ApplyImpulse(const Fvector& dir,const float P)
 	if(fis_zero(P))
 		return;
 	Fvector force;
-	force.Set(dir);
+	force.set(dir);
 	force.mul(P/fixed_step);
 	
 	AddControlVel(force);
@@ -155,14 +155,14 @@ void CPHMovementControl::in_shedule_Update(u32 DT)
 
 void CPHMovementControl::Calculate(Fvector& vAccel,const Fvector& camDir,float /**ang_speed/**/,float jump,float /**dt/**/,bool /**bLight/**/)
 {
-	Fvector previous_position;previous_position.Set(vPosition);
+	Fvector previous_position;previous_position.set(vPosition);
 	m_character->IPosition(vPosition);
 	if(bExernalImpulse)
 	{
 		
 		vAccel.add(vExternalImpulse);
 		m_character->ApplyForce(vExternalImpulse);
-		vExternalImpulse.Set(0.f,0.f,0.f);
+		vExternalImpulse.set(0.f,0.f,0.f);
 		
 		bExernalImpulse=false;
 	}
@@ -341,7 +341,7 @@ void CPHMovementControl::Calculate(const xr_vector<DetailPathManager::STravelPat
 
 	if( bNonInteractiveMode )
 	{
-		vPosition.Set( pObject->Position() );
+		vPosition.set( pObject->Position() );
 	}
 
 	if(!m_character->b_exist)	return;
@@ -362,11 +362,11 @@ void CPHMovementControl::Calculate(const xr_vector<DetailPathManager::STravelPat
 	bool  near_line;
 	m_path_size=path.size();
 	Fvector dir;
-	dir.Set(0,0,0);
+	dir.set(0,0,0);
 	if(m_path_size==0)
 	{
 		speed=0;
-		vPosition.Set(new_position);
+		vPosition.set(new_position);
 	}
 	else if(b_exect_position)
 	{
@@ -381,10 +381,10 @@ void CPHMovementControl::Calculate(const xr_vector<DetailPathManager::STravelPat
 		m_start_index=travel_point;
 		dir.y=0.f;
 		dir.normalize_safe();
-		vPosition.Set(new_position);
+		vPosition.set(new_position);
 		m_path_distance=0;
 		SetPathDir	(dir);
-		vPathPoint.Set(vPosition);
+		vPathPoint.set(vPosition);
 
 
 	}
@@ -396,9 +396,9 @@ void CPHMovementControl::Calculate(const xr_vector<DetailPathManager::STravelPat
 		if(m_path_size==1)
 		{
 			speed=0.f;
-			vPosition.Set(new_position);	//todo - insert it in PathNearestPoint
+			vPosition.set(new_position);	//todo - insert it in PathNearestPoint
 			index=0;
-			vPathPoint.Set(path[0].position);
+			vPathPoint.set(path[0].position);
 			Fvector _d;
 			_d.sub(path[0].position,new_position);
 			SetPathDir	(_d);
@@ -425,14 +425,14 @@ void CPHMovementControl::Calculate(const xr_vector<DetailPathManager::STravelPat
 				m_start_index=0;
 				PathNearestPoint(path,new_position,index,near_line);
 			}
-			vPosition.Set(new_position);//for PathDirLine && PathDirPoint
+			vPosition.set(new_position);//for PathDirLine && PathDirPoint
 			if(near_line) PathDIrLine(path,index,m_path_distance,precision,dir);
 			else		  PathDIrPoint(path,index,m_path_distance,precision,dir);
 			
 	
 			travel_point=(u32)index;
 			m_start_index=index;
-			if(fis_zero(speed)) dir.Set(0,0,0);
+			if(fis_zero(speed)) dir.set(0,0,0);
 		}
 
 	}
@@ -447,7 +447,7 @@ void CPHMovementControl::Calculate(const xr_vector<DetailPathManager::STravelPat
 
 		//vAccel.add(vExternalImpulse);
 		Fvector V;
-		V.Set(dir);
+		V.set(dir);
 		//V.mul(speed*fMass/fixed_step);
 		V.mul(speed*10.f);
 		V.add(vExternalImpulse);
@@ -456,11 +456,11 @@ void CPHMovementControl::Calculate(const xr_vector<DetailPathManager::STravelPat
 
 		if(!fis_zero(speed))
 		{
-			dir.Set(V);
+			dir.set(V);
 			dir.mul(1.f/speed);
 		}
 		speed/=10.f;
-		vExternalImpulse.Set(0.f,0.f,0.f);
+		vExternalImpulse.set(0.f,0.f,0.f);
 		bExernalImpulse=false;
 	}
 	/////////////////////////
@@ -538,7 +538,7 @@ void CPHMovementControl::PathNearestPoint(const xr_vector<DetailPathManager::STr
 				{
 					m_path_distance=temp;
 					index=i;
-					vPathPoint.Set(first);
+					vPathPoint.set(first);
 					SetPathDir(dir);
 					near_line=false;
 				}
@@ -552,7 +552,7 @@ void CPHMovementControl::PathNearestPoint(const xr_vector<DetailPathManager::STr
 			{
 				//temp=dir.dotproduct(new_position); seems to be wrong
 				temp=dir.dotproduct(from_first);
-				vtemp.Set(dir);
+				vtemp.set(dir);
 				vtemp.mul(temp);
 				path_point.add(vtemp,first);
 				vtemp.sub(path_point,new_position);
@@ -561,7 +561,7 @@ void CPHMovementControl::PathNearestPoint(const xr_vector<DetailPathManager::STr
 				{
 					m_path_distance=temp;
 					index=i;
-					vPathPoint.Set(path_point);
+					vPathPoint.set(path_point);
 					SetPathDir(dir);
 					near_line=true;
 				}
@@ -580,7 +580,7 @@ void CPHMovementControl::PathNearestPoint(const xr_vector<DetailPathManager::STr
 		vtemp.sub(new_position,path[i].position);
 		m_path_distance=vtemp.magnitude();
 		SetPathDir(dir);
-		vPathPoint.Set(path[i].position);
+		vPathPoint.set(path[i].position);
 		index=i;
 		near_line=false;
 	}
@@ -609,7 +609,7 @@ void CPHMovementControl::PathNearestPointFindUp(const xr_vector<DetailPathManage
 
 	Fvector path_point,vtemp;
 	float temp;
-	dir.Set		(0,0,1);
+	dir.set		(0,0,1);
 
 	for(int i=m_start_index;i<m_path_size-1;++i)
 	{
@@ -630,7 +630,7 @@ void CPHMovementControl::PathNearestPointFindUp(const xr_vector<DetailPathManage
 				{
 					m_path_distance=temp;
 					index=i;
-					vPathPoint.Set(first);
+					vPathPoint.set(first);
 					SetPathDir(dir);
 					near_line=false;
 				}
@@ -644,7 +644,7 @@ void CPHMovementControl::PathNearestPointFindUp(const xr_vector<DetailPathManage
 		{
 			if(from_second_dir<0.f) //befor second && after first = near line
 			{
-				vtemp.Set(dir);
+				vtemp.set(dir);
 				vtemp.mul(from_first_dir);
 				path_point.add(vtemp,first);
 				vtemp.sub(path_point,new_position);
@@ -653,7 +653,7 @@ void CPHMovementControl::PathNearestPointFindUp(const xr_vector<DetailPathManage
 				{
 					m_path_distance=temp;
 					index=i;
-					vPathPoint.Set(path_point);
+					vPathPoint.set(path_point);
 					SetPathDir(dir);
 					near_line=true;
 				}
@@ -674,7 +674,7 @@ void CPHMovementControl::PathNearestPointFindUp(const xr_vector<DetailPathManage
 		vtemp										.sub					(new_position,path[i].position)		;
 		m_path_distance								=vtemp.magnitude		()									;
 		SetPathDir									(dir);
-		vPathPoint									.Set					(path[i].position)					;
+		vPathPoint									.set					(path[i].position)					;
 		index										=i															;
 		near_line									=false														;
 	}
@@ -698,7 +698,7 @@ void CPHMovementControl::PathNearestPointFindDown(const xr_vector<DetailPathMana
 	Fvector path_point,vtemp;
 	float temp;
 	//(going down)
-	dir.Set(0,0,1);
+	dir.set(0,0,1);
 	for(int i=m_start_index;i>1;--i)
 	{
 		const Fvector &first=path[i-1].position, &second=path[i].position;
@@ -718,7 +718,7 @@ void CPHMovementControl::PathNearestPointFindDown(const xr_vector<DetailPathMana
 				{
 					m_path_distance		=temp		;
 					index				=i			;
-					vPathPoint			.Set(second);
+					vPathPoint			.set(second);
 					SetPathDir			(dir)	;
 					near_line			=false		;
 				}
@@ -733,7 +733,7 @@ void CPHMovementControl::PathNearestPointFindDown(const xr_vector<DetailPathMana
 
 			if(from_first_dir>0.f) //after second && before first = near line (going down)
 			{
-				vtemp.Set(dir);
+				vtemp.set(dir);
 				vtemp.mul(from_second_dir);
 				path_point.add(second,vtemp); //from_second_dir <0.f !!
 				vtemp.sub(path_point,new_position);
@@ -742,7 +742,7 @@ void CPHMovementControl::PathNearestPointFindDown(const xr_vector<DetailPathMana
 				{
 					m_path_distance=temp;
 					index			=i-1;
-					vPathPoint.Set	(path_point);
+					vPathPoint.set	(path_point);
 					SetPathDir		(dir);
 					near_line		=true;
 				}
@@ -763,7 +763,7 @@ void CPHMovementControl::PathNearestPointFindDown(const xr_vector<DetailPathMana
 		vtemp.sub				(new_position,path[i].position);
 		m_path_distance			=vtemp.magnitude();
 		SetPathDir				(dir);
-		vPathPoint.Set			(path[i].position);
+		vPathPoint.set			(path[i].position);
 		index					=i;
 		near_line				=false;
 	}
@@ -780,7 +780,7 @@ void		CPHMovementControl::CorrectPathDir			(const Fvector &real_path_dir,const x
 	{
 		if(!fis_zero(plane_motion,EPS))
 		{
-			corrected_path_dir.Set(real_path_dir);
+			corrected_path_dir.set(real_path_dir);
 			corrected_path_dir.y=0.f;
 			corrected_path_dir.mul(1.f/plane_motion);
 		}
@@ -792,12 +792,12 @@ void		CPHMovementControl::CorrectPathDir			(const Fvector &real_path_dir,const x
 		}
 		else 
 		{
-			corrected_path_dir.Set(real_path_dir);
+			corrected_path_dir.set(real_path_dir);
 		}
 	}
 	else
 	{
-		corrected_path_dir.Set(real_path_dir);
+		corrected_path_dir.set(real_path_dir);
 	}
 }
 void CPHMovementControl::PathDIrLine(const xr_vector<DetailPathManager::STravelPathPoint> &path,  int index,  float distance,  float precesition, Fvector &dir  )
@@ -809,7 +809,7 @@ void CPHMovementControl::PathDIrLine(const xr_vector<DetailPathManager::STravelP
 	float mag=to_path_point.magnitude();
 	if(mag<EPS)
 	{
-	dir.Set(corrected_path_dir);
+	dir.set(corrected_path_dir);
 	return;
 	}
 	to_path_point.mul(1.f/mag);
@@ -830,7 +830,7 @@ void CPHMovementControl::PathDIrPoint(const xr_vector<DetailPathManager::STravel
 	{  
 		if(0==index||m_path_size-1==index) //on path eidge
 		{
-			dir.Set(corrected_path_dir);//??
+			dir.set(corrected_path_dir);//??
 			return;
 		}
 		dir.sub(path[index].position,path[index-1].position);
@@ -841,19 +841,19 @@ void CPHMovementControl::PathDIrPoint(const xr_vector<DetailPathManager::STravel
 	to_path_point.mul(1.f/mag);
 	if(m_path_size-1==index)//on_path_edge
 	{
-		dir.Set(to_path_point);
+		dir.set(to_path_point);
 		return;
 	}
 
 
 	if(mag<EPS||fis_zero(dXZMag(to_path_point),EPS))
 	{
-		dir.Set(corrected_path_dir);
+		dir.set(corrected_path_dir);
 		return;//mean dir
 	}
 	
 	Fvector tangent;
-	tangent.crossproduct(Fvector().Set(0,1,0),to_path_point);
+	tangent.crossproduct(Fvector().set(0,1,0),to_path_point);
 
 	VERIFY(!fis_zero(tangent.magnitude()));
 	tangent.normalize();
@@ -946,7 +946,7 @@ case peAtWall : eEnvironment=peAtWall		;break;
 void CPHMovementControl::GroundNormal(Fvector & norm)		
 {
 if(m_character&&m_character->b_exist)m_character->GroundNormal(norm);
-else norm.Set(0.f,1.f,0.f);
+else norm.set(0.f,1.f,0.f);
 
 }
 
@@ -974,7 +974,7 @@ void	CPHMovementControl::SetPosition(const Fvector &P){
 		Msg("CPHMovementControl::SetPosition %s (CPHMovementControl::vPosition) %f,%f,%f",PH_DBG_ObjectTrackName(),vPosition.x,vPosition.y,vPosition.z);
 	}
 #endif
-	vPosition.Set	(P);  VERIFY( m_character ) ;m_character->SetPosition(vPosition);
+	vPosition.set	(P);  VERIFY( m_character ) ;m_character->SetPosition(vPosition);
 
 }
 bool		CPHMovementControl::		TryPosition				(Fvector& pos)															
@@ -995,7 +995,7 @@ VERIFY_BOUNDARIES2(pos,ph_boundaries(),m_character->PhysicsRefObject(),"CPHMovem
 			return					(ret);
 		}
 
-		vPosition.Set	(pos);
+		vPosition.set	(pos);
 		return			(true);
 }
 
@@ -1011,7 +1011,7 @@ VERIFY_BOUNDARIES2(P,ph_boundaries(),m_character->PhysicsRefObject(),"CPHMovemen
 		Msg("CPHMovementControl::GetPosition %s (CPHMovementControl::vPosition) %f,%f,%f",PH_DBG_ObjectTrackName(),vPosition.x,vPosition.y,vPosition.z);
 	}
 #endif
-	P.Set			(vPosition); 
+	P.set			(vPosition); 
 VERIFY_BOUNDARIES2(vPosition, ph_boundaries(), m_character->PhysicsRefObject(),"CPHMovementControl::GetPosition	out pos");
 }
 
@@ -1209,10 +1209,10 @@ void CPHMovementControl::CreateCharacter()
 	m_character->SetPosition(vPosition);
 	m_character->SetCollisionDamageFactor(fCollisionDamageFactor*fCollisionDamageFactor);
 	trying_times[0]=trying_times[1]=trying_times[2]=trying_times[3]=u32(-1);
-	trying_poses[0].Set(vPosition);
-	trying_poses[1].Set(vPosition);
-	trying_poses[2].Set(vPosition);
-	trying_poses[3].Set(vPosition);
+	trying_poses[0].set(vPosition);
+	trying_poses[1].set(vPosition);
+	trying_poses[2].set(vPosition);
+	trying_poses[3].set(vPosition);
 }
 CPHSynchronize*	CPHMovementControl::GetSyncItem()
 {
@@ -1268,7 +1268,7 @@ void CPHMovementControl::ApplyHit(const Fvector& dir,const float P,ALife::EHitTy
 			case ALife::eHitTypeBurn  :												;//stop
 			case ALife::eHitTypeShock :												;//stop
 			case ALife::eHitTypeStrike:												;//stop
-			case ALife::eHitTypeWound:			SetVelocity(Fvector().Set(0,0,0))	; break; // stop							;
+			case ALife::eHitTypeWound:			SetVelocity(Fvector().set(0,0,0))	; break; // stop							;
 //			case ALife::eHitTypeLightBurn  :										;//not stop
 			case ALife::eHitTypeRadiation:											;//not stop
 			case ALife::eHitTypeTelepatic:											;//not stop
@@ -1276,7 +1276,7 @@ void CPHMovementControl::ApplyHit(const Fvector& dir,const float P,ALife::EHitTy
 			case ALife::eHitTypeExplosion:											;//stop
 			case ALife::eHitTypeFireWound:											;//stop
 			case ALife::eHitTypeWound_2:											;break;//stop		//knife's alternative fire
-			case ALife::eHitTypePhysicStrike:	SetVelocity(Fvector().Set(0,0,0))	;break;//stop
+			case ALife::eHitTypePhysicStrike:	SetVelocity(Fvector().set(0,0,0))	;break;//stop
 			default:																NODEFAULT	;
 		}
 	}
@@ -1380,7 +1380,7 @@ void	CPHMovementControl::				UpdateObjectBox(CPHCharacter *ach)
 	Fvector2 plane_k;plane_k.set(pObject->XFORM().k.x,pObject->XFORM().k.z);
 	float R=_abs(poses_dir.dotproduct(plane_i)*cbox.x)+_abs(poses_dir.dotproduct(plane_k)*cbox.z);
 	R*=poses_dir.dotproduct(plane_cam); //(poses_dir.x*plane_cam.x+poses_dir.y*plane_cam.z);
-	Calculate(Fvector().Set(0,0,0),Fvector().Set(1,0,0),0,0,0,0);
+	Calculate(Fvector().set(0,0,0),Fvector().set(1,0,0),0,0,0,0);
 	m_character->SetObjectRadius(R);
 	ach->ChooseRestrictionType(rtStalker,1.f,m_character);
 	m_character->UpdateRestrictionType(ach);
@@ -1453,7 +1453,7 @@ void CPHMovementControl::VirtualMoveTo( const Fvector	&in_pos, Fvector &out_pos 
 	const float dist = displacement.magnitude();
 	if( fis_zero( dist ) )
 	{
-		out_pos.Set(in_pos);
+		out_pos.set(in_pos);
 		return;
 	}
 	
@@ -1475,7 +1475,7 @@ void CPHMovementControl::VirtualMoveTo( const Fvector	&in_pos, Fvector &out_pos 
 
 	for( u32 i = 0; i< steps_num; ++i )
 	{
-		m_character->SetVelocity( Fvector().Set(0,0,0) );
+		m_character->SetVelocity( Fvector().set(0,0,0) );
 		m_character->setForce( vforce );
 		m_character->step( fixed_step );
 	}
@@ -1563,7 +1563,7 @@ void		CPHMovementControl::		GetCharacterVelocity		(Fvector& velocity )
 	if(m_character)
 		m_character->GetVelocity(velocity); 
 	else 
-		velocity.Set(0.f,0.f,0.f);
+		velocity.set(0.f,0.f,0.f);
 }
 
 
@@ -1701,7 +1701,7 @@ void		CPHMovementControl::		GetCharacterVelocity		(Fvector& velocity )
 		if(m_character)
 			m_character->GetSmothedVelocity(v);
 		else 
-			v.Set(0,0,0);
+			v.set(0,0,0);
 	}
 
 	void		CPHMovementControl::SetPLastMaterialIDX	(u16* p)

@@ -50,7 +50,7 @@ Fvector CScriptGameObject::GetCurrentDirection()
 	CProjector	*obj = smart_cast<CProjector*>(&object());
 	if (!obj) {
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"Script Object : cannot access class member GetCurrentDirection!");
-		return Fvector().Set(0.f,0.f,0.f);
+		return Fvector().set(0.f,0.f,0.f);
 	}
 	return obj->GetCurrentDirection();
 }
@@ -233,7 +233,7 @@ void CScriptGameObject::set_const_force(const Fvector &dir,float value,u32 time_
 //#ifdef DEBUG
 //	Msg( "const force added: force: %f,  time: %d ,dir(%f,%f,%f)", value, time_interval, dir.x, dir.y, dir.z );
 //#endif
-	Fvector force;force.Set(dir);force.mul(value);
+	Fvector force;force.set(dir);force.mul(value);
 	CPHConstForceAction *a=	xr_new<CPHConstForceAction>(shell,force);
 	CPHExpireOnStepCondition *cn=xr_new<CPHExpireOnStepCondition>();
 	cn->set_time_interval(time_interval);

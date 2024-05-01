@@ -38,10 +38,10 @@ void CRenderDevice::_SetupStates()
 	mView.identity			();
 	mProject.identity		();
 	mFullTransform.identity	();
-	vCameraPosition.Set		(0,0,0);
-	vCameraDirection.Set	(0,0,1);
-	vCameraTop.Set			(0,1,0);
-	vCameraRight.Set		(1,0,0);
+	vCameraPosition.set		(0,0,0);
+	vCameraDirection.set	(0,0,1);
+	vCameraTop.set			(0,1,0);
+	vCameraRight.set		(1,0,0);
 
 	m_pRender->SetupStates();
 }

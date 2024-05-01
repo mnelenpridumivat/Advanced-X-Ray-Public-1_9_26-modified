@@ -7599,9 +7599,6 @@
     <ClInclude Include="RepackerInterface.h">
       <Filter>Core\Client\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="FlamethrowerTraceCollisionFSM.h">
-      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Flamethrower</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -11392,9 +11389,6 @@
     <ClCompile Include="RepackerInterface.cpp">
       <Filter>Core\Client\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="FlamethrowerTraceCollisionFSM.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Flamethrower</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ai\monsters\chimera\chimera_attack_state.h">
@@ -11418,6 +11412,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

@@ -1,8 +1,5 @@
-#pragma once
-
-#include "xrCoreInline.h"
-#include "defines.h"
-#include "_std_extensions.h"
+#ifndef __V2D__
+#define __V2D__
 
 template <class T>
 struct _vector2 
@@ -20,10 +17,8 @@ public:
 	IC SelfRef set(int _u, int _v)					{ x=T(_u); y=T(_v);				return *this;	}
 	IC SelfRef set(const Self &p)					{ x=p.x; y=p.y;					return *this;	}
 	IC SelfRef abs(const Self &p)					{ x=_abs(p.x); y=_abs(p.y);		return *this;	}
-//#undef min
 	IC SelfRef min(const Self &p)					{ x=_min(x,p.x); y=_min(y,p.y);	return *this;	}
 	IC SelfRef min(T _x, T _y)						{ x=_min(x,_x);  y=_min(y,_y);	return *this;	}
-//#undef max
 	IC SelfRef max(const Self &p)					{ x=_max(x,p.x); y=_max(y,p.y);	return *this;	}
 	IC SelfRef max(T _x, T _y)						{ x=_max(x,_x);  y=_max(y,_y);	return *this;	}
 	IC SelfRef sub(const T p)						{ x-=p; y-=p;					return *this;	}
@@ -102,22 +97,16 @@ public:
 	IC float 	crossproduct	(const Self &p) const	{ return y*p.x - x*p.y; }
 	IC float 	getH			(void) const
 	{
-		if (fis_zero(y)) {
-			if (fis_zero(x)) {
+        if (fis_zero(y))
+			if (fis_zero(x))
 				return		(0.f);
-			}
-			else {
+			else
 				return		((x > 0.0f) ? -PI_DIV_2 : PI_DIV_2);
-			}
-		}
-		else {
-			if (y < 0.f) {
-				return		(-(atanf(x / y) - PI));
-			}
-			else {
-				return		(-atanf(x / y));
-			}
-		}
+		else
+			if (y < 0.f)
+				return		(-(atanf(x/y) - PI));
+			else
+				return		(-atanf(x/y));
 	}
 };
 
@@ -127,3 +116,5 @@ typedef _vector2<int>		Ivector2;
 
 template <class T>
 BOOL	_valid			(const _vector2<T>& v)	{ return _valid((T)v.x) && _valid((T)v.y);	}
+
+#endif

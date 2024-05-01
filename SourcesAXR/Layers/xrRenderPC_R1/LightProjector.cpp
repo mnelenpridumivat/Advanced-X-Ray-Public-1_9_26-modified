@@ -203,10 +203,10 @@ void CLightProjector::calculate	()
 		// calculate view-matrix
 		Fmatrix		mView;
 		Fvector		v_C, v_Cs, v_N;
-		v_C.Set					(R.C);
+		v_C.set					(R.C);
 		v_Cs					= v_C;
 		v_C.y					+=	P_cam_dist;
-		v_N.Set					(0,0,1);
+		v_N.set					(0,0,1);
 		VERIFY					(_valid(v_C) && _valid(v_Cs) && _valid(v_N));
 
 		// validate
@@ -286,11 +286,11 @@ void CLightProjector::calculate	()
 		// Build bbox and render
 		Fvector					min,max;
 		Fbox					BB;
-		min.Set					(R.C.x-p_R,	R.C.y-(p_R+P_cam_range),	R.C.z-p_R);
-		max.Set					(R.C.x+p_R,	R.C.y+0,					R.C.z+p_R);
+		min.set					(R.C.x-p_R,	R.C.y-(p_R+P_cam_range),	R.C.z-p_R);
+		max.set					(R.C.x+p_R,	R.C.y+0,					R.C.z+p_R);
 		BB.set					(min,max);
-		R.UVclamp_min.Set		(min).add	(.05f);	// shrink a little
-		R.UVclamp_max.Set		(max).sub	(.05f);	// shrink a little
+		R.UVclamp_min.set		(min).add	(.05f);	// shrink a little
+		R.UVclamp_max.set		(max).sub	(.05f);	// shrink a little
 		ISpatial*	spatial		= dynamic_cast<ISpatial*>	(O);
 		if (spatial)			{
 			spatial->spatial_updatesector			();

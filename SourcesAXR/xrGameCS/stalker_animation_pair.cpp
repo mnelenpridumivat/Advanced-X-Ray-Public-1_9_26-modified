@@ -282,7 +282,7 @@ void CStalkerAnimationPair::on_animation_end	()
 
 void CStalkerAnimationPair::target_matrix			(Fvector const &position, Fvector const &direction)
 {
-	m_target_matrix_impl.rotation	(direction, Fvector().Set(0.f, 1.f, 0.f));
+	m_target_matrix_impl.rotation	(direction, Fvector().set(0.f, 1.f, 0.f));
 	m_target_matrix_impl.c			= position;
 	m_target_matrix					= &m_target_matrix_impl;
 }

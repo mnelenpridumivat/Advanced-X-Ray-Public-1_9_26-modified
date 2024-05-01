@@ -241,7 +241,7 @@ public:
 
 	void		compute_caster_model_fixed	(xr_vector<Fplane>& dest, Fvector3& translation, float map_size, bool clip_by_view_near )
 	{
-		translation.Set( 0.f, 0.f, 0.f );
+		translation.set( 0.f, 0.f, 0.f );
 
 		if( fis_zero( 1-abs(view_ray.D.dotproduct( light_ray.D )), EPS_S) )
 			return;
@@ -271,7 +271,7 @@ public:
 
 
 		Fvector align_vector; 
-		align_vector.Set( 0.f, 0.f, 0.f );
+		align_vector.set( 0.f, 0.f, 0.f );
 
 		// Align ray points to the align planes.
 		for( int p = 0; p < align_planes_count; ++p )
@@ -302,7 +302,7 @@ public:
 		// translate_light_model	( align_vector );
 
 		// Reset to reuse.
-		align_vector.Set( 0.f, 0.f, 0.f );
+		align_vector.set( 0.f, 0.f, 0.f );
 
 		// Check if view edges intersect, and push planes................ 
 		for( int p = 0; p < align_planes_count; ++p )
@@ -791,9 +791,9 @@ void CRender::render_sun				()
 		// view: auto find 'up' and 'right' vectors
 		Fmatrix						mdir_View, mdir_Project;
 		Fvector						L_dir,L_up,L_right,L_pos;
-		L_pos.Set					(fuckingsun->position);
-		L_dir.Set					(fuckingsun->direction).normalize	();
-		L_up.Set					(0,1,0);					if (_abs(L_up.dotproduct(L_dir))>.99f)	L_up.Set(0,0,1);
+		L_pos.set					(fuckingsun->position);
+		L_dir.set					(fuckingsun->direction).normalize	();
+		L_up.set					(0,1,0);					if (_abs(L_up.dotproduct(L_dir))>.99f)	L_up.set(0,0,1);
 		L_right.crossproduct		(L_up,L_dir).normalize		();
 		L_up.crossproduct			(L_dir,L_right).normalize	();
 		mdir_View.build_camera_dir	(L_pos,L_dir,L_up);
@@ -1241,9 +1241,9 @@ void CRender::render_sun_near	()
 		// view: auto find 'up' and 'right' vectors
 		Fmatrix						mdir_View, mdir_Project;
 		Fvector						L_dir,L_up,L_right,L_pos;
-		L_pos.Set					(fuckingsun->position);
-		L_dir.Set					(fuckingsun->direction).normalize	();
-		L_right.Set					(1,0,0);					if (_abs(L_right.dotproduct(L_dir))>.99f)	L_right.Set(0,0,1);
+		L_pos.set					(fuckingsun->position);
+		L_dir.set					(fuckingsun->direction).normalize	();
+		L_right.set					(1,0,0);					if (_abs(L_right.dotproduct(L_dir))>.99f)	L_right.set(0,0,1);
 		L_up.crossproduct			(L_dir,L_right).normalize	();
 		L_right.crossproduct		(L_up,L_dir).normalize		();
 		mdir_View.build_camera_dir	(L_pos,L_dir,L_up);
@@ -1481,9 +1481,9 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 		// view: auto find 'up' and 'right' vectors
 		Fmatrix						mdir_View, mdir_Project;
 		Fvector						L_dir,L_up,L_right,L_pos;
-		L_pos.Set					(fuckingsun->position);
-		L_dir.Set					(fuckingsun->direction).normalize	();
-		L_right.Set					(1,0,0);					if (_abs(L_right.dotproduct(L_dir))>.99f)	L_right.Set(0,0,1);
+		L_pos.set					(fuckingsun->position);
+		L_dir.set					(fuckingsun->direction).normalize	();
+		L_right.set					(1,0,0);					if (_abs(L_right.dotproduct(L_dir))>.99f)	L_right.set(0,0,1);
 		L_up.crossproduct			(L_dir,L_right).normalize	();
 		L_right.crossproduct		(L_up,L_dir).normalize		();
 		mdir_View.build_camera_dir	(L_pos,L_dir,L_up);
@@ -1598,7 +1598,7 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 			{
 				Fvector cam_proj = Device.vCameraPosition;
 				const float		align_aim_step_coef = 4.f;
-				cam_proj.Set(floorf(cam_proj.x/align_aim_step_coef)+align_aim_step_coef/2, floorf(cam_proj.y/align_aim_step_coef)+align_aim_step_coef/2, floorf(cam_proj.z/align_aim_step_coef)+align_aim_step_coef/2);
+				cam_proj.set(floorf(cam_proj.x/align_aim_step_coef)+align_aim_step_coef/2, floorf(cam_proj.y/align_aim_step_coef)+align_aim_step_coef/2, floorf(cam_proj.z/align_aim_step_coef)+align_aim_step_coef/2);
 				cam_proj.mul(align_aim_step_coef);
 				Fvector	cam_pixel	= wform		(cull_xform, cam_proj );
 				cam_pixel			= wform		(m_viewport, cam_pixel );

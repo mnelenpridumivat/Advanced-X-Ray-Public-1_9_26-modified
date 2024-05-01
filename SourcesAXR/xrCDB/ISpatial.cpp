@@ -28,9 +28,9 @@ Fvector	c_spatial_offset	[8]	=
 //////////////////////////////////////////////////////////////////////////
 ISpatial::ISpatial			(ISpatial_DB* space)
 {
-	spatial.sphere.P.Set	(0,0,0);
+	spatial.sphere.P.set	(0,0,0);
 	spatial.sphere.R		= 0;
-	spatial.node_center.Set	(0,0,0);
+	spatial.node_center.set	(0,0,0);
 	spatial.node_radius		= 0;
 	spatial.node_ptr		= NULL;
 	spatial.sector			= NULL;
@@ -173,11 +173,11 @@ void			ISpatial_DB::initialize(Fbox& BB)
 		Fvector bbc,bbd;
 		BB.get_CD				(bbc,bbd);
 
-		bbc.Set					(0,0,0);			// generic
-		bbd.Set					(1024,1024,1024);	// generic
+		bbc.set					(0,0,0);			// generic
+		bbd.set					(1024,1024,1024);	// generic
 
 		allocator_pool.reserve	(128);
-		m_center.Set			(bbc);
+		m_center.set			(bbc);
 		m_bounds				= _max(_max(bbd.x,bbd.y),bbd.z);
 		rt_insert_object		= NULL;
 		if (0==m_root)	m_root	= _node_create();
@@ -215,7 +215,7 @@ void			ISpatial_DB::_insert	(ISpatial_NODE* N, Fvector& n_C, float n_R)
 	{
 		// this is leaf node
 		N->_insert									(rt_insert_object);
-		rt_insert_object->spatial.node_center.Set	(n_C);
+		rt_insert_object->spatial.node_center.set	(n_C);
 		rt_insert_object->spatial.node_radius		= n_vR;		// vR
 		return;
 	}
@@ -246,7 +246,7 @@ void			ISpatial_DB::_insert	(ISpatial_NODE* N, Fvector& n_C, float n_R)
 	{
 		// we have to "own" this object (potentially it can be putted down sometimes...)
 		N->_insert									(rt_insert_object);
-		rt_insert_object->spatial.node_center.Set	(n_C);
+		rt_insert_object->spatial.node_center.set	(n_C);
 		rt_insert_object->spatial.node_radius		= n_vR;
 	}
 }
@@ -280,7 +280,7 @@ void			ISpatial_DB::insert		(ISpatial* S)
 		// Object outside our DB, put it into root node and hack bounds
 		// Object will reinsert itself until fits into "real", "controlled" space
 		m_root->_insert				(S);
-		S->spatial.node_center.Set	(m_center);
+		S->spatial.node_center.set	(m_center);
 		S->spatial.node_radius		=	m_bounds;
 	}
 #ifdef DEBUG

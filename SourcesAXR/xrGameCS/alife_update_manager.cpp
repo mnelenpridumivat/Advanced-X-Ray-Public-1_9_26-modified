@@ -172,8 +172,8 @@ bool CALifeUpdateManager::change_level	(NET_Packet &net_packet)
 	
 	GameGraph::_GRAPH_ID			holder_safe_graph_vertex_id = GameGraph::_GRAPH_ID(-1);
 	u32								holder_safe_level_vertex_id = u32(-1);
-	Fvector							holder_safe_position = Fvector().Set(flt_max,flt_max,flt_max);
-	Fvector							holder_safe_angles = Fvector().Set(flt_max,flt_max,flt_max);
+	Fvector							holder_safe_position = Fvector().set(flt_max,flt_max,flt_max);
+	Fvector							holder_safe_angles = Fvector().set(flt_max,flt_max,flt_max);
 	CSE_ALifeObject					*holder = 0;
 
 	net_packet.r					(&graph().actor()->m_tGraphID,sizeof(graph().actor()->m_tGraphID));
@@ -370,7 +370,7 @@ void CALifeUpdateManager::jump_to_level			(LPCSTR level_name) const
 	
 	Fvector								level_point = ai().game_graph().vertex(dest)->level_point();
 	net_packet.w						(&level_point,sizeof(level_point));
-	net_packet.w_vec3					(Fvector().Set(0.f,0.f,0.f));
+	net_packet.w_vec3					(Fvector().set(0.f,0.f,0.f));
 	Level().Send						(net_packet,net_flags(TRUE));
 }
 

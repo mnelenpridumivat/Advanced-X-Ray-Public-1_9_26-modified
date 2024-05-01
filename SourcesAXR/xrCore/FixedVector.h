@@ -1,8 +1,6 @@
+#ifndef FixedVectorH
+#define FixedVectorH
 #pragma once
-#include "xrCoreInline.h"
-#include "xrDebug_macros.h"
-#include "_types.h"
-#include "xrMemory.h"
 
 template <class T, const int dim>
 class svector 
@@ -81,3 +79,5 @@ public:
 		return TRUE;
 	}
 };
+
+#endif

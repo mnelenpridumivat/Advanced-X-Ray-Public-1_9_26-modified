@@ -1,10 +1,10 @@
 //----------------------------------------------------
 // file: PSLibrary.h
 //----------------------------------------------------
-#pragma once
+#ifndef PSLibraryH
+#define PSLibraryH
 
 #include "../../include/xrRender/particles_systems_library_interface.hpp"
-#include "../../xrCore/StructDefines.h"
 
 namespace PS {
 	class CPEDef;
@@ -71,4 +71,6 @@ public:
 #define PS_CHUNK_FIRSTGEN		0x0002
 #define PS_CHUNK_SECONDGEN		0x0003
 #define PS_CHUNK_THIRDGEN		0x0004
+
+#endif /*_INCDEF_PSLibrary_H_*/
 

@@ -27,7 +27,7 @@ BOOL CEffectorFall::ProcessCam(SCamEffectorInfo& info)
 CEffectorDOF::CEffectorDOF(const Fvector4& dof)
 :CEffectorCam(eCEDOF, 100000)
 {
-	GamePersistent().SetEffectorDOF	(Fvector().Set(dof.x,dof.y,dof.z));
+	GamePersistent().SetEffectorDOF	(Fvector().set(dof.x,dof.y,dof.z));
 	m_fPhase						= Device.fTimeGlobal + dof.w;
 }
 

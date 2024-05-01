@@ -14,7 +14,7 @@ struct	vis_data
 
 	IC void		clear			()
 	{
-		sphere.P.Set	(0,0,0);
+		sphere.P.set	(0,0,0);
 		sphere.R		= 0;
 		box.invalidate	();
 		marker			= 0;

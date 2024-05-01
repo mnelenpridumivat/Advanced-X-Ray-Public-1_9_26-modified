@@ -1461,7 +1461,6 @@
     <ClInclude Include="FlameCanister.h" />
     <ClInclude Include="Flamethrower.h" />
     <ClInclude Include="FlamethrowerTraceCollision.h" />
-    <ClInclude Include="FlamethrowerTraceCollisionFSM.h" />
     <ClInclude Include="flare.h" />
     <ClInclude Include="FoodItem.h" />
     <ClInclude Include="FryupZone.h" />
@@ -4929,7 +4928,6 @@
     <ClCompile Include="FlameCanister.cpp" />
     <ClCompile Include="Flamethrower.cpp" />
     <ClCompile Include="FlamethrowerTraceCollision.cpp" />
-    <ClCompile Include="FlamethrowerTraceCollisionFSM.cpp" />
     <ClCompile Include="flare.cpp" />
     <ClCompile Include="FoodItem.cpp" />
     <ClCompile Include="FryupZone.cpp" />
@@ -9769,7 +9767,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

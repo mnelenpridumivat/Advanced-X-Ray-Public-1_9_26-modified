@@ -150,7 +150,7 @@ bool trajectory_check_collision (float 							low,
 		}
 		else
 		{
-			box_y_axis					=	Fvector().Set(0, 0, 1.f);
+			box_y_axis					=	Fvector().set(0, 0, 1.f);
 			box_x_axis.crossproduct			(box_y_axis, box_z_axis).normalize();
 		}
 
@@ -205,7 +205,7 @@ bool trajectory_intersects_geometry	(float							trajectory_time,
 		out_collide_tris->resize		(0);
 #endif // #ifdef DEBUG
 
-	const Fvector			gravity = Fvector().Set(0.f, -physics_world()->Gravity(), 0.f);
+	const Fvector			gravity = Fvector().set(0.f, -physics_world()->Gravity(), 0.f);
 	const float				epsilon = .1f;
 
 	float					low = 0.f;

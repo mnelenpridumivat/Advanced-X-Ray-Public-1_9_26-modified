@@ -168,7 +168,7 @@ void CUIArtefactDetectorElite::Draw()
 	float h,p;
 	Device.vCameraDirection.getHP(h,p);
 	Mc.setHPB					(h,0,0);
-	Mc.c.Set					(Device.vCameraPosition);
+	Mc.c.set					(Device.vCameraPosition);
 	M.invert					(Mc);
 
 	UI().ScreenFrustumLIT().CreateFromRect(Frect().set(	rp.x,
@@ -292,7 +292,7 @@ void CScientificDetector::shedule_Update(u32 dt)
 
 	if(!H_Parent())				return;
 	Fvector						P; 
-	P.Set						(H_Parent()->Position());
+	P.set						(H_Parent()->Position());
 	m_zones.feel_touch_update	(P,m_fAfDetectRadius);
 }
 

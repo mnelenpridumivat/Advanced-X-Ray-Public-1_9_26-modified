@@ -34,7 +34,7 @@ void CWalmarkManager::AddWallmark(const Fvector& dir, const Fvector& start_pos,
 
 		//вычислить точку попадания
 		Fvector end_point;
-		end_point.Set(0,0,0);
+		end_point.set(0,0,0);
 		end_point.mad(start_pos, dir, range);
 
 		if (!wallmarks_vector.empty())
@@ -103,7 +103,7 @@ void CWalmarkManager::StartWorkflow()
 
 
 	XRC.box_options							(0);
-	XRC.box_query							(Level().ObjectSpace.GetStaticModel(),m_pos,Fvector().Set(m_trace_dist,m_trace_dist,m_trace_dist));
+	XRC.box_query							(Level().ObjectSpace.GetStaticModel(),m_pos,Fvector().set(m_trace_dist,m_trace_dist,m_trace_dist));
 
 	CDB::TRI*		T_array					= Level().ObjectSpace.GetStaticTris();
 	Fvector*		V_array					= Level().ObjectSpace.GetStaticVerts();

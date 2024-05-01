@@ -84,7 +84,7 @@ BOOL CPhantom::net_Spawn(CSE_Abstract* DC)
 
 	// orientate to enemy
 	XFORM().k.sub	(m_enemy->Position(),Position()).normalize();
-	XFORM().j.Set	(0,1,0);
+	XFORM().j.set	(0,1,0);
 	XFORM().i.crossproduct	(XFORM().j,XFORM().k);
 	XFORM().k.getHP	(vHP.x,vHP.y);
 
@@ -211,7 +211,7 @@ void CPhantom::OnFlyState()
 			SwitchToState	(stContact);
 			float power = 1000.0f;
 			float impulse = 100.0f;
-			SHit HDS(power,Fvector().Set(0,0,1),this,BI_NONE,Fvector().Set(0,0,0),impulse,ALife::eHitTypeFireWound,0.0f, false);
+			SHit HDS(power,Fvector().set(0,0,1),this,BI_NONE,Fvector().set(0,0,0),impulse,ALife::eHitTypeFireWound,0.0f, false);
 			Hit(&HDS);
 		}
 	}
@@ -306,10 +306,10 @@ void CPhantom::PsyHit(const CObject *object, float value)
 	HS.GenHeader		(GE_HIT, object->ID());				//				//	u_EventGen		(P,GE_HIT, object->ID());				
 	HS.whoID			= (ID());					// own			//	P.w_u16			(object->ID());							
 	HS.weaponID			= (ID());					// own			//	P.w_u16			(object->ID());							
-	HS.dir				= (Fvector().Set(0.f,1.f,0.f));		// direction	//	P.w_dir			(Fvector().set(0.f,1.f,0.f));			
+	HS.dir				= (Fvector().set(0.f,1.f,0.f));		// direction	//	P.w_dir			(Fvector().set(0.f,1.f,0.f));			
 	HS.power			= (value);							// hit value	//	P.w_float		(value);								
 	HS.boneID			= (BI_NONE);						// bone			//	P.w_s16			(BI_NONE);								
-	HS.p_in_bone_space	= (Fvector().Set(0.f,0.f,0.f));						//	P.w_vec3		(Fvector().set(0.f,0.f,0.f));			
+	HS.p_in_bone_space	= (Fvector().set(0.f,0.f,0.f));						//	P.w_vec3		(Fvector().set(0.f,0.f,0.f));			
 	HS.impulse			= (0.f);											//	P.w_float		(0.f);									
 	HS.hit_type			= (ALife::eHitTypeTelepatic);						//	P.w_u16			(u16(ALife::eHitTypeTelepatic));
 	HS.Write_Packet		(P);

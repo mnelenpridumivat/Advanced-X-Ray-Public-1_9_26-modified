@@ -104,7 +104,7 @@ void weapon::compute_bone	(u32 const bone_id)
 	Fvector					position;
 	transform.transform_tiny( position, vLoadedFirePoint );
 
-	Fvector					direction = Fvector( ).Set( 0.f, 0.f, 1.f );
+	Fvector					direction = Fvector( ).set( 0.f, 0.f, 1.f );
 	transform.transform_dir	( direction );
 
 	VERIFY				( _valid(m_bones[bone_id]) );

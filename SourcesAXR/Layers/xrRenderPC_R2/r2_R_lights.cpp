@@ -207,11 +207,11 @@ void	CRender::render_indirect			(light* L)
 		// energy and color
 		float	LIE						= LE*LI.E;
 		if (LIE < ps_r2_GI_clip)		continue;
-		Fvector T; T.Set(L->color.r,L->color.g,L->color.b).mul(LI.E);
+		Fvector T; T.set(L->color.r,L->color.g,L->color.b).mul(LI.E);
 		LIGEN.set_color					(T.x,T.y,T.z);
 
 		// geometric
-		Fvector L_up,L_right;			L_up.Set	(0,1,0);	if (_abs(L_up.dotproduct(LI.D))>.99f)	L_up.Set(0,0,1);
+		Fvector L_up,L_right;			L_up.set	(0,1,0);	if (_abs(L_up.dotproduct(LI.D))>.99f)	L_up.set(0,0,1);
 		L_right.crossproduct			(L_up,LI.D).normalize	();
 		LIGEN.spatial.sector			= LI.S;
 		LIGEN.set_position				(LI.P);

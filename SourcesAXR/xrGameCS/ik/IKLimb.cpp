@@ -213,11 +213,11 @@ Fmatrix& CIKLimb::transform			( Fmatrix &m, u16 bone0, u16 bone1 )		const
 
 float CIKLimb::SwivelAngle( const Fmatrix &ihip, const SCalculateData& cd )
 {
-	Fvector foot; foot.Set( Kinematics()->LL_GetTransform( m_bones[2] ).c );// use "0" channal only?
+	Fvector foot; foot.set( Kinematics()->LL_GetTransform( m_bones[2] ).c );// use "0" channal only?
 	ihip.transform_tiny( foot );
 	xm2im.transform_tiny( foot );
 	
-	Fvector knee; knee.Set( Kinematics()->LL_GetTransform( m_bones[1] ).c );
+	Fvector knee; knee.set( Kinematics()->LL_GetTransform( m_bones[1] ).c );
 	
 	Fmatrix ih;
 	CBoneData& BD = Kinematics()->LL_GetData( m_bones[0] );
@@ -870,7 +870,7 @@ void	CIKLimb::ToeTimeDiff( Fvector &v, const SCalculateData &cd ) const
 {
 	if( null_frame() )
 	{
-		v.Set(0,0,0);
+		v.set(0,0,0);
 		return;
 	}
 	VERIFY( Device.fTimeDelta > 0.f );
@@ -886,7 +886,7 @@ void	CIKLimb::ToeTimeDiff( Fvector &v, const SCalculateData &cd ) const
 
 void	CIKLimb::ToeTimeDiffPredict	( Fvector &v ) const
 {
-	v.Set(0,-1,0);
+	v.set(0,-1,0);
 }
 
 static const float pick_dir_mix_in_factor = 0.01f;
@@ -902,14 +902,14 @@ void pick_dir_update( Fvector &v, const Fvector& previous_dir, const Fvector& ne
 	
 	dir.add( previous_dir );
 
-	dir.add( Fvector( ).Set( 0, -0.05f, 0 ) );
+	dir.add( Fvector( ).set( 0, -0.05f, 0 ) );
 
 	float m = dir.magnitude( );
 
 	if(m < EPS)
-		v.Set( previous_dir );
+		v.set( previous_dir );
 	else 
-		v.Set( dir.mul( 1.f/m ) );
+		v.set( dir.mul( 1.f/m ) );
 
 	VERIFY( _valid( v ) );
 
@@ -917,7 +917,7 @@ void pick_dir_update( Fvector &v, const Fvector& previous_dir, const Fvector& ne
 
 IC void	CIKLimb::GetPickDir( Fvector &v, SCalculateData& cd ) const
 {
-	v.Set( 0, -1, 0 );
+	v.set( 0, -1, 0 );
 /*
 	if( !state_valide( sv_state ) )
 	{
@@ -1134,7 +1134,7 @@ Fmatrix&	CIKLimb::GetHipInvert( Fmatrix &ihip, const SCalculateData& cd  )
 	CBoneData& bd=Kinematics()->LL_GetData( m_bones[0] );
 	H.set( bd.bind_transform );
 	H.mulA_43( Kinematics()->LL_GetTransform( bd.GetParentID() ) );
-	H.c.Set( Kinematics()->LL_GetTransform( m_bones[0] ).c );
+	H.c.set( Kinematics()->LL_GetTransform( m_bones[0] ).c );
 	ihip.invert( H );
 	return ihip;
 }

@@ -137,8 +137,8 @@ void CLevelChanger::feel_touch_new	(CObject *tpObject)
 
 bool CLevelChanger::get_reject_pos(Fvector& p, Fvector& r)
 {
-		p.Set(0,0,0);
-		r.Set(0,0,0);
+		p.set(0,0,0);
+		r.set(0,0,0);
 //--		db.actor:set_actor_position(patrol("t_way"):point(0))
 //--		local dir = patrol("t_look"):point(0):sub(patrol("t_way"):point(0))
 //--		db.actor:set_actor_direction(-dir:getH())
@@ -202,7 +202,7 @@ void CLevelChanger::OnRender	()
 	if (!(dbg_net_Draw_Flags.is_any(dbg_draw_lchangers))) return;
 	//RCache.OnFrameEnd();
 	DRender->OnFrameEnd();
-	Fvector l_half; l_half.Set(.5f, .5f, .5f);
+	Fvector l_half; l_half.set(.5f, .5f, .5f);
 	Fmatrix l_ball, l_box;
 	xr_vector<CCF_Shape::shape_def> &l_shapes = ((CCF_Shape*)CFORM())->Shapes();
 	xr_vector<CCF_Shape::shape_def>::iterator l_pShape;
@@ -253,7 +253,7 @@ void CLevelChanger::OnRender	()
 		static float gx = 0.0f;
 		static float gy = 2.0f;
 		static float gz = 0.0f;
-		shift.Set(gx,gy,gz);
+		shift.set(gx,gy,gz);
 		res.transform(v_res, shift);
 
 // check if the object in sight

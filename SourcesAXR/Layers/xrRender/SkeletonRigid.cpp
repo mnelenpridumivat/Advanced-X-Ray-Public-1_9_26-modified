@@ -58,14 +58,14 @@ void CKinematics::CalculateBones			(BOOL bForceExact)
 			Fvector&	S		= obb.m_halfsize;
 
 			Fvector			P,A;
-			A.Set( -S.x,	-S.y,	-S.z ); X.transform_tiny(P,A); Box.modify(P);
-			A.Set( -S.x,	-S.y,	 S.z ); X.transform_tiny(P,A); Box.modify(P);
-			A.Set(  S.x,	-S.y,	 S.z ); X.transform_tiny(P,A); Box.modify(P);
-			A.Set(  S.x,	-S.y,	-S.z ); X.transform_tiny(P,A); Box.modify(P);
-			A.Set( -S.x,	 S.y,	-S.z ); X.transform_tiny(P,A); Box.modify(P);
-			A.Set( -S.x,	 S.y,	 S.z ); X.transform_tiny(P,A); Box.modify(P);
-			A.Set(  S.x, 	 S.y,	 S.z ); X.transform_tiny(P,A); Box.modify(P);
-			A.Set(  S.x, 	 S.y,	-S.z ); X.transform_tiny(P,A); Box.modify(P);
+			A.set( -S.x,	-S.y,	-S.z ); X.transform_tiny(P,A); Box.modify(P);
+			A.set( -S.x,	-S.y,	 S.z ); X.transform_tiny(P,A); Box.modify(P);
+			A.set(  S.x,	-S.y,	 S.z ); X.transform_tiny(P,A); Box.modify(P);
+			A.set(  S.x,	-S.y,	-S.z ); X.transform_tiny(P,A); Box.modify(P);
+			A.set( -S.x,	 S.y,	-S.z ); X.transform_tiny(P,A); Box.modify(P);
+			A.set( -S.x,	 S.y,	 S.z ); X.transform_tiny(P,A); Box.modify(P);
+			A.set(  S.x, 	 S.y,	 S.z ); X.transform_tiny(P,A); Box.modify(P);
+			A.set(  S.x, 	 S.y,	-S.z ); X.transform_tiny(P,A); Box.modify(P);
 		}
 	if(bones->size())
 	{
@@ -165,7 +165,7 @@ void	CKinematics::Bone_GetAnimPos(Fmatrix& pos,u16 id,u8 mask_channel, bool igno
 	R_ASSERT( _valid( bi.mTransform ) );
 #endif
 	pos.set( bi.mTransform );
-	pos.c.Set(last_c);
+	pos.c.set(last_c);
 }
 
 void CKinematics::Bone_Calculate(CBoneData* bd, Fmatrix *parent)

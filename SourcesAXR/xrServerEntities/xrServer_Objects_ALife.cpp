@@ -892,8 +892,8 @@ CSE_ALifeLevelChanger::CSE_ALifeLevelChanger(LPCSTR caSection) : CSE_ALifeSpaceR
 {
 	m_tNextGraphID				= static_cast<GameGraph::_GRAPH_ID>(-1);
 	m_dwNextNodeID				= static_cast<u32>(-1);
-	m_tNextPosition.Set			(0.f,0.f,0.f);
-	m_tAngles.Set				(0.f,0.f,0.f);
+	m_tNextPosition.set			(0.f,0.f,0.f);
+	m_tAngles.set				(0.f,0.f,0.f);
 #ifdef XRSE_FACTORY_EXPORTS
     fp_data.inc					();
 #endif // XRSE_FACTORY_EXPORTS
@@ -921,7 +921,7 @@ void CSE_ALifeLevelChanger::STATE_Read		(NET_Packet	&tNetPacket, u16 size)
 		tNetPacket.r_float		(m_tNextPosition.y);
 		tNetPacket.r_float		(m_tNextPosition.z);
 		if (m_wVersion <= 53)
-			m_tAngles.Set		(0.f,tNetPacket.r_float(),0.f);
+			m_tAngles.set		(0.f,tNetPacket.r_float(),0.f);
 		else
 			tNetPacket.r_vec3	(m_tAngles);
 	}
@@ -1152,7 +1152,7 @@ void CSE_ALifeObjectPhysic::UPDATE_Read		(NET_Packet	&tNetPacket)
 			tNetPacket.r_float		(State.angular_vel.z);
 		}
 		else
-			State.angular_vel.Set		(0.f,0.f,0.f);
+			State.angular_vel.set		(0.f,0.f,0.f);
 
 		if (!check(num_items.mask,inventory_item_linear_null)) {
 			tNetPacket.r_float		(State.linear_vel.x);
@@ -1160,7 +1160,7 @@ void CSE_ALifeObjectPhysic::UPDATE_Read		(NET_Packet	&tNetPacket)
 			tNetPacket.r_float		(State.linear_vel.z);
 		}
 		else
-			State.linear_vel.Set		(0.f,0.f,0.f);
+			State.linear_vel.set		(0.f,0.f,0.f);
 
 		/*if (check(num_items.mask,animated))
 		{

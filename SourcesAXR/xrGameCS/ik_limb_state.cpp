@@ -58,7 +58,7 @@ Fvector& ik_limb_state::	pick( Fvector &v ) const
 {
 	if( state.ref_bone == limb->ref_bone() )
 	{
-		v.Set( state.pick );
+		v.set( state.pick );
 		return v;
 	}
 	Fmatrix m;

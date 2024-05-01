@@ -40,7 +40,7 @@ void FLOD::Load			(LPCSTR N, IReader *data, u32 dwFlags)
 		_vertex* v				= facets[f].v;
 
 		Fvector					N,T;
-		N.Set					(0,0,0);
+		N.set					(0,0,0);
 		T.mknormal				(v[0].v,v[1].v,v[2].v);	N.add	(T);
 		T.mknormal				(v[1].v,v[2].v,v[3].v);	N.add	(T);
 		T.mknormal				(v[2].v,v[3].v,v[0].v);	N.add	(T);

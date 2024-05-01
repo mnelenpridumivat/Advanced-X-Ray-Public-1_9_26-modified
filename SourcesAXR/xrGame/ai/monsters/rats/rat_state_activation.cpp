@@ -20,9 +20,9 @@ using namespace RatSpace;
 
 void CAI_Rat::activate_state_free_active()
 {
-	m_tSpawnPosition.Set	(m_home_position);
+	m_tSpawnPosition.set	(m_home_position);
 	m_fGoalChangeDelta		= m_fSafeGoalChangeDelta;
-	m_tVarGoal.Set			(m_tGoalVariation);
+	m_tVarGoal.set			(m_tGoalVariation);
 	m_fASpeed				= m_fAngleSpeed;
 
 	if (bfCheckIfGoalChanged()) {
@@ -134,9 +134,9 @@ void CAI_Rat::activate_state_free_recoil()
 }
 void CAI_Rat::activate_state_home()
 {
-	m_tSpawnPosition.Set	(m_home_position);
+	m_tSpawnPosition.set	(m_home_position);
 	m_fGoalChangeDelta		= m_fSafeGoalChangeDelta;
-	m_tVarGoal.Set			(m_tGoalVariation);
+	m_tVarGoal.set			(m_tGoalVariation);
 	m_fASpeed				= m_fAngleSpeed;
 	m_fSpeed = m_fSafeSpeed = m_fAttackSpeed;
 	vfUpdateTime(m_fTimeUpdateDelta);
@@ -152,7 +152,7 @@ void CAI_Rat::activate_state_eat()
 	memory().item().selected()->Center						(temp_position);
 
 	if ((Device.dwTimeGlobal - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
-		m_tGoalDir.Set					(temp_position);
+		m_tGoalDir.set					(temp_position);
 
 	vfUpdateTime						(m_fTimeUpdateDelta);
 

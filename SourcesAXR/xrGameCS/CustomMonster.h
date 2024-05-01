@@ -103,7 +103,7 @@ public:
 			o_model			= 0;
 			o_torso.yaw		= 0;
 			o_torso.pitch	= 0;
-			p_pos.Set		(0,0,0);
+			p_pos.set		(0,0,0);
 			fHealth			= 0.f;
 		}
 		void	lerp	(net_update& A,net_update& B, float f);

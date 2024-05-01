@@ -79,7 +79,7 @@ void	CPortal::Setup	(Fvector* V, int vcnt, CSector* face, CSector* back)
 	marker				= 0xffffffff; 
 
 	Fvector				N,T;
-	N.Set				(0,0,0);
+	N.set				(0,0,0);
 
 	u32	_cnt			= 0;
 	for (int i=2; i<vcnt; i++) {

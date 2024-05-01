@@ -1,7 +1,4 @@
 #ifdef DEBUG_MEMORY_NAME
-
-#include "xrCoreInline.h"
-
 // new(0)
 template <class T>
 IC	T*		xr_new		()

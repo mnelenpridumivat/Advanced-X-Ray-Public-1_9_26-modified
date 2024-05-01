@@ -50,7 +50,7 @@ public:
 
 	void		compute_caster_model_fixed	(xr_vector<Fplane>& dest, Fvector3& translation, float map_size, bool clip_by_view_near )
 	{
-		translation.Set( 0.f, 0.f, 0.f );
+		translation.set( 0.f, 0.f, 0.f );
 
 		if( fis_zero( 1-abs(view_ray.D.dotproduct( light_ray.D )), EPS_S) )
 			return;
@@ -80,7 +80,7 @@ public:
 
 
 		Fvector align_vector; 
-		align_vector.Set( 0.f, 0.f, 0.f );
+		align_vector.set( 0.f, 0.f, 0.f );
 
 		// Align ray points to the align planes.
 		for( int p = 0; p < align_planes_count; ++p )
@@ -111,7 +111,7 @@ public:
 		// translate_light_model	( align_vector );
 
 		// Reset to reuse.
-		align_vector.Set( 0.f, 0.f, 0.f );
+		align_vector.set( 0.f, 0.f, 0.f );
 
 		// Check if view edges intersect, and push planes................ 
 		for( int p = 0; p < align_planes_count; ++p )

@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef __FBOX
+#define __FBOX
 
 template <class T>
 class _box3
@@ -27,14 +27,14 @@ public:
 
 	IC	const T* data		()	const									{ return &min.x;	}	
 
-	IC 	SelfRef	set			(const Tvector &_min, const Tvector &_max)	{ min.Set(_min);	max.Set(_max);		return *this;	};
-	IC	SelfRef	set			(T x1_, T y1_, T z1_, T x2_, T y2_, T z2_)		{ min.Set(x1_,y1_,z1_);max.Set(x2_,y2_,z2_);	return *this;	};
-	IC	SelfRef	set			(SelfCRef b)								{ min.Set(b.min);	max.Set(b.max);		return *this;	};
+	IC 	SelfRef	set			(const Tvector &_min, const Tvector &_max)	{ min.set(_min);	max.set(_max);		return *this;	};
+	IC	SelfRef	set			(T x1_, T y1_, T z1_, T x2_, T y2_, T z2_)		{ min.set(x1_,y1_,z1_);max.set(x2_,y2_,z2_);	return *this;	};
+	IC	SelfRef	set			(SelfCRef b)								{ min.set(b.min);	max.set(b.max);		return *this;	};
     IC 	SelfRef	setb		(const Tvector& center, const Tvector& dim)	{ min.sub(center,dim);max.add(center,dim);return *this;	}
 
-	IC	SelfRef	null		()								{ min.Set(0,0,0);	max.Set(0,0,0);					return *this;	};
-	IC	SelfRef	identity	()								{ min.Set(-0.5,-0.5,-0.5);	max.Set(0.5,0.5,0.5);						return *this;	};
-	IC	SelfRef	invalidate	()								{ min.Set(type_max(T),type_max(T),type_max(T)); max.Set(type_min(T),type_min(T),type_min(T));	return *this;	}
+	IC	SelfRef	null		()								{ min.set(0,0,0);	max.set(0,0,0);					return *this;	};
+	IC	SelfRef	identity	()								{ min.set(-0.5,-0.5,-0.5);	max.set(0.5,0.5,0.5);						return *this;	};
+	IC	SelfRef	invalidate	()								{ min.set(type_max(T),type_max(T),type_max(T)); max.set(type_min(T),type_min(T),type_min(T));	return *this;	}
 	
 	IC	SelfRef	shrink		(T s)							{ min.add(s); max.sub(s);	return *this;	};
 	IC	SelfRef	shrink		(const Tvector& s)				{ min.add(s); max.sub(s);	return *this;	};
@@ -67,7 +67,7 @@ public:
 		
 		// Transform the min point
 		m.transform_tiny	(min,B.min);
-		max.Set				(min);
+		max.set				(min);
 		
 		// Take the transformed min & axes and find _new_ extents
 		// Using CPU code in the right place is faster...
@@ -107,7 +107,7 @@ public:
 	}
 	IC	SelfRef		scale		(float s)					// 0.1 means make 110%, -0.1 means make 90%
 	{
-		Fvector	bd{};	bd.sub(max, min).mul(s);
+		Fvector	bd;	bd.sub	(max,min).mul(s);
 		grow				(bd);
 		return				*this;
 	}
@@ -287,26 +287,26 @@ public:
 	IC void getpoint( int index,  Tvector& result ) const 
 	{
 		switch( index ){
-		case 0: result.Set( min.x, min.y, min.z ); break;
-		case 1: result.Set( min.x, min.y, max.z ); break;
-		case 2: result.Set( max.x, min.y, max.z ); break;
-		case 3: result.Set( max.x, min.y, min.z ); break;
-		case 4: result.Set( min.x, max.y, min.z ); break;
-		case 5: result.Set( min.x, max.y, max.z ); break;
-		case 6: result.Set( max.x, max.y, max.z ); break;
-		case 7: result.Set( max.x, max.y, min.z ); break;
-		default: result.Set( 0, 0, 0 ); break; }
+		case 0: result.set( min.x, min.y, min.z ); break;
+		case 1: result.set( min.x, min.y, max.z ); break;
+		case 2: result.set( max.x, min.y, max.z ); break;
+		case 3: result.set( max.x, min.y, min.z ); break;
+		case 4: result.set( min.x, max.y, min.z ); break;
+		case 5: result.set( min.x, max.y, max.z ); break;
+		case 6: result.set( max.x, max.y, max.z ); break;
+		case 7: result.set( max.x, max.y, min.z ); break;
+		default: result.set( 0, 0, 0 ); break; }
 	};
 	IC void getpoints(Tvector* result)
 	{
-		result[0].Set( min.x, min.y, min.z );
-		result[1].Set( min.x, min.y, max.z );
-		result[2].Set( max.x, min.y, max.z );
-		result[3].Set( max.x, min.y, min.z );
-		result[4].Set( min.x, max.y, min.z );
-		result[5].Set( min.x, max.y, max.z );
-		result[6].Set( max.x, max.y, max.z );
-		result[7].Set( max.x, max.y, min.z );
+		result[0].set( min.x, min.y, min.z );
+		result[1].set( min.x, min.y, max.z );
+		result[2].set( max.x, min.y, max.z );
+		result[3].set( max.x, min.y, min.z );
+		result[4].set( min.x, max.y, min.z );
+		result[5].set( min.x, max.y, max.z );
+		result[6].set( max.x, max.y, max.z );
+		result[7].set( max.x, max.y, min.z );
 	};
 
 	IC SelfRef modify(SelfCRef src, const Tmatrix& M)
@@ -327,4 +327,6 @@ typedef _box3<double>	Dbox;
 typedef _box3<double>	Dbox3;
 
 template <class T>
-BOOL	_valid			(const _box3<T>& c)	{ return _valid(c.min) && _valid(c.max); }
+BOOL	_valid			(const _box3<T>& c)	{ return _valid(min) && _valid(max); }
+
+#endif

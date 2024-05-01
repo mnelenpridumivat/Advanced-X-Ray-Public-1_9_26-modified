@@ -136,7 +136,7 @@ void CStalkerActionDetectAnomaly::initialize	()
 	m_inertia_time					= 15000 + ::Random32.random(5000);
 
 	Fvector							result;
-	object().eye_matrix.transform_tiny	(result,Fvector().Set(0.f,0.f,10.f));
+	object().eye_matrix.transform_tiny	(result,Fvector().set(0.f,0.f,10.f));
 	object().throw_target			(result, 0);
 }
 

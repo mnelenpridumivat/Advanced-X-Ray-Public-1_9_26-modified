@@ -253,7 +253,7 @@ void CPseudoGigant::on_threaten_execute()
 
 		Fvector dir;
 		Fvector pos;
-		pos.Set(obj->Position());
+		pos.set(obj->Position());
 		pos.y += 2.f;
 		dir.sub(pos, position);
 		dir.normalize();
@@ -262,12 +262,12 @@ void CPseudoGigant::on_threaten_execute()
 
 	// играть звук
 	Fvector		pos;
-	pos.Set(position);
+	pos.set(position);
 	pos.y		+= 0.1f;
 	m_sound_threaten_hit.play_at_pos(this,pos);
 
 	// Interactive Grass FX
-	g_pGamePersistent->GrassBendersAddExplosion(ID(), pos, Fvector().Set(0, -99, 0), 1.33f, 5.0f, ps_ssfx_grass_interactive.w, 20);
+	g_pGamePersistent->GrassBendersAddExplosion(ID(), pos, Fvector().set(0, -99, 0), 1.33f, 5.0f, ps_ssfx_grass_interactive.w, 20);
 
 	// играть партиклы
 	PlayParticles(m_kick_particles, pos, Direction());
@@ -302,10 +302,10 @@ void CPseudoGigant::on_threaten_execute()
 	HS.GenHeader		(GE_HIT, pA->ID());														//	u_EventGen	(l_P,GE_HIT, pA->ID());
 	HS.whoID			= (ID());														//	l_P.w_u16	(ID());
 	HS.weaponID			= (ID());														//	l_P.w_u16	(ID());
-	HS.dir				= (Fvector().Set(0.f,1.f,0.f));									//	l_P.w_dir	(Fvector().set(0.f,1.f,0.f));
+	HS.dir				= (Fvector().set(0.f,1.f,0.f));									//	l_P.w_dir	(Fvector().set(0.f,1.f,0.f));
 	HS.power			= (hit_value);													//	l_P.w_float	(m_kick_damage);
 	HS.boneID			= (smart_cast<IKinematics*>(pA->Visual())->LL_GetBoneRoot());	//	l_P.w_s16	(smart_cast<IKinematics*>(pA->Visual())->LL_GetBoneRoot());
-	HS.p_in_bone_space	= (Fvector().Set(0.f,0.f,0.f));									//	l_P.w_vec3	(Fvector().set(0.f,0.f,0.f));
+	HS.p_in_bone_space	= (Fvector().set(0.f,0.f,0.f));									//	l_P.w_vec3	(Fvector().set(0.f,0.f,0.f));
 	HS.impulse			= (80 * pA->character_physics_support()->movement()->GetMass());						//	l_P.w_float	(20 * pA->movement_control()->GetMass());
 	HS.hit_type			= ( ALife::eHitTypeStrike);										//	l_P.w_u16	( u16(ALife::eHitTypeWound) );
 	HS.Write_Packet		(l_P);

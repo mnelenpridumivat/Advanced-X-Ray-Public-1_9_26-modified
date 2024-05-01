@@ -55,7 +55,7 @@ public:
 	void				dbg_unregister	(void* _p);
 	void				dbg_check		();
 
-	u32					mem_usage		(u32* pBlocksUsed=nullptr, u32* pBlocksFree=nullptr);
+	u32					mem_usage		(u32* pBlocksUsed=NULL, u32* pBlocksFree=NULL);
 	void				mem_compact		();
 	void				mem_counter_set	(u32 _val)	{ stat_counter = _val;	}
 	u32					mem_counter_get	()			{ return stat_counter;	}
@@ -137,12 +137,6 @@ const		u32			mem_pools_count			=	54;
 const		u32			mem_pools_ebase			=	16;
 const		u32			mem_generic				=	mem_pools_count+1;
 extern		BOOL		mem_initialized;
-
-#include "Windows.h"
-
-#undef min
-#undef max
-#include "winnt.h"
 
 XRCORE_API void vminfo			(size_t *_free, size_t *reserved, size_t *committed);
 XRCORE_API void log_vminfo		();

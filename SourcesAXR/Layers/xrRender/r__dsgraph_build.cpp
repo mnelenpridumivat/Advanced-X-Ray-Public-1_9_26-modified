@@ -35,7 +35,7 @@ ICF	float	CalcSSA				(float& distSQ, Fvector& C, float R)
 ICF    float    CalcHudSSA(float& distSQ, Fvector& C, dxRender_Visual* V)
 {
 	float R = V->vis.sphere.R + 0;
-	distSQ = Fvector().Set(0.f, 0.f, 0.f).distance_to_sqr(C) + EPS;
+	distSQ = Fvector().set(0.f, 0.f, 0.f).distance_to_sqr(C) + EPS;
 	return    R / distSQ;
 }
 

@@ -65,7 +65,7 @@ bool CPHShellBasedAction::obsolete() const
 CPHConstForceAction::CPHConstForceAction(CPhysicsShell	*shell, const Fvector &force)
 :CPHShellBasedAction(shell)
 {
-	m_force.Set(force);
+	m_force.set(force);
 }
 
 

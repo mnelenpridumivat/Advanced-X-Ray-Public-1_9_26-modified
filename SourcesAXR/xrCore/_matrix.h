@@ -1,10 +1,5 @@
-#pragma once
-#include "_vector4.h"
-#include "_vector3d.h"
-#include "_vector2.h"
-//#include "vector.h"
-//#include "_quaternion.h"
-
+#ifndef __M__
+#define __M__
 /*
 *	DirectX-compliant, ie row-column order, ie m[Row][Col].
 *	Same as:
@@ -29,9 +24,6 @@
 // NOTE_2: mul(A,B) means transformation B, followed by A
 // NOTE_3: I,J,K,C equals to R,N,D,T
 // NOTE_4: The rotation sequence is ZXY
-
-template<typename T>
-struct _quaternion;
 
 template <class T>
 struct _matrix {
@@ -61,18 +53,18 @@ public:
 	// Class members
 	ICF	SelfRef	set			(const Self &a) 
 	{
-		i.Set(a.i); _14_=a._14;
-		j.Set(a.j); _24_=a._24;
-		k.Set(a.k); _34_=a._34;
-		c.Set(a.c); _44_=a._44;
+		i.set(a.i); _14_=a._14;
+		j.set(a.j); _24_=a._24;
+		k.set(a.k); _34_=a._34;
+		c.set(a.c); _44_=a._44;
 		return *this;
 	}
 	ICF	SelfRef	set			(const Tvector& R,const Tvector& N,const Tvector& D,const Tvector& C) 
 	{
-		i.Set(R); _14_=0;
-		j.Set(N); _24_=0;
-		k.Set(D); _34_=0;
-		c.Set(C); _44_=1;
+		i.set(R); _14_=0;
+		j.set(N); _24_=0;
+		k.set(D); _34_=0;
+		c.set(C); _44_=1;
 		return *this;
 	}
 	ICF	SelfRef	identity	(void) 
@@ -239,22 +231,22 @@ public:
 	}
 	IC	SelfRef	translate	(const Tvector &Loc )		// setup translation matrix
 	{	
-		identity();	c.Set	(Loc.x,Loc.y,Loc.z);	
+		identity();	c.set	(Loc.x,Loc.y,Loc.z);	
 		return *this;
 	}
 	IC	SelfRef	translate	(T _x, T _y, T _z ) // setup translation matrix
 	{	
-		identity(); c.Set	(_x,_y,_z);				
+		identity(); c.set	(_x,_y,_z);				
 		return *this;
 	}
 	IC	SelfRef	translate_over(const Tvector &Loc )	// modify only translation
 	{	
-		c.Set	(Loc.x,Loc.y,Loc.z);				
+		c.set	(Loc.x,Loc.y,Loc.z);				
 		return *this;
 	}
 	IC	SelfRef	translate_over(T _x, T _y, T _z) // modify only translation
 	{	
-		c.Set	(_x,_y,_z);							
+		c.set	(_x,_y,_z);							
 		return *this;
 	}
 	IC	SelfRef	translate_add(const Tvector &Loc )	// combine translation
@@ -274,30 +266,30 @@ public:
 	{
 		T cosa	= _cos(Angle);
 		T sina	= _sin(Angle);
-		i.Set		(1,		0,		0	);	_14 = 0;
-		j.Set		(0,		cosa,	sina);	_24 = 0;
-		k.Set		(0,    -sina,   cosa);	_34 = 0;
-		c.Set		(0,		0,		0	);	_44 = 1;
+		i.set		(1,		0,		0	);	_14 = 0;
+		j.set		(0,		cosa,	sina);	_24 = 0;
+		k.set		(0,    -sina,   cosa);	_34 = 0;
+		c.set		(0,		0,		0	);	_44 = 1;
 		return *this;
 	}
 	IC	SelfRef	rotateY		(T Angle )				// rotation about Y axis
 	{
 		T cosa	= _cos(Angle);
 		T sina	= _sin(Angle);
-		i.Set		(cosa,	0,	   -sina);	_14 = 0;
-		j.Set		(0,		1,		0	);	_24 = 0;
-		k.Set		(sina,  0,		cosa);	_34 = 0;
-		c.Set		(0,		0,		0	);	_44 = 1;
+		i.set		(cosa,	0,	   -sina);	_14 = 0;
+		j.set		(0,		1,		0	);	_24 = 0;
+		k.set		(sina,  0,		cosa);	_34 = 0;
+		c.set		(0,		0,		0	);	_44 = 1;
 		return *this;
 	}
 	IC	SelfRef	rotateZ		(T Angle )				// rotation about Z axis
 	{
 		T cosa	= _cos(Angle);
 		T sina	= _sin(Angle);
-		i.Set		(cosa,	sina,	0	);	_14 = 0;
-		j.Set		(-sina,	cosa,	0	);	_24 = 0;
-		k.Set		(0,		0,		1	);	_34 = 0;
-		c.Set		(0,		0,		0	);	_44 = 1;
+		i.set		(cosa,	sina,	0	);	_14 = 0;
+		j.set		(-sina,	cosa,	0	);	_24 = 0;
+		k.set		(0,		0,		1	);	_34 = 0;
+		c.set		(0,		0,		0	);	_44 = 1;
 		return *this;
 	}
 
@@ -311,12 +303,12 @@ public:
 		return *this;
 	}
 
-	IC	SelfRef	mapXYZ		()	{i.Set(1, 0, 0);_14=0;j.Set(0, 1, 0);_24=0;k.Set(0, 0, 1);_34=0;c.Set(0, 0, 0);_44=1;	return *this; }
-	IC	SelfRef	mapXZY		()	{i.Set(1, 0, 0);_14=0;j.Set(0, 0, 1);_24=0;k.Set(0, 1, 0);_34=0;c.Set(0, 0, 0);_44=1;	return *this; }
-	IC	SelfRef	mapYXZ		()	{i.Set(0, 1, 0);_14=0;j.Set(1, 0, 0);_24=0;k.Set(0, 0, 1);_34=0;c.Set(0, 0, 0);_44=1;	return *this; }
-	IC	SelfRef	mapYZX		()	{i.Set(0, 1, 0);_14=0;j.Set(0, 0, 1);_24=0;k.Set(1, 0, 0);_34=0;c.Set(0, 0, 0);_44=1;	return *this; }
-	IC	SelfRef	mapZXY		()	{i.Set(0, 0, 1);_14=0;j.Set(1, 0, 0);_24=0;k.Set(0, 1, 0);_34=0;c.Set(0, 0, 0);_44=1;	return *this; }
-	IC	SelfRef	mapZYX		()	{i.Set(0, 0, 1);_14=0;j.Set(0, 1, 0);_24=0;k.Set(1, 0, 0);_34=0;c.Set(0, 0, 0);_44=1;	return *this; }
+	IC	SelfRef	mapXYZ		()	{i.set(1, 0, 0);_14=0;j.set(0, 1, 0);_24=0;k.set(0, 0, 1);_34=0;c.set(0, 0, 0);_44=1;	return *this; }
+	IC	SelfRef	mapXZY		()	{i.set(1, 0, 0);_14=0;j.set(0, 0, 1);_24=0;k.set(0, 1, 0);_34=0;c.set(0, 0, 0);_44=1;	return *this; }
+	IC	SelfRef	mapYXZ		()	{i.set(0, 1, 0);_14=0;j.set(1, 0, 0);_24=0;k.set(0, 0, 1);_34=0;c.set(0, 0, 0);_44=1;	return *this; }
+	IC	SelfRef	mapYZX		()	{i.set(0, 1, 0);_14=0;j.set(0, 0, 1);_24=0;k.set(1, 0, 0);_34=0;c.set(0, 0, 0);_44=1;	return *this; }
+	IC	SelfRef	mapZXY		()	{i.set(0, 0, 1);_14=0;j.set(1, 0, 0);_24=0;k.set(0, 1, 0);_34=0;c.set(0, 0, 0);_44=1;	return *this; }
+	IC	SelfRef	mapZYX		()	{i.set(0, 0, 1);_14=0;j.set(0, 1, 0);_24=0;k.set(1, 0, 0);_34=0;c.set(0, 0, 0);_44=1;	return *this; }
 
 	IC	SelfRef	rotation	( const Tvector &axis, T Angle )	{
 		T Cosine	= _cos(Angle);
@@ -551,19 +543,19 @@ public:
 	{
 		Tvector			res;
 		transform_tiny	(res,v);
-		v.Set			(res);
+		v.set			(res);
 	}
 	IC	void	transform			(Tvector &v) const
 	{
 		Tvector			res;
 		transform		(res,v);
-		v.Set			(res);
+		v.set			(res);
 	}
 	ICF	void	transform_dir		(Tvector &v) const
 	{
 		Tvector			res;
 		transform_dir	(res,v);
-		v.Set			(res);
+		v.set			(res);
 	}
 	ICF	SelfRef	setHPB	(T h, T p, T b)
 	{
@@ -574,10 +566,10 @@ public:
         _sb = _sin(b); _cb = _cos(b);
         _cc = _ch*_cb; _cs = _ch*_sb; _sc = _sh*_cb; _ss = _sh*_sb;
 
-        i.Set(_cc-_sp*_ss,	-_cp*_sb,	_sp*_cs+_sc	);	_14_=0;
-        j.Set(_sp*_sc+_cs,	_cp*_cb, 	_ss-_sp*_cc	);	_24_=0;
-        k.Set(-_cp*_sh,    	_sp,		_cp*_ch		);	_34_=0;
-        c.Set(0,			0,			0			);  _44_=1;
+        i.set(_cc-_sp*_ss,	-_cp*_sb,	_sp*_cs+_sc	);	_14_=0;
+        j.set(_sp*_sc+_cs,	_cp*_cb, 	_ss-_sp*_cc	);	_24_=0;
+        k.set(-_cp*_sh,    	_sp,		_cp*_ch		);	_34_=0;
+        c.set(0,			0,			0			);  _44_=1;
 		return *this; 
     }
 	IC	SelfRef	setXYZ	(T x, T y, T z)	{return setHPB(y,x,z);}
@@ -621,3 +613,5 @@ BOOL	_valid			(const _matrix<T>& m)
 
 extern XRCORE_API Fmatrix	Fidentity;
 extern XRCORE_API Dmatrix	Didentity;
+
+#endif

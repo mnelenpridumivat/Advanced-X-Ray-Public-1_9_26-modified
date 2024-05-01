@@ -6,8 +6,8 @@ class ik_pick_query
 {
 public:
 	ik_pick_query		( ): _point( ik_foot_geom::none ),
-						 _pos( Fvector().Set( -FLT_MAX, -FLT_MAX, -FLT_MAX ) ),
-						 _dir( Fvector().Set( -FLT_MAX, -FLT_MAX, -FLT_MAX ) ),
+						 _pos( Fvector().set( -FLT_MAX, -FLT_MAX, -FLT_MAX ) ),
+						 _dir( Fvector().set( -FLT_MAX, -FLT_MAX, -FLT_MAX ) ),
 						 _range( -FLT_MAX )
 	{}
 

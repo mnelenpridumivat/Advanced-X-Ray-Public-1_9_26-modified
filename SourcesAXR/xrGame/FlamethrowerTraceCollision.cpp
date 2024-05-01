@@ -47,7 +47,7 @@ void CFlamethrowerTraceCollision::UpdateParticles()
 
 	Fmatrix particles_pos = Fmatrix();
 	//particles_pos.set(XFORM);
-	particles_pos.c.Set(m_position);
+	particles_pos.c.set(m_position);
 
 	VERIFY(_valid(particles_pos));
 
@@ -97,9 +97,10 @@ void CFlamethrowerTraceCollision::Load(LPCSTR section)
 	m_FlameFadeTime = pSettings->r_float(section, "FlameFadeTime");
 	m_GravityAcceleration = pSettings->r_float(section, "GravityAcceleration");
 
+	string256 full_name;
 	// flames
-	m_sFlameParticles = pSettings->r_string(section, "flame_particles");
-	m_sEarthFlameParticles = pSettings->r_string(section, "earth_flame_particles");
+	strconcat(sizeof(full_name), full_name, "", "flame_particles");
+	m_sFlameParticles = pSettings->r_string(section, full_name);
 }
 
 inline CFlamethrower* CFlamethrowerTraceCollision::GetParentWeapon() const
@@ -226,13 +227,19 @@ void CFlamethrowerTraceCollision::Update(float DeltaTime)
 	if (!IsCollided()) {
 		m_GravityVelocity += m_GravityAcceleration * DeltaTime;
 		auto old_pos = m_position;
+		//invXFORM.transform(old_pos);
 		m_position = m_position + m_direction * m_Velocity * DeltaTime - Fvector{ 0.0f, m_GravityVelocity * DeltaTime, 0.0f };
+		//invXFORM.transform(new_pos);
+		//Msg("pos = [%f, %f, %f]", m_position.x, m_position.y, m_position.z);
+		//m_position = m_position.add(m_direction.mul(m_Velocity * DeltaTime)).sub({ 0.0f, m_GravityVelocity * DeltaTime, 0.0f });
 		collide::rq_results storage;
 		collide::ray_defs RD(old_pos, m_position, CDB::OPT_FULL_TEST, collide::rqtBoth);
 		FlamethrowerTraceData data;
 		data.TracedObj = this;
 		m_direction = m_position - old_pos;
 		m_direction.normalize();
+		//auto PosCopy = m_position;
+		//m_direction = (PosCopy - old_pos).normalize();
 		if (Level().ObjectSpace.RayQuery(storage, RD, CFlamethrowerTraceCollision::hit_callback, &data, CFlamethrowerTraceCollision::test_callback, nullptr))
 		{
 			m_position = old_pos + m_direction * data.HitDist;

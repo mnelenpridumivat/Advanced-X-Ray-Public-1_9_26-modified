@@ -95,7 +95,7 @@ public:
 	virtual void			detach_Actor		();
 	virtual bool			allowWeapon			()	const				{return false;};
 	virtual bool			HUDView				()	const				{return true;};
-	virtual Fvector			ExitPosition		()						{return Fvector().Set(0.0f,0.0f,0.0f);};
+	virtual Fvector			ExitPosition		()						{return Fvector().set(0.0f,0.0f,0.0f);};
 
 	virtual CCameraBase*	Camera				()						{return camera;};
 

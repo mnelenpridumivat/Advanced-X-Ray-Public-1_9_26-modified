@@ -124,12 +124,12 @@ void CDetectorAnomaly::shedule_Update(u32 dt)
 	if( !IsWorking() ) return;
 	if( !H_Parent()  ) return;
 
-	Position().Set(H_Parent()->Position());
+	Position().set(H_Parent()->Position());
 
 	if (H_Parent() && H_Parent() == Level().CurrentViewEntity())
 	{
 		Fvector					P; 
-		P.Set					(H_Parent()->Position());
+		P.set					(H_Parent()->Position());
 		feel_touch_update		(P,m_fRadius);
 	}
 }
@@ -187,7 +187,7 @@ void CDetectorAnomaly::UpdateCL()
 		if((float)zone_info.snd_time > current_snd_time)
 		{
 			zone_info.snd_time	= 0;
-			HUD_SOUND_ITEM::PlaySound(zone_type.detect_snds, Fvector().Set(0, 0, 0), NULL, true, false);
+			HUD_SOUND_ITEM::PlaySound(zone_type.detect_snds, Fvector().set(0, 0, 0), NULL, true, false);
 
 		} 
 		else 

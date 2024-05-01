@@ -54,7 +54,7 @@ void CHelicopter::StartFlame ()
 	m_pParticle = CParticlesObject::Create(*m_smoke_particle,FALSE);
 
 	Fvector zero_vector;
-	zero_vector.Set(0.f,0.f,0.f);
+	zero_vector.set(0.f,0.f,0.f);
 	m_pParticle->UpdateParent(m_particleXFORM, zero_vector );
 	m_pParticle->Play(false);
 	m_flame_started = true;
@@ -110,7 +110,7 @@ void CHelicopter::ExplodeHelicopter ()
 		CPHDestroyable::Destroy(ID(),"physic_destroyable_object");
 
 	CExplosive::SetInitiator(ID());
-	CExplosive::GenExplodeEvent(Position(),Fvector().Set(0.f,1.f,0.f));
+	CExplosive::GenExplodeEvent(Position(),Fvector().set(0.f,1.f,0.f));
 	m_brokenSound.stop					();
 
 	m_layered_sounds.PlaySound("sndExplode", Position(), this, false);
@@ -202,7 +202,7 @@ float CHelicopter::GetRealAltitude()
 	collide::rq_result		cR;
 	Fvector down_dir;
 
-	down_dir.Set(0.0f, -1.0f, 0.0f);
+	down_dir.set(0.0f, -1.0f, 0.0f);
 
 
 	Level().ObjectSpace.RayPick(XFORM().c, down_dir, 1000.0f, collide::rqtStatic, cR, nullptr);
@@ -334,7 +334,7 @@ void SHeliEnemy::Load(LPCSTR section)
 void SHeliEnemy::reinit()
 {
 	type					= eEnemyNone;
-	destEnemyPos.Set		(0.0f,0.0f,0.0f);
+	destEnemyPos.set		(0.0f,0.0f,0.0f);
 	destEnemyID				=static_cast<u16>(-1);
 	fStartFireTime			=-1.0f;
 }
@@ -409,7 +409,7 @@ void SHeliBodyState::reinit()
 {
 	type = eBodyByPath;
 	b_looking_at_point = false;
-	looking_point.Set(0.0f,0.0f,0.0f);
+	looking_point.set(0.0f,0.0f,0.0f);
 	parent->XFORM().getHPB(currBodyHPB.x, currBodyHPB.y, currBodyHPB.z);
 
 }

@@ -1,6 +1,8 @@
+#ifndef _TextureDescrManager_included_
+#define _TextureDescrManager_included_
+
 #pragma once
 #include "ETextureParams.h"
-#include "../../xrCore/StructDefines.h"
 
 class cl_dt_scaler;
 
@@ -45,3 +47,4 @@ public:
 	BOOL		GetDetailTexture(const shared_str& tex_name, LPCSTR& res, R_constant_setup* &CS) const;
 	BOOL		UseSteepParallax(const shared_str& tex_name) const;
 };
+#endif

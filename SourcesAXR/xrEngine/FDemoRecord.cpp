@@ -31,9 +31,9 @@ void setup_lm_screenshot_matrices()
 	Fbox bb								= curr_lm_fbox;
 	bb.getcenter						(Device.vCameraPosition);
 
-	Device.vCameraDirection.Set			( 0.f,-1.f,0.f	);
-	Device.vCameraTop.Set				( 0.f,0.f,1.f	);
-	Device.vCameraRight.Set				( 1.f,0.f,0.f	);
+	Device.vCameraDirection.set			( 0.f,-1.f,0.f	);
+	Device.vCameraTop.set				( 0.f,0.f,1.f	);
+	Device.vCameraRight.set				( 1.f,0.f,0.f	);
 	Device.mView.build_camera_dir		(Device.vCameraPosition,Device.vCameraDirection,Device.vCameraTop);
 
 	bb.xform					(Device.mView);
@@ -85,7 +85,7 @@ CDemoRecord::CDemoRecord(const char *name, float life_time) : CEffectorCam(cefDe
 
 		// parse yaw
 		Fvector& dir	= m_Camera.k;
-		Fvector DYaw;	DYaw.Set(dir.x,0.f,dir.z); DYaw.normalize_safe();
+		Fvector DYaw;	DYaw.set(dir.x,0.f,dir.z); DYaw.normalize_safe();
 		if (DYaw.x<0)	m_HPB.x = acosf(DYaw.z);
 		else			m_HPB.x = 2*PI-acosf(DYaw.z);
 
@@ -94,14 +94,14 @@ CDemoRecord::CDemoRecord(const char *name, float life_time) : CEffectorCam(cefDe
 		m_HPB.y			= asinf(dir.y);
 		m_HPB.z			= 0;
 
-		m_Position.Set	(m_Camera.c);
+		m_Position.set	(m_Camera.c);
 
-		m_vVelocity.Set	(0,0,0);
-		m_vAngularVelocity.Set(0,0,0);
+		m_vVelocity.set	(0,0,0);
+		m_vAngularVelocity.set(0,0,0);
 		iCount			= 0;
 		
-		m_vT.Set(0,0,0);
-		m_vR.Set(0,0,0);
+		m_vT.set(0,0,0);
+		m_vR.set(0,0,0);
 		m_bMakeCubeMap		= FALSE;
 		m_bMakeScreenshot	= FALSE;
 		m_bMakeLevelMap		= FALSE;
@@ -251,8 +251,8 @@ void CDemoRecord::MakeCubeMapFace(Fvector &D, Fvector &N)
 	string32 buf;
 	switch (m_Stage){
 	case 0:
-		N.Set		(cmNorm[m_Stage]);
-		D.Set		(cmDir[m_Stage]);
+		N.set		(cmNorm[m_Stage]);
+		D.set		(cmDir[m_Stage]);
 		s_hud_flag.assign(psHUD_Flags);
 		psHUD_Flags.assign	(0);
 	break;
@@ -261,14 +261,14 @@ void CDemoRecord::MakeCubeMapFace(Fvector &D, Fvector &N)
 	case 3:
 	case 4:
 	case 5:
-		N.Set		(cmNorm[m_Stage]);
-		D.Set		(cmDir[m_Stage]);
+		N.set		(cmNorm[m_Stage]);
+		D.set		(cmDir[m_Stage]);
 		Render->Screenshot	(IRender_interface::SM_FOR_CUBEMAP,itoa(m_Stage,buf,10));
 	break;
 	case 6:
 		Render->Screenshot	(IRender_interface::SM_FOR_CUBEMAP,itoa(m_Stage,buf,10));
-		N.Set		(m_Camera.j);
-		D.Set		(m_Camera.k);
+		N.set		(m_Camera.j);
+		D.set		(m_Camera.k);
 		psHUD_Flags.assign(s_hud_flag);
 		m_bMakeCubeMap = FALSE;
 	break;
@@ -285,9 +285,9 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 	{
 		MakeScreenshotFace();
 		// update camera
-		info.n.Set(m_Camera.j);
-		info.d.Set(m_Camera.k);
-		info.p.Set(m_Camera.c);
+		info.n.set(m_Camera.j);
+		info.d.set(m_Camera.k);
+		info.p.set(m_Camera.c);
 	}else if (m_bMakeLevelMap)
 	{
 		MakeLevelMapProcess();
@@ -295,7 +295,7 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 	}else if (m_bMakeCubeMap)
 	{
 		MakeCubeMapFace	(info.d, info.n);
-		info.p.Set		(m_Camera.c);
+		info.p.set		(m_Camera.c);
 		info.fAspect	= 1.f;
 	}else
 	{
@@ -355,24 +355,24 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 		m_HPB.z += m_vR.z;
 		if(g_position.set_position)
 		{
-			m_Position.Set(g_position.p);
+			m_Position.set(g_position.p);
 			g_position.set_position = false;
 		} else
-			g_position.p.Set( m_Position );
+			g_position.p.set( m_Position );
 		// move
 		Fvector vmove;
 
-		vmove.Set				(m_Camera.k);
+		vmove.set				(m_Camera.k);
 		vmove.normalize_safe	();
 		vmove.mul				(m_vT.z);
 		m_Position.add			(vmove);
 
-		vmove.Set				(m_Camera.i);
+		vmove.set				(m_Camera.i);
 		vmove.normalize_safe	();
 		vmove.mul				(m_vT.x);
 		m_Position.add			(vmove);
 
-		vmove.Set				(m_Camera.j);
+		vmove.set				(m_Camera.j);
 		vmove.normalize_safe	();
 		vmove.mul				(m_vT.y);
 		m_Position.add			(vmove);
@@ -381,14 +381,14 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 		m_Camera.translate_over	(m_Position);
 
 		// update camera
-		info.n.Set(m_Camera.j);
-		info.d.Set(m_Camera.k);
-		info.p.Set(m_Camera.c);
+		info.n.set(m_Camera.j);
+		info.d.set(m_Camera.k);
+		info.p.set(m_Camera.c);
 
 		fLifeTime-=Device.fTimeDelta;
 
-		m_vT.Set(0,0,0);
-		m_vR.Set(0,0,0);
+		m_vT.set(0,0,0);
+		m_vR.set(0,0,0);
 	}
 	return TRUE;
 }
@@ -442,8 +442,8 @@ void CDemoRecord::IR_OnKeyboardHold	(int dik)
 		g_pGameLevel->IR_OnKeyboardHold(dik);
 		return;
 	}
-	Fvector		vT_delta = Fvector().Set(0,0,0);
-	Fvector		vR_delta = Fvector().Set(0,0,0);
+	Fvector		vT_delta = Fvector().set(0,0,0);
+	Fvector		vR_delta = Fvector().set(0,0,0);
 
 	switch(dik){
 	case DIK_A:
@@ -478,7 +478,7 @@ void CDemoRecord::IR_OnMouseMove		(int dx, int dy)
 		return;
 	}
 
-	Fvector		vR_delta = Fvector().Set(0,0,0);
+	Fvector		vR_delta = Fvector().set(0,0,0);
 
 	float scale			= .5f;//psMouseSens;
 	if (dx||dy){
@@ -495,7 +495,7 @@ void CDemoRecord::IR_OnMouseHold		(int btn)
 		g_pGameLevel->IR_OnMouseHold(btn);
 		return;
 	}
-	Fvector		vT_delta = Fvector().Set(0,0,0);
+	Fvector		vT_delta = Fvector().set(0,0,0);
 	switch (btn){
 	case 0:			vT_delta.z += 1.0f; break; // Move Backward
 	case 1:			vT_delta.z -= 1.0f; break; // Move Forward

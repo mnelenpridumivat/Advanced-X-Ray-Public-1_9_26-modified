@@ -401,8 +401,8 @@ void	game_sv_ArtefactHunt::assign_RP(CSE_Abstract* E, game_PlayerState* ps_who)
 
 void	game_sv_ArtefactHunt::SetRP					(CSE_Abstract* E, RPoint* pRP)
 {
-	E->o_Position.Set	(pRP->P);
-	E->o_Angle.Set		(pRP->A);
+	E->o_Position.set	(pRP->P);
+	E->o_Angle.set		(pRP->A);
 
 	pRP->bBlocked		= true;
 	pRP->BlockedByID	= E->ID;
@@ -941,8 +941,8 @@ void game_sv_ArtefactHunt::Assign_Artefact_RPoint(CSE_Abstract* E)
 	Msg					("---select artefact RPoint [%d]", ID);
 #endif // #ifndef MASTER_GOLD
 	r					= rp[ID];
-	E->o_Position.Set	(r.P);
-	E->o_Angle.Set		(r.A);
+	E->o_Position.set	(r.P);
+	E->o_Angle.set		(r.A);
 };
 
 void game_sv_ArtefactHunt::OnTimelimitExceed()

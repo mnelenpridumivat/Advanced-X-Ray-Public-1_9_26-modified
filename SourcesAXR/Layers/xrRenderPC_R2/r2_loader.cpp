@@ -137,7 +137,7 @@ void CRender::level_Unload()
 	// 1.
 	xr_delete				(rmPortals);
 	pLastSector				= 0;
-	vLastCameraPos.Set		(0,0,0);
+	vLastCameraPos.set		(0,0,0);
 	// 2.
 	for (I=0; I<Sectors.size(); I++)	xr_delete(Sectors[I]);
 	Sectors.clear			();
@@ -393,9 +393,9 @@ void CRender::LoadSectors(IReader* fs)
 			if (CL.getTS() < 2)
 			{
 				Fvector v1, v2, v3;
-				v1.Set(-20000.f, -20000.f, -20000.f);
-				v2.Set(-20001.f, -20001.f, -20001.f);
-				v3.Set(-20002.f, -20002.f, -20002.f);
+				v1.set(-20000.f, -20000.f, -20000.f);
+				v2.set(-20001.f, -20001.f, -20001.f);
+				v3.set(-20002.f, -20002.f, -20002.f);
 				CL.add_face_packed_D(v1, v2, v3, 0);
 			}
 			rmPortals->build(CL.getV(), int(CL.getVS()), CL.getT(), int(CL.getTS()), nullptr, nullptr, false);

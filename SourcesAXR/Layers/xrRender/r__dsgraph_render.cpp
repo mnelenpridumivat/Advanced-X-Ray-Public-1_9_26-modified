@@ -482,7 +482,7 @@ public:
 		FTold = Device.mFullTransform;
 
 		Vold = Device.mView;
-		Device.mView.build_camera_dir(Fvector().Set(0.f, 0.f, 0.f), Device.vCameraDirection, Device.vCameraTop);
+		Device.mView.build_camera_dir(Fvector().set(0.f, 0.f, 0.f), Device.vCameraDirection, Device.vCameraTop);
 
 		Device.mProject.build_projection(psHUD_FOV, Device.fASPECT, HUD_VIEWPORT_NEAR, g_pGamePersistent->Environment().CurrentEnv->far_plane);
 
@@ -660,7 +660,7 @@ void	R_dsgraph_structure::r_dsgraph_render_subspace	(IRender_Sector* _sector, CF
 
 	if (_precise_portals && RImplementation.rmPortals)		{
 		// Check if camera is too near to some portal - if so force DualRender
-		Fvector box_radius;		box_radius.Set	(EPS_L*20,EPS_L*20,EPS_L*20);
+		Fvector box_radius;		box_radius.set	(EPS_L*20,EPS_L*20,EPS_L*20);
 		RImplementation.Sectors_xrc.box_options	(CDB::OPT_FULL_TEST);
 		RImplementation.Sectors_xrc.box_query	(RImplementation.rmPortals,_cop,box_radius);
 		for (int K=0; K<RImplementation.Sectors_xrc.r_count(); K++)

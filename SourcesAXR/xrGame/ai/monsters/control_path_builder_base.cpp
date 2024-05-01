@@ -42,7 +42,7 @@ void CControlPathBuilderBase::reset()
 	m_use_dest_orient				= false;
 	m_enable						= false;
 	m_path_type						= MovementManager::ePathTypeLevelPath;
-	m_dest_dir.Set					(0.f, 0.f, 0.f);
+	m_dest_dir.set					(0.f, 0.f, 0.f);
 	m_extrapolate					= false;
 	m_velocity_mask					= static_cast<u32>(-1);
 	m_desirable_mask				= static_cast<u32>(-1);
@@ -95,7 +95,7 @@ void CControlPathBuilderBase::detour_graph_points(u32 game_graph_vertex_id)
 void CControlPathBuilderBase::set_dest_direction(const Fvector &dir)
 {
 	if (m_last_time_dir_set + m_time > time()) return;
-	m_dest_dir.Set			(dir);
+	m_dest_dir.set			(dir);
 	m_last_time_dir_set		 = time();
 }
 

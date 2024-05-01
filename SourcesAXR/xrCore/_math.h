@@ -1,8 +1,6 @@
 #ifndef __XR_MATH_H__
 #define __XR_MATH_H__
 
-#include <thread>
-
 #include "cpuid.h"
 
 namespace CPU {

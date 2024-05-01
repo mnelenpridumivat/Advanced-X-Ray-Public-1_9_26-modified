@@ -50,7 +50,7 @@ CScriptMovementAction::CScriptMovementAction		()
 	SetPatrolRandom		(true);
 	SetSpeed			(0);
 	SetObjectToGo		(nullptr);
-	SetPosition			(Fvector().Set(0,0,0));
+	SetPosition			(Fvector().set(0,0,0));
 	m_tGoalType			= eGoalTypeDummy;
 	m_bCompleted		= true;
 }

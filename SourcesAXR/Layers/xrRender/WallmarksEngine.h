@@ -2,7 +2,6 @@
 //
 //////////////////////////////////////////////////////////////////////
 #pragma once
-#include "../../xrCore/_sphere.h"
 
 namespace WallmarksEngine {
 	struct wm_slot;

@@ -64,8 +64,8 @@ CVampireCameraEffector::CVampireCameraEffector(float time, const Fvector &src, c
 	
 	m_direction.normalize	();
 
-	dangle_target.Set	(Random.randFs(DELTA_ANGLE_X),Random.randFs(DELTA_ANGLE_Y),Random.randFs(DELTA_ANGLE_Z));
-	dangle_current.Set	(0.f, 0.f, 0.f);
+	dangle_target.set	(Random.randFs(DELTA_ANGLE_X),Random.randFs(DELTA_ANGLE_Y),Random.randFs(DELTA_ANGLE_Z));
+	dangle_current.set	(0.f, 0.f, 0.f);
 }
 
 BOOL CVampireCameraEffector::ProcessCam(SCamEffectorInfo& info)
@@ -80,10 +80,10 @@ BOOL CVampireCameraEffector::ProcessCam(SCamEffectorInfo& info)
 	// Инициализация
 	Fmatrix	Mdef;
 	Mdef.identity		();
-	Mdef.j.Set			(info.n);
-	Mdef.k.Set			(info.d);
+	Mdef.j.set			(info.n);
+	Mdef.k.set			(info.d);
 	Mdef.i.crossproduct	(info.n, info.d);
-	Mdef.c.Set			(info.p);
+	Mdef.c.set			(info.p);
 
 	
 	//////////////////////////////////////////////////////////////////////////
@@ -129,9 +129,9 @@ BOOL CVampireCameraEffector::ProcessCam(SCamEffectorInfo& info)
 	Fmatrix			mR;
 	mR.mul			(Mdef,R);
 
-	info.d.Set		(mR.k);
-	info.n.Set		(mR.j);
-	info.p.Set		(mR.c);
+	info.d.set		(mR.k);
+	info.n.set		(mR.j);
+	info.p.set		(mR.c);
 
 	return TRUE;
 }

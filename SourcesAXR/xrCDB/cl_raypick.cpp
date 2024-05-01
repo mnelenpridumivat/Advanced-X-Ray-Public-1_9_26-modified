@@ -37,8 +37,8 @@ namespace RAPID {
     #else
 		BOOL		Inside = TRUE;
 		Fvector		MaxT,bMin;
-		MaxT.Set	(-1.f,-1.f,-1.f);
-		bMin.Set	(-bMax.x,-bMax.y,-bMax.z);
+		MaxT.set	(-1.f,-1.f,-1.f);
+		bMin.set	(-bMax.x,-bMax.y,-bMax.z);
 
 		// Find candidate planes.
 		if(rP[0] < bMin[0]) {
@@ -70,7 +70,7 @@ namespace RAPID {
 		}
 
 		// Ray rP inside bounding box
-		if(Inside)		{ coord.Set	(rP); return true; }
+		if(Inside)		{ coord.set	(rP); return true; }
 
 		// Get largest of the maxT's for final choice of intersection
 		DWORD WhichPlane = 0;

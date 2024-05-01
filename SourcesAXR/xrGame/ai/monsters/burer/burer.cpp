@@ -325,7 +325,7 @@ void CBurer::UpdateGraviObject()
 			if (b_enemy_visible) {
 				Fvector impulse_dir;
 
-				impulse_dir.Set(0.0f,0.0f,1.0f);
+				impulse_dir.set(0.0f,0.0f,1.0f);
 				impulse_dir.normalize();
 
 				HitEntity(m_gravi_object.enemy, m_gravi.hit_power, m_gravi.impulse_to_enemy, impulse_dir, ALife::eHitTypeStrike, false);
@@ -345,7 +345,7 @@ void CBurer::UpdateGraviObject()
 	// вычислить позицию и направленность партикла
 	Fmatrix pos; 
 	pos.identity();
-	pos.k.Set(dir);
+	pos.k.set(dir);
 	Fvector::generate_orthonormal_basis_normalized(pos.k,pos.j,pos.i);
 	// установить позицию
 	pos.translate_over(m_gravi_object.cur_pos);
@@ -394,7 +394,7 @@ void CBurer::StartGraviPrepare()
 	if (!pA) return;
 
 	pA->CParticlesPlayer::StartParticles			(particle_gravi_prepare,
-													 Fvector().Set(0.0f, 0.1f, 0.0f),
+													 Fvector().set(0.0f, 0.1f, 0.0f),
 													 pA->ID());
 }
 void CBurer::StopGraviPrepare() 
@@ -409,7 +409,7 @@ void CBurer::StartTeleObjectParticle(CGameObject *pO)
 	CParticlesPlayer* PP						=	smart_cast<CParticlesPlayer*>(pO);
 	if(!PP) return;
 	PP->StartParticles								(particle_tele_object,
-													 Fvector().Set(0.0f, 0.1f, 0.0f),
+													 Fvector().set(0.0f, 0.1f, 0.0f),
 													 pO->ID());
 }
 void CBurer::StopTeleObjectParticle(CGameObject *pO) 
@@ -433,7 +433,7 @@ void	CBurer::Hit								(SHit* pHDS)
 		// установить particles
 		CParticlesObject* ps					=	CParticlesObject::Create(particle_fire_shield,TRUE);
 		
-		ps->UpdateParent							(pos,Fvector().Set(0.f,0.f,0.f));
+		ps->UpdateParent							(pos,Fvector().set(0.f,0.f,0.f));
 		GamePersistent().ps_needtoplay.push_back	(ps);
 
 	} 

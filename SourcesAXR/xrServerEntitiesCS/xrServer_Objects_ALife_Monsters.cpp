@@ -1320,8 +1320,8 @@ CSE_ALifeCreatureActor::CSE_ALifeCreatureActor	(LPCSTR caSection) : CSE_ALifeCre
 	m_u16NumItems				= 0;
 //	fArmor						= 0.f;
 	fRadiation					= 0.f;
-	accel.Set					(0.f,0.f,0.f);
-	velocity.Set				(0.f,0.f,0.f);
+	accel.set					(0.f,0.f,0.f);
+	velocity.set				(0.f,0.f,0.f);
 	m_holderID					=u16(-1);
 }
 

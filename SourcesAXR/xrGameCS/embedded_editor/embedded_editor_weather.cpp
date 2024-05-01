@@ -16,7 +16,7 @@
 Fvector convert(const Fvector& v)
 {
     Fvector result;
-    result.Set(v.z, v.y, v.x);
+    result.set(v.z, v.y, v.x);
     return result;
 }
 

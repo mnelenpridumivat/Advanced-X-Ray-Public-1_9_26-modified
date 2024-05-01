@@ -84,7 +84,7 @@ public:
 		typedef CItemBase<SInfoItem> inherited;
 		
 		#define	DELTA_HEIGHT_DEFAULT	16.f
-		#define	SHIFT_POS_DEFAULT		Fvector().Set(0.f,2.f,0.f)
+		#define	SHIFT_POS_DEFAULT		Fvector().set(0.f,2.f,0.f)
 
 		Fvector			m_shift_pos;
 		float			m_delta_height;
@@ -96,7 +96,7 @@ public:
 			void	add_item		(LPCSTR text, u32 color, u32 id = static_cast<u32>(-1));
 			
 			void	draw_info		(float x, float &y);
-		IC	void	setup			(const Fvector &shift = SHIFT_POS_DEFAULT, float delta = DELTA_HEIGHT_DEFAULT) {m_shift_pos.Set(shift); m_delta_height = delta;}
+		IC	void	setup			(const Fvector &shift = SHIFT_POS_DEFAULT, float delta = DELTA_HEIGHT_DEFAULT) {m_shift_pos.set(shift); m_delta_height = delta;}
 
 		IC	Fvector &get_shift_pos	() {return m_shift_pos;}
 	};

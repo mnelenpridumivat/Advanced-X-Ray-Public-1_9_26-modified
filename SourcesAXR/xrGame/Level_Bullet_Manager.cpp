@@ -257,7 +257,7 @@ void CBulletManager::UpdateWorkload()
 			continue;
 
 		VERIFY					(j > 0);
-		RegisterEvent			(EVENT_REMOVE, FALSE, &*i, Fvector().Set(0, 0, 0), dummy, j - 1);
+		RegisterEvent			(EVENT_REMOVE, FALSE, &*i, Fvector().set(0, 0, 0), dummy, j - 1);
 	}
 }
 
@@ -289,7 +289,7 @@ static Fvector trajectory_velocity			(
 	float const	fall_down_time	= time - parabolic_time;
 //	float const fake_velocity	= start_velocity*2.f;
 	if ( fall_down_time < 0.f ) {
-		Fvector const xz_velocity	= Fvector().Set( start_velocity.x, 0.f, start_velocity.z);
+		Fvector const xz_velocity	= Fvector().set( start_velocity.x, 0.f, start_velocity.z);
 		// this could be since we could fire in different directions
 		// for example, vertically into the ground
 		if ( !fis_zero(xz_velocity.square_magnitude()) ) {
@@ -375,7 +375,7 @@ static Fvector trajectory_position			(
 	float const parabolic_time		= _max( 0.f, 1.f/air_resistance - air_resistance_epsilon);
 	float const	fall_down_time		= time - parabolic_time;
 	if ( fall_down_time < 0.f ) {
-		Fvector const xz_velocity	= Fvector().Set( start_velocity.x, 0.f, start_velocity.z);
+		Fvector const xz_velocity	= Fvector().set( start_velocity.x, 0.f, start_velocity.z);
 		if ( !fis_zero(xz_velocity.square_magnitude()) )
 			return					(
 				parabolic_position(
@@ -611,7 +611,7 @@ static void update_bullet_parabolic	(
 	Fvector xz_projection		= Fvector(data.collide_position).sub(bullet.start_position);
 	xz_projection.y				= 0;
 	float const xz_range		= xz_projection.magnitude();
-	Fvector const xz_velocity	= Fvector().Set(bullet.start_velocity.x, 0.f, bullet.start_velocity.z);
+	Fvector const xz_velocity	= Fvector().set(bullet.start_velocity.x, 0.f, bullet.start_velocity.z);
 
 	VERIFY						(air_resistance >= 0.f);
 	if ( air_resistance > 0.f ) {
@@ -653,7 +653,7 @@ static void update_bullet_gravitation	(
 	Fvector xz_projection		= Fvector(data.collide_position).sub(fall_down_position);
 	xz_projection.y				= 0;
 	float const xz_range		= xz_projection.magnitude();
-	Fvector const xz_velocity	= Fvector().Set(fall_down_velocity.x, 0.f, fall_down_velocity.z);
+	Fvector const xz_velocity	= Fvector().set(fall_down_velocity.x, 0.f, fall_down_velocity.z);
 
 	if ( !fis_zero(xz_velocity.magnitude()) ) {
 		data.collide_time		= fall_down_time + xz_range/xz_velocity.magnitude();
@@ -697,7 +697,7 @@ static void update_bullet			(
 		return;
 	}
 
-	Fvector const xz_velocity		= Fvector().Set( bullet.start_velocity.x, 0.f, bullet.start_velocity.z );
+	Fvector const xz_velocity		= Fvector().set( bullet.start_velocity.x, 0.f, bullet.start_velocity.z );
 	if ( fis_zero(xz_velocity.square_magnitude()) ) {
 		update_bullet_gravitation	(bullet, data, gravity, air_resistance, 0.f);
 		return;
@@ -830,7 +830,7 @@ static bool try_update_bullet				(SBullet& bullet, Fvector const& gravity, float
 bool CBulletManager::process_bullet			(collide::rq_results & storage, SBullet& bullet, u32 const delta_time)
 {
 	float const time_delta		= static_cast<float>(delta_time)/1000.f;
-	Fvector const gravity		= Fvector().Set( 0.f, -m_fGravityConst, 0.f);
+	Fvector const gravity		= Fvector().set( 0.f, -m_fGravityConst, 0.f);
 
 	float const	air_resistance	= (GameID() == eGameIDSingle) ? m_fAirResistanceK : bullet.air_resistance;
 	bullet.tracer_start_position= bullet.bullet_pos;
@@ -1038,7 +1038,7 @@ void CBulletManager::Render	()
 
 		Fvector const tracer			= Fvector().sub(bullet->bullet_pos, bullet->tracer_start_position);
 		float length					= tracer.magnitude();
-		Fvector const tracer_direction	= length >= EPS_L ? Fvector(tracer).mul(1.f/length) : Fvector().Set(0.f, 0.f, 1.f);
+		Fvector const tracer_direction	= length >= EPS_L ? Fvector(tracer).mul(1.f/length) : Fvector().set(0.f, 0.f, 1.f);
 
 		if (length < m_fTracerLengthMin) 
 			continue;

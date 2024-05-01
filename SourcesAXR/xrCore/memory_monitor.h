@@ -1,11 +1,6 @@
 #ifndef MEMORY_MONITOR_H
 #define MEMORY_MONITOR_H
 
-#include "xrCoreExport.h"
-#include "_types.h"
-//#include "Windows.h"
-//#include "winnt.h"
-
 #ifdef DEBUG
     #ifndef	_EDITOR
         #define	USE_MEMORY_MONITOR

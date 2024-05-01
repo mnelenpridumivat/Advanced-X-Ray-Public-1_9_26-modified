@@ -168,7 +168,7 @@ void CStateMonsterDangerMoveToHomePointAbstract::setup_substates()
 TEMPLATE_SPECIALIZATION
 Fvector &CStateMonsterDangerMoveToHomePointAbstract::get_most_danger_pos()
 {	
-	m_danger_pos.Set(0,0,0);
+	m_danger_pos.set(0,0,0);
 
 	if (object->HitMemory.is_hit()) {
 		m_danger_pos = object->HitMemory.get_last_hit_position();

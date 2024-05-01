@@ -164,9 +164,9 @@ void CAI_Rat::FreeHuntingActive()
     
 	CHECK_IF_SWITCH_TO_NEW_STATE_THIS_UPDATE(memory().item().selected(),aiRatEatCorpse);
 	
-	m_tSpawnPosition.Set	(m_tSafeSpawnPosition);
+	m_tSpawnPosition.set	(m_tSafeSpawnPosition);
 	m_fGoalChangeDelta		= m_fSafeGoalChangeDelta;
-	m_tVarGoal.Set			(m_tGoalVariation);
+	m_tVarGoal.set			(m_tGoalVariation);
 	m_fASpeed				= m_fAngleSpeed;
 	
 	if (bfCheckIfGoalChanged()) {
@@ -345,7 +345,7 @@ void CAI_Rat::AttackRun()
 	CHECK_IF_GO_TO_NEW_STATE_THIS_UPDATE((memory().enemy().selected()->Position().distance_to(Position()) <= m_fAttackDistance) && (angle_difference(movement().m_body.target.yaw, sTemp.yaw) <= m_fAttackAngle),aiRatAttackFire)
 
 		if ((Device.dwTimeGlobal - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time) {
-			m_tGoalDir.Set(memory().enemy().selected()->Position());
+			m_tGoalDir.set(memory().enemy().selected()->Position());
 		}
 
 		vfUpdateTime(m_fTimeUpdateDelta);
@@ -461,7 +461,7 @@ void CAI_Rat::Pursuit()
 	}
 
 	if ((Device.dwTimeGlobal - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
-		m_tGoalDir.Set(memory().memory(memory().enemy().selected()).m_object_params.m_position);
+		m_tGoalDir.set(memory().memory(memory().enemy().selected()).m_object_params.m_position);
 
 	vfUpdateTime(m_fTimeUpdateDelta);
 
@@ -569,14 +569,14 @@ void CAI_Rat::ReturnHome()
 
 	CHECK_IF_GO_TO_PREV_STATE(!memory().enemy().selected() || !memory().enemy().selected()->g_Alive() || Position().distance_to(m_tSafeSpawnPosition) < m_fMaxHomeRadius);
 
-	m_tSpawnPosition.Set	(m_tSafeSpawnPosition);
+	m_tSpawnPosition.set	(m_tSafeSpawnPosition);
 	m_fGoalChangeDelta		= m_fSafeGoalChangeDelta;
-	m_tVarGoal.Set			(m_tGoalVariation);
+	m_tVarGoal.set			(m_tGoalVariation);
 	m_fASpeed				= m_fAngleSpeed;
 	m_fSpeed = m_fSafeSpeed = m_fAttackSpeed;
 
 	if ((Device.dwTimeGlobal - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
-		m_tGoalDir.Set			(m_tSafeSpawnPosition);
+		m_tGoalDir.set			(m_tSafeSpawnPosition);
 
 	vfUpdateTime(m_fTimeUpdateDelta);
 
@@ -627,7 +627,7 @@ void CAI_Rat::EatCorpse()
 	memory().item().selected()->Center						(temp_position);
 
 	if ((Device.dwTimeGlobal - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
-		m_tGoalDir.Set					(temp_position);
+		m_tGoalDir.set					(temp_position);
 
 	vfUpdateTime						(m_fTimeUpdateDelta);
 

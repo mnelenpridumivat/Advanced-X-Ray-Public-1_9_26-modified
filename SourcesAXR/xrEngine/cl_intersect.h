@@ -1,7 +1,6 @@
 //---------------------------------------------------------------------------
-#pragma once
-#include "../xrCore/_matrix33.h"
-#include "../xrCore/_obb.h"
+#ifndef intersectH
+#define intersectH
 
 namespace CDB
 {
@@ -744,3 +743,5 @@ namespace CDB
 //----------------------------------------------------------------------------
 };
 
+
+#endif

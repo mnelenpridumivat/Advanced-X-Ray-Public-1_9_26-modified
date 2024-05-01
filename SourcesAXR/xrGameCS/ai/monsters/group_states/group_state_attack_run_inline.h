@@ -27,7 +27,7 @@ void CStateGroupAttackRunAbstract::initialize()
 	m_intercept.normalize_safe();
 	if ( !m_intercept.magnitude() )
 	{
-		m_intercept.Set(0.f, 0.f, 1.f);
+		m_intercept.set(0.f, 0.f, 1.f);
 	}
 
 	m_intercept_length = 3000 + rand()%4000;
@@ -62,7 +62,7 @@ void CStateGroupAttackRunAbstract::initialize()
 	m_encircle_dir.normalize_safe();
 	if ( !m_encircle_dir.magnitude() )
 	{
-		m_encircle_dir.Set(0.f, 0.f, 1.f);
+		m_encircle_dir.set(0.f, 0.f, 1.f);
 	}
 }
 
@@ -77,7 +77,7 @@ void CStateGroupAttackRunAbstract::execute()
  		m_intercept.normalize_safe();
 		if ( !magnitude(m_intercept) )
 		{
-			m_intercept.Set(0.f, 0.f, 1.f);
+			m_intercept.set(0.f, 0.f, 1.f);
 		}
  	}
  
@@ -87,7 +87,7 @@ void CStateGroupAttackRunAbstract::execute()
  	if ( Device.dwTimeGlobal > m_memorized_tick + memory_update_ms )
  	{
  		m_predicted_vel  = (enemy_pos-m_memorized_pos) * (1000.f / (Device.dwTimeGlobal-m_memorized_tick));
-		m_predicted_vel.clamp( Fvector().Set(10,10,10) );
+		m_predicted_vel.clamp( Fvector().set(10,10,10) );
 
  		m_memorized_tick = Device.dwTimeGlobal;
  		m_memorized_pos  = enemy_pos;

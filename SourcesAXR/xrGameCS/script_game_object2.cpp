@@ -155,7 +155,7 @@ void CScriptGameObject::Hit(CScriptHit *tpLuaHit)
 		HS.boneID = 		(V->LL_BoneID(tLuaHit.m_caBoneName));			//		P.w_s16		(V->LL_BoneID(tLuaHit.m_caBoneName));
 	else																	//	else
 		HS.boneID = 		(s16(0));										//		P.w_s16		(s16(0));
-	HS.p_in_bone_space = Fvector().Set(0,0,0);								//	P.w_vec3		(Fvector().set(0,0,0));
+	HS.p_in_bone_space = Fvector().set(0,0,0);								//	P.w_vec3		(Fvector().set(0,0,0));
 	HS.impulse = tLuaHit.m_fImpulse;										//	P.w_float		(tLuaHit.m_fImpulse);
 	HS.hit_type = (ALife::EHitType)(tLuaHit.m_tHitType);					//	P.w_u16			(u16(tLuaHit.m_tHitType));
 	HS.Write_Packet(P);						
@@ -221,7 +221,7 @@ Fvector CScriptGameObject::memory_position(const CScriptGameObject &lua_game_obj
 	CCustomMonster			*monster = smart_cast<CCustomMonster*>(&object());
 	if (!monster) {
 		ai().script_engine().script_log			(ScriptStorage::eLuaMessageTypeError,"CScriptEntity : cannot access class member memory!");
-		return				(Fvector().Set(0.f,0.f,0.f));
+		return				(Fvector().set(0.f,0.f,0.f));
 	}
 	else
 		return				(monster->memory().memory_position(&lua_game_object.object()));

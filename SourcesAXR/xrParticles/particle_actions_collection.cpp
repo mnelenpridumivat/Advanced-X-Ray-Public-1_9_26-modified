@@ -1398,7 +1398,7 @@ void PASource::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 	if(m_Flags.is(u32(flVertexB_tracks))){
 		for(int i = 0; i < rate; i++){
 			position.Generate	(pos);
-			size.Generate		(siz); 	if (m_Flags.is(flSingleSize)) siz.Set(siz.x,siz.x,siz.x);
+			size.Generate		(siz); 	if (m_Flags.is(flSingleSize)) siz.set(siz.x,siz.x,siz.x);
 			rot.Generate		(rt);
 			velocity.Generate	(vel);	vel += parent_vel;
 			color.Generate		(col);
@@ -1409,7 +1409,7 @@ void PASource::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 	}else{
 		for(int i = 0; i < rate; i++){
 			position.Generate	(pos);
-			size.Generate		(siz); 	if (m_Flags.is(flSingleSize)) siz.Set(siz.x,siz.x,siz.x);
+			size.Generate		(siz); 	if (m_Flags.is(flSingleSize)) siz.set(siz.x,siz.x,siz.x);
 			rot.Generate		(rt);
 			velocity.Generate	(vel);	vel += parent_vel;
 			color.Generate		(col);
@@ -1705,9 +1705,9 @@ void PATurbulenceExecuteStream( LPVOID lpvParams )
         Particle &m = effect->particles[i];
 
         pV.mad(m.pos,offset,age);
-        vX.Set(pV.x+epsilon,pV.y,pV.z);
-        vY.Set(pV.x,pV.y+epsilon,pV.z);
-        vZ.Set(pV.x,pV.y,pV.z+epsilon);
+        vX.set(pV.x+epsilon,pV.y,pV.z);
+        vY.set(pV.x,pV.y+epsilon,pV.z);
+        vZ.set(pV.x,pV.y,pV.z+epsilon);
 
         float d	=	fractalsum3(pV, frequency, octaves);
 
@@ -1791,9 +1791,9 @@ void PATurbulence::Execute(ParticleEffect *effect, const float dt, float& tm_max
 		Particle& m = effect->particles[i];
 
 		pV.mad(m.pos, offset, age);
-		vX.Set(pV.x + epsilon, pV.y, pV.z);
-		vY.Set(pV.x, pV.y + epsilon, pV.z);
-		vZ.Set(pV.x, pV.y, pV.z + epsilon);
+		vX.set(pV.x + epsilon, pV.y, pV.z);
+		vY.set(pV.x, pV.y + epsilon, pV.z);
+		vZ.set(pV.x, pV.y, pV.z + epsilon);
 
 		float d = fractalsum3(pV, frequency, octaves);
 

@@ -73,7 +73,7 @@ IC bool cmp_matrix( const Fmatrix &m0, const Fmatrix &m1, float tl, float ta )
 
 IC void angular_diff( Fvector &aw, const Fmatrix &diff, float dt )
 {
-	aw.Set( ( diff._32-diff._23 )/2.f/dt,
+	aw.set( ( diff._32-diff._23 )/2.f/dt,
 			( diff._13-diff._31 )/2.f/dt,
 			( diff._21-diff._12 )/2.f/dt
 		);

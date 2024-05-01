@@ -23,7 +23,7 @@ IC	void CDebugRenderer::draw_line	(const Fmatrix &matrix, const Fvector &vertex0
 IC	void CDebugRenderer::draw_aabb	(const Fvector &center, const float &half_radius_x, const float &half_radius_y, const float &half_radius_z, const u32 &color)
 {
 	Fvector				half_radius;
-	half_radius.Set		(half_radius_x,half_radius_y,half_radius_z);
+	half_radius.set		(half_radius_x,half_radius_y,half_radius_z);
 
 	Fmatrix				matrix;
 	matrix.translate	(center);

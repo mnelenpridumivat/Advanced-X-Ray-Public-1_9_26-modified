@@ -141,7 +141,7 @@ Fvector CMovementManager::path_position	(const float & velocity, const Fvector &
 		} else break;
 	}
 
-	target.Set			(detail().path()[current_travel_point + 1].position);
+	target.set			(detail().path()[current_travel_point + 1].position);
 	// определить направление к целевой точке
 	dir_to_target.sub	(target, dest_position);
 
@@ -149,7 +149,7 @@ Fvector CMovementManager::path_position	(const float & velocity, const Fvector &
 	dist_to_target		= dir_to_target.magnitude();
 	
 	while (dist > dist_to_target) {
-		dest_position.Set		(target);
+		dest_position.set		(target);
 		dist					-= dist_to_target;
 
 		if (current_travel_point + 1 >= detail().path().size()) {
@@ -164,7 +164,7 @@ Fvector CMovementManager::path_position	(const float & velocity, const Fvector &
 			return				(dest_position);
 		}
 
-		target.Set				(detail().path()[current_travel_point + 1].position);
+		target.set				(detail().path()[current_travel_point + 1].position);
 		dir_to_target.sub		(target, dest_position);
 		dist_to_target			= dir_to_target.magnitude();
 	}

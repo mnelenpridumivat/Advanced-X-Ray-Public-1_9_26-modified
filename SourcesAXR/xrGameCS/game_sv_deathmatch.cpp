@@ -862,8 +862,8 @@ void game_sv_Deathmatch::assign_RP(CSE_Abstract* E, game_PlayerState* ps_who)
 	R_ASSERT(m_dwLastRPoints[Team] < rp.size());
 
 	RPoint&	r	= rp[m_dwLastRPoints[Team]];
-	E->o_Position.Set	(r.P);
-	E->o_Angle.Set		(r.A);	
+	E->o_Position.set	(r.P);
+	E->o_Angle.set		(r.A);	
 };
 
 bool	game_sv_Deathmatch::IsBuyableItem			(LPCSTR	ItemName)

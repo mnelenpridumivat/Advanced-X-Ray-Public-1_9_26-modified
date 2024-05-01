@@ -47,7 +47,8 @@ DEC '99 - Many updates for the book.
         - SymbolEngine.h updated to use DBGHELP.DLL.
 ----------------------------------------------------------------------*/
 
-#pragma once
+#ifndef _BUGSLAYERUTIL_H
+#define _BUGSLAYERUTIL_H
 
 /*//////////////////////////////////////////////////////////////////////
                                 Includes
@@ -350,5 +351,7 @@ DWORD  __stdcall
                                   END
                          C++ Only Declarations
 //////////////////////////////////////////////////////////////////////*/
+
+#endif  // _BUGSLAYERUTIL_H
 
 

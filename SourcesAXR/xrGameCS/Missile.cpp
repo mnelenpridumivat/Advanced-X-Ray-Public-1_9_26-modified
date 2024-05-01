@@ -88,7 +88,7 @@ BOOL CMissile::net_Spawn(CSE_Abstract* DC)
 
 	dwXF_Frame					= 0xffffffff;
 
-	m_throw_direction.Set(0.0f, 1.0f, 0.0f);
+	m_throw_direction.set(0.0f, 1.0f, 0.0f);
 	m_throw_matrix.identity();
 
 	return l_res;
@@ -482,11 +482,11 @@ void CMissile::setup_throw_params()
 		FirePos				= XFORM().c;
 		FireDir				= XFORM().k;
 	}
-	trans.k.Set				(FireDir);
+	trans.k.set				(FireDir);
 	Fvector::generate_orthonormal_basis(trans.k, trans.j,trans.i);
-	trans.c.Set				(FirePos);
+	trans.c.set				(FirePos);
 	m_throw_matrix.set		(trans);
-	m_throw_direction.Set	(trans.k);
+	m_throw_direction.set	(trans.k);
 }
 
 void CMissile::OnMotionMark(u32 state, const motion_marks& M)
@@ -540,7 +540,7 @@ void CMissile::OnEvent(NET_Packet& P, u16 type)
 			CMissile		*missile = smart_cast<CMissile*>(Level().Objects.net_Find(id));			
 			m_fake_missile	= missile;
 			missile->H_SetParent(this);
-			missile->Position().Set(Position());
+			missile->Position().set(Position());
 			break;
 		} 
 		case GE_OWNERSHIP_REJECT : {
@@ -643,7 +643,7 @@ void  CMissile::UpdateFireDependencies_internal	()
 		}else{
 			// 3rd person
 			Fmatrix& parent			= H_Parent()->XFORM();
-			m_throw_direction.Set	(m_vThrowDir);
+			m_throw_direction.set	(m_vThrowDir);
 			parent.transform_dir	(m_throw_direction);
 		}
 	}
@@ -662,7 +662,7 @@ void CMissile::activate_physic_shell()
 	}
 
 	Fvector				l_vel;
-	l_vel.Set			(m_throw_direction);
+	l_vel.set			(m_throw_direction);
 	l_vel.normalize_safe();
 	l_vel.mul			(m_fThrowForce);
 
@@ -674,10 +674,10 @@ void CMissile::activate_physic_shell()
 		teta			= ::Random.randF(0.f,M_PI);
 		r				= ::Random.randF(2.f*M_PI,3.f*M_PI);
 		float			rxy = r*_sin(teta);
-		a_vel.Set		(rxy*_cos(fi),rxy*_sin(fi),r*_cos(teta));
+		a_vel.set		(rxy*_cos(fi),rxy*_sin(fi),r*_cos(teta));
 	}
 	else
-		a_vel.Set		(0.f,0.f,0.f);
+		a_vel.set		(0.f,0.f,0.f);
 
 	XFORM().set			(m_throw_matrix);
 

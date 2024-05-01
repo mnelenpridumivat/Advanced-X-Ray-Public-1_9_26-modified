@@ -94,16 +94,16 @@ void CAI_Crow::init		()
 {
 	st_current			= eUndef;
 	st_target			= eFlyIdle;
-	vGoalDir.Set		(10.0f*(Random.randF()-Random.randF()),10.0f*(Random.randF()-Random.randF()),10.0f*(Random.randF()-Random.randF()));
-	vCurrentDir.Set		(0,0,1);
-	vHPB.Set			(0,0,0);
+	vGoalDir.set		(10.0f*(Random.randF()-Random.randF()),10.0f*(Random.randF()-Random.randF()),10.0f*(Random.randF()-Random.randF()));
+	vCurrentDir.set		(0,0,1);
+	vHPB.set			(0,0,0);
 	fDHeading			= 0;
 	fGoalChangeDelta	= 10.f;
 	fGoalChangeTime		= 0.f;
 	fSpeed				= 5.f;
 	fASpeed				= 0.2f;
 	fMinHeight			= 40.f;
-	vVarGoal.Set		(10.f,10.f,100.f);
+	vVarGoal.set		(10.f,10.f,100.f);
 	fIdleSoundDelta		= 10.f;
 	fIdleSoundTime		= fIdleSoundDelta;
 	bPlayDeathIdle		= false;
@@ -252,7 +252,7 @@ void CAI_Crow::state_Flying		(float fdt)
 
 
 	// Update position
-	vOldPosition.Set(Position());
+	vOldPosition.set(Position());
 	XFORM().setHPB	(vHPB.x,vHPB.y,vHPB.z);
 	Position().mad	(vOldPosition,vDirection,fSpeed*fdt);
 	VERIFY2( valid_pos( Position() ), dbg_valide_pos_string(Position(),this,"state_Flying		(float fdt)") );
@@ -262,7 +262,7 @@ static Fvector vV={0,0,0};
 void CAI_Crow::state_DeathFall()
 {
 	Fvector tAcceleration	;
-	tAcceleration.Set		(0,-10.f,0);
+	tAcceleration.set		(0,-10.f,0);
 	if (m_pPhysicsShell)
 	{
 		Fvector velocity;

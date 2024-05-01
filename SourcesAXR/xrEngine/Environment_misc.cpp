@@ -175,7 +175,7 @@ CEnvAmbient::SEffect* CEnvAmbient::create_effect	(CInifile& config, LPCSTR id)
 	}
 
 	result->wind_blast_strength			= 0.f;
-	result->wind_blast_direction.Set	(0.f, 0.f, 1.f);
+	result->wind_blast_direction.set	(0.f, 0.f, 1.f);
 	result->wind_blast_in_time			= 0.f;
 	result->wind_blast_out_time			= 0.f;
 
@@ -250,12 +250,12 @@ CEnvDescriptor::CEnvDescriptor	(shared_str const& identifier) :
 	exec_time_loaded	= 0.0f;
 	
 	clouds_color.set	(1,1,1,1);
-	sky_color.Set		(1,1,1);
+	sky_color.set		(1,1,1);
 	sky_rotation		= 0.0f;
 
 	far_plane			= 400.0f;;
 
-	fog_color.Set		(1,1,1);
+	fog_color.set		(1,1,1);
 	fog_density			= 0.0f;
 	fog_distance		= 400.0f;
 	lowland_fog_height	= 0.0f;
@@ -264,7 +264,7 @@ CEnvDescriptor::CEnvDescriptor	(shared_str const& identifier) :
 	color_grading.set	(0.0f, 0.0f, 0.0f, 0.0f);
 
 	rain_density		= 0.0f;
-	rain_color.Set		(0,0,0);
+	rain_color.set		(0,0,0);
 
 	bolt_period			= 0.0f;
 	bolt_duration		= 0.0f;
@@ -275,10 +275,10 @@ CEnvDescriptor::CEnvDescriptor	(shared_str const& identifier) :
 	clouds_velocity_0	= 0.0f;
 	clouds_velocity_1	= 0.0f;
     
-	ambient.Set			(0,0,0);
+	ambient.set			(0,0,0);
 	hemi_color.set		(1,1,1,1);
-	sun_color.Set		(1,1,1);
-	sun_dir.Set			(0,-1,0);
+	sun_color.set		(1,1,1);
+	sun_dir.set			(0,-1,0);
 
 	m_fSunShaftsIntensity = 0;
 	m_fWaterIntensity = 1;
@@ -287,7 +287,7 @@ CEnvDescriptor::CEnvDescriptor	(shared_str const& identifier) :
 	m_fTreeAmplitudeIntensity = 0.01;
 #endif
 
-	dof_value.Set(-1.25f, 1.4f, 10000.f);
+	dof_value.set(-1.25f, 1.4f, 10000.f);
 	dof_kernel			= 5.0f;
 	dof_sky				= 30.0f;
 
@@ -363,7 +363,7 @@ void CEnvDescriptor::load	(CEnvironment& environment, CInifile& config)
 		m_fTreeAmplitudeIntensity = config.r_float(m_identifier.c_str(), "tree_amplitude_intensity");
 #endif
 
-	dof_value = config.line_exist(m_identifier.c_str(), "dof") ? config.r_fvector3(m_identifier.c_str(), "dof") : Fvector3().Set(-1.25f, 1.4f, 10000.f);
+	dof_value = config.line_exist(m_identifier.c_str(), "dof") ? config.r_fvector3(m_identifier.c_str(), "dof") : Fvector3().set(-1.25f, 1.4f, 10000.f);
 	dof_kernel = config.line_exist(m_identifier.c_str(), "dof_kernel") ? config.r_float(m_identifier.c_str(), "dof_kernel") : 7.0f;
 	dof_sky = config.line_exist(m_identifier.c_str(), "dof_sky") ? config.r_float(m_identifier.c_str(), "dof_sky") : 30.0f;
 

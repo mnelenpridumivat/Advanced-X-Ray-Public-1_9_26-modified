@@ -56,7 +56,7 @@ int CObjectSpace::GetNearest		( xr_vector<ISpatial*>& q_spatial, xr_vector<CObje
 	// Query objects
 	q_nearest.clear_not_free		( );
 	Fsphere				Q;	Q.set	(point,range);
-	Fvector				B;	B.Set	(range,range,range);
+	Fvector				B;	B.set	(range,range,range);
 	g_SpatialSpace->q_box(q_spatial,0,STYPE_COLLIDEABLE,point,B);
 
 	// Iterate

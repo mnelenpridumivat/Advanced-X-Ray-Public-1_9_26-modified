@@ -9,7 +9,7 @@ struct SPuddle
 	float		radius;
 	Fmatrix		xform;
 
-	SPuddle() {P.Set(0,0,0); max_depth = 0; radius = 30; xform.identity();};
+	SPuddle() {P.set(0,0,0); max_depth = 0; radius = 30; xform.identity();};
 	void		make_xform();
 };
 

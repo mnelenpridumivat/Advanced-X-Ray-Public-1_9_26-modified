@@ -141,10 +141,10 @@ ICF BOOL test_point( const Fvector	&pt, xrXRC& xrc,  const Fmatrix33& mat, const
 IC bool test_point( const Fvector	&pt, const Fmatrix33& mat, const Fvector& ext, CActor* actor  )
 {
 	Fmatrix fmat = Fidentity;
-	fmat.i.Set( mat.i );
-	fmat.j.Set( mat.j );
-	fmat.k.Set( mat.k );
-	fmat.c.Set( pt );
+	fmat.i.set( mat.i );
+	fmat.j.set( mat.j );
+	fmat.k.set( mat.k );
+	fmat.c.set( pt );
 	//IPhysicsShellHolder * ve = smart_cast<IPhysicsShellHolder*> ( Level().CurrentEntity() ) ;
 	VERIFY( actor );
 	return test_camera_box( ext, fmat, actor );
@@ -193,7 +193,7 @@ IC void get_q_box( Fbox &xf,  float c, float alpha, float radius )
 {
 	Fvector src_pt,		tgt_pt;
 	calc_point			(tgt_pt,radius,0,alpha);
-	src_pt.Set			(0,tgt_pt.y,0);
+	src_pt.set			(0,tgt_pt.y,0);
 	xf.invalidate		();
 	xf.modify			(src_pt);
 	xf.modify			(tgt_pt);
@@ -217,10 +217,10 @@ IC void get_cam_oob(  Fvector &bd, Fmatrix	&mat, const Fmatrix &xform, const SRo
 	Fvector		bc;
 	get_cam_oob( bc, bd, mat3, xform, r_torso, alpha, radius, c );
 	mat.set( Fidentity );
-	mat.i.Set( mat3.i );
-	mat.j.Set( mat3.j );
-	mat.k.Set( mat3.k );
-	mat.c.Set( bc );
+	mat.i.set( mat3.i );
+	mat.j.set( mat3.j );
+	mat.k.set( mat3.k );
+	mat.c.set( bc );
 
 }
 void	CActor::cam_Lookout	( const Fmatrix &xform, float camera_height )

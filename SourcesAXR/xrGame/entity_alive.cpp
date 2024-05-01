@@ -425,7 +425,7 @@ void CEntityAlive::PlaceBloodWallmark(const Fvector& dir, const Fvector& start_p
 
 			//вычислить точку попадания
 			Fvector end_point;
-			end_point.Set(0,0,0);
+			end_point.set(0,0,0);
 			end_point.mad(start_pos, dir, result.range);
 
 			
@@ -465,14 +465,14 @@ void CEntityAlive::StartFireParticles(CWound* pWound)
 		{
 			CParticlesPlayer::StartParticles(pWound->GetParticleName(), 
 				pWound->GetParticleBoneNum(),
-				Fvector().Set(0,1,0),
+				Fvector().set(0,1,0),
 				ID(), 
 				static_cast<u32>(float(m_dwMinBurnTime) * ::Random.randF(0.5f, 1.5f)), false);
 		}
 		else
 		{
 			CParticlesPlayer::StartParticles(pWound->GetParticleName(), 
-				Fvector().Set(0,1,0),
+				Fvector().set(0,1,0),
 				ID(), 
 				static_cast<u32>(float(m_dwMinBurnTime) * ::Random.randF(0.5f, 1.5f)), false);
 		}
@@ -577,9 +577,9 @@ void CEntityAlive::UpdateBloodDrops()
 				Fvector pos_distort;
 				pos_distort.random_dir();
 				pos_distort.mul(0.15f);
-				CParticlesPlayer::GetBonePos(this, pWound->GetBoneNum(), Fvector().Set(0,0,0), pos);
+				CParticlesPlayer::GetBonePos(this, pWound->GetBoneNum(), Fvector().set(0,0,0), pos);
 				pos.add(pos_distort);
-				PlaceBloodWallmark(Fvector().Set(0.f, -1.f, 0.f),
+				PlaceBloodWallmark(Fvector().set(0.f, -1.f, 0.f),
 								pos, m_fBloodMarkDistance, 
 								m_fBloodDropSize, &**m_pBloodDropsVector);
 			}
@@ -896,7 +896,7 @@ Fvector	CEntityAlive::get_new_local_point_on_mesh	( u16& bone_id ) const
 	VERIFY2								( i != e, make_string("m_hit_bone_surface_areas[%d]", m_hit_bone_surface_areas.size()) );
 	SBoneShape const& shape				= kinematics->LL_GetData(i->first).shape;
 	bone_id								= i->first;
-	Fvector result						= Fvector().Set( flt_max, flt_max, flt_max );
+	Fvector result						= Fvector().set( flt_max, flt_max, flt_max );
 	switch ( shape.type ) {
 		case SBoneShape::stBox : {
 			Fmatrix	transform;
@@ -907,11 +907,11 @@ Fvector	CEntityAlive::get_new_local_point_on_mesh	( u16& bone_id ) const
 			Fvector random				= { (random_value & 1) ? -1.f : 1.f, ::Random.randF(2.f) - 1.f, ::Random.randF(2.f) - 1.f };
 			random.normalize			( );
 			if ( random_value < 2 )
-				direction				= Fvector().Set( random.x, random.y, random.z );
+				direction				= Fvector().set( random.x, random.y, random.z );
 			else if ( random_value < 4 )
-				direction				= Fvector().Set( random.z, random.x, random.y );
+				direction				= Fvector().set( random.z, random.x, random.y );
 			else
-				direction				= Fvector().Set( random.y, random.z, random.x );
+				direction				= Fvector().set( random.y, random.z, random.x );
 
 			transform.transform_tiny	( result, direction );
 			break;
@@ -928,12 +928,12 @@ Fvector	CEntityAlive::get_new_local_point_on_mesh	( u16& bone_id ) const
 			float const x				= shape.cylinder.m_direction.x;
 			float const y				= shape.cylinder.m_direction.y;
 			float const z				= shape.cylinder.m_direction.z;
-			Fvector normal				= Fvector().Set( y-z, z-x, x-y );
+			Fvector normal				= Fvector().set( y-z, z-x, x-y );
 
 			Fmatrix rotation			= Fmatrix().rotation( shape.cylinder.m_direction, normal );
 			Fmatrix rotation_y			= Fmatrix().rotateY( angle );
 			Fmatrix const transform		= Fmatrix().mul_43( rotation, rotation_y );
-			transform.transform_dir		( normal, Fvector().Set(0.f, 0.f, 1.f) );
+			transform.transform_dir		( normal, Fvector().set(0.f, 0.f, 1.f) );
 
 			float height, radius;
 			if ( random_value < shape.cylinder.m_height ) {

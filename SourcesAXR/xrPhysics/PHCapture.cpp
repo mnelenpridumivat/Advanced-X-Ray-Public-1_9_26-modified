@@ -151,7 +151,7 @@ void CPHCapture::PullingUpdate()
 	Fvector dir;
 	Fvector capture_bone_position;
 	//CObject* object=smart_cast<CObject*>(m_character->PhysicsRefObject());
-	capture_bone_position.Set(m_capture_bone->mTransform.c);
+	capture_bone_position.set(m_capture_bone->mTransform.c);
 	m_character->PhysicsRefObject()->ObjectXFORM().transform_tiny(capture_bone_position);
 	m_taget_element->GetGlobalPositionDynamic(&dir);
 	dir.sub(capture_bone_position,dir);
@@ -272,8 +272,8 @@ void CPHCapture::PullingUpdate()
 
 		//dJointSetAMotorParam(m_ajoint,dParamLoStop ,0.f);
 		//dJointSetAMotorParam(m_ajoint,dParamHiStop ,0.f);	
-		m_taget_element->set_LinearVel ( Fvector().Set( 0 ,0, 0 ) );
-		m_taget_element->set_AngularVel( Fvector().Set( 0 ,0, 0 ) );
+		m_taget_element->set_LinearVel ( Fvector().set( 0 ,0, 0 ) );
+		m_taget_element->set_AngularVel( Fvector().set( 0 ,0, 0 ) );
 
 
 		m_taget_element->set_DynamicLimits();
@@ -310,7 +310,7 @@ void CPHCapture::CapturedUpdate()
 
 	Fvector capture_bone_position;
 	//CObject* object=smart_cast<CObject*>(m_character->PhysicsRefObject());
-	capture_bone_position.Set(m_capture_bone->mTransform.c);
+	capture_bone_position.set(m_capture_bone->mTransform.c);
 	m_character->PhysicsRefObject()->ObjectXFORM().transform_tiny(capture_bone_position);
 	dBodySetPosition(m_body,capture_bone_position.x,capture_bone_position.y,capture_bone_position.z);
 }

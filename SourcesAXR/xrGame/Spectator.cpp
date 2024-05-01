@@ -405,12 +405,12 @@ void CSpectator::cam_Update	(CActor* A)
 			Fmatrix tmp; tmp.identity();
 			
 			Fvector point, point1, dangle;
-			point.Set	(0.f,1.6f,0.f);
-			point1.Set	(0.f,1.6f,0.f);			
+			point.set	(0.f,1.6f,0.f);
+			point1.set	(0.f,1.6f,0.f);			
 			M.transform_tiny		(point);
 			tmp.translate_over(point);
 			tmp.transform_tiny		(point1);
-			if (!A->g_Alive()) point.Set(point1);
+			if (!A->g_Alive()) point.set(point1);
 			cam->Update				(point,dangle);
 			}break;
 		}
@@ -441,11 +441,11 @@ void CSpectator::cam_Update	(CActor* A)
 		}
 
 		Fvector point, dangle;
-		point.Set				(0.f,1.6f,0.f);
+		point.set				(0.f,1.6f,0.f);
 		XFORM().transform_tiny	(point);
 
 		// apply shift
-		dangle.Set					(0,0,0);
+		dangle.set					(0,0,0);
 		
 		cam->Update					(point,dangle);
 //		cam->vPosition.set(point0);
@@ -491,7 +491,7 @@ BOOL			CSpectator::net_Spawn				( CSE_Abstract*	DC )
 	look_idx				= 0;
 
 	cameras[cam_active]->Set(-E->o_Angle.y, -E->o_Angle.x, tmp_roll);// set's camera orientation
-	cameras[cam_active]->vPosition.Set(E->o_Position);
+	cameras[cam_active]->vPosition.set(E->o_Position);
 
 	if (OnServer())
 	{

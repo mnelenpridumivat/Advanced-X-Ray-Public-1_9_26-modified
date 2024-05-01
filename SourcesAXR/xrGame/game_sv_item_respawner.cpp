@@ -273,8 +273,8 @@ void item_respawn_manager::add_new_rpoint(shared_str profile_sect, RPoint const 
 				iter_rsect->count_of_ammo);
 		if (new_item.item_object)
 		{
-			new_item.item_object->o_Position.Set(point.P);
-			new_item.item_object->o_Angle.Set(point.A);
+			new_item.item_object->o_Position.set(point.P);
+			new_item.item_object->o_Angle.set(point.A);
 			m_respawns.push_back(new_item);
 		} else
 		{

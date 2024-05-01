@@ -36,11 +36,11 @@ void CControlPathBuilder::reinit()
 	inherited_com::reinit		();
 
 	m_data.use_dest_orientation		= false;
-	m_data.dest_orientation.Set		(0.f,0.f,0.f);
+	m_data.dest_orientation.set		(0.f,0.f,0.f);
 
 	m_data.try_min_time				= true;
 
-	m_data.target_position.Set		(0.f,0.f,0.f);
+	m_data.target_position.set		(0.f,0.f,0.f);
 	m_data.target_node				= static_cast<u32>(-1);
 
 	m_data.enable					= false;
@@ -210,7 +210,7 @@ bool CControlPathBuilder::valid_and_accessible(Fvector &pos, u32 node)
 {
 	if (!valid_destination(pos, node) || !accessible(node))	return false;
 
-	fix_position(Fvector().Set(pos),node,pos);
+	fix_position(Fvector().set(pos),node,pos);
 	return true;
 }
 
@@ -221,11 +221,11 @@ void CControlPathBuilder::fix_position(const Fvector &pos, u32 node, Fvector &re
 	VERIFY(accessible(node));
 	VERIFY(ai().level_graph().inside(node, pos));
 
-	res_pos.Set	(pos);
+	res_pos.set	(pos);
 	res_pos.y	= ai().level_graph().vertex_plane_y(node,res_pos.x,res_pos.z);
 
 	if (!accessible(res_pos)) {
-		u32	level_vertex_id = restrictions().accessible_nearest(Fvector().Set(res_pos),res_pos);
+		u32	level_vertex_id = restrictions().accessible_nearest(Fvector().set(res_pos),res_pos);
 		
 #ifdef DEBUG		
 		if (level_vertex_id != node) {

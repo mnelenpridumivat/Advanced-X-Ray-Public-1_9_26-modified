@@ -36,8 +36,8 @@ struct SStateDataMoveToPoint {
 	SStateDataAction	action;
 
 	SStateDataMoveToPoint() {
-		point.Set			(0.f,0.f,0.f);
-		target_direction.Set(0.f,0.f,0.f);
+		point.set			(0.f,0.f,0.f);
+		target_direction.set(0.f,0.f,0.f);
 		vertex				= u32(-1);
 		accelerated			= false;
 		completion_dist		= 0.f;
@@ -75,7 +75,7 @@ struct SStateHideFromPoint {
 	SStateDataAction	action;
 
 	SStateHideFromPoint() {
-		point.Set			(0.f,0.f,0.f);
+		point.set			(0.f,0.f,0.f);
 		
 		accelerated			= false;
 		
@@ -96,7 +96,7 @@ struct SStateDataLookToPoint {
 	SStateDataAction	action;
 
 	SStateDataLookToPoint() {
-		point.Set		(0.f,0.f,0.f);
+		point.set		(0.f,0.f,0.f);
 		face_delay		= 0;
 	}
 };
@@ -117,7 +117,7 @@ struct SStateDataMoveAroundPoint {
 	SStateDataAction	action;
 
 	SStateDataMoveAroundPoint() {
-		point.Set			(0.f,0.f,0.f);
+		point.set			(0.f,0.f,0.f);
 		vertex				= u32(-1);
 		accelerated			= false;
 		radius				= 10.f;
@@ -131,7 +131,7 @@ struct SStateDataActionLook : public SStateDataAction {
 	Fvector		point;			
 
 	SStateDataActionLook() {
-		point.Set	(0.f,0.f,0.f);
+		point.set	(0.f,0.f,0.f);
 	}
 };
 

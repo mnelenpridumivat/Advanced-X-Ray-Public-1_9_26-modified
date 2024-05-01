@@ -469,7 +469,7 @@ void CCharacterPhysicsSupport::KillHit( SHit &H )
 	m_character_shell_control.TestForWounded( m_EntityAlife.XFORM( ), m_EntityAlife.Visual( )->dcast_PKinematics( ) );
 	Fmatrix prev_pose; prev_pose.set( mXFORM );
 
-	Fvector start;start.Set( m_EntityAlife.Position( ) );
+	Fvector start;start.set( m_EntityAlife.Position( ) );
 	Fvector velocity;
 	Fvector death_position;
 
@@ -751,7 +751,7 @@ bool CCharacterPhysicsSupport::DoCharacterShellCollide()
 bool CCharacterPhysicsSupport::CollisionCorrectObjPos(const Fvector& start_from,bool	character_create/*=false*/)
 {
 	//Fvector shift;shift.sub( start_from, m_EntityAlife.Position() );
-	Fvector shift;shift.Set(0,0,0);
+	Fvector shift;shift.set(0,0,0);
 	Fbox box;
 	if(character_create)
 		box.set( movement()->Box() );
@@ -776,7 +776,7 @@ bool CCharacterPhysicsSupport::CollisionCorrectObjPos(const Fvector& start_from,
 	bool not_collide_characters =	!DoCharacterShellCollide() && !character_create;
 	bool set_rotation =				!character_create;
 	
-	Fvector activation_res = Fvector().Set(0,0,0);
+	Fvector activation_res = Fvector().set(0,0,0);
 ////////////////
 
 	bool ret = ActivateShapeCharacterPhysicsSupport( activation_res, vbox, activation_pos, mXFORM, not_collide_characters, set_rotation, &m_EntityAlife );
@@ -889,14 +889,14 @@ BOOL dbg_draw_ragdoll_spawn = FALSE;
 void CCharacterPhysicsSupport::ActivateShell			( CObject* who )
 {
 	R_ASSERT( _valid(m_EntityAlife.Position( )) );
-	Fvector start;start.Set( m_EntityAlife.Position( ) );
+	Fvector start;start.set( m_EntityAlife.Position( ) );
 	Fvector velocity;
 	Fvector death_position;
 	CreateShell( who, death_position, velocity );
 	EndActivateFreeShell( who, start ,death_position, velocity );
 	VERIFY( m_pPhysicsShell );
 	m_pPhysicsShell->Enable();
-	m_pPhysicsShell->set_LinearVel( Fvector().Set(0,-1,0) );
+	m_pPhysicsShell->set_LinearVel( Fvector().set(0,-1,0) );
 }
 //void	CCharacterPhysicsSupport::	on_active_weapon_shell_activate()
 //{
@@ -1154,7 +1154,7 @@ void	CCharacterPhysicsSupport::	CreateShell						( CObject* who, Fvector& dp, Fv
 	
 
 	if( !m_PhysicMovementControl->CharacterExist( ) )
-		dp.Set( m_EntityAlife.Position( ) );
+		dp.set( m_EntityAlife.Position( ) );
 	else m_PhysicMovementControl->GetDeathPosition( dp );
 	m_PhysicMovementControl->DestroyCharacter( );
 
@@ -1391,7 +1391,7 @@ void	CCharacterPhysicsSupport::FlyTo(const	Fvector &disp)
 		void*	cd=m_pPhysicsShell->get_CallbackData();
 		m_pPhysicsShell->set_CallbackData(m_pPhysicsShell->PIsland());
 		m_pPhysicsShell->UnFreeze();
-		Fvector vel;vel.Set(disp);
+		Fvector vel;vel.set(disp);
 		const	u16	steps_num=10;
 		const	float	fsteps_num=steps_num;
 		vel.mul(1.f/fsteps_num/fixed_step);

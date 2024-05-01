@@ -237,8 +237,8 @@ BOOL CDemoPlay::ProcessCam(SCamEffectorInfo& info)
 		fLifeTime				-= Device.fTimeDelta;
 		if (m_MParam->bWrapped)	{ stat_Stop(); stat_Start(); }
 		mRotate.setXYZi			(R.x,R.y,R.z);
-		info.d.Set				(mRotate.k);
-		info.n.Set				(mRotate.j);
+		info.d.set				(mRotate.k);
+		info.n.set				(mRotate.j);
 	}
 	else
 	{
@@ -287,9 +287,9 @@ BOOL CDemoPlay::ProcessCam(SCamEffectorInfo& info)
 		
 		Fmatrix mInvCamera;
 		mInvCamera.invert(Device.mView);
-		info.n.Set( mInvCamera._21, mInvCamera._22, mInvCamera._23 );
-		info.d.Set( mInvCamera._31, mInvCamera._32, mInvCamera._33 );
-		info.p.Set( mInvCamera._41, mInvCamera._42, mInvCamera._43 );
+		info.n.set( mInvCamera._21, mInvCamera._22, mInvCamera._23 );
+		info.d.set( mInvCamera._31, mInvCamera._32, mInvCamera._33 );
+		info.p.set( mInvCamera._41, mInvCamera._42, mInvCamera._43 );
 		
 		fLifeTime-=Device.fTimeDelta;
 	}

@@ -1,3 +1,5 @@
+#ifndef	xrApi_included
+#define xrApi_included
 #pragma once
 
 #ifdef XRAPI_EXPORTS
@@ -54,3 +56,5 @@ extern XRAPI_API int nxrAPI;
 
 XRAPI_API int fnxrAPI(void);
 */
+
+#endif	//	xrApi_included

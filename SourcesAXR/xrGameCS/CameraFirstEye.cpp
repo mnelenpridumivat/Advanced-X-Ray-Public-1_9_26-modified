@@ -69,7 +69,7 @@ void CCameraFirstEye::UpdateLookat()
 
 void CCameraFirstEye::Update(Fvector& point, Fvector& noise_dangle)
 {
-	vPosition.Set	(point);
+	vPosition.set	(point);
 
 	UpdateLookat	();
 
@@ -88,8 +88,8 @@ void CCameraFirstEye::Update(Fvector& point, Fvector& noise_dangle)
 	mR.transpose	();
 	mR.mulB_43		(R);
 	
-	vDirection.Set	(mR.k);
-	vNormal.Set		(mR.j);
+	vDirection.set	(mR.k);
+	vNormal.set		(mR.j);
 
 	if (m_Flags.is(flRelativeLink))	
 	{

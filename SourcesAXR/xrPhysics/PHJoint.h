@@ -35,8 +35,8 @@ class CPHJoint:
 			float					velocity						;						//velocity to achieve
 			Fvector					direction						;						//axis direction
 		IC 	void 					set_limits						(float h, float l)												{high=h; low=l			;}
-		IC 	void 					set_direction					(const Fvector& v)												{direction.Set(v)		;}
-		IC 	void 					set_direction					(const float x,const float y,const float z)						{direction.Set(x,y,z)	;}
+		IC 	void 					set_direction					(const Fvector& v)												{direction.set(v)		;}
+		IC 	void 					set_direction					(const float x,const float y,const float z)						{direction.set(x,y,z)	;}
 		IC 	void 					set_param						(const float e,const float c)											{erp=e;cfm=c	;}	
 		   	void					set_sd_factors					(float sf,float df,enumType jt)															;
 									SPHAxis							();
@@ -138,11 +138,11 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 IC void own_axis(const Fmatrix& m,Fvector& axis){
-	if(m._11==1.f) {axis.Set(1.f,0.f,0.f); return;}
+	if(m._11==1.f) {axis.set(1.f,0.f,0.f); return;}
 	float k=m._13*m._21-m._11*m._23+m._23;
 
 	if(k==0.f){
-		if(m._13==0.f) {axis.Set(0.f,0.f,1.f);return;}
+		if(m._13==0.f) {axis.set(0.f,0.f,1.f);return;}
 		float k1=m._13/(1.f-m._11);
 		axis.z=_sqrt(1.f/(1.f+k1*k1));
 		axis.x=axis.z*k1;
@@ -164,11 +164,11 @@ IC void own_axis_angle(const Fmatrix& m,Fvector& axis,float& angle){
 	own_axis(m,axis);
 	Fvector ort1,ort2;
 	if(!(axis.z==0.f&&axis.y==0.f)){
-		ort1.Set(0.f,-axis.z,axis.y);
+		ort1.set(0.f,-axis.z,axis.y);
 		ort2.crossproduct(axis,ort1);
 	}
 	else{
-		ort1.Set(0.f,1.f,0.f);
+		ort1.set(0.f,1.f,0.f);
 		ort2.crossproduct(axis,ort1);
 	}
 	ort1.normalize();
@@ -188,11 +188,11 @@ IC void axis_angleB(const Fmatrix& m, const Fvector& axis,float& angle){
 
 	Fvector ort1,ort2;
 	if(!(fis_zero(axis.z)&&fis_zero(axis.y))){
-		ort1.Set(0.f,-axis.z,axis.y);
+		ort1.set(0.f,-axis.z,axis.y);
 		ort2.crossproduct(axis,ort1);
 	}
 	else{
-		ort1.Set(0.f,1.f,0.f);
+		ort1.set(0.f,1.f,0.f);
 		ort2.crossproduct(axis,ort1);
 	}
 	ort1.normalize();
@@ -204,7 +204,7 @@ IC void axis_angleB(const Fmatrix& m, const Fvector& axis,float& angle){
 	pr1=ort1.dotproduct(ort1_t);
 	pr2=ort2.dotproduct(ort1_t);
 	if(pr1==0.f&&pr2==0.f){angle=0.f;return;}
-	ort_r.Set(pr1*ort1.x+pr2*ort2.x,
+	ort_r.set(pr1*ort1.x+pr2*ort2.x,
 		pr1*ort1.y+pr2*ort2.y,
 		pr1*ort1.z+pr2*ort2.z);
 
@@ -222,11 +222,11 @@ IC void axis_angleA(const Fmatrix& m, const Fvector& axis,float& angle){
 	Fvector ort1,ort2,axis_t;
 	m.transform_dir(axis_t,axis);
 	if(!(fis_zero(axis_t.z)&&fis_zero(axis_t.y))){
-		ort1.Set(0.f,-axis_t.z,axis_t.y);
+		ort1.set(0.f,-axis_t.z,axis_t.y);
 		ort2.crossproduct(axis_t,ort1);
 	}
 	else{
-		ort1.Set(0.f,1.f,0.f);
+		ort1.set(0.f,1.f,0.f);
 		ort2.crossproduct(axis_t,ort1);
 	}
 	ort1.normalize();
@@ -238,7 +238,7 @@ IC void axis_angleA(const Fmatrix& m, const Fvector& axis,float& angle){
 	pr1=ort1.dotproduct(ort1_t);
 	pr2=ort2.dotproduct(ort1_t);
 	if(pr1==0.f&&pr2==0.f){angle=0.f;return;}
-	ort_r.Set(pr1*ort1.x+pr2*ort2.x,
+	ort_r.set(pr1*ort1.x+pr2*ort2.x,
 		pr1*ort1.y+pr2*ort2.y,
 		pr1*ort1.z+pr2*ort2.z);
 

@@ -1,14 +1,5 @@
-#pragma once
-
-//#include "stdlib.h"
-
-#ifdef min
-#undef min
-#endif
-
-#ifdef max
-#undef max
-#endif
+#ifndef TYPES_H
+#define TYPES_H
 
 // Type defs
 typedef	signed		char	s8;
@@ -37,8 +28,6 @@ typedef const char*			pcstr;
 	#define TRUE			true
 	#define FALSE			false
 #endif
-
-#define min(a,b) nonsense
 
 // Type limits
 #define type_max(T)		(std::numeric_limits<T>::max())
@@ -75,6 +64,6 @@ typedef	char	string1024	[1024];
 typedef	char	string2048	[2048];
 typedef	char	string4096	[4096];
 
-#define _MAX_PATH 260
-
 typedef	char	string_path	[2*_MAX_PATH];
+
+#endif

@@ -310,7 +310,7 @@ float		ps_r2_lt_smooth				= 1.f;				// 1.f
 float		ps_r2_slight_fade			= 0.5f;				// 1.f
 
 //	x - min (0), y - focus (1.4), z - max (100)
-Fvector3	ps_r2_dof					= Fvector3().Set(-1.25f, 1.4f, 10000.f);
+Fvector3	ps_r2_dof					= Fvector3().set(-1.25f, 1.4f, 10000.f);
 float		ps_r2_dof_sky				= 30;				//	distance to sky
 float		ps_r2_dof_kernel_size		= 5.0f;						//	7.0f
 
@@ -398,7 +398,7 @@ Flags32	ps_r4_shaders_flags = { R4FLAG_SSS_ADDON | R4FLAG_ES_ADDON };
 float ps_r2_img_exposure = 1.0f;
 float ps_r2_img_gamma = 1.0f;
 float ps_r2_img_saturation = 1.0f;
-Fvector ps_r2_img_cg = READ_IF_EXISTS(pAdvancedSettings, r_fvector3, "start_settings", "color_grading_es", Fvector3().Set(0.5f, 0.5f, 0.5f));
+Fvector ps_r2_img_cg = READ_IF_EXISTS(pAdvancedSettings, r_fvector3, "start_settings", "color_grading_es", Fvector3().set(0.5f, 0.5f, 0.5f));
 
 // Ascii1457's Screen Space Shaders
 extern ENGINE_API Fvector3 ps_ssfx_shadow_cascades;
@@ -1034,8 +1034,8 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r__d_tree_w_rot",		&ps_r__Tree_w_rot,			.01f,	100.f	);
 	CMD4(CCC_Float,		"r__d_tree_w_speed",	&ps_r__Tree_w_speed,		1.0f,	10.f	);
 
-	tw_min.Set			(EPS,EPS,EPS);
-	tw_max.Set			(2,2,2);
+	tw_min.set			(EPS,EPS,EPS);
+	tw_max.set			(2,2,2);
 	CMD4(CCC_Vector3,	"r__d_tree_wave",		&ps_r__Tree_Wave,			tw_min, tw_max	);
 #endif // DEBUG
 
@@ -1191,14 +1191,14 @@ void		xrRender_initconsole	()
 
 	CMD4(CCC_Float,		"r2_slight_fade",		&ps_r2_slight_fade,			.2f,	1.f		);
 
-	tw_min.Set			(0,0,0);	tw_max.Set	(1,1,1);
+	tw_min.set			(0,0,0);	tw_max.set	(1,1,1);
 	CMD4(CCC_Vector3,	"r2_aa_break",			&ps_r2_aa_barier,			tw_min, tw_max	);
 
-	tw_min.Set			(0,0,0);	tw_max.Set	(1,1,1);
+	tw_min.set			(0,0,0);	tw_max.set	(1,1,1);
 	CMD4(CCC_Vector3,	"r2_aa_weight",			&ps_r2_aa_weight,			tw_min, tw_max	);
 
 	//	Igor: Depth of field
-	tw_min.Set			(-10000,-10000,0);	tw_max.Set	(10000,10000,10000);
+	tw_min.set			(-10000,-10000,0);	tw_max.set	(10000,10000,10000);
 	CMD4( CCC_Dof,		"r2_dof",		&ps_r2_dof, tw_min, tw_max);
 	CMD4( CCC_DofNear,	"r2_dof_near",	&ps_r2_dof.x, tw_min.x, tw_max.x);
 	CMD4( CCC_DofFocus,	"r2_dof_focus", &ps_r2_dof.y, tw_min.y, tw_max.y);
@@ -1344,7 +1344,7 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,			"ssfx_wpn_dof_2",				&ps_ssfx_wpn_dof_2,			0.0f, 1.0f);
     CMD4(CCC_Vector4,		"ssfx_grass_shadows",			&ps_ssfx_grass_shadows,		Fvector4().set(0, 0, 0, 0), Fvector4().set(3, 1, 100, 100));
 	CMD4(CCC_Float,			"r_grass_shadows_dintance",		&ps_ssfx_grass_shadows.y,	0.01f, 1.0f);
-    CMD4(CCC_ssfx_cascades, "ssfx_shadow_cascades",			&ps_ssfx_shadow_cascades,	Fvector3().Set(1.0f, 1.0f, 1.0f), Fvector3().Set(300, 300, 300));
+    CMD4(CCC_ssfx_cascades, "ssfx_shadow_cascades",			&ps_ssfx_shadow_cascades,	Fvector3().set(1.0f, 1.0f, 1.0f), Fvector3().set(300, 300, 300));
     CMD4(CCC_Vector4,		"ssfx_grass_interactive",		&ps_ssfx_grass_interactive, Fvector4().set(0, 0, 0, 0), Fvector4().set(1, 15, 5000, 1));
     CMD4(CCC_Vector4,		"ssfx_int_grass_params_1",		&ps_ssfx_int_grass_params_1, Fvector4().set(0, 0, 0, 0), Fvector4().set(5, 5, 5, 60));
     CMD4(CCC_Vector4,		"ssfx_int_grass_params_2",		&ps_ssfx_int_grass_params_2, Fvector4().set(0, 0, 0, 0), Fvector4().set(5, 20, 1, 5));
@@ -1360,12 +1360,12 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Vector4,		"ssfx_wetsurfaces_2",			&ps_ssfx_wetsurfaces_2,		Fvector4().set(0.01, 0.01, 0.01, 0.01), Fvector4().set(2.0, 2.0, 2.0, 2.0));
 	CMD4(CCC_Integer,		"ssfx_is_underground",			&ps_ssfx_is_underground,	0, 1);
 	CMD4(CCC_Integer,		"ssfx_gloss_method",			&ps_ssfx_gloss_method,		0, 1);
-	CMD4(CCC_Vector3,		"ssfx_gloss_minmax",			&ps_ssfx_gloss_minmax,		Fvector3().Set(0, 0, 0), Fvector3().Set(1.0, 1.0, 1.0));
+	CMD4(CCC_Vector3,		"ssfx_gloss_minmax",			&ps_ssfx_gloss_minmax,		Fvector3().set(0, 0, 0), Fvector3().set(1.0, 1.0, 1.0));
 	CMD4(CCC_Float,			"ssfx_gloss_factor",			&ps_ssfx_gloss_factor,		0.0f, 1.0f);
 	CMD4(CCC_Vector4,		"ssfx_lightsetup_1",			&ps_ssfx_lightsetup_1,		Fvector4().set(0, 0, 0, 0), Fvector4().set(1.0, 1.0, 1.0, 1.0));
-	CMD4(CCC_Vector3,		"ssfx_shadows",					&ps_ssfx_shadows,			Fvector3().Set(128, 1536, 0), Fvector3().Set(1536, 4096, 0));
-	CMD4(CCC_Vector3,		"ssfx_volumetric",				&ps_ssfx_volumetric,		Fvector3().Set(0, 0, 1.0), Fvector3().Set(1.0, 1.0, 5.0));
-	CMD4(CCC_Vector3,		"ssfx_shadow_bias",				&ps_ssfx_shadow_bias,		Fvector3().Set(0, 0, 0), Fvector3().Set(1.0, 1.0, 1.0));
+	CMD4(CCC_Vector3,		"ssfx_shadows",					&ps_ssfx_shadows,			Fvector3().set(128, 1536, 0), Fvector3().set(1536, 4096, 0));
+	CMD4(CCC_Vector3,		"ssfx_volumetric",				&ps_ssfx_volumetric,		Fvector3().set(0, 0, 1.0), Fvector3().set(1.0, 1.0, 5.0));
+	CMD4(CCC_Vector3,		"ssfx_shadow_bias",				&ps_ssfx_shadow_bias,		Fvector3().set(0, 0, 0), Fvector3().set(1.0, 1.0, 1.0));
 	CMD4(CCC_Vector4,		"ssfx_lut",						&ps_ssfx_lut,				Fvector4().set(0.0, 0.0, 0.0, 0.0), tw2_max);
 	CMD4(CCC_Vector4,		"ssfx_wind_grass",				&ps_ssfx_wind_grass,		Fvector4().set(0.0, 0.0, 0.0, 0.0), Fvector4().set(20.0, 5.0, 5.0, 5.0));
 	CMD4(CCC_Vector4,		"ssfx_wind_trees",				&ps_ssfx_wind_trees,		Fvector4().set(0.0, 0.0, 0.0, 0.0), Fvector4().set(20.0, 5.0, 5.0, 1.0));

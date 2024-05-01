@@ -33,7 +33,7 @@ void CRenderTarget::accum_point		(light* L)
 	float		L_spec;
 	//float		L_R					= L->range;
 	float		L_R					= L->range*.95f;
-	Fvector		L_clr;				L_clr.Set		(L->color.r,L->color.g,L->color.b);
+	Fvector		L_clr;				L_clr.set		(L->color.r,L->color.g,L->color.b);
 	L_spec							= u_diffuse2s	(L_clr);
 	Device.mView.transform_tiny		(L_pos,L->position);
 

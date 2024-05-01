@@ -27,10 +27,10 @@ stalker_movement_params::stalker_movement_params				() :
 	m_path_type							(MovementManager::ePathTypeNoPath),
 	m_detail_path_type					(DetailPathManager::eDetailPathTypeSmooth),
 
-	m_desired_position_impl				(Fvector().Set(flt_max, flt_max, flt_max)),
+	m_desired_position_impl				(Fvector().set(flt_max, flt_max, flt_max)),
 	m_desired_position					(nullptr),
 
-	m_desired_direction_impl			(Fvector().Set(flt_max, flt_max, flt_max)),
+	m_desired_direction_impl			(Fvector().set(flt_max, flt_max, flt_max)),
 	m_desired_direction					(nullptr),
 
 	m_cover_id							(""),
@@ -39,7 +39,7 @@ stalker_movement_params::stalker_movement_params				() :
 	m_cover_loophole					(nullptr),
 	m_cover_fire_object					(nullptr),
 
-	m_cover_fire_position_impl			(Fvector().Set(flt_max, flt_max, flt_max)),
+	m_cover_fire_position_impl			(Fvector().set(flt_max, flt_max, flt_max)),
 	m_cover_fire_position				(nullptr),
 
 	m_selected_loophole_actual			(false),

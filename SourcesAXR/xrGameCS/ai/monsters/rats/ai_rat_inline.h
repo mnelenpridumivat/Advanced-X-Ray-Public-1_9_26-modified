@@ -11,7 +11,7 @@
 IC void CAI_Rat::vfChangeGoal()
 {
 	Fvector vP;
-	vP.Set(m_tSpawnPosition.x,m_tSpawnPosition.y,m_tSpawnPosition.z);
+	vP.set(m_tSpawnPosition.x,m_tSpawnPosition.y,m_tSpawnPosition.z);
 	m_tGoalDir.x = vP.x+m_tVarGoal.x*::Random.randF(-0.5f,0.5f); 
 	m_tGoalDir.y = vP.y+m_tVarGoal.y*::Random.randF(-0.5f,0.5f);
 	m_tGoalDir.z = vP.z+m_tVarGoal.z*::Random.randF(-0.5f,0.5f);

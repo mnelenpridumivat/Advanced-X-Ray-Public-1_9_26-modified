@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "../xrCore/StructDefines.h"
 
 #ifdef XRSOUND_EXPORTS
 	#define XRSOUND_API __declspec(dllexport)
@@ -172,9 +171,9 @@ class XRSOUND_API			CSound_params
 public:
 	CSound_params() :set(false), alpha(0.05f)  // Coefficient for exponential moving average.
 	{
-		position.Set(0.0f, 0.0f, 0.0f);
-		velocity.Set(0.0f, 0.0f, 0.0f);
-		accVelocity.Set(0.f, 0.f, 0.f);
+		position.set(0.0f, 0.0f, 0.0f);
+		velocity.set(0.0f, 0.0f, 0.0f);
+		accVelocity.set(0.f, 0.f, 0.f);
 	}
 	Fvector                 velocity;  // Cribbledirge.  Added for doppler effect.
 	Fvector                 curVelocity;  // Current velocity.
@@ -195,20 +194,20 @@ public:
 		// If the position has been set already, start getting a moving average of the velocity.
 		if (set)
 		{
-			prevVelocity.Set(accVelocity);
+			prevVelocity.set(accVelocity);
 			curVelocity.sub(newPosition, position);
-			accVelocity.Set(curVelocity.mul(alpha).add(prevVelocity.mul(1.f - alpha)));
+			accVelocity.set(curVelocity.mul(alpha).add(prevVelocity.mul(1.f - alpha)));
 		}
 		else
 		{
 			set = true;
 		}
-		position.Set(newPosition);
+		position.set(newPosition);
 	}
 
 	IC virtual void update_velocity(const float dt)
 	{
-		velocity.Set(accVelocity).div(dt);
+		velocity.set(accVelocity).div(dt);
 	}
 private:
 	float alpha;  // Cribbledirge: Alpha value for moving average.

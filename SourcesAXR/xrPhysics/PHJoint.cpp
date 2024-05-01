@@ -57,7 +57,7 @@ void CPHJoint::CreateBall()
 	VERIFY(first&&second);
 	first->GetGlobalTransformDynamic(&first_matrix);
 	second->GetGlobalTransformDynamic(&second_matrix);
-pos.Set(0,0,0);
+pos.set(0,0,0);
 	switch(vs_anchor){
 case vs_first :first_matrix.transform_tiny(pos,anchor); break;
 case vs_second:second_matrix.transform_tiny(pos,anchor); break;
@@ -90,7 +90,7 @@ void CPHJoint::CreateHinge()
 	first->GetGlobalTransformDynamic(&first_matrix);
 	second->GetGlobalTransformDynamic(&second_matrix);
 	
-pos.Set(0,0,0);
+pos.set(0,0,0);
 switch(vs_anchor)
 {
 case vs_first :first_matrix.transform_tiny(pos,anchor); break;
@@ -100,7 +100,7 @@ default:NODEFAULT;
 }
 
 
-	axis.Set(0,0,0);
+	axis.set(0,0,0);
 
 	first_matrix.invert();
 
@@ -141,7 +141,7 @@ void CPHJoint::CreateHinge2()
 	VERIFY(first&&second);
 	first->GetGlobalTransformDynamic(&first_matrix);
 	second->GetGlobalTransformDynamic(&second_matrix);
-	pos.Set(0,0,0);
+	pos.set(0,0,0);
 	switch(vs_anchor)
 	{
 	case vs_first :first_matrix.transform_tiny(pos,anchor); break;
@@ -169,7 +169,7 @@ void CPHJoint::CreateHinge2()
 	float hi;
 	//////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////
-	axis.Set(0,0,0);
+	axis.set(0,0,0);
 	CalcAxis(0,axis,lo,hi,first_matrix,second_matrix,rotate);
 	if(!b1)axis.invert();//SwapLimits(lo,hi);
 	dJointSetHinge2Axis1 (m_joint, axis.x, axis.y, axis.z);
@@ -218,7 +218,7 @@ void CPHJoint::CreateSlider()
 	dBodyID body2=body_for_joint(second);
 	
 
-	pos.Set(0,0,0);
+	pos.set(0,0,0);
 	switch(vs_anchor){
 		case vs_first :first_matrix.transform_tiny(pos,anchor); break;
 		case vs_second:second_matrix.transform_tiny(pos,anchor); break;
@@ -263,7 +263,7 @@ void CPHJoint::CreateSlider()
 	float hi;
 	//////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////
-	axis.Set(0,0,0);
+	axis.set(0,0,0);
 	//axis 0
 	CalcAxis(0,axis,lo,hi,first_matrix,second_matrix,rotate);
 	//if(body1)axis.invert();//SwapLimits(lo,hi);!!!
@@ -330,7 +330,7 @@ void CPHJoint::CreateFullControl()
 
 
 
-pos.Set(0,0,0);
+pos.set(0,0,0);
 switch(vs_anchor){
 case vs_first :first_matrix.transform_tiny(pos,anchor); break;
 case vs_second:second_matrix.transform_tiny(pos,anchor); break;
@@ -366,7 +366,7 @@ default:NODEFAULT;
 	float hi;
 	//////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////
-	axis.Set(0,0,0);
+	axis.set(0,0,0);
 	//axis 0
 	CalcAxis(0,axis,lo,hi,first_matrix,second_matrix,rotate);
 	if(!body1)axis.invert();//SwapLimits(lo,hi);
@@ -422,19 +422,19 @@ default:NODEFAULT;
 void CPHJoint::SetAnchor(const float x,const float y,const float z)
 {
 	vs_anchor=vs_global;
-	anchor.Set(x,y,z);
+	anchor.set(x,y,z);
 }
 
 void CPHJoint::SetAnchorVsFirstElement(const float x,const float y,const float z)
 {
 	vs_anchor=vs_first;
-	anchor.Set(x,y,z);
+	anchor.set(x,y,z);
 }
 
 void CPHJoint::SetAnchorVsSecondElement(const float x,const float y,const float z)
 {
 	vs_anchor=vs_second;
-	anchor.Set(x,y,z);	
+	anchor.set(x,y,z);	
 }
 
 void CPHJoint::SetAxisDir(const float x,const float y,const float z,const int axis_num)
@@ -444,7 +444,7 @@ void CPHJoint::SetAxisDir(const float x,const float y,const float z,const int ax
 	 //if(-1==ax) return;
 	VERIFY( -1 != ax );
 	axes[ax].vs=vs_global;
-	axes[ax].direction.Set(x,y,z);
+	axes[ax].direction.set(x,y,z);
 
 	SetAxisDirDynamic( axes[ax].direction, axis_num );
 
@@ -492,7 +492,7 @@ void CPHJoint::SetAxisDirVsFirstElement(const float x,const float y,const float 
 	LimitAxisNum(ax);
 	if(-1==ax) return;
 	axes[ax].vs=vs_first;
-	axes[ax].direction.Set(x,y,z);
+	axes[ax].direction.set(x,y,z);
 }
 
 void CPHJoint::SetAxisDirVsSecondElement(const float x,const float y,const float z,const int axis_num)
@@ -501,7 +501,7 @@ void CPHJoint::SetAxisDirVsSecondElement(const float x,const float y,const float
 	LimitAxisNum(ax);
 	if(-1==ax) return;
 	axes[ax].vs=vs_second;
-	axes[ax].direction.Set(x,y,z);
+	axes[ax].direction.set(x,y,z);
 
 }
 
@@ -519,7 +519,7 @@ void CPHJoint::SetLimits(const float low, const float high, const int axis_num)
 			case vs_first :pFirst_element->mXFORM.transform_dir(axis,axes[ax].direction);	break;
 			case vs_second:pSecond_element->mXFORM.transform_dir(axis,axes[ax].direction); break;
 			case vs_global:
-			default:		axis.Set(axes[ax].direction);							
+			default:		axis.set(axes[ax].direction);							
 	}
 
 	axes[ax].low=low;
@@ -1429,7 +1429,7 @@ void CPHJoint::GetAxisDir(int num, Fvector& axis, eVs& vs)
 {
 LimitAxisNum(num);
 vs=axes[num].vs;
-axis.Set(axes[num].direction);
+axis.set(axes[num].direction);
 }
 
 void CPHJoint::GetAxisDirDynamic(int num,Fvector& axis)
@@ -1452,7 +1452,7 @@ void CPHJoint::GetAxisDirDynamic(int num,Fvector& axis)
 				break;
 			default:					R_ASSERT2(false, "type not supported");
 		}
-	axis.Set(result[0],result[1],result[2]);
+	axis.set(result[0],result[1],result[2]);
 }
 
 void CPHJoint::GetAnchorDynamic(Fvector& anchor_)
@@ -1473,7 +1473,7 @@ void CPHJoint::GetAnchorDynamic(Fvector& anchor_)
 	default:				R_ASSERT2(false,"type not supported");
 		break;
 	}
-	anchor_.Set(result[0],result[1],result[2]);
+	anchor_.set(result[0],result[1],result[2]);
 }
 
 CPHJoint::SPHAxis::SPHAxis(){
@@ -1489,7 +1489,7 @@ CPHJoint::SPHAxis::SPHAxis(){
 	erp=0.3f;
 	cfm=0.000001f;
 #endif
-	direction.Set(0,0,1);
+	direction.set(0,0,1);
 	vs=vs_first;
 	force=0.f;
 	velocity=0.f;

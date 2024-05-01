@@ -157,7 +157,7 @@ void CPHAICharacter::BringToDesired(float time,float velocity,float force)
 void	CPHAICharacter::Jump(const Fvector& jump_velocity)
 {
 	b_jump=true;
-	m_jump_accel.Set(jump_velocity);
+	m_jump_accel.set(jump_velocity);
 }
 void	CPHAICharacter::	ValidateWalkOn						()
 {

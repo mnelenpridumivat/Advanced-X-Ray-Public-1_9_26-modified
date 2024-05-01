@@ -182,7 +182,7 @@ void	CRenderTarget::phase_combine	()
 		{
 			light*		fuckingsun		= (light*)RImplementation.Lights.sun_adapted._get()	;
 			Fvector		L_dir,L_clr;	float L_spec;
-			L_clr.Set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
+			L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
 			L_spec						= u_diffuse2s	(L_clr);
 			Device.mView.transform_dir	(L_dir,fuckingsun->direction);
 			L_dir.normalize				();
@@ -610,7 +610,7 @@ void	CRenderTarget::phase_combine	()
 		zero.mul	(P.n,P.d);
 		
 		Fvector             L_dir,L_up=P.n,L_right;
-		L_dir.Set           (0,0,1);                if (_abs(L_up.dotproduct(L_dir))>.99f)  L_dir.Set(1,0,0);
+		L_dir.set           (0,0,1);                if (_abs(L_up.dotproduct(L_dir))>.99f)  L_dir.set(1,0,0);
 		L_right.crossproduct(L_up,L_dir);           L_right.normalize       ();
 		L_dir.crossproduct  (L_right,L_up);         L_dir.normalize         ();
 

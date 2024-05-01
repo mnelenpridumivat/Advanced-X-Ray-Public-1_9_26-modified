@@ -51,14 +51,14 @@ void	points::extrapolate ( Fmatrix &m, float time ) const
 }
 
 pose::pose	( ):
-p( Fvector().Set( -FLT_MAX, -FLT_MAX, -FLT_MAX ) ),
+p( Fvector().set( -FLT_MAX, -FLT_MAX, -FLT_MAX ) ),
 r( Fquaternion().set( 0, 0, 0, 0 ) )
 {
 	
 }
 pose& pose::set( const Fmatrix &m )
 {
-	p.Set( m.c );
+	p.set( m.c );
 	r.set( m );
 	return *this;
 }
@@ -95,6 +95,6 @@ pose&	pose::invert()
 pose&	pose::	identity( )	
 {
 	r.identity( );
-	p.Set(0, 0, 0 );
+	p.set(0, 0, 0 );
 	return *this;
 }

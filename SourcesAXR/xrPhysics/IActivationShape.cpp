@@ -14,7 +14,7 @@ void ActivateShapeExplosive( IPhysicsShellHolder* self_obj, const Fvector &size,
 
 	dBodySetGravityMode(activation_shape.ODEBody(),0);
 	activation_shape.Activate(size,1,1.f,M_PI/8.f);
-	in_out_pos.Set(activation_shape.Position());
+	in_out_pos.set(activation_shape.Position());
 	activation_shape.Size(out_size);
 	activation_shape.Destroy();
 //////////
@@ -62,7 +62,7 @@ bool ActivateShapeCharacterPhysicsSupport( Fvector &out_pos, const Fvector &vbox
 	if( set_rotation )
 			activation_shape.set_rotation( mXFORM );
 	bool ret = activation_shape.Activate(vbox,1,1.f,M_PI/8.f);
-	out_pos.Set(activation_shape.Position());
+	out_pos.set(activation_shape.Position());
 	activation_shape.Destroy();
 	return ret;
 }

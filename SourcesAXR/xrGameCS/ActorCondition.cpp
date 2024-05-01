@@ -454,10 +454,10 @@ void CActorCondition::AffectDamage_InjuriousMaterialAndMonstersInfluence()
 			{
 				SHit HDS = SHit(damage, 
 //.								0.0f, 
-								Fvector().Set(0,1,0), 
+								Fvector().set(0,1,0), 
 								NULL, 
 								BI_NONE, 
-								Fvector().Set(0,0,0), 
+								Fvector().set(0,0,0), 
 								0.0f, 
 								type, 
 								0.0f, 
@@ -1483,7 +1483,7 @@ CActorDeathEffector::CActorDeathEffector	(CActorCondition* parent, LPCSTR sect)	
 	disable_input			();
 	LPCSTR snd				= pSettings->r_string(sect, "snd");
 	m_death_sound.create	(snd,st_Effect,0);
-	m_death_sound.play_at_pos(0,Fvector().Set(0,0,0),sm_2D);
+	m_death_sound.play_at_pos(0,Fvector().set(0,0,0),sm_2D);
 
 
 	SBaseEffector* pe		= Actor()->Cameras().GetPPEffector((EEffectorPPType)effActorDeath);

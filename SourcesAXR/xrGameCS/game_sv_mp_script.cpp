@@ -104,8 +104,8 @@ void	game_sv_mp_script::SpawnPlayer				(ClientID id, LPCSTR N, LPCSTR SkinName, 
 		ps_who->resetFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD);
 		ps_who->RespawnTime = Device.dwTimeGlobal;
 
-		E->o_Position.Set	(rp.P);
-		E->o_Angle.Set		(rp.A);
+		E->o_Position.set	(rp.P);
+		E->o_Angle.set		(rp.A);
 	}
 	else
 		if (pS)
@@ -115,8 +115,8 @@ void	game_sv_mp_script::SpawnPlayer				(ClientID id, LPCSTR N, LPCSTR SkinName, 
 			if (!GetPosAngleFromActor(id, Pos, Angle)) assign_RP				(E, ps_who);
 			else
 			{
-				E->o_Angle.Set(Angle);
-				E->o_Position.Set(Pos);
+				E->o_Angle.set(Angle);
+				E->o_Position.set(Pos);
 			}
 		};
 

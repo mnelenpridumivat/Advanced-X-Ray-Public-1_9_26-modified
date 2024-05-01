@@ -106,7 +106,7 @@ void CAI_Stalker::g_fireParams(CHudItem* pHudItem, Fvector& P, Fvector& D)
 		Msg				("! CAI_Stalker::g_fireParams() : VERIFY(inventory().ActiveItem())");
 #endif // DEBUG
 		P				= Position();
-		D				= Fvector().Set(0.f,0.f,1.f);
+		D				= Fvector().set(0.f,0.f,1.f);
 		return;
 	}
 
@@ -116,7 +116,7 @@ void CAI_Stalker::g_fireParams(CHudItem* pHudItem, Fvector& P, Fvector& D)
 		if (missile) {
 			update_throw_params	();
 			P			= m_throw_position;
-			D			= Fvector().Set(m_throw_velocity).normalize();
+			D			= Fvector().set(m_throw_velocity).normalize();
 			VERIFY		(!fis_zero(D.square_magnitude()));
 			return;
 		}
@@ -974,7 +974,7 @@ void CAI_Stalker::check_throw_trajectory	(const float &throw_time)
 										 collide_tris,
 										 box_size) )
 	{
-		m_throw_collide_position	= Fvector().Set(flt_max,flt_max,flt_max);
+		m_throw_collide_position	= Fvector().set(flt_max,flt_max,flt_max);
 		m_throw_enabled				= true;
 	}
 }

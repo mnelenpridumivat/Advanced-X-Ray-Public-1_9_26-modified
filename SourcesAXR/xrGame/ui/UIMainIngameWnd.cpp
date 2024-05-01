@@ -713,7 +713,7 @@ void CUIMainIngameWnd::AnimateContacts(bool b_snd)
 	UIZoneMap->Counter_ResetClrAnimation();
 
 	if(b_snd)
-		HUD_SOUND_ITEM::PlaySound	(m_contactSnd, Fvector().Set(0,0,0), nullptr, true );
+		HUD_SOUND_ITEM::PlaySound	(m_contactSnd, Fvector().set(0,0,0), nullptr, true );
 
 }
 

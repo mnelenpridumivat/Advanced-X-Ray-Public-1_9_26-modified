@@ -118,7 +118,7 @@ void HUD_SOUND_ITEM::PlaySound(	HUD_SOUND_ITEM&		hud_snd,
 	
 
 	hud_snd.m_activeSnd->snd.play_at_pos(	const_cast<CObject*>(parent),
-											flags&sm_2D?Fvector().Set(0,0,0):position,
+											flags&sm_2D?Fvector().set(0,0,0):position,
 											flags,
 											hud_snd.m_activeSnd->delay);
 
@@ -147,7 +147,7 @@ void HUD_SOUND_ITEM::PlaySoundAdd(
 		index = static_cast<u8>(Random.randI(hud_snd.sounds.size()));
 	hud_snd.m_activeSnd = &hud_snd.sounds[index];
 
-	Fvector pos = flags & sm_2D ? Fvector().Set(0, 0, 0) : position;
+	Fvector pos = flags & sm_2D ? Fvector().set(0, 0, 0) : position;
 	float vol = hud_snd.m_activeSnd->volume * (b_hud_mode ? psHUDSoundVolume : 1.0f);
 
 	vol *= g_fHudSndVolumeFactor;

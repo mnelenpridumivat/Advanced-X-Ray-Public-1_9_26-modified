@@ -179,7 +179,7 @@ void CPolterFlame::update_schedule()
 							HS.dir				= (elem->target_dir);					//					P.w_dir			(element->target_dir);
 							HS.power			= (hit_value);							//					P.w_float		(m_flame_hit_value);
 							HS.boneID			= (BI_NONE);							//					P.w_s16			(BI_NONE);
-							HS.p_in_bone_space	= (Fvector().Set(0.f,0.f,0.f));			//					P.w_vec3		(Fvector().set(0.f,0.f,0.f));
+							HS.p_in_bone_space	= (Fvector().set(0.f,0.f,0.f));			//					P.w_vec3		(Fvector().set(0.f,0.f,0.f));
 							HS.impulse			= (0.f);								//					P.w_float		(0.f);
 							HS.hit_type			= (ALife::eHitTypeBurn);				//					P.w_u16			(u16(ALife::eHitTypeBurn));
 
@@ -292,7 +292,7 @@ bool CPolterFlame::get_valid_flame_position(const CObject *target_object, Fvecto
 
 	float angle = ai().level_graph().vertex_high_cover_angle(Obj->ai_location().level_vertex_id(),PI_DIV_6,std::less<float>());
 
-	dir.Set(1.f,0.f,0.f);
+	dir.set(1.f,0.f,0.f);
 	dir.setHP(angle + PI, 0.f);
 	dir.normalize();
 

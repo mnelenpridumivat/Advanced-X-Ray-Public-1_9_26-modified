@@ -92,8 +92,8 @@ CSE_Abstract::CSE_Abstract					(LPCSTR caSection)
 	s_flags.assign				(0);
 	s_name						= caSection;
 	s_name_replace				= nullptr;			//xr_strdup("");
-	o_Angle.Set					(0.f,0.f,0.f);
-	o_Position.Set				(0.f,0.f,0.f);
+	o_Angle.set					(0.f,0.f,0.f);
+	o_Position.set				(0.f,0.f,0.f);
 	m_bALifeControl				= false;
 	m_wVersion					= 0;
 	m_script_version			= 0;

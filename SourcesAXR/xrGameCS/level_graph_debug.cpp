@@ -506,15 +506,15 @@ void CLevelGraph::draw_game_graph	()
 //	CGameFont				*font = UI().Font().pFontDI;
 
 	const Fmatrix			&xform = Level().CurrentEntity()->XFORM();
-	Fvector					center = Fvector().Set(0.f,5.f,0.f);
-	Fvector					bounds = Fvector().Set(3.f,0.f,3.f);
+	Fvector					center = Fvector().set(0.f,5.f,0.f);
+	Fvector					bounds = Fvector().set(3.f,0.f,3.f);
 
 	// draw back plane
 	Fvector					vertices[4];
-	xform.transform_tiny	(vertices[0], Fvector().Set(center.x - bounds.x, center.y + bounds.y, center.z + bounds.z));
-	xform.transform_tiny	(vertices[1], Fvector().Set(center.x + bounds.x, center.y + bounds.y, center.z + bounds.z));
-	xform.transform_tiny	(vertices[2], Fvector().Set(center.x - bounds.x, center.y - bounds.y, center.z - bounds.z));
-	xform.transform_tiny	(vertices[3], Fvector().Set(center.x + bounds.x, center.y - bounds.y, center.z - bounds.z));
+	xform.transform_tiny	(vertices[0], Fvector().set(center.x - bounds.x, center.y + bounds.y, center.z + bounds.z));
+	xform.transform_tiny	(vertices[1], Fvector().set(center.x + bounds.x, center.y + bounds.y, center.z + bounds.z));
+	xform.transform_tiny	(vertices[2], Fvector().set(center.x - bounds.x, center.y - bounds.y, center.z - bounds.z));
+	xform.transform_tiny	(vertices[3], Fvector().set(center.x + bounds.x, center.y - bounds.y, center.z - bounds.z));
 
 //	u32						back_color = color_xrgb(0,0,0);
 //	RCache.dbg_DrawTRI		(Fidentity,vertices[0],vertices[2],vertices[1],back_color);

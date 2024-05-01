@@ -25,8 +25,8 @@ public:
 		type=ltType;
 		diffuse.set(1.0f, 1.0f, 1.0f, 1.0f);
 		specular.set(diffuse);
-		position.Set(x,y,z);
-		direction.Set(x,y,z);
+		position.set(x,y,z);
+		direction.set(x,y,z);
 		direction.normalize_safe();
 		range= _sqrt(flt_max);
 	}

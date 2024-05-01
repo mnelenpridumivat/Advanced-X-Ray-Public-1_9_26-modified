@@ -28,9 +28,9 @@ struct R_Light
 
 	R_Light()
 	{
-		tri[0].Set(0, 0, 0);
-		tri[1].Set(0, 0, EPS_S);
-		tri[2].Set(EPS_S, 0, 0);
+		tri[0].set(0, 0, 0);
+		tri[1].set(0, 0, EPS_S);
+		tri[2].set(EPS_S, 0, 0);
 	}
 };
 
@@ -74,7 +74,7 @@ void CLight_DB::Load			(IReader *fs)
 			F->r						(&controller,4);
 			F->r						(&Ldata,sizeof(Flight));
 			if (Ldata.type==D3DLIGHT_DIRECTIONAL)	{
-				Fvector tmp_R;		tmp_R.Set(1,0,0);
+				Fvector tmp_R;		tmp_R.set(1,0,0);
 
 				// directional (base)
 				sun_original		= L;
@@ -92,8 +92,8 @@ void CLight_DB::Load			(IReader *fs)
 			else
 			{
 				Fvector tmp_D,tmp_R;
-				tmp_D.Set			(0,0,-1);	// forward
-				tmp_R.Set			(1,0,0);	// right
+				tmp_D.set			(0,0,-1);	// forward
+				tmp_R.set			(1,0,0);	// right
 
 				// point
 				v_static.push_back	(L);
@@ -254,9 +254,9 @@ void			CLight_DB::Update			()
 
 		VERIFY2						(E.sun_dir.y<0,"Invalid sun direction settings in evironment-config");
 		Fvector						OD,OP,AD,AP;
-		OD.Set						(E.sun_dir).normalize			();
+		OD.set						(E.sun_dir).normalize			();
 		OP.mad						(Device.vCameraPosition,OD,-500.f);
-		AD.Set(0,-.75f,0).add		(E.sun_dir);
+		AD.set(0,-.75f,0).add		(E.sun_dir);
 
 		// for some reason E.sun_dir can point-up
 		int		counter = 0;

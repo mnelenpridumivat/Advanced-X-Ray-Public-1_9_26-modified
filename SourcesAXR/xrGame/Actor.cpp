@@ -156,7 +156,7 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 
 	cam_active				= eacFirstEye;
 	fPrevCamPos				= 0.0f;
-	vPrevCamDir.Set			(0.f,0.f,1.f);
+	vPrevCamDir.set			(0.f,0.f,1.f);
 	fCurAVelocity			= 0.0f;
 	fFPCamYawMagnitude		= 0.0f; //--#SM+#--
 	fFPCamPitchMagnitude	= 0.0f; //--#SM+#--
@@ -506,8 +506,8 @@ if(!g_dedicated_server)
 	invincibility_fire_shield_1st	= READ_IF_EXISTS(pSettings,r_string,section,"Invincibility_Shield_1st",0);
 	invincibility_fire_shield_3rd	= READ_IF_EXISTS(pSettings,r_string,section,"Invincibility_Shield_3rd",0);
 //-----------------------------------------
-	m_AutoPickUp_AABB				= READ_IF_EXISTS(pSettings,r_fvector3,section,"AutoPickUp_AABB",Fvector().Set(0.02f, 0.02f, 0.02f));
-	m_AutoPickUp_AABB_Offset		= READ_IF_EXISTS(pSettings,r_fvector3,section,"AutoPickUp_AABB_offs",Fvector().Set(0, 0, 0));
+	m_AutoPickUp_AABB				= READ_IF_EXISTS(pSettings,r_fvector3,section,"AutoPickUp_AABB",Fvector().set(0.02f, 0.02f, 0.02f));
+	m_AutoPickUp_AABB_Offset		= READ_IF_EXISTS(pSettings,r_fvector3,section,"AutoPickUp_AABB_offs",Fvector().set(0, 0, 0));
 
 	CStringTable string_table;
 	m_sCharacterUseAction			= "character_use";
@@ -591,7 +591,7 @@ void	CActor::Hit(SHit* pHDS)
 				else
 					ps = CParticlesObject::Create(invincibility_fire_shield_3rd,TRUE);
 
-				ps->UpdateParent(pos,Fvector().Set(0.f,0.f,0.f));
+				ps->UpdateParent(pos,Fvector().set(0.f,0.f,0.f));
 				GamePersistent().ps_needtoplay.push_back(ps);
 			};
 		};
@@ -933,7 +933,7 @@ void CActor::g_Physics			(Fvector& _accel, float jump, float dt)
 {
 	// Correct accel
 	Fvector		accel;
-	accel.Set					(_accel);
+	accel.set					(_accel);
 	m_hit_slowmo				-=	dt;
 	if(m_hit_slowmo<0)			m_hit_slowmo = 0.f;
 
@@ -945,7 +945,7 @@ void CActor::g_Physics			(Fvector& _accel, float jump, float dt)
 	if(g_Alive())
 	{
 		if(mstate_real&mcClimb&&!cameras[eacFirstEye]->bClampYaw)
-				accel.Set(0.f,0.f,0.f);
+				accel.set(0.f,0.f,0.f);
 		character_physics_support()->movement()->Calculate			(accel,cameras[cam_active]->vDirection,0,jump,dt,false);
 		bool new_border_state=character_physics_support()->movement()->isOutBorder();
 		if(m_bOutBorder!=new_border_state && Level().CurrentControlEntity() == this)
@@ -974,7 +974,7 @@ void CActor::g_Physics			(Fvector& _accel, float jump, float dt)
 			VERIFY( di );
 			bool b_hit_initiated =  di->GetAndResetInitiated();
 			Fvector hdir;di->HitDir(hdir);
-			SetHitInfo(this, nullptr, 0, Fvector().Set(0, 0, 0), hdir);
+			SetHitInfo(this, nullptr, 0, Fvector().set(0, 0, 0), hdir);
 			//				Hit	(m_PhysicMovementControl->gcontact_HealthLost,hdir,di->DamageInitiator(),m_PhysicMovementControl->ContactBone(),di->HitPos(),0.f,ALife::eHitTypeStrike);//s16(6 + 2*::Random.randI(0,2))
 			if (Level().CurrentControlEntity() == this)
 			{
@@ -1383,9 +1383,9 @@ void CActor::shedule_Update	(u32 DT)
 	{
 		if(conditions().IsLimping() && g_Alive() && !psActorFlags.test(AF_GODMODE_RT)){
 			if(!m_HeavyBreathSnd._feedback()){
-				m_HeavyBreathSnd.play_at_pos(this, Fvector().Set(0,ACTOR_HEIGHT,0), sm_Looped | sm_2D);
+				m_HeavyBreathSnd.play_at_pos(this, Fvector().set(0,ACTOR_HEIGHT,0), sm_Looped | sm_2D);
 			}else{
-				m_HeavyBreathSnd.set_position(Fvector().Set(0,ACTOR_HEIGHT,0));
+				m_HeavyBreathSnd.set_position(Fvector().set(0,ACTOR_HEIGHT,0));
 			}
 		}else if(m_HeavyBreathSnd._feedback()){
 			m_HeavyBreathSnd.stop		();
@@ -1396,7 +1396,7 @@ void CActor::shedule_Update	(u32 DT)
 		if(bs>0.6f)
 		{
 			Fvector snd_pos;
-			snd_pos.Set(0,ACTOR_HEIGHT,0);
+			snd_pos.set(0,ACTOR_HEIGHT,0);
 			if(!m_BloodSnd._feedback())
 				m_BloodSnd.play_at_pos(this, snd_pos, sm_Looped | sm_2D);
 			else
@@ -1417,7 +1417,7 @@ void CActor::shedule_Update	(u32 DT)
 		if ( bs > 0.1f )
 		{
 			Fvector snd_pos;
-			snd_pos.Set(0,ACTOR_HEIGHT,0);
+			snd_pos.set(0,ACTOR_HEIGHT,0);
 			if(!m_DangerSnd._feedback())
 				m_DangerSnd.play_at_pos(this, snd_pos, sm_Looped | sm_2D);
 			else
@@ -1742,7 +1742,7 @@ void CActor::RenderText				(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 	M.mul						(XFORM(),BI.mTransform);
 	//------------------------------------------------
 	Fvector v0, v1;
-	v0.Set(M.c); v1.Set(M.c);
+	v0.set(M.c); v1.set(M.c);
 	Fvector T        = Device.vCameraTop;
 	v1.add(T);
 
@@ -3189,7 +3189,7 @@ bool CActor::use_HolderEx(CHolderCustom* object, bool bForce)
 				r_torso.yaw = r_model_yaw;
 				r_model_yaw_dest = r_model_yaw;
 
-				cam_Active()->Direction().Set(m_holder->Camera()->Direction());
+				cam_Active()->Direction().set(m_holder->Camera()->Direction());
 
 				SetCallbacks();
 

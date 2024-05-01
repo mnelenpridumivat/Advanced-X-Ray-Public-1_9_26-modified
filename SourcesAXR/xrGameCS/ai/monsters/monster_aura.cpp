@@ -180,7 +180,7 @@ void   monster_aura::play_detector_sound()
 
 		if(m_detect_snd_time > cur_period)
 		{
-			m_detect_sound.play_at_pos		(Actor(), Fvector().Set(0.f, 1.f, 0.f), sm_2D);
+			m_detect_sound.play_at_pos		(Actor(), Fvector().set(0.f, 1.f, 0.f), sm_2D);
 			m_detect_snd_time = 0.0f;
 		} 
 		else
@@ -206,7 +206,7 @@ void   monster_aura::update_schedule ()
 
 	if ( !m_sound._feedback() )
 	{
-		m_sound.play_at_pos				(Actor(), Fvector().Set(0.f, 1.f, 0.f), sm_Looped | sm_2D);
+		m_sound.play_at_pos				(Actor(), Fvector().set(0.f, 1.f, 0.f), sm_Looped | sm_2D);
 	} 
 
 	if ( m_sound._feedback() )

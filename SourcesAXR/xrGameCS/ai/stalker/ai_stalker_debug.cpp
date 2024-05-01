@@ -944,7 +944,7 @@ void CAI_Stalker::dbg_draw_vision	()
 		return;
 
 	Fvector						shift;
-	shift.Set					(0.f,2.5f,0.f);
+	shift.set					(0.f,2.5f,0.f);
 
 	Fmatrix						res;
 	res.mul						(Device.mFullTransform,XFORM());
@@ -1074,7 +1074,7 @@ void draw_visiblity_rays	(CCustomMonster *self, const CObject *object, collide::
 
 	VERIFY					(points.size() > 1);
 	
-	Fvector					size = Fvector().Set(.05f,.05f,.05f);
+	Fvector					size = Fvector().set(.05f,.05f,.05f);
 	Level().debug_renderer().draw_aabb	(points.front(),size.x,size.y,size.z,color_xrgb(0,0,255));
 
 	{
@@ -1412,7 +1412,7 @@ static void draw_animation_bones	(CAI_Stalker& self, Fmatrix const& transform, I
 
 	draw_bones							(
 		*kinematics,
-		Fvector().Set(.011f, .011f, .011f),
+		Fvector().set(.011f, .011f, .011f),
 		color_xrgb(0, 255, 0),
 		color_xrgb(0, 255, 255),
 		&transform
@@ -1458,7 +1458,7 @@ static void draw_animation_bones	(CAI_Stalker& self, Fmatrix const& transform, I
 	weapon_bone_0.transform_tiny	( weapon_bone_position, vLoadedFirePoint );
 
 	Fvector weapon_bone_direction;
-	weapon_bone_0.transform_dir		( weapon_bone_direction, Fvector().Set( 0.f, 0.f, 1.f ) );
+	weapon_bone_0.transform_dir		( weapon_bone_direction, Fvector().set( 0.f, 0.f, 1.f ) );
 
 	spine_offset						= 
 		aim_on_actor(
@@ -1502,7 +1502,7 @@ static void draw_animation_bones	(CAI_Stalker& self, Fmatrix const& transform, I
 
 	weapon_bone_0.mul				(mRes, offset);
 	weapon_bone_0.transform_tiny	(weapon_bone_position, vLoadedFirePoint);
-	weapon_bone_0.transform_dir		(weapon_bone_direction, Fvector().Set( 0.f, 0.f, 1.f ));
+	weapon_bone_0.transform_dir		(weapon_bone_direction, Fvector().set( 0.f, 0.f, 1.f ));
 
 	shoulder_offset						= 
 		aim_on_actor(
@@ -1551,7 +1551,7 @@ static void draw_animation_bones	(CAI_Stalker& self, Fmatrix const& transform, I
 		
 	weapon_bone_0.transform_tiny	(weapon_bone_position, vLoadedFirePoint);
 		
-	weapon_bone_direction			= Fvector().Set(0.f, 0.f, 1.f);
+	weapon_bone_direction			= Fvector().set(0.f, 0.f, 1.f);
 	weapon_bone_0.transform_dir		( weapon_bone_direction );
 
 	kinematics->LL_GetBoneInstance	( spine_bone_id ).reset_callback ( );
@@ -1601,19 +1601,19 @@ static void draw_animation_bones	(CAI_Stalker& self, Fmatrix const& transform, I
 
 	draw_bones						(
 		*kinematics,
-		Fvector().Set(.01f, .01f, .01f),
+		Fvector().set(.01f, .01f, .01f),
 		color_xrgb(0, 0, 255),
 		color_xrgb(255, 255, 0)
 	);
 
 	renderer.draw_obb				(
 		g_stalker_skeleton[weapon_bone_id0],
-		Fvector().Set(.01f, .01f, .01f),
+		Fvector().set(.01f, .01f, .01f),
 		color_xrgb(255, 0, 0)
 	);
 	renderer.draw_obb				(
 		g_stalker_skeleton[weapon_bone_id1],
-		Fvector().Set(.01f, .01f, .01f),
+		Fvector().set(.01f, .01f, .01f),
 		color_xrgb(255, 0, 0)
 	);
 	renderer.draw_line				(
@@ -1625,10 +1625,10 @@ static void draw_animation_bones	(CAI_Stalker& self, Fmatrix const& transform, I
 #endif // #ifdef DEBUG_RENDER
 }
 
-Fvector	g_debug_position_0		= Fvector().Set(0.f, 0.f, 0.f);
-Fvector	g_debug_position_1		= Fvector().Set(0.f, 0.f, 0.f);
-Fvector	g_debug_position_2		= Fvector().Set(0.f, 0.f, 0.f);
-Fvector	g_debug_position_3		= Fvector().Set(0.f, 0.f, 0.f);
+Fvector	g_debug_position_0		= Fvector().set(0.f, 0.f, 0.f);
+Fvector	g_debug_position_1		= Fvector().set(0.f, 0.f, 0.f);
+Fvector	g_debug_position_2		= Fvector().set(0.f, 0.f, 0.f);
+Fvector	g_debug_position_3		= Fvector().set(0.f, 0.f, 0.f);
 
 void CAI_Stalker::OnRender				()
 {
@@ -1759,16 +1759,16 @@ void CAI_Stalker::OnRender				()
 				}
 			}
 
-			direction.Set		(position.x - half_size*float(v->high_cover(0))/15.f,position.y,position.z);
+			direction.set		(position.x - half_size*float(v->high_cover(0))/15.f,position.y,position.z);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
-			direction.Set		(position.x,position.y,position.z + half_size*float(v->high_cover(1))/15.f);
+			direction.set		(position.x,position.y,position.z + half_size*float(v->high_cover(1))/15.f);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
-			direction.Set		(position.x + half_size*float(v->high_cover(2))/15.f,position.y,position.z);
+			direction.set		(position.x + half_size*float(v->high_cover(2))/15.f,position.y,position.z);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
-			direction.Set		(position.x,position.y,position.z - half_size*float(v->high_cover(3))/15.f);
+			direction.set		(position.x,position.y,position.z - half_size*float(v->high_cover(3))/15.f);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
 			float				value = ai().level_graph().high_cover_in_direction(float(10*j)/180.f*PI,v);
@@ -1799,16 +1799,16 @@ void CAI_Stalker::OnRender				()
 				}
 			}
 
-			direction.Set		(position.x - half_size*float(v->low_cover(0))/15.f,position.y,position.z);
+			direction.set		(position.x - half_size*float(v->low_cover(0))/15.f,position.y,position.z);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
-			direction.Set		(position.x,position.y,position.z + half_size*float(v->low_cover(1))/15.f);
+			direction.set		(position.x,position.y,position.z + half_size*float(v->low_cover(1))/15.f);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
-			direction.Set		(position.x + half_size*float(v->low_cover(2))/15.f,position.y,position.z);
+			direction.set		(position.x + half_size*float(v->low_cover(2))/15.f,position.y,position.z);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
-			direction.Set		(position.x,position.y,position.z - half_size*float(v->low_cover(3))/15.f);
+			direction.set		(position.x,position.y,position.z - half_size*float(v->low_cover(3))/15.f);
 			Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
 			float				value = ai().level_graph().low_cover_in_direction(float(10*j)/180.f*PI,v);

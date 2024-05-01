@@ -24,14 +24,14 @@
 const bool use_additional_radius	= true;
 
 static const Fvector		local_points[8] = {
-	Fvector().Set(-1.f,-1.f,-1.f),
-	Fvector().Set(-1.f,-1.f,+1.f),
-	Fvector().Set(-1.f,+1.f,+1.f),
-	Fvector().Set(-1.f,+1.f,-1.f),
-	Fvector().Set(+1.f,+1.f,+1.f),
-	Fvector().Set(+1.f,+1.f,-1.f),
-	Fvector().Set(+1.f,-1.f,+1.f),
-	Fvector().Set(+1.f,-1.f,-1.f)
+	Fvector().set(-1.f,-1.f,-1.f),
+	Fvector().set(-1.f,-1.f,+1.f),
+	Fvector().set(-1.f,+1.f,+1.f),
+	Fvector().set(-1.f,+1.f,-1.f),
+	Fvector().set(+1.f,+1.f,+1.f),
+	Fvector().set(+1.f,+1.f,-1.f),
+	Fvector().set(+1.f,-1.f,+1.f),
+	Fvector().set(+1.f,-1.f,-1.f)
 };
 
 extern MagicBox3 MagicMinBox (int iQuantity, const Fvector* akPoint);
@@ -64,7 +64,7 @@ public:
 
 IC	Fvector construct_position	(u32 level_vertex_id, float x, float z)
 {
-	return						(Fvector().Set(x,ai().level_graph().vertex_plane_y(level_vertex_id,x,z),z));
+	return						(Fvector().set(x,ai().level_graph().vertex_plane_y(level_vertex_id,x,z),z));
 }
 
 IC	bool ai_obstacle::inside	(const Fvector &position, const float &radius) const
@@ -95,7 +95,7 @@ IC	bool ai_obstacle::inside	(const u32 &vertex_id) const
 		inside(construct_position(vertex_id,position.x + offset,position.z - offset),EPS_L,.3f,6) ||
 		inside(construct_position(vertex_id,position.x - offset,position.z + offset),EPS_L,.3f,6) || 
 		inside(construct_position(vertex_id,position.x - offset,position.z - offset),EPS_L,.3f,6) ||
-		inside(Fvector().Set(position.x,position.y,position.z),EPS_L,.3f,6)
+		inside(Fvector().set(position.x,position.y,position.z),EPS_L,.3f,6)
 	);
 }
 
@@ -111,7 +111,7 @@ void ai_obstacle::compute_matrix(Fmatrix &result, const Fvector &additional)
 		return;
 	}
 
-	Fvector						last_half_size = Fvector().Set(flt_max,flt_max,flt_max);
+	Fvector						last_half_size = Fvector().set(flt_max,flt_max,flt_max);
 	Fmatrix						before_scale_matrix	= Fidentity;
 	Fmatrix						xform = m_object->XFORM();
 	Fvector						*points = static_cast<Fvector*>(_alloca(visible_bone_count * 8 * sizeof(Fvector)));
@@ -169,12 +169,12 @@ void ai_obstacle::compute_matrix(Fmatrix &result, const Fvector &additional)
 
 void ai_obstacle::prepare_inside	(Fvector &min, Fvector &max)
 {
-	min							= Fvector().Set(flt_max,flt_max,flt_max);
-	max							= Fvector().Set(flt_min,flt_min,flt_min);
+	min							= Fvector().set(flt_max,flt_max,flt_max);
+	max							= Fvector().set(flt_min,flt_min,flt_min);
 
 	Fmatrix						matrix;
 	float						half_cell_size = (use_additional_radius ? 1.f : 0.f)*ai().level_graph().header().cell_size()*.5f;
-	Fvector						half_size = Fvector().Set(half_cell_size,half_cell_size,half_cell_size);
+	Fvector						half_size = Fvector().set(half_cell_size,half_cell_size,half_cell_size);
 	compute_matrix				(matrix,half_size);
 
 	Fvector						points[8];

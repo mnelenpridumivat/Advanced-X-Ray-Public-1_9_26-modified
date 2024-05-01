@@ -299,8 +299,8 @@ public
 	  IConsole_Command(N),
 	  value(V)
 	{
-		min.Set(_min);
-		max.Set(_max);
+		min.set(_min);
+		max.set(_max);
 	};
 	const Fvector	GetValue	() const {return *value;};
 	Fvector*		GetValuePtr	() const {return value;};
@@ -326,7 +326,7 @@ public
 			InvalidSyntax();
 			return;
 		}
-		value->Set(v);
+		value->set(v);
 	}
 
 	virtual void	Status	(TStatus& S)

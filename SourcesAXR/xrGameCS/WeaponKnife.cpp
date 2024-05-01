@@ -37,8 +37,8 @@ CWeaponKnife::CWeaponKnife()
 	m_Hit1SplashRadius		= 1.0f;
 	m_Hit2SplashRadius		= 1.0f;
 
-	m_Hit1SpashDir.Set	(0.f,0.f,1.f);
-	m_Hit2SpashDir.Set	(0.f,0.f,1.f);
+	m_Hit1SpashDir.set	(0.f,0.f,1.f);
+	m_Hit2SpashDir.set	(0.f,0.f,1.f);
 }
 
 CWeaponKnife::~CWeaponKnife()
@@ -211,7 +211,7 @@ void CWeaponKnife::KnifeStrike(const Fvector& pos, const Fvector& dir)
 			ie = dest_hits.end(); i != ie; ++i)
 		{
 			Fvector shot_dir;
-			shot_dir.Set(*i).sub(pos).normalize();
+			shot_dir.set(*i).sub(pos).normalize();
 			MakeShot(pos, shot_dir, tmp_k_hit);
 			tmp_k_hit *= m_NextHitDivideFactor;
 		}
@@ -306,8 +306,8 @@ void CWeaponKnife::OnMotionMark(u32 state, const motion_marks& M)
 	}
 
 	Fvector	p1, d; 
-	p1.Set			(get_LastFP()); 
-	d.Set			(get_LastFD());
+	p1.set			(get_LastFP()); 
+	d.set			(get_LastFD());
 	fireDistance	= m_hit_dist + m_splash_radius;
 
 	if(H_Parent())
@@ -522,7 +522,7 @@ static bool intersect	( Fsphere const& bone, Fsphere const& query )
 static bool intersect	( Fobb bone, Fsphere const& query )
 {
 	Fmatrix	transform;
-	bone.m_halfsize.add	( Fvector().Set( query.R, query.R, query.R) );
+	bone.m_halfsize.add	( Fvector().set( query.R, query.R, query.R) );
 	bone.xform_full		( transform );
 	transform.invert	( );
 
@@ -646,7 +646,7 @@ void CWeaponKnife::fill_shapes_list(CEntityAlive const * entity,
 	float max_dist;
 	make_hit_sort_vectors(basis_vector, max_dist);
 	Fvector camendpos2;
-	camendpos2.Set(camera_endpos).mul(basis_vector);
+	camendpos2.set(camera_endpos).mul(basis_vector);
 
 	CCF_Skeleton::ElementVec const & elems_vec = tmp_skeleton->_GetElements();
 	for (CCF_Skeleton::ElementVec::const_iterator i = elems_vec.begin(),
@@ -758,12 +758,12 @@ void CWeaponKnife::make_hit_sort_vectors(Fvector & basis_hit_specific, float & m
 	if (m_eHitType == m_eHitType_1)
 	{
 		//basis_hit_specific1.set(-1.f, 0.f, 0.f);
-		basis_hit_specific.Set(0.f, 1.f, 0.f);
+		basis_hit_specific.set(0.f, 1.f, 0.f);
 		max_dist = 0.2;
 	} else // if (m_eHitType == m_eHitType_2)
 	{
 		//basis_hit_specific1.set(0.f, -1.f, 0.f);
-		basis_hit_specific.Set(1.f, 0.f, 0.f);
+		basis_hit_specific.set(1.f, 0.f, 0.f);
 		max_dist = 0.1;
 	}
 }
@@ -774,8 +774,8 @@ u32 CWeaponKnife::SelectHitsToShot(shot_targets_t & dst_dirs, Fvector const & f_
 {
 	Fvector		hit1_basis_vector;
 	Fvector		hit2_basis_vector;
-	hit1_basis_vector.Set(-1.f, 1.f, 0.f);
-	hit2_basis_vector.Set(0.f, -1.f, 0.f);
+	hit1_basis_vector.set(-1.f, 1.f, 0.f);
+	hit2_basis_vector.set(0.f, -1.f, 0.f);
 
 	Fmatrix		parent_xform;
 	Fvector		fendpos;
@@ -804,10 +804,10 @@ u32 CWeaponKnife::SelectHitsToShot(shot_targets_t & dst_dirs, Fvector const & f_
 	Fvector basis_vector;
 	if (m_eHitType == m_eHitType_1)
 	{
-		basis_vector.Set(hit1_basis_vector);
+		basis_vector.set(hit1_basis_vector);
 	} else // if (m_eHitType == m_eHitType_2)
 	{
-		basis_vector.Set(hit2_basis_vector);
+		basis_vector.set(hit2_basis_vector);
 	}
 
 	parent_xform.transform_dir(basis_vector);
@@ -840,7 +840,7 @@ bool CWeaponKnife::SelectBestHitVictim(Fvector const & f_pos,
 		return false;
 
 	parent_xform.transform_dir	(m_splash_dir);
-	fendpos_dest.Set(f_pos).mad(m_splash_dir, m_hit_dist);
+	fendpos_dest.set(f_pos).mad(m_splash_dir, m_hit_dist);
 	query_sphere.set(fendpos_dest, m_splash_radius);
 
 #ifdef DEBUG

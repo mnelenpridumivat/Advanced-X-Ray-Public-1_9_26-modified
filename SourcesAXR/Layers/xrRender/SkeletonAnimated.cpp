@@ -836,7 +836,7 @@ const	CBlendInstance::BlendSVec	&Blend				= BLEND_INST.blend_vector();
 				}
 			}
 			else
-				BK[channel][b_count].T.Set(M._initT);
+				BK[channel][b_count].T.set(M._initT);
 			++b_count;
 		}
 		for(u16 j= 0;MAX_CHANNELS>j;++j)

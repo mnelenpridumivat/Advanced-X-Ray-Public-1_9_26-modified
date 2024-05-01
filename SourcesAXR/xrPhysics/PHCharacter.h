@@ -155,7 +155,7 @@ virtual		void		SetAirControlFactor					(float factor)												=0 ;
 virtual		void		GetPosition							(Fvector& vpos)												=0 ;
 virtual		void		GetBodyPosition						(Fvector& vpos)												=0 ;
 virtual	const Fvector	&BodyPosition						()const														=0 ;
-virtual		void		GetFootCenter						(Fvector& vpos)												{vpos.Set(*(Fvector*)dBodyGetPosition(m_body));}
+virtual		void		GetFootCenter						(Fvector& vpos)												{vpos.set(*(Fvector*)dBodyGetPosition(m_body));}
 virtual		void		SetMas								(dReal mass)												=0 ;
 virtual		void		SetCollisionDamageFactor			(float f)													=0 ;
 virtual		float		Mass								()															=0 ;

@@ -18,7 +18,7 @@ IC	CCoverEvaluatorBase::CCoverEvaluatorBase	(CRestrictedObject *object)
 	m_inertia_time			= 0;
 	m_best_value			= flt_max;
 	m_initialized			= false;
-	m_start_position.Set	(flt_max,flt_max,flt_max);
+	m_start_position.set	(flt_max,flt_max,flt_max);
 	m_selected				= 0;
 	m_previous_selected		= 0;
 	m_object				= object;
@@ -134,7 +134,7 @@ IC	float CCoverEvaluatorBase::best_value				() const
 
 IC	CCoverEvaluatorCloseToEnemy::CCoverEvaluatorCloseToEnemy	(CRestrictedObject *object) : inherited(object)
 {
-	m_enemy_position.Set	(flt_max,flt_max,flt_max);
+	m_enemy_position.set	(flt_max,flt_max,flt_max);
 	m_deviation				= flt_max;
 	m_min_distance			= flt_max;
 	m_max_distance			= flt_max;
@@ -171,8 +171,8 @@ IC	void CCoverEvaluatorCloseToEnemy::setup		(const Fvector &enemy_position, floa
 
 IC	CCoverEvaluatorAngle::CCoverEvaluatorAngle	(CRestrictedObject *object) : inherited(object)
 {
-	m_direction.Set		(flt_max,flt_max,flt_max);
-	m_best_direction.Set(flt_max,flt_max,flt_max);
+	m_direction.set		(flt_max,flt_max,flt_max);
+	m_best_direction.set(flt_max,flt_max,flt_max);
 	m_best_alpha		= flt_max;;
 	m_level_vertex_id	= u32(-1);
 }
@@ -219,7 +219,7 @@ IC	void CCoverEvaluatorSafe::setup		(float min_distance)
 IC	CCoverEvaluatorAmbush::CCoverEvaluatorAmbush			(CRestrictedObject *object) :
 	inherited	(object)
 {
-	m_my_position.Set		(flt_max,flt_max,flt_max);
-	m_enemy_position.Set	(flt_max,flt_max,flt_max);
+	m_my_position.set		(flt_max,flt_max,flt_max);
+	m_enemy_position.set	(flt_max,flt_max,flt_max);
 	m_min_enemy_distance	= flt_max;;
 }

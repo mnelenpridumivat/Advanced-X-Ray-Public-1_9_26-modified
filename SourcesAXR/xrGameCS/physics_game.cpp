@@ -51,9 +51,9 @@ public:
 
 		Fmatrix pos; 
 		Fvector zero_vel = {0.f,0.f,0.f};
-		pos.k.Set(*((Fvector*)c.normal));
+		pos.k.set(*((Fvector*)c.normal));
 		Fvector::generate_orthonormal_basis(pos.k, pos.j, pos.i);
-		pos.c.Set(*((Fvector*)c.pos));
+		pos.c.set(*((Fvector*)c.pos));
 
 		ps->UpdateParent(pos,zero_vel);
 		GamePersistent().ps_needtoplay.push_back(ps);
@@ -141,7 +141,7 @@ public:
 	CPHWallMarksCall(const Fvector &p,CDB::TRI* Tri,const wm_shader &s)
 	{
 		pWallmarkShader=s;
-		pos.Set(p);
+		pos.set(p);
 		T=Tri;
 	}
 	virtual void 			run								()

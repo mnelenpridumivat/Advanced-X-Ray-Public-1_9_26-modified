@@ -19,13 +19,13 @@ IC	void	set( const Fvector &toe, const Fvector &heel,  const Fvector &side  )
 IC	bool is_valid	() const
 	{
 		Fbox test ;
-		test.max.Set(FLT_MAX/2.f, FLT_MAX/2.f, FLT_MAX/2.f );
-		test.min.Set(-FLT_MAX/2.f, -FLT_MAX/2.f, -FLT_MAX/2.f );
+		test.max.set(FLT_MAX/2.f, FLT_MAX/2.f, FLT_MAX/2.f );
+		test.min.set(-FLT_MAX/2.f, -FLT_MAX/2.f, -FLT_MAX/2.f );
 		return test.contains( pos_toe() ) && test.contains( pos_heel() ) && test.contains( pos_side() ) ;
 	}
-	ik_foot_geom(): _toe(Fvector().Set( -FLT_MAX, -FLT_MAX, -FLT_MAX )),
-					_heel(Fvector().Set( -FLT_MAX, -FLT_MAX, -FLT_MAX )),
-					_side(Fvector().Set( -FLT_MAX, -FLT_MAX, -FLT_MAX ))
+	ik_foot_geom(): _toe(Fvector().set( -FLT_MAX, -FLT_MAX, -FLT_MAX )),
+					_heel(Fvector().set( -FLT_MAX, -FLT_MAX, -FLT_MAX )),
+					_side(Fvector().set( -FLT_MAX, -FLT_MAX, -FLT_MAX ))
 	{}
 IC	const Fvector&	pos_toe		()const	{return _toe;}
 IC	const Fvector&	pos_heel	()const	{return _heel;}
@@ -43,5 +43,5 @@ struct SIKCollideData
 	Fplane			m_plane		;
 	Fvector			m_pick_dir	;
 	bool			collided	;
-	SIKCollideData	(): m_pick_dir( Fvector( ).Set( 0, -1, 0 ) ), collided( false ), m_collide_point( ik_foot_geom::toe ){}
+	SIKCollideData	(): m_pick_dir( Fvector( ).set( 0, -1, 0 ) ), collided( false ), m_collide_point( ik_foot_geom::toe ){}
 };

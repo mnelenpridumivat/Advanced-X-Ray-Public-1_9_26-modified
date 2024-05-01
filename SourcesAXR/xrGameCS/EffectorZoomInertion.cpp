@@ -47,10 +47,10 @@ void CEffectorZoomInertion::Load		()
 	m_fEpsilon = 2*m_fFloatSpeed;
 
 
-	m_vTargetVel.Set(0.f,0.f,0.f);
-	m_vCurrentPoint.Set(0.f,0.f,0.f);
-	m_vTargetPoint.Set(0.f,0.f,0.f);
-	m_vLastPoint.Set(0.f,0.f,0.f);
+	m_vTargetVel.set(0.f,0.f,0.f);
+	m_vCurrentPoint.set(0.f,0.f,0.f);
+	m_vTargetPoint.set(0.f,0.f,0.f);
+	m_vLastPoint.set(0.f,0.f,0.f);
 }
 
 void	CEffectorZoomInertion::Init				(CWeaponMagazined*	pWeapon)
@@ -104,7 +104,7 @@ BOOL CEffectorZoomInertion::ProcessCam(SCamEffectorInfo& info)
 
 	if (m_dwTimePassed == 0)
 	{
-		m_vLastPoint.Set(m_vCurrentPoint);
+		m_vLastPoint.set(m_vCurrentPoint);
 		CalcNextPoint();
 	}
 	else
@@ -113,7 +113,7 @@ BOOL CEffectorZoomInertion::ProcessCam(SCamEffectorInfo& info)
 		{
 			m_dwTimePassed -= m_dwDeltaTime;
 
-			m_vLastPoint.Set(m_vTargetPoint);
+			m_vLastPoint.set(m_vTargetPoint);
 			CalcNextPoint();
 		};
 	}

@@ -254,7 +254,7 @@ Ivector	vpack			(Fvector src)
 		}
 	}
 	Ivector		ipck;
-	ipck.Set	(r,g,b);
+	ipck.set	(r,g,b);
 	return		ipck;
 }
 
@@ -317,7 +317,7 @@ CRenderTarget::CRenderTarget		()
 	param_color_base	= color_rgba(127,127,127,	0);
 	param_color_gray	= color_rgba(85,85,85,		0);
 	//param_color_add		= color_rgba(0,0,0,			0);
-	param_color_add.Set( 0.0f, 0.0f, 0.0f );
+	param_color_add.set( 0.0f, 0.0f, 0.0f );
 
 	needClearAccumulator = true;
 	dxRenderDeviceRender::Instance().Resources->Evict			();

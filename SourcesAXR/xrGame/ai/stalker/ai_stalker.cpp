@@ -163,16 +163,16 @@ void CAI_Stalker::reinit			()
 	m_best_cover_value				= flt_max;
 
 	m_throw_actual					= false;
-	m_computed_object_position		= Fvector().Set(flt_max,flt_max,flt_max);
-	m_computed_object_direction		= Fvector().Set(flt_max,flt_max,flt_max);
+	m_computed_object_position		= Fvector().set(flt_max,flt_max,flt_max);
+	m_computed_object_direction		= Fvector().set(flt_max,flt_max,flt_max);
 
-	m_throw_target_position			= Fvector().Set(flt_max,flt_max,flt_max);
+	m_throw_target_position			= Fvector().set(flt_max,flt_max,flt_max);
 	m_throw_ignore_object			= nullptr;
 
-	m_throw_position				= Fvector().Set(flt_max,flt_max,flt_max);
-	m_throw_velocity				= Fvector().Set(flt_max,flt_max,flt_max);
+	m_throw_position				= Fvector().set(flt_max,flt_max,flt_max);
+	m_throw_velocity				= Fvector().set(flt_max,flt_max,flt_max);
 
-	m_throw_collide_position		= Fvector().Set(flt_max,flt_max,flt_max);
+	m_throw_collide_position		= Fvector().set(flt_max,flt_max,flt_max);
 	m_throw_enabled					= false;
 
 	m_last_throw_time				= 0;

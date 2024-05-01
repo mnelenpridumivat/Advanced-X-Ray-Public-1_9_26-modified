@@ -275,8 +275,8 @@ void CControllerPsyHit::death_glide_end()
 	monster->draw_fire_particles();
 
 
-	monster->m_sound_tube_hit_left.play_at_pos(Actor(), Fvector().Set(-1.f, 0.f, 1.f), sm_2D);
-	monster->m_sound_tube_hit_right.play_at_pos(Actor(), Fvector().Set(1.f, 0.f, 1.f), sm_2D);
+	monster->m_sound_tube_hit_left.play_at_pos(Actor(), Fvector().set(-1.f, 0.f, 1.f), sm_2D);
+	monster->m_sound_tube_hit_right.play_at_pos(Actor(), Fvector().set(1.f, 0.f, 1.f), sm_2D);
 
 	m_object->Hit_Psy(Actor(), monster->m_tube_damage);
 
@@ -301,13 +301,13 @@ void CControllerPsyHit::set_sound_state(ESoundState state)
 {
 	CController *monster = smart_cast<CController *>(m_object);
 	if (state == ePrepare) {
-		monster->m_sound_tube_prepare.play_at_pos(Actor(), Fvector().Set(0.f, 0.f, 0.f), sm_2D);
+		monster->m_sound_tube_prepare.play_at_pos(Actor(), Fvector().set(0.f, 0.f, 0.f), sm_2D);
 	} else 
 	if (state == eStart) {
 		if (monster->m_sound_tube_prepare._feedback())	monster->m_sound_tube_prepare.stop();
 
-		monster->m_sound_tube_start.play_at_pos(Actor(), Fvector().Set(0.f, 0.f, 0.f), sm_2D);
-		monster->m_sound_tube_pull.play_at_pos(Actor(), Fvector().Set(0.f, 0.f, 0.f), sm_2D);
+		monster->m_sound_tube_start.play_at_pos(Actor(), Fvector().set(0.f, 0.f, 0.f), sm_2D);
+		monster->m_sound_tube_pull.play_at_pos(Actor(), Fvector().set(0.f, 0.f, 0.f), sm_2D);
 	} else 
 	if (state == eHit) {
 		if (monster->m_sound_tube_start._feedback())	monster->m_sound_tube_start.stop();

@@ -132,7 +132,7 @@ void CEffect_Rain::Born(Item& dest, const float radius, const float speed)
 	dest.D.random_dir(Rain_Axis, ::Random.randF(-drop_angle, drop_angle) * (1.5f - Wind_Velocity));
 
 	// Set final destination
-	dest.P.Set(Rain_Offset.x + FinalView.x + RandomP.x, source_offset + view.y, Rain_Offset.y + FinalView.z + RandomP.y);
+	dest.P.set(Rain_Offset.x + FinalView.x + RandomP.x, source_offset + view.y, Rain_Offset.y + FinalView.z + RandomP.y);
 
 	// Set speed
 	dest.fSpeed			= ::Random.randF(drop_speed_min, drop_speed_max) * speed * clampr(Wind_Velocity * 1.5f, 0.5f, 1.0f);
@@ -166,7 +166,7 @@ void CEffect_Rain::RenewItem(Item& dest, float height, BOOL bHit)
 	}else{
 		dest.dwTime_Life= Device.dwTimeGlobal + iFloor(1000.f*height/dest.fSpeed) - Device.dwTimeDelta;
 		dest.dwTime_Hit	= Device.dwTimeGlobal + iFloor(2*1000.f*height/dest.fSpeed)-Device.dwTimeDelta;
-		dest.Phit.Set	(dest.P);
+		dest.Phit.set	(dest.P);
 	}
 }
 
@@ -210,7 +210,7 @@ void	CEffect_Rain::OnFrame	()
 		if (wind_enabled)
 		{
 			snd_Wind.play		(0,sm_Looped);
-			snd_Wind.set_position(Fvector().Set(0,0,0));
+			snd_Wind.set_position(Fvector().set(0,0,0));
 			snd_Wind.set_range	(source_offset,source_offset*2.f);	
 			
 			m_bWindWorking = true;
@@ -241,11 +241,11 @@ void	CEffect_Rain::OnFrame	()
 			if (factor < EPS_L)		return;
 			state = stWorking;
 			snd_Ambient.play(0, sm_Looped);
-			snd_Ambient.set_position(Fvector().Set(0, 0, 0));
+			snd_Ambient.set_position(Fvector().set(0, 0, 0));
 			snd_Ambient.set_range(source_offset, source_offset*2.f);
 
 			snd_RainOnMask.play(0, sm_Looped);
-			snd_RainOnMask.set_position(Fvector().Set(0, 0, 0));
+			snd_RainOnMask.set_position(Fvector().set(0, 0, 0));
 			snd_RainOnMask.set_range(source_offset, source_offset*2.f);
 			break;
 		case stWorking:

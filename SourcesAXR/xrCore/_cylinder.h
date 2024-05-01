@@ -15,7 +15,7 @@ public:
 	T			m_height;
 	T			m_radius;
 public:
-	IC SelfRef	invalidate	()	{ m_center.Set(0,0,0); m_direction.Set(0,0,0); m_height=0; m_radius=0; return *this; }
+	IC SelfRef	invalidate	()	{ m_center.set(0,0,0); m_direction.set(0,0,0); m_height=0; m_radius=0; return *this; }
 	enum ecode { cyl_cap, cyl_wall, cyl_none };
     IC int		intersect	(const _vector3<T>& start, const _vector3<T>& dir, T afT[2], ecode code[2] ) const
     {
@@ -24,7 +24,7 @@ public:
         // set up quadratic Q(t) = a*t^2 + 2*b*t + c
         _vector3<T> kU, kV, kW = m_direction;
         _vector3<T>::generate_orthonormal_basis(kW,kU,kV);
-        _vector3<T> kD; kD.Set(kU.dotproduct(dir),kV.dotproduct(dir),kW.dotproduct(dir));
+        _vector3<T> kD; kD.set(kU.dotproduct(dir),kV.dotproduct(dir),kW.dotproduct(dir));
 #ifdef DEBUG
 		if(kD.square_magnitude() <= std::numeric_limits<T>::min())
 		{
@@ -38,7 +38,7 @@ public:
         T fDLength = kD.normalize_magn();
         T fInvDLength = 1.0f/fDLength;
         _vector3<T> kDiff; kDiff.sub(start,m_center);
-        _vector3<T> kP; kP.Set(kU.dotproduct(kDiff),kV.dotproduct(kDiff),kW.dotproduct(kDiff));
+        _vector3<T> kP; kP.set(kU.dotproduct(kDiff),kV.dotproduct(kDiff),kW.dotproduct(kDiff));
         T fHalfHeight = 0.5f*m_height;
         T fRadiusSqr = m_radius*m_radius;
 

@@ -77,7 +77,7 @@ void CLevelGraph::draw_nodes	()
 	float	st		= 0.98f*header().cell_size()/2;
 	float	tt		= 0.01f;
 
-	Fvector	DUP;		DUP.Set(0,1,0);
+	Fvector	DUP;		DUP.set(0,1,0);
 
 	//RCache.set_Shader	(sh_debug);
 	DRender->SetShader(sh_debug);
@@ -139,10 +139,10 @@ void CLevelGraph::draw_nodes	()
 
 			// create vertices
 			Fvector		v,v1,v2,v3,v4;
-			v.Set(PC.x-st,PC.y,PC.z-st);	PL.intersectRayPoint(v,DUP,v1);	v1.mad(v1,PL.n,tt);	// minX,minZ
-			v.Set(PC.x+st,PC.y,PC.z-st);	PL.intersectRayPoint(v,DUP,v2);	v2.mad(v2,PL.n,tt);	// maxX,minZ
-			v.Set(PC.x+st,PC.y,PC.z+st);	PL.intersectRayPoint(v,DUP,v3);	v3.mad(v3,PL.n,tt);	// maxX,maxZ
-			v.Set(PC.x-st,PC.y,PC.z+st);	PL.intersectRayPoint(v,DUP,v4);	v4.mad(v4,PL.n,tt);	// minX,maxZ
+			v.set(PC.x-st,PC.y,PC.z-st);	PL.intersectRayPoint(v,DUP,v1);	v1.mad(v1,PL.n,tt);	// minX,minZ
+			v.set(PC.x+st,PC.y,PC.z-st);	PL.intersectRayPoint(v,DUP,v2);	v2.mad(v2,PL.n,tt);	// maxX,minZ
+			v.set(PC.x+st,PC.y,PC.z+st);	PL.intersectRayPoint(v,DUP,v3);	v3.mad(v3,PL.n,tt);	// maxX,maxZ
+			v.set(PC.x-st,PC.y,PC.z+st);	PL.intersectRayPoint(v,DUP,v4);	v4.mad(v4,PL.n,tt);	// minX,maxZ
 
 			// render quad
 			DRender->dbg_DrawTRI(Fidentity,v3,v2,v1,CT);
@@ -157,7 +157,7 @@ void CLevelGraph::draw_nodes	()
 			if (bHL) {
 				Fvector		T;
 				Fvector4	S;
-				T.Set		(PC); T.y+=0.3f;
+				T.set		(PC); T.y+=0.3f;
 				Device.mFullTransform.transform	(S,T);
 				if (S.z < 0 || S.z < 0)												continue;
 				if (S.x < -1.f || S.x > 1.f || S.y<-1.f || S.x>1.f)					continue;
@@ -250,16 +250,16 @@ void CLevelGraph::draw_covers	()
 			}
 		}
 
-		direction.Set		(position.x - half_size* static_cast<float>(v->high_cover(0))/15.f,position.y,position.z);
+		direction.set		(position.x - half_size* static_cast<float>(v->high_cover(0))/15.f,position.y,position.z);
 		Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
-		direction.Set		(position.x,position.y,position.z + half_size* static_cast<float>(v->high_cover(1))/15.f);
+		direction.set		(position.x,position.y,position.z + half_size* static_cast<float>(v->high_cover(1))/15.f);
 		Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
-		direction.Set		(position.x + half_size* static_cast<float>(v->high_cover(2))/15.f,position.y,position.z);
+		direction.set		(position.x + half_size* static_cast<float>(v->high_cover(2))/15.f,position.y,position.z);
 		Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
-		direction.Set		(position.x,position.y,position.z - half_size* static_cast<float>(v->high_cover(3))/15.f);
+		direction.set		(position.x,position.y,position.z - half_size* static_cast<float>(v->high_cover(3))/15.f);
 		Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
 		float				value = high_cover_in_direction(static_cast<float>(10 * j)/180.f*PI,v);
@@ -295,16 +295,16 @@ void CLevelGraph::draw_covers	()
 			}
 		}
 
-		direction.Set		(position.x - half_size* static_cast<float>(v->low_cover(0))/15.f,position.y,position.z);
+		direction.set		(position.x - half_size* static_cast<float>(v->low_cover(0))/15.f,position.y,position.z);
 		Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
-		direction.Set		(position.x,position.y,position.z + half_size* static_cast<float>(v->low_cover(1))/15.f);
+		direction.set		(position.x,position.y,position.z + half_size* static_cast<float>(v->low_cover(1))/15.f);
 		Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
-		direction.Set		(position.x + half_size* static_cast<float>(v->low_cover(2))/15.f,position.y,position.z);
+		direction.set		(position.x + half_size* static_cast<float>(v->low_cover(2))/15.f,position.y,position.z);
 		Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
-		direction.Set		(position.x,position.y,position.z - half_size* static_cast<float>(v->low_cover(3))/15.f);
+		direction.set		(position.x,position.y,position.z - half_size* static_cast<float>(v->low_cover(3))/15.f);
 		Level().debug_renderer().draw_line(Fidentity,position,direction,color_xrgb(255,0,0));
 
 		float				value = low_cover_in_direction(static_cast<float>(10 * j)/180.f*PI,v);

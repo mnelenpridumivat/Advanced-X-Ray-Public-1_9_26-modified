@@ -201,9 +201,9 @@ void CSightManager::Exec_Look		(float time_delta)
 	Fmatrix&			m = m_object->XFORM();
 	float				h = -body.current.yaw;
 	float				_sh = _sin(h), _ch = _cos(h);
-	m.i.Set				( _ch,	0.f,	_sh); m._14_	= 0.f;
-	m.j.Set				( 0.f,	1.f,	0.f); m._24_	= 0.f;
-	m.k.Set				(-_sh,	0.f,	_ch); m._34_	= 0.f;
+	m.i.set				( _ch,	0.f,	_sh); m._14_	= 0.f;
+	m.j.set				( 0.f,	1.f,	0.f); m._24_	= 0.f;
+	m.k.set				(-_sh,	0.f,	_ch); m._34_	= 0.f;
 
 	STOP_PROFILE
 }
@@ -305,7 +305,7 @@ Fvector	CSightManager::aiming_position				() const
 #endif // #if 0
 
 #ifdef DEBUG
-	result.Set					(flt_max, flt_max, flt_max);
+	result.set					(flt_max, flt_max, flt_max);
 #endif // #ifdef DEBUG
 
 	float const fake_distance	= 10000.f;
@@ -622,7 +622,7 @@ void CSightManager::process_action					( float const time_delta )
 	VERIFY							(_valid(m_current.m_spine.m_factor));
 
 	Fvector const angles			= 
-		Fvector().Set(
+		Fvector().set(
 			angle_normalize_signed	( -( head.current.pitch - body.current.pitch ) ),
 			angle_normalize_signed	( -( head.current.yaw   - body.current.yaw   ) ),
 			angle_normalize_signed	(    head.current.roll  - body.current.roll	 )

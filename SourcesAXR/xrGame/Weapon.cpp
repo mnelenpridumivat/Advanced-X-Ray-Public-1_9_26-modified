@@ -356,7 +356,7 @@ void CWeapon::UpdateXForm	()
 
 	if(fis_zero(D.magnitude())) {
 		mRes.set			(E->XFORM());
-		mRes.c.Set			(mR.c);
+		mRes.c.set			(mR.c);
 	}
 	else {		
 		D.normalize			();
@@ -399,7 +399,7 @@ void CWeapon::UpdateFireDependencies_internal()
 			parent.transform_tiny	(m_current_firedeps.vLastFP2,fp2);
 			parent.transform_tiny	(m_current_firedeps.vLastSP,sp);
 			
-			m_current_firedeps.vLastFD.Set	(0.f,0.f,1.f);
+			m_current_firedeps.vLastFD.set	(0.f,0.f,1.f);
 			parent.transform_dir	(m_current_firedeps.vLastFD);
 
 			m_current_firedeps.m_FireParticlesXForm.set(parent);
@@ -420,7 +420,7 @@ void CWeapon::ForceUpdateFireParticles()
 
 		Fmatrix						_pxf;
 		_pxf.k						= d;
-		_pxf.i.crossproduct			(Fvector().Set(0.0f,1.0f,0.0f),	_pxf.k);
+		_pxf.i.crossproduct			(Fvector().set(0.0f,1.0f,0.0f),	_pxf.k);
 		_pxf.j.crossproduct			(_pxf.k,		_pxf.i);
 		_pxf.c						= XFORM().c;
 		
@@ -583,7 +583,7 @@ void CWeapon::Load		(LPCSTR section)
 	// Настройки стрейфа (боковая ходьба)
 	const Fvector vZero = { 0.f, 0.f, 0.f };
 	Fvector vDefStrafeValue;
-	vDefStrafeValue.Set(vZero);
+	vDefStrafeValue.set(vZero);
 
 	//--> Смещение в стрейфе
 	m_strafe_offset[0][0] = READ_IF_EXISTS(pSettings, r_fvector3, section, "strafe_hud_offset_pos", vDefStrafeValue);
@@ -604,12 +604,12 @@ void CWeapon::Load		(LPCSTR section)
 	float fStrafeMinAngle_aim = READ_IF_EXISTS(pSettings, r_float, section, "strafe_cam_aim_min_angle", 7.0f);
 
 	//--> (Data 1)
-	m_strafe_offset[2][0].Set((bStrafeEnabled ? 1.0f : 0.0f), fFullStrafeTime, NULL);         // normal
-	m_strafe_offset[2][1].Set((bStrafeEnabled_aim ? 1.0f : 0.0f), fFullStrafeTime_aim, NULL); // aim-GL
+	m_strafe_offset[2][0].set((bStrafeEnabled ? 1.0f : 0.0f), fFullStrafeTime, NULL);         // normal
+	m_strafe_offset[2][1].set((bStrafeEnabled_aim ? 1.0f : 0.0f), fFullStrafeTime_aim, NULL); // aim-GL
 
 	//--> (Data 2)
-	m_strafe_offset[3][0].Set(fStrafeCamLFactor, fStrafeMinAngle, NULL); // normal
-	m_strafe_offset[3][1].Set(fStrafeCamLFactor_aim, fStrafeMinAngle_aim, NULL); // aim-GL
+	m_strafe_offset[3][0].set(fStrafeCamLFactor, fStrafeMinAngle, NULL); // normal
+	m_strafe_offset[3][1].set(fStrafeCamLFactor_aim, fStrafeMinAngle_aim, NULL); // aim-GL
 
 
 // modified by Peacemaker [17.10.08]
@@ -678,7 +678,7 @@ void CWeapon::Load		(LPCSTR section)
 		m_zoom_params.m_bHideCrosshairInZoom = !!pSettings->r_bool(hud_sect, "zoom_hide_crosshair");	
 
 	Fvector			def_dof;
-	def_dof.Set		(-1,-1,-1);
+	def_dof.set		(-1,-1,-1);
 //	m_zoom_params.m_ZoomDof		= READ_IF_EXISTS(pSettings, r_fvector3, section, "zoom_dof", Fvector().set(-1,-1,-1));
 //	m_zoom_params.m_bZoomDofEnabled	= !def_dof.similar(m_zoom_params.m_ZoomDof);
 
@@ -1612,7 +1612,7 @@ void CWeapon::GetBoneOffsetPosDir(const shared_str& bone_name, Fvector& dest_pos
 	fire_mat.transform_tiny(dest_pos, offset);
 	HudItemData()->m_item_transform.transform_tiny(dest_pos);
 	dest_pos.add(Device.vCameraPosition);
-	dest_dir.Set(0.f, 0.f, 1.f);
+	dest_dir.set(0.f, 0.f, 1.f);
 	HudItemData()->m_item_transform.transform_dir(dest_dir);
 }
 
@@ -1664,7 +1664,7 @@ void CWeapon::UpdateLaser()
 
 			Fmatrix laserXForm;
 			laserXForm.identity();
-			laserXForm.k.Set(laser_dir);
+			laserXForm.k.set(laser_dir);
 			Fvector::generate_orthonormal_basis_normalized(laserXForm.k, laserXForm.j, laserXForm.i);
 
 			laser_light_render->set_position(laser_pos);
@@ -1727,7 +1727,7 @@ void CWeapon::UpdateFlashlight()
 
 			Fmatrix flashlightXForm;
 			flashlightXForm.identity();
-			flashlightXForm.k.Set(flashlight_dir);
+			flashlightXForm.k.set(flashlight_dir);
 			Fvector::generate_orthonormal_basis_normalized(flashlightXForm.k, flashlightXForm.j, flashlightXForm.i);
 			flashlight_render->set_position(flashlight_pos);
 			flashlight_render->set_rotation(flashlightXForm.k, flashlightXForm.i);
@@ -1737,7 +1737,7 @@ void CWeapon::UpdateFlashlight()
 
 			Fmatrix flashlightomniXForm;
 			flashlightomniXForm.identity();
-			flashlightomniXForm.k.Set(flashlight_dir_omni);
+			flashlightomniXForm.k.set(flashlight_dir_omni);
 			Fvector::generate_orthonormal_basis_normalized(flashlightomniXForm.k, flashlightomniXForm.j, flashlightomniXForm.i);
 			flashlight_omni->set_position(flashlight_pos_omni);
 			flashlight_omni->set_rotation(flashlightomniXForm.k, flashlightomniXForm.i);
@@ -1817,7 +1817,7 @@ void CWeapon::SetDefaults()
 
 void CWeapon::UpdatePosition(const Fmatrix& trans)
 {
-	Position().Set		(trans.c);
+	Position().set		(trans.c);
 	if (m_strapped_mode || m_strapped_mode_rifle)
 		XFORM().mul(trans, m_StrapOffset);
 	else
@@ -1827,7 +1827,7 @@ void CWeapon::UpdatePosition(const Fmatrix& trans)
 }
 
 void CWeapon::UpdatePosition_alt(const Fmatrix& trans) {
-	Position().Set(trans.c);
+	Position().set(trans.c);
 	if (m_strapped_mode || m_strapped_mode_rifle)
 		XFORM().mul(trans, m_StrapOffset_alt);
 	else
@@ -2723,8 +2723,8 @@ void CWeapon::reload			(LPCSTR section)
 			ypr = pSettings->r_fvector3(section, "strap_orientation");
 		}
 		else {
-			pos = Fvector().Set(-0.34f, -0.20f, 0.15f);
-			ypr = Fvector().Set(-0.0f, 0.0f, 84.0f);
+			pos = Fvector().set(-0.34f, -0.20f, 0.15f);
+			ypr = Fvector().set(-0.0f, 0.0f, 84.0f);
 		}
 		ypr.mul				(PI/180.f);
 
@@ -2740,8 +2740,8 @@ void CWeapon::reload			(LPCSTR section)
 			ypr_alt = pSettings->r_fvector3(section, "strap_orientation_alt");
 		}
 		else {
-			pos_alt = Fvector().Set(-0.34f, 0.20f, 0.15f);
-			ypr_alt = Fvector().Set(0.0f, 0.0f, 94.0f);
+			pos_alt = Fvector().set(-0.34f, 0.20f, 0.15f);
+			ypr_alt = Fvector().set(0.0f, 0.0f, 94.0f);
 		}
 		ypr_alt.mul(PI / 180.f);
 		m_StrapOffset_alt.setHPB(ypr_alt.x, ypr_alt.y, ypr_alt.z);
