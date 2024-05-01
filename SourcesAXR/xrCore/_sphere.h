@@ -1,14 +1,18 @@
 #ifndef _F_SPHERE_H_
 #define _F_SPHERE_H_
+#include "defines.h"
+#include "xrCoreInline.h"
+#include "xrDebug_macros.h"
+#include "_vector3d.h"
 
 template <class T>
 struct _sphere {
 	_vector3<T>	P;
 	T			R;
 public:
-	IC void		set(const _vector3<T> &_P, T _R)	{ P.set(_P); R = _R; }
-	IC void		set(const _sphere<T> &S)			{ P.set(S.P); R=S.R; }
-	IC void		identity()							{ P.set(0,0,0); R=1; }
+	IC void		set(const _vector3<T> &_P, T _R)	{ P.Set(_P); R = _R; }
+	IC void		set(const _sphere<T> &S)			{ P.Set(S.P); R=S.R; }
+	IC void		identity()							{ P.Set(0,0,0); R=1; }
 
 	enum ERP_Result{
 		rpNone			= 0,
@@ -62,12 +66,12 @@ public:
 	{
 		int				quantity;
 		float			afT[2];
-		Fsphere::ERP_Result	result	= intersect(start,dir,dist,quantity,afT);
+		ERP_Result	result	= intersect(start,dir,dist,quantity,afT);
 
-		if (result == Fsphere::rpOriginInside || ((result==Fsphere::rpOriginOutside)&&(afT[0]<dist))){
+		if (result == rpOriginInside || ((result==rpOriginOutside)&&(afT[0]<dist))){
 			switch(result){
-				case Fsphere::rpOriginInside:	dist	= afT[0]<dist?afT[0]:dist;		break;
-				case Fsphere::rpOriginOutside:	dist	= afT[0];						break;
+				case rpOriginInside:	dist	= afT[0]<dist?afT[0]:dist;		break;
+				case rpOriginOutside:	dist	= afT[0];						break;
 			}
 		}
 		return			result;

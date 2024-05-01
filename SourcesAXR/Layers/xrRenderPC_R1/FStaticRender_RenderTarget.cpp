@@ -37,7 +37,7 @@ CRenderTarget::CRenderTarget()
 
 	param_color_base	= color_rgba(127,127,127,	0);
 	param_color_gray	= color_rgba(85,85,85,		0);
-	param_color_add.set( 0.0f, 0.0f, 0.0f );
+	param_color_add.Set( 0.0f, 0.0f, 0.0f );
 
 	bAvailable			= Create	();
 	Msg					("* SSample: %s",bAvailable?"enabled":"disabled");

@@ -19,7 +19,7 @@ IC	void stalker_movement_params::construct								(stalker_movement_manager_smar
 IC	void stalker_movement_params::desired_position						(Fvector const* position)
 {
 	if (!position) {
-		m_desired_position_impl.set		(flt_max, flt_max, flt_max);
+		m_desired_position_impl.Set		(flt_max, flt_max, flt_max);
 		m_desired_position				= 0;
 		return;
 	}
@@ -38,7 +38,7 @@ IC	Fvector const* stalker_movement_params::desired_position			() const
 IC	void stalker_movement_params::desired_direction						(Fvector const* direction)
 {
 	if (!direction) {
-		m_desired_direction_impl.set	(flt_max, flt_max, flt_max);
+		m_desired_direction_impl.Set	(flt_max, flt_max, flt_max);
 		m_desired_direction				= 0;
 		return;
 	}
@@ -72,7 +72,7 @@ IC	void stalker_movement_params::cover_fire_object						(CGameObject const* obje
 		return;
 
 	m_cover_fire_position				= 0;
-	m_cover_fire_position_impl.set		(flt_max, flt_max, flt_max);
+	m_cover_fire_position_impl.Set		(flt_max, flt_max, flt_max);
 }
 
 IC	CGameObject const* stalker_movement_params::cover_fire_object		() const
@@ -84,7 +84,7 @@ IC	void stalker_movement_params::cover_fire_position					(Fvector const* positio
 {
 	if (!position) {
 		m_cover_fire_position			= 0;
-		m_cover_fire_position_impl.set	(flt_max, flt_max, flt_max);
+		m_cover_fire_position_impl.Set	(flt_max, flt_max, flt_max);
 		return;
 	}
 

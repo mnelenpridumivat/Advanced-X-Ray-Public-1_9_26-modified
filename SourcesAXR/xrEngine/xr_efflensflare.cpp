@@ -158,9 +158,9 @@ CLensFlare::CLensFlare()
 #ifndef _EDITOR
 	for( int i=0; i<MAX_RAYS; ++i)
 	{
-		m_ray_cache[i].verts[0].set	(0,0,0);
-		m_ray_cache[i].verts[1].set	(0,0,0);
-		m_ray_cache[i].verts[2].set	(0,0,0);
+		m_ray_cache[i].verts[0].Set	(0,0,0);
+		m_ray_cache[i].verts[1].Set	(0,0,0);
+		m_ray_cache[i].verts[2].Set	(0,0,0);
 	}
 #endif
 
@@ -200,9 +200,9 @@ IC BOOL material_callback(collide::rq_result& result, LPVOID params)
 		if (fis_zero(vis)){
 			Fvector* V	= g_pGameLevel->ObjectSpace.GetStaticVerts();
 			fp->pray_cache->set				(fp->P,fp->D,fp->f,TRUE);
-			fp->pray_cache->verts[0].set	(V[T->verts[0]]);
-			fp->pray_cache->verts[1].set	(V[T->verts[1]]);
-			fp->pray_cache->verts[2].set	(V[T->verts[2]]);
+			fp->pray_cache->verts[0].Set	(V[T->verts[0]]);
+			fp->pray_cache->verts[1].Set	(V[T->verts[1]]);
+			fp->pray_cache->verts[2].Set	(V[T->verts[2]]);
 		}
 	}
 	fp->vis			*=vis;
@@ -296,17 +296,17 @@ void CLensFlare::OnFrame(shared_str id)
 	matEffCamPos.identity();
 	// Calculate our position and direction
 
-	matEffCamPos.i.set(Device.vCameraRight);
-	matEffCamPos.j.set(Device.vCameraTop);
-	matEffCamPos.k.set(Device.vCameraDirection);
-	vecPos.set(Device.vCameraPosition);
+	matEffCamPos.i.Set(Device.vCameraRight);
+	matEffCamPos.j.Set(Device.vCameraTop);
+	matEffCamPos.k.Set(Device.vCameraDirection);
+	vecPos.Set(Device.vCameraPosition);
 
-	vecDir.set(0.0f, 0.0f, 1.0f);
+	vecDir.Set(0.0f, 0.0f, 1.0f);
 	matEffCamPos.transform_dir(vecDir);
 	vecDir.normalize();
 
 	// Figure out of light (or flare) might be visible
-	vecLight.set(vSunDir);
+	vecLight.Set(vSunDir);
 	vecLight.normalize();
 
 	fDot = vecLight.dotproduct(vecDir);
@@ -325,7 +325,7 @@ void CLensFlare::OnFrame(shared_str id)
 
 	//
 	// Figure out if light is behind something else
-	vecX.set(1.0f, 0.0f, 0.0f);
+	vecX.Set(1.0f, 0.0f, 0.0f);
 	matEffCamPos.transform_dir(vecX);
 	vecX.normalize();
 	R_ASSERT( _valid(vecX) );

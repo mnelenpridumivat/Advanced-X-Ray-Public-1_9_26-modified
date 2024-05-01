@@ -64,7 +64,7 @@ CExplosive::CExplosive(void)
 //	m_bExploding			= false;
 //	m_bExplodeEventSent		= false;
 	m_explosion_flags.assign(0);
-	m_vExplodeSize.set		(0.001f,0.001f,0.001f);
+	m_vExplodeSize.Set		(0.001f,0.001f,0.001f);
 
 	m_bHideInExplosion	= TRUE;
 	m_fExplodeHideDurationMax = 0;
@@ -166,8 +166,8 @@ struct SExpQParams
 	SExpQParams(const Fvector& ec,const Fvector& d)
 	{
 		shoot_factor=			1.f			;
-		source_p				.set(ec)	;
-		l_dir					.set(d)		;
+		source_p				.Set(ec)	;
+		l_dir					.Set(d)		;
 	}
 	Fvector		source_p			;					
 	Fvector 	l_dir				;
@@ -202,7 +202,7 @@ ICF static BOOL grenade_hit_callback(collide::rq_result& result, LPVOID params)
 #ifdef DEBUG
 	if(ph_dbg_draw_mask.test(phDbgDrawExplosions))
 	{
-		Fvector p;p.set(ep.l_dir);p.mul(result.range);p.add(ep.source_p);
+		Fvector p;p.Set(ep.l_dir);p.mul(result.range);p.add(ep.source_p);
 		u8 c	=u8(shoot_factor*255.f);
 		DBG_DrawPoint(p,0.1f,color_xrgb(255-c,0,c));
 	}
@@ -235,7 +235,7 @@ float CExplosive::ExplosionEffect(collide::rq_results& storage, CExplosive*exp_o
 	if(ph_dbg_draw_mask.test(phDbgDrawExplosions))
 	{
 		Fmatrix dbg_box_m;dbg_box_m.set(obj_xform);
-		dbg_box_m.c.set(l_c);obj_xform.transform(dbg_box_m.c);
+		dbg_box_m.c.Set(l_c);obj_xform.transform(dbg_box_m.c);
 		DBG_DrawOBB(dbg_box_m,l_d,color_xrgb(255,255,0));
 	}
 #endif
@@ -326,7 +326,7 @@ void CExplosive::Explode()
 	Fvector& dir = m_vExplodeDir;
 
 	// Interactive Grass FX
-	g_pGamePersistent->GrassBendersAddExplosion(cast_game_object()->ID(), pos, Fvector().set(0, -99, 0), 1.33f, ps_ssfx_int_grass_params_2.y, ps_ssfx_int_grass_params_2.x, m_fBlastRadius * 2.0f);
+	g_pGamePersistent->GrassBendersAddExplosion(cast_game_object()->ID(), pos, Fvector().Set(0, -99, 0), 1.33f, ps_ssfx_int_grass_params_2.y, ps_ssfx_int_grass_params_2.x, m_fBlastRadius * 2.0f);
 
 #ifdef DEBUG
 	if(ph_dbg_draw_mask.test(phDbgDrawExplosions))
@@ -355,9 +355,9 @@ void CExplosive::Explode()
 
 	Fmatrix explode_matrix;
 	explode_matrix.identity();
-	explode_matrix.j.set(dir);
+	explode_matrix.j.Set(dir);
 	Fvector::generate_orthonormal_basis(explode_matrix.j, explode_matrix.i, explode_matrix.k);
-	explode_matrix.c.set(pos);
+	explode_matrix.c.Set(pos);
 
 	CParticlesObject* pStaticPG; 
 	pStaticPG = CParticlesObject::Create(*m_sExplodeParticles,!m_bDynamicParticles); 
@@ -455,19 +455,19 @@ void CExplosive::PositionUpdate()
 	GetExplDirection(dir);
 	Fmatrix explode_matrix;
 	explode_matrix.identity();
-	explode_matrix.j.set(dir);
+	explode_matrix.j.Set(dir);
 	Fvector::generate_orthonormal_basis(explode_matrix.j, explode_matrix.i, explode_matrix.k);
-	explode_matrix.c.set(pos);
+	explode_matrix.c.Set(pos);
 	
 }
 void CExplosive::GetExplPosition(Fvector &p)
 {
-	p.set(m_vExplodePos);
+	p.Set(m_vExplodePos);
 }
 
 void CExplosive::GetExplDirection(Fvector &d)
 {
-	d.set(m_vExplodeDir);
+	d.Set(m_vExplodeDir);
 }
 void CExplosive::GetExplVelocity(Fvector &v)
 {
@@ -619,13 +619,13 @@ void CExplosive::FindNormal(Fvector& normal)
 	collide::rq_result RQ;
 
 	Fvector pos, dir;
-	dir.set(0,-1.f,0);
+	dir.Set(0,-1.f,0);
 	cast_game_object()->Center(pos);
 
 	BOOL result = Level().ObjectSpace.RayPick(pos, dir, cast_game_object()->Radius(), 
 											 collide::rqtBoth, RQ, NULL);
 	if(!result || RQ.O){
-		normal.set(0,1,0);
+		normal.Set(0,1,0);
 	//если лежим на статике
 	//найти треугольник и вычислить нормаль по нему
 	}else
@@ -670,7 +670,7 @@ void CExplosive::GetRaySourcePos(CExplosive*exp_obj,const	Fvector	&expl_center,F
 }
 void CExplosive::GetRayExplosionSourcePos(Fvector &pos)
 {
-	pos.set						(m_vExplodeSize);pos.mul(0.5f);
+	pos.Set						(m_vExplodeSize);pos.mul(0.5f);
 	pos.random_point			(pos);
 	pos.add						(m_vExplodePos);
 }
@@ -746,11 +746,11 @@ void CExplosive::ExplodeWaveProcess()
 
 void CExplosive::GetExplosionBox(Fvector	&size)
 {
-	size.set(m_vExplodeSize);
+	size.Set(m_vExplodeSize);
 }
 void CExplosive::SetExplosionSize(const Fvector	&new_size)
 {
-	m_vExplodeSize.set(new_size);
+	m_vExplodeSize.Set(new_size);
 	
 }
 void CExplosive::ActivateExplosionBox(const Fvector &size,Fvector &in_out_pos)
@@ -792,7 +792,7 @@ void CExplosive::UpdateExplosionParticles ()
 	Fmatrix ParticleMatrix = m_pExpParticle->XFORM();	
 	Fvector Vel;
 	Vel.sub(GO->Position(), ParticleMatrix.c);
-	ParticleMatrix.c.set(GO->Position());
+	ParticleMatrix.c.Set(GO->Position());
 	m_pExpParticle->UpdateParent(ParticleMatrix, Vel);
 }
 

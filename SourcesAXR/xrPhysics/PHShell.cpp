@@ -308,7 +308,7 @@ void		CPHShell::	applyForce				(const Fvector& dir, float val)
 };
 void		CPHShell::	applyForce				(float x,float y,float z)				
 {
-Fvector dir;dir.set(x,y,z);
+Fvector dir;dir.Set(x,y,z);
 float val=dir.magnitude();
 	if(!fis_zero(val))
 	{
@@ -789,7 +789,7 @@ void CPHShell::AddElementRecursive(CPhysicsElement* root_e, u16 id,Fmatrix globa
 				fracture.m_start_el_num				=u16(elements.size());
 				fracture.m_start_jt_num				=u16(joints.size());	 
 				fracture.MassSetFirst				(*(E->getMassTensor()));
-				fracture.m_pos_in_element			.set(vs_root_position.c);
+				fracture.m_pos_in_element			.Set(vs_root_position.c);
 				VERIFY								(u16(-1)!=fracture.m_start_geom_num);
 				fracture.m_break_force				=joint_data.break_force;
 				fracture.m_break_torque				=joint_data.break_torque;
@@ -1403,7 +1403,7 @@ void CPHShell::applyGravityAccel(const Fvector& accel)
 	if(!isActive())return;
 	ELEMENT_I i,e;
 	Fvector a;
-	a.set(accel);
+	a.Set(accel);
 	a.mul((float)elements.size());
 	i=elements.begin(); e=elements.end();
 	for( ;i!=e;++i)

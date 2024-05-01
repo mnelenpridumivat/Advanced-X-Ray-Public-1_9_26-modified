@@ -73,7 +73,7 @@ void CBastArtefact::BastCollision(CEntityAlive* pEntityAlive)
 
 		m_bStrike = true;
 		Fvector vel;
-		vel.set(0,0,0);
+		vel.Set(0,0,0);
 	//	this->m_pPhysicsShell->set_LinearVel(vel);
 	//	this->m_pPhysicsShell->set_AngularVel(vel);
 
@@ -123,7 +123,7 @@ void CBastArtefact::shedule_Update(u32 dt)
 	inherited::shedule_Update(dt);
 
 	Fvector	P; 
-	P.set(Position());
+	P.Set(Position());
 	feel_touch_update(P,m_fRadius);
 }
 
@@ -192,7 +192,7 @@ void CBastArtefact::UpdateCLChild()
 			Fvector vel; 
 			//vel.sub(Position(),ps_Element(0).vPosition); 
 			//vel.div((Level().timeServer()-ps_Element(0).dwTime)/1000.f);
-			vel.set(0,0,0);
+			vel.Set(0,0,0);
 			pStaticPG->UpdateParent(pos, vel); 
 			pStaticPG->Play(false);
 		}

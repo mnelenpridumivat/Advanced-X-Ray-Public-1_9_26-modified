@@ -20,7 +20,7 @@ void CStateBurerAttackRunAroundAbstract::initialize()
 	inherited::initialize		();
 
 	time_started				= Device.dwTimeGlobal;
-	dest_direction.set			(0.f,0.f,0.f);
+	dest_direction.Set			(0.f,0.f,0.f);
 
 	// select point
 	Fvector						dir_to_enemy, dir_from_enemy;

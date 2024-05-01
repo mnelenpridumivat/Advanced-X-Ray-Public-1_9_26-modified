@@ -153,8 +153,8 @@ void RestoreVelocityState(V_PH_WORLD_STATE& state)
 		CPHSynchronize& sync=*i->first;
 		SPHNetState&	old_s	=i->second;
 		SPHNetState new_s;sync.get_State(new_s);
-		new_s.angular_vel.set(old_s.angular_vel);
-		new_s.linear_vel.set(old_s.linear_vel);
+		new_s.angular_vel.Set(old_s.angular_vel);
+		new_s.linear_vel.Set(old_s.linear_vel);
 		new_s.enabled=old_s.enabled;
 		sync.set_State(new_s);
 	}
@@ -268,7 +268,7 @@ bool	CPHActivationShape::	Activate							(const Fvector need_size,u16 steps,floa
 	dGeomBoxGetLengths(m_geom,cast_fp(from_size));
 	step_size.sub(need_size,from_size);
 	step_size.mul(fnum_steps_r);
-	size.set(from_size);
+	size.Set(from_size);
 	bool ret=false;
 	V_PH_WORLD_STATE temp_state;
 	ph_world->GetState(temp_state);
@@ -312,7 +312,7 @@ bool	CPHActivationShape::	Activate							(const Fvector need_size,u16 steps,floa
 		debug_output().DBG_OpenCashedDraw();
 		Fmatrix M;
 		PHDynamicData::DMXPStoFMX(dBodyGetRotation(m_body),dBodyGetPosition(m_body),M);
-		Fvector v;v.set(need_size);v.mul(0.5f);
+		Fvector v;v.Set(need_size);v.mul(0.5f);
 		debug_output().DBG_DrawOBB(M,v,color_xrgb(0,255,255));
 		debug_output().DBG_ClosedCashedDraw(30000);
 	}

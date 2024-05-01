@@ -1,3 +1,5 @@
+#include "_sphere.h"
+
 #include "stdafx.h"
 #pragma hdrstop
 
@@ -252,7 +254,7 @@ void Basis::reset ()
 {
 	m = s = 0;
 	// we misuse c[0] for the center of the empty sphere
-	c[0].set(0,0,0);
+	c[0].Set(0,0,0);
 	current_c = c;
 	current_sqr_r = -1;
 }
@@ -335,6 +337,6 @@ void Fsphere_compute(Fsphere& dest, const Fvector *verts, int count)
 
 	mb.build	();
 
-	dest.P.set	(mb.center());
+	dest.P.Set	(mb.center());
 	dest.R =	( _sqrt( mb.squared_radius() ));
 }

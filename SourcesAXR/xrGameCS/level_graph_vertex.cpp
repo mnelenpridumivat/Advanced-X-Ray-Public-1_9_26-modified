@@ -337,7 +337,7 @@ bool CLevelGraph::check_vertex_in_direction_slow	(u32 start_vertex_id, const Fve
 
 IC  Fvector v3d(const Fvector2 &vector2d)
 {
-	return			(Fvector().set(vector2d.x,0.f,vector2d.y));
+	return			(Fvector().Set(vector2d.x,0.f,vector2d.y));
 }
 
 IC  Fvector2 v2d(const Fvector &vector3d)

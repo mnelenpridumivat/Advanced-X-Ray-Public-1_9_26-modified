@@ -56,8 +56,8 @@ CSE_ALifeInventoryItem::CSE_ALifeInventoryItem(LPCSTR caSection)
 	State.quaternion.z			= 1.f;
 	State.quaternion.w			= 0.f;
 
-	State.angular_vel.set		(0.f,0.f,0.f);
-	State.linear_vel.set		(0.f,0.f,0.f);
+	State.angular_vel.Set		(0.f,0.f,0.f);
+	State.linear_vel.Set		(0.f,0.f,0.f);
 
 #ifdef XRGAME_EXPORTS
 			m_freeze_time	= Device.dwTimeGlobal;
@@ -223,7 +223,7 @@ void CSE_ALifeInventoryItem::UPDATE_Read	(NET_Packet &tNetPacket)
 		tNetPacket.r_vec3				(State.torque);
 
 		tNetPacket.r_vec3				(State.position);
-		base()->o_Position.set			(State.position); //this is very important because many functions use this o_Position..
+		base()->o_Position.Set			(State.position); //this is very important because many functions use this o_Position..
 
 		tNetPacket.r_float			(State.quaternion.x);
 		tNetPacket.r_float			(State.quaternion.y);
@@ -238,7 +238,7 @@ void CSE_ALifeInventoryItem::UPDATE_Read	(NET_Packet &tNetPacket)
 			tNetPacket.r_float		(State.angular_vel.z);
 		}
 		else
-			State.angular_vel.set		(0.f,0.f,0.f);
+			State.angular_vel.Set		(0.f,0.f,0.f);
 
 		if (!check(num_items.mask,inventory_item_linear_null)) {
 			tNetPacket.r_float		(State.linear_vel.x);
@@ -246,7 +246,7 @@ void CSE_ALifeInventoryItem::UPDATE_Read	(NET_Packet &tNetPacket)
 			tNetPacket.r_float		(State.linear_vel.z);
 		}
 		else
-			State.linear_vel.set		(0.f,0.f,0.f);
+			State.linear_vel.Set		(0.f,0.f,0.f);
 
 		/*if (check(num_items.mask,animated))
 		{

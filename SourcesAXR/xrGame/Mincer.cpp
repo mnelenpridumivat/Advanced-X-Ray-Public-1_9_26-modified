@@ -105,14 +105,14 @@ bool CMincer::BlowoutState	()
 }
 void CMincer ::ThrowInCenter(Fvector& C)
 {
-	C.set(m_telekinetics.Center());
+	C.Set(m_telekinetics.Center());
 	C.y=Position().y;
 }
 
 
 void CMincer ::Center	(Fvector& C) const
 {
-	C.set(Position());
+	C.Set(Position());
 }
 
 void CMincer::NotificateDestroy			(CPHDestroyableNotificate *dn)
@@ -128,13 +128,13 @@ void CMincer::NotificateDestroy			(CPHDestroyableNotificate *dn)
 	CParticlesPlayer* PP = smart_cast<CParticlesPlayer*>(obj);
 	if(PP && *m_torn_particles)
 	{
-		PP->StartParticles(m_torn_particles,Fvector().set(0,1,0),ID());
+		PP->StartParticles(m_torn_particles,Fvector().Set(0,1,0),ID());
 	}
 	m_tearing_sound.play_at_pos(nullptr,m_telekinetics.Center());
 
 	Fvector position_in_bone_space, throw_in_dir;
-	position_in_bone_space.set		(0.0f, 0.0f, 0.0f);
-	throw_in_dir.set				(1.0f, 0.0f, 1.0f);
+	position_in_bone_space.Set		(0.0f, 0.0f, 0.0f);
+	throw_in_dir.Set				(1.0f, 0.0f, 1.0f);
 	CreateHit(obj->ID(),ID(),throw_in_dir,power,0,position_in_bone_space,impulse,ALife::eHitTypeExplosion);
 }
 
@@ -146,7 +146,7 @@ void CMincer::AffectPullAlife(CEntityAlive* EA,const Fvector& throw_in_dir,float
 	if(!smart_cast<CActor*>(EA))
 	{
 		Fvector pos_in_bone_space;
-		pos_in_bone_space.set(0,0,0);
+		pos_in_bone_space.Set(0,0,0);
 		CreateHit(EA->ID(),ID(),throw_in_dir,power,0,pos_in_bone_space,0.0f,m_eHitTypeBlowout);
 	}
 	inherited::AffectPullAlife(EA,throw_in_dir,dist);

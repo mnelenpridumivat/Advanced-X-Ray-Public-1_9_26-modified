@@ -220,13 +220,13 @@ void CDrawUtilities::OnDeviceCreate()
     	Fvector S;
     	Fvector p;
         bb.getpoint(i,p);
-        S.set((float)SIGN(p.x),(float)SIGN(p.y),(float)SIGN(p.z));
-    	boxvert[i*6+0].set(p);
-    	boxvert[i*6+1].set(p.x-S.x*0.25f,p.y,p.z);
-    	boxvert[i*6+2].set(p);
-    	boxvert[i*6+3].set(p.x,p.y-S.y*0.25f,p.z);
-    	boxvert[i*6+4].set(p);
-    	boxvert[i*6+5].set(p.x,p.y,p.z-S.z*0.25f);
+        S.Set((float)SIGN(p.x),(float)SIGN(p.y),(float)SIGN(p.z));
+    	boxvert[i*6+0].Set(p);
+    	boxvert[i*6+1].Set(p.x-S.x*0.25f,p.y,p.z);
+    	boxvert[i*6+2].Set(p);
+    	boxvert[i*6+3].Set(p.x,p.y-S.y*0.25f,p.z);
+    	boxvert[i*6+4].Set(p);
+    	boxvert[i*6+5].Set(p.x,p.y,p.z-S.z*0.25f);
     }
     // create render stream
 	vs_L.create		(FVF::F_L,RCache.Vertex.Buffer(),RCache.Index.Buffer());
@@ -296,8 +296,8 @@ void CDrawUtilities::DrawDirectionalLight(const Fvector& p, const Fvector& d, fl
 	Fvector R,N,D; D.normalize(d);
 	Fmatrix rot;
 
-    N.set		(0,1,0);
-	if (_abs(D.y)>0.99f) N.set(1,0,0);
+    N.Set		(0,1,0);
+	if (_abs(D.y)>0.99f) N.Set(1,0,0);
 	R.crossproduct(N,D); R.normalize();
 	N.crossproduct(D,R); N.normalize();
     rot.set(R,N,D,p);
@@ -319,8 +319,8 @@ void CDrawUtilities::DrawDirectionalLight(const Fvector& p, const Fvector& d, fl
     DU_DRAW_DP		(D3DPT_LINELIST,vs_L,vBase,3);
 
     Fbox b;
-    b.min.set(-r,-r,-r);
-    b.max.set(r,r,r);
+    b.min.Set(-r,-r,-r);
+    b.max.Set(r,r,r);
 
 	DrawLineSphere	( p, radius, c, true );
 }
@@ -716,7 +716,7 @@ void CDrawUtilities::DrawAABB(const Fmatrix& parent, const Fvector& center, cons
 void CDrawUtilities::DrawAABB(const Fvector& p0, const Fvector& p1, u32 clr_s, u32 clr_w, BOOL bSolid, BOOL bWire)
 {
     Fmatrix			R;
-	Fvector	C; C.set((p1.x+p0.x)*0.5f,(p1.y+p0.y)*0.5f,(p1.z+p0.z)*0.5f);
+	Fvector	C; C.Set((p1.x+p0.x)*0.5f,(p1.y+p0.y)*0.5f,(p1.z+p0.z)*0.5f);
     R.scale			(_abs(p1.x-p0.x),_abs(p1.y-p0.y),_abs(p1.z-p0.z));
     R.translate_over(C);
 	RCache.set_xform_world(R);
@@ -802,8 +802,8 @@ void CDrawUtilities::DrawCylinder(const Fmatrix& parent, const Fvector& center, 
     
     // build final rotation / translation
     Fvector             L_dir,L_up,L_right;
-    L_dir.set           (dir);       		    L_dir.normalize			();
-    L_up.set            (0,1,0);				if (_abs(L_up.dotproduct(L_dir))>.99f)  L_up.set(0,0,1);
+    L_dir.Set           (dir);       		    L_dir.normalize			();
+    L_up.Set            (0,1,0);				if (_abs(L_up.dotproduct(L_dir))>.99f)  L_up.Set(0,0,1);
     L_right.crossproduct(L_up,L_dir);           L_right.normalize       ();
     L_up.crossproduct   (L_dir,L_right);        L_up.normalize          ();
 
@@ -828,8 +828,8 @@ void CDrawUtilities::DrawCone	(const Fmatrix& parent, const Fvector& apex, const
     
     // build final rotation / translation
     Fvector             L_dir,L_up,L_right;
-    L_dir.set           (dir);       		    L_dir.normalize			();
-    L_up.set            (0,1,0);				if (_abs(L_up.dotproduct(L_dir))>.99f)  L_up.set(0,0,1);
+    L_dir.Set           (dir);       		    L_dir.normalize			();
+    L_up.Set            (0,1,0);				if (_abs(L_up.dotproduct(L_dir))>.99f)  L_up.Set(0,0,1);
     L_right.crossproduct(L_up,L_dir);           L_right.normalize       ();
     L_up.crossproduct   (L_dir,L_right);        L_up.normalize          ();
 
@@ -852,7 +852,7 @@ void CDrawUtilities::DrawPlane	(const Fvector& p, const Fvector& n, const Fvecto
 	if (n.square_magnitude()<EPS_S) return;
     // build final rotation / translation
     Fvector             L_dir,L_up=n,L_right;
-    L_dir.set           (0,0,1);				if (_abs(L_up.dotproduct(L_dir))>.99f)  L_dir.set(1,0,0);
+    L_dir.Set           (0,0,1);				if (_abs(L_up.dotproduct(L_dir))>.99f)  L_dir.Set(1,0,0);
     L_right.crossproduct(L_up,L_dir);           L_right.normalize	();
     L_dir.crossproduct  (L_right,L_up);        	L_dir.normalize		();
 
@@ -1007,11 +1007,11 @@ void CDrawUtilities::DrawAxis(const Fmatrix& T)
 
     // position
   	p[0].mad(T.c,T.k,0.25f);
-    p[1].set(p[0]); p[1].x+=.015f;
-    p[2].set(p[0]);
-    p[3].set(p[0]); p[3].y+=.015f;
-    p[4].set(p[0]);
-    p[5].set(p[0]); p[5].z+=.015f;
+    p[1].Set(p[0]); p[1].x+=.015f;
+    p[2].Set(p[0]);
+    p[3].Set(p[0]); p[3].y+=.015f;
+    p[4].Set(p[0]);
+    p[5].Set(p[0]); p[5].z+=.015f;
 
     u32 vBase;
 	FVF::TL* pv	= (FVF::TL*)Stream->Lock(6,vs_TL->vb_stride,vBase);
@@ -1022,7 +1022,7 @@ void CDrawUtilities::DrawAxis(const Fmatrix& T)
     for (int i=0; i<6; i++,pv++){
 	    pv->color = c[i]; pv->transform(p[i],Device.mFullTransform);
 	    pv->p.set((float)iFloor(_x2real(pv->p.x)+dx),(float)iFloor(_y2real(pv->p.y)+dy),0,1);
-        p[i].set(pv->p.x,pv->p.y,0);
+        p[i].Set(pv->p.x,pv->p.y,0);
     }
 
 	// unlock VB and Render it as triangle list

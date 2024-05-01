@@ -169,7 +169,7 @@ IC void Dequantize(CKey& K,const CBlend& BD,const CMotion& M)
 	}
 	else
 	{
-		D->T.set	(M._initT);
+		D->T.Set	(M._initT);
 	}
 }
 
@@ -184,7 +184,7 @@ IC void MixInterlerp( CKey &Result, const CKey	*R, const CBlend* const BA[MAX_BL
 	{
 	case 0:
 		Result.Q.set	(0,0,0,0);
-		Result.T.set	(0,0,0);
+		Result.T.Set	(0,0,0);
 		break;
 	case 1: 
 		Result			= R[0];
@@ -274,7 +274,7 @@ IC void key_sub(CKey &rk, const CKey &k0, const CKey& k1)//sub right
 IC void key_identity(CKey &k)
 {
 	k.Q.identity();
-	k.T.set(0,0,0);
+	k.T.Set(0,0,0);
 }
 IC void key_add(CKey &res, const CKey &k0, const CKey &k1)//add right
 {

@@ -64,7 +64,7 @@ bool CControlRotationJump::check_start_conditions()
 	if (m_time_next_rotation_jump > Device.dwTimeGlobal)	return false;
 
 	Fvector									enemy_position;
-	enemy_position.set						(m_object->EnemyMan.get_enemy()->Position());
+	enemy_position.Set						(m_object->EnemyMan.get_enemy()->Position());
 	if (m_man->direction().is_face_target(enemy_position, CHECK_YAW))	return false;
 	
 	SVelocityParam &velocity_run			= m_object->move().get_velocity(MonsterMovement::eVelocityParameterRunNormal);

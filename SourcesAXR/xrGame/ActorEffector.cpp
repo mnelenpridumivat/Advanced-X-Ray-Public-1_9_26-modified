@@ -362,11 +362,11 @@ CControllerPsyHitCamEffector::CControllerPsyHitCamEffector(ECamEffectorType type
 	m_dest_fov				=	dest_fov;
 	m_time_total			=	time;
 	m_time_current			=	0;
-	m_dangle_target.set			(	angle_normalize(Random.randFs(DELTA_ANGLE_X)),
+	m_dangle_target.Set			(	angle_normalize(Random.randFs(DELTA_ANGLE_X)),
 									angle_normalize(Random.randFs(DELTA_ANGLE_Y)),
 									angle_normalize(Random.randFs(DELTA_ANGLE_Z))	);
 
-	m_dangle_current.set		(0.f, 0.f, 0.f);
+	m_dangle_current.Set		(0.f, 0.f, 0.f);
 	m_position_source		=	src_pos;
 	m_direction.sub				(target_pos,src_pos);
 	m_distance				=	m_direction.magnitude();
@@ -377,10 +377,10 @@ BOOL CControllerPsyHitCamEffector::ProcessCam(SCamEffectorInfo& info)
 {
 	Fmatrix	Mdef;
 	Mdef.identity		();
-	Mdef.j.set			(info.n);
-	Mdef.k.set			(m_direction);
+	Mdef.j.Set			(info.n);
+	Mdef.k.Set			(m_direction);
 	Mdef.i.crossproduct	(info.n,m_direction);
-	Mdef.c.set			(info.p);
+	Mdef.c.Set			(info.p);
 
 	//////////////////////////////////////////////////////////////////////////
 
@@ -421,9 +421,9 @@ BOOL CControllerPsyHitCamEffector::ProcessCam(SCamEffectorInfo& info)
 	Fmatrix		mR;
 	mR.mul		(Mdef,R);
 
-	info.d.set		(mR.k);
-	info.n.set		(mR.j);
-	info.p.set		(mR.c);
+	info.d.Set		(mR.k);
+	info.n.Set		(mR.j);
+	info.p.Set		(mR.c);
 
 	return TRUE;
 }

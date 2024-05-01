@@ -70,7 +70,7 @@ public:
 
 CCoverEvaluator::CCoverEvaluator(CRestrictedObject *object) : inherited(object)
 {
-	m_dest_position.set		(flt_max,flt_max,flt_max);
+	m_dest_position.Set		(flt_max,flt_max,flt_max);
 	m_deviation				= flt_max;
 	m_min_distance			= flt_max;
 	m_max_distance			= flt_max;

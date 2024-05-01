@@ -107,7 +107,7 @@ void CTelekineticObject::raise(float step)
 	step *= strength;
 	
 	Fvector dir;
-	dir.set(0.f,1.0f,0.f);
+	dir.Set(0.f,1.0f,0.f);
 
 	float elem_size = float(object->m_pPhysicsShell->Elements().size());
 	dir.mul(elem_size*elem_size*strength);
@@ -152,10 +152,10 @@ void CTelekineticObject::keep()
 
 	// установить dir в соответствие с текущей высотой
 	Fvector dir;
-	if (cur_h > target_height+ 0.6f)			dir.set(0.f,-1.0f,0.f);
-	else if (cur_h < target_height+ 0.6f)		dir.set(0.f,1.0f,0.f);
+	if (cur_h > target_height+ 0.6f)			dir.Set(0.f,-1.0f,0.f);
+	else if (cur_h < target_height+ 0.6f)		dir.Set(0.f,1.0f,0.f);
 	else {
-		dir.set(Random.randF(-1.0f,1.0f), Random.randF(-1.0f,1.0f), Random.randF(-1.0f,1.0f));
+		dir.Set(Random.randF(-1.0f,1.0f), Random.randF(-1.0f,1.0f), Random.randF(-1.0f,1.0f));
 		dir.normalize_safe();
 	}
 
@@ -177,7 +177,7 @@ void CTelekineticObject::release()
 	
 	
 	Fvector dir_inv;
-	dir_inv.set(0.f,-1.0f,0.f);
+	dir_inv.Set(0.f,-1.0f,0.f);
 
 		// включить гравитацию
 		object->m_pPhysicsShell->set_ApplyByGravity(TRUE);

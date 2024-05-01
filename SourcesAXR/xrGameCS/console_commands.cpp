@@ -282,7 +282,7 @@ public:
 				if (CSE_ALifeAnomalousZone* anom = smart_cast<CSE_ALifeAnomalousZone*>(entity))
 				{
 					CShapeData::shape_def _shape;
-					_shape.data.sphere.P.set(0.0f, 0.0f, 0.0f);
+					_shape.data.sphere.P.Set(0.0f, 0.0f, 0.0f);
 					_shape.data.sphere.R = 3.0f;
 					_shape.type = CShapeData::cfSphere;
 					anom->assign_shapes(&_shape, 1);
@@ -762,7 +762,7 @@ class CCC_DemoRecordSetPos : public CCC_Vector3
 	static Fvector p;
 public:
 
-	CCC_DemoRecordSetPos(LPCSTR N) : CCC_Vector3( N, &p, Fvector().set( -FLT_MAX, -FLT_MAX, -FLT_MAX ),Fvector().set( FLT_MAX, FLT_MAX, FLT_MAX ) ) {};
+	CCC_DemoRecordSetPos(LPCSTR N) : CCC_Vector3( N, &p, Fvector().Set( -FLT_MAX, -FLT_MAX, -FLT_MAX ),Fvector().Set( FLT_MAX, FLT_MAX, FLT_MAX ) ) {};
 	virtual void Execute(LPCSTR args) {
 		#ifndef	DEBUG
 		if (GameID() != eGameIDSingle) 
@@ -2547,7 +2547,7 @@ CMD4(CCC_FloatBlock,		"dbg_text_height_scale",	&dbg_text_height_scale	,			0.2f	,
 	CMD3(CCC_Mask,		"ai_use_torch_dynamic_lights",	&g_uCommonFlags, flAiUseTorchDynamicLights);
 
 #ifndef MASTER_GOLD
-	CMD4(CCC_Vector3,		"psp_cam_offset",				&CCameraLook2::m_cam_offset, Fvector().set(-1000,-1000,-1000),Fvector().set(1000,1000,1000));
+	CMD4(CCC_Vector3,		"psp_cam_offset",				&CCameraLook2::m_cam_offset, Fvector().Set(-1000,-1000,-1000),Fvector().Set(1000,1000,1000));
 #endif // MASTER_GOLD
 
 	CMD1(CCC_GSCheckForUpdates, "check_for_updates");

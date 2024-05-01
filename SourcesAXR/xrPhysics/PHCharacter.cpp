@@ -56,7 +56,7 @@ void	CPHCharacter::UnFreezeContent()
 void	CPHCharacter::getForce(Fvector& force)
 {
 	if(!b_exist)return;
-	force.set(*(Fvector*)dBodyGetForce(m_body));
+	force.Set(*(Fvector*)dBodyGetForce(m_body));
 }
 void	CPHCharacter::setForce(const Fvector &force)
 {
@@ -72,10 +72,10 @@ void CPHCharacter::get_State(SPHNetState& state)
 	GetVelocity(state.linear_vel);
 	getForce(state.force);
 
-	state.angular_vel.set(0.f,0.f,0.f);
+	state.angular_vel.Set(0.f,0.f,0.f);
 	state.quaternion.identity();
 	state.previous_quaternion.identity();
-	state.torque.set(0.f,0.f,0.f);
+	state.torque.Set(0.f,0.f,0.f);
 //	state.accel = GetAcceleration();
 //	state.max_velocity = GetMaximumVelocity();
 
@@ -139,7 +139,7 @@ void  CarHitCallback(bool& /**do_colide/**/,dContact& /**c/**/)
 void CPHCharacter::GetSavedVelocity(Fvector& vvel)
 {
 	
-	if(IsEnabled())vvel.set(m_safe_velocity);
+	if(IsEnabled())vvel.Set(m_safe_velocity);
 	else GetVelocity(vvel);
 }
 
@@ -167,7 +167,7 @@ void			CPHCharacter::get_LinearVel		( Fvector& velocity )		const
 }
 void			CPHCharacter::get_AngularVel		( Fvector& velocity )		const		
 {
-	velocity.set(0,0,0);
+	velocity.Set(0,0,0);
 }
 
 const	Fvector	&CPHCharacter::mass_Center		()							const			
@@ -180,7 +180,7 @@ void CPHCharacter::get_body_position( Fvector &p )
 {
 	VERIFY(b_exist);
 	VERIFY(get_body());
-	p.set(cast_fv(dBodyGetPosition(get_body())));
+	p.Set(cast_fv(dBodyGetPosition(get_body())));
 }
 
 void	virtual_move_collide_callback( bool& do_collide, bool bo1, dContact& c, SGameMtl* material_1, SGameMtl* material_2 )

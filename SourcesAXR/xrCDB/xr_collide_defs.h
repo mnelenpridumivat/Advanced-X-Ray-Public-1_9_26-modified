@@ -3,6 +3,7 @@
 //#pragma once
 
 #include "xrcdb.h"
+#include "../xrCore/StructDefines.h"
 
 class CObject;
 namespace collide 
@@ -31,13 +32,13 @@ namespace collide
 		Fvector				verts[3];
 		ray_cache() 
 		{
-			start.set	(0,0,0);
-			dir.set		(0,0,0);
+			start.Set	(0,0,0);
+			dir.Set		(0,0,0);
 			range		= 0;
 			result		= FALSE;
-			verts[0].set(0,0,0);
-			verts[1].set(0,0,0);
-			verts[2].set(0,0,0);
+			verts[0].Set(0,0,0);
+			verts[1].Set(0,0,0);
+			verts[2].Set(0,0,0);
 		}
 		void				set		(const Fvector& _start, const Fvector& _dir, const float _range,const BOOL _result)
 		{

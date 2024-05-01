@@ -192,7 +192,7 @@ bool CDetailPathManager::build_circle_trajectory(
 	Fvector				curr_pos;
 	u32					curr_vertex_id;
 	direction.sub		(position.position,position.center);
-	curr_pos.set		(position.position.x,0.f,position.position.y);
+	curr_pos.Set		(position.position.x,0.f,position.position.y);
 	curr_vertex_id		= position.vertex_id;
 	float				angle = position.angle;
 	int					size = path ? (int)path->size() : -1;

@@ -9,8 +9,8 @@ namespace FVF {
 		Fvector		p;
 		u32			color;
 		IC void		set(const L& src) {*this = src;};
-		IC void		set(float x, float y, float z, u32 C) { p.set(x,y,z); color=C; }
-		IC void		set(const Fvector& _p, u32 C) { p.set(_p); color=C; }
+		IC void		set(float x, float y, float z, u32 C) { p.Set(x,y,z); color=C; }
+		IC void		set(const Fvector& _p, u32 C) { p.Set(_p); color=C; }
 	};
 	const u32 F_L		= D3DFVF_XYZ | D3DFVF_DIFFUSE;
 
@@ -18,8 +18,8 @@ namespace FVF {
 		Fvector		p;
 		Fvector2	t;
 		IC void		set(const V& src) {*this = src;};
-		IC void		set(float x, float y, float z, float u, float v)	{ p.set(x,y,z); t.set(u,v);}
-		IC void		set(const Fvector& _p,float u, float v)				{ p.set(_p);	t.set(u,v);}
+		IC void		set(float x, float y, float z, float u, float v)	{ p.Set(x,y,z); t.set(u,v);}
+		IC void		set(const Fvector& _p,float u, float v)				{ p.Set(_p);	t.set(u,v);}
 	};
 	const u32 F_V		= D3DFVF_XYZ | D3DFVF_TEX1;
 
@@ -28,8 +28,8 @@ namespace FVF {
 		u32			color;
 		Fvector2	t;
 		IC void		set(const LIT& src) {*this = src;};
-		IC void		set(float x, float y, float z, u32 C, float u, float v) { p.set(x,y,z); color=C; t.set(u,v);}
-		IC void		set(const Fvector& _p, u32 C, float u, float v) { p.set(_p); color=C; t.set(u,v);}
+		IC void		set(float x, float y, float z, u32 C, float u, float v) { p.Set(x,y,z); color=C; t.set(u,v);}
+		IC void		set(const Fvector& _p, u32 C, float u, float v) { p.Set(_p); color=C; t.set(u,v);}
 	};
 	const u32 F_LIT	= D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1;
 

@@ -3,8 +3,7 @@
 Copyright (c) 1997-2000 John Robbins -- All rights reserved.
 ----------------------------------------------------------------------*/
 
-#ifndef _INTERNAL_H
-#define _INTERNAL_H
+#pragma once
 
 // The NT4 specific version of GetLoadedModules.
 BOOL __stdcall NT4GetLoadedModules ( DWORD     dwPID        ,
@@ -60,8 +59,5 @@ BOOL InternalMemStressInitialize ( void ) ;
 // process detach.
 BOOL InternalMemStressShutdown ( void ) ;
 #endif  // _DEBUG
-
-
-#endif  // _INTERNAL_H
 
 

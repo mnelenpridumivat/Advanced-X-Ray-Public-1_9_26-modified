@@ -734,8 +734,8 @@ void CWeaponMagazined::state_Fire(float dt)
 		VERIFY(fOneShotTime>0.f);
 
 		Fvector					p1, d; 
-		p1.set(get_LastFP());
-		d.set(get_LastFD());
+		p1.Set(get_LastFP());
+		d.Set(get_LastFD());
 
 		if (!H_Parent()) return;
 		if (smart_cast<CMPPlayersBag*>(H_Parent()) != NULL)

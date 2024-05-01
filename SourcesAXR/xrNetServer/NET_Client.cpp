@@ -1,4 +1,6 @@
 #include "stdafx.h"
+#include <WINSOCK2.H>
+#include <Ws2tcpip.h>
 #include "NET_Common.h"
 #include "net_client.h"
 #include "net_server.h"
@@ -1145,8 +1147,6 @@ BOOL	IPureClient::net_IsSyncronised()
 	return net_Syncronised;
 }
 
-#include <WINSOCK2.H>
-#include <Ws2tcpip.h>
 bool	IPureClient::GetServerAddress		(ip_address& pAddress, DWORD* pPort)
 {
 	*pPort		= 0;

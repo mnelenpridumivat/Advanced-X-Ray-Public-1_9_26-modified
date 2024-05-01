@@ -1,6 +1,5 @@
-#ifndef dx9r_constants_cacheH
-#define dx9r_constants_cacheH
 #pragma once
+#include "../../xrCore/StructDefines.h"
 
 template <class T, u32 limit>
 class	R_constant_cache
@@ -170,4 +169,3 @@ public:
 		if (a_pixel.b_dirty || a_vertex.b_dirty)	flush_cache();
 	}
 };
-#endif	//	dx9r_constants_cacheH

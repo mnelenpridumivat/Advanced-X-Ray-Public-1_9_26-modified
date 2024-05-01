@@ -213,11 +213,11 @@ IC float CLevelGraph::vertex_plane_y	(const CLevelGraph::CVertex &vertex, const 
 	Fvector				DUP, normal, v, v1, P;
 	Fplane				PL; 
 
-	DUP.set				(0,1,0);
+	DUP.Set				(0,1,0);
 	pvDecompress		(normal,vertex.plane());
 	vertex_position		(P,vertex.position());
 	PL.build			(P,normal);
-	v.set				(X,P.y,Z);	
+	v.Set				(X,P.y,Z);	
 	PL.intersectRayPoint(v,DUP,v1);	
 	return				(v1.y);
 }
@@ -381,7 +381,7 @@ IC	const u32 CLevelGraph::vertex_id(const CLevelGraph::CVertex *vertex) const
 
 IC  Fvector CLevelGraph::v3d(const Fvector2 &vector2d) const
 {
-	return				(Fvector().set(vector2d.x,0.f,vector2d.y));
+	return				(Fvector().Set(vector2d.x,0.f,vector2d.y));
 }
 
 IC  Fvector2 CLevelGraph::v2d(const Fvector &vector3d) const

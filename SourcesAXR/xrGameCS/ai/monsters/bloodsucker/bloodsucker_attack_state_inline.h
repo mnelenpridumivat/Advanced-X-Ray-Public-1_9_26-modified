@@ -283,7 +283,7 @@ void   CStateMonsterBackstubEnemy<_Object>::execute ()
 	data.point  = object->EnemyMan.get_enemy_position();
 	data.vertex = 0;
 
-	data.target_direction = Fvector().set(0.f, 0.f, 0.f);
+	data.target_direction = Fvector().Set(0.f, 0.f, 0.f);
 	const CEntityAlive* enemy = object->EnemyMan.get_enemy();
 	VERIFY(enemy);
 

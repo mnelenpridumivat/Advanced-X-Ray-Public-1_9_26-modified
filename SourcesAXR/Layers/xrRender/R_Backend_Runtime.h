@@ -1,11 +1,10 @@
-#ifndef R_BACKEND_RUNTIMEH
-#define R_BACKEND_RUNTIMEH
 #pragma once
 
 #include "sh_texture.h"
 #include "sh_matrix.h"
 #include "sh_constant.h"
 #include "sh_rt.h"
+#include "../../xrCore/StructDefines.h"
 
 #ifdef USE_DX11
 #include "../xrRenderDX10/dx10R_Backend_Runtime.h"
@@ -112,5 +111,3 @@ ICF void CBackend::set_Shader			(Shader* S, u32 pass)
 {
 	set_Element			(S->E[0],pass);
 }
-
-#endif

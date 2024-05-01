@@ -263,8 +263,8 @@ void	imotion_position::state_end( )
 	VERIFY( obj );
 	obj->processing_deactivate();
 	shell->Enable();
-	shell->setForce( Fvector().set( 0.f, 0.f, 0.f ) );
-	shell->setTorque( Fvector().set( 0.f, 0.f, 0.f ) );
+	shell->setForce( Fvector().Set( 0.f, 0.f, 0.f ) );
+	shell->setTorque( Fvector().Set( 0.f, 0.f, 0.f ) );
 
 	shell->AnimToVelocityState( end_delta, default_l_limit * 10, default_w_limit * 10 );
 #ifdef	DEBUG
@@ -730,7 +730,7 @@ void	imotion_position::rootbone_callback	( CBoneInstance *BI )
 	}
 	if( key )
 	{
-		key->Q.rotation( Fvector().set( 0, 1, 0 ), im->angle );
+		key->Q.rotation( Fvector().Set( 0, 1, 0 ), im->angle );
 	}
 	KA->LL_BoneMatrixBuild( *BI, &Fidentity, keys );
 

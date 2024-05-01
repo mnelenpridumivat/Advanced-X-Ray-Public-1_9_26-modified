@@ -35,14 +35,14 @@ void CRender::Calculate		()
 
 		if (0==pSector) pSector = pLastSector;
 		pLastSector = pSector;
-		vLastCameraPos.set(Device.vCameraPosition);
+		vLastCameraPos.Set(Device.vCameraPosition);
 	}
 
 	// Check if camera is too near to some portal - if so force DualRender
 	if (rmPortals) 
 	{
 		float	eps			= VIEWPORT_NEAR+EPS_L;
-		Fvector box_radius; box_radius.set(eps,eps,eps);
+		Fvector box_radius; box_radius.Set(eps,eps,eps);
 		Sectors_xrc.box_options	(CDB::OPT_FULL_TEST);
 		Sectors_xrc.box_query	(rmPortals,Device.vCameraPosition,box_radius);
 		for (int K=0; K<Sectors_xrc.r_count(); K++)	{

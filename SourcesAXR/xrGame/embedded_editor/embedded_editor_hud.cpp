@@ -1,4 +1,5 @@
 #include "stdAfx.h"
+#include "float.h"
 #include "embedded_editor_hud.h"
 #include "embedded_editor_helper.h"
 //#include <addons/ImGuizmo/ImGuizmo.h>

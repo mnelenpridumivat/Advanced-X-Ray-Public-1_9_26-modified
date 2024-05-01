@@ -160,12 +160,12 @@ void CLightR_Manager::render_point	(u32 _priority)
 		//		1. Calculate light frustum
 		Fvector						L_dir,L_up,L_right,L_pos;
 		Fmatrix						L_view,L_project,L_combine;
-		L_dir.set					(0,-1, 0);				
-		L_up.set					(0,	0, 1);				
+		L_dir.Set					(0,-1, 0);				
+		L_up.Set					(0,	0, 1);				
 		L_right.crossproduct		(L_up,L_dir);			L_right.normalize	();
 		L_up.crossproduct			(L_dir,L_right);		L_up.normalize		();
 		float	_camrange			= 300.f;
-		L_pos.set					(L->position);			
+		L_pos.Set					(L->position);			
 		//L_pos.y	+=	_camrange;
 		L_view.build_camera_dir		(L_pos,L_dir,L_up);
 		L_project.build_projection	(deg2rad(2.f),1.f,_camrange-L->range,_camrange+L->range);
@@ -239,11 +239,11 @@ void CLightR_Manager::render_spot	(u32 _priority)
 		//		1. Calculate light frustum
 		Fvector						L_dir,L_up,L_right,L_pos;
 		Fmatrix						L_view,L_project,L_combine;
-		L_dir.set					(L->direction);			L_dir.normalize		();
-		L_up.set					(0,1,0);				if (_abs(L_up.dotproduct(L_dir))>.99f)	L_up.set(0,0,1);
+		L_dir.Set					(L->direction);			L_dir.normalize		();
+		L_up.Set					(0,1,0);				if (_abs(L_up.dotproduct(L_dir))>.99f)	L_up.Set(0,0,1);
 		L_right.crossproduct		(L_up,L_dir);			L_right.normalize	();
 		L_up.crossproduct			(L_dir,L_right);		L_up.normalize		();
-		L_pos.set					(L->position);
+		L_pos.Set					(L->position);
 		L_view.build_camera_dir		(L_pos,L_dir,L_up);
 		L_project.build_projection	(L->cone,1.f,SSM_near_plane,L->range+EPS_S);
 		L_combine.mul				(L_project,L_view);

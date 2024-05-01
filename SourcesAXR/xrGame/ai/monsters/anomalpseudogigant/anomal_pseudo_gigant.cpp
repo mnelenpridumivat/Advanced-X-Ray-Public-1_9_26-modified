@@ -271,7 +271,7 @@ void	CAnomalPseudoGigant::Hit(SHit* pHDS)
 		// установить particles
 		CParticlesObject* ps = CParticlesObject::Create(particle_fire_shield, TRUE);
 
-		ps->UpdateParent(pos, Fvector().set(0.f, 0.f, 0.f));
+		ps->UpdateParent(pos, Fvector().Set(0.f, 0.f, 0.f));
 		GamePersistent().ps_needtoplay.push_back(ps);
 
 	}

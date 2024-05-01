@@ -202,7 +202,7 @@ void attachable_hud_item::setup_firedeps(firedeps& fd)
 		m_item_transform.transform_tiny					(fd.vLastFP);
 		fd.vLastFP.add									(Device.vCameraPosition);
 
-		fd.vLastFD.set									(0.f,0.f,1.f);
+		fd.vLastFD.Set									(0.f,0.f,1.f);
 		m_item_transform.transform_dir					(fd.vLastFD);
 
 		auto Wpn = smart_cast<CWeapon*>(m_parent_hud_item);
@@ -213,7 +213,7 @@ void attachable_hud_item::setup_firedeps(firedeps& fd)
 		VERIFY(_valid(fd.vLastFD));
 
 		fd.m_FireParticlesXForm.identity				();
-		fd.m_FireParticlesXForm.k.set					(fd.vLastFD);
+		fd.m_FireParticlesXForm.k.Set					(fd.vLastFD);
 		Fvector::generate_orthonormal_basis_normalized	(	fd.m_FireParticlesXForm.k,
 															fd.m_FireParticlesXForm.j, 
 															fd.m_FireParticlesXForm.i);
@@ -285,7 +285,7 @@ void hud_item_measures::load(const shared_str& sect_name, IKinematics* K)
 		m_fire_bone				= K->LL_BoneID(bone_name);
 		m_fire_point_offset		= pSettings->r_fvector3(sect_name, "fire_point");
 	}else
-		m_fire_point_offset.set(0,0,0);
+		m_fire_point_offset.Set(0,0,0);
 
 	m_prop_flags.set			 (e_fire_point2,pSettings->line_exist(sect_name,"fire_bone2"));
 	if(m_prop_flags.test(e_fire_point2))
@@ -294,7 +294,7 @@ void hud_item_measures::load(const shared_str& sect_name, IKinematics* K)
 		m_fire_bone2			= K->LL_BoneID(bone_name);
 		m_fire_point2_offset	= pSettings->r_fvector3(sect_name, "fire_point2");
 	}else
-		m_fire_point2_offset.set(0,0,0);
+		m_fire_point2_offset.Set(0,0,0);
 
 	m_prop_flags.set			 (e_shell_point,pSettings->line_exist(sect_name,"shell_bone"));
 	if(m_prop_flags.test(e_shell_point))
@@ -303,10 +303,10 @@ void hud_item_measures::load(const shared_str& sect_name, IKinematics* K)
 		m_shell_bone			= K->LL_BoneID(bone_name);
 		m_shell_point_offset	= pSettings->r_fvector3(sect_name, "shell_point");
 	}else
-		m_shell_point_offset.set(0,0,0);
+		m_shell_point_offset.Set(0,0,0);
 
-	m_hands_offset[0][0].set	(0,0,0);
-	m_hands_offset[1][0].set	(0,0,0);
+	m_hands_offset[0][0].Set	(0,0,0);
+	m_hands_offset[1][0].Set	(0,0,0);
 
 	strconcat					(sizeof(val_name),val_name,"aim_hud_offset_pos",_prefix);
 	m_hands_offset[0][1]		= pSettings->r_fvector3(sect_name, val_name);
@@ -332,8 +332,8 @@ void hud_item_measures::load(const shared_str& sect_name, IKinematics* K)
 	}
 	else
 	{
-		m_collision_offset[0] = Fvector().set(0.f, 0.f, 0.f);
-		m_collision_offset[1] = Fvector().set(0.f, 0.f, 0.f);
+		m_collision_offset[0] = Fvector().Set(0.f, 0.f, 0.f);
+		m_collision_offset[1] = Fvector().Set(0.f, 0.f, 0.f);
 	}
 
 	R_ASSERT2(pSettings->line_exist(sect_name,"fire_point")==pSettings->line_exist(sect_name,"fire_bone"),		sect_name.c_str());
@@ -554,7 +554,7 @@ void player_hud::Thumb0Callback(CBoneInstance* B)
 		current.add(diff[0]);
 	}
 	else
-		current.set(target);
+		current.Set(target);
 
 	Fmatrix rotation;
 	rotation.identity();
@@ -588,7 +588,7 @@ void player_hud::Thumb01Callback(CBoneInstance* B)
 		current.add(diff[0]);
 	}
 	else
-		current.set(target);
+		current.Set(target);
 
 	Fmatrix rotation;
 	rotation.identity();
@@ -622,7 +622,7 @@ void player_hud::Thumb02Callback(CBoneInstance* B)
 		current.add(diff[0]);
 	}
 	else
-		current.set(target);
+		current.Set(target);
 
 	Fmatrix rotation;
 	rotation.identity();
@@ -813,7 +813,7 @@ const Fvector& player_hud::attach_rot(u8 part) const
 	else if (m_attached_items[!part])
 		return m_attached_items[!part]->hands_attach_rot();
 
-	return Fvector().set(0.f, 0.f, 0.f);
+	return Fvector().Set(0.f, 0.f, 0.f);
 }
 
 const Fvector& player_hud::attach_pos(u8 part) const
@@ -823,7 +823,7 @@ const Fvector& player_hud::attach_pos(u8 part) const
 	else if (m_attached_items[!part])
 		return m_attached_items[!part]->hands_attach_pos();
 
-	return Fvector().set(0.f, 0.f, 0.f);
+	return Fvector().Set(0.f, 0.f, 0.f);
 }
 
 void player_hud::update(const Fmatrix& cam_trans)

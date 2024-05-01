@@ -104,7 +104,7 @@ void		CWallmarksEngine::static_wm_render		(CWallmarksEngine::static_wallmark*	W,
 	FVF::LIT*	S		= &*W->verts.begin	();
 	FVF::LIT*	E		= &*W->verts.end	();
 	for (; S!=E; S++, V++){
-		V->p.set		(S->p);
+		V->p.Set		(S->p);
 		V->color		= C;
 		V->t.set		(S->t);
 	}
@@ -174,8 +174,8 @@ void CWallmarksEngine::BuildMatrix	(Fmatrix &mView, float invsz, const Fvector& 
 	Fmatrix				mScale;
     Fvector				at,up,right,y;
 	at.sub				(from,sml_normal);
-	y.set				(0,1,0);
-	if (_abs(sml_normal.y)>.99f) y.set(1,0,0);
+	y.Set				(0,1,0);
+	if (_abs(sml_normal.y)>.99f) y.Set(1,0,0);
 	right.crossproduct	(y,sml_normal);
 	up.crossproduct		(sml_normal,right);
 	mView.build_camera	(from,at,up);
@@ -214,7 +214,7 @@ void CWallmarksEngine::AddWallmark_internal	(CDB::TRI* pTri, const Fvector* pVer
 	// calc face normal
 	Fvector	N;
 	N.mknormal			(pVerts[pTri->verts[0]],pVerts[pTri->verts[1]],pVerts[pTri->verts[2]]);
-	sml_normal.set		(N);
+	sml_normal.Set		(N);
 
 	// build 3D ortho-frustum
 	Fmatrix				mView,mRot;

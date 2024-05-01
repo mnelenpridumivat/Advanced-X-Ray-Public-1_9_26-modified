@@ -136,7 +136,7 @@ public:
 	virtual void					OnGameEnd			();
 
 	virtual void					UpdateGameType		() {};
-	virtual void					GetCurrentDof		(Fvector3& dof){dof.set(-1.4f, 0.0f, 250.f);};
+	virtual void					GetCurrentDof		(Fvector3& dof){dof.Set(-1.4f, 0.0f, 250.f);};
 	virtual void					SetBaseDof			(const Fvector3& dof){};
 	virtual void					OnSectorChanged		(int sector){};
 	virtual void					OnAssetsChanged		();

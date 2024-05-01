@@ -36,9 +36,9 @@ namespace Feel {
 		if (NULL==result.O && fis_zero(vis)){
 			CDB::TRI* T	= g_pGameLevel->ObjectSpace.GetStaticTris()+result.element;
 			Fvector* V	= g_pGameLevel->ObjectSpace.GetStaticVerts();
-			fp->item->Cache.verts[0].set	(V[T->verts[0]]);
-			fp->item->Cache.verts[1].set	(V[T->verts[1]]);
-			fp->item->Cache.verts[2].set	(V[T->verts[2]]);
+			fp->item->Cache.verts[0].Set	(V[T->verts[0]]);
+			fp->item->Cache.verts[1].Set	(V[T->verts[1]]);
+			fp->item->Cache.verts[2].Set	(V[T->verts[2]]);
 		}
 		return (fp->vis>fp->vis_threshold); 
 	}
@@ -48,9 +48,9 @@ namespace Feel {
 		feel_visible_Item&	I	= feel_visible.back();
 		I.O						= O;
 		I.Cache_vis				= 1.f;
-		I.Cache.verts[0].set	(0,0,0);
-		I.Cache.verts[1].set	(0,0,0);
-		I.Cache.verts[2].set	(0,0,0);
+		I.Cache.verts[0].Set	(0,0,0);
+		I.Cache.verts[1].Set	(0,0,0);
+		I.Cache.verts[2].Set	(0,0,0);
 		I.fuzzy					= -EPS_S;
 
 		if (CallOfPripyatMode)
@@ -60,7 +60,7 @@ namespace Feel {
 		}
 		else
 		{
-			I.cp_LP.set(0, 0, 0);
+			I.cp_LP.Set(0, 0, 0);
 		}
 
 	}

@@ -122,7 +122,7 @@ void CStalkerActionReachEnemyLocation::execute			()
 		object().sight().setup		(
 			CSightAction(
 				SightManager::eSightTypePosition,
-				Fvector(mem_object.m_object_params.m_position).add(Fvector().set(0.f, .5f, 0.f)),
+				Fvector(mem_object.m_object_params.m_position).add(Fvector().Set(0.f, .5f, 0.f)),
 //				mem_object.m_object_params.m_position,
 				true
 			)
@@ -141,7 +141,7 @@ void CStalkerActionReachEnemyLocation::execute			()
 		object().sight().setup		(
 			CSightAction(
 				SightManager::eSightTypePosition,
-				Fvector(mem_object.m_object_params.m_position).add(Fvector().set(0.f, .5f, 0.f)),
+				Fvector(mem_object.m_object_params.m_position).add(Fvector().Set(0.f, .5f, 0.f)),
 //				mem_object.m_object_params.m_position,
 				true
 			)

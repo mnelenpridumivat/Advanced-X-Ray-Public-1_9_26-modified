@@ -537,10 +537,10 @@ void CController::draw_fire_particles()
 
 	// вычислить позицию и направленность партикла
 	Fvector my_head_pos;
-	my_head_pos.set	(get_head_position(this));
+	my_head_pos.Set	(get_head_position(this));
 	
 	Fvector position;
-	position.set	(get_head_position(enemy));
+	position.Set	(get_head_position(enemy));
 	position.y		-= 0.5f;
 	
 	Fvector			dir;

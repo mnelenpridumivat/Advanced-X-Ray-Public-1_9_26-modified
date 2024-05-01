@@ -1,5 +1,5 @@
-#ifndef MATH_UTILS_H
-#define MATH_UTILS_H
+#pragma once
+#include "../xrCore/_obb.h"
 
 
 extern XRPHYSICS_API	const float	phInfinity;
@@ -155,8 +155,8 @@ IC	void twoq_2w(const Fquaternion& q1,const Fquaternion& q2,float dt,Fvector& w)
 //		[q1.w*q2.v-q2.w*q1.v-q1.v.crossproduct(q2.v)]
 	
 	Fvector v1,v2;
-	v1.set(q1.x,q1.y,q1.z);
-	v2.set(q2.x,q2.y,q2.z);
+	v1.Set(q1.x,q1.y,q1.z);
+	v2.Set(q2.x,q2.y,q2.z);
 	float cosinus=q1.w*q2.w+v1.dotproduct(v2);//q1.w*q2.w+ q1.v.dotproduct(q2.v)
 	w.crossproduct(v1,v2);
 	//								  //the signum must be inverted ?
@@ -175,7 +175,7 @@ IC float	to_mag_and_dir(const Fvector &in_v,Fvector &out_v)
 	if(!fis_zero(mag))
 		out_v.mul(in_v,1.f/mag);
 	else
-		out_v.set(0.f,0.f,0.f);
+		out_v.Set(0.f,0.f,0.f);
 	return mag;
 }
 
@@ -194,14 +194,14 @@ IC void		prg_pos_on_axis(const Fvector	&in_ax_p,const Fvector &in_ax_d,Fvector &
 	in_out_pos.sub(in_ax_p);
 	float ax_mag=in_ax_d.magnitude();
 	float prg=in_out_pos.dotproduct(in_ax_d)/ax_mag;
-	in_out_pos.set(in_ax_d);
+	in_out_pos.Set(in_ax_d);
 	in_out_pos.mul(prg/ax_mag);
 	in_out_pos.add(in_ax_p);
 }
 IC float		prg_pos_on_plane(const Fvector	&in_norm,float d,const Fvector &in_pos,Fvector &out_pos)
 {
 	float prg=d-in_pos.dotproduct(in_norm);
-	Fvector diff;diff.set(in_norm);diff.mul(prg);
+	Fvector diff;diff.Set(in_norm);diff.mul(prg);
 	out_pos.add(in_pos,diff);
 	return prg;
 }
@@ -209,14 +209,14 @@ IC float		prg_pos_on_plane(const Fvector	&in_norm,float d,const Fvector &in_pos,
 IC void		prg_on_normal( const Fvector	&in_norm, const Fvector &in_dir, Fvector &out_dir )
 {
 	float prg=-in_dir.dotproduct(in_norm);
-	Fvector diff;diff.set(in_norm);diff.mul(prg);
+	Fvector diff;diff.Set(in_norm);diff.mul(prg);
 	out_dir.add(in_dir,diff);
 	return;
 }
 
 IC void		restrict_vector_in_dir(Fvector& V,const Fvector& dir)
 {
-	Fvector sub;sub.set(dir);
+	Fvector sub;sub.Set(dir);
 	float dotpr =dir.dotproduct(V);
 	if(dotpr>0.f)
 	{
@@ -395,5 +395,4 @@ const float				DET_CHECK_FATAL_EPS =0.8f					;//scale -35%  !? ;)
 	}};
 #else
 #define	VERIFY_RMATRIX(M)	
-#endif
 #endif

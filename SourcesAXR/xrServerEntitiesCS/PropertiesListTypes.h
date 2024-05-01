@@ -523,9 +523,9 @@ class VectorValue: public NumericValue<Fvector>{
 public:
 						VectorValue		(Fvector* val, float mn, float mx, float increment, int decimal):NumericValue<Fvector>(val)
     {
-    	lim_mn.set		(mn,mn,mn);
-    	lim_mx.set		(mx,mx,mx);
-        inc.set			(increment,increment,increment);
+    	lim_mn.Set		(mn,mn,mn);
+    	lim_mx.Set		(mx,mx,mx);
+        inc.Set			(increment,increment,increment);
         dec				= decimal;
     };
 };

@@ -149,8 +149,8 @@ static float doun_shift_correct = 0.1f;
 bool	CIKLimbsController::PredictObjectShift			(  const SCalculateData cd[max_size] )
 {
 	
-	float predict_time_shift_down = FLT_MAX;
-	float predict_time_shift_up = FLT_MAX;
+	float predict_time_shift_down = std::numeric_limits<float>::max();
+	float predict_time_shift_up = std::numeric_limits<float>::max();
 	float predict_shift_down = 0.f;
 	//float predict_shift_up = 0.f;
 	bool shift_down = false;
@@ -181,7 +181,7 @@ bool	CIKLimbsController::PredictObjectShift			(  const SCalculateData cd[max_siz
 			
 		} 
 	float	predict_shift = 0;
-	float	predict_time_shift = FLT_MAX;
+	float	predict_time_shift = std::numeric_limits<float>::max();
 
 	if( shift_down )
 	{
@@ -259,7 +259,7 @@ void CIKLimbsController::Calculate( )
 	Fmatrix &obj = m_object->XFORM( );
 #ifdef	DEBUG
 	if( ph_dbg_draw_mask1.test( phDbgDrawIKSHiftObject ) )
-		_object_shift.dbg_draw( obj, _pose_extrapolation, Fvector().set( 0,2.5f,0));
+		_object_shift.dbg_draw( obj, _pose_extrapolation, Fvector().Set( 0,2.5f,0));
 #endif
 
 	SCalculateData cd[max_size];
@@ -307,7 +307,7 @@ void CIKLimbsController::Calculate( )
 		Fvector toe;
 		cd[j].m_limb->dbg_ik_foot().ToePosition( toe );
 		m.transform_tiny( toe );
-		DBG_DrawLine( toe, Fvector().add( toe, Fvector().set( 0, -_object_shift.shift(), 0 ) ), color_xrgb( 255, 0, 0 )  );
+		DBG_DrawLine( toe, Fvector().add( toe, Fvector().Set( 0, -_object_shift.shift(), 0 ) ), color_xrgb( 255, 0, 0 )  );
 	}
 #endif
 	}

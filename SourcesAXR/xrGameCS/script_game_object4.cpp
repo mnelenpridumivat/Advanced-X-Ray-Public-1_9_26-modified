@@ -220,7 +220,7 @@ CSightParams CScriptGameObject::sight_params	()
 
 		CSightParams				result;
 		result.m_object				= 0;
-		result.m_vector				= Fvector().set(flt_max,flt_max,flt_max);
+		result.m_vector				= Fvector().Set(flt_max,flt_max,flt_max);
 		result.m_sight_type			= SightManager::eSightTypeDummy;
 		return						(result);
 	}
@@ -300,7 +300,7 @@ void CScriptGameObject::start_particles(LPCSTR pname, LPCSTR bone)
 	u16 play_bone					= K->LL_BoneID(bone);
 	R_ASSERT						(play_bone!=BI_NONE);
 	if(K->LL_GetBoneVisible(play_bone))
-		PP->StartParticles				(pname, play_bone, Fvector().set(0,1,0), 9999);
+		PP->StartParticles				(pname, play_bone, Fvector().Set(0,1,0), 9999);
 	else
 		ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"Cant start particles, bone [%s] is not visible now", bone);
 }

@@ -290,13 +290,13 @@ void CCameraManager::Update(const Fvector& P, const Fvector& D, const Fvector& N
 #endif // DEBUG
 	// camera
 	if (flags&CCameraBase::flPositionRigid)
-		m_cam_info.p.set		(P);
+		m_cam_info.p.Set		(P);
 	else
 		m_cam_info.p.inertion	(P,	psCamInert);
 	if (flags&CCameraBase::flDirectionRigid)
 	{
-		m_cam_info.d.set		(D);
-		m_cam_info.n.set		(N);
+		m_cam_info.d.Set		(D);
+		m_cam_info.n.Set		(N);
 	}else{
 		m_cam_info.d.inertion	(D,	psCamInert);
 		m_cam_info.n.inertion	(N,	psCamInert);
@@ -453,9 +453,9 @@ void CCameraManager::ApplyDeviceInternal(float _viewport_near)
 		Fbox bb = Device.curr_lm_fbox;
 		bb.getcenter(Device.vCameraPosition);
 
-		Device.vCameraDirection.set(0.f, -1.f, 0.f);
-		Device.vCameraTop.set(0.f, 0.f, 1.f);
-		Device.vCameraRight.set(1.f, 0.f, 0.f);
+		Device.vCameraDirection.Set(0.f, -1.f, 0.f);
+		Device.vCameraTop.Set(0.f, 0.f, 1.f);
+		Device.vCameraRight.Set(1.f, 0.f, 0.f);
 		Device.mView.build_camera_dir(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
 
 		bb.xform(Device.mView);
@@ -466,10 +466,10 @@ void CCameraManager::ApplyDeviceInternal(float _viewport_near)
 	{
 		Device.mView.build_camera_dir(m_cam_info.p, m_cam_info.d, m_cam_info.n);
 
-		Device.vCameraPosition.set(m_cam_info.p);
-		Device.vCameraDirection.set(m_cam_info.d);
-		Device.vCameraTop.set(m_cam_info.n);
-		Device.vCameraRight.set(m_cam_info.r);
+		Device.vCameraPosition.Set(m_cam_info.p);
+		Device.vCameraDirection.Set(m_cam_info.d);
+		Device.vCameraTop.Set(m_cam_info.n);
+		Device.vCameraRight.Set(m_cam_info.r);
 
 		// projection
 		Device.fFOV = m_cam_info.fFov;
@@ -554,10 +554,10 @@ void CCameraManager::Dump()
 	Fvector _R,_U,_T,_P;
 	
 	mInvCamera.invert(Device.mView);
-	_R.set( mInvCamera._11, mInvCamera._12, mInvCamera._13 );
-	_U.set( mInvCamera._21, mInvCamera._22, mInvCamera._23 );
-	_T.set( mInvCamera._31, mInvCamera._32, mInvCamera._33 );
-	_P.set( mInvCamera._41, mInvCamera._42, mInvCamera._43 );
+	_R.Set( mInvCamera._11, mInvCamera._12, mInvCamera._13 );
+	_U.Set( mInvCamera._21, mInvCamera._22, mInvCamera._23 );
+	_T.Set( mInvCamera._31, mInvCamera._32, mInvCamera._33 );
+	_P.Set( mInvCamera._41, mInvCamera._42, mInvCamera._43 );
 	Log("CCameraManager::Dump::vPosition  = ",_P);
 	Log("CCameraManager::Dump::vDirection = ",_T);
 	Log("CCameraManager::Dump::vNormal    = ",_U);

@@ -59,16 +59,16 @@ CAI_Rat::~CAI_Rat()
 void CAI_Rat::init()
 {
 	m_tAction				= eRatActionNone;
-	m_hit_direction.set		(0,0,1);
+	m_hit_direction.Set		(0,0,1);
 	m_hit_time				= 0;
 	m_tpCurrentGlobalAnimation.invalidate();
 	m_tpCurrentGlobalBlend	= nullptr;
 	m_bActionStarted		= false;
 	m_bFiring				= false;
 	m_previous_query_time		= 0;
-	m_tGoalDir.set			(10.0f*(Random.randF()-Random.randF()),10.0f*(Random.randF()-Random.randF()),10.0f*(Random.randF()-Random.randF()));
+	m_tGoalDir.Set			(10.0f*(Random.randF()-Random.randF()),10.0f*(Random.randF()-Random.randF()),10.0f*(Random.randF()-Random.randF()));
 	m_tCurrentDir			= m_tGoalDir;
-	m_tHPB.set				(0,0,0);
+	m_tHPB.Set				(0,0,0);
 	m_fDHeading				= 0;
 	m_fGoalChangeTime		= 0.f;
 	m_tLastSound.tpEntity	= nullptr;
@@ -270,11 +270,11 @@ BOOL CAI_Rat::net_Spawn	(CSE_Abstract* DC)
 	m_fSpeed						= m_fCurSpeed = m_fMaxSpeed;
 
 	if (g_Alive())
-		m_tSpawnPosition.set		(Level().seniority_holder().team(g_Team()).squad(g_Squad()).leader()->Position());
+		m_tSpawnPosition.Set		(Level().seniority_holder().team(g_Team()).squad(g_Squad()).leader()->Position());
 	else
-		m_tSpawnPosition.set		(Position());
+		m_tSpawnPosition.Set		(Position());
 
-	m_home_position.set				(m_tSpawnPosition);
+	m_home_position.Set				(m_tSpawnPosition);
 	m_tStateStack.push				(m_eCurrentState = aiRatFreeActive);
 	if (g_Alive())
 		add_active_member			(true);
@@ -404,8 +404,8 @@ void CAI_Rat::CreateSkeleton(){
 	CPhysicsElement* element=P_create_Element();
 	Fobb box;
 	box.m_rotate.identity();
-	box.m_translate.set(0,0.1f,-0.15f);
-	box.m_halfsize.set(0.10f,0.085f,0.25f);
+	box.m_translate.Set(0,0.1f,-0.15f);
+	box.m_halfsize.Set(0.10f,0.085f,0.25f);
 	element->add_Box(box);
 	//Fsphere sphere;
 	//sphere.P.set(0,0,0);
@@ -520,7 +520,7 @@ void CAI_Rat::UpdatePositionAnimation()
 	XFORM()						= l_tSavedTransform;
 
 	if (!bfScriptAnimation())
-		SelectAnimation		(XFORM().k,Fvector().set(1,0,0),m_fSpeed);
+		SelectAnimation		(XFORM().k,Fvector().Set(1,0,0),m_fSpeed);
 }
 
 //void CAI_Rat::Hit(float P,Fvector &dir,CObject*who,s16 element,Fvector p_in_object_space,float impulse, ALife::EHitType hit_type /*= ALife::eHitTypeWound*/)
@@ -530,9 +530,9 @@ void		CAI_Rat::Hit									(SHit* pHDS)
 	inherited::Hit				(pHDS);
 	if (!m_pPhysicsShell) {
 		m_saved_impulse			= pHDS->impulse;
-		m_saved_hit_dir.set		(pHDS->dir);
+		m_saved_hit_dir.Set		(pHDS->dir);
 		m_saved_hit_type		= pHDS->hit_type;
-		m_saved_hit_position.set(pHDS->p_in_bone_space);
+		m_saved_hit_position.Set(pHDS->p_in_bone_space);
 	}
 	else {
 //		CEatableItem::Hit		(P,dir,who,element,p_in_object_space,impulse, hit_type);

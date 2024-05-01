@@ -8,7 +8,7 @@ IC	Fvector& CIKFoot::ToePosition( Fvector &toe_position ) const
 }
 IC	Fvector& CIKFoot::HeelPosition( Fvector &heel_position ) const
 {
-	heel_position.set( m_heel_position.v );
+	heel_position.Set( m_heel_position.v );
 	return heel_position;
 	//return	get_local_vector( heel_position,  m_heel_position );
 }
@@ -25,7 +25,7 @@ IC	Fvector&	CIKFoot::get_local_vector( u16 bone, Fvector &v, const local_vector 
 	
 	if( bone == lv.bone )
 	{
-		v.set(lv.v);
+		v.Set(lv.v);
 	} 
 	else if ( bone == 2 && lv.bone == 3 )
 	{

@@ -2,8 +2,6 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifndef LocatorAPIH
-#define LocatorAPIH
 #pragma once
 
 #pragma warning(push)
@@ -12,6 +10,7 @@
 #pragma warning(pop)
 
 #include "LocatorAPI_defs.h"
+#include "StructDefines.h"
 
 class XRCORE_API CStreamReader;
 
@@ -182,6 +181,4 @@ public:
 
 extern XRCORE_API	CLocatorAPI*					xr_FS;
 #define FS (*xr_FS)
-
-#endif // LocatorAPIH
 

@@ -56,10 +56,10 @@ BOOL CEffectorBobbing::ProcessCam(SCamEffectorInfo& info)
 	if (!fsimilar(fReminderFactor,0)){
 		Fmatrix		M;
 		M.identity	();
-		M.j.set		(info.n);
-		M.k.set		(info.d);
+		M.j.Set		(info.n);
+		M.k.Set		(info.d);
 		M.i.crossproduct(info.n, info.d);
-		M.c.set		(info.p);
+		M.c.Set		(info.p);
 		
 		// apply footstep bobbing effect
 		Fvector dangle;
@@ -97,8 +97,8 @@ BOOL CEffectorBobbing::ProcessCam(SCamEffectorInfo& info)
 		Fmatrix		mR;
 		mR.mul		(M,R);
 		
-		info.d.set	(mR.k);
-		info.n.set	(mR.j);
+		info.d.Set	(mR.k);
+		info.n.Set	(mR.j);
 	}
 //	else{
 //		fTime		= 0;

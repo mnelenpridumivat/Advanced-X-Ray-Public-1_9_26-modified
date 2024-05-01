@@ -205,8 +205,8 @@ BOOL CHelicopter::net_Spawn(CSE_Abstract*	DC)
 	m_i_bind_y_xform.invert	(matrices[m_rotate_y_bone]);
 	m_bind_rot.x			= matrices[m_rotate_x_bone].k.getP();
 	m_bind_rot.y			= matrices[m_rotate_y_bone].k.getH();
-	m_bind_x.set			(matrices[m_rotate_x_bone].c);
-	m_bind_y.set			(matrices[m_rotate_y_bone].c);
+	m_bind_x.Set			(matrices[m_rotate_x_bone].c);
+	m_bind_y.Set			(matrices[m_rotate_y_bone].c);
 	
 	IKinematicsAnimated	*A	= smart_cast<IKinematicsAnimated*>(Visual());
 	if (A) {

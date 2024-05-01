@@ -54,7 +54,7 @@ void CHangingLamp::Center	(Fvector& C) const
 	if (renderable.visual){
 		renderable.xform.transform_tiny(C,renderable.visual->getVisData().sphere.P);	
 	}else{
-		C.set	(XFORM().c);
+		C.Set	(XFORM().c);
 	}
 }
 

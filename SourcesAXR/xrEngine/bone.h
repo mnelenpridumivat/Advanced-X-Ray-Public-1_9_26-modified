@@ -1,6 +1,9 @@
 //----------------------------------------------------
-#ifndef BoneH
-#define BoneH
+#pragma once
+#include "../xrCore/StructDefines.h"
+#include "../xrCore/_obb.h"
+#include "../xrCore/_sphere.h"
+#include "../xrCore/_cylinder.h"
 
 // refs
 class CBone;
@@ -75,7 +78,7 @@ struct ENGINE_API vertBoned1W			// (3+3+3+3+2+1)*4 = 15*4 = 60 bytes
 	Fvector	B;
 	float	u,v;
 	u32		matrix;
-	void	get_pos( Fvector& p ) const { p.set(P); }
+	void	get_pos( Fvector& p ) const { p.Set(P); }
 #ifdef	DEBUG	
 	static const u8 bones_count = 1;
 	u16		get_bone_id(u8 bone)const{ VERIFY(bone<bones_count); return u16(matrix); }
@@ -91,7 +94,7 @@ struct ENGINE_API vertBoned2W			// (1+3+3 + 1+3+3 + 2)*4 = 16*4 = 64 bytes
 	Fvector	B;
 	float	w;
 	float	u,v;
-	void get_pos(Fvector& p) const { p.set(P); }
+	void get_pos(Fvector& p) const { p.Set(P); }
 #ifdef	DEBUG
 	static const u8 bones_count = 2;
 	u16		get_bone_id(u8 bone)const{ VERIFY(bone<bones_count); return bone==0 ? matrix0 : matrix1; }
@@ -106,7 +109,7 @@ struct ENGINE_API vertBoned3W          // 70 bytes
 	Fvector	B;
 	float	w		[2];
 	float	u,v;
-	void get_pos(Fvector& p) const { p.set(P); }
+	void get_pos(Fvector& p) const { p.Set(P); }
 #ifdef	DEBUG
 	static const u8 bones_count = 3;
 	u16		get_bone_id(u8 bone)const{ VERIFY(bone<bones_count); return m[bone]; }
@@ -121,7 +124,7 @@ struct ENGINE_API vertBoned4W       //76 bytes
 	Fvector	B;
 	float	w		[3];
 	float	u,v;
-	void get_pos(Fvector& p) const { p.set(P); }
+	void get_pos(Fvector& p) const { p.Set(P); }
 #ifdef	DEBUG
 	static const u8 bones_count = 4;
 	u16		get_bone_id(u8 bone)const{ VERIFY(bone<bones_count); return m[bone]; }
@@ -184,7 +187,7 @@ struct ECORE_API SBoneShape
 		flags.zero	();
     	type		= stNone;
         box.invalidate();
-        sphere.P.set(0.f,0.f,0.f); sphere.R = 0.f;
+        sphere.P.Set(0.f,0.f,0.f); sphere.R = 0.f;
         cylinder.invalidate();
     }
     bool			Valid(){  
@@ -349,7 +352,7 @@ public:
 	void			    SetName			(const char* p){name		= p; xr_strlwr(name);		}
 	void			    SetParentName	(const char* p){parent_name	= p; xr_strlwr(parent_name);}
 	void			    SetWMap			(const char* p){wmap		= p;}
-	void			    SetRestParams	(float length, const Fvector& offset, const Fvector& rotate){rest_offset.set(offset);rest_rotate.set(rotate);rest_length=length;};
+	void			    SetRestParams	(float length, const Fvector& offset, const Fvector& rotate){rest_offset.Set(offset);rest_rotate.Set(rotate);rest_length=length;};
 
 	shared_str		    Name			(){return name;}
 	shared_str		    ParentName		(){return parent_name;}
@@ -374,8 +377,8 @@ public:
 	IC Fvector&			_RestOffset		(){return rest_offset;}
 	IC Fvector&		    _RestRotate		(){return rest_rotate;}
     
-	void			    _Update			(const Fvector& T, const Fvector& R){mot_offset.set(T); mot_rotate.set(R); mot_length=rest_length;}
-    void			    Reset			(){mot_offset.set(rest_offset); mot_rotate.set(rest_rotate); mot_length=rest_length;}
+	void			    _Update			(const Fvector& T, const Fvector& R){mot_offset.Set(T); mot_rotate.Set(R); mot_length=rest_length;}
+    void			    Reset			(){mot_offset.Set(rest_offset); mot_rotate.Set(rest_rotate); mot_length=rest_length;}
 
     // IO
 	void			    Save			(IWriter& F);
@@ -536,6 +539,3 @@ IC void		CBoneInstance::construct	()
 
 	ZeroMemory(&param, sizeof(param));
 }
-
-
-#endif

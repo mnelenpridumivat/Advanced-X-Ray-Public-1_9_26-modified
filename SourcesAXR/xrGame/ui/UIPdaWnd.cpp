@@ -223,14 +223,14 @@ void CUIPdaWnd::MouseMovement(float x, float y)
 	bool buttonpressed = (bButtonL || bButtonR);
 
 	target_buttonpress = (buttonpressed ? -.0015f : 0.f);
-	target_joystickrot.set(x * -.75f, 0.f, y * .75f);
+	target_joystickrot.Set(x * -.75f, 0.f, y * .75f);
 
 	x += y * pda->m_thumb_rot[0];
 	y += x * pda->m_thumb_rot[1];
 
-	g_player_hud->target_thumb0rot.set(y * .15f, y * -.05f, (x * -.15f) + (buttonpressed ? .002f : 0.f));
-	g_player_hud->target_thumb01rot.set(0.f, 0.f, (x * -.25f) + (buttonpressed ? .01f : 0.f));
-	g_player_hud->target_thumb02rot.set(0.f, 0.f, (x * .75f) + (buttonpressed ? .025f : 0.f));
+	g_player_hud->target_thumb0rot.Set(y * .15f, y * -.05f, (x * -.15f) + (buttonpressed ? .002f : 0.f));
+	g_player_hud->target_thumb01rot.Set(0.f, 0.f, (x * -.25f) + (buttonpressed ? .01f : 0.f));
+	g_player_hud->target_thumb02rot.Set(0.f, 0.f, (x * .75f) + (buttonpressed ? .025f : 0.f));
 }
 
 void CUIPdaWnd::Show(bool status)

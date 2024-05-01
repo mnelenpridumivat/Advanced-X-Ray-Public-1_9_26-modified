@@ -85,12 +85,12 @@ void CPHInterpolation::GetRotation(Fquaternion& q, u16 num)
 void CPHInterpolation::GetPosition(Fvector& p,u16 num)
 {
 	if(!m_body)	return;
-	p.set(qPositions[num]);
+	p.Set(qPositions[num]);
 }
 void CPHInterpolation::SetPosition(const Fvector& p, u16 num)
 {
 	if(!m_body)	return;
-	qPositions[num].set(p);
+	qPositions[num].Set(p);
 }
 
 void CPHInterpolation::SetRotation(const Fquaternion& q, u16 num)

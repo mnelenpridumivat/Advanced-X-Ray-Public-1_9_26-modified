@@ -139,7 +139,7 @@ void dx103DFluidData::ParseProfile(const xr_string &Profile)
 		//Translate.translate(0.5, 0.5, 0.5);
 		//It seems that y axis is inverted in fluid simulation, so shange maths a bit
 		Fvector	vGridDim;
-		vGridDim.set( (float)FluidManager.GetTextureWidth(), (float)FluidManager.GetTextureHeight(), (float)FluidManager.GetTextureDepth() );
+		vGridDim.Set( (float)FluidManager.GetTextureWidth(), (float)FluidManager.GetTextureHeight(), (float)FluidManager.GetTextureDepth() );
 		Scale.scale(vGridDim.x-1, -(vGridDim.y-1), vGridDim.z-1 );
 		Translate.translate(0.5, -0.5, 0.5);
 		//	Actually it is mul(Translate, Scale).

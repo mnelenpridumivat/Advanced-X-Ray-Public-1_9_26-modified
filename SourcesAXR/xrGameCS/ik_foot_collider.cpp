@@ -31,11 +31,11 @@ struct ik_pick_result
 	ik_pick_result(ik_foot_geom::e_collide_point _point): 
 		p(invalide_plane),
 		point( _point ),
-		position( Fvector().set( -FLT_MAX, -FLT_MAX, -FLT_MAX ) )
+		position( Fvector().Set( -FLT_MAX, -FLT_MAX, -FLT_MAX ) )
 	{
-		triangle[0] = Fvector().set( -FLT_MAX, -FLT_MAX, -FLT_MAX );
-		triangle[1] = Fvector().set( -FLT_MAX, -FLT_MAX, -FLT_MAX );
-		triangle[2] = Fvector().set( -FLT_MAX, -FLT_MAX, -FLT_MAX );
+		triangle[0] = Fvector().Set( -FLT_MAX, -FLT_MAX, -FLT_MAX );
+		triangle[1] = Fvector().Set( -FLT_MAX, -FLT_MAX, -FLT_MAX );
+		triangle[2] = Fvector().Set( -FLT_MAX, -FLT_MAX, -FLT_MAX );
 	}
 	Fplane	p;
 	Fvector triangle[3];
@@ -109,7 +109,7 @@ IC bool	get_plane_static(  ik_pick_result &r, Fvector &next_pos, float &next_ran
 	tri_plane( r.triangle[0], r.triangle[1], r.triangle[2], r.p );
 
 	r.position.add(pos, Fvector().mul( pick_v, R.range  ) );
-	next_pos.set( r.position );
+	next_pos.Set( r.position );
 	next_range = pick_dist - R.range;
 	if( ignore_tri( *tri ) )
 	{
@@ -158,7 +158,7 @@ IC bool	get_plane_dynamic(  ik_pick_result &r, Fvector &next_pos, float &next_ra
 				r.triangle[0] = res.tri[0];
 				r.triangle[1] = res.tri[1];
 				r.triangle[2] = res.tri[2];
-				next_pos.set ( r.position );
+				next_pos.Set ( r.position );
 				next_range	  = pick_dist - res.dist;
 				r.range		  = res.dist; 
 				return true;

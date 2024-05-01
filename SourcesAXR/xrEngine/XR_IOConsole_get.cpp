@@ -119,5 +119,5 @@ Fvector CConsole::GetFVector( LPCSTR cmd ) const
 	{
 		return *pV;
 	}
-	return Fvector().set( 0.0f, 0.0f, 0.0f );
+	return Fvector().Set( 0.0f, 0.0f, 0.0f );
 }

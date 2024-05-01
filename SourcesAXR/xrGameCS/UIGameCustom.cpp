@@ -431,7 +431,7 @@ void CUIGameCustom::UpdateZones()
 	}
 
 	Fvector posf;
-	posf.set(Level().CurrentControlEntity()->Position());
+	posf.Set(Level().CurrentControlEntity()->Position());
 	Level().hud_zones_list->feel_touch_update(posf, m_zone_feel_radius_max);
 
 	if (Level().hud_zones_list->m_ItemInfos.size() == 0)
@@ -496,7 +496,7 @@ void CUIGameCustom::UpdateZones()
 			zone_info.snd_time = 0.0f;
 
 			if (!GameConstants::GetDosimeterSlotEnabled())
-				HUD_SOUND_ITEM::PlaySound(zone_type->detect_snds, Fvector().set(0, 0, 0), NULL, true, false);
+				HUD_SOUND_ITEM::PlaySound(zone_type->detect_snds, Fvector().Set(0, 0, 0), NULL, true, false);
 		}
 		else
 		{

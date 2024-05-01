@@ -18,14 +18,14 @@ void CDebugRenderer::add_lines		(Fvector const *vertices, u32 const &vertex_coun
 void CDebugRenderer::draw_obb		(const Fmatrix &matrix, const u32 &color)
 {
 	Fvector							aabb[8];
-	matrix.transform_tiny			(aabb[0],Fvector().set( -1, -1, -1)); // 0
-	matrix.transform_tiny			(aabb[1],Fvector().set( -1, +1, -1)); // 1
-	matrix.transform_tiny			(aabb[2],Fvector().set( +1, +1, -1)); // 2
-	matrix.transform_tiny			(aabb[3],Fvector().set( +1, -1, -1)); // 3
-	matrix.transform_tiny			(aabb[4],Fvector().set( -1, -1, +1)); // 4
-	matrix.transform_tiny			(aabb[5],Fvector().set( -1, +1, +1)); // 5
-	matrix.transform_tiny			(aabb[6],Fvector().set( +1, +1, +1)); // 6
-	matrix.transform_tiny			(aabb[7],Fvector().set( +1, -1, +1)); // 7
+	matrix.transform_tiny			(aabb[0],Fvector().Set( -1, -1, -1)); // 0
+	matrix.transform_tiny			(aabb[1],Fvector().Set( -1, +1, -1)); // 1
+	matrix.transform_tiny			(aabb[2],Fvector().Set( +1, +1, -1)); // 2
+	matrix.transform_tiny			(aabb[3],Fvector().Set( +1, -1, -1)); // 3
+	matrix.transform_tiny			(aabb[4],Fvector().Set( -1, -1, +1)); // 4
+	matrix.transform_tiny			(aabb[5],Fvector().Set( -1, +1, +1)); // 5
+	matrix.transform_tiny			(aabb[6],Fvector().Set( +1, +1, +1)); // 6
+	matrix.transform_tiny			(aabb[7],Fvector().Set( +1, -1, +1)); // 7
 
 	u16								aabb_id[12*2] = {
 		0,1,  1,2,  2,3,  3,0,  4,5,  5,6,  6,7,  7,4,  1,5,  2,6,  3,7,  0,4
@@ -133,7 +133,7 @@ void CDebugRenderer::draw_ellipse	(const Fmatrix &matrix, const u32 &color)
 	Fvector							*I = (Fvector*)vertices;
 	Fvector							*E = (Fvector*)(vertices + count);
 	for ( ; I != E; ++I)
-		matrix.transform_tiny		(*I,Fvector().set(*I));
+		matrix.transform_tiny		(*I,Fvector().Set(*I));
 
 	add_lines						((Fvector*)&vertices[0], sizeof(vertices)/sizeof(Fvector), &pairs[0], sizeof(pairs)/(2*sizeof(u16)), color);
 }

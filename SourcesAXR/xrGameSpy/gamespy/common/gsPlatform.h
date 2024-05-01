@@ -70,11 +70,12 @@
 	#include <limits.h>
 	#include <time.h>
 
-	#if defined(GSI_WINSOCK2)
+//	#if defined(GSI_WINSOCK2)
 		#include <winsock2.h>
-	#else
-		#include <winsock.h>
-	#endif
+//	#else
+//#      include <windows.h>
+//		#include <winsock2.h>
+//	#endif
 	
 	#if (_MSC_VER > 1300)
 		#define itoa(v, s, r) _itoa(v, s, r)

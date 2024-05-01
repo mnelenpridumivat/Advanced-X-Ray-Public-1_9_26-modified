@@ -26,11 +26,11 @@ IRender_Sector* CRender::detectSector(const Fvector& P)
 	Fvector			dir; 
 	Sectors_xrc.ray_options		(CDB::OPT_ONLYNEAREST);
 
-	dir.set				(0,-1,0);
+	dir.Set				(0,-1,0);
 	S					= detectSector(P,dir);
 	if (NULL==S)		
 	{
-		dir.set				(0,1,0);
+		dir.Set				(0,1,0);
 		S					= detectSector(P,dir);
 	}
 	return S;

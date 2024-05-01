@@ -19,7 +19,7 @@ public:
 		time			= 0;
 		dangerous		= 0;
 		power			= 0.f;
-		position		= Fvector().set(0.f,0.f,0.f);
+		position		= Fvector().Set(0.f,0.f,0.f);
 	}
 
 	void set(CScriptGameObject *p_who, bool p_danger, Fvector p_position, float p_power, int p_time) {

@@ -60,8 +60,8 @@ public:
 	virtual void IR_OnMouseHold			(int btn);
 	
 	virtual BOOL ProcessCam				(SCamEffectorInfo& info);
-	static	void SetGlobalPosition		( const Fvector &p ) { g_position.p.set(p), g_position.set_position= true; }
-	static	void GetGlobalPosition		( Fvector &p ) { p.set( g_position.p ); }
+	static	void SetGlobalPosition		( const Fvector &p ) { g_position.p.Set(p), g_position.set_position= true; }
+	static	void GetGlobalPosition		( Fvector &p ) { p.Set( g_position.p ); }
 	BOOL		 m_b_redirect_input_to_level;
 	virtual void OnRender				();
 };

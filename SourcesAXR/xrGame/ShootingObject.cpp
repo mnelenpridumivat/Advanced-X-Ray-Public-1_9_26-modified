@@ -29,8 +29,8 @@ CShootingObject::CShootingObject(void)
 	fvHitPowerCritical.set			(0.0f,0.0f,0.0f,0.0f);
 	m_fStartBulletSpeed				= 1000.f;
 
-	m_vCurrentShootDir.set			(0,0,0);
-	m_vCurrentShootPos.set			(0,0,0);
+	m_vCurrentShootDir.Set			(0,0,0);
+	m_vCurrentShootPos.Set			(0,0,0);
 	m_iCurrentParentID				= 0xFFFF;
 
 	m_fPredBulletTime				= 0.0f;
@@ -240,7 +240,7 @@ void CShootingObject::UpdateParticles (CParticlesObject*& pParticles,
 
 	Fmatrix particles_pos; 
 	particles_pos.set	(get_ParticlesXFORM());
-	particles_pos.c.set	(pos);
+	particles_pos.c.Set	(pos);
 	
 	pParticles->SetXFORM(particles_pos);
 
@@ -299,7 +299,7 @@ void CShootingObject::OnShellDrop	(const Fvector& play_pos,
 
 	Fmatrix particles_pos; 
 	particles_pos.set		(get_ParticlesXFORM());
-	particles_pos.c.set		(play_pos);
+	particles_pos.c.Set		(play_pos);
 
 	pShellParticles->UpdateParent		(particles_pos, parent_vel);
 	CSpectator* tmp_spectr = smart_cast<CSpectator*>(Level().CurrentControlEntity());
@@ -367,7 +367,7 @@ void CShootingObject::UpdateFlameParticles	()
 
 	Fmatrix		pos; 
 	pos.set		(get_ParticlesXFORM()	); 
-	pos.c.set	(get_CurrentFirePoint()	);
+	pos.c.Set	(get_CurrentFirePoint()	);
 
 	VERIFY(_valid(pos));
 

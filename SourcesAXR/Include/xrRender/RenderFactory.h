@@ -1,5 +1,3 @@
-#ifndef RenderFactory_included
-#define RenderFactory_included
 #pragma once
 
 class IWallMarkArray;
@@ -73,4 +71,3 @@ protected:
 	//virtual void DestroyEnvDescriptorRender(IEnvDescriptorRender *pObject) = 0;
 };
 
-#endif	//	RenderFactory_included

@@ -93,8 +93,8 @@ void CHM_Static::Update	()
 
 		// Build BBox
 		Fbox				bb;
-		bb.min.set			(S->x*dhm_size,		view.y-limit_down,	S->z*dhm_size);
-		bb.max.set			(bb.min.x+dhm_size,	view.y+limit_up,	bb.min.z+dhm_size);
+		bb.min.Set			(S->x*dhm_size,		view.y-limit_down,	S->z*dhm_size);
+		bb.max.Set			(bb.min.x+dhm_size,	view.y+limit_up,	bb.min.z+dhm_size);
 		bb.grow				(EPS_L);
 		
 		// Select polygons
@@ -108,13 +108,13 @@ void CHM_Static::Update	()
 		
 		// Cull polys
 		RAPID::tri* tris	= g_pGameLevel->ObjectSpace.GetStaticTris();
-		Fvector		vecUP;	vecUP.set(0,1,0);
+		Fvector		vecUP;	vecUP.Set(0,1,0);
 		for (u32 tid=0; tid<triCount; ++tid)
 		{
 			RAPID::tri&	T		= tris[XRC.BBoxContact[tid].id];
 			Poly		P;
 			Fvector		N;
-			P.v[0].set	(*T.verts[0]);	P.v[1].set	(*T.verts[1]);	P.v[2].set	(*T.verts[2]);
+			P.v[0].Set	(*T.verts[0]);	P.v[1].Set	(*T.verts[1]);	P.v[2].Set	(*T.verts[2]);
 			N.mknormal	(P.v[0],P.v[1],P.v[2]);
 			if (N.dotproduct(vecUP)<=0)	continue;
 			polys.push_back		(P);
@@ -128,8 +128,8 @@ void CHM_Static::Update	()
 				float	rx	= (float(x)/float(dhm_precision))*dhm_size + bb.min.x;
 				float	rz	= (float(z)/float(dhm_precision))*dhm_size + bb.min.z;
 				float	ry	= bb.min.y-5;
-				Fvector pos; pos.set(rx,bb.max.y,rz);
-				Fvector	dir; dir.set(0,-1,0);
+				Fvector pos; pos.Set(rx,bb.max.y,rz);
+				Fvector	dir; dir.Set(0,-1,0);
 				
 				float	r_u,r_v,r_range;
 				for (u32 tid=0; tid<polys.size(); ++tid)

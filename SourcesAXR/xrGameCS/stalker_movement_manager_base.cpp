@@ -71,8 +71,8 @@ public:
 stalker_movement_manager_base::stalker_movement_manager_base	(CAI_Stalker *object) :
 	inherited					(object),
 	m_last_query_object			(0),
-	m_last_query_position		(Fvector().set(flt_max,flt_max,flt_max)),
-	m_last_query_object_position(Fvector().set(flt_max,flt_max,flt_max)),
+	m_last_query_position		(Fvector().Set(flt_max,flt_max,flt_max)),
+	m_last_query_object_position(Fvector().Set(flt_max,flt_max,flt_max)),
 	m_last_query_result			(false),
 	m_last_query_distance		(flt_max),
 	m_force_update				(false)
@@ -522,7 +522,7 @@ void stalker_movement_manager_base::set_nearest_accessible_position(Fvector desi
 		desired_position.y		= ai().level_graph().vertex_plane_y(level_vertex_id,desired_position.x,desired_position.z);
 
 	if (!restrictions().accessible(desired_position)) {
-		level_vertex_id			= restrictions().accessible_nearest(Fvector().set(desired_position),desired_position);
+		level_vertex_id			= restrictions().accessible_nearest(Fvector().Set(desired_position),desired_position);
 		VERIFY					(restrictions().accessible(level_vertex_id));
 		VERIFY					(restrictions().accessible(desired_position));
 	}
@@ -607,8 +607,8 @@ void stalker_movement_manager_base::setup_speed_from_animation(const float &spee
 void stalker_movement_manager_base::on_build_path				()
 {
 	m_last_query_object					= 0;
-	m_last_query_position				= Fvector().set(flt_max,flt_max,flt_max);
-	m_last_query_object_position		= Fvector().set(flt_max,flt_max,flt_max);
+	m_last_query_position				= Fvector().Set(flt_max,flt_max,flt_max);
+	m_last_query_object_position		= Fvector().Set(flt_max,flt_max,flt_max);
 	m_last_query_result					= false;
 	m_last_query_distance				= flt_max;
 }
@@ -734,7 +734,7 @@ void stalker_movement_manager_base::check_for_bad_path	(stalker_movement_params&
 	if (current_direction.magnitude() >= EPS_L)
 		current_direction.normalize		();
 	else
-		current_direction.set			(0.f,0.f,1.f);
+		current_direction.Set			(0.f,0.f,1.f);
 
 	PATH::const_iterator				E = path.end();
 	PATH::const_iterator				I = path.begin() + point_index + 1;

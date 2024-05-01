@@ -146,7 +146,7 @@ void SArtefactActivation::ChangeEffects()
 	
 	if(state_def.m_particle.size()){
 		Fvector dir;
-		dir.set(0,1,0);
+		dir.Set(0,1,0);
 
 		m_af->CParticlesPlayer::StartParticles(	state_def.m_particle,
 												dir,
@@ -189,7 +189,7 @@ void SArtefactActivation::SpawnAnomaly()
 		CSE_ALifeAnomalousZone*		AlifeZone = smart_cast<CSE_ALifeAnomalousZone*>(object);
 		VERIFY(AlifeZone);
 		CShapeData::shape_def		_shape;
-		_shape.data.sphere.P.set	(0.0f,0.0f,0.0f);
+		_shape.data.sphere.P.Set	(0.0f,0.0f,0.0f);
 		_shape.data.sphere.R		= zone_radius;
 		_shape.type					= CShapeData::cfSphere;
 		AlifeZone->assign_shapes	(&_shape,1);

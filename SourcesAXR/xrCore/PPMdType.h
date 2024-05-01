@@ -18,7 +18,7 @@
 #error Only one environment must be defined
 #endif /* defined(_WIN32_ENVIRONMENT_)+defined(_DOS32_ENVIRONMENT_)+defined(_POSIX_ENVIRONMENT_)+defined(_UNKNOWN_ENVIRONMENT_) != 1 */
 
-#if defined(_WIN32_ENVIRONMENT_)
+#if !defined(_WIN32_ENVIRONMENT_)
 #include <windows.h>
 #else /* _DOS32_ENVIRONMENT_ || _POSIX_ENVIRONMENT_ || _UNKNOWN_ENVIRONMENT_ */
 typedef int   BOOL;

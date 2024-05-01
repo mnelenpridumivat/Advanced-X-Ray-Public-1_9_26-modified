@@ -196,7 +196,7 @@ IC void dGeomCreateUserData(dxGeom* geom)
 	(dGeomGetUserData(geom))->bone_id=u16(-1);
 	(dGeomGetUserData(geom))->callback_data=NULL;
 
-	(dGeomGetUserData(geom))->last_aabb_size.set(0,0,0);
+	(dGeomGetUserData(geom))->last_aabb_size.Set(0,0,0);
 	//((dxGeomUserData*)dGeomGetData(geom))->ContactsParameters::mu=1.f;
 	//((dxGeomUserData*)dGeomGetData(geom))->ContactsParameters::damping=1.f;
 	//((dxGeomUserData*)dGeomGetData(geom))->ContactsParameters::spring=1.f;
@@ -280,7 +280,7 @@ IC void dGeomUserDataResetLastPos(dxGeom* geom)
 	(dGeomGetUserData(geom))->pushing_b_neg=false;
 	(dGeomGetUserData(geom))->b_static_colide=true;
 
-	(dGeomGetUserData(geom))->last_aabb_size.set(0,0,0);
+	(dGeomGetUserData(geom))->last_aabb_size.Set(0,0,0);
 
 }
 IC void dGeomUserDataClearCashedTries(dxGeom* geom)
@@ -291,7 +291,7 @@ IC void dGeomUserDataClearCashedTries(dxGeom* geom)
 	debug_output().dbg_total_saved_tries()-=P->cashed_tries.size();
 #endif
 	P->cashed_tries.clear();
-	P->last_aabb_size.set(0.f,0.f,0.f);
+	P->last_aabb_size.Set(0.f,0.f,0.f);
 }
 #ifdef DEBUG
 XRPHYSICS_API	bool	IsCyliderContact(const dContact& c);

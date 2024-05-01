@@ -12,10 +12,10 @@
 #endif
 moving_bones_snd_player::moving_bones_snd_player( IKinematics *K, CInifile* ini, LPCSTR section, const Fmatrix &object  ):
 	bone_id( BI_NONE ),
-	min_factor( -FLT_MAX ),
-	max_factor( -FLT_MAX ),
-	base_velocity( -FLT_MAX ),
-	smothed_velocity( -FLT_MAX ),
+	min_factor(std::numeric_limits<float>::min()),
+	max_factor(std::numeric_limits<float>::min()),
+	base_velocity(std::numeric_limits<float>::min()),
+	smothed_velocity(std::numeric_limits<float>::min()),
 	previous_position( Fidentity ),
 	kinematics( K )
 {

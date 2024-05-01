@@ -12,7 +12,7 @@
 CTeleWhirlwind ::CTeleWhirlwind () 
 {
 	m_owner_object= nullptr;
-	m_center.set(0.f,0.f,0.f);
+	m_center.Set(0.f,0.f,0.f);
 	m_keep_radius=1.f;
 	m_throw_power=100.f;
 
@@ -43,9 +43,9 @@ void CTeleWhirlwind::clear()
 void CTeleWhirlwind::add_impact(const Fvector& dir,float val)
 {
 	Fvector force,point;
-	force.set(dir);
+	force.Set(dir);
 	force.mul(val);
-	point.set(0.f,0.f,0.f);
+	point.Set(0.f,0.f,0.f);
 	m_saved_impacts.push_back(SPHImpact(force,point,0));
 }
 void CTeleWhirlwind::set_throw_power(float throw_pow)
@@ -57,7 +57,7 @@ void CTeleWhirlwind::draw_out_impact(Fvector& dir,float& val)
 {
 	VERIFY2(m_saved_impacts.size(),"NO IMPACTS ADDED!");
 
-	dir.set(m_saved_impacts[0].force);
+	dir.Set(m_saved_impacts[0].force);
 	val=dir.magnitude();
 	if(!fis_zero(val))dir.mul(1.f/val);
 	m_saved_impacts.erase(m_saved_impacts.begin());
@@ -188,7 +188,7 @@ bool	CTeleWhirlwindObject::destroy_object		(const Fvector dir,float val)
 		if(PP)
 		{
 			u16 root=(smart_cast<IKinematics*>(object->Visual()))->LL_GetBoneRoot();
-			PP->StartParticles(m_telekinesis->destroing_particles(),root, Fvector().set(0,1,0),m_telekinesis->OwnerObject()->ID());
+			PP->StartParticles(m_telekinesis->destroing_particles(),root, Fvector().Set(0,1,0),m_telekinesis->OwnerObject()->ID());
 		}
 		return true;
 	}
@@ -224,7 +224,7 @@ void		CTeleWhirlwindObject::		raise					(float step)
 			Fvector diff;
 			diff.sub(center,pos);
 			float mag=_sqrt(diff.x*diff.x+diff.z*diff.z);
-			Fvector lc;lc.set(center);
+			Fvector lc;lc.Set(center);
 			if(mag>1.f)
 			{
 				lc.y/=mag;
@@ -242,29 +242,29 @@ void		CTeleWhirlwindObject::		raise					(float step)
 			}
 			else
 			{
-				dir.set(diff);dir.mul(1.f/mag);
+				dir.Set(diff);dir.mul(1.f/mag);
 			}
 			Fvector vel;
 			E->get_LinearVel(vel);
 			float delta_v=accel*fixed_step;
-			Fvector delta_vel; delta_vel.set(dir);delta_vel.mul(delta_v);
+			Fvector delta_vel; delta_vel.Set(dir);delta_vel.mul(delta_v);
 			Fvector predict_vel;predict_vel.add(vel,delta_vel);
-			Fvector delta_pos;delta_pos.set(predict_vel);delta_pos.mul(fixed_step);
+			Fvector delta_pos;delta_pos.Set(predict_vel);delta_pos.mul(fixed_step);
 			Fvector predict_pos;predict_pos.add(pos,delta_pos);
 			
 			Fvector predict_diff;predict_diff.sub(lc,predict_pos);
 			float predict_mag=predict_diff.magnitude();
 			float predict_v=predict_vel.magnitude();
 
-			Fvector force;force.set(dir);
+			Fvector force;force.Set(dir);
 			if(predict_mag>mag && predict_vel.dotproduct(dir)>0.f && predict_v>predict_v_eps)
 			{
 	
-				Fvector motion_dir;motion_dir.set(predict_vel);motion_dir.mul(1.f/predict_v);
+				Fvector motion_dir;motion_dir.Set(predict_vel);motion_dir.mul(1.f/predict_v);
 				float needed_d=diff.dotproduct(motion_dir);
-				Fvector needed_diff;needed_diff.set(motion_dir);needed_diff.mul(needed_d);
+				Fvector needed_diff;needed_diff.Set(motion_dir);needed_diff.mul(needed_d);
 				Fvector nearest_p;nearest_p.add(pos,needed_diff);//
-				Fvector needed_vel;needed_vel.set(needed_diff);needed_vel.mul(1.f/fixed_step);
+				Fvector needed_vel;needed_vel.Set(needed_diff);needed_vel.mul(1.f/fixed_step);
 				force.sub(needed_vel,vel);
 				force.mul(E->getMass()/fixed_step);
 			}
@@ -279,10 +279,10 @@ void		CTeleWhirlwindObject::		raise					(float step)
 		Fvector dist;dist.sub(center,maxE->mass_Center());
 		if(dist.magnitude()<m_telekinesis->keep_radius()&&b_destroyable)
 		{
-			p->setTorque(Fvector().set(0,0,0));
-			p->setForce(Fvector().set(0,0,0));
-			p->set_LinearVel(Fvector().set(0,0,0));
-			p->set_AngularVel(Fvector().set(0,0,0));
+			p->setTorque(Fvector().Set(0,0,0));
+			p->setForce(Fvector().Set(0,0,0));
+			p->set_LinearVel(Fvector().Set(0,0,0));
+			p->set_AngularVel(Fvector().Set(0,0,0));
 			switch_state(TS_Keep);
 		}
 }
@@ -319,15 +319,15 @@ void		CTeleWhirlwindObject::		keep					()
 		}
 	}
 	
-	maxE->setTorque(Fvector().set(0,500.f,0));
+	maxE->setTorque(Fvector().Set(0,500.f,0));
 
 	Fvector dist;dist.sub(center,maxE->mass_Center());
 	if(dist.magnitude()>m_telekinesis->keep_radius()*1.5f)
 	{
-		p->setTorque(Fvector().set(0,0,0));
-		p->setForce(Fvector().set(0,0,0));
-		p->set_LinearVel(Fvector().set(0,0,0));
-		p->set_AngularVel(Fvector().set(0,0,0));
+		p->setTorque(Fvector().Set(0,0,0));
+		p->setForce(Fvector().Set(0,0,0));
+		p->set_LinearVel(Fvector().Set(0,0,0));
+		p->set_AngularVel(Fvector().Set(0,0,0));
 		p->set_ApplyByGravity(TRUE);
 		switch_state(TS_Raise);
 	}

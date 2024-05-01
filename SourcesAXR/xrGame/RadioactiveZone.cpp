@@ -58,7 +58,7 @@ void CRadioactiveZone::Affect(SZoneObjectInfo* O)
 						dir,
 						send_power,
 						BI_NONE,
-						Fvector().set(0.0f,0.0f,0.0f),
+						Fvector().Set(0.0f,0.0f,0.0f),
 						impulse,
 						m_eHitTypeBlowout);
 #ifdef DEBUG
@@ -82,7 +82,7 @@ void CRadioactiveZone::feel_touch_new					(CObject* O	)
 	{
 		if (smart_cast<CActor*>(O))
 		{
-			CreateHit(O->ID(),ID(),Fvector().set(0, 0, 0),0.0f,BI_NONE,Fvector().set(0, 0, 0),0.0f,m_eHitTypeBlowout);// ALife::eHitTypeRadiation
+			CreateHit(O->ID(),ID(),Fvector().Set(0, 0, 0),0.0f,BI_NONE,Fvector().Set(0, 0, 0),0.0f,m_eHitTypeBlowout);// ALife::eHitTypeRadiation
 		}
 	};
 };
@@ -123,10 +123,10 @@ void CRadioactiveZone::UpdateWorkload					(u32	dt)
 				HS.GenHeader		(GE_HIT, it->object->ID());
 				HS.whoID			= ID();
 				HS.weaponID			= ID();
-				HS.dir				= Fvector().set(0,0,0);
+				HS.dir				= Fvector().Set(0,0,0);
 				HS.power			= power;
 				HS.boneID			= BI_NONE;
-				HS.p_in_bone_space	= Fvector().set(0, 0, 0);
+				HS.p_in_bone_space	= Fvector().Set(0, 0, 0);
 				HS.impulse			= 0.0f;
 				HS.hit_type			= m_eHitTypeBlowout;
 				

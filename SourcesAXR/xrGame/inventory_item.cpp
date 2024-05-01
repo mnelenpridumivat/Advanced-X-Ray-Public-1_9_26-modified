@@ -645,7 +645,7 @@ void CInventoryItem::net_Import_PH_Params(NET_Packet& P, net_update_IItem& N, ma
 		N.State.angular_vel.z	= P.r_float();
 	}
 	else
-		N.State.angular_vel.set	(0.f,0.f,0.f);
+		N.State.angular_vel.Set	(0.f,0.f,0.f);
 
 	if (!(num_items.mask & CSE_ALifeInventoryItem::inventory_item_linear_null)) {
 		N.State.linear_vel.x	= P.r_float();
@@ -653,7 +653,7 @@ void CInventoryItem::net_Import_PH_Params(NET_Packet& P, net_update_IItem& N, ma
 		N.State.linear_vel.z	= P.r_float();
 	}
 	else
-		N.State.linear_vel.set	(0.f,0.f,0.f);
+		N.State.linear_vel.Set	(0.f,0.f,0.f);
 	//Msg("Import N.State.linear_vel.y:%4.6f",N.State.linear_vel.y);
 	
 	N.State.previous_position	= N.State.position;
@@ -740,7 +740,7 @@ void CInventoryItem::net_Export			(NET_Packet& P)
 	if (pSyncObj && !object().H_Parent()) 
 		pSyncObj->get_State					(State);
 	else 	
-		State.position.set					(object().Position());
+		State.position.Set					(object().Position());
 
 
 	mask_inv_num_items			num_items;
@@ -1388,7 +1388,7 @@ void CInventoryItem::UpdateXForm	()
 	if(fis_zero(D.magnitude()))
 	{
 		mRes.set(E->XFORM());
-		mRes.c.set(mR.c);
+		mRes.c.Set(mR.c);
 	}
 	else
 	{		
@@ -1403,7 +1403,7 @@ void CInventoryItem::UpdateXForm	()
 	}
 
 	//	UpdatePosition	(mRes);
-	object().Position().set(mRes.c);
+	object().Position().Set(mRes.c);
 }
 
 

@@ -291,7 +291,7 @@ void CPHDestroyable::NotificatePart(CPHDestroyableNotificate *dn)
 			}
 			Fvector rnd_dir;rnd_dir.random_dir();
 			e->applyImpulse(rnd_dir,random_hit);
-			Fvector mc; mc.set(e->mass_Center());
+			Fvector mc; mc.Set(e->mass_Center());
 
 			//dVector3 res_lvell;
 			//dBodyGetPointVel(own_body,mc.x,mc.y,mc.z,res_lvell);

@@ -240,8 +240,8 @@ void CLightShadows::calculate	()
 			Fvector		v_D,v_N,v_R;
 			v_D.sub					(C.C,Lpos);
 			v_D.normalize			();
-			if(1-_abs(v_D.y)<EPS)	v_N.set(1,0,0);
-			else            		v_N.set(0,1,0);
+			if(1-_abs(v_D.y)<EPS)	v_N.Set(1,0,0);
+			else            		v_N.Set(0,1,0);
 			v_R.crossproduct		(v_N,v_D);
 			v_N.crossproduct		(v_D,v_R);
 			mView.build_camera		(Lpos,C.C,v_N);

@@ -54,7 +54,7 @@ loophole::loophole	(luabind::object const &description) :
 
 	if (m_fov_direction.square_magnitude() < EPS_L) {
 		Msg				("! fov direction for loophole %s is setup incorrectly", m_id.c_str());
-		m_fov_direction.set(0.f, 0.f, 1.f);
+		m_fov_direction.Set(0.f, 0.f, 1.f);
 	}
 	else
 		m_fov_direction.normalize	();
@@ -63,7 +63,7 @@ loophole::loophole	(luabind::object const &description) :
 
 	if (m_enter_direction.square_magnitude() < EPS_L) {
 		Msg				("! enter direction for loophole %s is setup incorrectly", m_id.c_str());
-		m_enter_direction.set(0.f, 0.f, 1.f);
+		m_enter_direction.Set(0.f, 0.f, 1.f);
 	}
 	else
 		m_enter_direction.normalize	();

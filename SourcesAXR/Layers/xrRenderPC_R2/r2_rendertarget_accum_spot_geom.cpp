@@ -140,10 +140,10 @@ void CRenderTarget::accum_volumetric_geom_create()
 		float dt = 1.0f/(VOLUMETRIC_SLICES-1);
 		for ( int i=0; i<VOLUMETRIC_SLICES; ++i)
 		{
-			pSlice[i].m_Vert[0] = Fvector().set(0,0,t);
-			pSlice[i].m_Vert[1] = Fvector().set(0,1,t);
-			pSlice[i].m_Vert[2] = Fvector().set(1,0,t);
-			pSlice[i].m_Vert[3] = Fvector().set(1,1,t);
+			pSlice[i].m_Vert[0] = Fvector().Set(0,0,t);
+			pSlice[i].m_Vert[1] = Fvector().Set(0,1,t);
+			pSlice[i].m_Vert[2] = Fvector().Set(1,0,t);
+			pSlice[i].m_Vert[3] = Fvector().Set(1,1,t);
 			t += dt;
 		}
 

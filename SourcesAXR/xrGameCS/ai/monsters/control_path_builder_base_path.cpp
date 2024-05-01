@@ -98,7 +98,7 @@ void CControlPathBuilderBase::find_target_point_set()
 	// проверить позицию на accessible
 	if (!m_man->path_builder().accessible(m_target_found.position())) {
 		Fvector new_position = m_target_found.position();
-		m_target_found.set_node ( m_man->path_builder().restrictions().accessible_nearest( Fvector().set( m_target_found.position() ), new_position ) );
+		m_target_found.set_node ( m_man->path_builder().restrictions().accessible_nearest( Fvector().Set( m_target_found.position() ), new_position ) );
 		m_target_found.set_position( new_position );
 	}
 	
@@ -163,7 +163,7 @@ void CControlPathBuilderBase::find_node()
 	if (ai().level_graph().valid_vertex_id(m_target_found.node()) && m_man->path_builder().accessible(m_target_found.node())) {
 		// корректировка позиции
 		Fvector new_position=m_target_found.position();
-		m_man->path_builder().fix_position(Fvector().set(m_target_found.position()), m_target_found.node(), new_position);
+		m_man->path_builder().fix_position(Fvector().Set(m_target_found.position()), m_target_found.node(), new_position);
 		m_target_found.set_position( new_position );
 		return;
 	}
@@ -174,7 +174,7 @@ void CControlPathBuilderBase::find_node()
 		if (ai().level_graph().valid_vertex_id(m_target_found.node()) && m_man->path_builder().accessible(m_target_found.node())) {
 			// корректировка позиции
 			Fvector new_position = m_target_found.position();
-			m_man->path_builder().fix_position(Fvector().set(m_target_found.position()), m_target_found.node(), new_position );
+			m_man->path_builder().fix_position(Fvector().Set(m_target_found.position()), m_target_found.node(), new_position );
 			m_target_found.set_position( new_position );
 			return;
 		}

@@ -298,7 +298,7 @@ void 	IWriter::w_sdir	(const Fvector& D)
 	if (mag>EPS_S)	{
 		C.div		(D,mag);
 	} else {
-		C.set		(0,0,1);
+		C.Set		(0,0,1);
 		mag			= 0;
 	}
 	w_dir	(C);

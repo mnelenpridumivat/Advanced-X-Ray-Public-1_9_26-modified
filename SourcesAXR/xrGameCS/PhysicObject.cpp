@@ -563,7 +563,7 @@ void CPhysicObject::net_Export			(NET_Packet& P)
 	if (pSyncObj && !this->H_Parent()) 
 		pSyncObj->get_State					(State);
 	else 	
-		State.position.set					(this->Position());
+		State.position.Set					(this->Position());
 
 
 	mask_num_items			num_items;
@@ -744,7 +744,7 @@ void CPhysicObject::net_Import_PH_Params(NET_Packet& P, net_update_PItem& N, mas
 		N.State.angular_vel.z	= P.r_float();
 	}
 	else
-		N.State.angular_vel.set	(0.f,0.f,0.f);
+		N.State.angular_vel.Set	(0.f,0.f,0.f);
 
 	if (!(num_items.mask & CSE_ALifeObjectPhysic::inventory_item_linear_null)) {
 		N.State.linear_vel.x	= P.r_float();
@@ -752,7 +752,7 @@ void CPhysicObject::net_Import_PH_Params(NET_Packet& P, net_update_PItem& N, mas
 		N.State.linear_vel.z	= P.r_float();
 	}
 	else
-		N.State.linear_vel.set	(0.f,0.f,0.f);
+		N.State.linear_vel.Set	(0.f,0.f,0.f);
 	//Msg("Import N.State.linear_vel.y:%4.6f",N.State.linear_vel.y);
 	
 	N.State.previous_position	= N.State.position;
@@ -960,8 +960,8 @@ if(dbg_draw_doors)
 
 	DBG_DrawMatrix( start_pos, 0.2f,100 );
 
-	const Fvector pos = start_pos.c.add( Fvector().set(0,0.2f,0) );
-	const Fvector pos1 = start_pos.c.add( Fvector().set(0,0.3f,0) );
+	const Fvector pos = start_pos.c.add( Fvector().Set(0,0.2f,0) );
+	const Fvector pos1 = start_pos.c.add( Fvector().Set(0,0.3f,0) );
 
 	DBG_DrawLine( pos, Fvector( ).add( pos, open ), color_xrgb( 0, 255, 0 ) );
 	DBG_DrawLine( pos, Fvector( ).add( pos, closed ), color_xrgb( 255, 0, 0 ) );

@@ -590,8 +590,8 @@ void	game_sv_mp::SpawnPlayer(ClientID id, LPCSTR N)
 			if (!GetPosAngleFromActor(id, Pos, Angle)) assign_RP				(E, ps_who);
 			else
 			{
-				E->o_Angle.set(Angle);
-				E->o_Position.set(Pos);				
+				E->o_Angle.Set(Angle);
+				E->o_Position.Set(Pos);				
 			}
 		};
 	
@@ -699,8 +699,8 @@ bool	game_sv_mp::GetPosAngleFromActor				(ClientID id, Fvector& Pos, Fvector &An
 	CActor* pActor = smart_cast <CActor*>(pObject);
 	if (!pActor) return false;
 
-	Angle.set(-pActor->cam_Active()->pitch, -pActor->cam_Active()->yaw, -pActor->cam_Active()->roll);
-	Pos.set(pActor->cam_Active()->vPosition);
+	Angle.Set(-pActor->cam_Active()->pitch, -pActor->cam_Active()->yaw, -pActor->cam_Active()->roll);
+	Pos.Set(pActor->cam_Active()->vPosition);
 	return true;
 };
 

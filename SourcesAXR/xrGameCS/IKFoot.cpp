@@ -39,15 +39,15 @@ void CIKFoot::Create		(  IKinematics	*K, LPCSTR section, u16 bones[4] )
 	m_ref_bone		= 2;
 	if( m_ref_bone	== 2 )
 	{
-		m_foot_normal.v			.set( 1, 0, 0 );//2
+		m_foot_normal.v			.Set( 1, 0, 0 );//2
 		m_foot_normal.bone		= 2;
-		m_foot_direction.v		.set( 0, 0, 1 );//2
+		m_foot_direction.v		.Set( 0, 0, 1 );//2
 		m_foot_direction.bone	= 2;
 	} else
 	{
-		m_foot_normal.v		.set( 0, 0, -1 );//3
+		m_foot_normal.v		.Set( 0, 0, -1 );//3
 		m_foot_normal.bone		= 3;
-		m_foot_direction.v	.set( 1, 0, 0 );//3
+		m_foot_direction.v	.Set( 1, 0, 0 );//3
 		m_foot_direction.bone	= 3;
 	}
 
@@ -77,14 +77,14 @@ public SEnumVerticesCallback
 	const Fmatrix &i_bind_transform;
 	const Fvector &ax;
 	envc( const Fmatrix &_i_bind_transform, const Fvector &_ax,  Fvector &_pos ): 
-	SEnumVerticesCallback(), i_bind_transform( _i_bind_transform ), ax( _ax ), pos( _pos ) { start_pos.set( 0, 0, 0 ); }
+	SEnumVerticesCallback(), i_bind_transform( _i_bind_transform ), ax( _ax ), pos( _pos ) { start_pos.Set( 0, 0, 0 ); }
 	void operator () (const Fvector& p)
 	{
 		Fvector lpos;
 		i_bind_transform.transform_tiny(lpos, p );
 		//Fvector diff;diff.sub( lpos, pos );
 		if( Fvector().sub( lpos, start_pos ).dotproduct( ax ) > Fvector().sub( pos, start_pos ).dotproduct( ax ) )
-						pos.set( lpos );
+						pos.Set( lpos );
 	}
 };
 void CIKFoot::set_toe(  u16 bones[4] )
@@ -122,23 +122,23 @@ void CIKFoot::set_toe(  u16 bones[4] )
 	ax.add( foot_normal, foot_dir );
 	ax.normalize();
 	///////////////////////////////////////////////////////
-	Fvector pos; pos.set( 0, 0, 0 );
+	Fvector pos; pos.Set( 0, 0, 0 );
 	Fmatrix ibind = ibind3;
 	envc pred( ibind, ax, pos );
 	/////////////////////////////////////////////////////////
 	Kinematics()->EnumBoneVertices( pred, bones[3] );
 	bind3.transform_tiny( pos );
 	ibind2.transform_tiny( pos );
-	m_toe_position.v.set( pos );
+	m_toe_position.v.Set( pos );
 	/////////////////////////////////////////////////////////
 	ibind.set( ibind2 );
-	ax.set( foot_normal );
+	ax.Set( foot_normal );
 	Kinematics()->EnumBoneVertices( pred, bones[2] );
 	m_toe_position.v.x = _max( pos.x, m_toe_position.v.x );
 	/////////////////////////////////////////////////////////
 	ax.sub( foot_normal, foot_dir );
 	ax.normalize();
-	pred.start_pos.set(0,0,0);pos.set( 0, 0, 0 );
+	pred.start_pos.Set(0,0,0);pos.Set( 0, 0, 0 );
 	Kinematics()->EnumBoneVertices( pred, bones[2] );
 	m_heel_position.v = pred.pos	;
 	m_heel_position.v.add( Fvector().mul( foot_dir,

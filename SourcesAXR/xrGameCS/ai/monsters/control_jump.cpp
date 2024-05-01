@@ -249,7 +249,7 @@ bool CControlJump::is_on_the_ground()
 	if (m_time_started + (m_jump_time*1000) > time()) return false;
 
 	Fvector direction;
-	direction.set(0.f, -1.f, 0.f);
+	direction.Set(0.f, -1.f, 0.f);
 	Fvector trace_from;
 	m_object->Center(trace_from);
 

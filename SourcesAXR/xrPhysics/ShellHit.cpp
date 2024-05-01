@@ -49,7 +49,7 @@ void CPHShell::ExplosionHit(const Fvector& pos, const Fvector& dir, float val,co
 			
 			Fvector r_dir,r_pos,r_box;
 			float rad=element->getRadius();
-			r_box.set(rad,rad,rad);
+			r_box.Set(rad,rad,rad);
 			r_pos.random_point(r_box);
 			r_dir.random_dir();
 			if(!fis_zero(pos.magnitude(),EPS_L))

@@ -185,8 +185,8 @@ public:
 	CPHSynchronize*		GetSyncItem					()								;
 	void				Freeze						()								;
 	void				UnFreeze					()								;
-	void				SetVelocity					(float x, float y, float z)	{SetVelocity(Fvector().set(x,y,z));}
-	void				SetVelocity					(const Fvector& v)	{vVelocity.set(v);SetCharacterVelocity(v);}
+	void				SetVelocity					(float x, float y, float z)	{SetVelocity(Fvector().Set(x,y,z));}
+	void				SetVelocity					(const Fvector& v)	{vVelocity.Set(v);SetCharacterVelocity(v);}
 	void				SetCharacterVelocity		(const Fvector& v)					;									
 	void				SetPhysicsRefObject			(CPhysicsShellHolder* ref_object)	;
 	IPhysicsShellHolder*PhysicsRefObject			();

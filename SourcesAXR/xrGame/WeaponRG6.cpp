@@ -57,8 +57,8 @@ void CWeaponRG6::FireStart ()
 		inheritedSG::FireStart ();
 	
 		Fvector p1, d; 
-		p1.set(get_LastFP()); 
-		d.set(get_LastFD());
+		p1.Set(get_LastFP()); 
+		d.Set(get_LastFD());
 
 		CEntity* E = smart_cast<CEntity*>(H_Parent());
 		if (E){
@@ -75,10 +75,10 @@ void CWeaponRG6::FireStart ()
 
 		Fmatrix launch_matrix;
 		launch_matrix.identity();
-		launch_matrix.k.set(d);
+		launch_matrix.k.Set(d);
 		Fvector::generate_orthonormal_basis(launch_matrix.k,
 											launch_matrix.j, launch_matrix.i);
-		launch_matrix.c.set(p1);
+		launch_matrix.c.Set(p1);
 
 		if (IsZoomed() && smart_cast<CActor*>(H_Parent()))
 		{

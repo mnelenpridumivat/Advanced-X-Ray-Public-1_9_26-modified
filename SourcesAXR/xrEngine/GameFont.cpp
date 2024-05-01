@@ -92,13 +92,13 @@ void CGameFont::Initialize		(LPCSTR cShader, LPCSTR cTextureName)
 
 		if ( ini->line_exist( "mb_symbol_coords" , "09608" ) ) {
 			Fvector v = ini->r_fvector3( "mb_symbol_coords" , "09608" );
-			vFirstValid.set( v.x , v.y , 1 + v[2] - v[0] );
+			vFirstValid.Set( v.x , v.y , 1 + v[2] - v[0] );
 		} else 
 		for ( u32 i=0 ; i < nNumChars ; i++ ) {
 			xr_sprintf( buf ,sizeof(buf), "%05d" , i );
 			if ( ini->line_exist( "mb_symbol_coords" , buf ) ) {
 				Fvector v = ini->r_fvector3( "mb_symbol_coords" , buf );
-				vFirstValid.set( v.x , v.y , 1 + v[2] - v[0] );
+				vFirstValid.Set( v.x , v.y , 1 + v[2] - v[0] );
 				break;
 			}
 		}
@@ -109,15 +109,15 @@ void CGameFont::Initialize		(LPCSTR cShader, LPCSTR cTextureName)
 			xr_sprintf( buf ,sizeof(buf), "%05d" , i );
 			if ( ini->line_exist( "mb_symbol_coords" , buf ) ) {
 				Fvector v = ini->r_fvector3( "mb_symbol_coords" , buf );
-				TCMap[i].set( v.x , v.y , 1 + v[2] - v[0] );
+				TCMap[i].Set( v.x , v.y , 1 + v[2] - v[0] );
 			} else
 				TCMap[i] = vFirstValid; // "unassigned" unprintable characters
 		}
 
 		// Special case for space
-		TCMap[ 0x0020 ].set( 0 , 0 , 0 );
+		TCMap[ 0x0020 ].Set( 0 , 0 , 0 );
 		// Special case for ideographic space
-		TCMap[ 0x3000 ].set( 0 , 0 , 0 );
+		TCMap[ 0x3000 ].Set( 0 , 0 , 0 );
 
 
 	}else
@@ -131,7 +131,7 @@ void CGameFont::Initialize		(LPCSTR cShader, LPCSTR cTextureName)
 		for (u32 i=0; i<nNumChars; i++){
 			xr_sprintf				(buf,sizeof(buf),"%03d",i);
 			Fvector v				= ini->r_fvector3("symbol_coords",buf);
-			TCMap[i].set			(v.x,v.y,v[2]-v[0]+d);
+			TCMap[i].Set			(v.x,v.y,v[2]-v[0]+d);
 		}
 	}else{
 	if (ini->section_exist("char widths")){
@@ -140,7 +140,7 @@ void CGameFont::Initialize		(LPCSTR cShader, LPCSTR cTextureName)
 		for (u32 i=0; i<nNumChars; i++){
 			xr_sprintf			(buf,sizeof(buf),"%d",i);
 			float w				= ini->r_float("char widths",buf);
-			TCMap[i].set		((i%cpl)*fHeight,(i/cpl)*fHeight,w);
+			TCMap[i].Set		((i%cpl)*fHeight,(i/cpl)*fHeight,w);
 		}
 	}else{
 		R_ASSERT(ini->section_exist("font_size"));
@@ -148,7 +148,7 @@ void CGameFont::Initialize		(LPCSTR cShader, LPCSTR cTextureName)
 		float width				= ini->r_float("font_size","width");
 		const int cpl			= ini->r_s32	("font_size","cpl");
 		for (u32 i=0; i<nNumChars; i++)
-			TCMap[i].set		((i%cpl)*width,(i/cpl)*fHeight,width);
+			TCMap[i].Set		((i%cpl)*width,(i/cpl)*fHeight,width);
 		}
 	}
 

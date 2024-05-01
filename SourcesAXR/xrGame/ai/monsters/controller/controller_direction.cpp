@@ -16,7 +16,7 @@ void CControllerDirection::reinit()
 	assign_bones			();
 
 	m_head_orient			= m_man->path_builder().body_orientation();
-	m_head_look_point.set	(0.f,0.f,0.f);
+	m_head_look_point.Set	(0.f,0.f,0.f);
 }
 
 void CControllerDirection::bone_callback(CBoneInstance *B)

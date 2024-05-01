@@ -10,9 +10,9 @@
 CCameraBase::CCameraBase(CObject* p, u32 flags)
 {
 	m_Flags.assign	(flags);
-	vPosition.set	(0,0,0);
-	vDirection.set	(0,0,1);
-	vNormal.set		(0,1,0);
+	vPosition.Set	(0,0,0);
+	vDirection.Set	(0,0,1);
+	vNormal.Set		(0,1,0);
 	yaw				= 0;
 	pitch			= 0;
 	roll			= 0;
@@ -72,9 +72,9 @@ float CCameraBase::CheckLimRoll( ){
 }
 SCamEffectorInfo::SCamEffectorInfo()
 {
-	p.set				(0,0,0);
-	d.set				(0,0,1);
-	n.set				(0,1,0);
+	p.Set				(0,0,0);
+	d.Set				(0,0,1);
+	n.Set				(0,1,0);
 
 	fFov				= 90.0f;
 	fFar				= 100.0f;

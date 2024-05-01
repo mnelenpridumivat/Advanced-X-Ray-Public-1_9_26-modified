@@ -136,7 +136,7 @@ void	CRender::render_lights	(light_Package& LP)
 					if (check_grass_shadow(L, ViewBase))
 					{
 						Details->fade_distance = -1; // Use light position to calc "fade"
-						Details->light_position.set(L->position);
+						Details->light_position.Set(L->position);
 						Details->Render();
 					}
 				}
@@ -242,7 +242,7 @@ void	CRender::render_indirect			(light* L)
 		Fvector4 pos;
 		Device.mFullTransform.transform(pos, L->position);
 
-		Fvector ldir = Fvector().set(L->position).sub(Device.vCameraPosition);
+		Fvector ldir = Fvector().Set(L->position).sub(Device.vCameraPosition);
 		float dist = ldir.magnitude(); ldir.normalize();
 		float cosLo = ldir.dotproduct(Device.vCameraDirection);
 
@@ -256,7 +256,7 @@ void	CRender::render_indirect			(light* L)
 			{
 				g_pGameLevel->ObjectSpace.RayPick(Device.vCameraPosition, ldir, dist, collide::rqtBoth, l_rq, g_pGameLevel->CurrentViewEntity());
 				float fade = (dist - l_rq.range) / 0.4f; clamp(fade, 0.0f, 1.0f); fade = 1.0f - fade; fade *= cosLo * 0.2f;
-				Fvector3 color = Fvector3().set(L->color.r, L->color.g, L->color.b); color.normalize();
+				Fvector3 color = Fvector3().Set(L->color.r, L->color.g, L->color.b); color.normalize();
 				{
 					Target->m_miltaka_lfx_coords.push_back(Fvector4().set(x, y, dist, dist));
 					Target->m_miltaka_lfx_color.push_back(Fvector4().set(fade*color.x, fade*color.y, fade*color.z, dist));
@@ -281,11 +281,11 @@ void	CRender::render_indirect			(light* L)
 		// energy and color
 		float	LIE						= LE*LI.E;
 		if (LIE < ps_r2_GI_clip)		continue;
-		Fvector T; T.set(L->color.r,L->color.g,L->color.b).mul(LI.E);
+		Fvector T; T.Set(L->color.r,L->color.g,L->color.b).mul(LI.E);
 		LIGEN.set_color					(T.x,T.y,T.z);
 
 		// geometric
-		Fvector L_up,L_right;			L_up.set	(0,1,0);	if (_abs(L_up.dotproduct(LI.D))>.99f)	L_up.set(0,0,1);
+		Fvector L_up,L_right;			L_up.Set	(0,1,0);	if (_abs(L_up.dotproduct(LI.D))>.99f)	L_up.Set(0,0,1);
 		L_right.crossproduct			(L_up,LI.D).normalize	();
 		LIGEN.spatial.sector			= LI.S;
 		LIGEN.set_position				(LI.P);

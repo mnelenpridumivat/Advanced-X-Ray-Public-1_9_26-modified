@@ -107,8 +107,8 @@ public:
 CAlienEffector::CAlienEffector(ECamEffectorType type, CAI_Bloodsucker *obj) :
 	inherited(type, flt_max)
 {
-	dangle_target.set		(angle_normalize(Random.randFs(DELTA_ANGLE_X)),angle_normalize(Random.randFs(DELTA_ANGLE_Y)),angle_normalize(Random.randFs(DELTA_ANGLE_Z)));
-	dangle_current.set		(0.f, 0.f, 0.f);
+	dangle_target.Set		(angle_normalize(Random.randFs(DELTA_ANGLE_X)),angle_normalize(Random.randFs(DELTA_ANGLE_Y)),angle_normalize(Random.randFs(DELTA_ANGLE_Z)));
+	dangle_current.Set		(0.f, 0.f, 0.f);
 
 	monster					= obj;
 	
@@ -124,10 +124,10 @@ BOOL CAlienEffector::ProcessCam(SCamEffectorInfo& info)
 	// Инициализация
 	Fmatrix	Mdef;
 	Mdef.identity		();
-	Mdef.j.set			(info.n);
-	Mdef.k.set			(info.d);
+	Mdef.j.Set			(info.n);
+	Mdef.k.Set			(info.d);
 	Mdef.i.crossproduct	(info.n, info.d);
-	Mdef.c.set			(info.p);
+	Mdef.c.Set			(info.p);
 
 
 	// set angle 
@@ -178,9 +178,9 @@ BOOL CAlienEffector::ProcessCam(SCamEffectorInfo& info)
 	Fmatrix		mR;
 	mR.mul		(Mdef,R);
 
-	info.d.set		(mR.k);
-	info.n.set		(mR.j);
-	info.p.set		(mR.c);
+	info.d.Set		(mR.k);
+	info.n.Set		(mR.j);
+	info.p.Set		(mR.c);
 
 	return TRUE;
 }

@@ -699,7 +699,7 @@ void CAI_Bloodsucker::predator_start()
 
 	control().animation().restart	();
 	
-	CParticlesPlayer::StartParticles(invisible_particle_name,Fvector().set(0.0f,0.1f,0.0f),ID());		
+	CParticlesPlayer::StartParticles(invisible_particle_name,Fvector().Set(0.0f,0.1f,0.0f),ID());		
 	sound().play					(CAI_Bloodsucker::eChangeVisibility);
 
 	m_predator						= true;
@@ -730,7 +730,7 @@ void CAI_Bloodsucker::predator_stop()
 
 	control().animation().restart	();
 	
-	CParticlesPlayer::StartParticles(invisible_particle_name,Fvector().set(0.0f,0.1f,0.0f),ID());		
+	CParticlesPlayer::StartParticles(invisible_particle_name,Fvector().Set(0.0f,0.1f,0.0f),ID());		
 	sound().play					(CAI_Bloodsucker::eChangeVisibility);
 	m_predator						= false;
 }

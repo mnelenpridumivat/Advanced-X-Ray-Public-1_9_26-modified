@@ -67,8 +67,8 @@ struct SPHObjDBGDraw:public SPHDBGDrawAbsract
 	
 	SPHObjDBGDraw(const CPHObject* obj)
 	{
-		AABB.set(obj->AABB);
-		AABB_center.set(obj->spatial.sphere.P);
+		AABB.Set(obj->AABB);
+		AABB_center.Set(obj->spatial.sphere.P);
 	}
 	void render		( ) override
 	{
@@ -102,8 +102,8 @@ struct SPHContactDBGDraw :public SPHDBGDrawAbsract
 
 		//is_cyl= (geomClass==dCylinderClassUser);
 		is_cyl = IsCyliderContact(c);
-		norm.set(cast_fv(c.geom.normal));
-		pos.set(cast_fv(c.geom.pos));
+		norm.Set(cast_fv(c.geom.normal));
+		pos.Set(cast_fv(c.geom.pos));
 		depth=c.geom.depth;
 	}
 	void render		( ) override
@@ -111,7 +111,7 @@ struct SPHContactDBGDraw :public SPHDBGDrawAbsract
 			//bool is_cyl= (geomClass==dCylinderClassUser);
 			Level().debug_renderer().draw_aabb			(pos,.01f,.01f,.01f,color_xrgb(255*is_cyl,0,255*!is_cyl));
 			Fvector dir;
-			dir.set(norm);
+			dir.Set(norm);
 			dir.mul(depth*100.f);
 			dir.add(pos);
 			Level().debug_renderer().draw_line(Fidentity,pos,dir,color_xrgb(255*is_cyl,0,255*!is_cyl));
@@ -130,24 +130,24 @@ struct SPHDBGDrawTri :public SPHDBGDrawAbsract
 	bool solid;
 	SPHDBGDrawTri(CDB::RESULT* T,u32 ac)
 	{
-		v[0].set(T->verts[0]);
-		v[1].set(T->verts[1]);
-		v[2].set(T->verts[2]);
+		v[0].Set(T->verts[0]);
+		v[1].Set(T->verts[1]);
+		v[2].Set(T->verts[2]);
 		c=ac;
 		solid = false;
 	}
 	SPHDBGDrawTri(CDB::TRI* T,const Fvector*	V_array,u32 ac)
 	{
 		
-		v[0].set(V_array[T->verts[0]]);
-		v[1].set(V_array[T->verts[1]]);
-		v[2].set(V_array[T->verts[2]]);
+		v[0].Set(V_array[T->verts[0]]);
+		v[1].Set(V_array[T->verts[1]]);
+		v[2].Set(V_array[T->verts[2]]);
 		c=ac;
 		solid = false;
 	}
 	SPHDBGDrawTri(const Fvector &v0, const Fvector &v1, const Fvector &v2, u32 ac, bool solid_)
 	{
-		v[0].set(v0);v[1].set(v1);v[2].set(v2);
+		v[0].Set(v0);v[1].Set(v1);v[2].Set(v2);
 		c = ac;
 		solid = solid_;
 	}
@@ -195,7 +195,7 @@ struct SPHDBGDrawLine : public SPHDBGDrawAbsract
 	Fvector p[2];u32 c;
 	SPHDBGDrawLine(const Fvector& p0,const Fvector& p1,u32 ca)
 	{
-		p[0].set(p0);p[1].set(p1);c=ca;
+		p[0].Set(p0);p[1].Set(p1);c=ca;
 	}
 
 	void render() override
@@ -241,8 +241,8 @@ IC	void rotate<2>(Fmatrix &m, float ang)
 template<int ax>
 void DBG_DrawRotation( float ang0, float ang1, const Fmatrix& m, const Fvector &l, float size, u32 ac, bool solid, u32 tessel)
 {
-	Fvector from; from.set( m.c );
-	Fvector ln; ln.set( l ); ln.mul( size );
+	Fvector from; from.Set( m.c );
+	Fvector ln; ln.Set( l ); ln.mul( size );
 
 	
 	const float ftess = static_cast<float>(tessel);
@@ -264,17 +264,17 @@ void DBG_DrawRotation( float ang0, float ang1, const Fmatrix& m, const Fvector &
 
 void	DBG_DrawRotationX( const Fmatrix &m, float ang0, float ang1, float size, u32 ac, bool solid, u32 tessel )
 {
-	DBG_DrawRotation<0>( ang0 , ang1, m, Fvector().set(0,0,1) ,size, ac, solid, tessel );
+	DBG_DrawRotation<0>( ang0 , ang1, m, Fvector().Set(0,0,1) ,size, ac, solid, tessel );
 }
 
 void	DBG_DrawRotationY( const Fmatrix &m, float ang0, float ang1, float size, u32 ac, bool solid, u32 tessel  )
 {
-	DBG_DrawRotation<1>( ang0 , ang1, m, Fvector().set(1,0,0),size, ac, solid, tessel );
+	DBG_DrawRotation<1>( ang0 , ang1, m, Fvector().Set(1,0,0),size, ac, solid, tessel );
 }
 
 void	DBG_DrawRotationZ( const Fmatrix &m, float ang0, float ang1, float size, u32 ac, bool solid, u32 tessel  )
 {
-	DBG_DrawRotation<2>( ang0 , ang1, m, Fvector().set(0,1,0), size, ac, solid, tessel );
+	DBG_DrawRotation<2>( ang0 , ang1, m, Fvector().Set(0,1,0), size, ac, solid, tessel );
 }
 
 struct SPHDBGDrawAABB :public SPHDBGDrawAbsract
@@ -282,7 +282,7 @@ struct SPHDBGDrawAABB :public SPHDBGDrawAbsract
 	Fvector p[2];u32 c;	
 	SPHDBGDrawAABB(const Fvector& center,const Fvector& AABB,u32 ac)
 	{
-		p[0].set(center);p[1].set(AABB);
+		p[0].Set(center);p[1].Set(AABB);
 		c=ac;
 	}
 
@@ -302,7 +302,7 @@ struct SPHDBGDrawOBB: public SPHDBGDrawAbsract
 	Fmatrix m;Fvector h;u32 c;
 	SPHDBGDrawOBB(const Fmatrix am,const Fvector ah, u32 ac)
 	{
-		m.set(am);h.set(ah);c=ac;
+		m.set(am);h.Set(ah);c=ac;
 	}
 
 	void render() override
@@ -326,13 +326,13 @@ struct SPHDBGDrawPoint :public SPHDBGDrawAbsract
 	Fvector p;float size;u32 c;
 	SPHDBGDrawPoint(const Fvector ap,float s,u32 ac)
 	{
-		p.set(ap),size=s;c=ac;
+		p.Set(ap),size=s;c=ac;
 	}
 
 	void render() override
 	{
 		//Level().debug_renderer().draw_aabb(p,size,size,size,c);
-		Fmatrix m;m.identity();m.scale(size,size,size);m.c.set(p);
+		Fmatrix m;m.identity();m.scale(size,size,size);m.c.Set(p);
 		Level().debug_renderer().draw_ellipse(m,c);
 	}
 };
@@ -1013,7 +1013,7 @@ void DBG_ObjBeforeStep			( CPHObject *obj )
 			obj->ref_object()->ObjectPPhysicsShell()->dbg_draw_force		( 0.1f, color_xrgb( 0, 0, 255 ) ); 
 			Fmatrix form = Fidentity;
 			obj->ref_object()->ObjectPPhysicsShell()->GetGlobalTransformDynamic( &form );
-			dbg_trace_prev_pos.set( form.c );
+			dbg_trace_prev_pos.Set( form.c );
 		}
 		
 	}

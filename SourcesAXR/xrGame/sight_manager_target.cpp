@@ -69,7 +69,7 @@ bool CSightManager::aim_target	(Fvector &my_position, Fvector &aim_target, const
 	//. hack is here, just because our actor model is animated with 20cm shift
 	m_object->XFORM().transform_tiny	(
 		my_position,
-		Fvector().set(
+		Fvector().Set(
 			.2f,
 			my_position.y - m_object->Position().y,
 			0.f
@@ -97,7 +97,7 @@ void CSightManager::SetFirePointLookAngles(const Fvector &tPosition, float &yaw,
 
 	target.sub					(my_position);
 	if (fis_zero(target.square_magnitude()))
-		target.set				(0.f,0.f,1.f);
+		target.Set				(0.f,0.f,1.f);
 
 	target.getHP				(yaw,pitch);
 	VERIFY						(_valid(yaw));

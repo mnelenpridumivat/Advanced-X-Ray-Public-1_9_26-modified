@@ -345,7 +345,7 @@ void IGame_Persistent::GrassBendersUpdate(u16 id, u8& data_idx, u32& data_frame,
         if (grass_shader_data.id[idx] == 0)
         {
             data_idx = idx;
-            GrassBendersSet(idx, id, position, Fvector3().set(0, -99, 0), 0, 0, 0.0f, init_radius, BENDER_ANIM_DEFAULT, true);
+            GrassBendersSet(idx, id, position, Fvector3().Set(0, -99, 0), 0, 0, 0.0f, init_radius, BENDER_ANIM_DEFAULT, true);
 
             grass_shader_data.str_target[idx] = init_str;
             grass_shader_data.radius_curr[idx] = init_radius;
@@ -552,7 +552,7 @@ void IGame_Persistent::GrassBendersRemoveById(u16 id)
 void IGame_Persistent::GrassBendersReset(u8 idx)
 {
     // Reset Everything
-    GrassBendersSet(idx, 0, Fvector3().set(0, 0, 0), Fvector3().set(0, -99, 0), 0, 0, 0, 0, BENDER_ANIM_DEFAULT, true);
+    GrassBendersSet(idx, 0, Fvector3().Set(0, 0, 0), Fvector3().Set(0, -99, 0), 0, 0, 0, 0, BENDER_ANIM_DEFAULT, true);
     grass_shader_data.str_target[idx] = 0;
 }
 

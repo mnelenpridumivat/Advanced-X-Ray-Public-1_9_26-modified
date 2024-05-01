@@ -184,9 +184,9 @@ void SPHCharacterRestrictor::SetMaterial(u16 material)
 void CPHActorCharacter::SetAcceleration(Fvector accel)
 {
 	Fvector cur_a,input_a;float cur_mug,input_mug;
-	cur_a.set(m_acceleration);cur_mug=m_acceleration.magnitude();
+	cur_a.Set(m_acceleration);cur_mug=m_acceleration.magnitude();
 	if(!fis_zero(cur_mug))cur_a.mul(1.f/cur_mug);
-	input_a.set(accel);input_mug=accel.magnitude();
+	input_a.Set(accel);input_mug=accel.magnitude();
 	if(!fis_zero(input_mug))input_a.mul(1.f/input_mug);
 	if(!cur_a.similar(input_a,0.05f)||!fis_zero(input_mug-cur_mug,0.5f))
 						inherited::SetAcceleration(accel);
@@ -215,7 +215,7 @@ void CPHActorCharacter::Jump(const Fvector& accel)
  			//if(accel.square_magnitude()>EPS_L)m_jump_accel.mul(4.f);
 		}
 		else{
-			m_jump_accel.set(vel[0]*JUMP_INCREASE_VELOCITY_RATE+m_acceleration.x/amag*0.2f,jump_up_velocity,vel[2]*JUMP_INCREASE_VELOCITY_RATE +m_acceleration.z/amag*0.2f);
+			m_jump_accel.Set(vel[0]*JUMP_INCREASE_VELOCITY_RATE+m_acceleration.x/amag*0.2f,jump_up_velocity,vel[2]*JUMP_INCREASE_VELOCITY_RATE +m_acceleration.z/amag*0.2f);
 		}
 		Enable();
 	}

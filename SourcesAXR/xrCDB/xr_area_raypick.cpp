@@ -82,9 +82,9 @@ BOOL CObjectSpace::_RayTest	( const Fvector &start, const Fvector &dir, float ra
 				CDB::RESULT*	R	= xrc.r_begin();
 				CDB::TRI&		T	= Static.get_tris() [ R->id ];
 				Fvector*		V	= Static.get_verts();
-				cache->verts[0].set	(V[T.verts[0]]);
-				cache->verts[1].set	(V[T.verts[1]]);
-				cache->verts[2].set	(V[T.verts[2]]);
+				cache->verts[0].Set	(V[T.verts[0]]);
+				cache->verts[1].Set	(V[T.verts[1]]);
+				cache->verts[2].Set	(V[T.verts[2]]);
 				return TRUE;
 			}
 		} else {

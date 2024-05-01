@@ -17,7 +17,7 @@ moving_object::moving_object			(const CEntityAlive *object)
 	m_object			= object;
 	
 	m_action			= action_move;
-	m_action_position	= Fvector().set(flt_max,flt_max,flt_max);
+	m_action_position	= Fvector().Set(flt_max,flt_max,flt_max);
 	m_action_frame		= 0;
 	m_action_time		= 0;
 

@@ -210,7 +210,7 @@ void CCustomMonster::reinit		()
 
 	eye_pp_stage				= 0;
 	m_dwLastUpdateTime			= 0xffffffff;
-	m_tEyeShift.set				(0,0,0);
+	m_tEyeShift.Set				(0,0,0);
 	m_fEyeShiftYaw				= 0.f;
 	NET_WasExtrapolating		= FALSE;
 
@@ -258,7 +258,7 @@ void CCustomMonster::mk_orientation(Fvector &dir, Fmatrix& mR)
 		// normalize
 		dir.x /= len;
 		dir.z /= len;
-		Fvector up;	up.set(0,1,0);
+		Fvector up;	up.Set(0,1,0);
 		mR.rotation	(dir,up);
 	}
 }
@@ -744,7 +744,7 @@ BOOL CCustomMonster::net_Spawn	(CSE_Abstract* DC)
 		N.o_model				= -E->o_torso.yaw;
 		N.o_torso.yaw			= -E->o_torso.yaw;
 		N.o_torso.pitch			= 0;
-		N.p_pos.set				(Position());
+		N.p_pos.Set				(Position());
 		NET.push_back			(N);
 
 		N.dwTimeStamp			+= NET_Latency;
@@ -1113,8 +1113,8 @@ void CCustomMonster::OnRender()
 		float								radius1 = !i ? .2f : .3f;
 		{
 			for (u32 I=1; I<path.size(); ++I) {
-				const DetailPathManager::STravelPathPoint&	N1 = path[I-1];	Fvector	P1; P1.set(N1.position); P1.y+=0.1f;
-				const DetailPathManager::STravelPathPoint&	N2 = path[I];	Fvector	P2; P2.set(N2.position); P2.y+=0.1f;
+				const DetailPathManager::STravelPathPoint&	N1 = path[I-1];	Fvector	P1; P1.Set(N1.position); P1.y+=0.1f;
+				const DetailPathManager::STravelPathPoint&	N2 = path[I];	Fvector	P2; P2.Set(N2.position); P2.y+=0.1f;
 				if (!fis_zero(P1.distance_to_sqr(P2),EPS_L))
 					Level().debug_renderer().draw_line			(Fidentity,P1,P2,color0);
 				if ((path.size() - 1) == I) // песледний box?
@@ -1127,12 +1127,12 @@ void CCustomMonster::OnRender()
 				CDetailPathManager::STravelPoint	temp;
 				temp		= keys[I - 1]; 
 				Fvector		P1;
-				P1.set		(temp.position.x,ai().level_graph().vertex_plane_y(temp.vertex_id),temp.position.y);
+				P1.Set		(temp.position.x,ai().level_graph().vertex_plane_y(temp.vertex_id),temp.position.y);
 				P1.y		+= 0.1f;
 
 				temp		= keys[I]; 
 				Fvector		P2;
-				P2.set		(temp.position.x,ai().level_graph().vertex_plane_y(temp.vertex_id),temp.position.y);
+				P2.Set		(temp.position.x,ai().level_graph().vertex_plane_y(temp.vertex_id),temp.position.y);
 				P2.y		+= 0.1f;
 
 				if (!fis_zero(P1.distance_to_sqr(P2),EPS_L))
@@ -1365,7 +1365,7 @@ Fvector	CCustomMonster::spatial_sector_point	( )
 	//	return						inherited::spatial_sector_point( );
 
 	//if ( !animation_movement() )
-		return						inherited::spatial_sector_point( ).add( Fvector().set(0.f, Radius()*.5f, 0.f) );
+		return						inherited::spatial_sector_point( ).add( Fvector().Set(0.f, Radius()*.5f, 0.f) );
 
 	//IKinematics* const kinematics	= smart_cast<IKinematics*>(Visual());
 	//VERIFY							(kinematics);

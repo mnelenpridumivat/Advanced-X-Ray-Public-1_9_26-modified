@@ -1,5 +1,3 @@
-#ifndef FTimerH
-#define FTimerH
 #pragma once
 
 class	CTimer_paused;
@@ -157,5 +155,3 @@ public:
 		return		_result		;
 	}
 };
-
-#endif // FTimerH

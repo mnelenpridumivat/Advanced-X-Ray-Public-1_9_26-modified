@@ -503,7 +503,7 @@ void CMapLocation::UpdateSpotPointer(CUICustomMap* map, CMapSpotPointer* sp )
 
 		Fvector2 tt = map->ConvertLocalToReal(m_position_on_map);
 		Fvector ttt;
-		ttt.set		(tt.x, 0.0f, tt.y);
+		ttt.Set		(tt.x, 0.0f, tt.y);
 
 		if (IsGameTypeSingle() && Level().CurrentEntity())
 		{

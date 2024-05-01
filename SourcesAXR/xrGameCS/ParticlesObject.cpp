@@ -232,7 +232,7 @@ Fvector& CParticlesObject::Position		()
 {
 	if(g_dedicated_server) 
 	{
-		static Fvector _pos = Fvector().set(0,0,0);
+		static Fvector _pos = Fvector().Set(0,0,0);
 		return _pos;
 	}
 	vis_data &vis = renderable.visual->getVisData();

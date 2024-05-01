@@ -96,7 +96,7 @@ IC int dcTriListCollider::dSortTriPrimitiveCollide (
 	if(no_last_pos||!last_box.contains(box))
 	{
 		
-		Fvector aabb;aabb.set(AABB);
+		Fvector aabb;aabb.Set(AABB);
 		aabb.mul(ph_console::ph_tri_query_ex_aabb_rate);
 	///////////////////////////////////////////////////////////////////////////////////////////////
 		XRC.box_options                (0);
@@ -118,8 +118,8 @@ IC int dcTriListCollider::dSortTriPrimitiveCollide (
 #ifdef DEBUG
 		debug_output().dbg_total_saved_tries()+=data->cashed_tries.size();
 #endif
-		data->last_aabb_pos.set(cast_fv(p));
-		data->last_aabb_size.set(aabb);
+		data->last_aabb_pos.Set(cast_fv(p));
+		data->last_aabb_size.Set(aabb);
 	}
 #ifdef DEBUG
 	else

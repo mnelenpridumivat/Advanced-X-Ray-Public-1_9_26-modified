@@ -422,7 +422,7 @@ void   ATTACK_ON_RUN_STATE::select_prepare_fallback_target ()
 					  ++index	)
 	{
 		float	const	angle				=	move_scan_angle * index;
-		Fvector	const	scan_point			=	enemy_pos + rotate_point(Fvector().set(far_radius, 0, 0), angle);
+		Fvector	const	scan_point			=	enemy_pos + rotate_point(Fvector().Set(far_radius, 0, 0), angle);
 
 		if ( is_valid_point_to_move(scan_point, &m_target_vertex) )
 		{

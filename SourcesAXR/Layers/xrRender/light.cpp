@@ -13,9 +13,9 @@ light::light		(void)	: ISpatial(g_SpatialSpace)
 	flags.bShadow	= false;
 	flags.bVolumetric = false;
 	flags.bHudMode	= false;
-	position.set	(0,-1000,0);
-	direction.set	(0,-1,0);
-	right.set		(0,0,0);
+	position.Set	(0,-1000,0);
+	direction.Set	(0,-1,0);
+	right.Set		(0,0,0);
 	range			= 8.f;
 	cone			= deg2rad(60.f);
 	color.set		(1,1,1,1);
@@ -138,7 +138,7 @@ void	light::set_position		(const Fvector& P)
 {
 	float	eps					=	EPS_L;	//_max	(range*0.001f,EPS_L);
 	if (position.similar(P,eps))return	;
-	position.set				(P);
+	position.Set				(P);
 	spatial_move				();
 }
 

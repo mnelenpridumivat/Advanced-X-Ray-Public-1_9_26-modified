@@ -21,7 +21,7 @@ struct SCalculateData  {
 public:
 	SCalculateData( ):
 	state( ), m_limb( 0 ), m_obj( 0 ), 
-	cl_shift( Fvector( ).set( 0, 0, 0 ) ), m_angles( 0 ), apply( false ), do_collide( false ),l( 0.f ), a( 0.f ) {}
+	cl_shift( Fvector( ).Set( 0, 0, 0 ) ), m_angles( 0 ), apply( false ), do_collide( false ),l( 0.f ), a( 0.f ) {}
 
 	SCalculateData( CIKLimb& l, const Fmatrix &o );
 public:

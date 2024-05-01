@@ -6,7 +6,7 @@ void CCustomMonster::mk_rotation					(Fvector &dir, SRotation &R)
 {
 	// parse yaw
 	Fvector DYaw;	
-	DYaw.set							(dir.x,0.f,dir.z); 
+	DYaw.Set							(dir.x,0.f,dir.z); 
 	DYaw.normalize_safe					();
 	clamp								(DYaw.x,-0.9999999f,0.9999999f);
 	clamp								(DYaw.y,-0.9999999f,0.9999999f);

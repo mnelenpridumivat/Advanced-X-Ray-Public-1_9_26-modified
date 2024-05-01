@@ -142,7 +142,7 @@ void CBaseGraviZone ::Affect(SZoneObjectInfo* O)
 	if(!fis_zero(dist))
 		throw_in_dir.mul(1.f/dist);
 	else 
-		throw_in_dir.set(0.f,1.f,0.f);
+		throw_in_dir.Set(0.f,1.f,0.f);
 
 	bool CanApplyPhisImpulse = GO->Local() == TRUE;
 
@@ -192,7 +192,7 @@ void CBaseGraviZone::AffectPullAlife(CEntityAlive* EA,const Fvector& throw_in_di
 	float throw_power = m_fThrowInImpulseAlive*rel_power*rel_power*rel_power*rel_power*rel_power;
 
 	Fvector vel;
-	vel.set(throw_in_dir);
+	vel.Set(throw_in_dir);
 	vel.mul(throw_power);
 	EA->character_physics_support()->movement()->AddControlVel(vel);
 }
@@ -211,7 +211,7 @@ void CBaseGraviZone::AffectThrow(SZoneObjectInfo* O, CPhysicsShellHolder* GO,con
 
 	if(power > 0.01f) 
 	{
-		position_in_bone_space.set(0.f,0.f,0.f);
+		position_in_bone_space.Set(0.f,0.f,0.f);
 		CreateHit(GO->ID(),ID(),throw_in_dir,power,0,position_in_bone_space,impulse,m_eHitTypeBlowout);
 		PlayHitParticles(GO);
 	}
@@ -237,7 +237,7 @@ void CBaseGraviZone::PlayTeleParticles(CGameObject* pObject)
 		particle_str = m_sTeleParticlesBig;
 	}
 
-	PP->StartParticles(particle_str, Fvector().set(0,1,0), ID());
+	PP->StartParticles(particle_str, Fvector().Set(0,1,0), ID());
 }
 
 void CBaseGraviZone::StopTeleParticles(CGameObject* pObject)

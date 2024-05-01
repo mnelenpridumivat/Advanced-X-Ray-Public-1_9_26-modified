@@ -15,7 +15,7 @@ CScriptWatchAction::CScriptWatchAction		()
 {
 	m_tpObjectToWatch	= nullptr;
 	m_tWatchType		= SightManager::eSightTypeCurrentDirection;
-	m_tWatchVector.set	(0,0,0);
+	m_tWatchVector.Set	(0,0,0);
 	m_tGoalType			= eGoalTypeCurrent;
 	m_bCompleted		= true;
 }

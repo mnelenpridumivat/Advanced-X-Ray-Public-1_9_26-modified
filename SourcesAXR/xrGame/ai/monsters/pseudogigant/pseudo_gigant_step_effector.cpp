@@ -23,10 +23,10 @@ BOOL CPseudogigantStepEffector::ProcessCam(SCamEffectorInfo& info)
 	// Инициализация
 	Fmatrix	Mdef;
 	Mdef.identity		();
-	Mdef.j.set			(info.n);
-	Mdef.k.set			(info.d);
+	Mdef.j.Set			(info.n);
+	Mdef.k.Set			(info.d);
 	Mdef.i.crossproduct	(info.n, info.d);
-	Mdef.c.set			(info.p);
+	Mdef.c.Set			(info.p);
 
 	float period_all	= period_number * PI_MUL_2;		// макс. значение цикла
 	float k				= 1 - time_left_perc + EPS_L + (1 - power);
@@ -44,8 +44,8 @@ BOOL CPseudogigantStepEffector::ProcessCam(SCamEffectorInfo& info)
 	Fmatrix		mR;
 	mR.mul		(Mdef,R);
 
-	info.d.set	(mR.k);
-	info.n.set	(mR.j);
+	info.d.Set	(mR.k);
+	info.n.Set	(mR.j);
 
 	return TRUE;
 }

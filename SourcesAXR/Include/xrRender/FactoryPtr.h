@@ -1,5 +1,3 @@
-#ifndef	FactoryPtr_included
-#define FactoryPtr_included
 #pragma once
 
 #include "RenderFactory.h"
@@ -90,5 +88,3 @@ void FactoryPtr<IStatsRender>::DestroyObject(void)
 }
 */
 
-
-#endif	//	FactoryPtr_included

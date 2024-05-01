@@ -339,7 +339,7 @@ bool CControlJump::is_on_the_ground()
 	if (m_time_started + (m_jump_time*1000) > time()) return false;
 
 	Fvector direction;
-	direction.set(0.f, -1.f, 0.f);
+	direction.Set(0.f, -1.f, 0.f);
 	Fvector trace_from;
 	m_object->Center(trace_from);
 
@@ -564,8 +564,8 @@ bool CControlJump::jump_intersect_geometry (Fvector const & target, CObject * co
 	if ( magnitude(start_to_target) < 1.f )
 		return false;
 
- 	Fvector const traj_start	=	m_object->Position() + Fvector().set(0, 1.2f, 0);
- 	Fvector const traj_target	=	target + Fvector().set(0, 1.2f, 0) - (normalize(start_to_target) * 1);
+ 	Fvector const traj_start	=	m_object->Position() + Fvector().Set(0, 1.2f, 0);
+ 	Fvector const traj_target	=	target + Fvector().Set(0, 1.2f, 0) - (normalize(start_to_target) * 1);
 
 	if ( trajectory_intersects_geometry	(m_jump_time, 
 										 traj_start,

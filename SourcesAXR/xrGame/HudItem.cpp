@@ -740,7 +740,7 @@ float CHudItem::GetHudFov()
 		if (pSettings->line_exist(item_sect, "hud_fov"))
 			fBaseFov = m_base_fov;
 
-		clamp(fBaseFov, 0.0f, FLT_MAX);
+		clamp(fBaseFov, 0.0f, std::numeric_limits<float>::max());
 
 		float src = m_nearwall_speed_mod * Device.fTimeDelta;
 		clamp(src, 0.f, 1.f);

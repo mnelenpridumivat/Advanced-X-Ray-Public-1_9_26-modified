@@ -715,7 +715,7 @@ void game_cl_mp::OnPlayerVoted			(game_PlayerState* ps)
 void game_cl_mp::LoadTeamData			(const shared_str& TeamName)
 {
 	cl_TeamStruct			Team;
-	Team.IndicatorPos.set	(0.f,0.f,0.f);
+	Team.IndicatorPos.Set	(0.f,0.f,0.f);
 	Team.Indicator_r1		= 0.f;
 	Team.Indicator_r2		= 0.f;
 

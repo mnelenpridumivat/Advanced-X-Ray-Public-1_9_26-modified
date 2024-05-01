@@ -20,8 +20,8 @@
 CGlow::CGlow		()		: ISpatial(g_SpatialSpace)
 {
 	flags.bActive	= false;
-	position.set	(0,0,0);
-	direction.set	(0,0,0);
+	position.Set	(0,0,0);
+	direction.Set	(0,0,0);
 	radius			= 0.1f;
 	color.set		(1,1,1,1);
 	bTestResult		= FALSE;
@@ -54,7 +54,7 @@ void	CGlow::set_active		(bool a)
 bool	CGlow::get_active		()					{return flags.bActive;}
 void	CGlow::set_position		(const Fvector& P)	{
 	if (position.similar(P))	return;
-	position.set				(P);
+	position.Set				(P);
 	spatial_move				();
 };
 void	CGlow::set_direction	(const Fvector& D)	{
@@ -107,7 +107,7 @@ void CGlowManager::Load		(IReader* fs)
 		fs->r				(&G->position,	3*sizeof(float));
 		fs->r				(&G->radius,	1*sizeof(float));
 		G->spatial.sphere.set(G->position, G->radius);
-		G->direction.set	( 0,0,0 );
+		G->direction.Set	( 0,0,0 );
 
 		u16 S				= fs->r_u16();
 		G->shader			= ::RImplementation.getShader(S);

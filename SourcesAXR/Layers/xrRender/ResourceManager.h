@@ -2,13 +2,12 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifndef ResourceManagerH
-#define ResourceManagerH
 #pragma once
 
 #include	"shader.h"
 #include	"tss_def.h"
 #include	"TextureDescrManager.h"
+#include "../../xrCore/StructDefines.h"
 // refs
 struct		lua_State;
 
@@ -237,5 +236,3 @@ private:
 
 #endif	//	USE_DX11
 };
-
-#endif //ResourceManagerH

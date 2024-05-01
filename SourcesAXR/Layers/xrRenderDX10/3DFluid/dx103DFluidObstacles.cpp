@@ -176,8 +176,8 @@ void dx103DFluidObstacles::ProcessDynamicObstacles( const dx103DFluidData &Fluid
 	m_lstElements.clear_not_free();
 
 	Fbox	box;
-	box.min = Fvector3().set(-0.5f, -0.5f, -0.5f);
-	box.max = Fvector3().set( 0.5f,  0.5f,  0.5f);
+	box.min = Fvector3().Set(-0.5f, -0.5f, -0.5f);
+	box.max = Fvector3().Set( 0.5f,  0.5f,  0.5f);
 	box.xform(FluidData.GetTransform());
 	Fvector3	center;
 	Fvector3	size;

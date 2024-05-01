@@ -587,8 +587,8 @@ void	game_sv_GameState::assign_RP				(CSE_Abstract* E, game_PlayerState* ps_who)
 	{
 		r.TimeToUnfreeze	= Level().timeServer() + g_sv_base_dwRPointFreezeTime;
 	};
-	E->o_Position.set	(r.P);
-	E->o_Angle.set		(r.A);
+	E->o_Position.Set	(r.P);
+	E->o_Angle.Set		(r.A);
 }
 
 bool				game_sv_GameState::IsPointFreezed			(RPoint* rp)

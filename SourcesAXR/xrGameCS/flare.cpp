@@ -163,7 +163,7 @@ void CFlare::UpdateCL()
 		Fmatrix							pm;
 		ParticlesMatrix					(pm);
 
-		m_pFlareParticles->UpdateParent	(pm, Fvector().set(0.f,0.f,0.f));
+		m_pFlareParticles->UpdateParent	(pm, Fvector().Set(0.f,0.f,0.f));
 
 	}
 }
@@ -174,10 +174,10 @@ void CFlare::FirePoint(Fvector& _fp)
 	{
 		firedeps						_current_firedeps;
 		HudItemData()->setup_firedeps	(_current_firedeps);
-		_fp.set							(_current_firedeps.vLastFP);
+		_fp.Set							(_current_firedeps.vLastFP);
 	}else
 	{
-		_fp.set							(0,0,0);
+		_fp.Set							(0,0,0);
 		IKinematics* K					= smart_cast<IKinematics*>(Visual());
 		Fmatrix& fire_mat				= K->LL_GetTransform(K->LL_BoneID("flare_point"));
 		fire_mat.transform_tiny			(_fp);
@@ -192,15 +192,15 @@ void CFlare::ParticlesMatrix(Fmatrix& _pm)
 		firedeps						_current_firedeps;
 		HudItemData()->setup_firedeps	(_current_firedeps);
 		_pm.set							(_current_firedeps.m_FireParticlesXForm);
-		_pm.c.set						(_current_firedeps.vLastFP);
+		_pm.c.Set						(_current_firedeps.vLastFP);
 	}else
 	{
 		Fvector							_pd;
-		_pd.set							(0.f,0.f,1.f);
+		_pd.Set							(0.f,0.f,1.f);
 		XFORM().transform_dir			(_pd);
 
 		_pm.identity					();
-		_pm.k.set						(_pd);
+		_pm.k.Set						(_pd);
 		Fvector::generate_orthonormal_basis_normalized	(	_pm.k, _pm.j, _pm.i);
 		FirePoint						(_pm.c);
 	}

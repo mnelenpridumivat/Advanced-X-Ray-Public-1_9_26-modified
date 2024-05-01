@@ -40,12 +40,12 @@ CCustomRocket::CCustomRocket()
 	m_bLightsEnabled			= false;
 
 
-	m_vPrevVel.set				(0,0,0);
+	m_vPrevVel.Set				(0,0,0);
 
 	m_pTrailLight				= NULL;
 	m_LaunchXForm.identity		();
-	m_vLaunchVelocity.set		(0,0,0);
-	m_vLaunchAngularVelocity.set(0,0,0);
+	m_vLaunchVelocity.Set		(0,0,0);
+	m_vLaunchAngularVelocity.Set(0,0,0);
 	m_bLaunched					= false;
 }
 
@@ -68,7 +68,7 @@ void CCustomRocket::reinit		()
 
 	m_pOwner					= NULL;
 
-	m_vPrevVel.set(0,0,0);
+	m_vPrevVel.Set(0,0,0);
 }
 
 
@@ -131,7 +131,7 @@ void CCustomRocket::activate_physic_shell	()
 	m_pPhysicsShell->Update	();
 
 	XFORM().set(m_pPhysicsShell->mXFORM);
-	Position().set(m_pPhysicsShell->mXFORM.c);
+	Position().Set(m_pPhysicsShell->mXFORM.c);
 	m_pPhysicsShell->set_PhysicsRefObject(this);
 	m_pPhysicsShell->set_ObjectContactCallback(ObjectContactCallback);
 	m_pPhysicsShell->set_ContactCallback(NULL);
@@ -154,9 +154,9 @@ void CCustomRocket::create_physic_shell	()
 	Fvector								ax;
 	float								radius;
 	CHOOSE_MAX(
-		obb.m_halfsize.x,ax.set(obb.m_rotate.i) ; ax.mul(obb.m_halfsize.x); radius=_min(obb.m_halfsize.y,obb.m_halfsize.z) ;obb.m_halfsize.y/=2.f;obb.m_halfsize.z/=2.f,
-		obb.m_halfsize.y,ax.set(obb.m_rotate.j) ; ax.mul(obb.m_halfsize.y); radius=_min(obb.m_halfsize.x,obb.m_halfsize.z) ;obb.m_halfsize.x/=2.f;obb.m_halfsize.z/=2.f,
-		obb.m_halfsize.z,ax.set(obb.m_rotate.k) ; ax.mul(obb.m_halfsize.z); radius=_min(obb.m_halfsize.y,obb.m_halfsize.x) ;obb.m_halfsize.y/=2.f;obb.m_halfsize.x/=2.f
+		obb.m_halfsize.x,ax.Set(obb.m_rotate.i) ; ax.mul(obb.m_halfsize.x); radius=_min(obb.m_halfsize.y,obb.m_halfsize.z) ;obb.m_halfsize.y/=2.f;obb.m_halfsize.z/=2.f,
+		obb.m_halfsize.y,ax.Set(obb.m_rotate.j) ; ax.mul(obb.m_halfsize.y); radius=_min(obb.m_halfsize.x,obb.m_halfsize.z) ;obb.m_halfsize.x/=2.f;obb.m_halfsize.z/=2.f,
+		obb.m_halfsize.z,ax.Set(obb.m_rotate.k) ; ax.mul(obb.m_halfsize.z); radius=_min(obb.m_halfsize.y,obb.m_halfsize.x) ;obb.m_halfsize.y/=2.f;obb.m_halfsize.x/=2.f
 		)
 		//radius*=1.4142f;
 		Fsphere								sphere1,sphere2;
@@ -207,7 +207,7 @@ void CCustomRocket::ObjectContactCallback(bool& do_colide,bool bo1,dContact& c ,
 		material=material_1;
 
 	}else{
-		vUp.set(*(Fvector*)&c.geom.normal);	
+		vUp.Set(*(Fvector*)&c.geom.normal);	
 
 		//if(dGeomGetClass(c.geom.g2)==dTriListClass)
 		//	material=GMLib.GetMaterialByIdx((u16)c.surface.mode);
@@ -227,7 +227,7 @@ void CCustomRocket::ObjectContactCallback(bool& do_colide,bool bo1,dContact& c ,
 	{
 		if(l_this->m_pOwner) 
 		{
-			Fvector l_pos; l_pos.set(l_this->Position());
+			Fvector l_pos; l_pos.Set(l_this->Position());
 			dxGeomUserData *l_pMYU = bo1 ? l_pUD1 :  l_pUD2;
 			VERIFY( l_pMYU );
 			if( l_pMYU->last_pos[0]!=-dInfinity )
@@ -274,10 +274,10 @@ void CCustomRocket::ObjectContactCallback(bool& do_colide,bool bo1,dContact& c ,
 			
 			R_ASSERT( l_this->m_pPhysicsShell );
 			l_this->m_pPhysicsShell->DisableCollision();
-			l_this->m_pPhysicsShell->set_LinearVel(Fvector().set(0,0,0));
-			l_this->m_pPhysicsShell->set_AngularVel(Fvector().set(0,0,0));
-			l_this->m_pPhysicsShell->setForce(Fvector().set(0,0,0));
-			l_this->m_pPhysicsShell->setTorque(Fvector().set(0,0,0));
+			l_this->m_pPhysicsShell->set_LinearVel(Fvector().Set(0,0,0));
+			l_this->m_pPhysicsShell->set_AngularVel(Fvector().Set(0,0,0));
+			l_this->m_pPhysicsShell->setForce(Fvector().Set(0,0,0));
+			l_this->m_pPhysicsShell->setTorque(Fvector().Set(0,0,0));
 			l_this->m_pPhysicsShell->set_ApplyByGravity(false);
 			l_this->setEnabled(FALSE);
 			
@@ -329,8 +329,8 @@ void  CCustomRocket::reload		(LPCSTR section)
 void CCustomRocket::Contact(const Fvector &pos, const Fvector &normal)
 {
 m_contact.contact=true;
-m_contact.pos.set(pos);
-m_contact.up.set(normal);
+m_contact.pos.Set(pos);
+m_contact.up.Set(normal);
 }
 void CCustomRocket::PlayContact()
 {
@@ -354,7 +354,7 @@ void CCustomRocket::PlayContact()
 	}
 //	if (OnClient()) return;
 
-	Position().set(m_contact.pos);
+	Position().Set(m_contact.pos);
 	m_contact.contact=false;
 }
 
@@ -463,8 +463,8 @@ void CCustomRocket::UpdateEnginePh			()
 	float force = m_fEngineImpulse*fixed_step;// * Device.fTimeDelta;
 	float k_back=1.f;
 	Fvector l_pos, l_dir; 
-	l_pos.set(0, 0,-2.f);
-	l_dir.set(XFORM().k);
+	l_pos.Set(0, 0,-2.f);
+	l_dir.Set(XFORM().k);
 
 	l_dir.normalize();
 	
@@ -474,7 +474,7 @@ void CCustomRocket::UpdateEnginePh			()
 	l_dir.normalize_safe();
 	l_dir.invert();
 	m_pPhysicsShell->applyImpulseTrace(l_pos, l_dir, force);
-	l_dir.set(0, 1.f, 0);
+	l_dir.Set(0, 1.f, 0);
 	force = m_fEngineImpulseUp*fixed_step;// * Device.fTimeDelta;
 	m_pPhysicsShell->applyImpulse(l_dir, force);
 
@@ -564,17 +564,17 @@ void CCustomRocket::UpdateParticles()
 
 	vel.add(m_vPrevVel,vel);
 	vel.mul(0.5f);
-	m_vPrevVel.set(vel);
+	m_vPrevVel.Set(vel);
 
 	Fmatrix particles_xform;
 	particles_xform.identity();
-	particles_xform.k.set(XFORM().k);
+	particles_xform.k.Set(XFORM().k);
 	particles_xform.k.mul(-1.f);
 	Fvector dir = particles_xform.k;
 	Fvector::generate_orthonormal_basis(particles_xform.k, 
 										particles_xform.j, 
 										particles_xform.i);
-    particles_xform.c.set	(XFORM().c);
+    particles_xform.c.Set	(XFORM().c);
 	dir.normalize_safe		(); //1m offset fake -(
 	particles_xform.c.add	(dir);
 

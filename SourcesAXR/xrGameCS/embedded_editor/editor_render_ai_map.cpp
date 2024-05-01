@@ -80,7 +80,7 @@ void renderAiMap()
     float st = 0.98f * graph.header().cell_size() / 2;
     float tt = 0.01f;
     Fvector DUP;
-    DUP.set(0, 1, 0);
+    DUP.Set(0, 1, 0);
 
     u32 DvbSize = 1536 * 1024; // ?acia? aooa?a rsDVB_Size from R_DStreams.cpp:12
     u32 PointSize = 24; // ?acia? aaiiuo iia iaio oi?eo hGeom_LIT.stride() from dxUIRender.cpp
@@ -118,16 +118,16 @@ void renderAiMap()
             k |= 1 << 3;
         // create vertices
         Fvector v, v1, v2, v3, v4;
-        v.set(PC.x - st, PC.y, PC.z - st);
+        v.Set(PC.x - st, PC.y, PC.z - st);
         PL.intersectRayPoint(v, DUP, v1);
         v1.mad(v1, PL.n, tt); // minX,minZ
-        v.set(PC.x + st, PC.y, PC.z - st);
+        v.Set(PC.x + st, PC.y, PC.z - st);
         PL.intersectRayPoint(v, DUP, v2);
         v2.mad(v2, PL.n, tt); // maxX,minZ
-        v.set(PC.x + st, PC.y, PC.z + st);
+        v.Set(PC.x + st, PC.y, PC.z + st);
         PL.intersectRayPoint(v, DUP, v3);
         v3.mad(v3, PL.n, tt); // maxX,maxZ
-        v.set(PC.x - st, PC.y, PC.z + st);
+        v.Set(PC.x - st, PC.y, PC.z + st);
         PL.intersectRayPoint(v, DUP, v4);
         v4.mad(v4, PL.n, tt); // minX,maxZ
 

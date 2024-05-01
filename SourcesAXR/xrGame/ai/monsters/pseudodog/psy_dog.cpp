@@ -270,7 +270,7 @@ void CPsyDogPhantom::Think()
 	setVisible		(TRUE);
 	setEnabled		(TRUE);
 
-	CParticlesPlayer::StartParticles(m_particles_appear,Fvector().set(0.0f,0.1f,0.0f),ID());
+	CParticlesPlayer::StartParticles(m_particles_appear,Fvector().Set(0.0f,0.1f,0.0f),ID());
 
 	if (EnemyMan.get_enemy() != Actor()) 
 		return;
@@ -290,7 +290,7 @@ void CPsyDogPhantom::net_Destroy()
 {
 	Fvector center;
 	Center(center);
-	PlayParticles(m_particles_disappear,center,Fvector().set(0.f,1.f,0.f));
+	PlayParticles(m_particles_disappear,center,Fvector().Set(0.f,1.f,0.f));
 	
 	if (m_parent && !is_wait_to_destroy_object()) {
 		m_parent->unregister_phantom	(this);

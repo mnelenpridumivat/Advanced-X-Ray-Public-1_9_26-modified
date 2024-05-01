@@ -388,7 +388,7 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 	m_iPreviousStateTime		= m_iStateTime = 0;
 
 	m_dwLastTimeMoved			= Device.dwTimeGlobal;
-	m_vPrevPos.set				(Position());
+	m_vPrevPos.Set				(Position());
 
 
 	if(spawn_ini() && spawn_ini()->line_exist("fast_mode","always_fast"))
@@ -829,7 +829,7 @@ void CCustomZone::PlayHitParticles(CGameObject* pObject)
 		if (PP){
 			u16 play_bone = PP->GetRandomBone(); 
 			if (play_bone!=BI_NONE)
-				PP->StartParticles	(particle_str,play_bone,Fvector().set(0,1,0), ID());
+				PP->StartParticles	(particle_str,play_bone,Fvector().Set(0,1,0), ID());
 		}
 	}
 }
@@ -860,7 +860,7 @@ void CCustomZone::PlayEntranceParticles(CGameObject* pObject)
 	if(shell_holder)
 		shell_holder->PHGetLinearVell(vel);
 	else 
-		vel.set						(0,0,0);
+		vel.Set						(0,0,0);
 	
 	//выбрать случайную косточку на объекте
 	CParticlesPlayer* PP			= smart_cast<CParticlesPlayer*>(pObject);
@@ -874,14 +874,14 @@ void CCustomZone::PlayEntranceParticles(CGameObject* pObject)
 			Fmatrix					xform;
 			Fvector					dir;
 			if(fis_zero				(vel.magnitude()))
-				dir.set				(0,1,0);
+				dir.Set				(0,1,0);
 			else
 			{
-				dir.set				(vel);
+				dir.Set				(vel);
 				dir.normalize		();
 			}
 
-			PP->MakeXFORM			(pObject,play_bone,dir,Fvector().set(0,0,0),xform);
+			PP->MakeXFORM			(pObject,play_bone,dir,Fvector().Set(0,0,0),xform);
 			pParticles->UpdateParent(xform, vel);
 			pParticles->Play		(false);
 		}
@@ -961,7 +961,7 @@ void CCustomZone::PlayBulletParticles(Fvector& pos)
 	
 	Fmatrix M;
 	M = XFORM();
-	M.c.set(pos);
+	M.c.Set(pos);
 
 	pParticles->UpdateParent(M,zero_vel);
 	pParticles->Play(false);
@@ -991,7 +991,7 @@ void CCustomZone::PlayObjectIdleParticles(CGameObject* pObject)
 	//. new
 	PP->StopParticles (particle_str, BI_NONE, true);
 
-	PP->StartParticles (particle_str, Fvector().set(0,1,0), ID());
+	PP->StartParticles (particle_str, Fvector().Set(0,1,0), ID());
 	if (!IsEnabled())
 		PP->StopParticles	(particle_str, BI_NONE, true);
 }
@@ -1127,7 +1127,7 @@ void CCustomZone::UpdateBlowout()
 	}
 
 	if (m_BendGrass_Blowout)
-		g_pGamePersistent->GrassBendersAddExplosion(ID(), Position(), Fvector().set(0, -99, 0), 1.33f, m_BendGrass_Blowout_speed, 1.0f, m_BendGrass_Blowout_radius);
+		g_pGamePersistent->GrassBendersAddExplosion(ID(), Position(), Fvector().Set(0, -99, 0), 1.33f, m_BendGrass_Blowout_speed, 1.0f, m_BendGrass_Blowout_radius);
 }
 
 void  CCustomZone::OnMove()
@@ -1135,7 +1135,7 @@ void  CCustomZone::OnMove()
 	if(m_dwLastTimeMoved == 0)
 	{
 		m_dwLastTimeMoved = Device.dwTimeGlobal;
-		m_vPrevPos.set(Position());
+		m_vPrevPos.Set(Position());
 	}
 	else
 	{

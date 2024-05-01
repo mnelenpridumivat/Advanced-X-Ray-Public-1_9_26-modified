@@ -206,7 +206,7 @@ void CElevatorState::UpdateStClimbingDown()
 	if(ClimbDirection()>0.f&&m_ladder->BeforeLadder(m_character))
 		SwitchState(clbClimbingUp);
 	float to_ax=m_ladder->DDToAxis(m_character,d);
-	Fvector ca;ca.set(m_character->ControlAccel());
+	Fvector ca;ca.Set(m_character->ControlAccel());
 	float  control_a=to_mag_and_dir(ca);
 	if(!fis_zero(to_ax)&&!fis_zero(control_a)&&abs(-ca.dotproduct(Fvector(m_ladder->Norm()).normalize()))<M_SQRT1_2)SwitchState(clbDepart);
 	if(m_ladder->AxDistToLowerP(m_character)-m_character->FootRadius()<stop_climbing_dist)
@@ -235,7 +235,7 @@ void CElevatorState::UpdateStClimbingUp()
 	if(ClimbDirection()<0.f&&m_ladder->BeforeLadder(m_character))
 		SwitchState(clbClimbingDown);
 	float to_ax=m_ladder->DDToAxis(m_character,d);
-	Fvector ca;ca.set(m_character->ControlAccel());
+	Fvector ca;ca.Set(m_character->ControlAccel());
 	float control_a=to_mag_and_dir(ca);
 	if(!fis_zero(to_ax)&&!fis_zero(control_a)&&abs(-ca.dotproduct(Fvector(m_ladder->Norm()).normalize()))<M_SQRT1_2)SwitchState(clbDepart);
 	if(m_ladder->AxDistToUpperP(m_character)+m_character->FootRadius()<stop_climbing_dist)
@@ -279,12 +279,12 @@ bool CElevatorState::GetControlDir(Fvector& dir)
 	case	clbNone			: 		break;			
 	case 	clbNearUp		:		dist= m_ladder->DDUpperP(m_character,d);
 									if(	dXZDotNormalized(d,m_character->CamDir())>look_angle_cosine&&
-										!fis_zero(dist,EPS_L)&&m_character->ControlAccel().dotproduct(d)>0.f) dir.set(d);
+										!fis_zero(dist,EPS_L)&&m_character->ControlAccel().dotproduct(d)>0.f) dir.Set(d);
 									break;						
 	case 	clbNearDown		:		
 									dist=m_ladder->DDLowerP(m_character,d);
 									if(dXZDotNormalized(d,m_character->CamDir())>look_angle_cosine&&
-									   !fis_zero(dist,EPS_L)&&m_character->ControlAccel().dotproduct(d)>0.f) dir.set(d);
+									   !fis_zero(dist,EPS_L)&&m_character->ControlAccel().dotproduct(d)>0.f) dir.Set(d);
 									break;					
 	case 	clbClimbingUp	:		m_ladder->DDAxis(dir);
 									m_ladder->DDToAxis(m_character,d);
@@ -365,9 +365,9 @@ void CElevatorState::GetJumpDir(const Fvector& accel,Fvector& dir)
 	Fvector norm,side;
 	m_ladder->DDNorm(norm);
 	m_ladder->DDSide(side);
-	Fvector ac;ac.set(accel).normalize_safe();
+	Fvector ac;ac.Set(accel).normalize_safe();
 	float side_component=ac.dotproduct(side);
-	dir.set(norm);
+	dir.Set(norm);
 	if(_abs(side_component)>M_SQRT1_2)
 	{
 		if(side_component<0.f)side.invert();

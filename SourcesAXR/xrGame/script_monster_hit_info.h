@@ -15,7 +15,7 @@ public:
 	{
 		who				= nullptr;
 		time			= 0;
-		direction		= Fvector().set(0.f,0.f,1.f);
+		direction		= Fvector().Set(0.f,0.f,1.f);
 	}
 
 	void set(CScriptGameObject *p_who, Fvector p_direction, int p_time) {

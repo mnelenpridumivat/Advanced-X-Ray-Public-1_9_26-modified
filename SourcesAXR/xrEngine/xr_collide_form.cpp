@@ -7,6 +7,7 @@
 #include "xrLevel.h"
 #include "fmesh.h"
 #include "../xrCDB/frustum.h"
+#include "../../xrCore/_cylinder.h"
 
 //#include "skeletoncustom.h"
 #include "../Include/xrRender/Kinematics.h"
@@ -41,15 +42,15 @@ void CCF_Skeleton::SElement::center(Fvector& center) const
 {
 	switch (type){
 	case SBoneShape::stBox:
-		center.set(	-b_IM.c.dotproduct(b_IM.i),
+		center.Set(	-b_IM.c.dotproduct(b_IM.i),
 					-b_IM.c.dotproduct(b_IM.j),
 					-b_IM.c.dotproduct(b_IM.k));
 	break;
 	case SBoneShape::stSphere: 
-		center.set(s_sphere.P);
+		center.Set(s_sphere.P);
 	break;
 	case SBoneShape::stCylinder: 
-		center.set(c_cylinder.m_center);
+		center.Set(c_cylinder.m_center);
 	break;
 	default:
 		NODEFAULT;
@@ -151,7 +152,7 @@ void CCF_Skeleton::BuildState()
 
 				//VERIFY2( DET(ME)>EPS, ( make_string("0 scale bone matrix, %d \n", I->elem_id ) + dbg_object_full_dump_string( owner ) ).c_str()  );
 
-				I->b_hsize.set		(B.m_halfsize);
+				I->b_hsize.Set		(B.m_halfsize);
 				// prepare matrix World to Element
 				T.mul_43					(Mbone,ME	);		// model space
 				TW.mul_43					(L2W,T		);		// world space
@@ -258,14 +259,14 @@ BOOL CCF_Skeleton::_RayQuery( const collide::ray_defs& Q, collide::rq_results& R
 CCF_EventBox::CCF_EventBox( CObject* O ) : ICollisionForm(O,cftShape)
 {
 	Fvector A[8],B[8];
-	A[0].set( -1, -1, -1);
-	A[1].set( -1, -1, +1);
-	A[2].set( -1, +1, +1);
-	A[3].set( -1, +1, -1);
-	A[4].set( +1, +1, +1);
-	A[5].set( +1, +1, -1);
-	A[6].set( +1, -1, +1);
-	A[7].set( +1, -1, -1);
+	A[0].Set( -1, -1, -1);
+	A[1].Set( -1, -1, +1);
+	A[2].Set( -1, +1, +1);
+	A[3].Set( -1, +1, -1);
+	A[4].Set( +1, +1, +1);
+	A[5].Set( +1, +1, -1);
+	A[6].Set( +1, -1, +1);
+	A[7].Set( +1, -1, -1);
 
 	const Fmatrix& T = O->XFORM();
 	for (int i=0; i<8; i++) {
@@ -273,7 +274,7 @@ CCF_EventBox::CCF_EventBox( CObject* O ) : ICollisionForm(O,cftShape)
 		T.transform_tiny(B[i],A[i]);
 	}
 	bv_box.set		(-.5f,-.5f,-.5f,+.5f,+.5f,+.5f);
-	Fvector R; R.set(bv_box.min);
+	Fvector R; R.Set(bv_box.min);
 	T.transform_dir	(R);
 	bv_sphere.R		= R.magnitude();
 
@@ -398,8 +399,8 @@ void CCF_Shape::ComputeBounds()
 			{
 				Fsphere		T		= shapes[el].data.sphere;
 				Fvector		P;
-				P.set		(T.P);	P.sub(T.R);	bv_box.modify(P);
-				P.set		(T.P);	P.add(T.R);	bv_box.modify(P);
+				P.Set		(T.P);	P.sub(T.R);	bv_box.modify(P);
+				P.Set		(T.P);	P.add(T.R);	bv_box.modify(P);
 				bv_sphere	= T;
 			}
 			break;
@@ -409,14 +410,14 @@ void CCF_Shape::ComputeBounds()
 				Fmatrix&	T		= shapes[el].data.box;
 				
 				// Build points
-				A.set( -.5f, -.5f, -.5f); T.transform_tiny	(B,A); bv_box.modify(B);
-				A.set( -.5f, -.5f, +.5f); T.transform_tiny	(B,A); bv_box.modify(B);
-				A.set( -.5f, +.5f, +.5f); T.transform_tiny	(B,A); bv_box.modify(B);
-				A.set( -.5f, +.5f, -.5f); T.transform_tiny	(B,A); bv_box.modify(B);
-				A.set( +.5f, +.5f, +.5f); T.transform_tiny	(B,A); bv_box.modify(B);
-				A.set( +.5f, +.5f, -.5f); T.transform_tiny	(B,A); bv_box.modify(B);
-				A.set( +.5f, -.5f, +.5f); T.transform_tiny	(B,A); bv_box.modify(B);
-				A.set( +.5f, -.5f, -.5f); T.transform_tiny	(B,A); bv_box.modify(B);
+				A.Set( -.5f, -.5f, -.5f); T.transform_tiny	(B,A); bv_box.modify(B);
+				A.Set( -.5f, -.5f, +.5f); T.transform_tiny	(B,A); bv_box.modify(B);
+				A.Set( -.5f, +.5f, +.5f); T.transform_tiny	(B,A); bv_box.modify(B);
+				A.Set( -.5f, +.5f, -.5f); T.transform_tiny	(B,A); bv_box.modify(B);
+				A.Set( +.5f, +.5f, +.5f); T.transform_tiny	(B,A); bv_box.modify(B);
+				A.Set( +.5f, +.5f, -.5f); T.transform_tiny	(B,A); bv_box.modify(B);
+				A.Set( +.5f, -.5f, +.5f); T.transform_tiny	(B,A); bv_box.modify(B);
+				A.Set( +.5f, -.5f, -.5f); T.transform_tiny	(B,A); bv_box.modify(B);
 
 				bCalcSphere	= TRUE;
 			}
@@ -464,14 +465,14 @@ BOOL CCF_Shape::Contact		( CObject* O )
 				// Build points
 				Fvector A,B[8];
 				Fplane  P;
-				A.set(-.5f, -.5f, -.5f);	Q.transform_tiny(B[0],A);
-				A.set(-.5f, -.5f, +.5f);	Q.transform_tiny(B[1],A);
-				A.set(-.5f, +.5f, +.5f);	Q.transform_tiny(B[2],A);
-				A.set(-.5f, +.5f, -.5f);	Q.transform_tiny(B[3],A);
-				A.set(+.5f, +.5f, +.5f);	Q.transform_tiny(B[4],A);
-				A.set(+.5f, +.5f, -.5f);	Q.transform_tiny(B[5],A);
-				A.set(+.5f, -.5f, +.5f);	Q.transform_tiny(B[6],A);
-				A.set(+.5f, -.5f, -.5f);	Q.transform_tiny(B[7],A);
+				A.Set(-.5f, -.5f, -.5f);	Q.transform_tiny(B[0],A);
+				A.Set(-.5f, -.5f, +.5f);	Q.transform_tiny(B[1],A);
+				A.Set(-.5f, +.5f, +.5f);	Q.transform_tiny(B[2],A);
+				A.Set(-.5f, +.5f, -.5f);	Q.transform_tiny(B[3],A);
+				A.Set(+.5f, +.5f, +.5f);	Q.transform_tiny(B[4],A);
+				A.Set(+.5f, +.5f, -.5f);	Q.transform_tiny(B[5],A);
+				A.Set(+.5f, -.5f, +.5f);	Q.transform_tiny(B[6],A);
+				A.Set(+.5f, -.5f, -.5f);	Q.transform_tiny(B[7],A);
 
 				P.build(B[0],B[3],B[5]);	if (P.classify(S.P)>S.R) break;
 				P.build(B[1],B[2],B[3]);	if (P.classify(S.P)>S.R) break;

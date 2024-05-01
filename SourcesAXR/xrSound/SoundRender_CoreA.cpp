@@ -12,7 +12,7 @@ CSoundRender_CoreA::CSoundRender_CoreA	():CSoundRender_Core()
 	pDeviceList					= nullptr;
 	pContext					= nullptr;
 
-	Listener.position.set(0, 0, 0);
+	Listener.position.Set(0, 0, 0);
 }
 
 CSoundRender_CoreA::~CSoundRender_CoreA	()
@@ -92,12 +92,12 @@ void CSoundRender_CoreA::_initialize(int stage)
     }
 
 	// Init listener struct.
-	Listener.position.set(0.0f, 0.0f, 0.0f);
-	Listener.prevVelocity.set(0.0f, 0.0f, 0.0f);
-	Listener.curVelocity.set(0.0f, 0.0f, 0.0f);
-	Listener.accVelocity.set(0.0f, 0.0f, 0.0f);
-	Listener.orientation[0].set(0.0f, 0.0f, 1.0f);
-	Listener.orientation[1].set(0.0f, 1.0f, 0.0f);
+	Listener.position.Set(0.0f, 0.0f, 0.0f);
+	Listener.prevVelocity.Set(0.0f, 0.0f, 0.0f);
+	Listener.curVelocity.Set(0.0f, 0.0f, 0.0f);
+	Listener.accVelocity.Set(0.0f, 0.0f, 0.0f);
+	Listener.orientation[0].Set(0.0f, 0.0f, 1.0f);
+	Listener.orientation[1].Set(0.0f, 1.0f, 0.0f);
 
     inherited::_initialize		(stage);
 
@@ -156,17 +156,17 @@ void CSoundRender_CoreA::update_listener		( const Fvector& P, const Fvector& D, 
 	static const float alpha = 0.05f;
 	inherited::update_listener(P,D,N,dt);
 
-	Listener.prevVelocity.set(Listener.accVelocity);
+	Listener.prevVelocity.Set(Listener.accVelocity);
 	Listener.curVelocity.sub(P, Listener.position);
-	Listener.accVelocity.set(Listener.curVelocity.mul(alpha).add(Listener.prevVelocity.mul(1.f - alpha)));
-	Listener.prevVelocity.set(Listener.accVelocity).div(dt);
+	Listener.accVelocity.Set(Listener.curVelocity.mul(alpha).add(Listener.prevVelocity.mul(1.f - alpha)));
+	Listener.prevVelocity.Set(Listener.accVelocity).div(dt);
 
 	if (!Listener.position.similar(P)){
-		Listener.position.set	(P);
+		Listener.position.Set	(P);
 		bListenerMoved			= TRUE;
 	}
-	Listener.orientation[0].set	(D.x,D.y,-D.z);
-	Listener.orientation[1].set	(N.x,N.y,-N.z);
+	Listener.orientation[0].Set	(D.x,D.y,-D.z);
+	Listener.orientation[1].Set	(N.x,N.y,-N.z);
 
 	A_CHK						(alListener3f	(AL_POSITION,Listener.position.x,Listener.position.y,-Listener.position.z));
 	A_CHK						(alListener3f	(AL_VELOCITY, Listener.prevVelocity.x, Listener.prevVelocity.y, -Listener.prevVelocity.z));

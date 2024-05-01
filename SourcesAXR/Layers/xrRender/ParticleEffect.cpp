@@ -69,7 +69,7 @@ CParticleEffect::CParticleEffect()
 	m_Def					= 0;
 	m_fElapsedLimit			= 0.f;
 	m_MemDT					= 0;
-	m_InitialPosition.set	(0,0,0);
+	m_InitialPosition.Set	(0,0,0);
 	m_DestroyCallback		= 0;
 	m_CollisionCallback		= 0;
 	m_XFORM.identity		();
@@ -530,7 +530,7 @@ void ParticleRenderStream( LPVOID lpvParams )
                     }else if ((speed>=EPS_S)&&pPE.m_Def->m_Flags.is(CPEDef::dfFaceAlign)){
                     	Fmatrix	M;  		M.identity();
                         M.k.div				(m.vel,speed);            
-                        M.j.set 			(0,1,0);	if (_abs(M.j.dotproduct(M.k))>.99f)  M.j.set(0,0,1);
+                        M.j.Set 			(0,1,0);	if (_abs(M.j.dotproduct(M.k))>.99f)  M.j.Set(0,0,1);
                         M.i.crossproduct	(M.j,M.k);	M.i.normalize	();
                         M.j.crossproduct   	(M.k,M.i);	M.j.normalize  ();
 						if (pPE.m_RT_Flags.is(CParticleEffect::flRT_XFORM)){

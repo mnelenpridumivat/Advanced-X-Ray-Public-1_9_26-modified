@@ -48,8 +48,8 @@ void CRender::render_rain()
 	//static const float	source_offset		= 40.f;
 
 	static const float	source_offset		= 10000.f;
-	RainLight.direction.set(0.0f, -1.0f, 0.0f);
-	RainLight.position.set(Device.vCameraPosition.x,Device.vCameraPosition.y+source_offset,Device.vCameraPosition.z);
+	RainLight.direction.Set(0.0f, -1.0f, 0.0f);
+	RainLight.position.Set(Device.vCameraPosition.x,Device.vCameraPosition.y+source_offset,Device.vCameraPosition.z);
 
 	float	fBoundingSphereRadius = 0;
 
@@ -146,9 +146,9 @@ void CRender::render_rain()
 		// view: auto find 'up' and 'right' vectors
 		Fmatrix						mdir_View, mdir_Project;
 		Fvector						L_dir,L_up,L_right,L_pos;
-		L_pos.set					(RainLight.position);
-		L_dir.set					(RainLight.direction).normalize	();
-		L_right.set					(1,0,0);					if (_abs(L_right.dotproduct(L_dir))>.99f)	L_right.set(0,0,1);
+		L_pos.Set					(RainLight.position);
+		L_dir.Set					(RainLight.direction).normalize	();
+		L_right.Set					(1,0,0);					if (_abs(L_right.dotproduct(L_dir))>.99f)	L_right.Set(0,0,1);
 		L_up.crossproduct			(L_dir,L_right).normalize	();
 		L_right.crossproduct		(L_up,L_dir).normalize		();
 		mdir_View.build_camera_dir	(L_pos,L_dir,L_up);
@@ -174,7 +174,7 @@ void CRender::render_rain()
 
 		//	Offset RainLight position to center rain shadowmap
 		Fvector3	vRectOffset;
-		vRectOffset.set( fBoundingSphereRadius*Device.vCameraDirection.x, 0, fBoundingSphereRadius*Device.vCameraDirection.z);
+		vRectOffset.Set( fBoundingSphereRadius*Device.vCameraDirection.x, 0, fBoundingSphereRadius*Device.vCameraDirection.z);
 		bb.min.x = -fBoundingSphereRadius + vRectOffset.x;
 		bb.max.x = fBoundingSphereRadius + vRectOffset.x;
 		bb.min.y = -fBoundingSphereRadius + vRectOffset.z;
@@ -201,7 +201,7 @@ void CRender::render_rain()
 
 		// snap view-position to pixel
 		//	snap zero point to pixel
-		Fvector cam_proj	= wform		(cull_xform,Fvector().set(0,0,0)	);
+		Fvector cam_proj	= wform		(cull_xform,Fvector().Set(0,0,0)	);
 		Fvector	cam_pixel	= wform		(m_viewport,cam_proj				);
 		cam_pixel.x			= floorf	(cam_pixel.x);
 		cam_pixel.y			= floorf	(cam_pixel.y);

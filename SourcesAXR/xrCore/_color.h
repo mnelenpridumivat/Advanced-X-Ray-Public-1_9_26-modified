@@ -1,5 +1,6 @@
-#ifndef __C__
-#define __C__
+#pragma once
+#include "vector.h"
+#include "_bitwise.h"
 
 // maps unsigned 8 bits/channel to D3DCOLOR
 ICF u32	color_argb	(u32 a, u32 r, u32 g, u32 b)	{	return ((a&0xff)<<24)|((r&0xff)<<16)|((g&0xff)<<8)|(b&0xff);	}
@@ -240,5 +241,3 @@ typedef _color<double>	Dcolor;
 
 template <class T>
 BOOL	_valid			(const _color<T>& c)	{ return _valid(c.r) && _valid(c.g) && _valid(c.b) && _valid(c.a); }
-
-#endif

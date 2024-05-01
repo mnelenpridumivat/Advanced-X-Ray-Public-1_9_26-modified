@@ -1,5 +1,7 @@
-#ifndef _PLANE
-#define _PLANE
+#pragma once
+
+#include "_vector3d.h"
+#include "_matrix.h"
 
 template <class T>
 class _plane {
@@ -14,7 +16,7 @@ public:
 public:
 	IC	SelfRef	set		(Self &P)
 	{
-		n.set	(P.n);
+		n.Set	(P.n);
 		d		= P.d;
 		return *this;
 	}
@@ -44,7 +46,7 @@ public:
 	ICF	SelfRef	build_unit_normal(const _vector3<T> &_p, const _vector3<T> &_n)
 	{
 		VERIFY		(fsimilar(_n.magnitude(),1,EPS));
-		d			= - n.set(_n).dotproduct(_p);
+		d			= - n.Set(_n).dotproduct(_p);
 		return *this;
 	}
 	IC	SelfCRef project(_vector3<T> &pdest, _vector3<T> const& psrc) const
@@ -145,5 +147,3 @@ typedef _plane<double>	Dplane;
 
 template <class T>
 BOOL	_valid			(const _plane<T>& s)		{ return _valid(s.n) && _valid(s.d);	}
-
-#endif

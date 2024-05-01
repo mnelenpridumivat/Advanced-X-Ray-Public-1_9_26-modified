@@ -180,7 +180,7 @@ void CPhysicsShellHolder::correct_spawn_pos()
 	R_ASSERT2( _valid( XFORM() ), make_string( "object: %s model: %s ", cName().c_str(), cNameVisual().c_str() ) );
 	PPhysicsShell()->DisableCollision	();
 
-	Fvector								ap = Fvector().set(0,0,0);
+	Fvector								ap = Fvector().Set(0,0,0);
 	ActivateShapePhysShellHolder		( this, XFORM(), size, c, ap );
 
 ////	VERIFY								(valid_pos(activation_shape.Position(),phBoundaries));
@@ -211,8 +211,8 @@ void CPhysicsShellHolder::activate_physic_shell()
 	VERIFY						(!m_pPhysicsShell);
 	create_physic_shell			();
 	Fvector						l_fw, l_up;
-	l_fw.set					(XFORM().k);
-	l_up.set					(XFORM().j);
+	l_fw.Set					(XFORM().k);
+	l_up.Set					(XFORM().j);
 	l_fw.mul					(2.f);
 	l_up.mul					(2.f);
 
@@ -292,7 +292,7 @@ void CPhysicsShellHolder::PHGetLinearVell		(Fvector& velocity)
 {
 	if(!m_pPhysicsShell)
 	{
-		velocity.set(0,0,0);
+		velocity.Set(0,0,0);
 		return;
 	}
 	m_pPhysicsShell->get_LinearVel(velocity);
@@ -404,8 +404,8 @@ void CPhysicsShellHolder::PHSaveState(NET_Packet &P)
 	/////////////////////////////
 	Fvector min,max;
 
-	min.set(flt_max,flt_max,flt_max);
-	max.set(-flt_max,-flt_max,-flt_max);
+	min.Set(flt_max,flt_max,flt_max);
+	max.Set(-flt_max,-flt_max,-flt_max);
 	/////////////////////////////////////
 
 	u16 bones_number=PHGetSyncItemsNumber();

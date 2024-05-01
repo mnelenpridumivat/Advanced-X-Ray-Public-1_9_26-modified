@@ -1,6 +1,5 @@
-#ifndef xrDebug_macrosH
-#define xrDebug_macrosH
 #pragma once
+#include "xrDebug.h"
 
 //#define ANONYMOUS_BUILD
 
@@ -145,4 +144,3 @@ template<>		struct CompileTimeError<true>	{};
 	CompileTimeError<((expr) != 0)> ERROR_##msg; \
 	(void)ERROR_##msg; \
 }
-#endif // xrDebug_macrosH

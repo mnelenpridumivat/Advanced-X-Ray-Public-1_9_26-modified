@@ -357,8 +357,8 @@ void CRenderDevice::on_idle		()
 	{
 		float factor					= float(dwPrecacheFrame)/float(dwPrecacheTotal);
 		float angle						= PI_MUL_2 * factor;
-		vCameraDirection.set			(_sin(angle),0,_cos(angle));	vCameraDirection.normalize	();
-		vCameraTop.set					(0,1,0);
+		vCameraDirection.Set			(_sin(angle),0,_cos(angle));	vCameraDirection.normalize	();
+		vCameraTop.Set					(0,1,0);
 		vCameraRight.crossproduct		(vCameraTop,vCameraDirection);
 
 		mView.build_camera_dir			(vCameraPosition,vCameraDirection,vCameraTop);

@@ -94,7 +94,7 @@ void SHeliMovementState::reinit()
 	need_to_del_path			= false;
 	curLinearSpeed				= 0.0f;
 	curLinearAcc				= 0.0f;
-	round_center.set			(0.0f,0.0f,0.0f);
+	round_center.Set			(0.0f,0.0f,0.0f);
 	round_radius				= 0.0f;
 	round_reverse				= false;
 	desiredPoint				= parent->XFORM().c;
@@ -172,7 +172,7 @@ void SHeliMovementState::getPathAltitude (Fvector& point, float base_altitude)
 
 	collide::rq_result		cR;
 	Fvector down_dir;
-	down_dir.set(0.0f, -1.0f, 0.0f);
+	down_dir.Set(0.0f, -1.0f, 0.0f);
 
 	point.y = boundingVolume.max.y+EPS_L;
 	VERIFY( _valid(point) );

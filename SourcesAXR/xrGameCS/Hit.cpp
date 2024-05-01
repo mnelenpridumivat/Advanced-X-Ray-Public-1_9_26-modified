@@ -10,14 +10,14 @@ SHit::SHit(float powerA, Fvector &dirA, CObject *whoA, u16 elementA, Fvector p_i
 		   float impulseA, ALife::EHitType hit_typeA, float armor_piercingA, bool AimBullet)
 {
 		power					= powerA								;
-		dir						.set(dirA)								;
+		dir						.Set(dirA)								;
 		who						= whoA									;
 		if (whoA)
 			whoID				= whoA->ID()							;
 		else 
 			whoID				= 0										;
 		boneID					= elementA								;
-		p_in_bone_space			.set(p_in_bone_spaceA)					;
+		p_in_bone_space			.Set(p_in_bone_spaceA)					;
 		impulse					= impulseA								;
 
 		hit_type				= hit_typeA								;
@@ -41,13 +41,13 @@ void SHit::invalidate()
 	DestID					= 0;
 
 	power					=-phInfinity								;
-	dir						.set(-phInfinity,-phInfinity,-phInfinity)	;
+	dir						.Set(-phInfinity,-phInfinity,-phInfinity)	;
 	who						=NULL									;
 	whoID					= 0;
 	weaponID				= 0;
 
 	boneID					=BI_NONE								;
-	p_in_bone_space		.set(-phInfinity,-phInfinity,-phInfinity)	;
+	p_in_bone_space		.Set(-phInfinity,-phInfinity,-phInfinity)	;
 
 	impulse					=-phInfinity								;
 	hit_type				=ALife::eHitTypeMax						;

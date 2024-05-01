@@ -33,23 +33,23 @@ class CControlPathBuilderBase : public CControl_ComBase {
 	public:
 					STarget()
 		{
-			_position.set( -FLT_MAX, -FLT_MAX, -FLT_MAX );
+			_position.Set(std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
 			_node  =static_cast<u32>(-1);
 		}
 		void		init		() {
-			_position.set	(0.f,0.f,0.f);
+			_position.Set	(0.f,0.f,0.f);
 			_node			= static_cast<u32>(-1);
 		}
 
 		void		set			(const Fvector &pos, u32 vertex) {
-			_position.set	(pos);
+			_position.Set	(pos);
 			_node			= vertex;
 		}
 		IC	const Fvector	&position	()const				{ return _position; }
 		//IC		  Fvector	&position	()					{ return _position; }
 		IC	u32				node		()const				{ return _node;		}
 		IC	void			set_node	( u32 node_ )		{ _node = node_ ;	}
-		IC	void			set_position( const Fvector	&p ){ _position.set(p);	}
+		IC	void			set_position( const Fvector	&p ){ _position.Set(p);	}
 	} m_target_set, m_target_found;
 
 	u32			m_time;					// время перестроения пути

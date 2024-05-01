@@ -20,7 +20,7 @@ bool CSpaceRestrictionBase::inside	(u32 level_vertex_id, bool partially_inside)
 
 IC	Fvector construct_position		(u32 level_vertex_id, float x, float z)
 {
-	return							(Fvector().set(x,ai().level_graph().vertex_plane_y(level_vertex_id,x,z),z));
+	return							(Fvector().Set(x,ai().level_graph().vertex_plane_y(level_vertex_id,x,z),z));
 }
 
 IC	bool CSpaceRestrictionBase_inside	(CSpaceRestrictionBase *self, const Fvector &position, const float &radius)
@@ -41,7 +41,7 @@ bool CSpaceRestrictionBase::inside	(u32 level_vertex_id, bool partially_inside, 
 			CSpaceRestrictionBase_inside(this,construct_position(level_vertex_id,position.x + offset,position.z - offset),radius) ||
 			CSpaceRestrictionBase_inside(this,construct_position(level_vertex_id,position.x - offset,position.z + offset),radius) || 
 			CSpaceRestrictionBase_inside(this,construct_position(level_vertex_id,position.x - offset,position.z - offset),radius) ||
-			CSpaceRestrictionBase_inside(this,Fvector().set(position.x,position.y,position.z),radius)
+			CSpaceRestrictionBase_inside(this,Fvector().Set(position.x,position.y,position.z),radius)
 		);
 	else
 		return						(
@@ -49,7 +49,7 @@ bool CSpaceRestrictionBase::inside	(u32 level_vertex_id, bool partially_inside, 
 			CSpaceRestrictionBase_inside(this,construct_position(level_vertex_id,position.x + offset,position.z - offset),radius) && 
 			CSpaceRestrictionBase_inside(this,construct_position(level_vertex_id,position.x - offset,position.z + offset),radius) && 
 			CSpaceRestrictionBase_inside(this,construct_position(level_vertex_id,position.x - offset,position.z - offset),radius) &&
-			CSpaceRestrictionBase_inside(this,Fvector().set(position.x,position.y,position.z),radius)
+			CSpaceRestrictionBase_inside(this,Fvector().Set(position.x,position.y,position.z),radius)
 		);
 }
 

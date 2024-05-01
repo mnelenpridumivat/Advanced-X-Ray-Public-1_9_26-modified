@@ -305,7 +305,7 @@ void CArtefact::SwitchAfParticles(bool bOn)
 	if(bOn)
 	{
 			Fvector dir;
-			dir.set(0,1,0);
+			dir.Set(0,1,0);
 			CParticlesPlayer::StartParticles(m_sParticlesName,dir,ID(),-1, false);
 	}else
 	{
@@ -758,7 +758,7 @@ void SArtefactDetectorsSupport::SetVisible(bool b)
 			u16 bone_id = K->LL_BoneID(bone);
 			R_ASSERT2(bone_id != BI_NONE, bone);
 
-			m_parent->CParticlesPlayer::StartParticles(curr, bone_id, Fvector().set(0, 1, 0), m_parent->ID());
+			m_parent->CParticlesPlayer::StartParticles(curr, bone_id, Fvector().Set(0, 1, 0), m_parent->ID());
 
 			curr = pSettings->r_string(m_parent->cNameSect().c_str(), (b) ? "det_show_snd" : "det_hide_snd");
 			m_sound.create(curr, st_Effect, sg_SourceType);
@@ -786,7 +786,7 @@ void SArtefactDetectorsSupport::Blink()
 	u16 bone_id				= K->LL_BoneID(bone);
 	R_ASSERT2				(bone_id!=BI_NONE, bone);
 
-	m_parent->CParticlesPlayer::StartParticles(curr,bone_id,Fvector().set(0,1,0),m_parent->ID(), 1000, true);
+	m_parent->CParticlesPlayer::StartParticles(curr,bone_id,Fvector().Set(0,1,0),m_parent->ID(), 1000, true);
 }
 
 void SArtefactDetectorsSupport::UpdateOnFrame()

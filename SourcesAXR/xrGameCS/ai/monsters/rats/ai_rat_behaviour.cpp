@@ -39,7 +39,7 @@ void CAI_Rat::update_home_position	()
 
 	m_next_graph_point			= ai().cross_table().vertex(ai_location().level_vertex_id()).game_vertex_id();
 	select_next_home_position	();
-	m_home_position.set			(ai().game_graph().vertex(m_next_graph_point)->level_point());
+	m_home_position.Set			(ai().game_graph().vertex(m_next_graph_point)->level_point());
 }
 
 void CAI_Rat::Think()

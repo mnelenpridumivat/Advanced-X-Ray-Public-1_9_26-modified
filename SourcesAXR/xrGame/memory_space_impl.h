@@ -39,10 +39,10 @@ IC	void CObjectParams<T>::fill				(const T *game_object)
 	
 	if (game_object) {
 		game_object->Center	(m_position);
-		m_position.set		(game_object->Position().x,m_position.y,game_object->Position().z);
+		m_position.Set		(game_object->Position().x,m_position.y,game_object->Position().z);
 	}
 	else
-		m_position			= Fvector().set(0.f,0.f,0.f);
+		m_position			= Fvector().Set(0.f,0.f,0.f);
 }
 
 template <typename T>

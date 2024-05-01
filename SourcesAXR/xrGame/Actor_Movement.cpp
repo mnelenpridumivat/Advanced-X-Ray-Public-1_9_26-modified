@@ -142,7 +142,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 {
 	float					cam_eff_factor = 0.0f;
 	mstate_old				= mstate_real;
-	vControlAccel.set		(0,0,0);
+	vControlAccel.Set		(0,0,0);
 
 	if (!(mstate_real&mcFall) && (character_physics_support()->movement()->Environment()==CPHMovementControl::peInAir)) 
 	{
@@ -476,7 +476,7 @@ void CActor::g_Orientate	(u32 mstate_rl, float dt)
 	// build matrix
 	Fmatrix mXFORM;
 	mXFORM.rotateY	(-(r_model_yaw + r_model_yaw_delta));
-	mXFORM.c.set	(Position());
+	mXFORM.c.Set	(Position());
 	XFORM().set		(mXFORM);
 	VERIFY(_valid(XFORM()));
 
@@ -508,8 +508,8 @@ bool CActor::g_LadderOrient()
 	leader_norm.div(mag);
 	leader_norm.invert();
 	Fmatrix M;M.set(Fidentity);
-	M.k.set(leader_norm);
-	M.j.set(0.f,1.f,0.f);
+	M.k.Set(leader_norm);
+	M.j.Set(0.f,1.f,0.f);
 	generate_orthonormal_basis1(M.k,M.j,M.i);
 	M.i.invert();
 	//M.j.invert();
@@ -532,12 +532,12 @@ bool CActor::g_LadderOrient()
 	//angle_lerp(angles3.x,angles1.x,angles2.x,dt);
 	//XFORM().setHPB(angles3.x,angles3.y,angles3.z);
 	Fvector position;
-	position.set(Position());
+	position.Set(Position());
 	//XFORM().rotation(q3);
 	VERIFY2(_valid(M),"Invalide matrix in g_LadderOrient");
 	XFORM().set(M);
 	VERIFY2(_valid(position),"Invalide position in g_LadderOrient");
-	Position().set(position);
+	Position().Set(position);
 	VERIFY(_valid(XFORM()));
 	return true;
 }

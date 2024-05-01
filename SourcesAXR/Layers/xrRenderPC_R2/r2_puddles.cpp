@@ -27,7 +27,7 @@ void CPuddles::Load()
 		{
 			const shared_str sect = sects[i]->Name;
 			SPuddle* point = &(points[i]);
-			point->P.set(ini.r_fvector3(sect, "center"));
+			point->P.Set(ini.r_fvector3(sect, "center"));
 			point->max_depth = ini.r_float(sect, "max_depth");
 			point->radius = ini.r_float(sect, "radius");
 			point->make_xform();

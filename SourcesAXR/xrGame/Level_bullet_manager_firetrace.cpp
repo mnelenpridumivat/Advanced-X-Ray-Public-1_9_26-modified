@@ -225,7 +225,7 @@ void CBulletManager::FireShotmark (SBullet* bullet, const Fvector& vDir, const F
 		Fmatrix pos;
 		pos.k.normalize(particle_dir);
 		Fvector::generate_orthonormal_basis(pos.k, pos.j, pos.i);
-		pos.c.set(vEnd);
+		pos.c.Set(vEnd);
 		if(ps_name && ShowMark)
 		{
 			//отыграть партиклы попадания в материал
@@ -309,7 +309,7 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 	}
 	else
 	{
-		position_in_bone_space.set(p_in_object_space);
+		position_in_bone_space.Set(p_in_object_space);
 	}
 
 	//отправить хит пораженному объекту
@@ -368,7 +368,7 @@ bool CBulletManager::ObjectHit( SBullet_Hit* hit_res, SBullet* bullet, const Fve
 		if ( skeleton )
 		{
 			Fvector			e_center;
-			hit_normal.set	(0,0,0);
+			hit_normal.Set	(0,0,0);
 			if ( skeleton->_ElementCenter( static_cast<u16>(R.element),e_center ) )
 				hit_normal.sub							(end_point, e_center);
 			float len		= hit_normal.square_magnitude();
@@ -476,7 +476,7 @@ bool CBulletManager::ObjectHit( SBullet_Hit* hit_res, SBullet* bullet, const Fve
 
 		// вычисление рикошета, делается немного фейком, т.к. пуля остается в точке столкновения
 		// и сразу выходит из RayQuery()
-		bullet->dir.set				(tgt_dir);
+		bullet->dir.Set				(tgt_dir);
 		bullet->bullet_pos			= end_point;
 		bullet->flags.ricochet_was	= 1;
 
@@ -501,7 +501,7 @@ bool CBulletManager::ObjectHit( SBullet_Hit* hit_res, SBullet* bullet, const Fve
 		//ввести коэффициент случайности при простреливании
 		Fvector rand_normal;
 		rand_normal.random_dir(bullet->dir, deg2rad(2.0f), Random);
-		bullet->dir.set(rand_normal);
+		bullet->dir.Set(rand_normal);
 #ifdef DEBUG
 		bullet_state = 2;
 #endif

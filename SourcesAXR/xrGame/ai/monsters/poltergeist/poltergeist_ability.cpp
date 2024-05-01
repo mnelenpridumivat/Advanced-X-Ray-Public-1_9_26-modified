@@ -54,8 +54,8 @@ void CPolterSpecialAbility::on_hide()
 	if (!m_object->GetMonster()->g_Alive())
 		return;
 
- 	m_particles_object			= m_object->GetMonster()->PlayParticles	(m_particles_hidden, m_object->GetMonster()->Position(),Fvector().set(0.0f,0.1f,0.0f), false);
- 	m_particles_object_electro	= m_object->GetMonster()->PlayParticles	(m_particles_idle, m_object->GetMonster()->Position(),Fvector().set(0.0f,0.1f,0.0f), false);
+ 	m_particles_object			= m_object->GetMonster()->PlayParticles	(m_particles_hidden, m_object->GetMonster()->Position(),Fvector().Set(0.0f,0.1f,0.0f), false);
+ 	m_particles_object_electro	= m_object->GetMonster()->PlayParticles	(m_particles_idle, m_object->GetMonster()->Position(),Fvector().Set(0.0f,0.1f,0.0f), false);
 }
 
 void CPolterSpecialAbility::on_show()
@@ -75,7 +75,7 @@ void CPolterSpecialAbility::on_die()
 	Fvector particles_position	= m_object->GetCurrentPosition();
 	particles_position.y		+= m_object->GetTargetHeight();
 
-	m_object->GetMonster()->PlayParticles			(m_particles_death, particles_position, Fvector().set(0.0f,1.0f,0.0f), TRUE, FALSE);
+	m_object->GetMonster()->PlayParticles			(m_particles_death, particles_position, Fvector().Set(0.0f,1.0f,0.0f), TRUE, FALSE);
 
 	CParticlesObject::Destroy		(m_particles_object_electro);
 	CParticlesObject::Destroy		(m_particles_object);
@@ -94,7 +94,7 @@ void CPolterSpecialAbility::on_hit(SHit* pHDS)
 			m_bone.transform_tiny	(start_pos);
 			m_object->GetMonster()->XFORM().transform_tiny	(start_pos);
 
-			m_object->GetMonster()->PlayParticles(m_particles_damage, start_pos, Fvector().set(0.f,1.f,0.f));
+			m_object->GetMonster()->PlayParticles(m_particles_damage, start_pos, Fvector().Set(0.f,1.f,0.f));
 		}
 	} 
 

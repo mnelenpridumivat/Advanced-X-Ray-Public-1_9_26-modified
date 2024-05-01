@@ -8,7 +8,7 @@ SCalculateData::SCalculateData( CIKLimb& l, const Fmatrix &o ):
 	state( )								,
 	m_limb( &l )							,
 	m_obj( &o )								,
-	cl_shift( Fvector( ).set( 0, 0, 0 ) )	, 
+	cl_shift( Fvector( ).Set( 0, 0, 0 ) )	, 
 	m_angles( nullptr )							, 
 	apply( false )							,
 	do_collide( false ) 

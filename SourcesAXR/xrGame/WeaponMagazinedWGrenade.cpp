@@ -338,8 +338,8 @@ void  CWeaponMagazinedWGrenade::LaunchGrenade()
 	R_ASSERT				(m_bGrenadeMode);
 	{
 		Fvector						p1, d; 
-		p1.set						(get_LastFP2());
-		d.set						(get_LastFD());
+		p1.Set						(get_LastFP2());
+		d.Set						(get_LastFD());
 		CEntity*					E = smart_cast<CEntity*>(H_Parent());
 
 		if (E){
@@ -354,16 +354,16 @@ void  CWeaponMagazinedWGrenade::LaunchGrenade()
 			E->g_fireParams		(this, p1,d);
 		}
 		if (IsGameTypeSingle())
-			p1.set						(get_LastFP2());
+			p1.Set						(get_LastFP2());
 		
 		Fmatrix							launch_matrix;
 		launch_matrix.identity			();
-		launch_matrix.k.set				(d);
+		launch_matrix.k.Set				(d);
 		Fvector::generate_orthonormal_basis(launch_matrix.k,
 											launch_matrix.j, 
 											launch_matrix.i);
 
-		launch_matrix.c.set				(p1);
+		launch_matrix.c.Set				(p1);
 
 		if(IsZoomed() && smart_cast<CActor*>(H_Parent()))
 		{

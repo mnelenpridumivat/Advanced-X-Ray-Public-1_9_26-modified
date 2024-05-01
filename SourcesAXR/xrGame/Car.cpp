@@ -354,7 +354,7 @@ void CCar::RestoreNetState(CSE_PHSkeleton* po)
 
 	Fmatrix inv ,replace,sof;
 	sof.setXYZ(co->o_Angle.x,co->o_Angle.y,co->o_Angle.z);
-	sof.c.set(co->o_Position);
+	sof.c.Set(co->o_Position);
 	inv.set(restored_form);
 	inv.invert();
 	replace.mul(sof,inv);
@@ -368,7 +368,7 @@ void CCar::RestoreNetState(CSE_PHSkeleton* po)
 
 	get_box(m_pPhysicsShell, restored_form, obj_size, center);
 
-	Fvector ap = Fvector().set(0, 0, 0);
+	Fvector ap = Fvector().Set(0, 0, 0);
 
 	ActivateShapePhysShellHolder(this, XFORM(), obj_size, center, ap);
 
@@ -471,7 +471,7 @@ void CCar::UpdateCL()
 	// Sound
 	Fvector		C,V;
 	Center		(C);
-	V.set		(lin_vel);
+	V.Set		(lin_vel);
 
 	m_car_sound->Update();
 	if(Owner())
@@ -587,7 +587,7 @@ void CCar::PHHit(SHit &H)
 	if(m_bone_steer==H.bone()) return;
 	if(CPHUpdateObject::IsActive())
 	{
-		Fvector vimpulse;vimpulse.set(H.direction());
+		Fvector vimpulse;vimpulse.Set(H.direction());
 		vimpulse.mul( H.phys_impulse( ) );
 		vimpulse.y *=GravityFactorImpulse();
 		float mag=vimpulse.magnitude();
@@ -658,8 +658,8 @@ bool CCar::attach_Actor(CGameObject* actor)
 
 	if (ini->line_exist("car_definition", "driver_position") && ini->line_exist("car_definition", "driver_direction"))
 	{
-		driver_xform.c.set(ini->r_fvector3("car_definition", "driver_position"));
-		driver_xform.k.set(ini->r_fvector3("car_definition", "driver_direction"));
+		driver_xform.c.Set(ini->r_fvector3("car_definition", "driver_position"));
+		driver_xform.k.Set(ini->r_fvector3("car_definition", "driver_direction"));
 	}
 	else if (ini->line_exist("car_definition", "driver_place")) 
 	{
@@ -1851,13 +1851,13 @@ void CCar::CarExplode()
 	m_damage_particles.Stop1(this);
 	m_damage_particles.Stop2(this);
 	b_exploded=true;
-	CExplosive::GenExplodeEvent(Position(),Fvector().set(0.f,1.f,0.f));
+	CExplosive::GenExplodeEvent(Position(),Fvector().Set(0.f,1.f,0.f));
 
 	CActor* A=OwnerActor();
 	if(A)
 	{
 		if(!m_doors.empty())m_doors.begin()->second.GetExitPosition(m_exit_position);
-		else m_exit_position.set(Position());
+		else m_exit_position.Set(Position());
 		A->detach_Vehicle();
 		if(A->g_Alive()<=0.f)A->character_physics_support()->movement()->DestroyCharacter();
 	}
@@ -2087,7 +2087,7 @@ void	CCar::		Die					(CObject* who)
 Fvector	CCar::		ExitVelocity				()
 {
 	CPhysicsShell		*P=PPhysicsShell();
-	if(!P||!P->isActive())return Fvector().set(0,0,0);
+	if(!P||!P->isActive())return Fvector().Set(0,0,0);
 	CPhysicsElement *E=P->get_ElementByStoreOrder(0);
 	Fvector v=ExitPosition();
 	E->GetPointVel( v, v );

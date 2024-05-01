@@ -34,10 +34,10 @@ float time_to_next_mark( const CBlend &b, const motion_marks& marks )
 	VERIFY( !marks.is_empty() );
 	const float l_blend_time = blend_time( b );
 	float time = marks.time_to_next_mark( l_blend_time );
-	if( time < FLT_MAX )
+	if( time < std::numeric_limits<float>::max())
 		return time;
 	time = marks.time_to_next_mark( EPS_S );
-	if( time < FLT_MAX )
+	if( time < std::numeric_limits<float>::max())
 				return time + b.timeTotal - l_blend_time;
 	return b.timeTotal - l_blend_time;
 }
@@ -115,6 +115,6 @@ bool	ik_anim_state::time_step_begin	( IKinematicsAnimated *K, const CBlend& B, u
 	//if( blend_in( *current_blend, marks ) )
 	//	time = 0;
 	time = time_to_next_mark( B, marks );
-	VERIFY( time < FLT_MAX );
+	VERIFY( time < std::numeric_limits<float>::max());
 	return true;
 }

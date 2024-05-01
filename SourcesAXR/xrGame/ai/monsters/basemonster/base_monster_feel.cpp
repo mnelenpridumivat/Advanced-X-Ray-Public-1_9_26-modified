@@ -80,7 +80,7 @@ void CBaseMonster::HitEntity(const CEntity *pEntity, float fDamage, float impuls
 
 	if (EnemyMan.get_enemy() == pEntity) {
 		Fvector position_in_bone_space;
-		position_in_bone_space.set(0.f,0.f,0.f);
+		position_in_bone_space.Set(0.f,0.f,0.f);
 
 		// перевод из локальных координат в мировые вектора направления импульса
 		Fvector hit_dir;
@@ -274,10 +274,10 @@ void CBaseMonster::Hit_Psy(CObject *object, float value)
 	HS.GenHeader		(GE_HIT, object->ID());				//					//	u_EventGen		(P,GE_HIT, object->ID());				// 
 	HS.whoID			= (ID());									// own		//	P.w_u16			(ID());									// own
 	HS.weaponID			= (ID());									// own		//	P.w_u16			(ID());									// own
-	HS.dir				= (Fvector().set(0.f,1.f,0.f));			// direction	//	P.w_dir			(Fvector().set(0.f,1.f,0.f));			// direction
+	HS.dir				= (Fvector().Set(0.f,1.f,0.f));			// direction	//	P.w_dir			(Fvector().set(0.f,1.f,0.f));			// direction
 	HS.power			= (value);								// hit value	//	P.w_float		(value);								// hit value
 	HS.boneID			= (BI_NONE);								// bone		//	P.w_s16			(BI_NONE);								// bone
-	HS.p_in_bone_space	= (Fvector().set(0.f,0.f,0.f));							//	P.w_vec3		(Fvector().set(0.f,0.f,0.f));			
+	HS.p_in_bone_space	= (Fvector().Set(0.f,0.f,0.f));							//	P.w_vec3		(Fvector().set(0.f,0.f,0.f));			
 	HS.impulse			= (0.f);												//	P.w_float		(0.f);									
 	HS.hit_type			= (ALife::eHitTypeTelepatic);							//	P.w_u16			(u16(ALife::eHitTypeTelepatic));
 	HS.Write_Packet	(P);
@@ -294,7 +294,7 @@ void CBaseMonster::Hit_Wound(CObject *object, float value, const Fvector &dir, f
 	HS.dir				= (dir);															//	P.w_dir		(dir);
 	HS.power			= (value);															//	P.w_float	(value);
 	HS.boneID			= (smart_cast<IKinematics*>(object->Visual())->LL_GetBoneRoot());	//	P.w_s16		(smart_cast<IKinematics*>(object->Visual())->LL_GetBoneRoot());
-	HS.p_in_bone_space	= (Fvector().set(0.f,0.f,0.f));										//	P.w_vec3	(Fvector().set(0.f,0.f,0.f));
+	HS.p_in_bone_space	= (Fvector().Set(0.f,0.f,0.f));										//	P.w_vec3	(Fvector().set(0.f,0.f,0.f));
 	HS.impulse			= (impulse);														//	P.w_float	(impulse);
 	HS.hit_type			= (ALife::eHitTypeWound);											//	P.w_u16		(u16(ALife::eHitTypeWound));
 	HS.Write_Packet(P);

@@ -59,8 +59,8 @@ void CKinematics::DebugRender(Fmatrix& XFORM)
 	CBoneData::BoneDebug	dbgLines;
 	(*bones)[iRoot]->DebugQuery	(dbgLines);
 
-	Fvector Z;  Z.set(0,0,0);
-	Fvector H1; H1.set(0.01f,0.01f,0.01f);
+	Fvector Z;  Z.Set(0,0,0);
+	Fvector H1; H1.Set(0.01f,0.01f,0.01f);
 	Fvector H2; H2.mul(H1,2);
 	for (u32 i=0; i<dbgLines.size(); i+=2)	{
 		Fmatrix& M1 = bone_instances[dbgLines[i]].mTransform;
@@ -530,8 +530,8 @@ void BuildMatrix		(Fmatrix &mView, float invsz, const Fvector norm, const Fvecto
 	Fmatrix				mScale;
 	Fvector				at,up,right,y;
 	at.sub				(from,norm);
-	y.set				(0,1,0);
-	if (_abs(norm.y)>.99f) y.set(1,0,0);
+	y.Set				(0,1,0);
+	if (_abs(norm.y)>.99f) y.Set(1,0,0);
 	right.crossproduct	(y,norm);
 	up.crossproduct		(norm,right);
 	mView.build_camera	(from,at,up);

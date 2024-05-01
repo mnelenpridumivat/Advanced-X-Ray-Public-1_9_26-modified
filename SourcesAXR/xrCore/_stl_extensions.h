@@ -1,7 +1,16 @@
-#ifndef _STL_EXT_internal
-#define _STL_EXT_internal
+#pragma once
 
 #include <functional>
+#include <deque>
+#include <list>
+#include <map>
+#include <set>
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <stack>
+
+#include "_std_extensions.h"
 
 #include "xalloc.h"
 
@@ -68,8 +77,8 @@ namespace std
 	using binary_function = function<ret(left, right)>;
 };
 
-// string(char)
-typedef		std::basic_string<char, std::char_traits<char>, xalloc<char> >	xr_string;
+//// string(char)
+//typedef		std::basic_string<char, std::char_traits<char>, xalloc<char> >	xr_string;
 
 // vector
 template	<typename T, typename allocator = xalloc<T> >
@@ -87,8 +96,8 @@ public:
 	u32		size				() const							{ return (u32)inherited::size();} 
 
 	void	clear_and_free		()									{ inherited::clear();			}
-	void	clear_not_free		()									{ erase(begin(),end());			}
-	void	clear_and_reserve	()									{ if ( capacity() <= (size()+size()/4) ) clear_not_free(); else { u32 old=size(); clear_and_free(); reserve(old); } }
+	void	clear_not_free		()									{ inherited::erase(inherited::begin(), inherited::end());			}
+	void	clear_and_reserve	()									{ if (inherited::capacity() <= (size()+size()/4) ) clear_not_free(); else { u32 old=size(); clear_and_free(); reserve(old); } }
 
 #ifdef M_DONTDEFERCLEAR_EXT
 	void	clear				()									{ clear_and_free	();			}
@@ -96,8 +105,8 @@ public:
 	void	clear				()									{ clear_not_free	();			}
 #endif
 
-	const_reference operator[]	(size_type _Pos) const				{ {VERIFY2(_Pos<size(),make_string("index is out of range: index requested[%d], size of container[%d]", _Pos, size()).c_str());} return (*(begin() + _Pos)); }
-	reference operator[]		(size_type _Pos)					{ {VERIFY2(_Pos<size(),make_string("index is out of range: index requested[%d], size of container[%d]", _Pos, size()).c_str());} return (*(begin() + _Pos)); }
+	inherited::const_reference operator[]	(inherited::size_type _Pos) const				{ {VERIFY2(_Pos<size(),make_string("index is out of range: index requested[%d], size of container[%d]", _Pos, size()).c_str());} return (*(begin() + _Pos)); }
+	inherited::reference operator[]		(inherited::size_type _Pos)					{ {VERIFY2(_Pos<size(),make_string("index is out of range: index requested[%d], size of container[%d]", _Pos, size()).c_str());} return (*(begin() + _Pos)); }
 
 	bool remove(T Item){
 		for (auto it = inherited::begin(); it != inherited::end(); ++it)
@@ -113,7 +122,7 @@ public:
 };
 
 // vector<bool>
-template <>
+/*template <>
 class xr_vector<bool,xalloc<bool> >	: public std::vector<bool,xalloc<bool> > {
 private:
 	typedef std::vector<bool,xalloc<bool> > inherited;
@@ -130,8 +139,8 @@ private:
 
 public: 
 	u32		size				() const							{ return (u32)inherited::size();} 
-	void	clear				()									{ erase(begin(),end());			} 
-};
+	void	clear				()									{ inherited::erase(inherited::begin(), inherited::end());			}
+};*/
 
 // deque
 template <typename T, typename allocator = xalloc<T> >
@@ -196,8 +205,12 @@ template <typename K, class V, class Hasher = std::hash<K>, class Traits = std::
 	typename allocator = xalloc<std::pair<const K, V>>>
 	using xr_unordered_map = std::unordered_map<K, V, Hasher, Traits, allocator>;
 
+	template <typename K, class Hasher = std::hash<K>, class Traits = std::equal_to<K>,
+		typename allocator = xalloc<K>>
+		using xr_unordered_set = std::unordered_set<K, Hasher, Traits, allocator>;
+
 // STL extensions
-#define DEF_VECTOR(N,T)				typedef xr_vector< T > N;		typedef N::iterator N##_it;
+/*#define DEF_VECTOR(N,T)				typedef xr_vector< T > N;		typedef N::iterator N##_it;
 #define DEF_LIST(N,T)				typedef xr_list< T > N;			typedef N::iterator N##_it;
 #define DEF_DEQUE(N,T)				typedef xr_deque< T > N;		typedef N::iterator N##_it;
 #define DEF_MAP(N,K,T)				typedef xr_map< K, T > N;		typedef N::iterator N##_it;
@@ -211,10 +224,20 @@ template <typename K, class V, class Hasher = std::hash<K>, class Traits = std::
 #define DEFINE_SVECTOR(T,C,N,I)		typedef svector< T, C > N;		typedef N::iterator I;
 #define DEFINE_SET(T,N,I)			typedef xr_set< T > N;			typedef N::iterator I;
 #define DEFINE_SET_PRED(T,N,I,P)	typedef xr_set< T, P > N;		typedef N::iterator I;
+#define DEFINE_USET(T,N,I)			typedef xr_unordered_set< T > N;		typedef N::iterator I;
+#define DEFINE_USET_PRED(T,N,I,H,P)	typedef xr_unordered_set< T, H, P > N;		typedef N::iterator I;
 #define DEFINE_STACK(T,N)			typedef xr_stack< T > N;
 
 #include "FixedVector.h"
 #include "buffer_vector.h"
+#include "_types.h"
+#include "_rect.h"
+#include "_plane.h"
+#include "_vector2.h"
+#include "_vector3d.h"
+#include "_color.h"
+#include "Windows.h"
+#include "winnt.h"
 
 // auxilary definition
 DEFINE_VECTOR(bool,boolVec,boolIt);
@@ -248,11 +271,9 @@ DEFINE_VECTOR(u32*,LPU32Vec,LPU32It);
 DEFINE_VECTOR(float,FloatVec,FloatIt);
 DEFINE_VECTOR(float*,LPFloatVec,LPFloatIt);
 DEFINE_VECTOR(int,IntVec,IntIt);
-DEFINE_VECTOR(int*,LPIntVec,LPIntIt);
+DEFINE_VECTOR(int*,LPIntVec,LPIntIt);*/
 
 #ifdef __BORLANDC__
 DEFINE_VECTOR(AnsiString,AStringVec,AStringIt);
 DEFINE_VECTOR(AnsiString*,LPAStringVec,LPAStringIt);
-#endif
-
 #endif

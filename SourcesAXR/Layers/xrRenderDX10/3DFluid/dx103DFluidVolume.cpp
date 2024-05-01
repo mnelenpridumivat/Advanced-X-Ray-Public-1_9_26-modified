@@ -33,8 +33,8 @@ void dx103DFluidVolume::Load( LPCSTR N, IReader *data, u32 dwFlags )
 	const Fmatrix		&Transform = m_FluidData.GetTransform();
 
 	//	Update visibility data
-	vis.box.min = Fvector3().set(-0.5f, -0.5f, -0.5f);
-	vis.box.max = Fvector3().set( 0.5f,  0.5f,  0.5f);
+	vis.box.min = Fvector3().Set(-0.5f, -0.5f, -0.5f);
+	vis.box.max = Fvector3().Set( 0.5f,  0.5f,  0.5f);
 
 	vis.box.xform(Transform);
 
@@ -107,8 +107,8 @@ void dx103DFluidVolume::Render( float LOD )		// LOD - Level Of Detail  [0.0f - m
 	u32 clr = 0xFFFFFFFF;
 
 	Fbox	box;
-	box.min = Fvector3().set(-0.5f, -0.5f, -0.5f);
-	box.max = Fvector3().set( 0.5f,  0.5f,  0.5f);
+	box.min = Fvector3().Set(-0.5f, -0.5f, -0.5f);
+	box.max = Fvector3().Set( 0.5f,  0.5f,  0.5f);
 	//box.min = Fvector3().set( 0.0f,  0.0f,  0.0f);
 	//box.max = Fvector3().set( 1.0f,  1.0f,  1.0f);
 

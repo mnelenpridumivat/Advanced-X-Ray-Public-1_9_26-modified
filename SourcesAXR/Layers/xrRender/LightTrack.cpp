@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////
 CROS_impl::CROS_impl	()
 {
-	approximate.set		( 0,0,0 );
+	approximate.Set		( 0,0,0 );
 	dwFrame				= u32(-1);
 	shadow_recv_frame	= u32(-1);
 	shadow_recv_slot	= -1;
@@ -63,9 +63,9 @@ void	CROS_impl::add		(light* source)
 	Item&	L			= track.back();
 	L.frame_touched		= Device.dwFrame;
 	L.source			= source;
-	L.cache.verts[0].set(0,0,0);
-	L.cache.verts[1].set(0,0,0);
-	L.cache.verts[2].set(0,0,0);
+	L.cache.verts[0].Set(0,0,0);
+	L.cache.verts[1].Set(0,0,0);
+	L.cache.verts[2].Set(0,0,0);
 	L.test				= 0.f;
 	L.energy			= 0.f;
 }
@@ -270,7 +270,7 @@ void	CROS_impl::update	(IRenderable* O)
 //		lacc.z		*= desc.lmap_color.z;
 //		Msg				("- rgb[%f,%f,%f]",lacc.x,lacc.y,lacc.z);
 		accum.add		(lacc);
-	} else 			accum.set	( .1f, .1f, .1f );
+	} else 			accum.Set	( .1f, .1f, .1f );
 
 
 	//clamp(hemi_value, 0.0f, 1.0f); //Possibly can change hemi value
@@ -376,7 +376,7 @@ void CROS_impl::calc_sun_value(Fvector& position, CObject* _object)
 	if	(MODE & IRender_ObjectSpecific::TRACE_SUN)	{
 		if  (--result_sun	< 0)	{
 			result_sun		+=		::Random.randI(lt_hemisamples/4,lt_hemisamples/2)	;
-			Fvector	direction;	direction.set	(sun->direction).invert().normalize	();
+			Fvector	direction;	direction.Set	(sun->direction).invert().normalize	();
 			sun_value		=	!(g_pGameLevel->ObjectSpace.RayTest(position,direction,500.f,collide::rqtBoth,&cache_sun,_object))?1.f:0.f;
 		}
 	}
@@ -399,7 +399,7 @@ void CROS_impl::calc_sky_hemi_value(Fvector& position, CObject* _object)
 			else								{ sample=(result_iterator%lt_hemisamples); result_iterator++;	}
 
 			// take sample
-			Fvector	direction;	direction.set	(hdir[sample][0],hdir[sample][1],hdir[sample][2]).normalize	();
+			Fvector	direction;	direction.Set	(hdir[sample][0],hdir[sample][1],hdir[sample][2]).normalize	();
 			//.			result[sample]	=	!g_pGameLevel->ObjectSpace.RayTest(position,direction,50.f,collide::rqtBoth,&cache[sample],_object);
 			result[sample]	=	!g_pGameLevel->ObjectSpace.RayTest(position,direction,50.f,collide::rqtStatic,&cache[sample],_object);
 			//	Msg				("%d:-- %s",sample,result[sample]?"true":"false");
@@ -417,7 +417,7 @@ void CROS_impl::calc_sky_hemi_value(Fvector& position, CObject* _object)
 	{
 		if (result[it])
 		{
-			accum_hemi(hemi_cube, Fvector3().set(hdir[it][0], hdir[it][1], hdir[it][2]), ps_r2_dhemi_sky_scale);
+			accum_hemi(hemi_cube, Fvector3().Set(hdir[it][0], hdir[it][1], hdir[it][2]), ps_r2_dhemi_sky_scale);
 		}
 	}
 }

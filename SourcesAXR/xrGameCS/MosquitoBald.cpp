@@ -50,7 +50,7 @@ void CMosquitoBald::Affect(SZoneObjectInfo* O)
 	XFORM().transform_tiny(P,CFORM()->getSphere().P);
 
 	Fvector hit_dir; 
-	hit_dir.set(	::Random.randF(-.5f,.5f), 
+	hit_dir.Set(	::Random.randF(-.5f,.5f), 
 					::Random.randF(.0f,1.f), 
 					::Random.randF(-.5f,.5f)); 
 	hit_dir.normalize();
@@ -66,7 +66,7 @@ void CMosquitoBald::Affect(SZoneObjectInfo* O)
 
 	if(power > 0.01f) 
 	{
-		position_in_bone_space.set(0.f,0.f,0.f);
+		position_in_bone_space.Set(0.f,0.f,0.f);
 		CreateHit(pGameObject->ID(),ID(),hit_dir,power,0,position_in_bone_space,impulse,m_eHitTypeBlowout);
 		PlayHitParticles(pGameObject);
 	}

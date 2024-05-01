@@ -245,9 +245,9 @@ void CHelicopter::UpdateMGunDir()
 	m_fire_bone_xform	= K->LL_GetTransform(m_fire_bone);
 
 	m_fire_bone_xform.mulA_43	(XFORM());
-	m_fire_pos.set				(0,0,0); 
+	m_fire_pos.Set				(0,0,0); 
 	m_fire_bone_xform.transform_tiny(m_fire_pos);
-	m_fire_dir.set				(0,0,1);
+	m_fire_dir.Set				(0,0,1);
 	m_fire_bone_xform.transform_dir(m_fire_dir);
 	
 	m_fire_dir.sub				(m_enemy.destEnemyPos,m_fire_pos).normalize_safe();
@@ -304,7 +304,7 @@ void CHelicopter::startRocket(u16 idx)
 
 		Fmatrix xform;
 		xform.identity();
-		xform.k.set(dir);
+		xform.k.Set(dir);
 		Fvector::generate_orthonormal_basis(xform.k,xform.j,xform.i);
 		xform.c = rocketXFORM.c;
 		VERIFY2(_valid(xform),"CHelicopter::startRocket. Invalid xform");

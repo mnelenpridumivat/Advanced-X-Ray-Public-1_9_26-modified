@@ -14,7 +14,7 @@ CCar::SCarSound::SCarSound(CCar* car)
 {
 	volume                 =1.f;
 	pcar=car;
-	relative_pos.set(0.f,0.5f,-1.f);
+	relative_pos.Set(0.f,0.5f,-1.f);
 }
 
 CCar::SCarSound::~SCarSound()
@@ -35,7 +35,7 @@ void CCar::SCarSound::Init()
 		engine_start_delay=iFloor((snd_engine_start._handle() ? iFloor(snd_engine_start.get_length_sec()*1000.0f) : 1.f)*fengine_start_delay);
 		if(ini->line_exist("car_sound","relative_pos"))
 		{
-			relative_pos.set(ini->r_fvector3("car_sound","relative_pos"));
+			relative_pos.Set(ini->r_fvector3("car_sound","relative_pos"));
 		}
 		if(ini->line_exist("car_sound","transmission_switch"))
 		{

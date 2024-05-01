@@ -1,4 +1,5 @@
 #pragma once
+#include "_fbox.h"
 #ifdef	DEBUG
 XRCORE_API std::string get_string( bool v );
 XRCORE_API std::string get_string( const Fvector& v );

@@ -37,12 +37,12 @@ void CCameraLook::load(IReader& packet)
 
 void CCameraLook::Update(Fvector& point, Fvector& /**noise_dangle/**/)
 {
-	vPosition.set		(point);
+	vPosition.Set		(point);
 	Fmatrix mR;
 	mR.setHPB			(-yaw,-pitch,-roll);
 
-	vDirection.set		(mR.k);
-	vNormal.set			(mR.j);
+	vDirection.Set		(mR.k);
+	vNormal.Set			(mR.j);
 
 	if (m_Flags.is(flRelativeLink)){
 		parent->XFORM().transform_dir(vDirection);
@@ -87,7 +87,7 @@ void CCameraLook::OnActivate( CCameraBase* old_cam )
 	if (old_cam&&(m_Flags.is(flRelativeLink)==old_cam->m_Flags.is(flRelativeLink)))
 	{
 		yaw				= old_cam->yaw;
-		vPosition.set	(old_cam->vPosition);
+		vPosition.Set	(old_cam->vPosition);
 	}
 	if (yaw>PI_MUL_2) yaw-=PI_MUL_2;
 	if (yaw<-PI_MUL_2)yaw+=PI_MUL_2;
@@ -108,29 +108,29 @@ void CCameraLook2::OnActivate(CCameraBase* old_cam)
 void CCameraLook2::Update(Fvector& point, Fvector&)
 {
 	if (psActorFlags.test(AF_RIGHT_SHOULDER))
-		m_cam_offset = Fvector().set(-0.400f, 0.2f, 0.0f);
+		m_cam_offset = Fvector().Set(-0.400f, 0.2f, 0.0f);
 	else
-		m_cam_offset = Fvector().set(0.314f, 0.2f, 0.0f);
+		m_cam_offset = Fvector().Set(0.314f, 0.2f, 0.0f);
 
 	Fmatrix mR;
 	mR.setHPB						(-yaw,-pitch,-roll);
 
-	vDirection.set					(mR.k);
-	vNormal.set						(mR.j);
+	vDirection.Set					(mR.k);
+	vNormal.Set						(mR.j);
 
 	Fmatrix							a_xform;
 	a_xform.setXYZ					(0, -yaw, 0);
 	a_xform.translate_over			(point);
 	Fvector _off					= m_cam_offset;
 	a_xform.transform_tiny			(_off);
-	vPosition.set					(_off);
+	vPosition.Set					(_off);
 	UpdateDistance					(_off);
 }
 
 void CCameraLook2::Load(LPCSTR section)
 {
 	CCameraLook::Load		(section);
-	m_cam_offset = Fvector().set(0.314f, 0.2f, 0.0f);
+	m_cam_offset = Fvector().Set(0.314f, 0.2f, 0.0f);
 	dist = 1.4f;
 	prev_d = 0.0f;
 }
@@ -172,9 +172,9 @@ void CCameraFixedLook::Update(Fvector& point, Fvector& noise_dangle)
 	
 	Fmatrix	rm;
 	rm.rotation			(m_current_dir);
-	vPosition.set		(point);
-	vDirection.set		(rm.k);
-	vNormal.set			(rm.j);
+	vPosition.Set		(point);
+	vDirection.Set		(rm.k);
+	vNormal.Set			(rm.j);
 
 	UpdateDistance		(point);
 }

@@ -41,7 +41,7 @@ void DamageReceiverCollisionCallback(bool& do_colide,bool bo1,dContact& c,SGameM
 
 	float dfs=(material_self->fBounceDamageFactor+damager_material_factor);
 	if(fis_zero(dfs)) return;
-	Fvector dir;dir.set(*(Fvector*)c.geom.normal);
+	Fvector dir;dir.Set(*(Fvector*)c.geom.normal);
 	Fvector pos;
 	pos.sub(*(Fvector*)c.geom.pos,*(Fvector*)dGeomGetPosition(bo1 ? c.geom.g1:c.geom.g2));//it is not true pos in bone space
 
@@ -117,8 +117,8 @@ void BreakableObjectCollisionCallback(bool&/**do_colide/**/,bool bo1,dContact& c
 	//if(!this_object->m_pUnbrokenObject) return;
 
 	float c_damage=E_NlS(body,c.geom.normal,norm_sign);
-	Fvector dir	= Fvector().set(-c.geom.normal[0]*norm_sign,-c.geom.normal[1]*norm_sign,-c.geom.normal[2]*norm_sign);
-	Fvector pos	= Fvector().set(c.geom.pos[0],c.geom.pos[1],c.geom.pos[2]);
+	Fvector dir	= Fvector().Set(-c.geom.normal[0]*norm_sign,-c.geom.normal[1]*norm_sign,-c.geom.normal[2]*norm_sign);
+	Fvector pos	= Fvector().Set(c.geom.pos[0],c.geom.pos[1],c.geom.pos[2]);
 
 	damag_receiver->CollisionHit( u16(-1), u16(-1), c_damage, dir, pos );
 	

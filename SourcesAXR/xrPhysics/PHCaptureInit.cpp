@@ -110,7 +110,7 @@ CPHCapture::CPHCapture	( CPHCharacter   *a_character, IPhysicsShellHolder	*a_tag
 ///////////////////////////////////////////////////////////////
 	m_taget_element			(0)						,
 	//dJointFeedback		m_joint_feedback;								,
-	m_capture_pos			(Fvector().set(0,0,0))	,
+	m_capture_pos			(Fvector().Set(0,0,0))	,
 	m_back_force			( 0 )					,
 	m_pull_force			( 0 )					,
 	m_capture_force			( 0 )					,
@@ -150,7 +150,7 @@ CPHCapture::CPHCapture	( CPHCharacter   *a_character, IPhysicsShellHolder	*a_tag
 ///////////////////////////////////////////////////////////////
 	m_taget_element			(0)						,
 	//dJointFeedback		m_joint_feedback;								,
-	m_capture_pos			(Fvector().set(0,0,0))	,
+	m_capture_pos			(Fvector().Set(0,0,0))	,
 	m_back_force			( 0 )					,
 	m_pull_force			( 0 )					,
 	m_capture_force			( 0 )					,
@@ -203,7 +203,7 @@ void CPHCapture::Init( )
 
 	Fvector dir;
 	Fvector capture_bone_position;
-	capture_bone_position.set(m_capture_bone->mTransform.c);
+	capture_bone_position.Set(m_capture_bone->mTransform.c);
 	b_character_feedback=true;
 	(m_character->PhysicsRefObject())->ObjectXFORM().transform_tiny(capture_bone_position);
 

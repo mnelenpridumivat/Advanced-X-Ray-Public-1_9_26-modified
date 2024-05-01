@@ -57,7 +57,7 @@ CParticlesPlayer::CParticlesPlayer ()
 	
 	m_bActiveBones		= false;
 
-	m_Bones.push_back	(SBoneInfo(0,Fvector().set(0,0,0)));
+	m_Bones.push_back	(SBoneInfo(0,Fvector().Set(0,0,0)));
 
 	SetParentVel		(zero_vel);
 	m_self_object		= 0;
@@ -94,7 +94,7 @@ void CParticlesPlayer::LoadParticles(IKinematics* K)
 	if(m_Bones.empty())
 	{
 		bone_mask			= u64(1)<<u64(0);
-		m_Bones.push_back	(SBoneInfo(K->LL_GetBoneRoot(),Fvector().set(0,0,0)));
+		m_Bones.push_back	(SBoneInfo(K->LL_GetBoneRoot(),Fvector().Set(0,0,0)));
 	}
 }
 //уничтожение партиклов на net_Destroy

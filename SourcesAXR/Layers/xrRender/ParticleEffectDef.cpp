@@ -28,9 +28,9 @@ CPEDef::CPEDef()
     m_fCollideResilience		= 0.f;
     m_fCollideSqrCutoff			= 0.f;
     // velocity scale
-    m_VelocityScale.set			(0.f,0.f,0.f);
+    m_VelocityScale.Set			(0.f,0.f,0.f);
     // align to path
-    m_APDefaultRotation.set		(-PI_DIV_2,0.f,0.f);
+    m_APDefaultRotation.Set		(-PI_DIV_2,0.f,0.f);
 	// flags
     m_Flags.zero		();
 }
@@ -135,7 +135,7 @@ void CPEDef::ExecuteCollision(PAPI::Particle* particles, u32 p_cnt, float dt, CP
 				if (g_pGameLevel->ObjectSpace.RayPick(m.posB,dir,dist,RT,RQ,NULL)){	
 					pt.mad	(m.posB,dir,RQ.range);
 					if (RQ.O){
-						n.set(0.f,1.f,0.f);
+						n.Set(0.f,1.f,0.f);
 					}else{
 						CDB::TRI*	T		=  	g_pGameLevel->ObjectSpace.GetStaticTris()+RQ.element;
 						Fvector*	verts	=	g_pGameLevel->ObjectSpace.GetStaticVerts();

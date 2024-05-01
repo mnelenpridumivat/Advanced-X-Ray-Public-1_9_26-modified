@@ -252,8 +252,8 @@ void		CActor::net_ExportDeadBody		(NET_Packet &P)
 	/////////////////////////////
 	Fvector min,max;
 
-	min.set(F_MAX,F_MAX,F_MAX);
-	max.set(-F_MAX,-F_MAX,-F_MAX);
+	min.Set(F_MAX,F_MAX,F_MAX);
+	max.Set(-F_MAX,-F_MAX,-F_MAX);
 	/////////////////////////////////////
 	u16 bones_number		= PHGetSyncItemsNumber();
 	for(u16 i=0;i<bones_number;i++)
@@ -602,7 +602,7 @@ BOOL CActor::net_Spawn		(CSE_Abstract* DC)
 //
 //	m_bJumpKeyPressed = ((mstate_wishful&mcJump)!=0);
 //		
-	NET_SavedAccel.set		(0,0,0);
+	NET_SavedAccel.Set		(0,0,0);
 	NET_WasInterpolating	= TRUE;
 
 	setEnabled				(E->s_flags.is(M_SPAWN_OBJECT_LOCAL));
@@ -983,7 +983,7 @@ void CActor::PH_B_CrPr		()	// actions & operations before physic correction-pred
 				pSyncObj->set_State(N_A.State);
 				
 				g_Physics(N.p_accel, 0.0f, 0.0f);				
-				Position().set(IStart.Pos);
+				Position().Set(IStart.Pos);
 			};
 		};
 	}
@@ -1129,8 +1129,8 @@ void	CActor::CalculateInterpolationParams()
 	HP2.mul(1.0f/fixed_step);
 	SP2.sub(PredictedState.position, HP2);
 
-	SP3.set(PredictedState.position);
-	HP3.set(PredictedState.position);
+	SP3.Set(PredictedState.position);
+	HP3.Set(PredictedState.position);
 	/*
 	{
 	Fvector d0, d1;
@@ -1171,8 +1171,8 @@ void	CActor::CalculateInterpolationParams()
 	Fvector V0, V1;
 	//	V0.sub(SP1, SP0);
 	//	V1.sub(SP3, SP2);
-	V0.set(HP1);
-	V1.set(HP2);
+	V0.Set(HP1);
+	V1.Set(HP2);
 	lV0 = V0.magnitude();
 	lV1 = V1.magnitude();
 
@@ -1272,7 +1272,7 @@ void CActor::make_Interpolation	()
 			{
 			case 0:	
 				{
-					ResPosition.set(IPosL);
+					ResPosition.Set(IPosL);
 					SpeedVector.sub(IEnd.Pos, IStart.Pos);
 					SpeedVector.div(static_cast<float>(m_dwIEndTime - m_dwIStartTime)/1000.0f);
 				}break;
@@ -1281,14 +1281,14 @@ void CActor::make_Interpolation	()
 					for (int k=0; k<3; k++)
 						SpeedVector[k] = (factor*factor*SCoeff[k][0]*3+factor*SCoeff[k][1]*2+SCoeff[k][2])/3; // сокрость из формулы в 3 раза превышает скорость при расчете коэффициентов !!!!
 					
-					ResPosition.set(IPosS); 
+					ResPosition.Set(IPosS); 
 				}break;
 			case 2: 
 				{
 					for (int k=0; k<3; k++)
 						SpeedVector[k] = (factor*factor*HCoeff[k][0]*3+factor*HCoeff[k][1]*2+HCoeff[k][2]); 
 
-					ResPosition.set(IPosH); 
+					ResPosition.Set(IPosH); 
 				}break;
 			default:
 				{
@@ -1423,11 +1423,11 @@ void dbg_draw_piramid (Fvector pos, Fvector dir, float size, float xdir, u32 col
 {
 	
 	Fvector p0, p1, p2, p3, p4;
-	p0.set(size, size, 0.0f);
-	p1.set(-size, size, 0.0f);
-	p2.set(-size, -size, 0.0f);
-	p3.set(size, -size, 0.0f);
-	p4.set(0, 0, size*4);
+	p0.Set(size, size, 0.0f);
+	p1.Set(-size, size, 0.0f);
+	p2.Set(-size, -size, 0.0f);
+	p3.Set(size, -size, 0.0f);
+	p4.Set(0, 0, size*4);
 	
 	bool Double = false;
 	Fmatrix t; t.identity();
@@ -1441,7 +1441,7 @@ void dbg_draw_piramid (Fvector pos, Fvector dir, float size, float xdir, u32 col
 		t.rotateY(xdir);		
 		Double = true;
 	}
-	t.c.set(pos);
+	t.c.Set(pos);
 
 //	Level().debug_renderer().draw_line(t, p0, p1, color);
 //	Level().debug_renderer().draw_line(t, p1, p2, color);
@@ -1535,10 +1535,10 @@ void	CActor::OnRender_Network()
 							}break;
 							case SBoneShape::stCylinder:{
 								Fmatrix M;
-								M.c.set				(I->c_cylinder.m_center);
-								M.k.set				(I->c_cylinder.m_direction);
+								M.c.Set				(I->c_cylinder.m_center);
+								M.k.Set				(I->c_cylinder.m_direction);
 								Fvector				h_size;
-								h_size.set			(I->c_cylinder.m_radius,I->c_cylinder.m_radius,I->c_cylinder.m_height*0.5f);
+								h_size.Set			(I->c_cylinder.m_radius,I->c_cylinder.m_radius,I->c_cylinder.m_height*0.5f);
 								Fvector::generate_orthonormal_basis(M.k,M.j,M.i);
 								Level().debug_renderer().draw_obb	(M, h_size, color_rgba(0, 127, 255, 255));
 							}break;
@@ -1598,9 +1598,9 @@ void	CActor::OnRender_Network()
 			{
 				Level().debug_renderer().draw_line(*pM, *ppoint0, *ppoint1, cColor);
 			};
-			point0S.set(point1S);
-			point0H.set(point1H);
-			point0L.set(point1L);
+			point0S.Set(point1S);
+			point0H.Set(point1H);
+			point0L.Set(point1L);
 		};
 
 		//drawing speed vectors
@@ -1642,8 +1642,8 @@ void	CActor::OnRender_Network()
 		};
 
 		Fvector PH, PS;
-		PH.set(IPosH); PH.y += 1;
-		PS.set(IPosS); PS.y += 1;
+		PH.Set(IPosH); PH.y += 1;
+		PS.Set(IPosS); PS.y += 1;
 //		Level().debug_renderer().draw_aabb			(PS, size, size, size, color_rgba(128, 128, 255, 255));
 //		Level().debug_renderer().draw_aabb			(PH, size, size, size, color_rgba(255, 128, 128, 255));
 		/////////////////////////////////////////////////////////////////////////////////
@@ -1723,8 +1723,8 @@ void	CActor::OnRender_Network()
 				//-----------------------------------------------------------------
 				Fvector min,max;
 
-				min.set(F_MAX,F_MAX,F_MAX);
-				max.set(-F_MAX,-F_MAX,-F_MAX);
+				min.Set(F_MAX,F_MAX,F_MAX);
+				max.Set(-F_MAX,-F_MAX,-F_MAX);
 				/////////////////////////////////////
 				for(u16 i=0;i<NumBones;i++)
 				{
@@ -1946,7 +1946,7 @@ void				CActor::OnPlayHeadShotParticle (NET_Packet P)
 	
 	ps = CParticlesObject::Create(m_sHeadShotParticle.c_str(),TRUE);
 
-	ps->UpdateParent(pos,Fvector().set(0.f,0.f,0.f));
+	ps->UpdateParent(pos,Fvector().Set(0.f,0.f,0.f));
 	GamePersistent().ps_needtoplay.push_back(ps);
 };
 

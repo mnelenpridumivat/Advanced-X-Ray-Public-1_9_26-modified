@@ -35,7 +35,7 @@ void   CStateBurerShield<Object>::execute()
 		 current_time() > m_next_particle_allowed )
 	{
 		object->CParticlesPlayer::StartParticles	(object->m_shield_keep_particle, 
-													 Fvector().set(0,1,0), 
+													 Fvector().Set(0,1,0), 
 													 object->ID(), 
 													 -1, 
 													 true);

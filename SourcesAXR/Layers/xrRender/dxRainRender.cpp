@@ -113,7 +113,7 @@ void dxRainRender::Render(CEffect_Rain &owner)
 	// build source plane
 	Fplane src_plane;
 	Fvector norm	={0.f,-1.f,0.f};
-	Fvector upper; 	upper.set(Device.vCameraPosition.x,Device.vCameraPosition.y+source_offset,Device.vCameraPosition.z);
+	Fvector upper; 	upper.Set(Device.vCameraPosition.x,Device.vCameraPosition.y+source_offset,Device.vCameraPosition.z);
 	src_plane.build(upper,norm);
 
 	// perform update
@@ -149,7 +149,7 @@ void dxRainRender::Render(CEffect_Rain &owner)
 		one.P.mad		(one.D,one.fSpeed*dt);
 
 		Device.Statistic->TEST1.Begin();
-		Fvector	wdir;	wdir.set(one.P.x-vEye.x,0,one.P.z-vEye.z);
+		Fvector	wdir;	wdir.Set(one.P.x-vEye.x,0,one.P.z-vEye.z);
 		float	wlen	= wdir.square_magnitude();
 		if (wlen>b_radius_wrap_sqr)	{
 			wlen		= _sqrt(wlen);

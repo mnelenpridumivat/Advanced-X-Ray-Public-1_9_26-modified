@@ -8,7 +8,7 @@ void CSE_ActorMP::UPDATE_Read	(NET_Packet &packet)
 {
 	flags						= 0;
 	m_u16NumItems				= 1;
-	velocity.set				(0.f,0.f,0.f);
+	velocity.Set				(0.f,0.f,0.f);
 
 	if (get_health() <= 0)
 	{

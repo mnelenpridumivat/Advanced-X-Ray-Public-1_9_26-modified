@@ -2,6 +2,8 @@
 #include "dx10StateUtils.h"
 
 #include "../xrRender/Utils/dxHashHelper.h"
+//#include "../../xrCore/_std_extensions.h"
+#include <limits>
 
 namespace dx10StateUtils
 {
@@ -240,8 +242,10 @@ void ResetDescription( D3D_SAMPLER_DESC &desc )
 	desc.BorderColor[1] = 1.0f;
 	desc.BorderColor[2] = 1.0f;
 	desc.BorderColor[3] = 1.0f;
-	desc.MinLOD = -FLT_MAX;
-	desc.MaxLOD = FLT_MAX;
+	desc.MinLOD = std::numeric_limits<float>::min();
+	desc.MaxLOD = std::numeric_limits<float>::max();;
+	//desc.MinLOD = -FLT_MAX;
+	//desc.MaxLOD = FLT_MAX;
 }
 
 bool operator==(const D3D_RASTERIZER_DESC &desc1, const D3D_RASTERIZER_DESC &desc2)

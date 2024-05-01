@@ -105,9 +105,9 @@ struct				net_update
 
 	net_update()	{
 		dwTimeStamp		= 0;
-		p_pos.set		(0,0,0);
-		p_accel.set		(0,0,0);
-		p_velocity.set	(0,0,0);
+		p_pos.Set		(0,0,0);
+		p_accel.Set		(0,0,0);
+		p_velocity.Set	(0,0,0);
 	}
 
 	void	lerp		(net_update& A,net_update& B, float f);

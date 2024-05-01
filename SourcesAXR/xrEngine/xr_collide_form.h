@@ -2,6 +2,9 @@
 #define __XR_COLLIDE_FORM_H__
 
 #include "../xrcdb/xr_collide_defs.h"
+#include "../xrCore/_obb.h"
+#include "../xrCore/_sphere.h"
+#include "../xrCore/_cylinder.h"
 
 // refs
 class ENGINE_API	CObject;

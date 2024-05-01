@@ -69,7 +69,7 @@ BOOL CClimableObject::	net_Spawn			( CSE_Abstract* DC)
 	R_ASSERT( CLB );
 	m_material = GMLib.GetMaterialIdx( CLB->material.c_str() );
 	const Fmatrix& b=CLB->shapes[0].data.box;
-	m_box.m_halfsize.set(b._11,b._22,b._33);
+	m_box.m_halfsize.Set(b._11,b._22,b._33);
 	m_radius=_max(_max(m_box.m_halfsize.x,m_box.m_halfsize.y),m_box.m_halfsize.z);
 
 	//m_box.m_halfsize.set(1.f,1.f,1.f);
@@ -78,10 +78,10 @@ BOOL CClimableObject::	net_Spawn			( CSE_Abstract* DC)
 	spatial.type					&= ~STYPE_VISIBLEFORAI;
 
 	const float f_min_width=0.2f;
-	Fvector shift;shift.set(0.f,0.f,0.f);
-	SORT(b._11,m_axis.set(XFORM().i);m_axis.mul(m_box.m_halfsize.x),m_side.set(XFORM().i);m_side.mul(m_box.m_halfsize.x),m_norm.set(XFORM().i);if(m_box.m_halfsize.x<f_min_width){m_box.m_halfsize.x=f_min_width;shift.set(1.f,0.f,0.f);};m_norm.mul(m_box.m_halfsize.x),
-		b._22,m_axis.set(XFORM().j);m_axis.mul(m_box.m_halfsize.y),m_side.set(XFORM().j);m_side.mul(m_box.m_halfsize.y),m_norm.set(XFORM().j);if(m_box.m_halfsize.y<f_min_width){m_box.m_halfsize.y=f_min_width;shift.set(0.f,1.f,0.f);};m_norm.mul(m_box.m_halfsize.y),
-		b._33,m_axis.set(XFORM().k);m_axis.mul(m_box.m_halfsize.z),m_side.set(XFORM().k);m_side.mul(m_box.m_halfsize.z),m_norm.set(XFORM().k);if(m_box.m_halfsize.z<f_min_width){m_box.m_halfsize.z=f_min_width;shift.set(0.f,0.f,1.f);};m_norm.mul(m_box.m_halfsize.z)
+	Fvector shift;shift.Set(0.f,0.f,0.f);
+	SORT(b._11,m_axis.Set(XFORM().i);m_axis.mul(m_box.m_halfsize.x),m_side.Set(XFORM().i);m_side.mul(m_box.m_halfsize.x),m_norm.Set(XFORM().i);if(m_box.m_halfsize.x<f_min_width){m_box.m_halfsize.x=f_min_width;shift.Set(1.f,0.f,0.f);};m_norm.mul(m_box.m_halfsize.x),
+		b._22,m_axis.Set(XFORM().j);m_axis.mul(m_box.m_halfsize.y),m_side.Set(XFORM().j);m_side.mul(m_box.m_halfsize.y),m_norm.Set(XFORM().j);if(m_box.m_halfsize.y<f_min_width){m_box.m_halfsize.y=f_min_width;shift.Set(0.f,1.f,0.f);};m_norm.mul(m_box.m_halfsize.y),
+		b._33,m_axis.Set(XFORM().k);m_axis.mul(m_box.m_halfsize.z),m_side.Set(XFORM().k);m_side.mul(m_box.m_halfsize.z),m_norm.Set(XFORM().k);if(m_box.m_halfsize.z<f_min_width){m_box.m_halfsize.z=f_min_width;shift.Set(0.f,0.f,1.f);};m_norm.mul(m_box.m_halfsize.z)
 		);
 	shift.mul(f_min_width);
 	
@@ -124,7 +124,7 @@ void CClimableObject::	UpdateCL			( )								// Called each frame, so no need fo
 
 void	CClimableObject::Center				(Fvector &C) const
 {
-		C.set(XFORM().c);
+		C.Set(XFORM().c);
 }
 float	CClimableObject::Radius				() const
 {
@@ -158,18 +158,18 @@ void		CClimableObject::	DefineClimbState	(CPHCharacter	*actor)const
 }
 float		CClimableObject::DDAxis(Fvector& dir)const
 {
-	dir.set(m_axis);
+	dir.Set(m_axis);
 	return to_mag_and_dir(dir);
 }
 
 float	CClimableObject::DDSide(Fvector& dir)const
 {
-	dir.set(m_side);
+	dir.Set(m_side);
 	return to_mag_and_dir(dir);
 }
 float	CClimableObject::DDNorm(Fvector &dir)const
 {
-	dir.set(m_norm);
+	dir.Set(m_norm);
 	return to_mag_and_dir(dir);
 }
 float		CClimableObject::	DDToAxis			(CPHCharacter	*actor,Fvector &out_dir)const
@@ -208,26 +208,26 @@ void CClimableObject::DSideToAxis		(CPHCharacter	*actor,Fvector	&dir)const
 {
 	VERIFY(actor);
 	DToAxis(actor,dir);
-	Fvector side;side.set(m_side);
+	Fvector side;side.Set(m_side);
 	to_mag_and_dir(side);
 	side.mul(side.dotproduct(dir));
-	dir.set(side);
+	dir.Set(side);
 }
 
 float CClimableObject::DDSideToAxis(CPHCharacter *actor,Fvector &dir)const
 {
 	VERIFY(actor);
 	DToAxis(actor,dir);
-	Fvector side;side.set(m_side);to_mag_and_dir(side);
+	Fvector side;side.Set(m_side);to_mag_and_dir(side);
 	float dot=side.dotproduct(dir);
 	if(dot>0.f)
 	{
-		dir.set(side);
+		dir.Set(side);
 		return dot;
 	}
 	else
 	{
-		dir.set(side);
+		dir.Set(side);
 		dir.invert();
 		return -dot;
 	}
@@ -238,11 +238,11 @@ void CClimableObject::DToPlain(CPHCharacter *actor,Fvector &dist)const
 {
  VERIFY(actor);
  DToAxis(actor,dist);
- Fvector norm;norm.set(m_norm);
+ Fvector norm;norm.Set(m_norm);
  to_mag_and_dir(norm);
  float dot=norm.dotproduct(dist);
  norm.mul(dot);
- dist.set(norm);
+ dist.Set(norm);
 }
 
 float CClimableObject::DDToPlain(CPHCharacter *actor,Fvector &dir)const
@@ -270,7 +270,7 @@ float CClimableObject::AxDistToUpperP(CPHCharacter *actor)const
 	actor->GetFootCenter(v1);
 	UpperPoint(v2);
 	v2.sub(v1);
-	v1.set(m_axis);to_mag_and_dir(v1);
+	v1.Set(m_axis);to_mag_and_dir(v1);
 	return v1.dotproduct(v2);
 }
 
@@ -281,7 +281,7 @@ float CClimableObject::AxDistToLowerP(CPHCharacter *actor)const
 	actor->GetFootCenter(v1);
 	LowerPoint(v2);
 	v2.sub(v1);
-	v1.set(m_axis);to_mag_and_dir(v1);
+	v1.Set(m_axis);to_mag_and_dir(v1);
 	return -v1.dotproduct(v2);
 }
 bool CClimableObject::InRange(CPHCharacter *actor)const
@@ -296,7 +296,7 @@ bool CClimableObject::BeforeLadder(CPHCharacter *actor,float tolerance/*=0.f*/)c
 	VERIFY(actor);
 	Fvector d;
 	DToAxis(actor,d);
-	Fvector n;n.set(Norm());
+	Fvector n;n.Set(Norm());
 	float width=to_mag_and_dir(n);
 	return d.dotproduct(n)<-(width+actor->FootRadius()/2.f+tolerance);
 }
@@ -351,20 +351,20 @@ void CClimableObject ::OnRender()
 	//form.mulA(XFORM());
 	Level().debug_renderer().draw_obb(XFORM(),m_box.m_halfsize,color_xrgb(0,0,255));
 	Fvector p1,p2,d;
-	d.set(m_axis);
+	d.Set(m_axis);
 	p1.add(XFORM().c,d);
 	p2.sub(XFORM().c,d);
 	Level().debug_renderer().draw_line(Fidentity,p1,p2,color_xrgb(255,0,0));
 
-	d.set(m_side);
+	d.Set(m_side);
 	p1.add(XFORM().c,d);
 	p2.sub(XFORM().c,d);
 	Level().debug_renderer().draw_line(Fidentity,p1,p2,color_xrgb(255,0,0));
 
-	d.set(m_norm);
+	d.Set(m_norm);
 	d.mul(10.f);
 	p1.add(XFORM().c,d);
-	p2.set(XFORM().c);
+	p2.Set(XFORM().c);
 	Level().debug_renderer().draw_line(Fidentity,p1,p2,color_xrgb(0,255,0));
 }
 #endif

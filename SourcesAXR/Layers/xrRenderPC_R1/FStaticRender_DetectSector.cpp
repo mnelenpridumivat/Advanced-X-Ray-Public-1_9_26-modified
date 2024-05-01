@@ -22,7 +22,7 @@ int CRender::translateSector(IRender_Sector* pSector)
 IRender_Sector* CRender::detectSector(const Fvector& P)
 {
 	Sectors_xrc.ray_options	(CDB::OPT_ONLYNEAREST);
-	Fvector dir; dir.set(0,-1,0);
+	Fvector dir; dir.Set(0,-1,0);
 
 	// Portals model
 	int		id1		= -1;

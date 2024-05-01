@@ -43,7 +43,7 @@ Fvector CScriptSound::GetPosition() const
 		return			(l_tpSoundParams->position);
 	else {
 		ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"Sound was not launched, can't get position!");
-		return			(Fvector().set(0,0,0));
+		return			(Fvector().Set(0,0,0));
 	}
 }
 

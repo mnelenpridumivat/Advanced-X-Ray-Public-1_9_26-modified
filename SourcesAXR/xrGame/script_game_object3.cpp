@@ -1070,7 +1070,7 @@ Fvector	CScriptGameObject::head_orientation		() const
 	CAI_Stalker		*stalker = smart_cast<CAI_Stalker*>(&object());
 	if (!stalker) {
 		ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"CScriptGameObject : cannot access class member head_orientation!");
-		return		(Fvector().set(flt_max,flt_max,flt_max));
+		return		(Fvector().Set(flt_max,flt_max,flt_max));
 	}
 	const SRotation	&r = stalker->movement().head_orientation().current;
 	return			(Fvector().setHP(-r.yaw,-r.pitch));

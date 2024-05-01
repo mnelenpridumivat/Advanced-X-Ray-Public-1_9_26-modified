@@ -140,7 +140,7 @@ public:
 		if(dV_valid(linear_velocity))
 		{
 			dReal mag;
-			Fvector vlinear_velocity;vlinear_velocity.set(cast_fv(linear_velocity));
+			Fvector vlinear_velocity;vlinear_velocity.Set(cast_fv(linear_velocity));
 			mag=_sqrt(linear_velocity[0]*linear_velocity[0]+linear_velocity[2]*linear_velocity[2]);//
 			if(mag>l_limit)
 			{
@@ -366,7 +366,7 @@ bool ActivateBoxDynamic( IPHMovementControl* mov_control, bool character_exist, 
 	dBodySetLinearVel(mov_control->character()->get_body(),0.f,0.f,0.f);
 
 	//Calculate(Fvector().set(0,0,0),Fvector().set(1,0,0),0,0,0,0);
-	mov_control->actor_calculate(Fvector().set(0,0,0),Fvector().set(1,0,0),0,0,0,0);
+	mov_control->actor_calculate(Fvector().Set(0,0,0),Fvector().Set(1,0,0),0,0,0,0);
 
 	CVelocityLimiter vl(mov_control->character()->get_body(),max_vel,max_vel);
 	max_vel=1.f/fnum_it/fnum_steps/fixed_step;
@@ -381,7 +381,7 @@ bool ActivateBoxDynamic( IPHMovementControl* mov_control, bool character_exist, 
 	for(int m=0;30>m;++m)
 	{
 		//Calculate(Fvector().set(0,0,0),Fvector().set(1,0,0),0,0,0,0);
-		mov_control->actor_calculate(Fvector().set(0,0,0),Fvector().set(1,0,0),0,0,0,0);
+		mov_control->actor_calculate(Fvector().Set(0,0,0),Fvector().Set(1,0,0),0,0,0,0);
 
 		//EnableCharacter();
 		//void		CPHMovementControl::EnableCharacter			()																	
@@ -413,7 +413,7 @@ bool ActivateBoxDynamic( IPHMovementControl* mov_control, bool character_exist, 
 		for(int i=0;num_it>i;++i){
 			max_depth=0.f;
 			//Calculate(Fvector().set(0,0,0),Fvector().set(1,0,0),0,0,0,0);
-			mov_control->actor_calculate(Fvector().set(0,0,0),Fvector().set(1,0,0),0,0,0,0);
+			mov_control->actor_calculate(Fvector().Set(0,0,0),Fvector().Set(1,0,0),0,0,0,0);
 			//EnableCharacter();
 			mov_control->character()->Enable();
 			mov_control->character()->ApplyForce(0,ph_world->Gravity()*mov_control->character()->Mass(),0);

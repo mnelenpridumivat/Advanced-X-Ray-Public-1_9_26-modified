@@ -184,9 +184,9 @@ public:
 	walker					(ISpatial_DB*	_space, u32 _mask, const Fvector& _start, const Fvector&	_dir, float _range)
 	{
 		mask			= _mask;
-		ray.pos.set		(_start);
-		ray.inv_dir.set	(1.f,1.f,1.f).div(_dir);
-		ray.fwd_dir.set (_dir);
+		ray.pos.Set		(_start);
+		ray.inv_dir.Set	(1.f,1.f,1.f).div(_dir);
+		ray.fwd_dir.Set (_dir);
 		if (!b_use_sse)	{
 			// for FPU - zero out inf
 			if (_abs(_dir.x)>flt_eps){}	else ray.inv_dir.x=0;

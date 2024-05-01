@@ -18,9 +18,9 @@ car_memory::car_memory					(CCar *object) :
 	m_object		(object)
 {
 	VERIFY				(m_object);
-	m_view_position.set	(0,0,0);
-	m_view_direction.set(0,0,1);
-	m_view_normal.set	(0,1,0);
+	m_view_position.Set	(0,0,0);
+	m_view_direction.Set(0,0,1);
+	m_view_normal.Set	(0,1,0);
 	m_far_plane			= 1.0f;
 }
 

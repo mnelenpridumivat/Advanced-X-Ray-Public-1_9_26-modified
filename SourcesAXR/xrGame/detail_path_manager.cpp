@@ -30,8 +30,8 @@ void CDetailPathManager::reinit			()
 {
 	m_actuality				= false;
 	m_failed				= false;
-	m_start_position		= Fvector().set(0,0,0);
-	m_dest_position			= Fvector().set(0,0,0);
+	m_start_position		= Fvector().Set(0,0,0);
+	m_dest_position			= Fvector().Set(0,0,0);
 	m_current_travel_point	= static_cast<u32>(-1);
 	m_path_type				= eDetailPathTypeSmooth;
 	m_path.clear			();
@@ -66,13 +66,13 @@ bool CDetailPathManager::valid			(const Fvector &position) const
 Fvector CDetailPathManager::direction() const
 {
 	if ((m_path.size() < 2) || (m_path.size() <= m_current_travel_point + 1))
-		return				(Fvector().set(0,0,1));
+		return				(Fvector().Set(0,0,1));
 	
 	Fvector					direction;
 	direction.sub			(m_path[m_current_travel_point + 1].position, m_path[m_current_travel_point].position);
 
 	if (direction.square_magnitude() < EPS_L)
-		direction.set		(0.f,0.f,1.f);
+		direction.Set		(0.f,0.f,1.f);
 	else
 		direction.normalize	();
 

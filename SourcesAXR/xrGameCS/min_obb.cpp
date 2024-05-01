@@ -46,13 +46,13 @@ static void FromAxisAngle(Fmatrix &self, const Fvector& rkAxis, float fRadians)
 static Fvector GetColumn(Fmatrix &self, const u32 &index)
 {
 	switch (index) {
-		case 0 : return(Fvector().set(self._11,self._21,self._31));
-		case 1 : return(Fvector().set(self._12,self._22,self._32));
-		case 2 : return(Fvector().set(self._13,self._23,self._33));
+		case 0 : return(Fvector().Set(self._11,self._21,self._31));
+		case 1 : return(Fvector().Set(self._12,self._22,self._32));
+		case 2 : return(Fvector().Set(self._13,self._23,self._33));
 		default : NODEFAULT;
 	}
 #ifdef DEBUG
-	return	(Fvector().set(flt_max,flt_max,flt_max));
+	return	(Fvector().Set(flt_max,flt_max,flt_max));
 #endif // DEBUG
 }
 
@@ -66,7 +66,7 @@ static float Volume (const float* afAngle, void* pvUserData)
     float fSin0 = _sin(afAngle[0]);
     float fCos1 = _cos(afAngle[1]);
     float fSin1 = _sin(afAngle[1]);
-    Fvector kAxis = Fvector().set(fCos0*fSin1,fSin0*fSin1,fCos1);
+    Fvector kAxis = Fvector().Set(fCos0*fSin1,fSin0*fSin1,fCos1);
     Fmatrix kRot;
     FromAxisAngle(kRot,kAxis,afAngle[2]);
 
@@ -105,7 +105,7 @@ static void MinimalBoxForAngles (int iQuantity, const Fvector* akPoint,
     float		fSin0 = _sin(afAngle[0]);
     float		fCos1 = _cos(afAngle[1]);
     float		fSin1 = _sin(afAngle[1]);
-    Fvector		kAxis = Fvector().set(fCos0*fSin1,fSin0*fSin1,fCos1);
+    Fvector		kAxis = Fvector().Set(fCos0*fSin1,fSin0*fSin1,fCos1);
     Fmatrix		kRot;
     FromAxisAngle(kRot,kAxis,afAngle[2]);
 

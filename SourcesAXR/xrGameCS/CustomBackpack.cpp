@@ -214,7 +214,7 @@ void CCustomBackpack::OnStateSwitch(u32 S)
 			g_block_actor_movement = true;
 
 			g_player_hud->attach_item(this);
-			m_sounds.PlaySound("sndShow", Fvector().set(0, 0, 0), this, true, false);
+			m_sounds.PlaySound("sndShow", Fvector().Set(0, 0, 0), this, true, false);
 			PlayHUDMotion("anm_show", FALSE, this, GetState());
 			SetPending(TRUE);
 		}break;
@@ -223,7 +223,7 @@ void CCustomBackpack::OnStateSwitch(u32 S)
 			g_actor_allow_ladder = true;
 			g_block_actor_movement = false;
 
-			m_sounds.PlaySound("sndHide", Fvector().set(0, 0, 0), this, true, false);
+			m_sounds.PlaySound("sndHide", Fvector().Set(0, 0, 0), this, true, false);
 			PlayHUDMotion("anm_hide", FALSE, this, GetState());
 
 			if (HUD().GetUI()->UIGame()->ActorMenu().IsShown())

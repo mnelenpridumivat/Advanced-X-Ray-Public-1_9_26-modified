@@ -170,14 +170,14 @@ void CSpaceRestrictor::prepare			() const
 				// Build points
 				Fvector					A,B[8];
 				CPlanes					temp;
-				A.set					(-.5f, -.5f, -.5f);	sphere.transform_tiny(B[0],A);
-				A.set					(-.5f, -.5f, +.5f);	sphere.transform_tiny(B[1],A);
-				A.set					(-.5f, +.5f, +.5f);	sphere.transform_tiny(B[2],A);
-				A.set					(-.5f, +.5f, -.5f);	sphere.transform_tiny(B[3],A);
-				A.set					(+.5f, +.5f, +.5f);	sphere.transform_tiny(B[4],A);
-				A.set					(+.5f, +.5f, -.5f);	sphere.transform_tiny(B[5],A);
-				A.set					(+.5f, -.5f, +.5f);	sphere.transform_tiny(B[6],A);
-				A.set					(+.5f, -.5f, -.5f);	sphere.transform_tiny(B[7],A);
+				A.Set					(-.5f, -.5f, -.5f);	sphere.transform_tiny(B[0],A);
+				A.Set					(-.5f, -.5f, +.5f);	sphere.transform_tiny(B[1],A);
+				A.Set					(-.5f, +.5f, +.5f);	sphere.transform_tiny(B[2],A);
+				A.Set					(-.5f, +.5f, -.5f);	sphere.transform_tiny(B[3],A);
+				A.Set					(+.5f, +.5f, +.5f);	sphere.transform_tiny(B[4],A);
+				A.Set					(+.5f, +.5f, -.5f);	sphere.transform_tiny(B[5],A);
+				A.Set					(+.5f, -.5f, +.5f);	sphere.transform_tiny(B[6],A);
+				A.Set					(+.5f, -.5f, -.5f);	sphere.transform_tiny(B[7],A);
 
 				temp.m_planes[0].build	(B[0],B[3],B[5]);
 				temp.m_planes[1].build	(B[1],B[2],B[3]);
@@ -237,7 +237,7 @@ void CSpaceRestrictor::OnRender	()
 	if (!(dbg_net_Draw_Flags.is_any(dbg_draw_customzone))) return;
 	//RCache.OnFrameEnd();
 	DRender->OnFrameEnd();
-	Fvector l_half; l_half.set(.5f, .5f, .5f);
+	Fvector l_half; l_half.Set(.5f, .5f, .5f);
 	Fmatrix l_ball, l_box;
 	xr_vector<CCF_Shape::shape_def> &l_shapes = static_cast<CCF_Shape*>(CFORM())->Shapes();
 	xr_vector<CCF_Shape::shape_def>::iterator l_pShape;
@@ -291,7 +291,7 @@ void CSpaceRestrictor::OnRender	()
 		static float gx = 0.0f;
 		static float gy = 2.0f;
 		static float gz = 0.0f;
-		shift.set(gx,gy,gz);
+		shift.Set(gx,gy,gz);
 		res.transform(v_res, shift);
 
 // check if the object in sight

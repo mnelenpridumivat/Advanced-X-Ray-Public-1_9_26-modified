@@ -45,7 +45,7 @@ public:
 								CTeleWhirlwind			();
 		CGameObject*    		OwnerObject				()const									{return m_owner_object;}
   const	Fvector&				Center					()const									{return m_center;}
-		void					SetCenter				(const Fvector center)					{m_center.set(center);}
+		void					SetCenter				(const Fvector center)					{m_center.Set(center);}
 		void					SetOwnerObject			(CGameObject* owner_object)				{m_owner_object=owner_object;}
 		void					add_impact				(const Fvector& dir,float val)			;
 		void					draw_out_impact			(Fvector& dir,float& val)				;

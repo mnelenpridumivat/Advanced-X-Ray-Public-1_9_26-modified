@@ -19,7 +19,7 @@ void CBaseMonster::LookPosition(Fvector to_point, float angular_speed)
 {
 	// по-умолчанию просто изменить movement().m_body.target.yaw
 	Fvector	d;
-	d.set(to_point);
+	d.Set(to_point);
 	d.sub(Position());	
 	
 	// установить текущий угол

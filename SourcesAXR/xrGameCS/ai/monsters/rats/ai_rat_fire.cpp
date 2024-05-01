@@ -28,7 +28,7 @@ void CAI_Rat::Exec_Action(float /**dt/**/)
 				m_dwStartAttackTime = dwTime;
 				Fvector tDirection;
 				Fvector position_in_bone_space;
-				position_in_bone_space.set(0.f,0.f,0.f);
+				position_in_bone_space.Set(0.f,0.f,0.f);
 				tDirection.sub(memory().enemy().selected()->Position(),this->Position());
 				vfNormalizeSafe(tDirection);
 				
@@ -73,7 +73,7 @@ void CAI_Rat::HitSignal(float amount, Fvector& vLocalDir, CObject* who, s16 /**e
 	Fvector D;
 	XFORM().transform_dir(D,vLocalDir);
 	m_hit_time = Device.dwTimeGlobal;
-	m_hit_direction.set(D);
+	m_hit_direction.Set(D);
 	m_hit_direction.normalize();
 	m_tHitPosition = who->Position();
 	

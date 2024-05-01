@@ -84,7 +84,7 @@ void	game_cl_mp::PlaySndMessage			(u32 ID)
 	};
 #endif
 	
-	SndMsg->pSound.play_at_pos(nullptr, Fvector().set(0,0,0), sm_2D, static_cast<float>(MaxDelay)/1000.0f);
+	SndMsg->pSound.play_at_pos(nullptr, Fvector().Set(0,0,0), sm_2D, static_cast<float>(MaxDelay)/1000.0f);
 	SndMsg->LastStarted = Level().timeServer_Async()+MaxDelay;
 	m_pSndMessagesInPlay.push_back(SndMsg);
 }

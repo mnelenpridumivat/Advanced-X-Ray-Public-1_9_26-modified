@@ -27,10 +27,10 @@ IC	CStalkerAnimationScript::CStalkerAnimationScript				(
 	}
 
 	m_transform_ptr				= nullptr;
-	m_transform.i.set			(flt_max, flt_max, flt_max);
-	m_transform.j.set			(flt_max, flt_max, flt_max);
-	m_transform.k.set			(flt_max, flt_max, flt_max);
-	m_transform.c.set			(flt_max, flt_max, flt_max);
+	m_transform.i.Set			(flt_max, flt_max, flt_max);
+	m_transform.j.Set			(flt_max, flt_max, flt_max);
+	m_transform.k.Set			(flt_max, flt_max, flt_max);
+	m_transform.c.Set			(flt_max, flt_max, flt_max);
 }
 
 IC CStalkerAnimationScript::CStalkerAnimationScript					(CStalkerAnimationScript const& object)

@@ -91,14 +91,14 @@ IC	u32	CSpaceRestrictionBridge::accessible_nearest(T restriction, const Fvector 
 			Fsphere		current;
 			current.R	= EPS_L;
 #ifdef DEBUG
-			current.P	= Fvector().set(flt_max,flt_max,flt_max);
+			current.P	= Fvector().Set(flt_max,flt_max,flt_max);
 #endif
 			switch (i) {
-				case 0 : current.P.set(center.x + offset,center.y,center.z + offset); break;
-				case 1 : current.P.set(center.x + offset,center.y,center.z - offset); break;
-				case 2 : current.P.set(center.x - offset,center.y,center.z + offset); break;
-				case 3 : current.P.set(center.x - offset,center.y,center.z - offset); break;
-				case 4 : current.P.set(center.x,center.y,center.z); break;
+				case 0 : current.P.Set(center.x + offset,center.y,center.z + offset); break;
+				case 1 : current.P.Set(center.x + offset,center.y,center.z - offset); break;
+				case 2 : current.P.Set(center.x - offset,center.y,center.z + offset); break;
+				case 3 : current.P.Set(center.x - offset,center.y,center.z - offset); break;
+				case 4 : current.P.Set(center.x,center.y,center.z); break;
 				default : NODEFAULT;
 			}
 			if (i < 4)

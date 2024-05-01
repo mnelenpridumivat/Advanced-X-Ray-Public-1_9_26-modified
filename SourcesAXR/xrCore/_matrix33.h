@@ -1,5 +1,9 @@
-#ifndef _matrix33H_
-#define _matrix33H_
+#pragma once
+#include "_matrix.h"
+#include "_vector2.h"
+
+//template<typename T>
+//struct _matrix;
 
 template <class T>
 struct _matrix33{
@@ -150,15 +154,15 @@ public:
 
         v.identity();
 
-        b.set(a.m[0][0], a.m[1][1], a.m[2][2]);
-        d.set(a.m[0][0], a.m[1][1], a.m[2][2]);
-        z.set(0,0,0);
+        b.Set(a.m[0][0], a.m[1][1], a.m[2][2]);
+        d.Set(a.m[0][0], a.m[1][1], a.m[2][2]);
+        z.Set(0,0,0);
 
         nrot = 0;
 
         for(i=0; i<50; i++){
             sm=0.0f; sm+=_abs(a.m[0][1]); sm+=_abs(a.m[0][2]); sm+=_abs(a.m[1][2]);
-            if (sm == 0.0) { set(v); dout.set(d); return i; }
+            if (sm == 0.0) { set(v); dout.Set(d); return i; }
             if (i < 3) tresh=0.2f*sm/(3.0f*3.0f); else tresh=0.0f;
             {
                 g = 100.0f*_abs(a.m[0][1]);
@@ -218,8 +222,8 @@ public:
                 }
             }
             b.add(z);
-            d.set(b);
-            z.set(0,0,0);
+            d.Set(b);
+            z.Set(0,0,0);
         }
 //        Log.Msg("eigen: too many iterations in Jacobi transform (%d).\n", i);
         return i;
@@ -399,6 +403,4 @@ BOOL	_valid			(const _matrix33<T>& m)
 		_valid(m.j)&&
 		_valid(m.k);
 }
-
-#endif
 

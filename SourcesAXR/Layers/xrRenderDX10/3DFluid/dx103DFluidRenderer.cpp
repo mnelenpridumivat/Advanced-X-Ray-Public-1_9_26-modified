@@ -522,14 +522,14 @@ void dx103DFluidRenderer::CalculateLighting(const dx103DFluidData &FluidData, Fo
 	Fvector4 hemi_color = g_pGamePersistent->Environment().CurrentEnv->hemi_color;
 	//hemi_color.mul(0.2f);
 	hemi_color.mul(VolumeSettings.m_fHemi);
-	LightData.m_vLightIntencity.set(hemi_color.x, hemi_color.y, hemi_color.z);
+	LightData.m_vLightIntencity.Set(hemi_color.x, hemi_color.y, hemi_color.z);
 	LightData.m_vLightIntencity.add(g_pGamePersistent->Environment().CurrentEnv->ambient);
 
 	const Fmatrix &Transform = FluidData.GetTransform();
 
 	Fbox	box;
-	box.min = Fvector3().set(-0.5f, -0.5f, -0.5f);
-	box.max = Fvector3().set( 0.5f,  0.5f,  0.5f);
+	box.min = Fvector3().Set(-0.5f, -0.5f, -0.5f);
+	box.max = Fvector3().Set( 0.5f,  0.5f,  0.5f);
 	box.xform(Transform);
 	Fvector3	center;
 	Fvector3	size;
@@ -567,7 +567,7 @@ void dx103DFluidRenderer::CalculateLighting(const dx103DFluidData &FluidData, Fo
 
 		Fvector3	LightIntencity;
 
-		LightIntencity.set(pLight->color.r, pLight->color.g, pLight->color.b);
+		LightIntencity.Set(pLight->color.r, pLight->color.g, pLight->color.b);
 
 		//LightIntencity.mul(0.5f);
 

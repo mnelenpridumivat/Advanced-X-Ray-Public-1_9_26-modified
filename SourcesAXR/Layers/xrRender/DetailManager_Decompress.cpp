@@ -47,14 +47,14 @@ IC bool		InterpolateAndDither(float* alpha255,	u32 x, u32 y, u32 sx, u32 sy, u32
 static void draw_obb		( const Fmatrix &matrix, const u32 &color )
 {
 	Fvector							aabb[8];
-	matrix.transform_tiny			(aabb[0],Fvector().set( -1, -1, -1)); // 0
-	matrix.transform_tiny			(aabb[1],Fvector().set( -1, +1, -1)); // 1
-	matrix.transform_tiny			(aabb[2],Fvector().set( +1, +1, -1)); // 2
-	matrix.transform_tiny			(aabb[3],Fvector().set( +1, -1, -1)); // 3
-	matrix.transform_tiny			(aabb[4],Fvector().set( -1, -1, +1)); // 4
-	matrix.transform_tiny			(aabb[5],Fvector().set( -1, +1, +1)); // 5
-	matrix.transform_tiny			(aabb[6],Fvector().set( +1, +1, +1)); // 6
-	matrix.transform_tiny			(aabb[7],Fvector().set( +1, -1, +1)); // 7
+	matrix.transform_tiny			(aabb[0],Fvector().Set( -1, -1, -1)); // 0
+	matrix.transform_tiny			(aabb[1],Fvector().Set( -1, +1, -1)); // 1
+	matrix.transform_tiny			(aabb[2],Fvector().Set( +1, +1, -1)); // 2
+	matrix.transform_tiny			(aabb[3],Fvector().Set( +1, -1, -1)); // 3
+	matrix.transform_tiny			(aabb[4],Fvector().Set( -1, -1, +1)); // 4
+	matrix.transform_tiny			(aabb[5],Fvector().Set( -1, +1, +1)); // 5
+	matrix.transform_tiny			(aabb[6],Fvector().Set( +1, +1, +1)); // 6
+	matrix.transform_tiny			(aabb[7],Fvector().Set( +1, -1, +1)); // 7
 
 	u16								aabb_id[12*2] = {
 		0,1,  1,2,  2,3,  3,0,  4,5,  5,6,  6,7,  7,4,  1,5,  2,6,  3,7,  0,4
@@ -175,14 +175,14 @@ void		CDetailManager::cache_Decompress(Slot* S)
 			Fvector		Item_P;
 
 #ifndef		DBG_SWITCHOFF_RANDOMIZE
-			Item_P.set	(rx + r_jitter.randFs(jitter), D.vis.box.max.y, rz + r_jitter.randFs(jitter));
+			Item_P.Set	(rx + r_jitter.randFs(jitter), D.vis.box.max.y, rz + r_jitter.randFs(jitter));
 #else
 			Item_P.set	(rx , D.vis.box.max.y, rz );
 #endif
 
 			// Position (Y)
 			float y		= D.vis.box.min.y-5;
-			Fvector	dir; dir.set(0,-1,0);
+			Fvector	dir; dir.Set(0,-1,0);
 
 			float		r_u,r_v,r_range;
 			for (u32 tid=0; tid<triCount; tid++)
