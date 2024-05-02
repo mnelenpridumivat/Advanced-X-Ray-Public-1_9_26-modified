@@ -13,10 +13,18 @@ class CFlamethrowerTraceCollision :
 	public Feel::Touch
 {
 
+	enum class ETraceState
+	{
+		Idle,
+		Air,
+		AirToGround,
+		Ground,
+		End,
+		MAX
+	};
+
 	CFlamethrowerTraceManager* m_flamethrower;
-	bool m_IsActive = false;
-	bool m_IsCollided = false;
-	bool m_launched = false;
+	ETraceState m_State = ETraceState::Idle;
 	float m_current_time = 0.0f;
 	float m_time_on_collide = 0.0f;
 	//Fmatrix XFORM;
@@ -28,6 +36,7 @@ class CFlamethrowerTraceCollision :
 	float RadiusOnCollide;
 
 	shared_str m_sFlameParticles;
+	shared_str m_sFlameParticlesGround;
 
 	float m_last_update_time;
 
@@ -45,6 +54,7 @@ class CFlamethrowerTraceCollision :
 	float m_GravityAcceleration = 0.0f;
 
 	CParticlesObject* m_particles = nullptr;
+	CParticlesObject* m_particles_ground = nullptr;
 
 	struct FlamethrowerTraceData {
 		CFlamethrowerTraceCollision* TracedObj = nullptr;
@@ -55,6 +65,10 @@ class CFlamethrowerTraceCollision :
 	static BOOL test_callback(const collide::ray_defs& rd, CObject* object, LPVOID params);
 
 	void UpdateParticles();
+	void Update_Air(float DeltaTime);
+	void Update_AirToGround(float DeltaTime);
+	void Update_Ground(float DeltaTime);
+	void Update_End(float DeltaTime);
 
 public:
 
@@ -71,8 +85,8 @@ public:
 	inline CFlamethrowerTraceManager* GetParent() const { return m_flamethrower; };
 	inline CFlamethrower* GetParentWeapon() const;
 
-	inline bool IsActive() { return m_IsActive; }
-	inline bool IsCollided() { return m_IsCollided; }
+	inline bool IsActive() { return m_State != ETraceState::Idle; }
+	inline bool IsCollided() { return m_State == ETraceState::AirToGround || m_State == ETraceState::Ground; }
 	bool IsReadyToUpdateCollisions();
 	inline Fvector GetCurrentPosition() { return m_position; }
 	float GetCurrentRadius();
