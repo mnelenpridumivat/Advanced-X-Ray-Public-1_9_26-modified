@@ -107,6 +107,9 @@ void CFlamethrowerTraceCollision::Update_Air(float DeltaTime)
 			m_particles->Stop(false);
 			CParticlesObject::Destroy(m_particles);
 			m_particles_ground = CParticlesObject::Create(*m_sFlameParticlesGround, false);
+			particles_pos.c.set(m_position);
+			m_particles_ground->SetXFORM(particles_pos);
+			m_particles_ground->Manual_UpdateSize(m_RadiusCollided * m_RadiusCollisionCoeff);
 			m_particles_ground->Play(false);
 		}
 	}
@@ -124,10 +127,17 @@ void CFlamethrowerTraceCollision::Update_AirToGround(float DeltaTime)
 		m_State = ETraceState::Ground;
 		interpTime = 1.0f;
 	}
-	RadiusCurrent = RadiusOnCollide + (m_RadiusCollided - RadiusOnCollide) * interpTime;
+	//RadiusCurrent = RadiusOnCollide + (m_RadiusCollided - RadiusOnCollide) * interpTime;
 	const float AlphaValue = 1.0f - std::pow(1.0f - interpTime, 2.0f);
+	//if(!m_particles_ground)
+	//{
+	//	m_particles_ground = CParticlesObject::Create(*m_sFlameParticlesGround, false);
+	//	m_particles_ground->Play(false);
+	//}
 	m_particles_ground->Manual_UpdateAlpha(AlphaValue);
 	RadiusCurrent = std::max(RadiusOnCollide, AlphaValue * m_RadiusCollided);
+
+	m_particles_ground->Manual_UpdateSize(m_RadiusCollided * m_RadiusCollisionCoeff);
 }
 
 void CFlamethrowerTraceCollision::Update_Ground(float DeltaTime)
