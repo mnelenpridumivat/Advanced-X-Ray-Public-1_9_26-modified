@@ -2,6 +2,12 @@
 
 #include "../xrEngine/feel_touch.h"
 #include "../xrCore/_types.h"
+#include "../../xrParticles/particle_param_handle.h"
+
+namespace PAPI
+{
+	class pVector;
+}
 
 class CParticlesObject;
 class CFlamethrower;
@@ -55,6 +61,9 @@ class CFlamethrowerTraceCollision :
 
 	CParticlesObject* m_particles = nullptr;
 	CParticlesObject* m_particles_ground = nullptr;
+
+	PAPI::Handle<float> m_particle_alpha_handle;
+	PAPI::Handle<PAPI::pVector> m_particle_size_handle;
 
 	struct FlamethrowerTraceData {
 		CFlamethrowerTraceCollision* TracedObj = nullptr;

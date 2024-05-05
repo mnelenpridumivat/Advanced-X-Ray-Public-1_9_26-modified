@@ -4,6 +4,8 @@
 
 #include "particle_actions.h"
 #include "particle_core.h"
+#include "particle_param_handle.h"
+
 namespace PAPI{
 #define _METHODS	virtual void 	Load		(IReader& F);\
                     virtual void 	Save		(IWriter& F);\
@@ -298,6 +300,110 @@ namespace PAPI{
 
         _METHODS;
     };
+
+	struct PARTICLES_API PABindTimeLimit : public ParticleAction
+	{
+		float BindValue;
+
+		_METHODS;
+	};
+
+	struct PARTICLES_API PABindMaxParticles : public ParticleAction
+	{
+		int BindValue;
+
+		_METHODS;
+	};
+
+	/*struct PARTICLES_API PABindSourceDomain : public ParticleAction
+	{
+		pDomain BindValue;
+
+		_METHODS;
+	};
+
+	struct PARTICLES_API PABindSourceVelocity : public ParticleAction
+	{
+		pDomain BindValue;
+
+		_METHODS;
+	};
+
+	struct PARTICLES_API PABindSourceRotation : public ParticleAction
+	{
+		pDomain BindValue;
+
+
+		_METHODS;
+	};
+
+	struct PARTICLES_API PABindSourceSize : public ParticleAction
+	{
+		pDomain BindValue;
+
+
+		_METHODS;
+	};
+
+	struct PARTICLES_API PABindSourceColor : public ParticleAction
+	{
+		pDomain BindValue;
+
+		_METHODS;
+	};
+
+	struct PARTICLES_API PABindSourceAlpha : public ParticleAction
+	{
+		float BindValue;
+
+		_METHODS;
+	};*/
+
+	struct PARTICLES_API PABindVelocityValue : public ParticleAction
+	{
+		Handle<pVector> GetHandle() { return { &BindValue }; }
+
+		pVector BindValue;
+
+		_METHODS;
+	};
+
+	struct PARTICLES_API PABindRotationValue : public ParticleAction
+	{
+		Handle<pVector> GetHandle() { return { &BindValue }; }
+
+		pVector BindValue;
+
+		_METHODS;
+	};
+
+	struct PARTICLES_API PABindSizeValue : public ParticleAction
+	{
+		Handle<pVector> GetHandle() { return { &BindValue }; }
+
+		pVector BindValue;
+
+		_METHODS;
+	};
+
+	struct PARTICLES_API PABindColorValue : public ParticleAction
+	{
+		Handle<pVector> GetHandle() { return { &BindValue }; }
+
+		pVector BindValue;
+
+		_METHODS;
+	};
+
+	struct PARTICLES_API PABindColorAlpha : public ParticleAction
+	{
+		Handle<float> GetHandle() { return {&BindValue}; }
+
+		float BindValue;
+
+		_METHODS;
+	};
+
 };
 
 //---------------------------------------------------------------------------

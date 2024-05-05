@@ -198,6 +198,57 @@ void CParticleGroup::SItem::Clear()
 	_children_related.clear_not_free();
 	_children_free.clear_not_free();
 }
+
+PAPI::Handle<float> CParticleGroup::SItem::GetAlphaHandle(u32 EffectIndex)
+{
+    IParticleCustom* E = smart_cast<IParticleCustom*>(_effect);
+    if (E)
+    {
+        return E->GetAlphaHandle(EffectIndex);
+    }
+    return PAPI::Handle<float>();
+}
+
+PAPI::Handle<PAPI::pVector> CParticleGroup::SItem::GetColorHandle(u32 EffectIndex)
+{
+    IParticleCustom* E = smart_cast<IParticleCustom*>(_effect);
+    if (E)
+    {
+        return E->GetColorHandle(EffectIndex);
+    }
+    return PAPI::Handle<PAPI::pVector>();
+}
+
+PAPI::Handle<PAPI::pVector> CParticleGroup::SItem::GetSizeHandle(u32 EffectIndex)
+{
+    IParticleCustom* E = smart_cast<IParticleCustom*>(_effect);
+    if (E)
+    {
+        return E->GetSizeHandle(EffectIndex);
+    }
+    return PAPI::Handle<PAPI::pVector>();
+}
+
+PAPI::Handle<PAPI::pVector> CParticleGroup::SItem::GetVelocityHandle(u32 EffectIndex)
+{
+    IParticleCustom* E = smart_cast<IParticleCustom*>(_effect);
+    if (E)
+    {
+        return E->GetVelocityHandle(EffectIndex);
+    }
+    return PAPI::Handle<PAPI::pVector>();
+}
+
+PAPI::Handle<PAPI::pVector> CParticleGroup::SItem::GetRotationHandle(u32 EffectIndex)
+{
+    IParticleCustom* E = smart_cast<IParticleCustom*>(_effect);
+    if (E)
+    {
+        return E->GetRotationHandle(EffectIndex);
+    }
+    return PAPI::Handle<PAPI::pVector>();
+}
+
 void CParticleGroup::SItem::StartRelatedChild(CParticleEffect* emitter, LPCSTR eff_name, PAPI::Particle& m)
 {
     CParticleEffect*C		= static_cast<CParticleEffect*>(RImplementation.model_CreatePE(eff_name));
@@ -399,33 +450,6 @@ void CParticleGroup::SItem::OnFrame(u32 u_dt, const CPGDef::SEffect& def, Fbox& 
 //	Msg("C: %d CS: %d",_children.size(),_children_stopped.size());
 }
 
-void CParticleGroup::SItem::Manual_UpdateSize(const Fvector& NewSize)
-{
-    IParticleCustom* E = smart_cast<IParticleCustom*>(_effect);
-    if (E)
-    {
-        E->Manual_UpdateSize(NewSize);
-    }
-}
-
-void CParticleGroup::SItem::Manual_UpdateAlpha(float NewAlpha)
-{
-    IParticleCustom* E = smart_cast<IParticleCustom*>(_effect);
-    if (E)
-    {
-        E->Manual_UpdateAlpha(NewAlpha);
-    }
-}
-
-void CParticleGroup::SItem::Manual_AddAlpha(float DeltaAlpha)
-{
-    IParticleCustom* E = smart_cast<IParticleCustom*>(_effect);
-    if (E)
-    {
-        E->Manual_AddAlpha(DeltaAlpha);
-    }
-}
-
 void CParticleGroup::SItem::OnDeviceCreate()
 {
 	VisualVec 		visuals;
@@ -460,26 +484,71 @@ CParticleGroup::CParticleGroup()
 	m_InitialPosition.set	(0,0,0);
 }
 
-void CParticleGroup::Manual_UpdateSize(const Fvector& NewSize)
+PAPI::Handle<float> CParticleGroup::GetAlphaHandle(u32 EffectIndex)
 {
-    for (SItemVecIt i_it = items.begin(); i_it != items.end(); i_it++) {
-        i_it->Manual_UpdateSize(NewSize);
+    if(EffectIndex >= items.size())
+    {
+        xr_string ErrorMessage = "Cannot find effect with index ";
+        ErrorMessage.append(std::to_string(EffectIndex));
+        ErrorMessage.append(" in particle group ");
+        ErrorMessage.append(m_Def->m_Name.c_str());
+        VERIFY2(EffectIndex < items.size(), ErrorMessage.c_str());
     }
+    return items[EffectIndex].GetAlphaHandle(0);
 }
 
-void CParticleGroup::Manual_UpdateAlpha(float NewAlpha)
+PAPI::Handle<PAPI::pVector> CParticleGroup::GetColorHandle(u32 EffectIndex)
 {
-    for (SItemVecIt i_it = items.begin(); i_it != items.end(); i_it++) {
-        i_it->Manual_UpdateAlpha(NewAlpha);
+    if (EffectIndex >= items.size())
+    {
+        xr_string ErrorMessage = "Cannot find effect with index ";
+        ErrorMessage.append(std::to_string(EffectIndex));
+        ErrorMessage.append(" in particle group ");
+        ErrorMessage.append(m_Def->m_Name.c_str());
+        VERIFY2(EffectIndex < items.size(), ErrorMessage.c_str());
     }
+    return items[EffectIndex].GetColorHandle(0);
 }
 
-void CParticleGroup::Manual_AddAlpha(float DeltaAlpha)
+PAPI::Handle<PAPI::pVector> CParticleGroup::GetSizeHandle(u32 EffectIndex)
 {
-    for (SItemVecIt i_it = items.begin(); i_it != items.end(); i_it++) {
-        i_it->Manual_AddAlpha(DeltaAlpha);
+    if (EffectIndex >= items.size())
+    {
+        xr_string ErrorMessage = "Cannot find effect with index ";
+        ErrorMessage.append(std::to_string(EffectIndex));
+        ErrorMessage.append(" in particle group ");
+        ErrorMessage.append(m_Def->m_Name.c_str());
+        VERIFY2(EffectIndex < items.size(), ErrorMessage.c_str());
     }
+    return items[EffectIndex].GetSizeHandle(0);
 }
+
+PAPI::Handle<PAPI::pVector> CParticleGroup::GetVelocityHandle(u32 EffectIndex)
+{
+    if (EffectIndex >= items.size())
+    {
+        xr_string ErrorMessage = "Cannot find effect with index ";
+        ErrorMessage.append(std::to_string(EffectIndex));
+        ErrorMessage.append(" in particle group ");
+        ErrorMessage.append(m_Def->m_Name.c_str());
+        VERIFY2(EffectIndex < items.size(), ErrorMessage.c_str());
+    }
+    return items[EffectIndex].GetVelocityHandle(0);
+}
+
+PAPI::Handle<PAPI::pVector> CParticleGroup::GetRotationHandle(u32 EffectIndex)
+{
+    if (EffectIndex >= items.size())
+    {
+        xr_string ErrorMessage = "Cannot find effect with index ";
+        ErrorMessage.append(std::to_string(EffectIndex));
+        ErrorMessage.append(" in particle group ");
+        ErrorMessage.append(m_Def->m_Name.c_str());
+        VERIFY2(EffectIndex < items.size(), ErrorMessage.c_str());
+    }
+    return items[EffectIndex].GetRotationHandle(0);
+}
+
 
 CParticleGroup::~CParticleGroup()
 {

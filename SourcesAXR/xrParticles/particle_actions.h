@@ -35,6 +35,16 @@ namespace PAPI{
 				xr_delete(*it);
 			m_actions.clear();
 		}
+		ParticleAction* find(PActionEnum type)
+		{
+			for (PAVecIt it = m_actions.begin(); it != m_actions.end(); it++) {
+				if((*it)->type == type)
+				{
+					return *it;
+				}
+			}
+			return nullptr;
+		}
 		IC void			append			(ParticleAction* pa)	{ m_actions.push_back(pa);	}
 		IC bool			empty			()						{return	m_actions.empty();}
 		IC PAVecIt		begin			()						{return	m_actions.begin();}

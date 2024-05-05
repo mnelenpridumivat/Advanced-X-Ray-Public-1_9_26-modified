@@ -64,8 +64,8 @@ namespace std
 	template<class _Tp1, class _Tp2>	inline	xalloc<_Tp2>&	__stl_alloc_rebind(xalloc<_Tp1>& __a, const _Tp2*)	{	return (xalloc<_Tp2>&)(__a);	}
 	template<class _Tp1, class _Tp2>	inline	xalloc<_Tp2>	__stl_alloc_create(xalloc<_Tp1>&, const _Tp2*)		{	return xalloc<_Tp2>();			}
 
-	template<typename left, typename right, typename ret>
-	using binary_function = function<ret(left, right)>;
+	//template<typename left, typename right, typename ret>
+	//using binary_function = function<ret(left, right)>;
 };
 
 // string(char)
@@ -87,8 +87,8 @@ public:
 	u32		size				() const							{ return (u32)inherited::size();} 
 
 	void	clear_and_free		()									{ inherited::clear();			}
-	void	clear_not_free		()									{ erase(begin(),end());			}
-	void	clear_and_reserve	()									{ if ( capacity() <= (size()+size()/4) ) clear_not_free(); else { u32 old=size(); clear_and_free(); reserve(old); } }
+	void	clear_not_free		()									{ inherited::erase(inherited::begin(), inherited::end());			}
+	void	clear_and_reserve	()									{ if (inherited::capacity() <= (size()+size()/4) ) clear_not_free(); else { u32 old=size(); clear_and_free(); inherited::reserve(old); } }
 
 #ifdef M_DONTDEFERCLEAR_EXT
 	void	clear				()									{ clear_and_free	();			}
@@ -96,8 +96,8 @@ public:
 	void	clear				()									{ clear_not_free	();			}
 #endif
 
-	const_reference operator[]	(size_type _Pos) const				{ {VERIFY2(_Pos<size(),make_string("index is out of range: index requested[%d], size of container[%d]", _Pos, size()).c_str());} return (*(begin() + _Pos)); }
-	reference operator[]		(size_type _Pos)					{ {VERIFY2(_Pos<size(),make_string("index is out of range: index requested[%d], size of container[%d]", _Pos, size()).c_str());} return (*(begin() + _Pos)); }
+	inherited::const_reference operator[]	(inherited::size_type _Pos) const				{ {VERIFY2(_Pos<size(),make_string("index is out of range: index requested[%d], size of container[%d]", _Pos, size()).c_str());} return (*(inherited::begin() + _Pos)); }
+	inherited::reference operator[]		(inherited::size_type _Pos)					{ {VERIFY2(_Pos<size(),make_string("index is out of range: index requested[%d], size of container[%d]", _Pos, size()).c_str());} return (*(inherited::begin() + _Pos)); }
 
 	bool remove(T Item){
 		for (auto it = inherited::begin(); it != inherited::end(); ++it)
@@ -130,7 +130,7 @@ private:
 
 public: 
 	u32		size				() const							{ return (u32)inherited::size();} 
-	void	clear				()									{ erase(begin(),end());			} 
+	void	clear				()									{ inherited::erase(inherited::begin(), inherited::end());			}
 };
 
 // deque

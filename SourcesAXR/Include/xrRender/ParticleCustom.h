@@ -1,16 +1,19 @@
 #ifndef	ParticleCustom_included
 #define	ParticleCustom_included
 #pragma once
+#include "../../xrParticles/particle_param_handle.h"
+//#include "../../xrParticles/particle_actions_collection.h"
 
 class IParticleCustom
 {
 public:
 	virtual ~IParticleCustom() {;}
 
-	virtual void Manual_UpdateSize(const Fvector& NewSize) = 0;
-	virtual void Manual_UpdateAlpha(float NewAlpha) = 0;
-
-	virtual void Manual_AddAlpha(float DeltaAlpha) = 0;
+	virtual PAPI::Handle<float> GetAlphaHandle(u32 EffectIndex) = 0;
+	virtual PAPI::Handle<PAPI::pVector> GetColorHandle(u32 EffectIndex) = 0;
+	virtual PAPI::Handle<PAPI::pVector> GetSizeHandle(u32 EffectIndex) = 0;
+	virtual PAPI::Handle<PAPI::pVector> GetVelocityHandle(u32 EffectIndex) = 0;
+	virtual PAPI::Handle<PAPI::pVector> GetRotationHandle(u32 EffectIndex) = 0;
 
 	virtual void 	OnDeviceCreate		()=0;
 	virtual void 	OnDeviceDestroy		()=0;

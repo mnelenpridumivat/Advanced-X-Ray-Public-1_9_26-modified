@@ -22,6 +22,36 @@ CParticlesObject::CParticlesObject	(LPCSTR p_name, BOOL bAutoRemove, bool destro
 	Init					(p_name,nullptr,bAutoRemove);
 }
 
+PAPI::Handle<float> CParticlesObject::GetAlphaHandle(u32 EffectIndex)
+{
+	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
+	return V->GetAlphaHandle(EffectIndex);
+}
+
+PAPI::Handle<PAPI::pVector> CParticlesObject::GetColorHandle(u32 EffectIndex)
+{
+	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
+	return V->GetColorHandle(EffectIndex);
+}
+
+PAPI::Handle<PAPI::pVector> CParticlesObject::GetSizeHandle(u32 EffectIndex)
+{
+	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
+	return V->GetSizeHandle(EffectIndex);
+}
+
+PAPI::Handle<PAPI::pVector> CParticlesObject::GetVelocityHandle(u32 EffectIndex)
+{
+	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
+	return V->GetVelocityHandle(EffectIndex);
+}
+
+PAPI::Handle<PAPI::pVector> CParticlesObject::GetRotationHandle(u32 EffectIndex)
+{
+	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
+	return V->GetRotationHandle(EffectIndex);
+}
+
 void CParticlesObject::Init	(LPCSTR p_name, IRender_Sector* S, BOOL bAutoRemove)
 {
 	m_bLooped				= false;
@@ -300,27 +330,4 @@ bool CParticlesObject::IsPlaying()
 	IParticleCustom* V	= smart_cast<IParticleCustom*>(renderable.visual); 
 	VERIFY(V);
 	return !!V->IsPlaying();
-}
-
-void CParticlesObject::Manual_UpdateSize(Fvector NewSize)
-{
-	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
-	V->Manual_UpdateSize(NewSize);
-}
-
-void CParticlesObject::Manual_UpdateSize(float NewSize)
-{
-	Manual_UpdateSize({ NewSize, NewSize, NewSize });
-}
-
-void CParticlesObject::Manual_UpdateAlpha(float NewAlpha)
-{
-	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
-	V->Manual_UpdateAlpha(NewAlpha);
-}
-
-void CParticlesObject::Manual_AddAlpha(float DeltaAlpha)
-{
-	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
-	V->Manual_AddAlpha(DeltaAlpha);
 }

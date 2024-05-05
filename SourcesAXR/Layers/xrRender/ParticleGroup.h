@@ -88,11 +88,11 @@ namespace PS
                 return visuals.size();
             }
 
-
-			void Manual_UpdateSize(const Fvector& NewSize);
-			void Manual_UpdateAlpha(float NewAlpha);
-
-			void Manual_AddAlpha(float DeltaAlpha);
+			virtual PAPI::Handle<float> GetAlphaHandle(u32 EffectIndex);
+			virtual PAPI::Handle<PAPI::pVector> GetColorHandle(u32 EffectIndex);
+			virtual PAPI::Handle<PAPI::pVector> GetSizeHandle(u32 EffectIndex);
+			virtual PAPI::Handle<PAPI::pVector> GetVelocityHandle(u32 EffectIndex);
+			virtual PAPI::Handle<PAPI::pVector> GetRotationHandle(u32 EffectIndex);
             
             void			OnDeviceCreate	();
             void			OnDeviceDestroy	();
@@ -120,10 +120,11 @@ namespace PS
 	public:
 		CParticleGroup	();
 
-		virtual void Manual_UpdateSize(const Fvector& NewSize) override;
-		virtual void Manual_UpdateAlpha(float NewAlpha) override;
-
-		virtual void Manual_AddAlpha(float DeltaAlpha) override;
+		virtual PAPI::Handle<float> GetAlphaHandle(u32 EffectIndex) override;
+		virtual PAPI::Handle<PAPI::pVector> GetColorHandle(u32 EffectIndex) override;
+		virtual PAPI::Handle<PAPI::pVector> GetSizeHandle(u32 EffectIndex) override;
+		virtual PAPI::Handle<PAPI::pVector> GetVelocityHandle(u32 EffectIndex) override;
+		virtual PAPI::Handle<PAPI::pVector> GetRotationHandle(u32 EffectIndex) override;
 
 		virtual				~CParticleGroup	();
 		virtual void	 	OnFrame			(u32 dt);

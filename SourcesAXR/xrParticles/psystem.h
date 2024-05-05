@@ -122,6 +122,26 @@ namespace PAPI{
 		PAVortexID,			// 
         PATurbulenceID,     //
         PAScatterID, 	    //
+		PABindTimeLimitID,
+		PABindMaxParticlesID,
+		PABindSourceDomainID,
+		PABindSourceVelocityID,
+		PABindSourceRotationID,
+		PABindSourceSizeID,
+		PABindSourceColorID,
+		PABindSourceAlphaID,
+		PABindVelocityValueID,
+		PABindVelocityScaleID,
+		PABindVelocityAllowRotateID,
+		PABindRotationValueID,
+		PABindRotationScaleID,
+		PABindSizeValueID,
+		PABindSizeScaleID,
+		PABindColorValueID,
+		PABindColorAlphaID,
+		PABindColorScaleID,
+		PABindColorTimeFromID,
+		PABindColorTimeToID,
 		action_enum_force_dword = u32(-1)
 	};
     struct ParticleAction;
@@ -136,6 +156,8 @@ namespace PAPI{
 		virtual void				DestroyEffect		(int effect_id)=0;
 		virtual int					CreateActionList	()=0;
 		virtual void				DestroyActionList	(int alist_id)=0;
+
+		virtual ParticleAction*		FindAction			(int alist_id, PActionEnum Type) = 0;
 
         // control
         virtual void				PlayEffect			(int effect_id, int alist_id)=0;

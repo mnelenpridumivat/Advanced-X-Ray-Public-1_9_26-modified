@@ -51,10 +51,11 @@ namespace PS
 							CParticleEffect		();
 		virtual 			~CParticleEffect	();
 
-		virtual void Manual_UpdateSize(const Fvector& NewSize) override;
-		virtual void Manual_UpdateAlpha(float NewAlpha) override;
-
-		virtual void Manual_AddAlpha(float DeltaAlpha) override;
+		virtual PAPI::Handle<float> GetAlphaHandle(u32 EffectIndex) override;
+		virtual PAPI::Handle<PAPI::pVector> GetColorHandle(u32 EffectIndex) override;
+		virtual PAPI::Handle<PAPI::pVector> GetSizeHandle(u32 EffectIndex) override;
+		virtual PAPI::Handle<PAPI::pVector> GetVelocityHandle(u32 EffectIndex) override;
+		virtual PAPI::Handle<PAPI::pVector> GetRotationHandle(u32 EffectIndex) override;
 
 		void	 			OnFrame				(u32 dt);
 

@@ -2,6 +2,12 @@
 #define ParticlesObjectH
 
 #include "../xrEngine/PS_instance.h"
+#include "../xrParticles/particle_param_handle.h"
+
+namespace PAPI
+{
+	class pVector;
+}
 
 extern const Fvector zero_vel;
 
@@ -29,11 +35,11 @@ protected:
 public:
 						CParticlesObject	(LPCSTR p_name, BOOL bAutoRemove, bool destroy_on_game_load);
 
-	void Manual_UpdateSize(Fvector NewSize);
-	void Manual_UpdateSize(float NewSize);
-	void Manual_UpdateAlpha(float NewAlpha);
-
-	void Manual_AddAlpha(float DeltaAlpha);
+	PAPI::Handle<float> GetAlphaHandle(u32 EffectIndex);
+	PAPI::Handle<PAPI::pVector> GetColorHandle(u32 EffectIndex);
+	PAPI::Handle<PAPI::pVector> GetSizeHandle(u32 EffectIndex);
+	PAPI::Handle<PAPI::pVector> GetVelocityHandle(u32 EffectIndex);
+	PAPI::Handle<PAPI::pVector> GetRotationHandle(u32 EffectIndex);
 
 	bool		shedule_Needed		() override {return true;};
 	float		shedule_Scale		() override;

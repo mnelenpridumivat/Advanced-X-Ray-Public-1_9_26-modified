@@ -7,6 +7,17 @@
 #include <xmmintrin.h>
 #endif
 
+#include "../../xrParticles/particle_actions_collection.h"
+
+/*namespace PAPI
+{
+	struct PABindColorAlpha;
+	struct PABindColorValue;
+	struct PABindSizeValue;
+	struct PABindRotationValue;
+	struct PABindVelocityValue;
+}*/
+
 using namespace PAPI;
 using namespace PS;
 
@@ -82,58 +93,39 @@ CParticleEffect::~CParticleEffect()
 	ParticleManager()->DestroyActionList	(m_HandleActionList);
 }
 
-void CParticleEffect::Manual_UpdateSize(const Fvector& NewSize)
+PAPI::Handle<float> CParticleEffect::GetAlphaHandle(u32 EffectIndex)
 {
-	Particle* particles;
-	u32 p_cnt = 0;
-	ParticleManager()->GetParticles(m_HandleEffect, particles, p_cnt);
-	for(u32 i = 0; i < p_cnt; ++i)
-	{
-		Particle& m = particles[i];
-		//Msg("Starting size is [%f, %f, %f]", m.size.x, m.size.y, m.size.z);
-		m.size.x = NewSize.x;
-		m.size.y = NewSize.y;
-		m.size.z = NewSize.z;
-		//Msg("Ending size is [%f, %f, %f]", m.size.x, m.size.y, m.size.z);
-		/*pVector dif;
-		dif.x = NewSize.x - m.size.x;
-		dif.y = NewSize.y - m.size.y;
-		dif.z = NewSize.z - m.size.z;
-		m.size += dif;*/
-	}
+	auto Action = ParticleManager()->FindAction(m_HandleActionList, PABindColorAlphaID);
+	VERIFY3(Action, "Unable to find action BindColorAlpha in particle effect", m_Def->m_Name.c_str());
+	return static_cast<PABindColorAlpha*>(Action)->GetHandle();
 }
 
-void CParticleEffect::Manual_UpdateAlpha(float NewAlpha)
+PAPI::Handle<PAPI::pVector> CParticleEffect::GetColorHandle(u32 EffectIndex)
 {
-	Particle* particles;
-	u32 p_cnt = 0;
-	ParticleManager()->GetParticles(m_HandleEffect, particles, p_cnt);
-	for (u32 i = 0; i < p_cnt; ++i)
-	{
-		Fcolor c_p, c_t;
-		Particle& m = particles[i];
-
-		c_p.set(m.color);
-		c_t.set(c_p.r, c_p.g, c_p.b, NewAlpha);
-		m.color = c_t.get();
-	}
+	auto Action = ParticleManager()->FindAction(m_HandleActionList, PABindColorValueID);
+	VERIFY3(Action, "Unable to find action BindColorValue in particle effect", m_Def->m_Name.c_str());
+	return static_cast<PABindColorValue*>(Action)->GetHandle();
 }
 
-void CParticleEffect::Manual_AddAlpha(float DeltaAlpha)
+PAPI::Handle<PAPI::pVector> CParticleEffect::GetSizeHandle(u32 EffectIndex)
 {
-	Particle* particles;
-	u32 p_cnt = 0;
-	ParticleManager()->GetParticles(m_HandleEffect, particles, p_cnt);
-	for (u32 i = 0; i < p_cnt; ++i)
-	{
-		Fcolor c_p, c_t;
-		Particle& m = particles[i];
+	auto Action = ParticleManager()->FindAction(m_HandleActionList, PABindSizeValueID);
+	VERIFY3(Action, "Unable to find action BindSizeValue in particle effect", m_Def->m_Name.c_str());
+	return static_cast<PABindSizeValue*>(Action)->GetHandle();
+}
 
-		c_p.set(m.color);
-		c_t.set(c_p.r, c_p.g, c_p.b, c_p.a+DeltaAlpha);
-		clamp(c_t.a, 0.0f, 1.0f);
-		m.color = c_t.get();
-	}
+PAPI::Handle<PAPI::pVector> CParticleEffect::GetVelocityHandle(u32 EffectIndex)
+{
+	auto Action = ParticleManager()->FindAction(m_HandleActionList, PABindVelocityValueID);
+	VERIFY3(Action, "Unable to find action BindVelocityValue in particle effect", m_Def->m_Name.c_str());
+	return static_cast<PABindVelocityValue*>(Action)->GetHandle();
+}
+
+PAPI::Handle<PAPI::pVector> CParticleEffect::GetRotationHandle(u32 EffectIndex)
+{
+	auto Action = ParticleManager()->FindAction(m_HandleActionList, PABindRotationValueID);
+	VERIFY3(Action, "Unable to find action BindRotationValue in particle effect", m_Def->m_Name.c_str());
+	return static_cast<PABindRotationValue*>(Action)->GetHandle();
 }
 
 void CParticleEffect::Play()

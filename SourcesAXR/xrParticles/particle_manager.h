@@ -29,6 +29,8 @@ namespace PAPI{
 		virtual int					CreateActionList	();
 		virtual void				DestroyActionList	(int alist_id);
 
+        virtual ParticleAction* FindAction(int alist_id, PActionEnum Type);
+
         // control
         virtual void				PlayEffect			(int effect_id, int alist_id);
         virtual void				StopEffect			(int effect_id, int alist_id, BOOL deffered=TRUE);

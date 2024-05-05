@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #pragma hdrstop
 
+#include "particle_actions.h"
 #include "particle_actions_collection.h"
 using namespace PAPI;
 
@@ -475,6 +476,110 @@ void PATurbulence::Save		(IWriter& F)
 	F.w_float		(magnitude);
 	F.w_float		(epsilon);
     F.w_fvector3	(offset);
+}
+void PABindTimeLimit::Load(IReader& F){
+	ParticleAction::Load(F);
+	BindValue = F.r_float();
+}
+void PABindTimeLimit::Save(IWriter& F){
+	ParticleAction::Save(F);
+	F.w_float(BindValue);
+}
+void PABindMaxParticles::Load(IReader& F) {
+	ParticleAction::Load(F);
+	BindValue = F.r_s32();
+}
+void PABindMaxParticles::Save(IWriter& F) {
+	ParticleAction::Save(F);
+	F.w_s32(BindValue);
+}
+/*void PABindSourceDomain::Load(IReader& F) {
+	ParticleAction::Load(F);
+	F.r(&BindValue, sizeof(pDomain));
+}
+void PABindSourceDomain::Save(IWriter& F) {
+	ParticleAction::Save(F);
+	F.w(&BindValue, sizeof(pDomain));
+}
+void PABindSourceVelocity::Load(IReader& F) {
+	ParticleAction::Load(F);
+	F.r(&BindValue, sizeof(pDomain));
+}
+void PABindSourceVelocity::Save(IWriter& F) {
+	ParticleAction::Save(F);
+	F.w(&BindValue, sizeof(pDomain));
+}
+void PABindSourceRotation::Load(IReader& F) {
+	ParticleAction::Load(F);
+	F.r(&BindValue, sizeof(pDomain));
+}
+void PABindSourceRotation::Save(IWriter& F) {
+	ParticleAction::Save(F);
+	F.w(&BindValue, sizeof(pDomain));
+}
+void PABindSourceSize::Load(IReader& F) {
+	ParticleAction::Load(F);
+	F.r(&BindValue, sizeof(pDomain));
+}
+void PABindSourceSize::Save(IWriter& F) {
+	ParticleAction::Save(F);
+	F.w(&BindValue, sizeof(pDomain));
+}
+void PABindSourceColor::Load(IReader& F) {
+	ParticleAction::Load(F);
+	F.r(&BindValue, sizeof(pDomain));
+}
+void PABindSourceColor::Save(IWriter& F) {
+	ParticleAction::Save(F);
+	F.w(&BindValue, sizeof(pDomain));
+}
+void PABindSourceAlpha::Load(IReader& F) {
+	ParticleAction::Load(F);
+	BindValue = F.r_float();
+}
+void PABindSourceAlpha::Save(IWriter& F) {
+	ParticleAction::Save(F);
+	F.w_float(BindValue);
+}*/
+void PABindVelocityValue::Load(IReader& F) {
+	ParticleAction::Load(F);
+	F.r_fvector3(BindValue);
+}
+void PABindVelocityValue::Save(IWriter& F) {
+	ParticleAction::Save(F);
+	F.w_fvector3(BindValue);
+}
+void PABindRotationValue::Load(IReader& F) {
+	ParticleAction::Load(F);
+	F.r_fvector3(BindValue);
+}
+void PABindRotationValue::Save(IWriter& F) {
+	ParticleAction::Save(F);
+	F.w_fvector3(BindValue);
+}
+void PABindSizeValue::Load(IReader& F) {
+	ParticleAction::Load(F);
+	F.r_fvector3(BindValue);
+}
+void PABindSizeValue::Save(IWriter& F) {
+	ParticleAction::Save(F);
+	F.w_fvector3(BindValue);
+}
+void PABindColorValue::Load(IReader& F) {
+	ParticleAction::Load(F);
+	F.r_fvector3(BindValue);
+}
+void PABindColorValue::Save(IWriter& F) {
+	ParticleAction::Save(F);
+	F.w_fvector3(BindValue);
+}
+void PABindColorAlpha::Load(IReader& F) {
+	ParticleAction::Load(F);
+	BindValue = F.r_float();
+}
+void PABindColorAlpha::Save(IWriter& F) {
+	ParticleAction::Save(F);
+	F.w_float(BindValue);
 }
 
 

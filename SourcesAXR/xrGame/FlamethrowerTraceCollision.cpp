@@ -5,7 +5,7 @@
 #include "Flamethrower.h"
 #include "../xrEngine/xr_collide_form.h"
 #include "ai/stalker/ai_stalker.h"
-#include "Actor.h"
+#include "../xrParticles/psystem.h"
 #include "debug_renderer.h"
 #include "Level_Bullet_Manager.h"
 #include "seniority_hierarchy_space.h"
@@ -52,7 +52,9 @@ void CFlamethrowerTraceCollision::UpdateParticles()
 
 	m_particles->SetXFORM(particles_pos);
 
-	m_particles->Manual_UpdateSize(GetCurrentRadius()*m_RadiusCollisionCoeff);
+	//m_particles->Manual_UpdateSize(GetCurrentRadius()*m_RadiusCollisionCoeff);
+	auto size = GetCurrentRadius() * m_RadiusCollisionCoeff;
+	m_particle_size_handle.Set(PAPI::pVector(size, size, size));
 	float NewAlpha;
 	if(IsCollided())
 	{
@@ -61,7 +63,8 @@ void CFlamethrowerTraceCollision::UpdateParticles()
 	{
 		NewAlpha = (m_LifeTime - std::max(m_current_time, m_LifeTime - m_FlameFadeTime)) / m_FlameFadeTime;
 	}
-	m_particles->Manual_UpdateAlpha(NewAlpha);
+	m_particle_alpha_handle.Set(NewAlpha);
+	//m_particles->Manual_UpdateAlpha(NewAlpha);
 
 	if (!m_particles->IsAutoRemove() && !m_particles->IsLooped()
 		&& !m_particles->PSI_alive())
@@ -85,7 +88,10 @@ void CFlamethrowerTraceCollision::Update_Air(float DeltaTime)
 	RadiusCurrent = m_RadiusMin + (m_RadiusMax - m_RadiusMin) * interpTime;
 	clamp(RadiusCurrent, m_RadiusMin, m_RadiusMax);
 
-	m_particles->Manual_UpdateSize(GetCurrentRadius() * m_RadiusCollisionCoeff);
+	//m_particles->Manual_UpdateSize(GetCurrentRadius() * m_RadiusCollisionCoeff);
+	auto size = GetCurrentRadius() * m_RadiusCollisionCoeff;
+	m_particle_size_handle.Set(PAPI::pVector(size, size, size));
+	//m_particle_size_handle.Set(GetCurrentRadius() * m_RadiusCollisionCoeff);
 
 	if (!IsCollided()) {
 		m_GravityVelocity += m_GravityAcceleration * DeltaTime;
@@ -109,7 +115,9 @@ void CFlamethrowerTraceCollision::Update_Air(float DeltaTime)
 			m_particles_ground = CParticlesObject::Create(*m_sFlameParticlesGround, false);
 			particles_pos.c.set(m_position);
 			m_particles_ground->SetXFORM(particles_pos);
-			m_particles_ground->Manual_UpdateSize(m_RadiusCollided * m_RadiusCollisionCoeff);
+			m_particle_alpha_handle = m_particles_ground->GetAlphaHandle(0);
+			m_particle_size_handle = m_particles_ground->GetSizeHandle(0);
+			//m_particles_ground->Manual_UpdateSize(m_RadiusCollided * m_RadiusCollisionCoeff);
 			m_particles_ground->Play(false);
 		}
 	}
@@ -134,10 +142,12 @@ void CFlamethrowerTraceCollision::Update_AirToGround(float DeltaTime)
 	//	m_particles_ground = CParticlesObject::Create(*m_sFlameParticlesGround, false);
 	//	m_particles_ground->Play(false);
 	//}
-	m_particles_ground->Manual_UpdateAlpha(AlphaValue);
+	m_particle_alpha_handle.Set(AlphaValue);
+	//m_particles_ground->Manual_UpdateAlpha(AlphaValue);
 	RadiusCurrent = std::max(RadiusOnCollide, AlphaValue * m_RadiusCollided);
-
-	m_particles_ground->Manual_UpdateSize(m_RadiusCollided * m_RadiusCollisionCoeff);
+	auto size = m_RadiusCollided * m_RadiusCollisionCoeff;
+	m_particle_size_handle.Set(PAPI::pVector(size, size, size));
+	//m_particles_ground->Manual_UpdateSize(m_RadiusCollided * m_RadiusCollisionCoeff);
 }
 
 void CFlamethrowerTraceCollision::Update_Ground(float DeltaTime)
@@ -158,12 +168,16 @@ void CFlamethrowerTraceCollision::Update_End(float DeltaTime)
 		return;
 	}
 	const float AlphaValue = 1.0f - std::pow(1.0f - interpTime, 2.0f);
-	if (m_particles) {
-		m_particles->Manual_UpdateAlpha(AlphaValue);
+	if(m_particle_alpha_handle.IsValid())
+	{
+		m_particle_alpha_handle.Set(AlphaValue);
 	}
-	if (m_particles_ground) {
-		m_particles_ground->Manual_UpdateAlpha(AlphaValue);
-	}
+	//if (m_particles) {
+	//	m_particle_alpha_handle.Set(AlphaValue);
+	//}
+	//if (m_particles_ground) {
+	//	m_particle_alpha_handle.Set(AlphaValue);
+	//}
 	//RadiusCurrent = AlphaValue;
 }
 
@@ -277,6 +291,8 @@ void CFlamethrowerTraceCollision::Activate()
 	//feel_touch_update(m_position, GetCurrentRadius());
 	m_LastUpdatedPos = m_position;
 	m_particles = CParticlesObject::Create(*m_sFlameParticles, false);
+	m_particle_alpha_handle = m_particles->GetAlphaHandle(0);
+	m_particle_size_handle = m_particles->GetSizeHandle(0);
 	m_particles->Play(false);
 }
 
@@ -300,6 +316,7 @@ void CFlamethrowerTraceCollision::Deactivate()
 	m_current_time = 0.0f;
 	m_time_on_collide = 0.0f;
 	RadiusOnCollide = 0.0f;
+	m_particle_alpha_handle.Reset();
 	if (m_particles) {
 		m_particles->Stop();
 		CParticlesObject::Destroy(m_particles);
