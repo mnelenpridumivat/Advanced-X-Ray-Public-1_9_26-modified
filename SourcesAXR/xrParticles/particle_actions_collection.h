@@ -382,6 +382,7 @@ namespace PAPI{
 		Handle<pVector> GetHandle() { return { &BindValue }; }
 
 		pVector BindValue;
+		pVector Pivot;
 
 		_METHODS;
 	};

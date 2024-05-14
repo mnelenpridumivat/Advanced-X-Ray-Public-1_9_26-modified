@@ -113,12 +113,13 @@ void CFlamethrowerTraceCollision::Update_Air(float DeltaTime)
 			m_particles->Stop(false);
 			CParticlesObject::Destroy(m_particles);
 			m_particles_ground = CParticlesObject::Create(*m_sFlameParticlesGround, false);
-			particles_pos.c.set(m_position);
-			m_particles_ground->SetXFORM(particles_pos);
+			//m_particle_alpha_handle = m_particles_ground->GetAlphaHandle(0);
+			//m_particle_size_handle = m_particles_ground->GetSizeHandle(0);
+			m_particles_ground->Play(false);
 			m_particle_alpha_handle = m_particles_ground->GetAlphaHandle(0);
 			m_particle_size_handle = m_particles_ground->GetSizeHandle(0);
-			//m_particles_ground->Manual_UpdateSize(m_RadiusCollided * m_RadiusCollisionCoeff);
-			m_particles_ground->Play(false);
+			particles_pos.c.set(m_position);
+			m_particles_ground->SetXFORM(particles_pos);
 		}
 	}
 	if(m_current_time >= m_LifeTime)
@@ -136,18 +137,25 @@ void CFlamethrowerTraceCollision::Update_AirToGround(float DeltaTime)
 		interpTime = 1.0f;
 	}
 	//RadiusCurrent = RadiusOnCollide + (m_RadiusCollided - RadiusOnCollide) * interpTime;
-	const float AlphaValue = 1.0f - std::pow(1.0f - interpTime, 2.0f);
+	const float AlphaValue = 1.0f -std::pow(1.0f - interpTime, 2.0f);
+	//const float AlphaValue = (std::sin(m_current_time)+1.0f)/2.0f;
 	//if(!m_particles_ground)
 	//{
 	//	m_particles_ground = CParticlesObject::Create(*m_sFlameParticlesGround, false);
 	//	m_particles_ground->Play(false);
 	//}
-	m_particle_alpha_handle.Set(AlphaValue);
-	//m_particles_ground->Manual_UpdateAlpha(AlphaValue);
+	if (m_particle_alpha_handle.IsValid()) {
+		m_particle_alpha_handle.Set(AlphaValue);
+		//m_particle_alpha_handle.Set(1.0);
+	}
 	RadiusCurrent = std::max(RadiusOnCollide, AlphaValue * m_RadiusCollided);
-	auto size = m_RadiusCollided * m_RadiusCollisionCoeff;
-	m_particle_size_handle.Set(PAPI::pVector(size, size, size));
-	//m_particles_ground->Manual_UpdateSize(m_RadiusCollided * m_RadiusCollisionCoeff);
+	//RadiusCurrent = AlphaValue * m_RadiusCollided;
+	//auto size = m_RadiusCollided * m_RadiusCollisionCollidedCoeff;
+	auto size = AlphaValue * m_RadiusCollided * m_RadiusCollisionCollidedCoeff;
+	if (m_particle_size_handle.IsValid()) {
+		//Msg("Size handle: change from [%f, %f, %f] to [%f, %f, %f]", m_particle_size_handle.Get().x, m_particle_size_handle.Get().y, m_particle_size_handle.Get().z, size, size, size);
+		m_particle_size_handle.Set(PAPI::pVector(size, size, size));
+	}
 }
 
 void CFlamethrowerTraceCollision::Update_Ground(float DeltaTime)
@@ -172,13 +180,6 @@ void CFlamethrowerTraceCollision::Update_End(float DeltaTime)
 	{
 		m_particle_alpha_handle.Set(AlphaValue);
 	}
-	//if (m_particles) {
-	//	m_particle_alpha_handle.Set(AlphaValue);
-	//}
-	//if (m_particles_ground) {
-	//	m_particle_alpha_handle.Set(AlphaValue);
-	//}
-	//RadiusCurrent = AlphaValue;
 }
 
 CFlamethrowerTraceCollision::CFlamethrowerTraceCollision(CFlamethrowerTraceManager* flamethrower) : m_flamethrower(flamethrower)
@@ -199,6 +200,7 @@ void CFlamethrowerTraceCollision::Load(LPCSTR section)
 	m_RadiusCollided = pSettings->r_float(section, "RadiusCollided");
 	m_RadiusCollidedInterpTime = pSettings->r_float(section, "RadiusCollidedInterpTime");
 	m_RadiusCollisionCoeff = pSettings->r_float(section, "RadiusCollisionCoeff");
+	m_RadiusCollisionCollidedCoeff = pSettings->r_float(section, "RadiusCollisionCollidedCoeff");
 	m_RadiusMaxTime = pSettings->r_float(section, "RadiusMaxTime");
 	m_Velocity = pSettings->r_float(section, "Velocity");
 	m_LifeTime = pSettings->r_float(section, "LifeTime");
@@ -240,25 +242,10 @@ bool CFlamethrowerTraceCollision::IsReadyToUpdateCollisions()
 float CFlamethrowerTraceCollision::GetCurrentRadius()
 {
 	return RadiusCurrent;
-	/*if (!IsActive()) {
-		return 0.0f;
-	}
-	if (IsCollided()) {
-		return m_RadiusCollided;
-	}
-	if (m_current_time > m_RadiusMaxTime) {
-		return m_RadiusMax;
-	}
-	float CurRadius = m_RadiusMin + (m_RadiusMax - m_RadiusMin) * (m_current_time / m_RadiusMaxTime);
-	clamp(CurRadius, m_RadiusMin, m_RadiusMax);
-	return CurRadius;*/
 }
 
 void CFlamethrowerTraceCollision::SetTransform(const Fvector& StartPos, const Fvector& StartDir)
 {
-	//XFORM = StartPos;
-	//invXFORM = XFORM.invert();
-	//StartPos.getXYZ(m_position);
 	m_position = StartPos;
 	m_direction = StartDir;
 }
@@ -288,7 +275,6 @@ BOOL CFlamethrowerTraceCollision::feel_touch_contact(CObject* O)
 void CFlamethrowerTraceCollision::Activate()
 {
 	m_State = ETraceState::Air;
-	//feel_touch_update(m_position, GetCurrentRadius());
 	m_LastUpdatedPos = m_position;
 	m_particles = CParticlesObject::Create(*m_sFlameParticles, false);
 	m_particle_alpha_handle = m_particles->GetAlphaHandle(0);

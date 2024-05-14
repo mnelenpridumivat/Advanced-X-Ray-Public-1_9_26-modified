@@ -55,6 +55,7 @@ class CFlamethrowerTraceCollision :
 	float m_RadiusCollided = 0.0f;
 	float m_RadiusCollidedInterpTime = 0.0f;
 	float m_RadiusCollisionCoeff = 0.0f;
+	float m_RadiusCollisionCollidedCoeff = 0.0f;
 	float m_Velocity = 0.0f;
 	float m_GravityVelocity = 0.0f;
 	float m_GravityAcceleration = 0.0f;

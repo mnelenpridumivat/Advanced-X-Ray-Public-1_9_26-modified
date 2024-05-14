@@ -1915,7 +1915,14 @@ void PABindSizeValue::Execute(ParticleEffect* effect, const float dt, float& tm_
 	for (u32 i = 0; i < effect->p_count; i++)
 	{
 		Particle& m = effect->particles[i];
+		//Msg("Before = [%f, %f, %f]", m.size.x, m.size.y, m.size.z);
 		m.size = BindValue;
+		//Msg("After = [%f, %f, %f]", m.size.x, m.size.y, m.size.z);
+		auto NegPivot = Pivot;
+		-NegPivot;
+		m.pos.x = NegPivot.x * m.size.x;
+		m.pos.y = NegPivot.y * m.size.y;
+		m.pos.z = NegPivot.z * m.size.z;
 	}
 }
 void PABindColorValue::Transform(const Fmatrix& m) {}
@@ -1927,7 +1934,9 @@ void PABindColorValue::Execute(ParticleEffect* effect, const float dt, float& tm
 		Particle& m = effect->particles[i];
 
 		c_p.set(m.color);
+		//Msg("Before = [%f, %f, %f, %f]", c_p.r, c_p.g, c_p.b, c_p.a);
 		c_t.set(BindValue.x, BindValue.y, BindValue.z, c_p.a);
+		//Msg("After = [%f, %f, %f, %f]", c_t.r, c_t.g, c_t.b, c_t.a);
 		m.color = c_t.get();
 	}
 }
