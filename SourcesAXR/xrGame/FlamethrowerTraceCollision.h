@@ -115,6 +115,55 @@ public:
 
 };
 
+DEFINE_DEQUE(CFlamethrowerTraceCollision*, FCollisionsDeque, FCollisionsDequeIt);
+
+class CFlamethrowerTraceBeamPoint
+{
+
+	CFlamethrowerTraceBeamPoint* Next = nullptr;
+	CFlamethrowerTraceBeamPoint* Prev = nullptr;
+
+	Fvector PointPosition;
+	Fvector PointDirection;
+	float GravityVelocity = 0.0f;
+
+	float m_Velocity = 0.0f;
+	float m_GravityAcceleration = 0.0f;
+
+public:
+
+	void SetNext(CFlamethrowerTraceBeamPoint* Next) { this->Next = Next; };
+	void SetPrev(CFlamethrowerTraceBeamPoint* Prev) { this->Prev = Prev; };
+
+	void SetVelocity(float Velocity) { m_Velocity = Velocity; }
+	void SetGravityAcceleration(float GravityAcceleration) { m_GravityAcceleration = GravityAcceleration; }
+
+	void SetStartPosition(Fvector StartPosition) { PointPosition = StartPosition; }
+	void SetStartDirection(Fvector StartDirection) { PointDirection = StartDirection; }
+
+	void Update(float DeltaTime);
+	
+};
+
+class CFlamethrowerTraceBeam
+{
+	DEFINE_DEQUE(CFlamethrowerTraceBeamPoint*, FlametrowerTraceBeamDeque, FlametrowerTraceBeamDequeIt);
+
+	FlametrowerTraceBeamDeque ActivePoints;
+	FlametrowerTraceBeamDeque InactivePoints;
+
+	shared_str BeamSection;
+	CFlamethrowerTraceManager* Parent = nullptr;
+
+	CFlamethrowerTraceBeamPoint* GetInactivePoint();
+
+public:
+
+	void LaunchPoint(const Fvector& StartPos, const Fvector& StartDir);
+
+
+};
+
 class CFlamethrowerTraceManager :
 	public Feel::Touch
 {
@@ -125,10 +174,10 @@ class CFlamethrowerTraceManager :
 	DEFINE_VECTOR(CCustomMonster*, FOverlappedObjects, FOverlappedObjectsIt);
 	DEFINE_VECTOR(CFlamethrowerTraceCollision*, FCollisions, FCollisionsIt);
 
-	DEFINE_DEQUE(CFlamethrowerTraceCollision*, FCollisionsDeque, FCollisionsDequeIt);
-
 	FOverlappedObjects Overlapped;
 	FCollisionsDeque CollisionsPool;
+	FCollisionsDeque InactiveCollisions;
+	FCollisionsDeque ActiveCollisions;
 	//FCollisionsDeque CollisionsDeque;
 
 	float LifeTime;

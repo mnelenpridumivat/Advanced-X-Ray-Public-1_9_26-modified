@@ -393,6 +393,42 @@ void CFlamethrowerTraceCollision::Update(float DeltaTime)
 
 }
 
+CFlamethrowerTraceBeamPoint* CFlamethrowerTraceBeam::GetInactivePoint()
+{
+	if(InactivePoints.empty())
+	{
+		InactivePoints.push_back(xr_new<CFlamethrowerTraceBeamPoint>());
+	}
+	auto Inactive = InactivePoints.front();
+	InactivePoints.pop_front();
+	return Inactive;
+}
+
+void CFlamethrowerTraceBeam::LaunchPoint(const Fvector& StartPos, const Fvector& StartDir)
+{
+	auto InactivePoint = GetInactivePoint();
+	CFlamethrowerTraceBeamPoint* ActivePoint;
+	if(ActivePoints.empty())
+	{
+		ActivePoint = nullptr;
+	} else
+	{
+		ActivePoint = ActivePoints.back();
+	}
+
+	InactivePoint->SetStartPosition(StartPos);
+	InactivePoint->SetStartDirection(StartDir);
+	InactivePoint->SetVelocity();
+	InactivePoint->SetGravityAcceleration();
+	InactivePoint->SetPrev(ActivePoint);
+	if (ActivePoint) {
+		ActivePoint->SetNext(InactivePoint);
+	}
+
+	ActivePoints.push_back(InactivePoint);
+
+}
+
 CFlamethrowerTraceManager::CFlamethrowerTraceManager(CFlamethrower* flamethrower) : m_flamethrower(flamethrower)
 {
 
