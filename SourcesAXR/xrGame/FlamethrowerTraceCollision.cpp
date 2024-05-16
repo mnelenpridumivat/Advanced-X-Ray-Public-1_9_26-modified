@@ -53,8 +53,11 @@ void CFlamethrowerTraceCollision::UpdateParticles()
 	m_particles->SetXFORM(particles_pos);
 
 	//m_particles->Manual_UpdateSize(GetCurrentRadius()*m_RadiusCollisionCoeff);
-	auto size = GetCurrentRadius() * m_RadiusCollisionCoeff;
-	m_particle_size_handle.Set(PAPI::pVector(size, size, size));
+	PAPI::pVector Size;
+	Size.x = GetCurrentRadius() * m_RadiusCollisionCoeff.x;
+	Size.y = GetCurrentRadius() * m_RadiusCollisionCoeff.y;
+	Size.z = GetCurrentRadius() * m_RadiusCollisionCoeff.z;
+	m_particle_size_handle.Set(Size);
 	float NewAlpha;
 	if(IsCollided())
 	{
@@ -89,8 +92,11 @@ void CFlamethrowerTraceCollision::Update_Air(float DeltaTime)
 	clamp(RadiusCurrent, m_RadiusMin, m_RadiusMax);
 
 	//m_particles->Manual_UpdateSize(GetCurrentRadius() * m_RadiusCollisionCoeff);
-	auto size = GetCurrentRadius() * m_RadiusCollisionCoeff;
-	m_particle_size_handle.Set(PAPI::pVector(size, size, size));
+	PAPI::pVector Size;
+	Size.x = GetCurrentRadius() * m_RadiusCollisionCoeff.x;
+	Size.y = GetCurrentRadius() * m_RadiusCollisionCoeff.y;
+	Size.z = GetCurrentRadius() * m_RadiusCollisionCoeff.z;
+	m_particle_size_handle.Set(Size);
 	//m_particle_size_handle.Set(GetCurrentRadius() * m_RadiusCollisionCoeff);
 
 	if (!IsCollided()) {
@@ -151,11 +157,22 @@ void CFlamethrowerTraceCollision::Update_AirToGround(float DeltaTime)
 	RadiusCurrent = std::max(RadiusOnCollide, AlphaValue * m_RadiusCollided);
 	//RadiusCurrent = AlphaValue * m_RadiusCollided;
 	//auto size = m_RadiusCollided * m_RadiusCollisionCollidedCoeff;
-	auto size = AlphaValue * m_RadiusCollided * m_RadiusCollisionCollidedCoeff;
+	PAPI::pVector Size;
+	Size.x = RadiusCurrent * m_RadiusCollisionCollidedCoeff.x;
+	Size.y = RadiusCurrent * m_RadiusCollisionCollidedCoeff.y;
+	Size.z = RadiusCurrent * m_RadiusCollisionCollidedCoeff.z;
 	if (m_particle_size_handle.IsValid()) {
 		//Msg("Size handle: change from [%f, %f, %f] to [%f, %f, %f]", m_particle_size_handle.Get().x, m_particle_size_handle.Get().y, m_particle_size_handle.Get().z, size, size, size);
-		m_particle_size_handle.Set(PAPI::pVector(size, size, size));
+		m_particle_size_handle.Set(Size);
 	}
+
+	auto Position = m_position;
+	Position.x -= m_CollidedParticlePivot.x * Size.x;
+	Position.y -= m_CollidedParticlePivot.y * Size.y;
+	Position.z -= m_CollidedParticlePivot.z * Size.z;
+	Fmatrix particles_pos = Fmatrix();
+	particles_pos.c.set(Position);
+	m_particles_ground->SetXFORM(particles_pos);
 }
 
 void CFlamethrowerTraceCollision::Update_Ground(float DeltaTime)
@@ -199,8 +216,9 @@ void CFlamethrowerTraceCollision::Load(LPCSTR section)
 	m_RadiusMax = pSettings->r_float(section, "RadiusMax");
 	m_RadiusCollided = pSettings->r_float(section, "RadiusCollided");
 	m_RadiusCollidedInterpTime = pSettings->r_float(section, "RadiusCollidedInterpTime");
-	m_RadiusCollisionCoeff = pSettings->r_float(section, "RadiusCollisionCoeff");
-	m_RadiusCollisionCollidedCoeff = pSettings->r_float(section, "RadiusCollisionCollidedCoeff");
+	m_RadiusCollisionCoeff = pSettings->r_fvector3(section, "RadiusCollisionCoeff");
+	m_CollidedParticlePivot = pSettings->r_fvector3(section, "CollidedParticlePivot");
+	m_RadiusCollisionCollidedCoeff = pSettings->r_fvector3(section, "RadiusCollisionCollidedCoeff");
 	m_RadiusMaxTime = pSettings->r_float(section, "RadiusMaxTime");
 	m_Velocity = pSettings->r_float(section, "Velocity");
 	m_LifeTime = pSettings->r_float(section, "LifeTime");

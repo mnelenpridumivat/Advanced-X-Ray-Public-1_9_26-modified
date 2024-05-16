@@ -1915,14 +1915,24 @@ void PABindSizeValue::Execute(ParticleEffect* effect, const float dt, float& tm_
 	for (u32 i = 0; i < effect->p_count; i++)
 	{
 		Particle& m = effect->particles[i];
-		//Msg("Before = [%f, %f, %f]", m.size.x, m.size.y, m.size.z);
+
+		//volatile pVector   Coeff;
+
+		//Coeff.x = Pivot.x / m.size.x;
+		//Coeff.y = Pivot.y / m.size.y;
+		//Coeff.z = Pivot.z / m.size.z;
+
+		//volatile pVector Deviation = m.pos + Pivot;
+
 		m.size = BindValue;
-		//Msg("After = [%f, %f, %f]", m.size.x, m.size.y, m.size.z);
-		auto NegPivot = Pivot;
-		-NegPivot;
-		m.pos.x = NegPivot.x * m.size.x;
-		m.pos.y = NegPivot.y * m.size.y;
-		m.pos.z = NegPivot.z * m.size.z;
+
+		//m.pos.x = Coeff.x * m.size.x;
+		//m.pos.y = Coeff.y * m.size.y;
+		//m.pos.z = Coeff.z * m.size.z;
+
+		//m.pos.x += Deviation.x;
+		//m.pos.y += Deviation.y;
+		//m.pos.z += Deviation.z;
 	}
 }
 void PABindColorValue::Transform(const Fmatrix& m) {}
