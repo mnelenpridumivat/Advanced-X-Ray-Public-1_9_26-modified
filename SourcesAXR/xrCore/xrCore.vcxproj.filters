@@ -603,6 +603,9 @@
     <ClInclude Include="Threading\Event.hpp">
       <Filter>Threading</Filter>
     </ClInclude>
+    <ClInclude Include="xr_smart_pointers.h">
+      <Filter>Math\STLext</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="xrCore.rc">

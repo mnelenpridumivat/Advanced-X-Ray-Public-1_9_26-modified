@@ -3,7 +3,10 @@
 #include "ai_sounds.h"
 #include "weapon.h"
 
-class CFlamethrowerTraceManager;
+namespace FlamethrowerTrace
+{
+	class CManager;
+}
 
 class CFlamethrower : public CWeapon
 {
@@ -43,6 +46,7 @@ protected:
 	virtual void    switch2_Unmis();
 
 	void	OnShot() override;
+	virtual void	StopShooting() override;
 
 	virtual void	OnEmptyClick();
 
@@ -206,6 +210,6 @@ protected:
 		u16 weapon_id,
 		bool send_hit) override;
 
-	CFlamethrowerTraceManager* TraceManager = nullptr;
+	FlamethrowerTrace::CManager* TraceManager = nullptr;
 
 };

@@ -451,7 +451,7 @@ protected:
 	void			FireEnd() override;
 
 	virtual void			Reload();
-	void					StopShooting();
+	virtual void			StopShooting();
 
 	// обработка визуализации выстрела
 	virtual void			OnShot() {};
