@@ -59,7 +59,7 @@ CFlamethrower::CFlamethrower(ESoundTypes eSoundType) : CWeapon()
 
 	m_sSndShotCurrent = nullptr;
 
-	TraceManager = xr_new<CFlamethrowerTraceManager>(this);
+	TraceManager = xr_new<FlamethrowerTrace::CManager>(this);
 }
 
 CFlamethrower::~CFlamethrower()
@@ -602,6 +602,8 @@ void CFlamethrower::UpdateCL()
 
 	UpdateSounds();
 
+	TraceManager->UpdatePoints(dt);
+	TraceManager->UpdateJoins(dt);
 	TraceManager->UpdateOverlaps(dt);
 }
 
@@ -673,8 +675,9 @@ void CFlamethrower::state_Fire(float dt)
 		CEntity* E = smart_cast<CEntity*>(H_Parent());
 		E->g_fireParams(this, p1, d);
 
-		if (!E->g_stateFire())
+		if (!E->g_stateFire()) {
 			StopShooting();
+		}
 
 		m_vStartPos = p1;
 		m_vStartDir = d;
@@ -853,6 +856,13 @@ void CFlamethrower::OnShot()
 	CGameObject* object = smart_cast<CGameObject*>(H_Parent());
 	if (object)
 		object->callback(GameObject::eOnWeaponFired)(object->lua_game_object(), this->lua_game_object(), iAmmoElapsed);
+}
+
+void CFlamethrower::StopShooting()
+{
+	inherited::StopShooting();
+
+	TraceManager->OnShootingEnd();
 }
 
 

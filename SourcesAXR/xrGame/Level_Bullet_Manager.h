@@ -8,6 +8,11 @@
 #include "weaponammo.h"
 #include "tracer.h"
 
+namespace FlamethrowerTrace
+{
+	class CManager;
+}
+
 class CFlamethrowerTraceManager;
 
 //коэфициенты и параметры патрона
@@ -154,7 +159,7 @@ protected:
 	typedef xr_vector<Fvector>	BulletPoints;
 	BulletPoints			m_bullet_points;
 
-	xr_set<CFlamethrowerTraceManager*> m_flamethrower_managers;
+	xr_set<FlamethrowerTrace::CManager*> m_flamethrower_managers;
 #endif // #ifdef DEBUG
 
 	//отрисовка трассеров от пуль
@@ -251,7 +256,7 @@ public:
 #ifdef DEBUG
 	void AddBulletMoveChunk(Fvector A, Fvector B);
 
-	void MarkFlamethrowerTraceToDraw(CFlamethrowerTraceManager* Manager);
+	void MarkFlamethrowerTraceToDraw(FlamethrowerTrace::CManager* Manager);
 #endif
 };
 

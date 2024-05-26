@@ -961,7 +961,17 @@ void CBulletManager::Render	()
 			Fmatrix	sphere = Fmatrix().scale(.05f, .05f, .05f);
 			for(auto& elem : m_flamethrower_managers)
 			{
-				auto RecentlyLaunched = elem->LastLaunched;
+				for(auto& Collision : elem->ActiveCollisions)
+				{
+					sphere.scale(
+						Collision->GetCurrentRadius(),
+						Collision->GetCurrentRadius(),
+						Collision->GetCurrentRadius()
+					);
+					sphere.c = Collision->GetPosition();
+					renderer.draw_ellipse(sphere, color_xrgb(255, 0, 0));
+				}
+				/*auto RecentlyLaunched = elem->LastLaunched;
 				if (!RecentlyLaunched)
 				{
 					continue;
@@ -996,7 +1006,7 @@ void CBulletManager::Render	()
 					renderer.draw_ellipse(sphere, color_xrgb(255, 0, 0));
 					RecentlyLaunched = PrevRecently;
 					PrevRecently = RecentlyLaunched->Prev;
-				} while (PrevRecently && PrevRecently->IsActive());
+				} while (PrevRecently && PrevRecently->IsActive());*/
 			}
 		}
 	}
@@ -1086,7 +1096,7 @@ void CBulletManager::AddBulletMoveChunk(Fvector A, Fvector B)
 	m_bullet_points.push_back(B);
 }
 
-void CBulletManager::MarkFlamethrowerTraceToDraw(CFlamethrowerTraceManager* Manager)
+void CBulletManager::MarkFlamethrowerTraceToDraw(FlamethrowerTrace::CManager* Manager)
 {
 	m_flamethrower_managers.insert(Manager);
 }
