@@ -2674,6 +2674,7 @@ CMD4(CCC_Integer,			"hit_anims_tune",						&tune_hit_anims,		0, 1);
 	CMD3(CCC_Mask,		"dbg_draw_rp",				&dbg_net_Draw_Flags,	dbg_draw_rp);
 	CMD3(CCC_Mask,		"dbg_draw_climbable",		&dbg_net_Draw_Flags,	dbg_draw_climbable);
 	CMD3(CCC_Mask,		"dbg_draw_skeleton",		&dbg_net_Draw_Flags,	dbg_draw_skeleton);
+	CMD4(CCC_Integer,	"activate_extended_debug",		&bDebug, 0, 1);
 
 
 	CMD3(CCC_Mask,		"dbg_draw_ph_contacts",			&ph_dbg_draw_mask,	phDbgDrawContacts);

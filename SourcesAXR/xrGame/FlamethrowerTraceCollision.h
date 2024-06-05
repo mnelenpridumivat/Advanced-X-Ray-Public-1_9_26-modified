@@ -142,8 +142,8 @@ namespace FlamethrowerTrace
 		float m_RadiusMaxTime = 0.0f;
 		float m_RadiusCollided = 0.0f;
 		float m_RadiusCollidedInterpTime = 0.0f;
-		float m_RadiusCollisionCoeff = 0.0f;
-		float m_RadiusCollisionCollidedCoeff = 0.0f;
+		Fvector m_RadiusCollisionCoeff{};
+		Fvector m_RadiusCollisionCollidedCoeff{};
 		Fvector CollidedParticlePivot{};
 		//float m_Velocity = 0.0f;
 		//float m_GravityVelocity = 0.0f;

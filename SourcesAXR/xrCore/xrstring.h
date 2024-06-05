@@ -140,7 +140,10 @@ struct transparent_string_equal
 	using is_transparent = void;
 	[[nodiscard]] bool operator()(const std::string_view lhs, const std::string_view rhs) const { return lhs == rhs; }
 	[[nodiscard]] bool operator()(const shared_str& lhs, const shared_str& rhs) const { return lhs == rhs; }
-	[[nodiscard]] bool operator()(const char* lhs, const char* rhs) const { return !strcmp(lhs, rhs); }
+	[[nodiscard]] bool operator()(const char* lhs, const char* rhs) const
+	{
+		return !std::strcmp(lhs, rhs);
+	}
 };
 
 template <typename Key, typename Value, class _Alloc = std::allocator<std::pair<const Key, Value>>>

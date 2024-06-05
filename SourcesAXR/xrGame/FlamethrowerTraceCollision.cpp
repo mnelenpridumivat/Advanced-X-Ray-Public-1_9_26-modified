@@ -301,10 +301,10 @@ void FlamethrowerTrace::CCollision::Update_AirToGround(float DeltaTime)
 		m_particle_size_handle.Set(Size);
 	}
 
-	auto Position = m_position;
-	Position.x -= m_CollidedParticlePivot.x * Size.x;
-	Position.y -= m_CollidedParticlePivot.y * Size.y;
-	Position.z -= m_CollidedParticlePivot.z * Size.z;
+	auto Position = AttachPoint->GetPosition();
+	Position.x -= CollidedParticlePivot.x * Size.x;
+	Position.y -= CollidedParticlePivot.y * Size.y;
+	Position.z -= CollidedParticlePivot.z * Size.z;
 	Fmatrix particles_pos = Fmatrix();
 	particles_pos.c.set(Position);
 	m_particles_ground->SetXFORM(particles_pos);
@@ -340,8 +340,8 @@ FlamethrowerTrace::CCollision::CCollision(FlamethrowerTrace::CManager* Manager) 
 	m_RadiusMax = pSettings->r_float(Manager->GetSection(), "RadiusMax");
 	m_RadiusCollided = pSettings->r_float(Manager->GetSection(), "RadiusCollided");
 	m_RadiusCollidedInterpTime = pSettings->r_float(Manager->GetSection(), "RadiusCollidedInterpTime");
-	m_RadiusCollisionCoeff = pSettings->r_float(Manager->GetSection(), "RadiusCollisionCoeff");
-	m_RadiusCollisionCollidedCoeff = pSettings->r_float(Manager->GetSection(), "RadiusCollisionCollidedCoeff");
+	m_RadiusCollisionCoeff = pSettings->r_fvector3(Manager->GetSection(), "RadiusCollisionCoeff");
+	m_RadiusCollisionCollidedCoeff = pSettings->r_fvector3(Manager->GetSection(), "RadiusCollisionCollidedCoeff");
 	m_RadiusMaxTime = pSettings->r_float(Manager->GetSection(), "RadiusMaxTime");
 	//m_Velocity = pSettings->r_float(section, "Velocity");
 	m_LifeTime = pSettings->r_float(Manager->GetSection(), "LifeTime");
@@ -369,7 +369,7 @@ void FlamethrowerTrace::CCollision::Load(LPCSTR section)
 	m_RadiusCollided = pSettings->r_float(section, "RadiusCollided");
 	m_RadiusCollidedInterpTime = pSettings->r_float(section, "RadiusCollidedInterpTime");
 	m_RadiusCollisionCoeff = pSettings->r_fvector3(section, "RadiusCollisionCoeff");
-	m_CollidedParticlePivot = pSettings->r_fvector3(section, "CollidedParticlePivot");
+	CollidedParticlePivot = pSettings->r_fvector3(section, "CollidedParticlePivot");
 	m_RadiusCollisionCollidedCoeff = pSettings->r_fvector3(section, "RadiusCollisionCollidedCoeff");
 	m_RadiusMaxTime = pSettings->r_float(section, "RadiusMaxTime");
 	//m_Velocity = pSettings->r_float(section, "Velocity");
@@ -763,8 +763,8 @@ void FlamethrowerTrace::CManager::UpdateOverlaps(float DeltaTime)
 	Fvector Center{};
 	float Radius = 0.0f;
 	uint16_t Num = 0;
-	Msg("InactiveCollisions num [%u]", InactiveCollisions.size());
-	Msg("ActiveCollisions num [%u]", ActiveCollisions.size());
+	//Msg("InactiveCollisions num [%u]", InactiveCollisions.size());
+	//Msg("ActiveCollisions num [%u]", ActiveCollisions.size());
 	if(!ActiveCollisions.empty()){
 		auto FirstElem = ActiveCollisions.front();
 		ActiveCollisions.pop_front();

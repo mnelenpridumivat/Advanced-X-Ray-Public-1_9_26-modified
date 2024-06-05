@@ -484,6 +484,35 @@ public:
 	{	// non normalized
 		return mad(dir,norm,-dir.dotproduct(norm));
 	}
+	IC	SelfRef rotate_axis_angle_deg(const T Angle, const SelfRef Axis)
+	{
+		rotate_axis_angle_rad(Angle * (PI / 180), Axis);
+	}
+	IC	SelfRef rotate_axis_angle_rad(const T Angle, const SelfRef Axis)
+	{
+		T S = std::sin(Angle);
+		T C = std::cos(Angle);
+
+		const T XX = Axis.x * Axis.x;
+		const T YY = Axis.y * Axis.y;
+		const T ZZ = Axis.z * Axis.z;
+
+		const T XY = Axis.x * Axis.y;
+		const T YZ = Axis.y * Axis.z;
+		const T ZX = Axis.z * Axis.x;
+
+		const T XS = Axis.x * S;
+		const T YS = Axis.y * S;
+		const T ZS = Axis.z * S;
+
+		const T OMC = 1.f - C;
+
+		return Self(
+			(OMC * XX + C) * x + (OMC * XY - ZS) * y + (OMC * ZX + YS) * z,
+			(OMC * XY + ZS) * x + (OMC * YY + C) * y + (OMC * YZ - XS) * z,
+			(OMC * ZX - YS) * x + (OMC * YZ + XS) * y + (OMC * ZZ + C) * z
+		);
+	}
     IC static void generate_orthonormal_basis(const _vector3<T>& dir, _vector3<T>& up, _vector3<T>& right)
     {
         T fInvLength;
@@ -534,6 +563,7 @@ public:
 			up.z		= -dir.y * right.x ;
 		}
 	}
+
 };
 typedef _vector3<float>		Fvector;
 typedef _vector3<float>		Fvector3;

@@ -64,7 +64,7 @@ public:
 
 public:
 #ifdef DEBUG
-	void				OnRender			() override;
+	virtual void				OnRender			() override;
 #endif
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
