@@ -106,7 +106,7 @@ void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvect
 			{
 				curr_env = e_target.name;
 #ifdef DEBUG
-				Msg("curr env [%s]", curr_env.c_str());
+				//Msg("curr env [%s]", curr_env.c_str());
 #endif
 			}
 		}

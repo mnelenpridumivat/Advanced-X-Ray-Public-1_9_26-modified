@@ -91,6 +91,8 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("center",						&CScriptGameObject::Center)
 		.def("position",					&CScriptGameObject::Position)
 		.def("direction",					&CScriptGameObject::Direction)
+		.def("right_direction", &CScriptGameObject::RightDirection)
+		.def("up_direction", &CScriptGameObject::UpDirection)
 		.def("clsid",						&CScriptGameObject::clsid)
 		.def("id",							&CScriptGameObject::ID)
 		.def("story_id",					&CScriptGameObject::story_id)

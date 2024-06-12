@@ -153,6 +153,8 @@ public:
 			Fvector				Center				();
 	_DECLARE_FUNCTION10	(Position	,	Fvector		);
 	_DECLARE_FUNCTION10	(Direction	,	Fvector		);
+	_DECLARE_FUNCTION10 (RightDirection, Fvector);
+	_DECLARE_FUNCTION10 (UpDirection, Fvector);
 	_DECLARE_FUNCTION10	(Mass		,	float		);
 	_DECLARE_FUNCTION10	(ID			,	u16			);
 	_DECLARE_FUNCTION10	(getVisible	,	BOOL		);

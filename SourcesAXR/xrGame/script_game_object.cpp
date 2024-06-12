@@ -61,6 +61,8 @@ Fvector	CScriptGameObject::Center()
 
 BIND_FUNCTION10	(&object(),	CScriptGameObject::Position,			CGameObject,	Position,			Fvector,						Fvector());
 BIND_FUNCTION10	(&object(),	CScriptGameObject::Direction,			CGameObject,	Direction,			Fvector,						Fvector());
+BIND_FUNCTION10	(&object(), CScriptGameObject::RightDirection, CGameObject, RightDirection, Fvector, Fvector());
+BIND_FUNCTION10	(&object(), CScriptGameObject::UpDirection, CGameObject, UpDirection, Fvector, Fvector());
 BIND_FUNCTION10	(&object(),	CScriptGameObject::Mass,		CPhysicsShellHolder,	GetMass,			float,							static_cast<float>(-1));
 BIND_FUNCTION10	(&object(),	CScriptGameObject::ID,					CGameObject,	ID,					u16,							static_cast<u16>(-1));
 BIND_FUNCTION10	(&object(),	CScriptGameObject::getVisible,			CGameObject,	getVisible,			BOOL,							FALSE);
