@@ -1277,6 +1277,7 @@
     <ClInclude Include="anticheat_dumpable_object.h" />
     <ClInclude Include="AntigasFilter.h" />
     <ClInclude Include="antirad.h" />
+    <ClInclude Include="ArtContainer.h" />
     <ClInclude Include="Artefact.h" />
     <ClInclude Include="ArtefactContainer.h" />
     <ClInclude Include="artefact_activation.h" />
@@ -1316,6 +1317,7 @@
     <ClInclude Include="Car.h" />
     <ClInclude Include="CarDamageParticles.h" />
     <ClInclude Include="CarLights.h" />
+    <ClInclude Include="ArtCombiner.h" />
     <ClInclude Include="CartrigeParam.h" />
     <ClInclude Include="CarWeapon.h" />
     <ClInclude Include="car_memory.h" />
@@ -4436,6 +4438,7 @@
     <ClCompile Include="AnomalyDetector.cpp" />
     <ClCompile Include="AntigasFilter.cpp" />
     <ClCompile Include="antirad.cpp" />
+    <ClCompile Include="ArtContainer.cpp" />
     <ClCompile Include="Artefact.cpp" />
     <ClCompile Include="ArtefactContainer.cpp" />
     <ClCompile Include="artefact_activation.cpp" />
@@ -4539,6 +4542,7 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <ClCompile Include="CarSound.cpp" />
+    <ClCompile Include="ArtCombiner.cpp" />
     <ClCompile Include="CarWeapon.cpp" />
     <ClCompile Include="CarWheels.cpp" />
     <ClCompile Include="car_memory.cpp" />

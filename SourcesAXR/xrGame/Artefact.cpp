@@ -36,7 +36,7 @@
 
 extern float af_from_container_charge_level;
 extern int af_from_container_rank;
-extern CArtefactContainer* m_LastAfContainer;
+extern CArtContainer* m_LastAfContainer;
 
 CArtefact::CArtefact() 
 {

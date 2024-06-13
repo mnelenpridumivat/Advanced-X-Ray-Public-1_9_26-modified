@@ -43,19 +43,19 @@ public:
 	CArtefact*				cast_artefact					() override {return this;}
 	u32						Cost							() const override;
 
-			float					GetHealthPower					() const { return m_fHealthRestoreSpeed; }
-			float					GetRadiationPower				() const { return m_fRadiationRestoreSpeed; }
-			float					GetSatietyPower					() const { return m_fSatietyRestoreSpeed; }
-			float					GetPowerPower					() const { return m_fPowerRestoreSpeed; }
-			float					GetBleedingPower				() const { return m_fBleedingRestoreSpeed; }
+	virtual float					GetHealthPower					() const { return m_fHealthRestoreSpeed; }
+	virtual float					GetRadiationPower				() const { return m_fRadiationRestoreSpeed; }
+	virtual float					GetSatietyPower					() const { return m_fSatietyRestoreSpeed; }
+	virtual float					GetPowerPower					() const { return m_fPowerRestoreSpeed; }
+	virtual float					GetBleedingPower				() const { return m_fBleedingRestoreSpeed; }
 
-			void					SetHealthPower					(float value) { m_fHealthRestoreSpeed = value; }
-			void					SetRadiationPower				(float value) { m_fRadiationRestoreSpeed = value; }
-			void					SetSatietyPower					(float value) { m_fSatietyRestoreSpeed = value; }
-			void					SetPowerPower					(float value) { m_fPowerRestoreSpeed = value; }
-			void					SetBleedingPower				(float value) { m_fBleedingRestoreSpeed = value; }
-	float GetImmunity(ALife::EHitType hit_type) { return m_ArtefactHitImmunities.GetHitImmunity(hit_type); }
-	void SetImmunity(ALife::EHitType hit_type, float val) { m_ArtefactHitImmunities.SetHitImmunity(hit_type, val); }
+	virtual void					SetHealthPower					(float value) { m_fHealthRestoreSpeed = value; }
+	virtual void					SetRadiationPower				(float value) { m_fRadiationRestoreSpeed = value; }
+	virtual void					SetSatietyPower					(float value) { m_fSatietyRestoreSpeed = value; }
+	virtual void					SetPowerPower					(float value) { m_fPowerRestoreSpeed = value; }
+	virtual void					SetBleedingPower				(float value) { m_fBleedingRestoreSpeed = value; }
+	virtual float GetImmunity(ALife::EHitType hit_type) { return m_ArtefactHitImmunities.GetHitImmunity(hit_type); }
+	virtual void SetImmunity(ALife::EHitType hit_type, float val) { m_ArtefactHitImmunities.SetHitImmunity(hit_type, val); }
 
 protected:
 	virtual void					UpdateCLChild					()		{};
@@ -90,7 +90,7 @@ public:
 	void					PhTune							(float step) override {};
 
 	float							m_additional_weight;
-	float							AdditionalInventoryWeight		() const {return m_additional_weight;}
+	virtual float							AdditionalInventoryWeight		() const {return m_additional_weight;}
 	bool							m_bCanSpawnZone;
 	float							m_fHealthRestoreSpeed;
 	float 							m_fRadiationRestoreSpeed;

@@ -63,6 +63,7 @@
 #define CLSID_AF_RUSTY_HAIR			MK_CLSID('A','F','_','R','H','A','I','R')
 #define CLSID_AF_GALANTINE			MK_CLSID('A','F','_','G','A','L','A','N')
 #define CLSID_AF_CTA				MK_CLSID('A','F','_','C','T','A',' ',' ')
+#define CLSID_AF_COMBINER			MK_CLSID('A','F','_','C','O','M','B','I')
 
 #define CLSID_ARTEFACT				MK_CLSID('A','R','T','E','F','A','C','T')
 
