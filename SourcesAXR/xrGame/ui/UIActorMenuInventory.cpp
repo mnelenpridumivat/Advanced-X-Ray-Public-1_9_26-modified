@@ -1930,7 +1930,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 	case ARTEFACT_TO_CONTAINER:
 		{
 			CArtefact* artefact = smart_cast<CArtefact*>(item);
-			CArtefactContainer* af_container = smart_cast<CArtefactContainer*>((PIItem)m_UIPropertiesBox->GetClickedItem()->GetData());
+			CArtContainer* af_container = smart_cast<CArtContainer*>((PIItem)m_UIPropertiesBox->GetClickedItem()->GetData());
 
 			if (!artefact || !af_container)
 				break;
@@ -1943,7 +1943,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case ARTEFACT_FROM_CONTAINER:
 		{
-			CArtefactContainer* af_container = smart_cast<CArtefactContainer*>(item);
+			CArtContainer* af_container = smart_cast<CArtContainer*>(item);
 			CArtefact* artefact = smart_cast<CArtefact*>((PIItem)m_UIPropertiesBox->GetClickedItem()->GetData());
 
 			if (!af_container)

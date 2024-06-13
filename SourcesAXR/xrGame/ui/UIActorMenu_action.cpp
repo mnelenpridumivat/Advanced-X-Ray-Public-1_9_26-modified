@@ -82,7 +82,7 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
 	{
 		CUICellItem* cell_item				= new_owner->GetCellItemUnderCursor();
 		PIItem item_in_cell					= cell_item ? (PIItem)cell_item->m_pData : nullptr;
-		CArtefactContainer* pAfContainer	= smart_cast<CArtefactContainer*>(item_in_cell);
+		CArtContainer* pAfContainer	= smart_cast<CArtContainer*>(item_in_cell);
 		CArtefact*	pArtefact				= smart_cast<CArtefact*>	(CurrentIItem());
 
 		if (old_owner == new_owner && item_in_cell && item_in_cell->CanAttach(CurrentIItem()))
