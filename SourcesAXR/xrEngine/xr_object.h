@@ -120,17 +120,19 @@ public:
 	ICF const Fvector&					Direction			() 			const	{ return renderable.xform.k;		}
 	ICF Fvector&						Position			() 					{ return renderable.xform.c;		}
 	ICF const Fvector&					Position			() 			const	{ return renderable.xform.c;		}
-	IC const Fvector					RightDirection		()			const
+	ICF const Fvector					RightDirection		()			const
 	{
-		Fvector RightDir;
+		return renderable.xform.i;
+		/*Fvector RightDir;
 		XFORM().transform_dir(RightDir, { 0.0f, 0.0f, 1.0f });
-		return RightDir;
+		return RightDir;*/
 	}
-	IC const Fvector					UpDirection			()			const
+	ICF const Fvector					UpDirection			()			const
 	{
-		Fvector RightDir;
+		return renderable.xform.j;
+		/*Fvector RightDir;
 		XFORM().transform_dir(RightDir, { 0.0f, 1.0f, 0.0f });
-		return RightDir;
+		return RightDir;*/
 	}
 	virtual float						Radius				()			const;
 	virtual const Fbox&					BoundingBox			()			const;

@@ -11,6 +11,7 @@
 #include "script_game_object.h"
 #include "../xrEngine/LightAnimLibrary.h"
 //#include "physicscommon.h"
+#include "debug_renderer.h"
 #include "ui_base.h"
 //50fps fixed
 float STEP=0.02f;
@@ -33,6 +34,15 @@ CHelicopter::~CHelicopter() {}
 void CHelicopter::setState(CHelicopter::EHeliState s)
 {
 	m_curState = s;
+	for(auto& elem : ActiveFlares)
+	{
+		elem->Deactivate();
+		xr_delete(elem);
+	}
+	for(auto& elem : InactiveFlares)
+	{
+		xr_delete(elem);
+	}
 }
 
 
@@ -122,6 +132,13 @@ void CHelicopter::Load(LPCSTR section)
 	LPCSTR lanim						= pSettings->r_string	(section,"light_color_animmator");
 	m_lanim								= LALib.FindItem(lanim);
 
+	FlaresPairsDropCount				= pSettings->r_u32(section, "flares_count");
+	FlaresDropDelay = pSettings->r_float(section, "flares_drop_delay");
+	FlareParticle = pSettings->r_string(section, "flare_particle");
+	FlareData.LifeTimeMax = pSettings->r_float(section, "flare_life_time");
+	FlareData.xzStartSpeed = pSettings->r_float(section, "flare_horiz_start_speed");
+	FlareData.xzSlowing = pSettings->r_float(section, "flare_horiz_slowing");
+	FlareData.GravitySpeed = pSettings->r_float(section, "flare_vertical_speed");
 
 }
 
@@ -417,10 +434,50 @@ void CHelicopter::UpdateCL()
 	}
 #endif
 
-	if(m_engineSound._feedback())
+	if (m_engineSound._feedback()) {
 		m_engineSound.set_position(XFORM().c);
-	
+	}
 
+	LastFlareDropTime += Device.fTimeDelta;
+	LastFlareDropTime = std::min(LastFlareDropTime, FlaresDropDelay);
+	if(RequestedDropFlaresCount > 0 && LastFlareDropTime >= FlaresDropDelay)
+	{
+		LastFlareDropTime -= FlaresDropDelay;
+		--RequestedDropFlaresCount;
+		//Fvector ForwardDir = Direction();
+		Fvector RightDir = RightDirection();
+		//Fvector RightDir = XFORM().i;
+		CHeliFlare* Flare = GetInactiveFlare();
+		Flare->SetTransform(XFORM());
+		Flare->SetDirection(RightDir);
+		Flare->Activate();
+		ActiveFlares.push_back(Flare);
+		Flare = GetInactiveFlare();
+		Flare->SetTransform(XFORM());
+		Flare->SetDirection(RightDir.invert());
+		Flare->Activate();
+		ActiveFlares.push_back(Flare);
+	}
+	if(!ActiveFlares.empty()){
+		CHeliFlare* StartFlare = ActiveFlares.front();
+		ActiveFlares.pop_front();
+		ActiveFlares.push_back(StartFlare);
+		CHeliFlare* CurrentFlare;
+		do
+		{
+			CurrentFlare = ActiveFlares.front();
+			ActiveFlares.pop_front();
+			if (CurrentFlare->IsExpired())
+			{
+				CurrentFlare->Deactivate();
+				InactiveFlares.push_back(CurrentFlare);
+			} else
+			{
+				CurrentFlare->Update(Device.fTimeDelta);
+				ActiveFlares.push_back(CurrentFlare);
+			}
+		} while (CurrentFlare != StartFlare);
+	}
 
 	m_enemy.Update();
 	//weapon
@@ -479,6 +536,12 @@ void CHelicopter::save(NET_Packet &output_packet)
 	save_data		(m_max_mgun_dist, output_packet);
 	save_data		(m_time_between_rocket_attack, output_packet);
 	save_data		(m_syncronize_rocket, output_packet);
+	save_data		(ActiveFlares.size(), output_packet);
+	for(auto& elem : ActiveFlares)
+	{
+		elem->save(output_packet);
+	}
+	save_data(InactiveFlares.size(), output_packet);
 }
 
 void CHelicopter::load(IReader &input_packet)
@@ -499,9 +562,117 @@ void CHelicopter::load(IReader &input_packet)
 	load_data		(m_max_mgun_dist, input_packet);
 	load_data		(m_time_between_rocket_attack, input_packet);
 	load_data		(m_syncronize_rocket, input_packet);
+	u32 Size;
+	load_data		(Size, input_packet);
+	for (u32 i = 0; i < Size; ++i) {
+		auto Flare = GetInactiveFlare();
+		Flare->load(input_packet);
+		ActiveFlares.push_back(Flare);
+	}
+	load_data		(Size, input_packet);
+	for (u32 i = 0; i < Size; ++i) {
+		InactiveFlares.push_back(GetInactiveFlare());
+	}
 }
 void CHelicopter::net_Relcase(CObject* O )
 {
 	CExplosive::net_Relcase(O);
 	inherited::net_Relcase(O);
+}
+void CHelicopter::DropFlares()
+{
+	RequestedDropFlaresCount += FlaresPairsDropCount;
+}
+CHeliFlare* CHelicopter::GetInactiveFlare()
+{
+	CHeliFlare* Flare;
+	if(InactiveFlares.empty())
+	{
+		Flare = xr_new<CHeliFlare>();
+		Flare->InitParticle(&FlareData, FlareParticle);
+	}else
+	{
+		Flare = InactiveFlares.front();
+		InactiveFlares.pop_front();
+	}
+	return Flare;
+}
+
+CHeliFlare::~CHeliFlare()
+{
+	CParticlesObject::Destroy(m_particles);
+}
+
+void CHeliFlare::InitParticle(Constants* constants_, xr_string ParticlesName)
+{
+	this->constants_ = constants_;
+	m_particles = CParticlesObject::Create(ParticlesName.c_str(), false);
+}
+
+void CHeliFlare::save(NET_Packet& output_packet)
+{
+	save_data(FlarePosition, output_packet);
+	save_data(FlareDirection, output_packet);
+	save_data(LifeTime, output_packet);
+}
+
+void CHeliFlare::load(IReader& input_packet)
+{
+	load_data(FlarePosition, input_packet);
+	load_data(FlareDirection, input_packet);
+	load_data(LifeTime, input_packet);
+
+	// вычислить позицию и направленность партикла
+	Fmatrix	matrix = Fmatrix();
+	matrix.c.set(FlarePosition);
+	m_particles->SetXFORM(matrix);
+}
+
+void CHeliFlare::SetTransform(Fmatrix xform)
+{
+	FlarePosition = xform.c;
+}
+
+void CHeliFlare::SetDirection(Fvector fvector)
+{
+	FlareDirection = fvector;
+}
+
+void CHeliFlare::Activate()
+{
+	CurrentSpeed = constants_->xzStartSpeed;
+	Fmatrix	matrix = Fmatrix();
+	matrix.c.set(FlarePosition);
+	m_particles->SetXFORM(matrix);
+	m_particles->Play(false);
+}
+
+void CHeliFlare::Deactivate()
+{
+	m_particles->Stop();
+	LifeTime = 0.0f;
+}
+
+void CHeliFlare::Update(float f_time_delta)
+{
+	LifeTime += f_time_delta;
+	Fvector DeltaMove = FlareDirection;
+	DeltaMove *= CurrentSpeed * f_time_delta;
+	CurrentSpeed -= constants_->xzSlowing * f_time_delta;
+	CurrentSpeed = std::max(0.0f, CurrentSpeed);
+	DeltaMove.y -= constants_->GravitySpeed * f_time_delta;
+	FlarePosition += DeltaMove;
+	Fmatrix	matrix = Fmatrix();
+	matrix.c.set(FlarePosition);
+	m_particles->SetXFORM(matrix);
+	/*Fmatrix m_sphere;
+	m_sphere.identity();
+	m_sphere.scale(0.25, 0.25, 0.25);
+	m_sphere.translate_add(FlarePosition);
+	Level().debug_renderer().draw_ellipse(m_sphere, color_xrgb(255, 0, 0));
+	m_sphere.identity();
+	m_sphere.scale(0.25, 0.25, 0.25);
+	m_particles->XFORM().getXYZ(DeltaMove);
+	m_sphere.translate_add(DeltaMove);
+	Level().debug_renderer().draw_ellipse(m_sphere, color_xrgb(0, 255, 0));*/
 }
