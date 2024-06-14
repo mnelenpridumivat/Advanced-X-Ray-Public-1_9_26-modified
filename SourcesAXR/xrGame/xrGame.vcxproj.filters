@@ -2554,6 +2554,9 @@
     <Filter Include="Core\Client\Objects\ArtContainer">
       <UniqueIdentifier>{cad29506-ff2c-4a84-991d-6bd7f69c2af5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Client\Objects\zones\EchoZone">
+      <UniqueIdentifier>{ef30cd34-0f24-4399-a6d9-747693547ee4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">
@@ -7605,11 +7608,8 @@
     <ClInclude Include="RepackerInterface.h">
       <Filter>Core\Client\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="ArtCombiner.h">
-      <Filter>Core\Client\Objects\items &amp; weapons\Artifacts\Combiner</Filter>
-    </ClInclude>
-    <ClInclude Include="ArtContainer.h">
-      <Filter>Core\Client\Objects\ArtContainer</Filter>
+    <ClInclude Include="EchoZone.h">
+      <Filter>Core\Client\Objects\zones\EchoZone</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -11401,11 +11401,8 @@
     <ClCompile Include="RepackerInterface.cpp">
       <Filter>Core\Client\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="ArtCombiner.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Artifacts\Combiner</Filter>
-    </ClCompile>
-    <ClCompile Include="ArtContainer.cpp">
-      <Filter>Core\Client\Objects\ArtContainer</Filter>
+    <ClCompile Include="EchoZone.cpp">
+      <Filter>Core\Client\Objects\zones\EchoZone</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
