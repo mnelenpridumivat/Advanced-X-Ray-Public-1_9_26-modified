@@ -27,6 +27,8 @@ public:
 	xr_vector<CArtefact*>	GetArtefactsInside() { return m_sArtefactsInside; }
 	bool					IsFull() const { return m_sArtefactsInside.size() >= m_iContainerSize; }
 
+	virtual	bool CanStoreArt(CArtefact* art);
+
 	void					PutArtefactToContainer(const CArtefact& artefact);
 	void					TakeArtefactFromContainer(CArtefact* artefact);
 };

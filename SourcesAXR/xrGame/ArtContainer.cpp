@@ -59,6 +59,11 @@ void CArtContainer::load(IReader& packet)
     }
 }
 
+bool CArtContainer::CanStoreArt(CArtefact* art)
+{
+    return true;
+}
+
 void CArtContainer::PutArtefactToContainer(const CArtefact& artefact)
 {
     CArtefact* af = xr_new<CArtefact>(artefact);

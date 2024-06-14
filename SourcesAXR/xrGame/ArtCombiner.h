@@ -18,14 +18,28 @@ public:
 	u32				Cost() const override;
 	float			Weight() const override;
 
+	virtual	bool CanStoreArt(CArtefact* art) override;
+
+	virtual bool				CheckInventoryIconItemSimilarity(CInventoryItem* other) override;
+
 	virtual float GetHealthPower() const override;
 	virtual float GetRadiationPower() const override;
 	virtual float GetSatietyPower() const override;
 	virtual float GetPowerPower() const override;
 	virtual float GetBleedingPower() const override;
 	virtual float AdditionalInventoryWeight() const override;
+	virtual float GetThirstPower() const override;
+	virtual float GetIntoxicationPower() const override;
+	virtual float GetSleepenessPower() const override;
+	virtual float GetAlcoholismPower() const override;
+	virtual float GetNarcotismPower() const override;
+	virtual float GetPsyHealthPower() const override;
+	virtual float GetJumpPower() const override;
+	virtual float GetWalkPower() const override;
 
 	virtual float GetImmunity(ALife::EHitType hit_type) override;
+
+	virtual float ArtAffectHit(float power, ALife::EHitType hit_type) override;
 
 };
 

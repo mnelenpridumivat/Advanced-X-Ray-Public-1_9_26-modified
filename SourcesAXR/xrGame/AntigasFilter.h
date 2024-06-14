@@ -28,6 +28,8 @@ public:
 	float					GetFilterCondition(void) const;
   
 	bool					UseAllowed();
+
+	virtual bool				CheckInventoryIconItemSimilarity(CInventoryItem* other) override;
   
 protected:
 	int						m_iPortionsNum;

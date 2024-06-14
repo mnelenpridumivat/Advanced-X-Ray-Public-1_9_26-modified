@@ -1581,6 +1581,23 @@ BOOL CInventoryItem::IsInvalid() const
 	return object().getDestroy() || GetDropManual();
 }
 
+bool CInventoryItem::CheckInventoryIconItemSimilarity(CInventoryItem* other)
+{
+	if (object().cNameSect() != other->object().cNameSect())
+	{
+		return false;
+	}
+	if (!fsimilar(GetCondition(), other->GetCondition(), 0.01f))
+	{
+		return false;
+	}
+	if (!equal_upgrades(other->upgardes()))
+	{
+		return false;
+	}
+	return true;
+}
+
 u16 CInventoryItem::object_id()const
 {
 	return object().ID();

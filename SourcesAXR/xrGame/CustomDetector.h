@@ -154,6 +154,8 @@ public:
 	void			ShowDetector		(bool bFastMode);
 	bool	CheckCompatibility	(CHudItem* itm) override;
 
+	virtual bool				CheckInventoryIconItemSimilarity(CInventoryItem* other) override;
+
 	u32		ef_detector_type	() const override {return 1;};
 
 			void	UpdateChargeLevel	(void);

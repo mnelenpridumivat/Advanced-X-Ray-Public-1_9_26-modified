@@ -146,6 +146,8 @@ public:
 	virtual float				Weight				() const	{ return m_weight;}	
 			void				SetWeight			(float w)	{ m_weight = w; }
 
+			virtual bool				CheckInventoryIconItemSimilarity(CInventoryItem* other);
+
 public:
 	CInventory*					m_pInventory;
 	shared_str					m_section_id;

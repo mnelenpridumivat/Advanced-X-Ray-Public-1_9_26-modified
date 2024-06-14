@@ -571,3 +571,14 @@ bool CCustomOutfit::IsNecessaryItem(const shared_str& item_sect, xr_vector<share
 {
 	return (std::find(item.begin(), item.end(), item_sect) != item.end());
 }
+
+bool CCustomOutfit::CheckInventoryIconItemSimilarity(CInventoryItem* other)
+{
+	if (!inherited::CheckInventoryIconItemSimilarity(other))
+	{
+		return false;
+	}
+	auto outfit = smart_cast<CCustomOutfit*>(other);
+	VERIFY(outfit);
+	return fsimilar(outfit->GetFilterCondition(), GetFilterCondition(), 0.01f);
+}

@@ -72,6 +72,8 @@ public:
 
 			float	get_range				() const;
 
+	virtual bool				CheckInventoryIconItemSimilarity(CInventoryItem* other) override;
+
 	//CAttachableItem
     void	enable					(bool value) override;
 

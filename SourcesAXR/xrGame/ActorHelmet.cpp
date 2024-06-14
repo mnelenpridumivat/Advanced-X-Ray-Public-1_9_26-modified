@@ -451,6 +451,17 @@ float CHelmet::HitThroughArmor(float hit_power, s16 element, float ap, bool& add
 	return NewHitPower;
 }
 
+bool CHelmet::CheckInventoryIconItemSimilarity(CInventoryItem* other)
+{
+	if (!inherited::CheckInventoryIconItemSimilarity(other))
+	{
+		return false;
+	}
+	auto helmet = smart_cast<CHelmet*>(other);
+	VERIFY(other);
+	return fsimilar(helmet->GetFilterCondition(), GetFilterCondition(), 0.01f);
+}
+
 float CHelmet::GetDegradationSpeed() const
 {
 	return m_fFilterDegradation;

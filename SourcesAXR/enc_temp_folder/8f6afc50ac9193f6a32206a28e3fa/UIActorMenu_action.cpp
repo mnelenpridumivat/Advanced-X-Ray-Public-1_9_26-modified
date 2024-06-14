@@ -98,6 +98,7 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
 				pAfContainer->PutArtefactToContainer(*pArtefact);
 
 				pArtefact->DestroyObject();
+				cell_item->Update();
 				return true;	
 			}
 		}

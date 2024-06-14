@@ -1363,7 +1363,7 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 	CBattery*		pBattery		= smart_cast<CBattery*>		(item);
 	CAntigasFilter* pFilter			= smart_cast<CAntigasFilter*>(item);
 	CRepairKit*		pRepairKit		= smart_cast<CRepairKit*>	(item);
-	CArtefactContainer* pAfContainer= smart_cast<CArtefactContainer*>(item);
+	CArtContainer* pAfContainer		= smart_cast<CArtContainer*>(item);
 	CArtefact*		pArtefact		= smart_cast<CArtefact*>	(item);
 	CSleepingBag*	pSleepingBag	= smart_cast<CSleepingBag*>	(item);
 
@@ -1430,11 +1430,11 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 	{
 		act_str = "st_use";
 	}
-	else if ( pBottleItem )
+	if ( pBottleItem )
 	{
 		act_str = "st_drink";
 	}
-	else if (pBattery)
+	if (pBattery)
 	{
 		if (item_in_torch_slot)
 		{
@@ -1461,7 +1461,7 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 		}
 		return;
 	}
-	else if (pFilter)
+	if (pFilter)
 	{
 		if (item_in_outfit_slot && outfit_use_filter )
 		{
@@ -1488,7 +1488,7 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 		}
 		return;
 	}
-	else if (pRepairKit)
+	if (pRepairKit)
 	{
 		if (item_in_outfit_slot && can_repair_outfit)
 		{
@@ -1547,7 +1547,7 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 		}
 		return;
 	}
-	else if (pArtefact)
+	if (pArtefact)
 	{
 		TIItemContainer::iterator it = inv->m_ruck.begin();
 		TIItemContainer::iterator ite = inv->m_ruck.end();
@@ -1565,7 +1565,7 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 			}
 		}
 	}
-	else if (pAfContainer && pAfContainer->GetArtefactsInside().size())
+	if (pAfContainer && pAfContainer->GetArtefactsInside().size())
 	{
 		for (auto af_in_container : pAfContainer->GetArtefactsInside())
 		{
@@ -1580,12 +1580,12 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 			}
 		}
 	}
-	else if (pSleepingBag)
+	if (pSleepingBag)
 	{
 		m_UIPropertiesBox->AddItem("st_use", nullptr, INVENTORY_SLEEP_ACTION);
 		b_show = true;
 	}
-	else if ( pEatableItem )
+	if ( pEatableItem )
 	{
 		CObject*	pObj			= smart_cast<CObject*>		(item);
 		shared_str	section_name	= pObj->cNameSect();
@@ -1932,8 +1932,9 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 			CArtefact* artefact = smart_cast<CArtefact*>(item);
 			CArtContainer* af_container = smart_cast<CArtContainer*>((PIItem)m_UIPropertiesBox->GetClickedItem()->GetData());
 
-			if (!artefact || !af_container)
+			if (!artefact || !af_container || !af_container->CanStoreArt(artefact)) {
 				break;
+			}
 
 			af_container->PutArtefactToContainer(*artefact);
 

@@ -38,6 +38,34 @@ float CArtCombiner::Weight() const
 	return res;
 }
 
+bool CArtCombiner::CanStoreArt(CArtefact* art)
+{
+	return smart_cast<CArtCombiner*>(art) == nullptr;
+}
+
+bool CArtCombiner::CheckInventoryIconItemSimilarity(CInventoryItem* other)
+{
+	if (!inherited::CheckInventoryIconItemSimilarity(other))
+	{
+		return false;
+	}
+	auto comb = smart_cast<CArtCombiner*>(other);
+	VERIFY(comb);
+	if(comb->m_sArtefactsInside.size() != m_sArtefactsInside.size())
+	{
+		return false;
+	}
+	xr_hash_set<xr_string> sections;
+	sections.reserve(m_sArtefactsInside.size() * 2);
+	for (const auto& art : m_sArtefactsInside) {
+		sections.insert(art->m_section_id.c_str());
+	}
+	for (const auto& art : comb->m_sArtefactsInside) {
+		sections.insert(art->m_section_id.c_str());
+	}
+	return sections.size() == m_sArtefactsInside.size();
+}
+
 float CArtCombiner::GetHealthPower() const
 {
 	auto base = CArtefact::GetHealthPower();
@@ -110,6 +138,102 @@ float CArtCombiner::AdditionalInventoryWeight() const
 	return base;
 }
 
+float CArtCombiner::GetThirstPower() const
+{
+	auto base = CArtefact::GetThirstPower();
+
+	for (const auto& artefact : m_sArtefactsInside)
+	{
+		base += artefact->GetThirstPower();
+	}
+
+	return base;
+}
+
+float CArtCombiner::GetIntoxicationPower() const
+{
+	auto base = CArtefact::GetIntoxicationPower();
+
+	for (const auto& artefact : m_sArtefactsInside)
+	{
+		base += artefact->GetIntoxicationPower();
+	}
+
+	return base;
+}
+
+float CArtCombiner::GetSleepenessPower() const
+{
+	auto base = CArtefact::GetSleepenessPower();
+
+	for (const auto& artefact : m_sArtefactsInside)
+	{
+		base += artefact->GetSleepenessPower();
+	}
+
+	return base;
+}
+
+float CArtCombiner::GetAlcoholismPower() const
+{
+	auto base = CArtefact::GetAlcoholismPower();
+
+	for (const auto& artefact : m_sArtefactsInside)
+	{
+		base += artefact->GetAlcoholismPower();
+	}
+
+	return base;
+}
+
+float CArtCombiner::GetNarcotismPower() const
+{
+	auto base = CArtefact::GetNarcotismPower();
+
+	for (const auto& artefact : m_sArtefactsInside)
+	{
+		base += artefact->GetNarcotismPower();
+	}
+
+	return base;
+}
+
+float CArtCombiner::GetPsyHealthPower() const
+{
+	auto base = CArtefact::GetPsyHealthPower();
+
+	for (const auto& artefact : m_sArtefactsInside)
+	{
+		base += artefact->GetPsyHealthPower();
+	}
+
+	return base;
+}
+
+float CArtCombiner::GetJumpPower() const
+{
+	auto base = CArtefact::GetJumpPower();
+
+	for (const auto& artefact : m_sArtefactsInside)
+	{
+		base *= artefact->GetJumpPower();
+	}
+
+	return base;
+}
+
+float CArtCombiner::GetWalkPower() const
+{
+	auto base = CArtefact::GetWalkPower();
+
+	for (const auto& artefact : m_sArtefactsInside)
+	{
+		base *= artefact->GetWalkPower();
+	}
+
+	return base;
+}
+
 float CArtCombiner::GetImmunity(ALife::EHitType hit_type)
 {
 	auto base = m_ArtefactHitImmunities.GetHitImmunity(hit_type);
@@ -117,6 +241,17 @@ float CArtCombiner::GetImmunity(ALife::EHitType hit_type)
 	for (const auto& artefact : m_sArtefactsInside)
 	{
 		base += artefact->GetImmunity(hit_type);
+	}
+	return base;
+}
+
+float CArtCombiner::ArtAffectHit(float power, ALife::EHitType hit_type)
+{
+	auto base = CArtefact::ArtAffectHit(power, hit_type);
+
+	for (const auto& artefact : m_sArtefactsInside)
+	{
+		base += artefact->ArtAffectHit(power, hit_type);
 	}
 	return base;
 }

@@ -177,6 +177,7 @@ template	<typename K, class V, class P=std::less<K>, typename allocator = xalloc
 template	<typename K, class V, class P=std::less<K>, typename allocator = xalloc<std::pair<const K,V> > >	class	xr_multimap		: public std::multimap<K,V,P,allocator>	{ public: u32 size() const {return (u32)__super::size(); } };
 
 template	<typename K, class V, class _Traits = std::equal_to<K>, typename allocator = xalloc<std::pair<const K,V> > >	class	xr_hash_map		: public std::unordered_map<K,V,std::hash<K>, _Traits,allocator>	{ public: u32 size() const {return (u32)__super::size(); } };
+template	<typename K, class _Traits = std::equal_to<K>, typename allocator = xalloc<K> >	class	xr_hash_set : public std::unordered_set<K, std::hash<K>, _Traits, allocator> { public: u32 size() const { return (u32)__super::size(); } };
 
 
 #endif
