@@ -2554,9 +2554,6 @@
     <Filter Include="Core\Client\Objects\ArtContainer">
       <UniqueIdentifier>{cad29506-ff2c-4a84-991d-6bd7f69c2af5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Client\Objects\zones\EchoZone">
-      <UniqueIdentifier>{cdaed93b-e189-419c-a9bb-c245acc6ac82}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">
@@ -7614,9 +7611,6 @@
     <ClInclude Include="ArtContainer.h">
       <Filter>Core\Client\Objects\ArtContainer</Filter>
     </ClInclude>
-    <ClInclude Include="EchoZone.h">
-      <Filter>Core\Client\Objects\zones\EchoZone</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -11412,9 +11406,6 @@
     </ClCompile>
     <ClCompile Include="ArtContainer.cpp">
       <Filter>Core\Client\Objects\ArtContainer</Filter>
-    </ClCompile>
-    <ClCompile Include="EchoZone.cpp">
-      <Filter>Core\Client\Objects\zones\EchoZone</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
