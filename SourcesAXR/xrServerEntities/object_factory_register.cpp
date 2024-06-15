@@ -15,6 +15,7 @@
 #include "xrServer_Objects_ALife_All.h"
 #include "xrServer_Objects_ALife_Smartcovers.h"
 #include "clsid_game.h"
+#include "EchoZone.h"
 #include "EmiZone.h"
 #include "MagnetZone.h"
 
@@ -401,6 +402,7 @@ void CObjectFactory::register_classes	()
 	ADD(CRadioactiveZone		,CSE_ALifeAnomalousZone			,CLSID_Z_RADIO					,"zone_radioactive");
 	ADD(CMagnetZone				,CSE_ALifeAnomalousZone			,CLSID_Z_MAGNET					,"zone_magnet");
 	ADD(CEmiZone				,CSE_ALifeAnomalousZone			,CLSID_Z_EMI					,"zone_emi");
+	ADD(CEchoZone				,CSE_ALifeAnomalousZone			,CLSID_Z_ECHO					,"zone_echo");
 	ADD(CHairsZone				,CSE_ALifeZoneVisual			,CLSID_Z_BFUZZ					,"zone_bfuzz");
 	ADD(CHairsZone				,CSE_ALifeZoneVisual			,CLSID_Z_RUSTYH					,"zone_rusty_hair");
 	ADD(CMosquitoBald			,CSE_ALifeAnomalousZone			,CLSID_Z_DEAD					,"zone_dead");

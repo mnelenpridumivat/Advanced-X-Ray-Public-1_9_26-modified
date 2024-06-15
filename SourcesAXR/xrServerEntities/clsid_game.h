@@ -149,6 +149,7 @@
 #define CLSID_Z_RADIO				MK_CLSID('Z','_','R','A','D','I','O',' ')
 #define CLSID_Z_MAGNET				MK_CLSID('Z','_','M','A','G','N','E','T')
 #define CLSID_Z_EMI					MK_CLSID('Z','_','E','M','I',' ',' ',' ')
+#define CLSID_Z_ECHO				MK_CLSID('Z','_','E','C','H','O',' ',' ')
 #define CLSID_Z_BFUZZ				MK_CLSID('Z','_','B','F','U','Z','Z',' ')
 #define CLSID_Z_RUSTYH				MK_CLSID('Z','_','R','U','S','T','Y','H')
 #define CLSID_Z_AMEBA				MK_CLSID('Z','_','A','M','E','B','A',' ')

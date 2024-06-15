@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+#include "EchoZone.h"
 #include "pch_script.h"
 #include "MagnetZone.h"
 
@@ -10,6 +12,8 @@ void CMagnetZone::script_register(lua_State* L)
 	module(L)
 		[
 			class_<CMagnetZone, CGameObject>("CMagnetZone")
-			.def(constructor<>())
+				.def(constructor<>()),
+			class_<CEchoZone, CGameObject>("CEchoZone")
+				.def(constructor<>())
 		];
 }
