@@ -39,6 +39,7 @@ namespace FlamethrowerTrace
 		struct TraceData {
 			CPoint* TracedObj = nullptr;
 			float HitDist;
+			bool Penetrate = false;
 		};
 
 		CManager* Manager = nullptr;

@@ -10,6 +10,7 @@
 #include "Level_Bullet_Manager.h"
 #include "seniority_hierarchy_space.h"
 #include "../xrParticles/psystem.h"
+#include "../xrEngine/gamemtllib.h"
 
 void FlamethrowerTrace::CPoint::UpdateAir(float delta_time)
 {
@@ -23,7 +24,7 @@ void FlamethrowerTrace::CPoint::UpdateAir(float delta_time)
 		collide::ray_defs RD(OldPos, PointPosition, CDB::OPT_FULL_TEST, collide::rqtBoth);
 		TraceData data;
 		data.TracedObj = this;
-		if (Level().ObjectSpace.RayQuery(storage, RD, FlamethrowerTrace::CPoint::hit_callback, &data, FlamethrowerTrace::CPoint::test_callback, nullptr))
+		if (Level().ObjectSpace.RayQuery(storage, RD, FlamethrowerTrace::CPoint::hit_callback, &data, FlamethrowerTrace::CPoint::test_callback, nullptr) && !data.Penetrate)
 		{
 			PointPosition = OldPos + PointDirection * data.HitDist;
 			State = ETraceState::AirToGround;
@@ -68,9 +69,16 @@ BOOL FlamethrowerTrace::CPoint::hit_callback(collide::rq_result& result, LPVOID 
 	TraceData* pData = static_cast<TraceData*>(params);
 	if (!result.O)
 	{
-		pData->HitDist = result.range;
-		return false;
+		CDB::TRI const& triangle = *(Level().ObjectSpace.GetStaticTris() + result.element);
+		SGameMtl* mtl = GMLib.GetMaterialByIdx(triangle.material);
+		if (!fsimilar(mtl->fShootFactor, 0.0f)) //≈сли материал полностью простреливаемый (кусты)
+		{
+			pData->HitDist = result.range;
+			return false;
+		}
+		//return false;
 	}
+	pData->Penetrate = true;
 	return true;
 }
 
