@@ -51,7 +51,7 @@ public:
 	~CSpaceRestrictor	() override;
 	BOOL				net_Spawn			(CSE_Abstract* data) override;
 	void				net_Destroy			() override;
-			bool				inside				(const Fsphere &sphere) const;
+	bool				inside				(const Fsphere &sphere) const;
 	void				Center				(Fvector &C) const override;
 	float				Radius				() const override;
 	BOOL				UsedAI_Locations	() override;

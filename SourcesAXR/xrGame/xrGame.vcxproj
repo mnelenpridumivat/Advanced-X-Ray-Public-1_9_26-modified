@@ -1551,7 +1551,6 @@
     <ClInclude Include="HairsZone.h" />
     <ClInclude Include="HangingLamp.h" />
     <ClInclude Include="harvest_time.h" />
-    <ClInclude Include="EchoZone.h" />
     <ClInclude Include="helicopter.h" />
     <ClInclude Include="Hit.h" />
     <ClInclude Include="HitMarker.h" />
@@ -1677,6 +1676,7 @@
     <ClInclude Include="MilitaryOutfit.h" />
     <ClInclude Include="Mincer.h" />
     <ClInclude Include="Missile.h" />
+    <ClInclude Include="MissileSam.h" />
     <ClInclude Include="mixed_delegate.h" />
     <ClInclude Include="mixed_delegate_unique_tags.h" />
     <ClInclude Include="monster_community.h" />
@@ -1872,6 +1872,7 @@
     <ClInclude Include="RustyHairArtifact.h" />
     <ClInclude Include="safe_map_iterator.h" />
     <ClInclude Include="safe_map_iterator_inline.h" />
+    <ClInclude Include="SamZone.h" />
     <ClInclude Include="saved_game_wrapper.h" />
     <ClInclude Include="saved_game_wrapper_inline.h" />
     <ClInclude Include="ScientificOutfit.h" />
@@ -4768,7 +4769,6 @@
     <ClCompile Include="eatable_item.cpp" />
     <ClCompile Include="eatable_item_object.cpp" />
     <ClCompile Include="eatable_item_object_script.cpp" />
-    <ClCompile Include="EchoZone.cpp" />
     <ClCompile Include="EffectorBobbing.cpp" />
     <ClCompile Include="EffectorFall.cpp" />
     <ClCompile Include="EffectorShot.cpp" />
@@ -5907,6 +5907,7 @@
     </ClCompile>
     <ClCompile Include="min_obb.cpp" />
     <ClCompile Include="Missile.cpp" />
+    <ClCompile Include="MissileSam.cpp" />
     <ClCompile Include="monster_community.cpp" />
     <ClCompile Include="MosquitoBald.cpp" />
     <ClCompile Include="MosquitoBald_script.cpp">
@@ -6486,6 +6487,7 @@
     </ClCompile>
     <ClCompile Include="RocketLauncher.cpp" />
     <ClCompile Include="RustyHairArtifact.cpp" />
+    <ClCompile Include="SamZone.cpp" />
     <ClCompile Include="saved_game_wrapper.cpp" />
     <ClCompile Include="saved_game_wrapper_script.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch_script.h</PrecompiledHeaderFile>

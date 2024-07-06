@@ -664,7 +664,8 @@ void CHeliFlare::Update(float f_time_delta)
 	FlarePosition += DeltaMove;
 	Fmatrix	matrix = Fmatrix();
 	matrix.c.set(FlarePosition);
-	m_particles->SetXFORM(matrix);
+	//m_particles->SetXFORM(matrix);
+	m_particles->UpdateParent(matrix, DeltaMove * 0.5f);
 	/*Fmatrix m_sphere;
 	m_sphere.identity();
 	m_sphere.scale(0.25, 0.25, 0.25);

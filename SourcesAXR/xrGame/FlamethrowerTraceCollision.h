@@ -260,6 +260,9 @@ namespace FlamethrowerTrace
 		BOOL	feel_touch_contact(CObject* O) override;
 	
 		void Load(LPCSTR section);
+
+		void save(NET_Packet& output_packet);
+		void load(IReader& input_packet);
 	
 		void UpdateOverlaps(float DeltaTime);
 		void UpdatePoints(float DeltaTime);

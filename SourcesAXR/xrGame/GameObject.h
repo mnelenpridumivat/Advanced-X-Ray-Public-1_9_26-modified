@@ -1,4 +1,4 @@
-// GameObject.h: interface for the CGameObject class.
+// GameObject.h: interface for the SAM_ZN_S class.
 //
 //////////////////////////////////////////////////////////////////////
 

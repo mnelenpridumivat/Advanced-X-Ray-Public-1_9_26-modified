@@ -9,6 +9,7 @@
 #include "pch_script.h"
 #include "level.h"
 #include "actor.h"
+#include "ai_object_location.h"
 #include "script_game_object.h"
 #include "patrol_path_storage.h"
 #include "xrServer.h"
@@ -42,6 +43,7 @@
 #include "../xrEngine/Rain.h"
 
 #include "CustomTimer.h"
+#include "SamZone.h"
 
 using namespace luabind;
 bool g_block_all_except_movement = false;
@@ -1205,6 +1207,30 @@ int get_custom_timer(LPCSTR name)
 	return Actor()->TimerManager->GetTimerValue(name);
 }
 
+void launch_sam(CScriptGameObject* launch_object, CScriptGameObject* target)
+{
+	if (!launch_object)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "launch_sam: launch object is NULL!");
+		return;
+	}
+	auto sam = smart_cast<CSamZone*>(&launch_object->object());
+	if(!sam)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "launch_sam: launch object is not a CSamZone!");
+		return;
+	}
+	if (!target)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "target_sam: target is NULL!");
+		return;
+	}
+	if (OnClient()) {
+		return;
+	}
+	sam->LaunchMissile(&target->object());
+}
+
 std::string get_moon_phase()
 {
 	return Level().GetMoonPhase().c_str();
@@ -1354,7 +1380,9 @@ void CLevel::script_register(lua_State *L)
 		def("stop_custom_timer",				&stop_custom_timer),
 		def("reset_custom_timer",				&reset_custom_timer),
 		def("delete_custom_timer",				&delete_custom_timer),
-		def("get_custom_timer",					&get_custom_timer)
+		def("get_custom_timer",					&get_custom_timer),
+
+		def("launch_sam",						&launch_sam)
 	],
 	
 	module(L,"actor_stats")

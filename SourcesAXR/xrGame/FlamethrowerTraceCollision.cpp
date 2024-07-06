@@ -766,6 +766,14 @@ void FlamethrowerTrace::CManager::Load(LPCSTR section)
 	}
 }
 
+void FlamethrowerTrace::CManager::save(NET_Packet& output_packet)
+{
+}
+
+void FlamethrowerTrace::CManager::load(IReader& input_packet)
+{
+}
+
 void FlamethrowerTrace::CManager::UpdateOverlaps(float DeltaTime)
 {
 	Fvector Center{};

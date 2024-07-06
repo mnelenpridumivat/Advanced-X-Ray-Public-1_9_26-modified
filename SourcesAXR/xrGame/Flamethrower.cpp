@@ -1597,6 +1597,7 @@ void CFlamethrower::save(NET_Packet& output_packet)
 	save_data(m_current_charge, output_packet);
 	save_data(m_current_fuel_level, output_packet);
 	save_data(m_fuel_section_name, output_packet);
+	TraceManager->save(output_packet);
 }
 
 void CFlamethrower::load(IReader& input_packet)
@@ -1607,6 +1608,7 @@ void CFlamethrower::load(IReader& input_packet)
 	load_data(m_current_charge, input_packet);
 	load_data(m_current_fuel_level, input_packet);
 	load_data(m_fuel_section_name, input_packet);
+	TraceManager->load(input_packet);
 }
 
 void CFlamethrower::SpawnFuelCanister(float Condition, LPCSTR ammoSect, u32 ParentID)
