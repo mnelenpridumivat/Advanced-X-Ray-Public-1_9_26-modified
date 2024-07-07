@@ -78,6 +78,15 @@ struct hdrCFORM
 	Fbox	aabb;
 };
 
+inline IReader& operator>>(IReader& reader, hdrCFORM& data)
+{
+	data.version = reader.r_u32();
+	data.vertcount = reader.r_u32();
+	data.facecount = reader.r_u32();
+	reader >> data.aabb;
+	return reader;
+}
+
 struct	hdrNODES
 {
 	u32		version;

@@ -288,7 +288,11 @@ public:
 	};
 
 public:
+//protected:
+//#pragma deprecated(r)
 	void			r			(void *p,int cnt);
+
+public:
 
 	void			r_string	(char *dest, u32 tgt_sz);
 	void			r_string	(xr_string& dest);
@@ -314,6 +318,21 @@ public:
 private:
 	typedef IReaderBase<IReader>	inherited;
 };
+
+inline IReader& operator>>(IReader& reader, Fvector& data)
+{
+	data.x = reader.r_float();
+	data.y = reader.r_float();
+	data.z = reader.r_float();
+	return reader;
+}
+
+inline IReader& operator>>(IReader& reader, Fbox& data)
+{
+	reader >> data.min;
+	reader >> data.max;
+	return reader;
+}
 
 class XRCORE_API CVirtualFileRW : public IReader
 {

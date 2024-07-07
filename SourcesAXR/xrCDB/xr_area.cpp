@@ -123,7 +123,8 @@ void CObjectSpace::Load(IReader* F,
 	CDB::deserialize_callback deserialize_callback)
 {
 	hdrCFORM					H;
-	F->r						(&H,sizeof(hdrCFORM));
+	(*F) >> H;
+	//F->r						(&H,sizeof(hdrCFORM));
 	Fvector*	verts			= (Fvector*)F->pointer();
 	CDB::TRI*	tris			= (CDB::TRI*)(verts+H.vertcount);
 	Static.set_version(F->get_age());
