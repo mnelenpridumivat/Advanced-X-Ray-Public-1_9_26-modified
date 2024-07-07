@@ -314,6 +314,14 @@ struct b_portal
 	svector<Fvector,6>	vertices;
 };
 
+inline IReader& operator>>(IReader& reader, b_portal& data)
+{
+	data.sector_front = reader.r_u16();
+	data.sector_back = reader.r_u16();
+	reader.r(&data.vertices, sizeof(data.vertices));
+	return reader;
+}
+
 void CRender::LoadSectors(IReader* fs)
 {
 	// allocate memory for portals
@@ -372,10 +380,11 @@ void CRender::LoadSectors(IReader* fs)
 
 		CDB::Collector	CL;
 		fs->find_chunk	(fsL_PORTALS);
-		for (i=0; i<count; i++)
+		for (u32 i=0; i<count; i++)
 		{
 			b_portal	P;
-			fs->r		(&P,sizeof(P));
+			(*fs) >> P;
+			//fs->r		(&P,sizeof(P));
 			CPortal*	__P	= (CPortal*)Portals[i];
 			__P->Setup	(P.vertices.begin(),P.vertices.size(),
 				(CSector*)getSector(P.sector_front),

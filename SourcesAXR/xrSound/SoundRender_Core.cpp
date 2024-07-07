@@ -252,7 +252,10 @@ void CSoundRender_Core::set_geometry_som(IReader* I)
 	CDB::Collector				CL;			
 	while (!geom->eof()){
 		SOM_poly				P;
-		geom->r					(&P,sizeof(P));
+		(*geom) >> P.v1 >> P.v2 >> P.v3;
+		P.b2sided = geom->r_u32();
+		P.occ = geom->r_float();
+		//geom->r					(&P,sizeof(P));
 		CL.add_face_packed_D	(P.v1,P.v2,P.v3,*(u32*)&P.occ,0.01f);
 		if (P.b2sided)
 			CL.add_face_packed_D(P.v3,P.v2,P.v1,*(u32*)&P.occ,0.01f);
@@ -300,7 +303,8 @@ void CSoundRender_Core::set_geometry_env(IReader* I)
 	IReader* geom		= xr_new<IReader>(_data, geom_ch->length(), 0);
 	
 	hdrCFORM realCform;
-	geom->r(&realCform, sizeof(hdrCFORM));
+	(*geom) >> realCform;
+	//geom->r(&realCform, sizeof(hdrCFORM));
 
 	Fvector* verts = (Fvector*)geom->pointer();
 	CDB::TRI* tris = (CDB::TRI*)(verts + realCform.vertcount);

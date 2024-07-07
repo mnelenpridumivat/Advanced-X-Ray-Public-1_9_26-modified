@@ -98,7 +98,8 @@ void dx103DFluidData::Load(IReader *data)
 	data->r_string(Profile);
 
 	//	Prepare transform
-	data->r( &m_Transform, sizeof(m_Transform) );
+	(*data) >> m_Transform;
+	//data->r( &m_Transform, sizeof(m_Transform) );
 
 	//	Read obstacles
 	u32 uiObstCnt = data->r_u32();
@@ -106,7 +107,8 @@ void dx103DFluidData::Load(IReader *data)
 	for(u32 i=0; i<uiObstCnt; ++i)
 	{
 		Fmatrix		ObstTransform;
-		data->r( &ObstTransform, sizeof(ObstTransform) );
+		(*data) >> ObstTransform;
+		//data->r( &ObstTransform, sizeof(ObstTransform) );
 		m_Obstacles.push_back(ObstTransform);
 	}
 
