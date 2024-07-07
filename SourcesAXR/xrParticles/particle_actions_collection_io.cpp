@@ -19,7 +19,8 @@ void ParticleAction::Save	(IWriter& F)
 void PAAvoid::Load			(IReader& F)
 {
 	ParticleAction::Load	(F);
-    F.r				(&position,sizeof(pDomain));
+	F >> position;
+    //F.r				(&position,sizeof(pDomain));
     look_ahead		= F.r_float();
     magnitude		= F.r_float();
     epsilon			= F.r_float();
@@ -37,7 +38,8 @@ void PAAvoid::Save			(IWriter& F)
 void PABounce::Load			(IReader& F)
 {
 	ParticleAction::Load   	(F);
-    F.r				(&position,sizeof(pDomain));
+	F >> position;
+    //F.r				(&position,sizeof(pDomain));
     oneMinusFriction= F.r_float();
     resilience		= F.r_float();
     cutoffSqr		= F.r_float();
@@ -146,7 +148,8 @@ void PAJet::Load			(IReader& F)
 {
 	ParticleAction::Load	(F);
 	F.r_fvector3	(center);
-	F.r				(&acc,sizeof(pDomain));
+	F >> acc;
+	//F.r				(&acc,sizeof(pDomain));
 	magnitude		= F.r_float();
 	epsilon			= F.r_float();
 	max_radius		= F.r_float();
@@ -242,7 +245,8 @@ void PAOrbitPoint::Save		(IWriter& F)
 void PARandomAccel::Load	(IReader& F)
 {
 	ParticleAction::Load	(F);
-    F.r				(&gen_acc,sizeof(pDomain));
+	F >> gen_acc;
+    //F.r				(&gen_acc,sizeof(pDomain));
     gen_accL		= gen_acc;
 }
 void PARandomAccel::Save	(IWriter& F)
@@ -254,7 +258,8 @@ void PARandomAccel::Save	(IWriter& F)
 void PARandomDisplace::Load	(IReader& F)
 {
 	ParticleAction::Load  	(F);
-    F.r				(&gen_disp,sizeof(pDomain));
+	F >> gen_disp;
+    //F.r				(&gen_disp,sizeof(pDomain));
     gen_dispL		= gen_disp;
 }
 void PARandomDisplace::Save	(IWriter& F)
@@ -266,7 +271,8 @@ void PARandomDisplace::Save	(IWriter& F)
 void PARandomVelocity::Load	(IReader& F)
 {
 	ParticleAction::Load   	(F);
-    F.r				(&gen_vel,sizeof(pDomain));
+	F >> gen_vel;
+    //F.r				(&gen_vel,sizeof(pDomain));
     gen_velL		= gen_vel;
 }
 void PARandomVelocity::Save	(IWriter& F)
@@ -308,7 +314,8 @@ void PASink::Load			(IReader& F)
 {
 	ParticleAction::Load 	(F);
 	kill_inside		= F.r_u32();
-    F.r				(&position,sizeof(pDomain));
+	F >> position;
+    //F.r				(&position,sizeof(pDomain));
     positionL		= position;
 }
 void PASink::Save			(IWriter& F)
@@ -322,7 +329,8 @@ void PASinkVelocity::Load  	(IReader& F)
 {
 	ParticleAction::Load   	(F);
 	kill_inside		= F.r_u32();
-    F.r				(&velocity,sizeof(pDomain));
+	F >> velocity;
+    //F.r				(&velocity,sizeof(pDomain));
     velocityL		= velocity;
 }
 void PASinkVelocity::Save  	(IWriter& F)
@@ -348,11 +356,16 @@ void PASpeedLimit::Save		(IWriter& F)
 void PASource::Load			(IReader& F)
 {
 	ParticleAction::Load 	(F);
-    F.r				(&position,sizeof(pDomain));
-    F.r				(&velocity,sizeof(pDomain));
-    F.r				(&rot,sizeof(pDomain));
-    F.r				(&size,sizeof(pDomain));
-    F.r				(&color,sizeof(pDomain));
+	F >> position;
+    //F.r				(&position,sizeof(pDomain));
+	F >> velocity;
+    //F.r				(&velocity,sizeof(pDomain));
+	F >> rot;
+    //F.r				(&rot,sizeof(pDomain));
+	F >> size;
+    //F.r				(&size,sizeof(pDomain));
+	F >> color;
+    //F.r				(&color,sizeof(pDomain));
 	alpha			= F.r_float();
 	particle_rate	= F.r_float();
 	age				= F.r_float();
