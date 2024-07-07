@@ -20,7 +20,27 @@
 #include "../xrRender/blender_particle.h"
 
 IBlender*	CRender::blender_create	(CLASS_ID cls)
-{	
+{
+/*#ifdef DEBUG
+	if(cls == B_DEFAULT)			return xr_new<CBlender_default>();
+	if(cls == B_DEFAULT_AREF)	return xr_new<CBlender_default_aref>();
+	if(cls == B_VERT)			return xr_new<CBlender_Vertex>();
+	if(cls == B_VERT_AREF)		return xr_new<CBlender_Vertex_aref>();
+	if(cls == B_SCREEN_SET)		return xr_new<CBlender_Screen_SET>();
+	if(cls == B_SCREEN_GRAY)		return xr_new<CBlender_Screen_GRAY>();
+	if(cls == B_EDITOR_WIRE)		return xr_new<CBlender_Editor_Wire>();
+	if(cls == B_EDITOR_SEL)		return xr_new<CBlender_Editor_Selection>();
+	if(cls == B_LaEmB)			return xr_new<CBlender_LaEmB>();
+	if(cls == B_LmEbB)			return xr_new<CBlender_LmEbB>();
+	if(cls == B_BmmD)			return xr_new<CBlender_BmmD>();
+	if(cls == B_SHADOW_WORLD)	return xr_new<CBlender_ShWorld>();
+	if(cls == B_BLUR)			return xr_new<CBlender_Blur>();
+	if(cls == B_MODEL)			return xr_new<CBlender_Model>();
+	if(cls == B_MODEL_EbB)		return xr_new<CBlender_Model_EbB>();
+	if(cls == B_DETAIL)			return xr_new<CBlender_Detail_Still>();
+	if(cls == B_TREE)			return xr_new<CBlender_Tree>();
+	if(cls == B_PARTICLE)		return xr_new<CBlender_Particle>();
+#else*/
 	switch (cls)
 	{
 	case B_DEFAULT:			return xr_new<CBlender_default>			();		
@@ -42,6 +62,7 @@ IBlender*	CRender::blender_create	(CLASS_ID cls)
 	case B_TREE:			return xr_new<CBlender_Tree>			();	
 	case B_PARTICLE:		return xr_new<CBlender_Particle>		();
 	}
+//#endif
 	return 0;
 }
 
