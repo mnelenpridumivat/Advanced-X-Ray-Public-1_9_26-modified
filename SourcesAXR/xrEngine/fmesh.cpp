@@ -166,11 +166,14 @@ void ogf_desc::Load(IReader& F)
 {
 	F.r_stringZ	(source_file);
     F.r_stringZ	(build_name);
-    F.r			(&build_time,sizeof(build_time));
+	build_time = F.r_s64();
+    //F.r			(&build_time,sizeof(build_time));
     F.r_stringZ	(create_name);
-    F.r			(&create_time,sizeof(create_time));
+	create_time = F.r_s64();
+    //F.r			(&create_time,sizeof(create_time));
     F.r_stringZ	(modif_name);
-    F.r			(&modif_time,sizeof(modif_time));
+	modif_time = F.r_s64();
+    //F.r			(&modif_time,sizeof(modif_time));
 }
 void ogf_desc::Save(IWriter& F)
 {

@@ -153,7 +153,9 @@ void CEnvelope::Save(IWriter& F)
 void CEnvelope::Load_1(IReader& F)
 {
 	Clear		();
-	F.r			(behavior,sizeof(int)*2);
+    behavior[0] = F.r_s32();
+    behavior[1] = F.r_s32();
+	//F.r			(behavior,sizeof(int)*2);
     int y		= F.r_u32();
 	keys.resize	(y);
 	for (u32 i=0; i<keys.size(); i++){

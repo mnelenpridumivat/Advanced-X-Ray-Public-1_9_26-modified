@@ -395,8 +395,10 @@ IC	void CPlanner::load	(IReader &packet)
 		GraphEngineSpace::_solver_condition_type	condition;
 		GraphEngineSpace::_solver_value_type		value;
 		for (u32 i=0; i<count; ++i) {
-			packet.r				(&condition,sizeof(condition));
-			packet.r				(&value,sizeof(value));
+			condition = packet.r_u32();
+			value = packet.r_bool();
+			//packet.r				(&condition,sizeof(condition));
+			//packet.r				(&value,sizeof(value));
 			m_storage.set_property	(condition,value);
 		}
 	}

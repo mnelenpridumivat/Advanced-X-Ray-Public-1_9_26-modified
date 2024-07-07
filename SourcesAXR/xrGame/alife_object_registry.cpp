@@ -96,8 +96,9 @@ CSE_ALifeDynamicObject *CALifeObjectRegistry::get_object		(IReader &file_stream)
 	NET_Packet				tNetPacket;
 	u16						u_id;
 	// Spawn
-	tNetPacket.B.count		= file_stream.r_u16();
-	file_stream.r			(tNetPacket.B.data,tNetPacket.B.count);
+	//tNetPacket.B.count		= file_stream.r_u16();
+	file_stream >> tNetPacket.B;
+	//file_stream.r			(tNetPacket.B.data,tNetPacket.B.count);
 	tNetPacket.r_begin		(u_id);
 	R_ASSERT2				(M_SPAWN==u_id,"Invalid packet ID (!= M_SPAWN)");
 
@@ -116,8 +117,9 @@ CSE_ALifeDynamicObject *CALifeObjectRegistry::get_object		(IReader &file_stream)
 	tpALifeDynamicObject->Spawn_Read(tNetPacket);
 
 	// Update
-	tNetPacket.B.count		= file_stream.r_u16();
-	file_stream.r			(tNetPacket.B.data,tNetPacket.B.count);
+	file_stream >> tNetPacket.B;
+	//tNetPacket.B.count		= file_stream.r_u16();
+	//file_stream.r			(tNetPacket.B.data,tNetPacket.B.count);
 	tNetPacket.r_begin		(u_id);
 	R_ASSERT2				(M_UPDATE==u_id,"Invalid packet ID (!= M_UPDATE)");
 	tpALifeDynamicObject->UPDATE_Read(tNetPacket);

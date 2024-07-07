@@ -83,7 +83,11 @@ struct st_Key{
         tension		= F.r_float();
         continuity	= F.r_float();
         bias		= F.r_float();
-        F.r			(&param,sizeof(float)*4);
+        for(int i = 0; i < 4; ++i)
+        {
+            param[i] = F.r_float();
+        }
+        //F.r			(&param,sizeof(float)*4);
     }
 	IC void		Load_2		(IReader& F)
     {

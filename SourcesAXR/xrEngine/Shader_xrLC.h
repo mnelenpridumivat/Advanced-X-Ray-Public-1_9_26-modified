@@ -46,6 +46,16 @@ public:
 	}
 };
 
+inline IReader& operator>>(IReader& reader, Shader_xrLC& data)
+{
+	reader.r_stringZ(data.Name, 128);
+	reader >> data.m_Flags;
+	data.vert_translucency = reader.r_float();
+	data.vert_ambient = reader.r_float();
+	data.lm_density = reader.r_float();
+	return reader;
+}
+
 DEFINE_VECTOR(Shader_xrLC,Shader_xrLCVec,Shader_xrLCIt);
 class Shader_xrLC_LIB
 {
@@ -67,7 +77,11 @@ public:
 		int count			= fs->length()/sizeof(Shader_xrLC);
 		R_ASSERT			(int(fs->length()) == int(count*sizeof(Shader_xrLC)));
 		library.resize		(count);
-		fs->r				(&*library.begin(),fs->length());
+		for(int i = 0; i < fs->length(); ++i)
+		{
+			(*fs)>>library[i];
+		}
+		//fs->r				(&*library.begin(),fs->length());
         FS->r_close			(fs);
 	}
 	bool					Save	(LPCSTR name)

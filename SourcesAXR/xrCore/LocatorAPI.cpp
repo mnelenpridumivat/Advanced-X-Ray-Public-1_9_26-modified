@@ -367,7 +367,11 @@ void CLocatorAPI::LoadArchive(archive& A, LPCSTR entrypoint)
 		VERIFY			(buffer_size < sizeof(name) + 4*sizeof(u32));
 		VERIFY			(buffer_size < sizeof(buffer_start));
 		u8				*buffer = (u8*)&*buffer_start;
-		hdr->r			(buffer,buffer_size);
+		for(u16 i = 0; i < buffer_size; ++i)
+		{
+			buffer[i] = hdr->r_u8();
+		}
+		//hdr->r			(buffer,buffer_size);
 
 		u32 size_real	= *(u32*)buffer;
 		buffer			+= sizeof(size_real);

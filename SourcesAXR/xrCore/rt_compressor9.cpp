@@ -37,11 +37,18 @@ rtc9_initialize()
 		IReader*    reader = FS.r_open( file_name );
 		
 		R_ASSERT(reader);
+
+		using DictType = u8;
 		
 		_LZO_DictionarySize = reader->length();
-		_LZO_Dictionary     = (u8*)xr_malloc(_LZO_DictionarySize);
+		_LZO_Dictionary     = (DictType*)xr_malloc(_LZO_DictionarySize);
+
+		for(u32 i = 0; i < _LZO_DictionarySize; ++i)
+		{
+			_LZO_Dictionary[i] = reader->r_u8();
+		}
 		
-		reader->r( _LZO_Dictionary, _LZO_DictionarySize );
+		//reader->r( _LZO_Dictionary, _LZO_DictionarySize );
 		FS.r_close( reader );
 
         Msg( "using LZO-dictionary \"%s\"", file_name );

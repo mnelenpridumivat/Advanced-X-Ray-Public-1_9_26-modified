@@ -64,7 +64,8 @@ void CALifeSpawnRegistry::load				(IReader &file_stream, LPCSTR game_name)
 	chunk						= chunk0->open_chunk(0);
 	VERIFY						(chunk);
 	chunk->r_stringZ			(m_spawn_name);
-	chunk->r					(&guid,sizeof(guid));
+	(*chunk) >> guid;
+	//chunk->r					(&guid,sizeof(guid));
 	chunk->close				();
 
 	string_path					file_name;

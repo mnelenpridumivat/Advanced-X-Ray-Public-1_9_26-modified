@@ -50,7 +50,8 @@ void CPatternFunction::vfLoadEF(LPCSTR caFileName)
 	}
 	
 	IReader			*F = FS.r_open(caPath);
-	F->r			(&m_tEFHeader,sizeof(SEFHeader));
+	(*F) >> m_tEFHeader;
+	//F->r			(&m_tEFHeader,sizeof(SEFHeader));
 
 	if (EFC_VERSION != m_tEFHeader.dwBuilderVersion) {
 		FS.r_close	(F);
@@ -59,45 +60,65 @@ void CPatternFunction::vfLoadEF(LPCSTR caFileName)
 		return;
 	}
 
-	F->r			(&m_dwVariableCount,sizeof(m_dwVariableCount));
+	m_dwVariableCount = F->r_u32();
+	//F->r			(&m_dwVariableCount,sizeof(m_dwVariableCount));
 	m_dwaAtomicFeatureRange = xr_alloc<u32>(m_dwVariableCount);
 	ZeroMemory		(m_dwaAtomicFeatureRange,m_dwVariableCount*sizeof(u32));
 	u32				*m_dwaAtomicIndexes = xr_alloc<u32>(m_dwVariableCount);
 	ZeroMemory		(m_dwaAtomicIndexes,m_dwVariableCount*sizeof(u32));
 
 	for (u32 i=0; i<m_dwVariableCount; ++i) {
-		F->r(m_dwaAtomicFeatureRange + i,sizeof(u32));
-		if (i)
-			m_dwaAtomicIndexes[i] = m_dwaAtomicIndexes[i-1] + m_dwaAtomicFeatureRange[i-1];
+		m_dwaAtomicFeatureRange[i] = F->r_u32();
+		//F->r(m_dwaAtomicFeatureRange + i,sizeof(u32));
+		if (i) {
+			m_dwaAtomicIndexes[i] = m_dwaAtomicIndexes[i - 1] + m_dwaAtomicFeatureRange[i - 1];
+		}
 	}
 
 	m_dwaVariableTypes = xr_alloc<u32>(m_dwVariableCount);
-	F->r			(m_dwaVariableTypes,m_dwVariableCount*sizeof(u32));
 
-	F->r			(&m_dwFunctionType,sizeof(u32));
+	for (u32 i = 0; i < m_dwVariableCount; ++i) {
+		m_dwaVariableTypes[i] = F->r_u32();
+	}
+	//F->r			(m_dwaVariableTypes,m_dwVariableCount*sizeof(u32));
 
-	F->r			(&m_fMinResultValue,sizeof(float));
-	F->r			(&m_fMaxResultValue,sizeof(float));
+	m_dwFunctionType = F->r_u32();
+	//F->r			(&m_dwFunctionType,sizeof(u32));
 
-	F->r			(&m_dwPatternCount,sizeof(m_dwPatternCount));
+	m_fMinResultValue = F->r_float();
+	//F->r			(&m_fMinResultValue,sizeof(float));
+	m_fMaxResultValue = F->r_float();
+	//F->r			(&m_fMaxResultValue,sizeof(float));
+
+	m_dwPatternCount = F->r_u32();
+	//F->r			(&m_dwPatternCount,sizeof(m_dwPatternCount));
 	m_tpPatterns	= xr_alloc<SPattern>(m_dwPatternCount);
 	m_dwaPatternIndexes = xr_alloc<u32>(m_dwPatternCount);
 	ZeroMemory		(m_dwaPatternIndexes,m_dwPatternCount*sizeof(u32));
 	m_dwParameterCount = 0;
-	for ( i=0; i<m_dwPatternCount; ++i) {
-		if (i)
+	for (u32 i=0; i<m_dwPatternCount; ++i) {
+		if (i) {
 			m_dwaPatternIndexes[i] = m_dwParameterCount;
-		F->r		(&(m_tpPatterns[i].dwCardinality),sizeof(m_tpPatterns[i].dwCardinality));
+		}
+		m_tpPatterns[i].dwCardinality = F->r_u32();
+		//F->r		(&(m_tpPatterns[i].dwCardinality),sizeof(m_tpPatterns[i].dwCardinality));
 		m_tpPatterns[i].dwaVariableIndexes = xr_alloc<u32>(m_tpPatterns[i].dwCardinality);
-		F->r		(m_tpPatterns[i].dwaVariableIndexes,m_tpPatterns[i].dwCardinality*sizeof(u32));
+		for (u32 j = 0; j < m_tpPatterns[i].dwCardinality; ++j) {
+			m_tpPatterns[i].dwaVariableIndexes[j] = F->r_u32();
+		}
+		//F->r		(m_tpPatterns[i].dwaVariableIndexes,m_tpPatterns[i].dwCardinality*sizeof(u32));
 		u32			m_dwComplexity = 1;
-		for (int j=0; j<static_cast<int>(m_tpPatterns[i].dwCardinality); ++j)
+		for (int j = 0; j < static_cast<int>(m_tpPatterns[i].dwCardinality); ++j) {
 			m_dwComplexity *= m_dwaAtomicFeatureRange[m_tpPatterns[i].dwaVariableIndexes[j]];
+		}
 		m_dwParameterCount += m_dwComplexity;
 	}
 	
 	m_faParameters	= xr_alloc<float>(m_dwParameterCount);
-	F->r			(m_faParameters,m_dwParameterCount*sizeof(float));
+	for (u32 i = 0; i < m_dwParameterCount; ++i) {
+		m_faParameters[i] = F->r_float();
+	}
+	//F->r			(m_faParameters,m_dwParameterCount*sizeof(float));
 	FS.r_close		(F);
 
 	m_dwaVariableValues = xr_alloc<u32>(m_dwVariableCount);

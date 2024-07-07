@@ -155,6 +155,15 @@ struct ECORE_API SJointLimit
     }
 };
 
+inline IReader& operator>>(IReader& reader, SJointLimit& data)
+{
+	data.limit.x = reader.r_float();
+	data.limit.y = reader.r_float();
+	data.spring_factor = reader.r_float();
+	data.damping_factor = reader.r_float();
+	return reader;
+}
+
 struct ECORE_API SBoneShape
 {
     enum EShapeType
@@ -259,7 +268,11 @@ struct ECORE_API SJointIKData
     bool				Import(IReader& F, u16 vers)
     {
         type			= (EJointType)F.r_u32();
-        F.r				(limits,sizeof(SJointLimit)*3);
+		for(int i = 0; i < 3; ++i)
+		{
+			F >> limits[i];
+		}
+        //F.r				(limits,sizeof(SJointLimit)*3);
         spring_factor	= F.r_float();
         damping_factor	= F.r_float();
         ik_flags.flags	= F.r_u32();

@@ -67,7 +67,9 @@ BOOL CLevel::Load_GameSpecific_After()
 				gametype_usage				= OBJ->r_u16();
 			}
 			OBJ->r_stringZ					(ref_name,sizeof(ref_name));
-			OBJ->r							(&transform,sizeof(Fmatrix));transform.c.y+=0.01f;
+			(*OBJ) >> transform;
+			//OBJ->r							(&transform,sizeof(Fmatrix));
+			transform.c.y+=0.01f;
 			
 						
 			if ((g_pGamePersistent->m_game_params.m_e_game_type & static_cast<EGameIDs>(gametype_usage)) || (ver == 0))
@@ -128,11 +130,13 @@ BOOL CLevel::Load_GameSpecific_After()
 				Fmatrix					volume_matrix;
 				for(u32 i=0; i<cnt; ++i)
 				{
-					F->r				(&volume_matrix, sizeof(volume_matrix));
+					(*F) >> volume_matrix;
+					//F->r				(&volume_matrix, sizeof(volume_matrix));
 					u32 sub_cnt			= F->r_u32();
 					for(u32 is=0; is<sub_cnt; ++is)
 					{
-						F->r			(&volume_matrix, sizeof(volume_matrix));
+						(*F) >> volume_matrix;
+						//F->r			(&volume_matrix, sizeof(volume_matrix));
 					}
 
 				}

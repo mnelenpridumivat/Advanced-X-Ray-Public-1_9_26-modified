@@ -47,7 +47,8 @@ void SLocationKey::save(IWriter &stream)
 	
 void SLocationKey::load(IReader &stream)
 {
-	stream.r		(&object_id,sizeof(object_id));
+	object_id = stream.r_u16();
+	//stream.r		(&object_id,sizeof(object_id));
 
 	stream.r_stringZ(spot_type);
 	stream.r_u8		();

@@ -276,9 +276,11 @@ IC	void GameGraph::SLevel::load									(IReader *reader)
 {
 	reader->r_stringZ			(m_name);
 	reader->r_fvector3			(m_offset);
-	reader->r					(&m_id,sizeof(m_id));
+	m_id = reader->r_u8();
+	//reader->r					(&m_id,sizeof(m_id));
 	reader->r_stringZ			(m_section);
-	reader->r					(&m_guid,sizeof(m_guid));
+	(*reader) >> m_guid;
+	//reader->r					(&m_guid,sizeof(m_guid));
 }
 
 IC	void GameGraph::SLevel::save									(IWriter *writer)
@@ -292,11 +294,16 @@ IC	void GameGraph::SLevel::save									(IWriter *writer)
 
 IC	void GameGraph::CHeader::load									(IReader *reader)
 {
-	reader->r					(&m_version,			sizeof(m_version));
-	reader->r					(&m_vertex_count,		sizeof(m_vertex_count));
-	reader->r					(&m_edge_count,			sizeof(m_edge_count));
-	reader->r					(&m_death_point_count,	sizeof(m_death_point_count));
-	reader->r					(&m_guid,				sizeof(m_guid));
+	m_version = reader->r_u8();
+	//reader->r					(&m_version,			sizeof(m_version));
+	m_vertex_count = reader->r_u16();
+	//reader->r					(&m_vertex_count,		sizeof(m_vertex_count));
+	m_edge_count = reader->r_u32();
+	//reader->r					(&m_edge_count,			sizeof(m_edge_count));
+	m_death_point_count = reader->r_u32();
+	//reader->r					(&m_death_point_count,	sizeof(m_death_point_count));
+	(*reader) >> m_guid;
+	//reader->r					(&m_guid,				sizeof(m_guid));
 	
 	u32							level_count = reader->r_u8();
 

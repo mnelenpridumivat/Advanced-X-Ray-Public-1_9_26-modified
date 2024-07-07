@@ -20,6 +20,14 @@ private:
 	typedef struct tagSEFHeader {
 		u32			dwBuilderVersion;
 		u32			dwDataFormat;
+
+		inline IReader& operator>>(IReader& reader)
+		{
+			dwBuilderVersion = reader.r_u32();
+			dwDataFormat = reader.r_u32();
+			return reader;
+		}
+
 	} SEFHeader;
 
 	typedef struct tagSPattern {
@@ -34,6 +42,13 @@ private:
 	u32				m_dwPatternCount;
 	u32				m_dwParameterCount;
 	SEFHeader		m_tEFHeader;
+
+	friend IReader& operator>>(IReader& reader, SEFHeader& data)
+	{
+		data.dwBuilderVersion = reader.r_u32();
+		data.dwDataFormat = reader.r_u32();
+		return reader;
+	}
 
 	IC u32 dwfGetPatternIndex(u32 *dwpTest, int iPatternIndex)
 	{
