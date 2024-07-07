@@ -229,7 +229,8 @@ void	CKinematics::Load(const char* N, IReader *data, u32 dwFlags)
 		data->r_stringZ				(buf,sizeof(buf));	strlwr(buf);
 		L_parents.push_back			(buf);
 
-		data->r						(&pBone->obb,sizeof(Fobb));
+		(*data) >> pBone->obb;
+		//data->r						(&pBone->obb,sizeof(Fobb));
         visimask.set				(u64(1)<<ID,TRUE);
 	}
 	std::sort	(bone_map_N->begin(),bone_map_N->end(),pred_sort_N);
@@ -265,7 +266,8 @@ void	CKinematics::Load(const char* N, IReader *data, u32 dwFlags)
             CBoneData*	B 	= (*bones)[i];
             u16 vers		= (u16)IKD->r_u32();
             IKD->r_stringZ	(B->game_mtl_name);
-            IKD->r			(&B->shape,sizeof(SBoneShape));
+			(*IKD) >> B->shape;
+            //IKD->r			(&B->shape,sizeof(SBoneShape));
             B->IK_data.Import(*IKD,vers);
             Fvector vXYZ,vT;
             IKD->r_fvector3	(vXYZ);

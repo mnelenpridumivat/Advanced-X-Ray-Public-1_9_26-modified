@@ -206,6 +206,18 @@ struct ECORE_API SBoneShape
     }
 };
 
+inline IReader& operator>>(IReader& reader, SBoneShape& data)
+{
+
+	data.type = reader.r_u16();		// 2
+	reader >> data.flags;		// 2
+	reader >> data.box;      	// 15*4
+	reader >> data.sphere;		// 4*4
+	reader >> data.cylinder;	// 8*4
+	//reader.r_stringZ(data, 16);
+	return reader;
+}
+
 struct ECORE_API SJointIKData
 {
     // IK

@@ -68,9 +68,18 @@ void FTreeVisual::Load		(const char* N, IReader *data, u32 dwFlags)
 	// load tree-def
 	R_ASSERT			(data->find_chunk(OGF_TREEDEF2));
 	{
-		data->r			(&xform,	sizeof(xform));
-		data->r			(&c_scale,	sizeof(c_scale));	c_scale.rgb.mul	(.5f);	c_scale.hemi*=.5f;	c_scale.sun	*=.5f;
-		data->r			(&c_bias,	sizeof(c_bias));	c_bias.rgb.mul	(.5f);	c_bias.hemi	*=.5f;	c_bias.sun	*=.5f;
+		(*data) >> xform;
+		//data->r			(&xform,	sizeof(xform));
+		(*data) >> c_scale;
+		//data->r			(&c_scale,	sizeof(c_scale));
+		c_scale.rgb.mul	(.5f);
+		c_scale.hemi*=.5f;
+		c_scale.sun	*=.5f;
+		(*data) >> c_bias;
+		//data->r			(&c_bias,	sizeof(c_bias));
+		c_bias.rgb.mul	(.5f);
+		c_bias.hemi	*=.5f;
+		c_bias.sun	*=.5f;
 		//Msg				("hemi[%f / %f], sun[%f / %f]",c_scale.hemi,c_bias.hemi,c_scale.sun,c_bias.sun);
 	}
 

@@ -52,6 +52,13 @@ struct HOM_poly
 	Fvector	v1,v2,v3;
 	u32		flags;
 };
+
+inline IReader& operator>>(IReader& reader, HOM_poly& data)
+{
+	reader >> data.v1 >> data.v2 >> data.v3;
+	data.flags = reader.r_u32();
+	return reader;
+}
 #pragma pack(pop)
 
 IC float	Area		(Fvector& v0, Fvector& v1, Fvector& v2)
@@ -84,7 +91,8 @@ void CHOM::Load			()
 	while (!S->eof())
 	{
 		HOM_poly				P;
-		S->r					(&P,sizeof(P));
+		(*S) >> P;
+		//S->r					(&P,sizeof(P));
 		CL.add_face_packed_D	(P.v1,P.v2,P.v3,P.flags,0.01f);
 	}
 	

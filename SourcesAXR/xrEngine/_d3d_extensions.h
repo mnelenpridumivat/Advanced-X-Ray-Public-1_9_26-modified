@@ -37,6 +37,25 @@ public:
     }
 };
 
+inline IReader& operator>>(IReader& reader, Flight& data)
+{
+	data.type = reader.r_u32();             /* Type of light source */
+	reader >> data.diffuse;          /* Diffuse color of light */
+	reader >> data.specular;         /* Specular color of light */
+	reader >> data.ambient;          /* Ambient color of light */
+	reader >> data.position;         /* Position in world space */
+	reader >> data.direction;        /* Direction in world space */
+	data.range = reader.r_float();            /* Cutoff range */
+	data.falloff = reader.r_float();          /* Falloff */
+	data.attenuation0 = reader.r_float();     /* Constant attenuation */
+	data.attenuation1 = reader.r_float();     /* Linear attenuation */
+	data.attenuation2 = reader.r_float();     /* Quadratic attenuation */
+	data.theta = reader.r_float();            /* Inner angle of spotlight cone */
+	data.phi = reader.r_float();              /* Outer angle of spotlight cone */
+	//reader.r_stringZ(data, 16);
+	return reader;
+}
+
 /*
 #if sizeof(Flight)!=sizeof(D3DLIGHT9)
 #error Different structure size

@@ -36,7 +36,10 @@ void FLOD::Load			(LPCSTR N, IReader *data, u32 dwFlags)
 	R_ASSERT			(data->find_chunk(OGF_LODDEF2));
 	for (int f=0; f<8; f++)
 	{
-		data->r					(facets[f].v,sizeof(facets[f].v));
+		for (int i = 0; i < 4; ++i) {
+			(*data) >> facets[f].v[i];
+		}
+		//data->r					(facets[f].v,sizeof(facets[f].v));
 		_vertex* v				= facets[f].v;
 
 		Fvector					N,T;

@@ -140,6 +140,17 @@ namespace PS
 #endif
 	};
 };
+
+inline IReader& operator>>(IReader& reader, PS::SFrame& data)
+{
+	reader >> data.m_fTexSize;
+	reader >> data.reserved;
+	data.m_iFrameDimX = reader.r_s32();
+	data.m_iFrameCount = reader.r_s32();
+	data.m_fSpeed = reader.r_float();
+	return reader;
+}
+
 #define PED_VERSION				0x0001
 #define PED_CHUNK_VERSION		0x0001
 #define PED_CHUNK_NAME			0x0002

@@ -59,7 +59,8 @@ void	IBlender::Load(	IReader& fs, u16  )
 {
 	// Read desc and doesn't change version
 	u16	V		= description.version;
-	fs.r			(&description,sizeof(description));
+	fs >> description;
+	//fs.r			(&description,sizeof(description));
 	description.version	= V;
 
 	// Properties

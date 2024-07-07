@@ -423,6 +423,50 @@ inline IReader& operator>>(IReader& reader, string4096& data)
 	return reader;
 }
 
+template<typename T>
+inline IReader& operator>>(IReader& reader, _matrix33<T>& data)
+{
+	reader.r(&data.m, sizeof(data.m));
+	return reader;
+}
+
+template<typename T>
+inline IReader& operator>>(IReader& reader, _obb<T>& data)
+{
+	reader >> data.m_rotate;
+	reader >> data.m_translate;
+	reader >> data.m_halfsize;
+	return reader;
+}
+
+template<typename T>
+inline IReader& operator>>(IReader& reader, _sphere<T>& data)
+{
+	reader >> data.P;
+	reader.r(&data.R, sizeof(data.R));
+	return reader;
+}
+
+template<typename T>
+inline IReader& operator>>(IReader& reader, _cylinder<T>& data)
+{
+	reader >> data.m_center;
+	reader >> data.m_direction;
+	reader.r(&data.m_height, sizeof(data.m_height));
+	reader.r(&data.m_radius, sizeof(data.m_radius));
+	return reader;
+}
+
+template<typename T>
+inline IReader& operator>>(IReader& reader, _color<T>& data)
+{
+	reader.r(&data.r, sizeof(data.r));
+	reader.r(&data.g, sizeof(data.g));
+	reader.r(&data.b, sizeof(data.b));
+	reader.r(&data.a, sizeof(data.a));
+	return reader;
+}
+
 class XRCORE_API CVirtualFileRW : public IReader
 {
 private:

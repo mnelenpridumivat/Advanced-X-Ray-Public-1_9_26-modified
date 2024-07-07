@@ -205,7 +205,8 @@ BOOL CPEDef::Load(IReader& F)
 	if (m_Flags.is(dfFramed))
 	{
 		R_ASSERT	(F.find_chunk(PED_CHUNK_FRAME));
-		F.r			(&m_Frame,sizeof(SFrame));
+		F >> m_Frame;
+		//F.r			(&m_Frame,sizeof(SFrame));
 	}
 
 	if (m_Flags.is(dfTimeLimit))

@@ -38,3 +38,12 @@ public:
 	virtual void Load			(LPCSTR N, IReader *data, u32 dwFlags);
 	virtual void Copy			(dxRender_Visual *pFrom	);
 };
+
+inline IReader& operator>>(IReader& reader, FLOD::_vertex& data)
+{
+	reader >> data.v;
+	reader >> data.t;
+	data.c_rgb_hemi = reader.r_u32();
+	data.c_sun = reader.r_u8();
+	return reader;
+}

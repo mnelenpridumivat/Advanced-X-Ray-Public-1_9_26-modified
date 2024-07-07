@@ -70,9 +70,10 @@ void CLight_DB::Load			(IReader *fs)
 #else
 			L->set_shadow				(true);
 #endif
-			u32 controller				= 0;
-			F->r						(&controller,4);
-			F->r						(&Ldata,sizeof(Flight));
+			u32 controller				= F->r_u32();
+			//F->r						(&controller,4);
+			(*F) >> Ldata;
+			//F->r						(&Ldata,sizeof(Flight));
 			if (Ldata.type==D3DLIGHT_DIRECTIONAL)	{
 				Fvector tmp_R;		tmp_R.set(1,0,0);
 

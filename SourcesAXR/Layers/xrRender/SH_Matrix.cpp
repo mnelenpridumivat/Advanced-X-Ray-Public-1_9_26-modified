@@ -67,11 +67,16 @@ void CMatrix::Load(	IReader* fs )
 {
 	dwMode		= fs->r_u32	();
 	tcm			= fs->r_u32	();
-	fs->r		(&scaleU,sizeof(WaveForm));
-	fs->r		(&scaleV,sizeof(WaveForm));
-	fs->r		(&rotate,sizeof(WaveForm));
-	fs->r		(&scrollU,sizeof(WaveForm));
-	fs->r		(&scrollV,sizeof(WaveForm));
+	(*fs) >> scaleU;
+	//fs->r		(&scaleU,sizeof(WaveForm));
+	(*fs) >> scaleV;
+	//fs->r		(&scaleV,sizeof(WaveForm));
+	(*fs) >> rotate;
+	//fs->r		(&rotate,sizeof(WaveForm));
+	(*fs) >> scrollU;
+	//fs->r		(&scrollU,sizeof(WaveForm));
+	(*fs) >> scrollV;
+	//fs->r		(&scrollV,sizeof(WaveForm));
 }
 
 void CMatrix::Save(	IWriter* fs )

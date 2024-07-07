@@ -46,7 +46,11 @@ void FProgressive::Load		(const char* N, IReader *data, u32 dwFlags)
     nSWI.count			= lods().r_u32();
 	VERIFY				(NULL==nSWI.sw);
     nSWI.sw				= xr_alloc<FSlideWindow>(nSWI.count);
-	lods().r			(nSWI.sw,nSWI.count*sizeof(FSlideWindow));
+	for(u32 i = 0; i < nSWI.count; ++i)
+	{
+		lods() >> nSWI.sw[i];
+	}
+	//lods().r			(nSWI.sw,nSWI.count*sizeof(FSlideWindow));
 
 	// fast
 #if RENDER!=R_R1
