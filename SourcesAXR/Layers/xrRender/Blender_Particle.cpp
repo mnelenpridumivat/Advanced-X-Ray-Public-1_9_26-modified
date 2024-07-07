@@ -49,7 +49,8 @@ void	CBlender_Particle::Load	( IReader& fs, u16 version)
 {
 	IBlender::Load		(fs,version);
 
-	xrPREAD_PROP		(fs,xrPID_TOKEN,		oBlend);	oBlend.Count =   oBlendCount;
+	xrPREAD_PROP		(fs,xrPID_TOKEN,		oBlend);
+	oBlend.Count =   oBlendCount;
 	xrPREAD_PROP		(fs,xrPID_BOOL,			oClamp);
 	xrPREAD_PROP		(fs,xrPID_INTEGER,		oAREF);
 }

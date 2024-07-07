@@ -303,6 +303,8 @@ public:
 	void			r_stringZ	(shared_str& dest);
 	void			r_stringZ	(xr_string& dest);
 
+	bool			r_bool		();
+
 public:
 	void			close		();
 
@@ -319,18 +321,105 @@ private:
 	typedef IReaderBase<IReader>	inherited;
 };
 
-inline IReader& operator>>(IReader& reader, Fvector& data)
+template<typename T>
+inline IReader& operator>>(IReader& reader, _vector3<T>& data)
 {
-	data.x = reader.r_float();
-	data.y = reader.r_float();
-	data.z = reader.r_float();
+	reader.r(&data.x, sizeof(T));
+	reader.r(&data.y, sizeof(T));
+	reader.r(&data.z, sizeof(T));
 	return reader;
 }
 
-inline IReader& operator>>(IReader& reader, Fbox& data)
+template<typename T>
+inline IReader& operator>>(IReader& reader, _box3<T>& data)
 {
 	reader >> data.min;
 	reader >> data.max;
+	return reader;
+}
+
+template<typename T>
+inline IReader& operator>>(IReader& reader, _flags<T>& data)
+{
+	reader.r(&data.flags, sizeof(T));
+	return reader;
+}
+
+template<typename T>
+inline IReader& operator>>(IReader& reader, _vector2<T>& data)
+{
+	reader.r(&data.x, sizeof(T));
+	reader.r(&data.y, sizeof(T));
+	return reader;
+}
+
+template<typename T>
+inline IReader& operator>>(IReader& reader, _matrix<T>& data)
+{
+	reader.r(&data.m, sizeof(data.m));
+	return reader;
+}
+
+inline IReader& operator>>(IReader& reader, string16& data)
+{
+	reader.r(data, 16);
+	//reader.r_stringZ(data, 16);
+	return reader;
+}
+
+inline IReader& operator>>(IReader& reader, string32& data)
+{
+	reader.r(data, 32);
+	//reader.r_stringZ(data, 32);
+	return reader;
+}
+
+inline IReader& operator>>(IReader& reader, string64& data)
+{
+	reader.r(data, 64);
+	//reader.r_stringZ(data, 64);
+	return reader;
+}
+
+inline IReader& operator>>(IReader& reader, string128& data)
+{
+	reader.r(data, 128);
+	//reader.r_stringZ(data, 128);
+	return reader;
+}
+
+inline IReader& operator>>(IReader& reader, string256& data)
+{
+	reader.r(data, 256);
+	//reader.r_stringZ(data, 256);
+	return reader;
+}
+
+inline IReader& operator>>(IReader& reader, string512& data)
+{
+	reader.r(data, 512);
+	//reader.r_stringZ(data, 512);
+	return reader;
+}
+
+inline IReader& operator>>(IReader& reader, string1024& data)
+{
+	reader.r(data, 1024);
+	//reader.r_stringZ(data, 1024);
+	return reader;
+}
+
+inline IReader& operator>>(IReader& reader, string2048& data)
+{
+	reader.r(data, 2048);
+	//reader.r_stringZ(data, 2048);
+	return reader;
+}
+
+inline IReader& operator>>(IReader& reader, string4096& data)
+{
+	reader.r(data, 4096);
+	//reader.r_stringZ(data, 4096);
 	return reader;
 }
 

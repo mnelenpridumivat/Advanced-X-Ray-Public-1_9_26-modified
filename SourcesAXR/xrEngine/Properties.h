@@ -37,6 +37,15 @@ struct	xrP_Integer
 	xrP_Integer() : value(0), min(0), max(255)	{}
 };
 
+inline IReader& operator>>(IReader& reader, xrP_Integer& data)
+{
+	data.value = reader.r_s32();
+	data.min = reader.r_s32();
+	data.max = reader.r_s32();
+	//reader.r_stringZ(data, 16);
+	return reader;
+}
+
 struct	xrP_Float
 {
 	float				value;
@@ -46,11 +55,27 @@ struct	xrP_Float
 	xrP_Float()	: value(0), min(0), max(1)		{}
 };
 
+/*inline IReader& operator>>(IReader& reader, xrP_Float& data)
+{
+	data.value = reader.r_float();
+	data.min = reader.r_float();
+	data.max = reader.r_float();
+	//reader.r_stringZ(data, 16);
+	return reader;
+}*/
+
 struct	xrP_BOOL
 {
 	BOOL				value;
 	xrP_BOOL() : value(FALSE)					{}
 };
+
+
+inline IReader& operator>>(IReader& reader, xrP_BOOL& data)
+{
+	reader.r(&data.value, sizeof(BOOL));
+	return reader;
+}
 
 struct	xrP_TOKEN
 {
@@ -66,6 +91,14 @@ struct	xrP_TOKEN
 
 	xrP_TOKEN()	: IDselected(0), Count(0)		{}
 };
+
+inline IReader& operator>>(IReader& reader, xrP_TOKEN& data)
+{
+	data.IDselected = reader.r_u32();
+	data.Count = reader.r_u32();
+	//reader.r_stringZ(data, 16);
+	return reader;
+}
 
 struct	xrP_CLSID
 {
@@ -124,15 +157,56 @@ IC void		xrPREAD_MARKER	(IReader& fs)
 	R_ASSERT(xrPID_MARKER==xrPREAD(fs));
 }
 
-#define xrPREAD_PROP(fs,ID,data) \
+template<typename T>
+IC void		xrPREAD_PROP	(IReader& fs, xrProperties ID, T& data)
+{
+	R_ASSERT(ID == xrPREAD(fs));
+	fs >> data;
+	//fs.r(&data, sizeof(data));
+	switch (ID)
+	{
+	case xrPID_TOKEN:
+		{
+			fs.advance(((xrP_TOKEN*)&data)->Count * sizeof(xrP_TOKEN::Item));
+			break;
+		}
+	case xrPID_CLSID:{
+			fs.advance(((xrP_CLSID*)&data)->Count * sizeof(CLASS_ID));
+			break;
+	}
+	};
+}
+
+/*template<>
+IC void		xrPREAD_PROP<string64>(IReader& fs, xrProperties ID, string64& data)
+{
+	R_ASSERT(ID == xrPREAD(fs));
+	fs >> data;
+	//fs.r(&data, sizeof(data));
+	switch (ID)
+	{
+	case xrPID_TOKEN:
+	{
+		fs.advance(((xrP_TOKEN*)&data)->Count * sizeof(xrP_TOKEN::Item));
+		break;
+	}
+	case xrPID_CLSID: {
+		fs.advance(((xrP_CLSID*)&data)->Count * sizeof(CLASS_ID));
+		break;
+	}
+	};
+}*/
+
+/*#define xrPREAD_PROP(fs,ID,data) \
 { \
-	R_ASSERT(ID==xrPREAD(fs)); fs.r(&data,sizeof(data)); \
+	R_ASSERT(ID==xrPREAD(fs)); \
+	fs.r(&data,sizeof(data)); \
 	switch (ID) \
 	{ \
 	case xrPID_TOKEN:	fs.advance(((xrP_TOKEN*)&data)->Count * sizeof(xrP_TOKEN::Item));	break; \
 	case xrPID_CLSID:	fs.advance(((xrP_CLSID*)&data)->Count * sizeof(CLASS_ID));			break; \
 	}; \
-}
+}*/
 
 //template <class T>
 //IC void		xrPWRITE_PROP	(IWriter& FS, LPCSTR name, u32 ID, T& data)
