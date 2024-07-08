@@ -62,6 +62,15 @@ struct	NET_Buffer
 	u32		count;
 };
 
+inline IReader& operator>>(IReader& reader, NET_Buffer& data)
+{
+	reader >> data.count;
+	for (u32 i = 0; i < data.count; ++i) {
+		reader >> data.data[i];
+	}
+	return reader;
+}
+
 class XRCORE_API NET_Packet
 {
 public:
@@ -269,6 +278,283 @@ public:
 	void		r_matrix		(Fmatrix& M);
 	void		r_clientID		(ClientID& C);
 };
+
+// write operators
+
+inline NET_Packet& operator<<(NET_Packet& writer, const bool& data)
+{
+	writer.w(&data, sizeof(data));
+	return writer;
+}
+inline NET_Packet& operator<<(NET_Packet& writer, const Fvector& data)
+{
+	writer.w_vec3(data);
+	return writer;
+}
+inline NET_Packet& operator<<(NET_Packet& writer, const Fvector4& data)
+{
+	writer.w_vec4(data);
+	return writer;
+}
+inline NET_Packet& operator<<(NET_Packet& writer, const float& data)
+{
+	writer.w_float(data);
+	return writer;
+}
+inline NET_Packet& operator<<(NET_Packet& writer, const u64& data)
+{
+	writer.w_u64(data);
+	return writer;
+}
+inline NET_Packet& operator<<(NET_Packet& writer, const s64& data)
+{
+	writer.w_s64(data);
+	return writer;
+}
+inline NET_Packet& operator<<(NET_Packet& writer, const u32& data)
+{
+	writer.w_u32(data);
+	return writer;
+}
+inline NET_Packet& operator<<(NET_Packet& writer, const s32& data)
+{
+	writer.w_s32(data);
+	return writer;
+}
+inline NET_Packet& operator<<(NET_Packet& writer, const u16& data)
+{
+	writer.w_u16(data);
+	return writer;
+}
+inline NET_Packet& operator<<(NET_Packet& writer, const s16& data)
+{
+	writer.w_s16(data);
+	return writer;
+}
+inline NET_Packet& operator<<(NET_Packet& writer, const u8& data)
+{
+	writer.w_u8(data);
+	return writer;
+}
+inline NET_Packet& operator<<(NET_Packet& writer, const s8& data)
+{
+	writer.w_s8(data);
+	return writer;
+}
+inline NET_Packet& operator<<(NET_Packet& writer, const shared_str& data)
+{
+	writer.w_stringZ(data);
+	return writer;
+}
+
+template<typename T>
+inline NET_Packet& operator<<(NET_Packet& writer, const _vector3<T>& data)
+{
+	writer.w(&data.x, sizeof(T));
+	writer.w(&data.y, sizeof(T));
+	writer.w(&data.z, sizeof(T));
+	return writer;
+}
+
+template<typename T>
+inline NET_Packet& operator<<(NET_Packet& writer, const _box3<T>& data)
+{
+	writer << data.min;
+	writer << data.max;
+	return writer;
+}
+
+template<typename T>
+inline NET_Packet& operator<<(NET_Packet& writer, const _flags<T>& data)
+{
+	writer.w(&data.flags, sizeof(T));
+	return writer;
+}
+
+template<typename T>
+inline NET_Packet& operator<<(NET_Packet& writer, const _vector2<T>& data)
+{
+	writer.w(&data.x, sizeof(T));
+	writer.w(&data.y, sizeof(T));
+	return writer;
+}
+
+template<typename T>
+inline NET_Packet& operator<<(NET_Packet& writer, const _matrix<T>& data)
+{
+	writer.w(&data.m, sizeof(data.m));
+	return writer;
+}
+
+inline NET_Packet& operator<<(NET_Packet& writer, const string16& data)
+{
+	writer.w(data, 16);
+	//reader.r_stringZ(data, 16);
+	return writer;
+}
+
+inline NET_Packet& operator<<(NET_Packet& writer, const string32& data)
+{
+	writer.w(data, 32);
+	//reader.r_stringZ(data, 32);
+	return writer;
+}
+
+inline NET_Packet& operator<<(NET_Packet& writer, const string64& data)
+{
+	writer.w(data, 64);
+	//reader.r_stringZ(data, 64);
+	return writer;
+}
+
+inline NET_Packet& operator<<(NET_Packet& writer, const string128& data)
+{
+	writer.w(data, 128);
+	//reader.r_stringZ(data, 128);
+	return writer;
+}
+
+inline NET_Packet& operator<<(NET_Packet& writer, const string256& data)
+{
+	writer.w(data, 256);
+	//reader.r_stringZ(data, 256);
+	return writer;
+}
+
+inline NET_Packet& operator<<(NET_Packet& writer, const string512& data)
+{
+	writer.w(data, 512);
+	//reader.r_stringZ(data, 512);
+	return writer;
+}
+
+inline NET_Packet& operator<<(NET_Packet& writer, const string1024& data)
+{
+	writer.w(data, 1024);
+	//reader.r_stringZ(data, 1024);
+	return writer;
+}
+
+inline NET_Packet& operator<<(NET_Packet& writer, const string2048& data)
+{
+	writer.w(data, 2048);
+	//reader.r_stringZ(data, 2048);
+	return writer;
+}
+
+inline NET_Packet& operator<<(NET_Packet& writer, const string4096& data)
+{
+	writer.w(data, 4096);
+	//reader.r_stringZ(data, 4096);
+	return writer;
+}
+
+template<typename T>
+inline NET_Packet& operator<<(NET_Packet& writer, const _matrix33<T>& data)
+{
+	writer.w(&data.m, sizeof(data.m));
+	return writer;
+}
+
+template<typename T>
+inline NET_Packet& operator<<(NET_Packet& writer, const _obb<T>& data)
+{
+	writer << data.m_rotate;
+	writer << data.m_translate;
+	writer << data.m_halfsize;
+	return writer;
+}
+
+template<typename T>
+inline NET_Packet& operator<<(NET_Packet& writer, const _sphere<T>& data)
+{
+	writer << data.P;
+	writer.w(&data.R, sizeof(data.R));
+	return writer;
+}
+
+template<typename T>
+inline NET_Packet& operator<<(NET_Packet& writer, const _cylinder<T>& data)
+{
+	writer << data.m_center;
+	writer << data.m_direction;
+	writer.w(&data.m_height, sizeof(data.m_height));
+	writer.w(&data.m_radius, sizeof(data.m_radius));
+	return writer;
+}
+
+template<typename T>
+inline NET_Packet& operator<<(NET_Packet& writer, const _color<T>& data)
+{
+	writer.w(&data.r, sizeof(data.r));
+	writer.w(&data.g, sizeof(data.g));
+	writer.w(&data.b, sizeof(data.b));
+	writer.w(&data.a, sizeof(data.a));
+	return writer;
+}
+
+// read operators
+
+inline NET_Packet& operator>>(NET_Packet& reader, bool& data)
+{
+	reader.r(&data, sizeof(data));
+	return reader;
+}
+inline NET_Packet& operator>>(NET_Packet& reader, Fvector& data)
+{
+	data = reader.r_vec3();
+	return reader;
+}
+inline NET_Packet& operator>>(NET_Packet& reader, Fvector4& data)
+{
+	data = reader.r_vec4();
+	return reader;
+}
+inline NET_Packet& operator>>(NET_Packet& reader, float& data)
+{
+	data = reader.r_float();
+	return reader;
+}
+inline NET_Packet& operator>>(NET_Packet& reader, u64& data)
+{
+	data = reader.r_u64();
+	return reader;
+}
+inline NET_Packet& operator>>(NET_Packet& reader, s64& data)
+{
+	data = reader.r_s64();
+	return reader;
+}
+inline NET_Packet& operator>>(NET_Packet& reader, u32& data)
+{
+	data = reader.r_u32();
+	return reader;
+}
+inline NET_Packet& operator>>(NET_Packet& reader, s32& data)
+{
+	data = reader.r_s32();
+	return reader;
+}
+inline NET_Packet& operator>>(NET_Packet& reader, u16& data)
+{
+	data = reader.r_u16();
+	return reader;
+}
+inline NET_Packet& operator>>(NET_Packet& reader, s16& data)
+{
+	data = reader.r_s16();
+	return reader;
+}
+inline NET_Packet& operator>>(NET_Packet& reader, u8& data)
+{
+	data = reader.r_u8();
+	return reader;
+}
+inline NET_Packet& operator>>(NET_Packet& reader, s8& data)
+{
+	data = reader.r_s8();
+	return reader;
+}
 
 #pragma pack(pop)
 
