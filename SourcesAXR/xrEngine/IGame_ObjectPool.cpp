@@ -51,6 +51,9 @@ void IGame_ObjectPool::clear()
 CObject*	IGame_ObjectPool::create			( LPCSTR	name	)
 {
 	CLASS_ID CLS		=	pSettings->r_clsid		(name,"class");
+	char id_name[10];
+	CLSID2TEXT(CLS, id_name);
+	Msg("Attempt to spawn obj of CLASS_ID [%s]", id_name);
 	CObject* O			=	(CObject*) NEW_INSTANCE	(CLS);
 	O->cNameSect_set	(name);
 	O->Load				(name);

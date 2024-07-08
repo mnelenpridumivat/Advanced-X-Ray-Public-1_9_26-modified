@@ -450,6 +450,9 @@ void CObjectFactory::register_classes	()
 #endif // #ifndef NO_SINGLE
 
 #ifndef NO_XR_GAME
+
+	//ADD(CSamZone, CSE_ALifeSpaceRestrictor, CLSID_Z_SAM, "sam_zone_s");
+
 	// hack, for dedicated server only
 	// because we do not have scripts
 	// and script functionality is not
@@ -485,6 +488,5 @@ void CObjectFactory::register_classes	()
 	ADD(CMincer					,CSE_ALifeAnomalousZone			,TEXT2CLSID("ZS_GALAN")			,"zone_galant_s");
 	ADD(CMincer					,CSE_ALifeAnomalousZone			,TEXT2CLSID("ZS_MINCE")			,"zone_mincer_s");
 	ADD(CSpaceRestrictor		,CSE_ALifeSpaceRestrictor		,TEXT2CLSID("SPC_RS_S")			,"script_restr");
-	ADD(CSamZone				,CSE_ALifeSpaceRestrictor		,TEXT2CLSID("SAM_ZN_S")			,"sam_zone_s");
 #endif // NO_XR_GAME
 }

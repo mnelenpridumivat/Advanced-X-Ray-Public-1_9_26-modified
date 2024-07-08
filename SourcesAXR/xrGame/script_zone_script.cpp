@@ -7,6 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "pch_script.h"
+
+#include "SamZone.h"
 #include "script_zone.h"
 #include "smart_zone.h"
 
@@ -27,6 +29,8 @@ void CSmartZone::script_register(lua_State *L)
 	module(L)
 	[
 		class_<CSmartZone,DLL_Pure>("ce_smart_zone")
+			.def(constructor<>()),
+		class_<CSamZone, CSmartZone>("CSamZone")
 			.def(constructor<>())
 	];
 }

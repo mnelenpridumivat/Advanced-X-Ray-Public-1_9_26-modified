@@ -1,17 +1,21 @@
 #pragma once
 #include "hudsound.h"
 #include "rocketlauncher.h"
+#include "smart_zone.h"
 #include "space_restrictor.h"
 
-class CSamZone : public CSpaceRestrictor, public CRocketLauncher {
+class CSamZone : public CSmartZone, public CRocketLauncher {
 private:
-	typedef CSpaceRestrictor			inherited;
+	typedef CSmartZone			inherited;
 
 protected:
 
 	shared_str m_missile_section;
 
 public:
+
+	virtual void					shedule_Update(u32		time_delta) override;
+	virtual BOOL					net_Spawn(CSE_Abstract* DC) override;
 
 	HUD_SOUND_COLLECTION_LAYERED	m_layered_sounds;
 

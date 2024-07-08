@@ -7,10 +7,26 @@
 #include "script_engine.h"
 #include "xrMessages.h"
 
+void CSamZone::shedule_Update(u32 time_delta)
+{
+	inherited::shedule_Update(time_delta);
+	/*if(!getCurrentRocket())
+	{
+		CRocketLauncher::SpawnRocket(m_missile_section, this);
+	}*/
+}
+
+BOOL CSamZone::net_Spawn(CSE_Abstract* DC)
+{
+	auto result = inherited::net_Spawn(DC);
+	CRocketLauncher::SpawnRocket(m_missile_section, this);
+	return result;
+}
+
 void CSamZone::Load(LPCSTR section)
 {
 	m_missile_section = pSettings->r_string(section, "missle_section");
-	CRocketLauncher::SpawnRocket(m_missile_section, this);
+	//CRocketLauncher::SpawnRocket(m_missile_section, this);
 	m_layered_sounds.LoadSound(section, "snd_shoot_rocket", "sndRocket", false, ESoundTypes::SOUND_TYPE_WEAPON_SHOOTING);
 }
 
@@ -52,7 +68,7 @@ void CSamZone::LaunchMissile(CGameObject* target)
 
 void CSamZone::OnEvent(NET_Packet& P, u16 type)
 {
-	CSpaceRestrictor::OnEvent(P, type);
+	inherited::OnEvent(P, type);
 	u16 id;
 	switch (type) {
 	case GE_OWNERSHIP_TAKE:
