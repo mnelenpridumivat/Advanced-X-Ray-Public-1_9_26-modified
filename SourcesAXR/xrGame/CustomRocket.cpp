@@ -494,6 +494,11 @@ void CCustomRocket::UpdateEngine				()
 		Msg("! CCustomRocket::UpdateEngine called, but false==getVisible() id[%d] frame[%d]",ID(),Device.dwFrame);
 	}
 
+	if(IsEngineInfinite())
+	{
+		return;
+	}
+
 	if (m_dwEngineTime <= 0) 
 	{
 

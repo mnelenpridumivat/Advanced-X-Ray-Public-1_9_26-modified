@@ -264,6 +264,7 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 
 	ActorSkills				= nullptr;
 	TimerManager			= nullptr;
+	BinderManager			= nullptr;
 
 	m_fDevicesPsyFactor		= 0.0f;
 
@@ -302,6 +303,7 @@ CActor::~CActor()
 	xr_delete				(m_night_vision);
 	xr_delete				(ActorSkills);
 	xr_delete				(TimerManager);
+	xr_delete				(BinderManager);
 }
 
 void CActor::reinit	()
@@ -525,6 +527,9 @@ if(!g_dedicated_server)
 
 	if (!TimerManager)
 		TimerManager = xr_new<CTimerManager>();
+
+	if (!BinderManager)
+		BinderManager = xr_new<CBinderManager>();
 
 	m_iBaseArtefactCount = READ_IF_EXISTS(pSettings, r_u32, section, "base_artefacts_count", 0);
 	m_fInventoryCapacity = READ_IF_EXISTS(pSettings, r_float, section, "inventory_capacity", 50.0f);
@@ -1572,10 +1577,11 @@ void CActor::shedule_Update	(u32 DT)
 	if (TimerManager)
 	{
 		TimerManager->Update();
+	}
 
-		/*TimerManager->SetOnTimerStopCallback([](std::string name)	// Does not work after restarting the game
-		{
-		});*/
+	if (BinderManager)
+	{
+		BinderManager->Update();
 	}
 };
 #include "debug_renderer.h"

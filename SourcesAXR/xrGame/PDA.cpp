@@ -724,7 +724,8 @@ void CPda::UpdateActiveContacts()
 		CEntityAlive* pEA = smart_cast<CEntityAlive*>(*it);
 		if (!!pEA->g_Alive() 
 			&& !pEA->cast_base_monster() 
-			&& !pEA->IsInEmi())
+			&& !pEA->IsInEmi()
+			&& !pEA->IsIgnoreOnPDA())
 		{
 			m_active_contacts.push_back(*it);
 		}

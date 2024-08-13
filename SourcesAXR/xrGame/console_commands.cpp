@@ -1035,10 +1035,12 @@ public:
 #endif
 		if (!xr_strlen(S))
 		{
-			if (last_quick < 1 && quick_save_counter == 0)
+			if (last_quick < 1 && quick_save_counter == 0) {
 				strconcat(sizeof(S), S, Core.UserName, "_", "quicksave");
-			else
+			}
+			else {
 				xr_sprintf(S, "%s - quicksave %d", Core.UserName, last_quick);
+			}
 
 			NET_Packet			net_packet;
 			net_packet.w_begin	(M_SAVE_GAME);

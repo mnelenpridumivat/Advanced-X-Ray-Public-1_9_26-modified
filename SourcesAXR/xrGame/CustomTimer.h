@@ -2,33 +2,31 @@
 
 #include <functional>
 
-class CCustomTimer
+class CCustomTimerBase
 {
-	std::string     m_sTimerName;
+protected:
 	int             m_iTimerStartValue;
     int             m_iTimerCurValue;
     int             m_iTimerMode; //0 - milliseconds, 1 - seconds, 2 - minutes, 3 hours
     u32             m_iStartTime;
-	bool            m_bIsActive;
 
-	std::function<void(std::string)> OnTimerStop = [](std::string) {};
+    CCustomTimerBase(const CCustomTimerBase&) = delete;
+    CCustomTimerBase& operator=(const CCustomTimerBase&) = delete;
 
-    CCustomTimer(const CCustomTimer&) = delete;
-    CCustomTimer& operator=(const CCustomTimer&) = delete;
+    bool            m_bIsActive;
+
+    virtual void OnTimerEnd() = 0;
 
 public:
-    CCustomTimer            ();
-	CCustomTimer            (std::string name, int value, int mode = 0) : m_sTimerName(name), m_iTimerStartValue(value), m_iTimerMode(mode), m_iTimerCurValue(0), m_iStartTime(0), m_bIsActive(false) {}
+    CCustomTimerBase();
+    CCustomTimerBase(int value, int mode = 0) : m_iTimerStartValue(value), m_iTimerMode(mode), m_iTimerCurValue(0), m_iStartTime(0), m_bIsActive(false) {}
 
-    ~CCustomTimer           ();
+    ~CCustomTimerBase();
 
-	void StartCustomTimer   ();
-	void StopCustomTimer    ();
-	void ResetCustomTimer   ();
+	virtual void StartCustomTimer   ();
+    virtual void StopCustomTimer    ();
+    virtual void ResetCustomTimer   ();
     void Update             ();
-
-    void setName            (std::string name)  {m_sTimerName = name;}
-    std::string getName     () const            {return m_sTimerName;}
 
     void setValue           (int value)         {m_iTimerStartValue = value;}
     int  getValue           () const            {return m_iTimerStartValue;}
@@ -39,13 +37,61 @@ public:
     void setMode            (int mode)          {m_iTimerMode = mode;}
     int  getMode            () const            {return m_iTimerMode;}
 
-    void save               (NET_Packet& output_packet);
-    void load               (IReader& input_packet);
+    virtual void save               (NET_Packet& output_packet);
+    virtual void load               (IReader& input_packet);
+};
+
+class CCustomTimer: public CCustomTimerBase
+{
+    std::string     m_sTimerName;
+    std::function<void(std::string)> OnTimerStop = [](std::string) {};
+
+protected:
+
+    virtual void OnTimerEnd() override;
+
+public:
+    CCustomTimer() { m_sTimerName = ""; }
+    CCustomTimer(std::string name, int value, int mode = 0) : m_sTimerName(name), CCustomTimerBase(value, mode) {}
+
+
+    virtual void StartCustomTimer() override;
+    virtual void StopCustomTimer() override;
+    virtual void ResetCustomTimer() override;
+
+    virtual void save(NET_Packet& output_packet) override;
+    virtual void load(IReader& input_packet) override;
+
+    void setName(std::string name) { m_sTimerName = name; }
+    std::string getName() const { return m_sTimerName; }
 
     void SetOnTimerStopCallback(std::function<void(std::string)> callback)
     {
         OnTimerStop = callback;
     }
+};
+
+class CBinder : public CCustomTimerBase
+{
+    std::string     m_sFuncName;
+    std::vector<std::string> m_params;
+    bool m_expired = false;
+
+protected:
+    virtual void OnTimerEnd() override;
+
+public:
+    CBinder() { m_sFuncName = ""; }
+    CBinder(std::string name, const std::vector<std::string>& params, int value, int mode = 0) : m_sFuncName(name), m_params(params), CCustomTimerBase(value, mode)
+    {
+        StartCustomTimer();
+    }
+
+    virtual void save(NET_Packet& output_packet) override;
+    virtual void load(IReader& input_packet) override;
+
+    bool getExpired() const { return m_expired; }
+
 };
 
 class CTimerManager
@@ -71,5 +117,18 @@ public:
     {
         OnTimerStop = callback;
     }
+};
+
+class CBinderManager
+{
+    std::vector<std::unique_ptr<CBinder>> Binders;
+
+public:
+    void CreateBinder(std::string name, const std::vector<std::string>& params, int value, int mode = 0);
+
+    void save(NET_Packet& output_packet);
+    void load(IReader& input_packet);
+
+    void Update();
 };
 

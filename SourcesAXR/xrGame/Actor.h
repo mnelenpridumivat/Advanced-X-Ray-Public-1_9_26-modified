@@ -833,6 +833,7 @@ public:
 	bool					m_bActionAnimInProcess;
 	CActorSkills*			ActorSkills;
 	CTimerManager*			TimerManager;
+	CBinderManager*			BinderManager;
 
 	bool					HasItemsForRepair(xr_vector<std::pair<shared_str, int>> item);
 	void					RemoveItemsForRepair(xr_vector<std::pair<shared_str, int>> item);

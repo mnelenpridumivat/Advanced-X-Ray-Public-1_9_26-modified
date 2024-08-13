@@ -1347,14 +1347,20 @@ void CLevel::ApplyCamera()
 		Actor()->Cameras().ApplyDevice(VIEWPORT_NEAR);
 	}*/
 
-	if (g_actor && lastApplyCameraVPNear > -1.f)
+	if (g_actor && lastApplyCameraVPNear > -1.f) {
 		lastApplyCamera(lastApplyCameraVPNear);
+	}
 }
 
 u32	GameID()
 {
 	return Game().Type();
 }
+
+LPCSTR get_user_name() {
+	return Core.UserName;
+}
+
 /*
 #include "../xrEngine/IGame_Persistent.h"
 

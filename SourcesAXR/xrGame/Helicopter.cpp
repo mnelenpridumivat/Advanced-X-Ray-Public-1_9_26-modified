@@ -536,12 +536,14 @@ void CHelicopter::save(NET_Packet &output_packet)
 	save_data		(m_max_mgun_dist, output_packet);
 	save_data		(m_time_between_rocket_attack, output_packet);
 	save_data		(m_syncronize_rocket, output_packet);
+	//TODO: fix flares save
+	/*
 	save_data		(ActiveFlares.size(), output_packet);
 	for(auto& elem : ActiveFlares)
 	{
 		elem->save(output_packet);
 	}
-	save_data(InactiveFlares.size(), output_packet);
+	save_data(InactiveFlares.size(), output_packet);*/
 }
 
 void CHelicopter::load(IReader &input_packet)
@@ -562,6 +564,8 @@ void CHelicopter::load(IReader &input_packet)
 	load_data		(m_max_mgun_dist, input_packet);
 	load_data		(m_time_between_rocket_attack, input_packet);
 	load_data		(m_syncronize_rocket, input_packet);
+	//TODO: fix flares load
+	/*
 	u32 Size;
 	load_data		(Size, input_packet);
 	for (u32 i = 0; i < Size; ++i) {
@@ -573,6 +577,7 @@ void CHelicopter::load(IReader &input_packet)
 	for (u32 i = 0; i < Size; ++i) {
 		InactiveFlares.push_back(GetInactiveFlare());
 	}
+	*/
 }
 void CHelicopter::net_Relcase(CObject* O )
 {

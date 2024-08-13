@@ -418,6 +418,7 @@ add_to_type_list(CLevel)
 IC CLevel&				Level()		{ return *static_cast<CLevel*>(g_pGameLevel);			}
 IC game_cl_GameState&	Game()		{ return *Level().game;					}
 	u32					GameID();
+	LPCSTR get_user_name();
 
 
 #ifdef DEBUG

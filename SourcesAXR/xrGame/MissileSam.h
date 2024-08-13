@@ -9,5 +9,12 @@ class CMissileSam: public CExplosiveRocket
 
 public:
 	void SetTarget(CGameObject* target) { this->target = target; }
+	virtual	void			StartFlying() override;
+
+	virtual	void			UpdateEnginePh() override;
+
+protected:
+
+	virtual bool IsEngineInfinite() override {return true;}
 
 };

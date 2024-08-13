@@ -1152,6 +1152,54 @@ void create_custom_timer(LPCSTR name, int start_value, int mode = 0)
 	Actor()->TimerManager->CreateTimer(name, start_value, mode);
 }
 
+void bind_timer(LPCSTR function, int start_value, int mode = 0)
+{
+	auto TimeManager = Actor()->BinderManager;
+	if (!TimeManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : BinderManager is NULL!");
+		return;
+	}
+
+	TimeManager->CreateBinder(function, {}, start_value, mode);
+}
+
+void bind_timer_one_param(LPCSTR function, LPCSTR param1, int start_value, int mode = 0)
+{
+	auto TimeManager = Actor()->BinderManager;
+	if (!TimeManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : BinderManager is NULL!");
+		return;
+	}
+
+	TimeManager->CreateBinder(function, { param1 }, start_value, mode);
+}
+
+void bind_timer_two_params(LPCSTR function, LPCSTR param1, LPCSTR param2, int start_value, int mode = 0)
+{
+	auto TimeManager = Actor()->BinderManager;
+	if (!TimeManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : BinderManager is NULL!");
+		return;
+	}
+
+	TimeManager->CreateBinder(function, { param1, param2 }, start_value, mode);
+}
+
+void bind_timer_three_params(LPCSTR function, LPCSTR param1, LPCSTR param2, LPCSTR param3, int start_value, int mode = 0)
+{
+	auto TimeManager = Actor()->BinderManager;
+	if (!TimeManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : BinderManager is NULL!");
+		return;
+	}
+
+	TimeManager->CreateBinder(function, { param1, param2, param3 }, start_value, mode);
+}
+
 void start_custom_timer(LPCSTR name)
 {
 	if (!Actor()->TimerManager)
@@ -1381,6 +1429,13 @@ void CLevel::script_register(lua_State *L)
 		def("reset_custom_timer",				&reset_custom_timer),
 		def("delete_custom_timer",				&delete_custom_timer),
 		def("get_custom_timer",					&get_custom_timer),
+
+		def("bind_timer",						&bind_timer),
+		def("bind_timer_one_param",				&bind_timer_one_param),
+		def("bind_timer_two_params",			&bind_timer_two_params),
+		def("bind_timer_three_params",			&bind_timer_three_params),
+
+		def("get_user_name",					&get_user_name),
 
 		def("launch_sam",						&launch_sam)
 	],

@@ -40,6 +40,7 @@ namespace GameObject {
 
 		eHelicopterOnPoint,
 		eHelicopterOnHit,
+		eHelicopterOnSamHit,
 
 		eOnItemTake,
 		eOnItemDrop,

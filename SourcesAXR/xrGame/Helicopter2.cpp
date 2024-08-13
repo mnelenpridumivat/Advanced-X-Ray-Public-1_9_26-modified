@@ -12,6 +12,7 @@
 #include "../xrphysics/MathUtils.h"
 
 #include "actor.h"
+#include "MissileSam.h"
 #include "physics_game.h"
 
 bool CHelicopter::isObjectVisible			(CObject* O)
@@ -241,13 +242,17 @@ void	CHelicopter::Hit							(SHit* pHDS)
 			Log("----Helicopter::Hit(). health=",GetfHealth());
 #endif
 	};
-	if (pHDS->who&&
-		( smart_cast<CActor*>(pHDS->who)	||
-		smart_cast<CAI_Stalker*>(pHDS->who)		||
-		smart_cast<CCustomZone*>(pHDS->who) )
-		){
-			callback(GameObject::eHelicopterOnHit)(pHDS->damage(),pHDS->impulse,pHDS->hit_type,pHDS->who->ID());
+	if (pHDS->who) {
+		if ((smart_cast<CActor*>(pHDS->who) ||
+			smart_cast<CAI_Stalker*>(pHDS->who) ||
+			smart_cast<CCustomZone*>(pHDS->who))
+			) {
+			callback(GameObject::eHelicopterOnHit)(pHDS->damage(), pHDS->impulse, pHDS->hit_type, pHDS->who->ID());
+		} else if (smart_cast<CMissileSam*>(pHDS->who))
+		{
+			callback(GameObject::eHelicopterOnSamHit)(pHDS->damage(), pHDS->impulse, pHDS->hit_type);
 		}
+	}
 
 	CPHDestroyable::SetFatalHit(*pHDS);
 

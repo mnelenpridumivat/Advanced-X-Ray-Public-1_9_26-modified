@@ -40,7 +40,7 @@ IC	const xr_vector<u32> &CSpaceRestrictionAbstract::accessible_neighbour_border(
 	VERIFY2											(
 		!m_accessible_neighbour_border.empty(),
 		make_string(
-			"space restrictor %s has no accessible neighbours (border size[%d])",
+			"space restrictor %s has no accessible neighbours (border size[%d]). You need to rotate AI nodes to have some of them intersects with restrictor borders.",
 			*name(),
 			border().size()
 		)

@@ -1364,11 +1364,17 @@ void CActor::save(NET_Packet &output_packet)
 	inherited::save(output_packet);
 	CInventoryOwner::save(output_packet);
 
-	if (ActorSkills)
+	if (ActorSkills) {
 		ActorSkills->save(output_packet);
+	}
 
-	if (TimerManager)
+	if (TimerManager) {
 		TimerManager->save(output_packet);
+	}
+
+	if (BinderManager) {
+		BinderManager->save(output_packet);
+	}
 
 	cam_Active()->save(output_packet);
 
@@ -1387,16 +1393,22 @@ void CActor::save(NET_Packet &output_packet)
 	output_packet.w_stringZ(g_quick_use_slots[3]);
 }
 
-void CActor::load(IReader &input_packet)
+void CActor::load(IReader& input_packet)
 {
 	inherited::load(input_packet);
 	CInventoryOwner::load(input_packet);
 
-	if (ActorSkills)
+	if (ActorSkills) {
 		ActorSkills->load(input_packet);
+	}
 
-	if (TimerManager)
+	if (TimerManager) {
 		TimerManager->load(input_packet);
+	}
+
+	if (BinderManager) {
+		BinderManager->load(input_packet);
+	}
 
 	cam_Active()->load(input_packet);
 
