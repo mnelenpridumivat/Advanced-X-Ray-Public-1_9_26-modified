@@ -142,6 +142,11 @@ namespace PAPI{
 		PABindColorScaleID,
 		PABindColorTimeFromID,
 		PABindColorTimeToID,
+		PANamedBindVelocityValueID,
+		PANamedBindRotationValueID,
+		PANamedBindSizeValueID,
+		PANamedBindColorValueID,
+		PANamedBindColorAlphaID,
 		action_enum_force_dword = u32(-1)
 	};
     struct ParticleAction;
@@ -158,6 +163,7 @@ namespace PAPI{
 		virtual void				DestroyActionList	(int alist_id)=0;
 
 		virtual ParticleAction*		FindAction			(int alist_id, PActionEnum Type) = 0;
+		virtual ParticleAction*		FindAction			(int alist_id, xr_string Name) = 0;
 
         // control
         virtual void				PlayEffect			(int effect_id, int alist_id)=0;

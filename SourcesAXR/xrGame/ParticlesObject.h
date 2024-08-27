@@ -20,8 +20,8 @@ class CParticlesObject		:	public CPS_Instance
 	void				UpdateSpatial		();
 
 protected:
-	bool				m_bLooped;			//флаг, что система зациклена
-	bool				m_bStopping;		//вызвана функция Stop()
+	bool				m_bLooped;			//пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	bool				m_bStopping;		//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ Stop()
 
 	bool m_UseOptimization = false;
 	float m_OptimizationDistance = 0.0f;
@@ -40,6 +40,9 @@ public:
 	PAPI::Handle<PAPI::pVector> GetSizeHandle(u32 EffectIndex);
 	PAPI::Handle<PAPI::pVector> GetVelocityHandle(u32 EffectIndex);
 	PAPI::Handle<PAPI::pVector> GetRotationHandle(u32 EffectIndex);
+
+	PAPI::Handle<float> GetFloatHandle(xr_string Name);
+	PAPI::Handle<PAPI::pVector> GetVectorHandle(xr_string Name);
 
 	bool		shedule_Needed		() override {return true;};
 	float		shedule_Scale		() override;

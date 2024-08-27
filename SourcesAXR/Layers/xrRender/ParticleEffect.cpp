@@ -168,6 +168,36 @@ PAPI::Handle<PAPI::pVector> CParticleEffect::GetRotationHandle(u32 EffectIndex)
 	return static_cast<PABindRotationValue*>(Action)->GetHandle();
 }
 
+PAPI::Handle<float> PS::CParticleEffect::GetFloatHandle(xr_string Name)
+{
+	auto Action = ParticleManager()->FindAction(m_HandleActionList, Name);
+#ifdef DEBUG
+	if (!Action)
+	{
+		Msg("Unable to find action with binder [%s] in particle effect [%s]", Name.c_str(), m_Def->m_Name.c_str());
+		return nullptr;
+	}
+#else
+	VERIFY3(Action, "Unable to find action with binder [%s] in particle effect [%s]", Name.c_str(), m_Def->m_Name.c_str());
+#endif
+	return { Action->GetVariable<float>((u8)PANamedBindValue::Variables::eBindValue) };
+}
+
+PAPI::Handle<PAPI::pVector> PS::CParticleEffect::GetVectorHandle(xr_string Name)
+{
+	auto Action = ParticleManager()->FindAction(m_HandleActionList, Name);
+#ifdef DEBUG
+	if (!Action)
+	{
+		Msg("Unable to find action with binder [%s] in particle effect [%s]", Name.c_str(), m_Def->m_Name.c_str());
+		return nullptr;
+	}
+#else
+	VERIFY3(Action, "Unable to find action with binder [%s] in particle effect [%s]", Name.c_str(), m_Def->m_Name.c_str());
+#endif
+	return { Action->GetVariable<PAPI::pVector>((u8)PANamedBindValue::Variables::eBindValue) };
+}
+
 void CParticleEffect::Play()
 {
 	m_RT_Flags.set		(flRT_DefferedStop,FALSE);

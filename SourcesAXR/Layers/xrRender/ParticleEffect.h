@@ -57,6 +57,9 @@ namespace PS
 		virtual PAPI::Handle<PAPI::pVector> GetVelocityHandle(u32 EffectIndex) override;
 		virtual PAPI::Handle<PAPI::pVector> GetRotationHandle(u32 EffectIndex) override;
 
+		virtual PAPI::Handle<float> GetFloatHandle(xr_string Name) override;
+		virtual PAPI::Handle<PAPI::pVector> GetVectorHandle(xr_string Name) override;
+
 		void	 			OnFrame				(u32 dt);
 
 		u32					RenderTO			();

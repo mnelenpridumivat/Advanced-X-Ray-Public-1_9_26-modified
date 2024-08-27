@@ -107,4 +107,6 @@ SourcesAXR/xrEngine/xrEngine.vcxproj.user
 
 packages/
 *.sqlite
+.vs/
 .vs/ProjectSettings.json
+.vs/VSWorkspaceState.json

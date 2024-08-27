@@ -72,7 +72,7 @@ namespace PAPI
         	if (0==p_count)			return;
 			Particle& m				= particles[i];
             if (d_cb)				d_cb(owner,param,m,i);
-            m 						= particles[--p_count]; // не менять правило удаления !!! (dependence ParticleGroup)
+            m 						= particles[--p_count]; // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ !!! (dependence ParticleGroup)
 			// Msg( "pDel() : %u" , p_count );
 		}
 

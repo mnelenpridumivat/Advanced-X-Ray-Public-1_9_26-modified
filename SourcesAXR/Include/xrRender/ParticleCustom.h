@@ -15,6 +15,9 @@ public:
 	virtual PAPI::Handle<PAPI::pVector> GetVelocityHandle(u32 EffectIndex) = 0;
 	virtual PAPI::Handle<PAPI::pVector> GetRotationHandle(u32 EffectIndex) = 0;
 
+	virtual PAPI::Handle<float> GetFloatHandle(xr_string Name) = 0;
+	virtual PAPI::Handle<PAPI::pVector> GetVectorHandle(xr_string Name) = 0;
+
 	virtual void 	OnDeviceCreate		()=0;
 	virtual void 	OnDeviceDestroy		()=0;
 

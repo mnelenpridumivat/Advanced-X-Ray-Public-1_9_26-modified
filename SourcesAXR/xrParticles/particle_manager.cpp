@@ -104,6 +104,18 @@ ParticleAction* CParticleManager::FindAction(int alist_id, PActionEnum Type)
 	return List->find(Type);
 }
 
+ParticleAction* CParticleManager::FindAction(int alist_id, xr_string Name)
+{
+	auto List = GetActionListPtr(alist_id);
+	for (auto it = List->begin(); it != List->end(); ++it) {
+		auto NameVar = (*it)->GetVariable<xr_string>((u8)PANamedBindValue::Variables::eValueName);
+		if (NameVar && (*NameVar) == Name) {
+			return *it;
+		}
+	}
+	return nullptr;
+}
+
 // control
 void CParticleManager::PlayEffect(int effect_id, int alist_id)
 {

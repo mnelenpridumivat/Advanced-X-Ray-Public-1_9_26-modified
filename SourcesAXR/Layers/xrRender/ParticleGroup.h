@@ -93,6 +93,9 @@ namespace PS
 			virtual PAPI::Handle<PAPI::pVector> GetSizeHandle(u32 EffectIndex);
 			virtual PAPI::Handle<PAPI::pVector> GetVelocityHandle(u32 EffectIndex);
 			virtual PAPI::Handle<PAPI::pVector> GetRotationHandle(u32 EffectIndex);
+
+			virtual PAPI::Handle<float> GetFloatHandle(xr_string Name);
+			virtual PAPI::Handle<PAPI::pVector> GetVectorHandle(xr_string Name);
             
             void			OnDeviceCreate	();
             void			OnDeviceDestroy	();
@@ -125,6 +128,9 @@ namespace PS
 		virtual PAPI::Handle<PAPI::pVector> GetSizeHandle(u32 EffectIndex) override;
 		virtual PAPI::Handle<PAPI::pVector> GetVelocityHandle(u32 EffectIndex) override;
 		virtual PAPI::Handle<PAPI::pVector> GetRotationHandle(u32 EffectIndex) override;
+
+		virtual PAPI::Handle<float> GetFloatHandle(xr_string Name) override;
+		virtual PAPI::Handle<PAPI::pVector> GetVectorHandle(xr_string Name) override;
 
 		virtual				~CParticleGroup	();
 		virtual void	 	OnFrame			(u32 dt);

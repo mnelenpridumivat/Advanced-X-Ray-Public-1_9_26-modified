@@ -29,7 +29,8 @@ namespace PAPI{
 		virtual int					CreateActionList	();
 		virtual void				DestroyActionList	(int alist_id);
 
-        virtual ParticleAction* FindAction(int alist_id, PActionEnum Type);
+        virtual ParticleAction* FindAction(int alist_id, PActionEnum Type) override;
+        virtual ParticleAction* FindAction(int alist_id, xr_string Name) override;
 
         // control
         virtual void				PlayEffect			(int effect_id, int alist_id);

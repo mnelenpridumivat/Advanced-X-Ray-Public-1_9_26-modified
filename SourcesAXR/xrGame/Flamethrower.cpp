@@ -86,7 +86,7 @@ void CFlamethrower::Load(LPCSTR section)
 {
 	inherited::Load(section);
 
-	// Проверяем наличие анимаций
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	SetAnimFlag(ANM_SHOW_EMPTY, "anm_show_empty");
 	SetAnimFlag(ANM_HIDE_EMPTY, "anm_hide_empty");
 	SetAnimFlag(ANM_IDLE_EMPTY, "anm_idle_empty");
@@ -122,7 +122,7 @@ void CFlamethrower::Load(LPCSTR section)
 	if (WeaponSoundExist(section, "snd_change_zoom", true))
 		m_sounds.LoadSound(section, "snd_change_zoom", "sndChangeZoom", m_eSoundEmptyClick);
 
-	// Звуки из класса пистолета
+	// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	if (WeaponSoundExist(section, "snd_close", true))
 		m_sounds.LoadSound(section, "snd_close", "sndClose", false, m_eSoundClose);
 
@@ -414,7 +414,7 @@ int CFlamethrower::CheckAmmoBeforeReload(u8& v_ammoType)
 	{
 		for (u8 i = 0; i < static_cast<u8>(m_ammoTypes.size()); ++i)
 		{
-			//проверить патроны всех подходящих типов
+			//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 			ammo = smart_cast<CFlameCanister*>(m_pInventory->GetAny(m_ammoTypes[i].c_str()));
 			if (ammo)
 			{
@@ -434,7 +434,7 @@ void CFlamethrower::ReloadMagazine()
 {
 	m_BriefInfo_CalcFrame = 0;
 
-	//устранить осечку при перезарядке
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	if (IsMisfire())	bMisfire = false;
 
 	if (!m_bLockType)
@@ -463,7 +463,7 @@ void CFlamethrower::ReloadMagazine()
 		xr_vector<PIItem> canisters;
 		m_pInventory->GetAll(tmp_sect_name, canisters);
 
-		//попытаться найти в инвентаре патроны текущего типа 
+		//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ 
 		//AmmoCanister = smart_cast<CFlameCanister*>(m_pInventory->GetAny(tmp_sect_name));
 		for(int i = 0; i < canisters.size(); ++i)
 		{
@@ -556,8 +556,8 @@ void CFlamethrower::UpdateCL()
 
 	//Msg("Update flamethrower: dt = [%f]", dt);
 
-	//когда происходит апдейт состояния оружия
-	//ничего другого не делать
+	//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+	//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	if (GetNextState() == GetState())
 	{
 		switch (GetState())
@@ -778,7 +778,7 @@ void CFlamethrower::SetDefaults()
 
 void CFlamethrower::OnShot()
 {
-	// Если актор бежит - останавливаем его
+	// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
 	if (ParentIsActor() && GameConstants::GetStopActorIfShoot())
 		Actor()->set_state_wishful(Actor()->get_state_wishful() & (~mcSprint));
 
@@ -795,14 +795,14 @@ void CFlamethrower::OnShot()
 	PHGetLinearVell(vel);
 	OnShellDrop(get_LastSP(), vel);
 
-	// Огонь из ствола
+	// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	StartFlameParticles();
 
-	//дым из ствола
+	//пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	ForceUpdateFireParticles();
 	//StartSmokeParticles(get_LastFP(), vel);
 
-	// Проиграем звук помпы отдельно, если не будет работать то будем думать что делать и как быть
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 	if (m_sounds.FindSoundItem("sndPumpGun", false))
 		PlaySound("sndPumpGun", get_LastFP());
 
@@ -833,7 +833,7 @@ void CFlamethrower::OnShot()
 
 	TraceManager->LaunchTrace(m_vStartPos, m_vStartDir);
 
-	// Эхо выстрела
+	// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	if (IsSilencerAttached() == false)
 	{
 		bool bIndoor = false;
@@ -877,8 +877,8 @@ void CFlamethrower::OnAnimationEnd(u32 state)
 	{
 	case eReload:
 	{
-		//CheckMagazine(); // Основано на механизме из Lost Alpha: New Project
-		// Авторы: rafa & Kondr48
+		//CheckMagazine(); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Lost Alpha: New Project
+		// пїЅпїЅпїЅпїЅпїЅпїЅ: rafa & Kondr48
 
 		CCartridge FirstBulletInGun;
 
@@ -1083,7 +1083,7 @@ bool CFlamethrower::Action(u16 cmd, u32 flags)
 {
 	if (inherited::Action(cmd, flags)) return true;
 
-	//если оружие чем-то занято, то ничего не делать
+	//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ-пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	if (IsPending()) return false;
 
 	switch (cmd)
@@ -1096,12 +1096,12 @@ bool CFlamethrower::Action(u16 cmd, u32 flags)
 		if (flags & CMD_START) {
 			if (m_current_fuel_level < 1.0 || IsMisfire())
 			{
-				if (GetState() == eUnMisfire) // Rietmon: Запрещаем перезарядку, если играет анима передергивания затвора
+				if (GetState() == eUnMisfire) // Rietmon: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 					return false;
 
 				PIItem Det = Actor()->inventory().ItemFromSlot(DETECTOR_SLOT);
 				if (!Det)
-					Reload(); // Rietmon: Если в слоте нету детектора, то он не может быть активен
+					Reload(); // Rietmon: пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
 				if (Det)
 				{
@@ -1243,7 +1243,7 @@ bool CFlamethrower::Attach(PIItem pIItem, bool b_send_event)
 
 		if (b_send_event && OnServer())
 		{
-			//уничтожить подсоединенную вещь из инвентаря
+			//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 //.			pIItem->Drop					();
 			pIItem->object().DestroyObject();
 		};
@@ -1355,7 +1355,7 @@ void CFlamethrower::InitAddons()
 		m_sSmokeParticlesCurrent = m_sSmokeParticles;
 		m_sSndShotCurrent = "sndShot";
 
-		//подсветка от выстрела
+		//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		LoadLights(*cNameSect(), "");
 	}
 

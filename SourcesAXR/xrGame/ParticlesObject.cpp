@@ -52,6 +52,18 @@ PAPI::Handle<PAPI::pVector> CParticlesObject::GetRotationHandle(u32 EffectIndex)
 	return V->GetRotationHandle(EffectIndex);
 }
 
+PAPI::Handle<float> CParticlesObject::GetFloatHandle(xr_string Name)
+{
+	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
+	return V->GetFloatHandle(Name);
+}
+
+PAPI::Handle<PAPI::pVector> CParticlesObject::GetVectorHandle(xr_string Name)
+{
+	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
+	return V->GetVectorHandle(Name);
+}
+
 void CParticlesObject::Init	(LPCSTR p_name, IRender_Sector* S, BOOL bAutoRemove)
 {
 	m_bLooped				= false;
@@ -321,8 +333,8 @@ void CParticlesObject::SetAutoRemove		(bool auto_remove)
 	m_bAutoRemove = auto_remove;
 }
 
-//играются ли партиклы, отличается от PSI_Alive, тем что после
-//остановки Stop партиклы могут еще доигрывать анимацию IsPlaying = true
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ PSI_Alive, пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Stop пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ IsPlaying = true
 bool CParticlesObject::IsPlaying()
 {
 	if(g_dedicated_server)		return false;

@@ -584,4 +584,71 @@ void PABindColorAlpha::Save(IWriter& F) {
 	F.w_float(BindValue);
 }
 
+// named binders
+
+void PANamedBindValue::Load(IReader& F)
+{
+	ParticleAction::Load(F);
+	F.r_stringZ(ValueName);
+}
+void PANamedBindValue::Save(IWriter& F)
+{
+	ParticleAction::Save(F);
+	F.w_stringZ(ValueName);
+}
+
+void PANamedBindVelocityValue::Load(IReader& F)
+{
+	PANamedBindValue::Load(F);
+	F.r_fvector3(BindValue);
+}
+void PANamedBindVelocityValue::Save(IWriter& F)
+{
+	PANamedBindValue::Save(F);
+	F.w_fvector3(BindValue);
+}
+void PANamedBindRotationValue::Load(IReader& F)
+{
+	PANamedBindValue::Load(F);
+	F.r_fvector3(BindValue);
+}
+void PANamedBindRotationValue::Save(IWriter& F)
+{
+	PANamedBindValue::Save(F);
+	F.w_fvector3(BindValue);
+}
+void PANamedBindSizeValue::Load(IReader& F)
+{
+	PANamedBindValue::Load(F);
+	F.r_fvector3(BindValue);
+	F.r_fvector3(Pivot);
+}
+void PANamedBindSizeValue::Save(IWriter& F)
+{
+	PANamedBindValue::Save(F);
+	F.w_fvector3(BindValue);
+	F.w_fvector3(Pivot);
+}
+void PANamedBindColorValue::Load(IReader& F)
+{
+	PANamedBindValue::Load(F);
+	F.r_fvector3(BindValue);
+}
+void PANamedBindColorValue::Save(IWriter& F)
+{
+	PANamedBindValue::Save(F);
+	F.w_fvector3(BindValue);
+}
+void PANamedBindColorAlpha::Load(IReader& F)
+{
+	PANamedBindValue::Load(F);
+	F.r_stringZ(ValueName);
+	BindValue = F.r_float();
+}
+void PANamedBindColorAlpha::Save(IWriter& F)
+{
+	PANamedBindValue::Save(F);
+	F.w_float(BindValue);
+}
+
 

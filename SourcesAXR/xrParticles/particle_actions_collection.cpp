@@ -1963,5 +1963,82 @@ void PABindColorAlpha::Execute(ParticleEffect* effect, const float dt, float& tm
 		m.color = c_t.get();
 	}
 }
+
+// named binders
+
+void PANamedBindValue::Transform(const Fmatrix& m) {}
+void PANamedBindValue::Execute(ParticleEffect* effect, const float dt, float& tm_max)
+{}
+
+void PANamedBindVelocityValue::Transform(const Fmatrix& m) {}
+void PANamedBindVelocityValue::Execute(ParticleEffect* effect, const float dt, float& tm_max)
+{
+	for (u32 i = 0; i < effect->p_count; i++)
+	{
+		Particle& m = effect->particles[i];
+		m.vel = BindValue;
+	}
+}
+void PANamedBindRotationValue::Transform(const Fmatrix& m) {}
+void PANamedBindRotationValue::Execute(ParticleEffect* effect, const float dt, float& tm_max)
+{
+	for (u32 i = 0; i < effect->p_count; i++)
+	{
+		Particle& m = effect->particles[i];
+		m.rot.x = BindValue.x;
+	}
+}
+void PANamedBindSizeValue::Transform(const Fmatrix& m) {}
+void PANamedBindSizeValue::Execute(ParticleEffect* effect, const float dt, float& tm_max)
+{
+	for (u32 i = 0; i < effect->p_count; i++)
+	{
+		Particle& m = effect->particles[i];
+
+		pVector   Coeff;
+
+		Coeff.x = Pivot.x / m.size.x;
+		Coeff.y = Pivot.y / m.size.y;
+		Coeff.z = Pivot.z / m.size.z;
+
+		pVector Deviation = m.pos - Pivot;
+
+		m.size = BindValue;
+
+		m.pos.x = Coeff.x * m.size.x;
+		m.pos.y = Coeff.y * m.size.y;
+		m.pos.z = Coeff.z * m.size.z;
+
+		m.pos += Deviation;
+	}
+}
+void PANamedBindColorValue::Transform(const Fmatrix& m) {}
+void PANamedBindColorValue::Execute(ParticleEffect* effect, const float dt, float& tm_max)
+{
+	Fcolor c_p, c_t;
+
+	for (u32 i = 0; i < effect->p_count; i++)
+	{
+		Particle& m = effect->particles[i];
+
+		c_p.set(m.color);
+		c_t.set(BindValue.x, BindValue.y, BindValue.z, c_p.a);
+		m.color = c_t.get();
+	}
+}
+void PANamedBindColorAlpha::Transform(const Fmatrix& m) {}
+void PANamedBindColorAlpha::Execute(ParticleEffect* effect, const float dt, float& tm_max)
+{
+	Fcolor c_p, c_t;
+
+	for (u32 i = 0; i < effect->p_count; i++)
+	{
+		Particle& m = effect->particles[i];
+
+		c_p.set(m.color);
+		c_t.set(c_p.r, c_p.g, c_p.b, BindValue);
+		m.color = c_t.get();
+	}
+}
 //-------------------------------------------------------------------------------------------------
 

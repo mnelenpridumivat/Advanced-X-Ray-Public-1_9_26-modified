@@ -249,6 +249,26 @@ PAPI::Handle<PAPI::pVector> CParticleGroup::SItem::GetRotationHandle(u32 EffectI
     return PAPI::Handle<PAPI::pVector>();
 }
 
+PAPI::Handle<float> PS::CParticleGroup::SItem::GetFloatHandle(xr_string Name)
+{
+    IParticleCustom* E = smart_cast<IParticleCustom*>(_effect);
+    if (E)
+    {
+        return E->GetFloatHandle(Name);
+    }
+    return PAPI::Handle<float>();
+}
+
+PAPI::Handle<PAPI::pVector> PS::CParticleGroup::SItem::GetVectorHandle(xr_string Name)
+{
+    IParticleCustom* E = smart_cast<IParticleCustom*>(_effect);
+    if (E)
+    {
+        return E->GetVectorHandle(Name);
+    }
+    return PAPI::Handle<PAPI::pVector>();
+}
+
 void CParticleGroup::SItem::StartRelatedChild(CParticleEffect* emitter, LPCSTR eff_name, PAPI::Particle& m)
 {
     CParticleEffect*C		= static_cast<CParticleEffect*>(RImplementation.model_CreatePE(eff_name));
@@ -547,6 +567,38 @@ PAPI::Handle<PAPI::pVector> CParticleGroup::GetRotationHandle(u32 EffectIndex)
         VERIFY2(EffectIndex < items.size(), ErrorMessage.c_str());
     }
     return items[EffectIndex].GetRotationHandle(0);
+}
+
+PAPI::Handle<float> PS::CParticleGroup::GetFloatHandle(xr_string Name)
+{
+    for (auto& item : items) {
+        auto handle = item.GetFloatHandle(Name);
+        if (handle.IsValid()) {
+            return handle;
+        }
+    }
+    /*xr_string ErrorMessage = "Cannot find binder ";
+    ErrorMessage.append(Name);
+    ErrorMessage.append(" in particle group ");
+    ErrorMessage.append(m_Def->m_Name.c_str());
+    VERIFY2(false, ErrorMessage.c_str());*/
+    return PAPI::Handle<float>();
+}
+
+PAPI::Handle<PAPI::pVector> PS::CParticleGroup::GetVectorHandle(xr_string Name)
+{
+    for (auto& item : items) {
+        auto handle = item.GetVectorHandle(Name);
+        if (handle.IsValid()) {
+            return handle;
+        }
+    }
+    /*xr_string ErrorMessage = "Cannot find binder ";
+    ErrorMessage.append(Name);
+    ErrorMessage.append(" in particle group ");
+    ErrorMessage.append(m_Def->m_Name.c_str());
+    VERIFY2(false, ErrorMessage.c_str());*/
+    return PAPI::Handle<PAPI::pVector>();
 }
 
 
