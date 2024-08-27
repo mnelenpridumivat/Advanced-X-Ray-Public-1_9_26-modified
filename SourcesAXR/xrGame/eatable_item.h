@@ -39,6 +39,8 @@ public:
 	u32				Cost						()	const override;
 	float			Weight						()	const override;
 
+	virtual bool				CheckInventoryIconItemSimilarity(CInventoryItem* other) override;
+
 	IC		u32				GetPortionsNum				()	const				{return m_iPortionsNum;}
 			u32				m_iConstPortions;
 			u32				m_iPortionsNum;

@@ -369,3 +369,14 @@ float CEatableItem::Weight() const
 
 	return res;
 }
+
+bool CEatableItem::CheckInventoryIconItemSimilarity(CInventoryItem* other)
+{
+	if (!inherited::CheckInventoryIconItemSimilarity(other))
+	{
+		return false;
+	}
+	auto eatable = smart_cast<CEatableItem*>(other);
+	VERIFY(eatable);
+	return eatable->GetPortionsNum() == GetPortionsNum();
+}

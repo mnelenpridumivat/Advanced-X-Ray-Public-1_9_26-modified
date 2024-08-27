@@ -317,6 +317,17 @@ bool CDetectorAnomaly::IsNecessaryItem(const shared_str& item_sect, xr_vector<sh
 	return (std::find(item.begin(), item.end(), item_sect) != item.end());
 }
 
+bool CDetectorAnomaly::CheckInventoryIconItemSimilarity(CInventoryItem* other)
+{
+	if (!inherited::CheckInventoryIconItemSimilarity(other))
+	{
+		return false;
+	}
+	auto ano_det = smart_cast<CDetectorAnomaly*>(other);
+	VERIFY(ano_det);
+	return ano_det->GetCurrentChargeLevel() == GetCurrentChargeLevel();
+}
+
 /*void CCustomDetector::AddRemoveMapSpot(CCustomZone* pZone, bool bAdd)
 {
 	if(m_ZoneTypeMap.find(pZone->CLS_ID) == m_ZoneTypeMap.end() )return;

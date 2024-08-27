@@ -2057,14 +2057,14 @@ void CActor::UpdateArtefactsOnBelt()
 			CArtefact* artefact = smart_cast<CArtefact*>(*itR);
 			if (artefact)
 			{
-				if (artefact->m_fRadiationRestoreSpeed > 0.0f)
+				if (artefact->GetRadiationPower() > 0.0f)
 				{
-					float val = artefact->m_fRadiationRestoreSpeed - conditions().GetBoostRadiationImmunity();
+					float val = artefact->GetRadiationPower() - conditions().GetBoostRadiationImmunity();
 					clamp(val, 0.0f, val);
 					conditions().ChangeRadiation(val * f_update_time);
 				}
 				else
-					conditions().ChangeRadiation(artefact->m_fRadiationRestoreSpeed * f_update_time);
+					conditions().ChangeRadiation(artefact->GetRadiationPower() * f_update_time);
 
 				if (GameConstants::GetArtefactsDegradation() && (xr_strcmp("from_ruck", GameConstants::GetArtefactDegradationMode()) == 0))
 					artefact->UpdateDegradation();
@@ -2077,28 +2077,28 @@ void CActor::UpdateArtefactsOnBelt()
 		CArtefact* artefact = smart_cast<CArtefact*>(*it);
 		if (artefact)
 		{
-			conditions().ChangeBleeding(artefact->m_fBleedingRestoreSpeed * f_update_time);
-			conditions().ChangeHealth(artefact->m_fHealthRestoreSpeed * f_update_time);
-			conditions().ChangePower(artefact->m_fPowerRestoreSpeed * f_update_time);
-			conditions().ChangeSatiety(artefact->m_fSatietyRestoreSpeed * f_update_time);
-			conditions().ChangeThirst(artefact->m_fThirstRestoreSpeed * f_update_time);
-			conditions().ChangeIntoxication(artefact->m_fIntoxicationRestoreSpeed * f_update_time);
-			conditions().ChangeSleepeness(artefact->m_fSleepenessRestoreSpeed * f_update_time);
-			conditions().ChangeAlcoholism(artefact->m_fAlcoholismRestoreSpeed * f_update_time);
-			conditions().ChangeNarcotism(artefact->m_fNarcotismRestoreSpeed * f_update_time);
-			conditions().ChangePsyHealth(artefact->m_fPsyHealthRestoreSpeed * f_update_time);
+			conditions().ChangeBleeding(artefact->GetBleedingPower() * f_update_time);
+			conditions().ChangeHealth(artefact->GetHealthPower() * f_update_time);
+			conditions().ChangePower(artefact->GetPowerPower() * f_update_time);
+			conditions().ChangeSatiety(artefact->GetSatietyPower() * f_update_time);
+			conditions().ChangeThirst(artefact->GetThirstPower() * f_update_time);
+			conditions().ChangeIntoxication(artefact->GetIntoxicationPower() * f_update_time);
+			conditions().ChangeSleepeness(artefact->GetSleepenessPower() * f_update_time);
+			conditions().ChangeAlcoholism(artefact->GetAlcoholismPower() * f_update_time);
+			conditions().ChangeNarcotism(artefact->GetNarcotismPower() * f_update_time);
+			conditions().ChangePsyHealth(artefact->GetPsyHealthPower() * f_update_time);
 
 			if (GameConstants::GetArtefactsDegradation())
 				artefact->UpdateDegradation();
 
-			if (artefact->m_fRadiationRestoreSpeed > 0.0f)
+			if (artefact->GetRadiationPower() > 0.0f)
 			{
-				float val = artefact->m_fRadiationRestoreSpeed - conditions().GetBoostRadiationImmunity();
+				float val = artefact->GetRadiationPower() - conditions().GetBoostRadiationImmunity();
 				clamp(val, 0.0f, val);
 				conditions().ChangeRadiation(val * f_update_time);
 			}
 			else
-				conditions().ChangeRadiation(artefact->m_fRadiationRestoreSpeed * f_update_time);
+				conditions().ChangeRadiation(artefact->GetRadiationPower() * f_update_time);
 		}
 	}
 }
@@ -2128,28 +2128,28 @@ void CActor::UpdateArtefactsInRuck()
 		CArtefact* artefact = smart_cast<CArtefact*>(*it);
 		if (artefact)
 		{
-			conditions().ChangeBleeding(artefact->m_fBleedingRestoreSpeed * f_update_time);
-			conditions().ChangeHealth(artefact->m_fHealthRestoreSpeed * f_update_time);
-			conditions().ChangePower(artefact->m_fPowerRestoreSpeed * f_update_time);
-			conditions().ChangeSatiety(artefact->m_fSatietyRestoreSpeed * f_update_time);
-			conditions().ChangeThirst(artefact->m_fThirstRestoreSpeed * f_update_time);
-			conditions().ChangeIntoxication(artefact->m_fIntoxicationRestoreSpeed * f_update_time);
-			conditions().ChangeSleepeness(artefact->m_fSleepenessRestoreSpeed * f_update_time);
-			conditions().ChangeAlcoholism(artefact->m_fAlcoholismRestoreSpeed * f_update_time);
-			conditions().ChangeNarcotism(artefact->m_fNarcotismRestoreSpeed * f_update_time);
-			conditions().ChangePsyHealth(artefact->m_fPsyHealthRestoreSpeed * f_update_time);
+			conditions().ChangeBleeding(artefact->GetBleedingPower() * f_update_time);
+			conditions().ChangeHealth(artefact->GetHealthPower() * f_update_time);
+			conditions().ChangePower(artefact->GetPowerPower() * f_update_time);
+			conditions().ChangeSatiety(artefact->GetSatietyPower() * f_update_time);
+			conditions().ChangeThirst(artefact->GetThirstPower() * f_update_time);
+			conditions().ChangeIntoxication(artefact->GetIntoxicationPower() * f_update_time);
+			conditions().ChangeSleepeness(artefact->GetSleepenessPower() * f_update_time);
+			conditions().ChangeAlcoholism(artefact->GetAlcoholismPower() * f_update_time);
+			conditions().ChangeNarcotism(artefact->GetNarcotismPower() * f_update_time);
+			conditions().ChangePsyHealth(artefact->GetPsyHealthPower() * f_update_time);
 
 			if (GameConstants::GetArtefactsDegradation())
 				artefact->UpdateDegradation();
 
-			if (artefact->m_fRadiationRestoreSpeed > 0.0f)
+			if (artefact->GetRadiationPower() > 0.0f)
 			{
-				float val = artefact->m_fRadiationRestoreSpeed - conditions().GetBoostRadiationImmunity();
+				float val = artefact->GetRadiationPower() - conditions().GetBoostRadiationImmunity();
 				clamp(val, 0.0f, val);
 				conditions().ChangeRadiation(val * f_update_time);
 			}
 			else
-				conditions().ChangeRadiation(artefact->m_fRadiationRestoreSpeed * f_update_time);
+				conditions().ChangeRadiation(artefact->GetRadiationPower() * f_update_time);
 		}
 	}
 }
@@ -2233,7 +2233,7 @@ float	CActor::HitArtefactsOnBelt(float hit_power, ALife::EHitType hit_type)
 			CArtefact* artefact = smart_cast<CArtefact*>(*it);
 			if (artefact)
 			{
-				hit_power -= artefact->m_ArtefactHitImmunities.AffectHit(1.0f, hit_type);
+				hit_power -= artefact->ArtAffectHit(1.0f, hit_type);
 			}
 		}
 	}
@@ -2244,7 +2244,7 @@ float	CActor::HitArtefactsOnBelt(float hit_power, ALife::EHitType hit_type)
 			CArtefact* artefact = smart_cast<CArtefact*>(*itR);
 			if (artefact)
 			{
-				hit_power -= artefact->m_ArtefactHitImmunities.AffectHit(1.0f, hit_type);
+				hit_power -= artefact->ArtAffectHit(1.0f, hit_type);
 			}
 		}
 	}
@@ -2269,7 +2269,7 @@ float CActor::GetProtection_ArtefactsOnBelt( ALife::EHitType hit_type )
 			CArtefact* artefact = smart_cast<CArtefact*>(*it);
 			if (artefact)
 			{
-				sum += artefact->m_ArtefactHitImmunities.AffectHit(1.0f, hit_type);
+				sum += artefact->ArtAffectHit(1.0f, hit_type);
 			}
 		}
 	}
@@ -2280,7 +2280,7 @@ float CActor::GetProtection_ArtefactsOnBelt( ALife::EHitType hit_type )
 			CArtefact* artefact = smart_cast<CArtefact*>(*itR);
 			if (artefact)
 			{
-				sum += artefact->m_ArtefactHitImmunities.AffectHit(1.0f, hit_type);
+				sum += artefact->ArtAffectHit(1.0f, hit_type);
 			}
 		}
 	}
@@ -2444,7 +2444,7 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 			CArtefact*	artefact = smart_cast<CArtefact*>( *itb );
 			if ( artefact )
 			{
-				res += artefact->m_fHealthRestoreSpeed;
+				res += artefact->GetHealthPower();
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();
@@ -2469,7 +2469,7 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 			CArtefact*	artefact = smart_cast<CArtefact*>( *itb );
 			if ( artefact )
 			{
-				res += artefact->m_fRadiationRestoreSpeed;
+				res += artefact->GetRadiationPower();
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();
@@ -2496,7 +2496,7 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 			CArtefact*	artefact = smart_cast<CArtefact*>( *itb );
 			if ( artefact )
 			{
-				res += artefact->m_fSatietyRestoreSpeed;
+				res += artefact->GetSatietyPower();
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();
@@ -2523,7 +2523,7 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 			CArtefact*	artefact = smart_cast<CArtefact*>( *itb );
 			if ( artefact )
 			{
-				res += artefact->m_fPowerRestoreSpeed;
+				res += artefact->GetPowerPower();
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();
@@ -2557,7 +2557,7 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 			CArtefact*	artefact = smart_cast<CArtefact*>( *itb );
 			if ( artefact )
 			{
-				res += artefact->m_fBleedingRestoreSpeed;
+				res += artefact->GetBleedingPower();
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();
@@ -2584,7 +2584,7 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 			CArtefact*	artefact = smart_cast<CArtefact*>(*itb);
 			if (artefact)
 			{
-				res += artefact->m_fThirstRestoreSpeed;
+				res += artefact->GetThirstPower();
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();
@@ -2609,7 +2609,7 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 			CArtefact* artefact = smart_cast<CArtefact*>(*itb);
 			if (artefact)
 			{
-				res += artefact->m_fIntoxicationRestoreSpeed;
+				res += artefact->GetIntoxicationPower();
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();
@@ -2634,7 +2634,7 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 			CArtefact* artefact = smart_cast<CArtefact*>(*itb);
 			if (artefact)
 			{
-				res += artefact->m_fSleepenessRestoreSpeed;
+				res += artefact->GetSleepenessPower();
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();
@@ -2659,7 +2659,7 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 			CArtefact* artefact = smart_cast<CArtefact*>(*itb);
 			if (artefact)
 			{
-				res += artefact->m_fAlcoholismRestoreSpeed;
+				res += artefact->GetAlcoholismPower();
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();
@@ -2684,7 +2684,7 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 			CArtefact* artefact = smart_cast<CArtefact*>(*itb);
 			if (artefact)
 			{
-				res += artefact->m_fNarcotismRestoreSpeed;
+				res += artefact->GetNarcotismPower();
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();
@@ -2709,7 +2709,7 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 			CArtefact* artefact = smart_cast<CArtefact*>(*itb);
 			if (artefact)
 			{
-				res += artefact->m_fPsyHealthRestoreSpeed;
+				res += artefact->GetPsyHealthPower();
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();

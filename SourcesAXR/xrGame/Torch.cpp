@@ -697,6 +697,17 @@ float CTorch::get_range() const
 	return light_render->get_range();
 }
 
+bool CTorch::CheckInventoryIconItemSimilarity(CInventoryItem* other)
+{
+	if (!inherited::CheckInventoryIconItemSimilarity(other))
+	{
+		return false;
+	}
+	auto torch = smart_cast<CTorch*>(other);
+	VERIFY(torch);
+	return torch->GetCurrentChargeLevel() == GetCurrentChargeLevel();
+}
+
 bool CTorch::install_upgrade_impl(LPCSTR section, bool test)
 {
 	bool result = inherited::install_upgrade_impl(section, test);

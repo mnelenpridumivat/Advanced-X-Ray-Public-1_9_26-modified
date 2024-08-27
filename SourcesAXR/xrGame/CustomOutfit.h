@@ -38,6 +38,8 @@ public:
 	void					FilterReplace		(float val);
 	bool					IsNecessaryItem		(const shared_str& item_sect, xr_vector<shared_str> item);
 
+	virtual bool				CheckInventoryIconItemSimilarity(CInventoryItem* other) override;
+
 protected:
 
 	shared_str				m_ActorVisual;

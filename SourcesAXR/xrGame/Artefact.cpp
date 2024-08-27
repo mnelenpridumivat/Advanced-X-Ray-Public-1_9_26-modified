@@ -36,7 +36,7 @@
 
 extern float af_from_container_charge_level;
 extern int af_from_container_rank;
-extern CArtefactContainer* m_LastAfContainer;
+extern CArtContainer* m_LastAfContainer;
 
 CArtefact::CArtefact() 
 {
@@ -897,6 +897,25 @@ u32 CArtefact::Cost() const
 	}
 
 	return res;
+}
+
+bool CArtefact::CheckInventoryIconItemSimilarity(CInventoryItem* other)
+{
+	if (!inherited::CheckInventoryIconItemSimilarity(other))
+	{
+		return false;
+	}
+	auto artefact = smart_cast<CArtefact*>(other);
+	VERIFY(artefact);
+	if (!fsimilar(artefact->GetCurrentChargeLevel(), GetCurrentChargeLevel(), 0.01f))
+	{
+		return false;
+	}
+	if (artefact->GetCurrentAfRank() != GetCurrentAfRank())
+	{
+		return false;
+	}
+	return true;
 }
 
 bool CArtefact::IsInContainer()

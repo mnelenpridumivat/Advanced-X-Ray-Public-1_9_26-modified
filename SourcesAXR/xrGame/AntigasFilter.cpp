@@ -72,6 +72,17 @@ bool CAntigasFilter::UseAllowed()
 		return false;
 }
 
+bool CAntigasFilter::CheckInventoryIconItemSimilarity(CInventoryItem* other)
+{
+	if(!inherited::CheckInventoryIconItemSimilarity(other))
+	{
+		return false;
+	}
+	auto filter = smart_cast<CAntigasFilter*>(other);
+	VERIFY(filter);
+	return fsimilar(filter->GetFilterCondition(), GetFilterCondition(), 0.01f);
+}
+
 bool CAntigasFilter::UseBy(CEntityAlive* entity_alive)
 {
 	if (!inherited::Useful()) return false;

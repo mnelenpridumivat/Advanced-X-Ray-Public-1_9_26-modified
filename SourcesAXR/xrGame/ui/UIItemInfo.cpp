@@ -445,7 +445,7 @@ void CUIItemInfo::TryAddItemInfo(CInventoryItem& pInvItem)
 	CTorch* torch = smart_cast<CTorch*>(&pInvItem);
 	CCustomDetector* artefact_detector = smart_cast<CCustomDetector*>(&pInvItem);
 	CDetectorAnomaly* anomaly_detector = smart_cast<CDetectorAnomaly*>(&pInvItem);
-	CArtefactContainer* af_container = smart_cast<CArtefactContainer*>(&pInvItem);
+	CArtContainer* af_container = smart_cast<CArtContainer*>(&pInvItem);
 	CCustomBackpack* backpack = smart_cast<CCustomBackpack*>(&pInvItem);
 
 	bool ShowChargeTorch = GameConstants::GetTorchHasBattery();

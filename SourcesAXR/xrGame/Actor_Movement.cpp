@@ -224,7 +224,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 				CArtefact* artefact = smart_cast<CArtefact*>(*it);
 				if (artefact)
 				{
-					jump_k *= (artefact->m_fJumpSpeed * artefact->GetCondition());
+					jump_k *= (artefact->GetJumpPower() * artefact->GetCondition());
 				}
 			}
 
@@ -317,7 +317,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 					CArtefact* artefact = smart_cast<CArtefact*>(*it);
 					if (artefact)
 					{
-						accel_k *= (artefact->m_fWalkAccel * artefact->GetCondition());
+						accel_k *= (artefact->GetWalkPower() * artefact->GetCondition());
 					}
 				}
 

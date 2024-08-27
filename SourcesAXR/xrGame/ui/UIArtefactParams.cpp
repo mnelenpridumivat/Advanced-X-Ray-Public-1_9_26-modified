@@ -299,7 +299,7 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 
 	for ( u32 i = 0; i < ALife::infl_max_count; ++i )
 	{
-		val = artefact->m_HitTypeProtection[static_cast<ALife::EInfluenceType>(i)];
+		val = artefact->GetProtection(static_cast<ALife::EInfluenceType>(i));
 		if ( fis_zero(val) )
 		{
 			continue;
@@ -318,7 +318,7 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 
 	if (artefact)
 	{
-		val = artefact->m_additional_weight;
+		val = artefact->AdditionalInventoryWeight();
 		if (!fis_zero(val))
 		{
 			m_additional_weight->SetValue(val, 2);
@@ -331,7 +331,7 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 			AttachChild(m_additional_weight);
 		}
 
-		val = artefact->m_fHealthRestoreSpeed;
+		val = artefact->GetHealthPower();
 		if (!fis_zero(val))
 		{
 			m_fHealthRestoreSpeed->SetValue(val, 2);
@@ -344,7 +344,7 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 			AttachChild(m_fHealthRestoreSpeed);
 		}
 
-		val = artefact->m_fRadiationRestoreSpeed;
+		val = artefact->GetRadiationPower();
 		if (!fis_zero(val))
 		{
 			m_fRadiationRestoreSpeed->SetValue(val, 1);
@@ -357,7 +357,7 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 			AttachChild(m_fRadiationRestoreSpeed);
 		}
 
-		val = artefact->m_fSatietyRestoreSpeed;
+		val = artefact->GetSatietyPower();
 		if (!fis_zero(val))
 		{
 			m_fSatietyRestoreSpeed->SetValue(val, 2);
@@ -370,7 +370,7 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 			AttachChild(m_fSatietyRestoreSpeed);
 		}
 
-		val = artefact->m_fPowerRestoreSpeed;
+		val = artefact->GetPowerPower();
 		if (!fis_zero(val))
 		{
 			m_fPowerRestoreSpeed->SetValue(val, 2);
@@ -383,7 +383,7 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 			AttachChild(m_fPowerRestoreSpeed);
 		}
 
-		val = artefact->m_fBleedingRestoreSpeed;
+		val = artefact->GetBleedingPower();
 		if (!fis_zero(val))
 		{
 			m_fBleedingRestoreSpeed->SetValue(val, 2);
@@ -396,7 +396,7 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 			AttachChild(m_fBleedingRestoreSpeed);
 		}
 
-		val = artefact->m_fThirstRestoreSpeed;
+		val = artefact->GetThirstPower();
 		if (!fis_zero(val))
 		{
 			m_fThirstRestoreSpeed->SetValue(val, 2);
@@ -409,7 +409,7 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 			AttachChild(m_fThirstRestoreSpeed);
 		}
 
-		val = artefact->m_fIntoxicationRestoreSpeed;
+		val = artefact->GetIntoxicationPower();
 		if (!fis_zero(val))
 		{
 			m_fIntoxicationRestoreSpeed->SetValue(val, 1);
@@ -422,7 +422,7 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 			AttachChild(m_fIntoxicationRestoreSpeed);
 		}
 
-		val = artefact->m_fSleepenessRestoreSpeed;
+		val = artefact->GetSleepenessPower();
 		if (!fis_zero(val))
 		{
 			m_fSleepenessRestoreSpeed->SetValue(val, 1);
@@ -435,7 +435,7 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 			AttachChild(m_fSleepenessRestoreSpeed);
 		}
 
-		val = artefact->m_fAlcoholismRestoreSpeed;
+		val = artefact->GetAlcoholismPower();
 		if (!fis_zero(val))
 		{
 			m_fAlcoholismRestoreSpeed->SetValue(val, 1);
@@ -448,7 +448,7 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 			AttachChild(m_fAlcoholismRestoreSpeed);
 		}
 
-		val = artefact->m_fPsyHealthRestoreSpeed;
+		val = artefact->GetPsyHealthPower();
 		if (!fis_zero(val))
 		{
 			m_fPsyHealthRestoreSpeed->SetValue(val, 2);
@@ -461,7 +461,7 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 			AttachChild(m_fPsyHealthRestoreSpeed);
 		}
 
-		val = artefact->m_fWalkAccel;
+		val = artefact->GetWalkPower();
 		if (!fis_zero(val) && val > 1.0f)
 		{
 			m_fWalkAccel->SetValue(val, 2);
@@ -474,7 +474,7 @@ void CUIArtefactParams::SetInfo(CInventoryItem& pInvItem)
 			AttachChild(m_fWalkAccel);
 		}
 
-		val = artefact->m_fJumpSpeed;
+		val = artefact->GetJumpPower();
 		if (!fis_zero(val) && val > 1.0f)
 		{
 			m_fJumpSpeed->SetValue(val, 2);
