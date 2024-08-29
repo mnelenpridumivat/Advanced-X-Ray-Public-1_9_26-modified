@@ -53,7 +53,7 @@ SERVER_ENTITY_DECLARE_BEGIN0(CSE_ALifeTraderAbstract)
 	bool							m_deadbody_closed;
 
 #ifdef XRGAME_EXPORTS
-	//для работы с relation system
+	//пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ relation system
 	u16								object_id				() const;
 	CHARACTER_COMMUNITY_INDEX		Community				() const;
 	LPCSTR							CommunityName			() const;
@@ -66,7 +66,7 @@ SERVER_ENTITY_DECLARE_BEGIN0(CSE_ALifeTraderAbstract)
 	shared_str						m_sCharacterProfile;
 	shared_str						m_SpecificCharacter;
 
-	//буферный вектор проверенных персонажей
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	xr_vector<shared_str> m_CheckedCharacters;
 	xr_vector<shared_str> m_DefaultCharacters;
 
@@ -339,7 +339,7 @@ SERVER_ENTITY_DECLARE_BEGIN3(CSE_ALifeCreatureActor,CSE_ALifeCreatureAbstract,CS
 	SPHNetState						m_AliveState;
 //	PH_STATES						m_DeadStates;
 
-	// статический массив - 6 float(вектора пределов квантизации) + m_u16NumItems*(7 u8) (позиция и поворот кости)
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ - 6 float(пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) + m_u16NumItems*(7 u8) (пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ)
 	u8								m_BoneDataSize;
 	char							m_DeadBodyData[1024];
 	///////////////////////////////////////////

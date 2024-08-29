@@ -38,7 +38,10 @@
 #else
 	// "release"
 	#if defined(_CPPUNWIND) && !defined __BORLANDC__
-		#error Please disable exceptions...
+		//#define _CRT_STRINGIZE_(x) #x
+		//#define _CRT_STRINGIZE(x) _CRT_STRINGIZE_(x)
+		//#pragma message(__FILE__ "(" _CRT_STRINGIZE(__LINE__) ")" ": warning: Please disable exceptions... message off!")
+		//#error Please disable exceptions...
 	#endif
 	#define _HAS_EXCEPTIONS		1	// STL
 	#define XRAY_EXCEPTIONS		0	// XRAY

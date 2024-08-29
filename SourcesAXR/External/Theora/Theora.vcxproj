@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+    <Import Project="..\..\xray_ProjectConfigurations.props" />
+  </ImportGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Public\theora\codec.h" />
+    <ClInclude Include="..\Public\theora\theora.h" />
+    <ClInclude Include="..\Public\theora\theoradec.h" />
+    <ClInclude Include="..\Public\theora\theoraenc.h" />
+    <ClInclude Include="apiwrapper.h" />
+    <ClInclude Include="bitpack.h" />
+    <ClInclude Include="cpu.h" />
+    <ClInclude Include="dct.h" />
+    <ClInclude Include="decint.h" />
+    <ClInclude Include="dequant.h" />
+    <ClInclude Include="encint.h" />
+    <ClInclude Include="enquant.h" />
+    <ClInclude Include="huffdec.h" />
+    <ClInclude Include="huffenc.h" />
+    <ClInclude Include="huffman.h" />
+    <ClInclude Include="internal.h" />
+    <ClInclude Include="mathops.h" />
+    <ClInclude Include="mmxfrag.h" />
+    <ClInclude Include="mmxloop.h" />
+    <ClInclude Include="modedec.h" />
+    <ClInclude Include="ocintrin.h" />
+    <ClInclude Include="quant.h" />
+    <ClInclude Include="x86enc.h" />
+    <ClInclude Include="x86int.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="analyze.c" />
+    <ClCompile Include="apiwrapper.c" />
+    <ClCompile Include="bitpack.c" />
+    <ClCompile Include="cpu.c" />
+    <ClCompile Include="decapiwrapper.c" />
+    <ClCompile Include="decinfo.c" />
+    <ClCompile Include="decode.c" />
+    <ClCompile Include="dequant.c" />
+    <ClCompile Include="encapiwrapper.c" />
+    <ClCompile Include="encfrag.c" />
+    <ClCompile Include="encinfo.c" />
+    <ClCompile Include="encode.c" />
+    <ClCompile Include="encoder_disabled.c" />
+    <ClCompile Include="enquant.c" />
+    <ClCompile Include="fdct.c" />
+    <ClCompile Include="fragment.c" />
+    <ClCompile Include="huffdec.c" />
+    <ClCompile Include="huffenc.c" />
+    <ClCompile Include="idct.c" />
+    <ClCompile Include="info.c" />
+    <ClCompile Include="internal.c" />
+    <ClCompile Include="mathops.c" />
+    <ClCompile Include="mcenc.c" />
+    <ClCompile Include="mmxencfrag.c" />
+    <ClCompile Include="mmxfdct.c" />
+    <ClCompile Include="mmxfrag.c" />
+    <ClCompile Include="mmxidct.c" />
+    <ClCompile Include="mmxstate.c" />
+    <ClCompile Include="quant.c" />
+    <ClCompile Include="rate.c" />
+    <ClCompile Include="state.c" />
+    <ClCompile Include="tokenize.c" />
+    <ClCompile Include="x86enc.c" />
+    <ClCompile Include="x86state.c" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{0CBE8406-AE28-414B-B353-CB2D3C4003C8}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Theora</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="..\..\xray_PlatformToolset.props" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\xray.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\xray.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)..\_Build\Lib\$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\_Build\Lib\$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>Full</Optimization>
+      <StringPooling>true</StringPooling>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

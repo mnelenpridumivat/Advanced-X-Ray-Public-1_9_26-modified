@@ -11,6 +11,7 @@ struct ECORE_API STextureParams{
         ttTerrain,
 		ttForceU32	= u32(-1)
 	};
+#pragma message(__FILE__ "(" _CRT_STRINGIZE(__LINE__) ")" ": warning: added enum values not properly inserted into engine after migration from HybridXRay")
 	enum ETFormat{
     	tfDXT1 = 0,
         tfADXT1,
@@ -26,6 +27,10 @@ struct ECORE_API STextureParams{
 		tfA8,
 		tfL8,
 		tfA8L8,
+		tfBC4, //added
+		tfBC5, //added
+		tfBC6, //added
+		tfBC7, //added
 		tfForceU32	= u32(-1)
 	};
     enum ETBumpMode{
@@ -145,10 +150,10 @@ struct ECORE_API STextureParams{
 
     IC BOOL HasAlpha()
     { 
-    	// исходная текстура содержит альфа канал
+    	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     	return flags.is(flHasAlpha);
     }
-	IC BOOL HasAlphaChannel() // игровая текстура содержит альфа канал
+	IC BOOL HasAlphaChannel() // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 	{
 		switch (fmt)
 		{

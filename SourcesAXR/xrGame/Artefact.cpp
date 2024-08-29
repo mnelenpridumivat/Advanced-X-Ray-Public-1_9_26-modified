@@ -82,7 +82,7 @@ void CArtefact::Load(LPCSTR section)
 		m_fConstTrailLightRange = pSettings->r_float(section,"trail_light_range");
 	}
 
-	//Случайный начальный ранг артефакта
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	if (GameConstants::GetAfRanks())
 	{
 		int rnd_rank = ::Random.randI(1, 100);
@@ -230,7 +230,7 @@ void CArtefact::OnH_A_Chield()
 		m_detectorObj->m_currPatrolVertex = nullptr;
 	}
 
-	if (m_LastAfContainer) //Костыль для контейнеров, потом надо нормально как-то сделать
+	if (m_LastAfContainer) //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ-пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	{
 		SetChargeLevel(af_from_container_charge_level);
 		SetRank(af_from_container_rank);

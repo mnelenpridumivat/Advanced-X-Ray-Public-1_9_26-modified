@@ -123,13 +123,14 @@ IC void	xr_strlwr		(shared_str& src)									{ if (*src){LPSTR lp=xr_strdup(*src
 
 #pragma pack(pop)
 
-#include <string_view>
+// somehow compiler not recognizes c++17...
+//#include <string_view>
 
 struct transparent_string_hash
 {
 	using is_transparent = void; // https://www.cppstories.com/2021/heterogeneous-access-cpp20/
-	using hash_type = std::hash<std::string_view>;
-	[[nodiscard]] size_t operator()(const std::string_view txt) const noexcept { return hash_type{}(txt); }
+	using hash_type = std::hash<std::string>;
+	//[[nodiscard]] size_t operator()(const std::string_view txt) const noexcept { return hash_type{}(txt); }
 	[[nodiscard]] size_t operator()(const std::string& txt) const noexcept { return hash_type{}(txt); }
 	[[nodiscard]] size_t operator()(const char* txt) const noexcept { return hash_type{}(txt); }
 	[[nodiscard]] size_t operator()(const shared_str& txt) const noexcept { return hash_type{}(*txt); }
@@ -138,7 +139,7 @@ struct transparent_string_hash
 struct transparent_string_equal
 {
 	using is_transparent = void;
-	[[nodiscard]] bool operator()(const std::string_view lhs, const std::string_view rhs) const { return lhs == rhs; }
+	//[[nodiscard]] bool operator()(const std::string_view lhs, const std::string_view rhs) const { return lhs == rhs; }
 	[[nodiscard]] bool operator()(const shared_str& lhs, const shared_str& rhs) const { return lhs == rhs; }
 	[[nodiscard]] bool operator()(const char* lhs, const char* rhs) const
 	{

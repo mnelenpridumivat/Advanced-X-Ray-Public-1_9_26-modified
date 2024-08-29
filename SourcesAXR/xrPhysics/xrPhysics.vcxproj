@@ -508,6 +508,7 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libvorbisfile_static.lib;libogg_static.lib;soft_oal.lib;%(AdditionalDependencies)</AdditionalDependencies>

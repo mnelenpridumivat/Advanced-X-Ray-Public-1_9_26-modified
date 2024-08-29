@@ -168,7 +168,7 @@ protected:
 	shared_str					hud_sect;
 	shared_str					item_sect;
 
-	//кадры момента пересчета XFORM и FirePos
+	//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ XFORM пїЅ FirePos
 	u32							dwFP_Frame;
 	u32							dwXF_Frame;
 

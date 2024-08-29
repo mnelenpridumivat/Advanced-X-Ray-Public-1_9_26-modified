@@ -59,14 +59,14 @@ public:
 
 #else
 
-namespace std
-{
-	template<class _Tp1, class _Tp2>	inline	xalloc<_Tp2>&	__stl_alloc_rebind(xalloc<_Tp1>& __a, const _Tp2*)	{	return (xalloc<_Tp2>&)(__a);	}
-	template<class _Tp1, class _Tp2>	inline	xalloc<_Tp2>	__stl_alloc_create(xalloc<_Tp1>&, const _Tp2*)		{	return xalloc<_Tp2>();			}
+//namespace std
+//{
+	//template<class _Tp1, class _Tp2>	inline	xalloc<_Tp2>&	__stl_alloc_rebind(xalloc<_Tp1>& __a, const _Tp2*)	{	return (xalloc<_Tp2>&)(__a);	}
+	//template<class _Tp1, class _Tp2>	inline	xalloc<_Tp2>	__stl_alloc_create(xalloc<_Tp1>&, const _Tp2*)		{	return xalloc<_Tp2>();			}
 
 	//template<typename left, typename right, typename ret>
 	//using binary_function = function<ret(left, right)>;
-};
+//};
 
 // string(char)
 typedef		std::basic_string<char, std::char_traits<char>, xalloc<char> >	xr_string;

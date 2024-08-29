@@ -59,7 +59,7 @@ void CFlameCanister::OnH_B_Independent(bool just_before_destroy)
 
 bool CFlameCanister::Useful() const
 {
-	// Если IItem еще не полностью использованый, вернуть true
+	// пїЅпїЅпїЅпїЅ IItem пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ true
 	return !!GetCondition();
 }
 
