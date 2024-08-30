@@ -110,3 +110,4 @@ packages/
 .vs/
 .vs/ProjectSettings.json
 .vs/VSWorkspaceState.json
+/SourcesAXR/External/RedImage/libraries/x64

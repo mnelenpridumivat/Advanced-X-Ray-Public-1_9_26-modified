@@ -1552,7 +1552,7 @@ u8 CScriptGameObject::GetRemainingUses()
 	if (!eItm)
 		return 0;
 
-	return eItm->GetPortionsNum();
+	return eItm->GetRemainingUses();
 }
 
 u8 CScriptGameObject::GetMaxUses()

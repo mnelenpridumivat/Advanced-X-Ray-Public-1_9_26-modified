@@ -13,6 +13,11 @@ private:
 protected:
 	CPhysicItem		*m_physic_item;
 
+	u8 m_iMaxUses;
+	u8 m_iRemainingUses;
+	float m_fWeightFull;
+	float m_fWeightEmpty;
+
 public:
 							CEatableItem				();
 	~CEatableItem				() override;
@@ -32,18 +37,20 @@ public:
 			void			UpdateUseAnim				(CActor* actor);
 			void			HideWeapon					();
 			void			StartAnimation				();
-			void SetRemainingUses(u8 value) { if (value > m_iConstPortions) return; m_iPortionsNum = value; };
-			u8 GetMaxUses() const { return m_iConstPortions; };
+
+			void SetRemainingUses(u8 value) { if (value > m_iMaxUses) return; m_iRemainingUses = value; };
+	IC		u8 GetMaxUses() const { return m_iMaxUses; };
+	IC		u8 GetRemainingUses() const { return m_iRemainingUses; };
+
 	virtual	bool			UseBy						(CEntityAlive* npc);
-	virtual	bool			Empty						()						{return m_iPortionsNum==0;};
+	virtual	bool			Empty						()						{return m_iRemainingUses==0;};
 	u32				Cost						()	const override;
 	float			Weight						()	const override;
 
 	virtual bool				CheckInventoryIconItemSimilarity(CInventoryItem* other) override;
 
-	IC		u32				GetPortionsNum				()	const				{return m_iPortionsNum;}
-			u32				m_iConstPortions;
-			u32				m_iPortionsNum;
+			//u32				m_iConstPortions;
+			//u32				m_iPortionsNum;
 			bool			m_bHasAnimation;
 			bool			m_bUnlimited;
 			bool			m_bActivated;

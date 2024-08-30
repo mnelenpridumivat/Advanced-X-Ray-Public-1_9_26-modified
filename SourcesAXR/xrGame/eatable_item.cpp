@@ -36,7 +36,6 @@ static float last_hud_fov{};
 
 CEatableItem::CEatableItem()
 {
-	m_iPortionsNum			= 1;
 	use_cam_effector		= nullptr;
 	anim_sect				= nullptr;
 	m_bHasAnimation			= false;
@@ -54,6 +53,11 @@ CEatableItem::CEatableItem()
 	m_fIrradiationZonePower = 0.0f;
 	m_fSpoliage				= 0.0f;
 	m_fFoodRottingCoef		= 0.0f;
+
+	m_iMaxUses = 1;
+	m_iRemainingUses = 1;
+	m_fWeightFull = 0.0f;
+	m_fWeightEmpty = 0.0f;
 }
 
 CEatableItem::~CEatableItem()
@@ -70,7 +74,7 @@ void CEatableItem::Load(LPCSTR section)
 {
 	inherited::Load(section);
 
-	m_iPortionsNum = m_iConstPortions = READ_IF_EXISTS(pSettings, r_u32, section, "eat_portions_num", 1);
+	m_iRemainingUses = m_iMaxUses = READ_IF_EXISTS(pSettings, r_u32, section, "eat_portions_num", 1);
 	m_bHasAnimation = READ_IF_EXISTS(pSettings, r_bool, section, "has_anim", false);
 	m_bUnlimited = READ_IF_EXISTS(pSettings, r_bool, section, "unlimited_usage", false);
 	anim_sect = READ_IF_EXISTS(pSettings, r_string, section, "hud_section", nullptr);
@@ -82,6 +86,9 @@ void CEatableItem::Load(LPCSTR section)
 	m_fIrradiationCoef = READ_IF_EXISTS(pSettings, r_float, section, "irradiation_coef", 0.0005f);
 	m_fIrradiationZonePower = READ_IF_EXISTS(pSettings, r_float, section, "irradiation_zone_power", 0.0f);
 	m_fFoodRottingCoef = READ_IF_EXISTS(pSettings, r_float, section, "rotting_factor", 0.0f);
+
+	m_fWeightFull = m_weight;
+	m_fWeightEmpty = READ_IF_EXISTS(pSettings, r_float, section, "empty_weight", 0.0f);
 }
 
 BOOL CEatableItem::net_Spawn				(CSE_Abstract* DC)
@@ -95,8 +102,8 @@ bool CEatableItem::Useful() const
 {
 	if(!inherited::Useful()) return false;
 
-	//проверить не все ли еще съедено
-	if(m_iPortionsNum == 0 && !m_bUnlimited) return false;
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	if(m_iRemainingUses == 0 && !m_bUnlimited) return false;
 
 	return true;
 }
@@ -128,7 +135,7 @@ void CEatableItem::OnH_B_Independent(bool just_before_destroy)
 void CEatableItem::save(NET_Packet &packet)
 {
 	inherited::save(packet);
-	save_data(m_iPortionsNum, packet);
+	save_data(m_iRemainingUses, packet);
 	save_data(m_fRadioactivity, packet);
 	save_data(m_fSpoliage, packet);
 }
@@ -136,7 +143,7 @@ void CEatableItem::save(NET_Packet &packet)
 void CEatableItem::load(IReader &packet)
 {
 	inherited::load(packet);
-	load_data(m_iPortionsNum, packet);
+	load_data(m_iRemainingUses, packet);
 	load_data(m_fRadioactivity, packet);
 	load_data(m_fSpoliage, packet);
 
@@ -212,7 +219,7 @@ void CEatableItem::StartAnimation()
 	if (pSettings->line_exist(anim_sect, "anm_use"))
 	{
 		string128 anim_name{};
-		strconcat(sizeof(anim_name), anim_name, "anm_use", (cur_outfit && cur_outfit->m_bHasLSS) ? "_exo" : (m_iPortionsNum == 1) ? "_last" : "");
+		strconcat(sizeof(anim_name), anim_name, "anm_use", (cur_outfit && cur_outfit->m_bHasLSS) ? "_exo" : (m_iRemainingUses == 1) ? "_last" : "");
 
 		LPCSTR attach_visual = READ_IF_EXISTS(pSettings, r_string, anim_sect, (cur_outfit && cur_outfit->m_bHasLSS) ? "item_visual_exo" : "item_visual", nullptr);
 
@@ -248,7 +255,7 @@ void CEatableItem::StartAnimation()
 		string128 snd_var_name{};
 		shared_str snd_name{};
 
-		strconcat(sizeof(snd_var_name), snd_var_name, "snd_using", (cur_outfit && cur_outfit->m_bHasLSS) ? "_exo" : (m_iPortionsNum == 1) ? "_last" : "");
+		strconcat(sizeof(snd_var_name), snd_var_name, "snd_using", (cur_outfit && cur_outfit->m_bHasLSS) ? "_exo" : (m_iRemainingUses == 1) ? "_last" : "");
 
 		if (pSettings->line_exist(anim_sect, snd_var_name))
 			snd_name = pSettings->r_string(anim_sect, snd_var_name);
@@ -336,15 +343,15 @@ bool CEatableItem::UseBy (CEntityAlive* entity_alive)
 		Level().Send(tmp_packet);
 	}
 
-	if (m_iPortionsNum != -1 && !m_bUnlimited)
+	if (m_iRemainingUses != u8(-1) && !m_bUnlimited)
 	{
-		if (m_iPortionsNum > 0)
-			--(m_iPortionsNum);
+		if (m_iRemainingUses > 0)
+			--(m_iRemainingUses);
 		else
-			m_iPortionsNum = 0;
+			m_iRemainingUses = 0;
 	}
 
-	if (m_iPortionsNum > 1 && CurrentGameUI()->ActorMenu().IsShown() && CurrentGameUI()->ActorMenu().GetMenuMode() != mmDeadBodySearch)
+	if (m_iRemainingUses > 1 && CurrentGameUI()->ActorMenu().IsShown() && CurrentGameUI()->ActorMenu().GetMenuMode() != mmDeadBodySearch)
 		CurrentGameUI()->ActorMenu().RefreshConsumableCells();
 
 	return true;
@@ -353,7 +360,7 @@ bool CEatableItem::UseBy (CEntityAlive* entity_alive)
 u32 CEatableItem::Cost() const
 {
 	u32 res = inherited::Cost();
-	int percent = (m_iPortionsNum * 100) / m_iConstPortions;
+	int percent = (m_iRemainingUses * 100) / m_iMaxUses;
 
 	res = (res * percent) / 100;
 
@@ -363,9 +370,14 @@ u32 CEatableItem::Cost() const
 float CEatableItem::Weight() const
 {
 	float res = inherited::Weight();
-	int percent = (m_iPortionsNum * 100) / m_iConstPortions;
 
-	res = (res * percent) / 100;
+	if (IsUsingCondition())
+	{
+		float net_weight = m_fWeightFull - m_fWeightEmpty;
+		float use_weight = m_iMaxUses > 0 ? (net_weight / m_iMaxUses) : 0.f;
+
+		res = m_fWeightEmpty + (m_iRemainingUses * use_weight);
+	}
 
 	return res;
 }
@@ -378,5 +390,5 @@ bool CEatableItem::CheckInventoryIconItemSimilarity(CInventoryItem* other)
 	}
 	auto eatable = smart_cast<CEatableItem*>(other);
 	VERIFY(eatable);
-	return eatable->GetPortionsNum() == GetPortionsNum();
+	return eatable->GetRemainingUses() == GetRemainingUses();
 }

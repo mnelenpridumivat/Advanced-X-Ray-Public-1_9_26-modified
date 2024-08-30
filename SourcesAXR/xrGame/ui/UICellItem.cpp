@@ -328,10 +328,44 @@ void CUICellItem::UpdateConditionProgressBar()
 
 		if (itm && itm->IsUsingCondition())
 		{
+
+			float cond = itm->GetCondition();
+			CEatableItem* eitm = smart_cast<CEatableItem*>(itm);
+			if (eitm)
+			{
+				u8 max_uses = eitm->GetMaxUses();
+
+				if (max_uses > 0)
+				{
+					u8 remaining_uses = eitm->GetRemainingUses();
+
+					if (max_uses < 10)
+					{
+						m_pConditionState->ShowBackground(false);
+					}
+
+					if (remaining_uses < 1)
+					{
+						cond = 0.f;
+					}
+					else if (max_uses > 10)
+					{
+						cond = (float)remaining_uses / (float)max_uses;
+					}
+					else
+					{
+						cond = ((float)remaining_uses * 0.1f) - 0.05f;
+					}
+
+					//m_pConditionState->m_bUseGradient = false;
+				}
+			}
+
 			Ivector2 itm_grid_size = GetGridSize();
 
-			if(m_pParentList->GetVerticalPlacement())
+			if (m_pParentList->GetVerticalPlacement()) {
 				std::swap(itm_grid_size.x, itm_grid_size.y);
+			}
 
 			Ivector2 cell_size = m_pParentList->CellSize();
 			Ivector2 cell_space = m_pParentList->CellsSpacing();
@@ -339,7 +373,7 @@ void CUICellItem::UpdateConditionProgressBar()
 			float y = itm_grid_size.y * (cell_size.y + cell_space.y) - m_pConditionState->GetHeight() - 2.f;
 
 			m_pConditionState->SetWndPos(Fvector2().set(x, y));
-			m_pConditionState->SetProgressPos(iCeil(itm->GetCondition() * 13.0f) / 13.0f);
+			m_pConditionState->SetProgressPos(iCeil(cond * 13.0f) / 13.0f);
 
 			m_pConditionState->Show(true);
 
@@ -356,9 +390,9 @@ void CUICellItem::UpdatePortionsProgressBar()
 		PIItem itm = static_cast<PIItem>(m_pData);
 		CEatableItem* pEatable = smart_cast<CEatableItem*>(itm);
 
-		if (pEatable && pEatable->m_iConstPortions > 1 && pEatable->m_iConstPortions <= 8)
+		if (pEatable && pEatable->GetMaxUses() > 1 && pEatable->GetMaxUses() <= 8)
 		{
-			int BasePortionsNum = pEatable->m_iConstPortions;
+			int BasePortionsNum = pEatable->GetMaxUses();
 			Ivector2 itm_grid_size = GetGridSize();
 			if (m_pParentList->GetVerticalPlacement())
 				std::swap(itm_grid_size.x, itm_grid_size.y);
@@ -420,7 +454,7 @@ void CUICellItem::UpdatePortionsProgressBar()
 			m_pPortionsState->SetRange(0, BasePortionsNum * scaler);
 			m_pPortionsState->SetWndPos(Fvector2().set(x, y));
 			m_pPortionsState->SetWndSize(size);
-			m_pPortionsState->SetProgressPos(iCeil((pEatable->GetPortionsNum() * scaler) * 13.0f) / 13.0f);
+			m_pPortionsState->SetProgressPos(iCeil((pEatable->GetRemainingUses() * scaler) * 13.0f) / 13.0f);
 
 			m_pPortionsState->Show(true);
 
