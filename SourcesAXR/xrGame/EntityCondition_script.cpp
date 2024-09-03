@@ -79,7 +79,16 @@ void CActorCondition::script_register(lua_State* L)
             .def(constructor<>())
             .def_readwrite("fBoostTime",        &SBooster::fBoostTime)
             .def_readwrite("fBoostValue",       &SBooster::fBoostValue)
-            .def_readwrite("m_type",            &SBooster::m_type),
+            .def_readwrite("m_type",            &SBooster::m_type)
+            .def_readwrite("m_booster_type",    &SBooster::m_booster_type)
+            .enum_("EBoostType")
+            [
+                value("eBoostTypeMedkit", int(EBoostType::eBoostTypeMedkit)),
+                value("eBoostTypeSyringe", int(EBoostType::eBoostTypeSyringe)),
+                value("eBoostTypePills", int(EBoostType::eBoostTypePills)),
+                value("eBoostTypeLiquid", int(EBoostType::eBoostTypeLiquid)),
+                value("eBoostTypePhysical", int(EBoostType::eBoostTypePhysical))
+            ],
 
         class_<CWound>("CWound")
             .def("TypeSize",                    &CWound::TypeSize)

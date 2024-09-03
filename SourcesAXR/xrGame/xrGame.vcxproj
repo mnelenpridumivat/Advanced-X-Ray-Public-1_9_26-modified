@@ -1183,8 +1183,9 @@
     <ClInclude Include="ai\Monsters\Tushkano\tushkano.h" />
     <ClInclude Include="ai\Monsters\Tushkano\tushkano_state_manager.h" />
     <ClInclude Include="ai\Monsters\Zombie\zombie.h" />
+    <ClInclude Include="ai\monsters\zombie\zombie_state_attack.h" />
     <ClInclude Include="ai\Monsters\Zombie\zombie_state_attack_run.h" />
-    <ClInclude Include="ai\Monsters\Zombie\zombie_state_attack_run_inline.h" />
+    <ClInclude Include="ai\monsters\zombie\zombie_state_fake_death.h" />
     <ClInclude Include="ai\Monsters\Zombie\zombie_state_manager.h" />
     <ClInclude Include="ai\phantom\phantom.h" />
     <ClInclude Include="ai\position_prediction.h" />

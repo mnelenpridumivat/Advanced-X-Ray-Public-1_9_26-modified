@@ -175,7 +175,7 @@ public:
 
 	void				ReceiveNews						(GAME_NEWS_DATA* news);
 	void				UpdateMainIndicators			();
-	void				UpdateBoosterIndicators			(const xr_map<EBoostParams, SBooster> influences);
+	void				UpdateBoosterIndicators			(const svector<svector<SBoosterAction, EBoostType::eBoostTypeMaxCount>, EBoostParams::eBoostMaxCount>& influences);
 
 protected:
 	void				UpdateQuickSlots				();

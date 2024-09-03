@@ -418,7 +418,21 @@ void CActorCondition::UpdateCondition()
 
 void CActorCondition::UpdateBoosters()
 {
-	for(u8 i=0;i<eBoostMaxCount;i++)
+	for (auto i = 0; i < EBoostParams::eBoostMaxCount; ++i) {
+		for (auto j = 0; j < EBoostType::eBoostTypeMaxCount; ++j) {
+			if (m_booster_influences[i][j].fBoostTime <= 0.0f) {
+				continue;
+			}
+			m_booster_influences[i][j].fBoostTime -= m_fDeltaTime / (IsGameTypeSingle() ? Level().GetGameTimeFactor() : 1.0f);
+			if (m_booster_influences[i][j].fBoostTime <= 0.0f)
+			{
+				DisableBoostParameters(SBooster(m_booster_influences[i][j], static_cast<EBoostParams>(i)));
+			}
+		}
+	}
+
+
+	/*for (u8 i = 0; i<eBoostMaxCount; i++)
 	{
 		BOOSTER_MAP::iterator it = m_booster_influences.find(static_cast<EBoostParams>(i));
 		if(it!=m_booster_influences.end())
@@ -430,7 +444,7 @@ void CActorCondition::UpdateBoosters()
 				m_booster_influences.erase(it);
 			}
 		}
-	}
+	}*/
 
 	if(m_object == Level().CurrentViewEntity())
 		CurrentGameUI()->UIMainIngameWnd->UpdateBoosterIndicators(m_booster_influences);
@@ -925,14 +939,21 @@ void CActorCondition::save(NET_Packet &output_packet)
 	save_data			(m_curr_medicine_influence.fWithdrawal, output_packet);
 	save_data			(m_curr_medicine_influence.fDrugs, output_packet);
 
-	output_packet.w_u8(static_cast<u8>(m_booster_influences.size()));
+	for (auto i = 0; i < EBoostParams::eBoostMaxCount; ++i) {
+		for (auto j = 0; j < EBoostType::eBoostTypeMaxCount; ++j) {
+			save_data(m_booster_influences[i][j].fBoostValue, output_packet);
+			save_data(m_booster_influences[i][j].fBoostTime, output_packet);
+		}
+	}
+
+	/*output_packet.w_u8(static_cast<u8>(m_booster_influences.size()));
 	BOOSTER_MAP::iterator b = m_booster_influences.begin(), e = m_booster_influences.end();
 	for(; b!=e; b++)
 	{
 		output_packet.w_u8(static_cast<u8>(b->second.m_type));
 		output_packet.w_float(b->second.fBoostValue);
 		output_packet.w_float(b->second.fBoostTime);
-	}
+	}*/
 }
 
 void CActorCondition::load(IReader &input_packet)
@@ -968,7 +989,15 @@ void CActorCondition::load(IReader &input_packet)
 	load_data			(m_curr_medicine_influence.fWithdrawal, input_packet);
 	load_data			(m_curr_medicine_influence.fDrugs, input_packet);
 
-	u8 cntr = input_packet.r_u8();
+	for (auto i = 0; i < EBoostParams::eBoostMaxCount; ++i) {
+		for (auto j = 0; j < EBoostType::eBoostTypeMaxCount; ++j) {
+			m_booster_influences[i][j].fBoostValue = input_packet.r_float();
+			m_booster_influences[i][j].fBoostTime = input_packet.r_float();
+			BoostParameters(SBooster(m_booster_influences[i][j], static_cast<EBoostParams>(i)), false);
+		}
+	}
+
+	/*u8 cntr = input_packet.r_u8();
 	for(; cntr>0; cntr--)
 	{
 		SBooster B;
@@ -977,7 +1006,7 @@ void CActorCondition::load(IReader &input_packet)
 		B.fBoostTime = input_packet.r_float();
 		m_booster_influences[B.m_type] = B;
 		BoostParameters(B, false);
-	}
+	}*/
 }
 
 void CActorCondition::reinit	()
@@ -1061,7 +1090,16 @@ void CActorCondition::BoostParameters(const SBooster& B, bool need_change_tf)
 {
 	if(OnServer())
 	{
-		switch(B.m_type)
+		auto copy = B;
+		if (copy.m_type == eBoostTimeFactor && !need_change_tf) {
+			copy.fBoostValue = 0.0f;
+		}
+		auto func = BoostParamPtrs.find(copy.m_type);
+		if (func == BoostParamPtrs.end()) {
+			VERIFY(false, "Unable to process booster of type [index = %d]", copy.m_type);
+		}
+		(*this.*BoostParamPtrs[copy.m_type])(copy.fBoostValue);
+		/*switch (B.m_type)
 		{
 			case eBoostHpRestore: BoostHpRestore(B.fBoostValue); break;
 			case eBoostPowerRestore: BoostPowerRestore(B.fBoostValue); break;
@@ -1093,15 +1131,24 @@ void CActorCondition::BoostParameters(const SBooster& B, bool need_change_tf)
 			case eBoostWithdrawalRestore: BoostWithdrawalRestore(B.fBoostValue); break;
 			case eBoostTimeFactor: need_change_tf ? BoostTimeFactor(B.fBoostValue) : BoostTimeFactor(0.0f); break;
 			default: NODEFAULT;	
-		}
+		}*/
 	}
 }
 void CActorCondition::DisableBoostParameters(const SBooster& B)
 {
-	if(!OnServer())
+	if (!OnServer()) {
 		return;
+	}
 
-	switch(B.m_type)
+	auto copy = B;
+	copy.fBoostValue = -copy.fBoostValue;
+	auto func = BoostParamPtrs.find(copy.m_type);
+	if (func == BoostParamPtrs.end()) {
+		VERIFY(false, "Unable to process booster of type [index = %d]", copy.m_type);
+	}
+	(*this.*BoostParamPtrs[copy.m_type])(copy.fBoostValue);
+
+	/*switch (B.m_type)
 	{
 		case eBoostHpRestore: BoostHpRestore(-B.fBoostValue); break;
 		case eBoostPowerRestore: BoostPowerRestore(-B.fBoostValue); break;
@@ -1133,7 +1180,7 @@ void CActorCondition::DisableBoostParameters(const SBooster& B)
 		case eBoostWithdrawalRestore: BoostWithdrawalRestore(-B.fBoostValue); break;
 		case eBoostTimeFactor: BoostTimeFactor(-B.fBoostValue); break;
 		default: NODEFAULT;	
-	}
+	}*/
 }
 
 void CActorCondition::WoundForEach(const luabind::functor<bool>& funct)
@@ -1151,13 +1198,27 @@ void CActorCondition::WoundForEach(const luabind::functor<bool>& funct)
 void CActorCondition::BoosterForEach(const luabind::functor<bool>& funct)
 {
 	const auto& cur_booster_influences = GetCurBoosterInfluences();
-	CEntityCondition::BOOSTER_MAP::const_iterator it = cur_booster_influences.begin();
+
+	for (auto i = 0; i < EBoostParams::eBoostMaxCount; ++i) {
+		for (auto j = 0; j < EBoostType::eBoostTypeMaxCount; ++j) {
+			if (funct(
+				static_cast<EBoostParams>(i), 
+				static_cast<EBoostType>(j), 
+				m_booster_influences[i][j].fBoostTime, 
+				m_booster_influences[i][j].fBoostValue
+			) == true) {
+				break;
+			}
+		}
+	}
+
+	/*CEntityCondition::BOOSTER_MAP::const_iterator it = cur_booster_influences.begin();
 	CEntityCondition::BOOSTER_MAP::const_iterator it_e = cur_booster_influences.end();
 	for (; it != it_e; ++it)
 	{
 		if (funct(it->first, it->second.fBoostTime, it->second.fBoostValue) == true)
 			break;
-	}
+	}*/
 }
 
 bool CActorCondition::ApplyBooster_script(const SBooster& B, LPCSTR sect)
@@ -1168,12 +1229,20 @@ bool CActorCondition::ApplyBooster_script(const SBooster& B, LPCSTR sect)
 void CActorCondition::ClearAllBoosters()
 {
 	const auto& cur_booster_influences = GetCurBoosterInfluences();
-	CEntityCondition::BOOSTER_MAP::const_iterator it = cur_booster_influences.begin();
+
+	for (auto i = 0; i < EBoostParams::eBoostMaxCount; ++i) {
+		for (auto j = 0; j < EBoostType::eBoostTypeMaxCount; ++j) {
+			DisableBoostParameters(SBooster(m_booster_influences[i][j], static_cast<EBoostParams>(i)));
+			m_booster_influences[i][j].fBoostValue = 0.0f;
+			m_booster_influences[i][j].fBoostTime = -1.0f;
+		}
+	}
+	/*CEntityCondition::BOOSTER_MAP::const_iterator it = cur_booster_influences.begin();
 	CEntityCondition::BOOSTER_MAP::const_iterator it_e = cur_booster_influences.end();
 	for (; it != it_e; ++it)
 	{
 		DisableBoostParameters(it->second);
-	}
+	}*/
 }
 
 void CActorCondition::BoostHpRestore(const float value)
@@ -1301,6 +1370,43 @@ void CActorCondition::BoostWithdrawalRestore(const float value)
 {
 	m_fV_Withdrawal += value;
 }
+
+CActorCondition::BoostersParamPtrs CActorCondition::CreateBoostsParamPtrs()
+{
+	BoostersParamPtrs ptrs;
+	ptrs[eBoostMaxWeight] = &BoostMaxWeight;
+	ptrs[eBoostHpRestore] = &BoostHpRestore;
+	ptrs[eBoostPowerRestore] = &BoostPowerRestore;
+	ptrs[eBoostRadiationRestore] = &BoostRadiationRestore;
+	ptrs[eBoostBleedingRestore] = &BoostBleedingRestore;
+	ptrs[eBoostBurnImmunity] = &BoostBurnImmunity;
+	ptrs[eBoostShockImmunity] = &BoostShockImmunity;
+	ptrs[eBoostRadiationImmunity] = &BoostRadiationImmunity;
+	ptrs[eBoostTelepaticImmunity] = &BoostTelepaticImmunity;
+	ptrs[eBoostChemicalBurnImmunity] = &BoostChemicalBurnImmunity;
+	ptrs[eBoostExplImmunity] = &BoostExplImmunity;
+	ptrs[eBoostStrikeImmunity] = &BoostStrikeImmunity;
+	ptrs[eBoostFireWoundImmunity] = &BoostFireWoundImmunity;
+	ptrs[eBoostWoundImmunity] = &BoostWoundImmunity;
+	ptrs[eBoostRadiationProtection] = &BoostRadiationProtection;
+	ptrs[eBoostTelepaticProtection] = &BoostTelepaticProtection;
+	ptrs[eBoostChemicalBurnProtection] = &BoostChemicalBurnProtection;
+	ptrs[eBoostTimeFactor] = &BoostTimeFactor;
+	ptrs[eBoostSatietyRestore] = &BoostSatietyRestore;
+	ptrs[eBoostThirstRestore] = &BoostThirstRestore;
+	ptrs[eBoostPsyHealthRestore] = &BoostPsyHealthRestore;
+	ptrs[eBoostIntoxicationRestore] = &BoostIntoxicationRestore;
+	ptrs[eBoostSleepenessRestore] = &BoostSleepenessRestore;
+	ptrs[eBoostAlcoholRestore] = &BoostAlcoholRestore;
+	ptrs[eBoostAlcoholismRestore] = &BoostAlcoholismRestore;
+	ptrs[eBoostHangoverRestore] = &BoostHangoverRestore;
+	ptrs[eBoostDrugsRestore] = &BoostDrugsRestore;
+	ptrs[eBoostNarcotismRestore] = &BoostNarcotismRestore;
+	ptrs[eBoostWithdrawalRestore] = &BoostWithdrawalRestore;
+	return ptrs;
+}
+
+CActorCondition::BoostersParamPtrs CActorCondition::BoostParamPtrs = CActorCondition::CreateBoostsParamPtrs();
 
 void CActorCondition::UpdateTutorialThresholds()
 {
@@ -1518,10 +1624,18 @@ bool CActorCondition::ApplyBooster(const SBooster& B, const shared_str& sect)
 			}
 		}
 
-		BOOSTER_MAP::iterator it = m_booster_influences.find(B.m_type);
-		if(it!=m_booster_influences.end())
+		SBoosterAction& CurrentAction = m_booster_influences[B.m_type][B.m_booster_type];
+
+		if (CurrentAction.fBoostTime > 0) {
+			DisableBoostParameters(SBooster(CurrentAction, B.m_type));
+		}
+
+		CurrentAction = B;
+		/*BOOSTER_MAP::iterator it = m_booster_influences.find(B.m_type);
+		if (it != m_booster_influences.end()) {
 			DisableBoostParameters(it->second);
-		m_booster_influences[B.m_type] = B;
+		}
+		m_booster_influences[B.m_type] = B;*/
 		BoostParameters(B);
 	}
 	return true;

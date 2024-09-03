@@ -204,8 +204,19 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	float shoc_value = 0.0f;
 	float fwou_value = 0.0f;
 
-	CEntityCondition::BOOSTER_MAP cur_booster_influences = actor->conditions().GetCurBoosterInfluences();
-	CEntityCondition::BOOSTER_MAP::const_iterator it;
+	auto cur_booster_influences = actor->conditions().GetCurBoosterInfluences();
+	for (auto i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+		if (auto val = cur_booster_influences[eBoostRadiationProtection][i].fBoostTime; val >= 0) {
+			radi_value += val;
+		}
+		if (auto val = cur_booster_influences[eBoostChemicalBurnProtection][i].fBoostTime; val >= 0) {
+			cmbn_value += val;
+		}
+		if (auto val = cur_booster_influences[eBoostTelepaticProtection][i].fBoostTime; val >= 0) {
+			tele_value += val;
+		}
+	}
+	/*CEntityCondition::BOOSTER_MAP::const_iterator it;
 	it = cur_booster_influences.find(eBoostRadiationProtection);
 	if(it!=cur_booster_influences.end())
 		radi_value += it->second.fBoostValue;
@@ -216,7 +227,7 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 
 	it = cur_booster_influences.find(eBoostTelepaticProtection);
 	if(it!=cur_booster_influences.end())
-		tele_value += it->second.fBoostValue;
+		tele_value += it->second.fBoostValue;*/
 
 	if(outfit)
 	{

@@ -13,7 +13,14 @@ class CActorDeathEffector;
 //class CPostprocessAnimatorLerp;
 
 class CActorCondition: public CEntityCondition {
+public:
+	using BoostersParamPtrs = xr_unordered_map<EBoostParams, void(CActorCondition::*)(const float)>;
 private:
+
+	static BoostersParamPtrs BoostParamPtrs;
+
+	static BoostersParamPtrs CreateBoostsParamPtrs();
+
 	typedef CEntityCondition inherited;
 	enum {	eCriticalPowerReached			=(1<<0),
 			eCriticalMaxPowerReached		=(1<<1),

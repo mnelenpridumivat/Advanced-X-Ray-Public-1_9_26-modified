@@ -1410,13 +1410,14 @@ void CUIMainIngameWnd::DrawMainIndicatorsForInventory()
 		m_ind_boost_withdrawal->Draw();
 	}
 
-	if (UIArtefactsPanel && UIArtefactsPanel->GetShowInInventory() && UIArtefactsPanel->IsShown())
+	if (UIArtefactsPanel && UIArtefactsPanel->GetShowInInventory() && UIArtefactsPanel->IsShown()) {
 		UIArtefactsPanel->Draw();
+	}
 
 	m_ui_hud_states->DrawZoneIndicators();
 }
 
-void CUIMainIngameWnd::UpdateBoosterIndicators(const xr_map<EBoostParams, SBooster> influences)
+void CUIMainIngameWnd::UpdateBoosterIndicators(const svector<svector<SBoosterAction, EBoostType::eBoostTypeMaxCount>, EBoostParams::eBoostMaxCount>& influences)
 {
 	m_ind_boost_psy->Show(false);
 	m_ind_boost_radia->Show(false);
@@ -1441,8 +1442,328 @@ void CUIMainIngameWnd::UpdateBoosterIndicators(const xr_map<EBoostParams, SBoost
 	flags |= LA_CYCLIC;
 	flags |= LA_ONLYALPHA;
 	flags |= LA_TEXTURECOLOR;
+	
+	{
+		auto& req = influences[eBoostHpRestore];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_health->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_health->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_health->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
 
-	xr_map<EBoostParams, SBooster>::const_iterator b = influences.begin(), e = influences.end();
+	{
+		auto& req = influences[eBoostPowerRestore];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_power->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_power->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_power->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostRadiationRestore];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_rad->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_rad->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_rad->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostBleedingRestore];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_wound->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_wound->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_wound->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostMaxWeight];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_weight->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_weight->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_weight->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostRadiationImmunity];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_radia->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_radia->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_radia->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostRadiationProtection];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_radia->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_radia->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_radia->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostTelepaticImmunity];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_psy->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_psy->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_psy->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostTelepaticProtection];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_psy->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_psy->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_psy->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostChemicalBurnImmunity];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_chem->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_chem->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_chem->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostChemicalBurnProtection];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_chem->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_chem->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_chem->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostSatietyRestore];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_satiety->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_satiety->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_satiety->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostThirstRestore];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_thirst->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_thirst->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_thirst->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostPsyHealthRestore];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_psy_health->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_psy_health->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_psy_health->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostIntoxicationRestore];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_intoxication->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_intoxication->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_intoxication->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostSleepenessRestore];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_sleepeness->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_sleepeness->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_sleepeness->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostAlcoholismRestore];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_alcoholism->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_alcoholism->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_alcoholism->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostHangoverRestore];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_hangover->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_hangover->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_hangover->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostNarcotismRestore];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_narcotism->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_narcotism->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_narcotism->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	{
+		auto& req = influences[eBoostWithdrawalRestore];
+		for (int i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+			if (req[i].fBoostTime >= 0.0f) {
+				m_ind_boost_withdrawal->Show(true);
+				if (req[i].fBoostTime <= 3.0f) {
+					m_ind_boost_withdrawal->SetColorAnimation(str_flag, flags);
+				}
+				else {
+					m_ind_boost_withdrawal->ResetColorAnimation();
+				}
+				break;
+			}
+		}
+	}
+
+	/*xr_map<EBoostParams, SBooster>::const_iterator b = influences.begin(), e = influences.end();
 	for(; b!=e; b++)
 	{
 		switch(b->second.m_type)
@@ -1604,5 +1925,5 @@ void CUIMainIngameWnd::UpdateBoosterIndicators(const xr_map<EBoostParams, SBoost
 				}
 				break;
 		}
-	}
+	}*/
 }

@@ -405,7 +405,25 @@ void CUIHudStatesWnd::UpdateIndicatorType( CActor* actor, ALife::EInfluenceType 
 	protect += actor->GetProtection_ArtefactsOnBelt( hit_type );
 
 	CEntityCondition::BOOSTER_MAP cur_booster_influences = actor->conditions().GetCurBoosterInfluences();
-	CEntityCondition::BOOSTER_MAP::const_iterator it;
+	for (auto i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+		if (hit_type == ALife::eHitTypeRadiation) {
+			if (auto val = cur_booster_influences[eBoostRadiationProtection][i].fBoostTime; val >= 0) {
+				protect += val;
+			}
+		}
+		if (hit_type == ALife::eHitTypeChemicalBurn) {
+			if (auto val = cur_booster_influences[eBoostChemicalBurnProtection][i].fBoostTime; val >= 0) {
+				protect += val;
+			}
+		}
+		if (hit_type == ALife::eHitTypeTelepatic) {
+			if (auto val = cur_booster_influences[eBoostTelepaticProtection][i].fBoostTime; val >= 0) {
+				protect += val;
+			}
+		}
+	}
+
+	/*CEntityCondition::BOOSTER_MAP::const_iterator it;
 	if(hit_type==ALife::eHitTypeChemicalBurn)
 	{
 		it = cur_booster_influences.find(eBoostChemicalBurnProtection);
@@ -423,7 +441,7 @@ void CUIHudStatesWnd::UpdateIndicatorType( CActor* actor, ALife::EInfluenceType 
 		it = cur_booster_influences.find(eBoostTelepaticProtection);
 		if(it!=cur_booster_influences.end())
 			protect += it->second.fBoostValue;
-	}
+	}*/
 
 //	float max_power = actor->conditions().GetZoneMaxPower( hit_type );
 //	protect = protect / max_power; // = 0..1
@@ -541,7 +559,24 @@ void CUIHudStatesWnd::FakeUpdateIndicatorType(u8 t, float power)
 	protect += actor->GetProtection_ArtefactsOnBelt( hit_type );
 
 	CEntityCondition::BOOSTER_MAP cur_booster_influences = actor->conditions().GetCurBoosterInfluences();
-	CEntityCondition::BOOSTER_MAP::const_iterator it;
+	for (auto i = 0; i < EBoostType::eBoostTypeMaxCount; ++i) {
+		if (hit_type == ALife::eHitTypeRadiation) {
+			if (auto val = cur_booster_influences[eBoostRadiationProtection][i].fBoostTime; val >= 0) {
+				protect += val;
+			}
+		}
+		if (hit_type == ALife::eHitTypeChemicalBurn) {
+			if (auto val = cur_booster_influences[eBoostChemicalBurnProtection][i].fBoostTime; val >= 0) {
+				protect += val;
+			}
+		}
+		if (hit_type == ALife::eHitTypeTelepatic) {
+			if (auto val = cur_booster_influences[eBoostTelepaticProtection][i].fBoostTime; val >= 0) {
+				protect += val;
+			}
+		}
+	}
+	/*CEntityCondition::BOOSTER_MAP::const_iterator it;
 	if(hit_type==ALife::eHitTypeChemicalBurn)
 	{
 		it = cur_booster_influences.find(eBoostChemicalBurnProtection);
@@ -559,7 +594,7 @@ void CUIHudStatesWnd::FakeUpdateIndicatorType(u8 t, float power)
 		it = cur_booster_influences.find(eBoostTelepaticProtection);
 		if(it!=cur_booster_influences.end())
 			protect += it->second.fBoostValue;
-	}
+	}*/
 
 	float max_power = actor->conditions().GetZoneMaxPower( hit_type );
 	protect = protect / max_power; // = 0..1

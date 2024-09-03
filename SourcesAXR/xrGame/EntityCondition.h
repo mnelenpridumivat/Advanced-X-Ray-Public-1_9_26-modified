@@ -43,6 +43,15 @@ enum EBoostParams
 	eBoostMaxCount,
 };
 
+enum EBoostType {
+	eBoostTypeMedkit = 0,
+	eBoostTypeSyringe,
+	eBoostTypePills,
+	eBoostTypeLiquid,
+	eBoostTypePhysical,
+	eBoostTypeMaxCount
+};
+
 static const LPCSTR ef_boosters_section_names[] =
 {
 	"boost_health_restore",
@@ -76,12 +85,19 @@ static const LPCSTR ef_boosters_section_names[] =
 	"boost_time_factor"
 };
 
-struct SBooster
+struct SBoosterAction {
+	float fBoostTime = -1.0f;
+	float fBoostValue = 0.0f;
+};
+
+struct SBooster: public SBoosterAction
 {
-	float fBoostTime;
-	float fBoostValue;
 	EBoostParams m_type;
-	SBooster():fBoostTime(-1.0f){};
+	EBoostType m_booster_type;
+	SBooster(){};
+	SBooster(const SBoosterAction& other, EBoostParams m_type): m_type(m_type) {
+		fBoostValue = other.fBoostValue;
+	}
 	void Load(const shared_str& sect, EBoostParams type);
 };
 
@@ -211,7 +227,8 @@ public:
 
 	IC float				GetBoostRadiationImmunity() const {return m_fBoostRadiationImmunity;};
 
-	typedef					xr_map<EBoostParams, SBooster> BOOSTER_MAP;
+	using BOOSTER_MAP = svector<svector<SBoosterAction, EBoostType::eBoostTypeMaxCount>, EBoostParams::eBoostMaxCount>;
+	//typedef					xr_map<EBoostParams, SBooster> BOOSTER_MAP;
 protected:
 	void					UpdateHealth			();
 	void					UpdatePower				();

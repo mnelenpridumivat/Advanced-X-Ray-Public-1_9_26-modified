@@ -101,6 +101,11 @@ CEntityCondition::CEntityCondition(CEntityAlive *object)
 	m_fHangover				= 0.0f;
 	m_fNarcotism			= 0.0f;
 	m_fWithdrawal			= 0.0f;
+
+	m_booster_influences.resize(EBoostParams::eBoostMaxCount);
+	for (auto& elem : m_booster_influences) {
+		elem.resize(EBoostType::eBoostTypeMaxCount);
+	}
 }
 
 CEntityCondition::~CEntityCondition(void)
@@ -700,40 +705,140 @@ void SMedicineInfluenceValues::Load(const shared_str& sect)
 
 void SBooster::Load(const shared_str& sect, EBoostParams type)
 {
+	auto fill_map = []() {
+		xr_map<shared_str, EBoostType> TypesByName;
+		TypesByName["Medkit"] = eBoostTypeMedkit;
+		TypesByName["Syringe"] = eBoostTypeSyringe;
+		TypesByName["Pills"] = eBoostTypePills;
+		TypesByName["Liquid"] = eBoostTypeLiquid;
+		TypesByName["Physical"] = eBoostTypePhysical;
+		return TypesByName;
+		};
+	static xr_map<shared_str, EBoostType> TypesByName = fill_map();
 	fBoostTime = pSettings->r_float(sect.c_str(), "boost_time");
+	auto booster_type = TypesByName.find(pSettings->r_string(sect.c_str(), "booster_type"));
+	VERIFY(booster_type != TypesByName.end(), "Booster [%s] has invalid booster_type!", *sect);
+	m_booster_type = booster_type->second;
 	m_type = type;
 	switch(type)
 	{
-		case eBoostHpRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_health_restore"); break;
-		case eBoostPowerRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_power_restore"); break;
-		case eBoostRadiationRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_radiation_restore"); break;
-		case eBoostBleedingRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_bleeding_restore"); break;
-		case eBoostMaxWeight: fBoostValue = pSettings->r_float(sect.c_str(), "boost_max_weight"); break;
-		case eBoostBurnImmunity: fBoostValue = pSettings->r_float(sect.c_str(), "boost_burn_immunity"); break;
-		case eBoostShockImmunity: fBoostValue = pSettings->r_float(sect.c_str(), "boost_shock_immunity"); break;
-		case eBoostRadiationImmunity: fBoostValue = pSettings->r_float(sect.c_str(), "boost_radiation_immunity"); break;
-		case eBoostTelepaticImmunity: fBoostValue = pSettings->r_float(sect.c_str(), "boost_telepat_immunity"); break;
-		case eBoostChemicalBurnImmunity: fBoostValue = pSettings->r_float(sect.c_str(), "boost_chemburn_immunity"); break;
-		case eBoostExplImmunity: fBoostValue = pSettings->r_float(sect.c_str(), "boost_explosion_immunity"); break;
-		case eBoostStrikeImmunity: fBoostValue = pSettings->r_float(sect.c_str(), "boost_strike_immunity"); break;
-		case eBoostFireWoundImmunity: fBoostValue = pSettings->r_float(sect.c_str(), "boost_fire_wound_immunity"); break;
-		case eBoostWoundImmunity: fBoostValue = pSettings->r_float(sect.c_str(), "boost_wound_immunity"); break;
-		case eBoostRadiationProtection: fBoostValue = pSettings->r_float(sect.c_str(), "boost_radiation_protection"); break;
-		case eBoostTelepaticProtection: fBoostValue = pSettings->r_float(sect.c_str(), "boost_telepat_protection"); break;
-		case eBoostChemicalBurnProtection: fBoostValue = pSettings->r_float(sect.c_str(), "boost_chemburn_protection"); break;
-		case eBoostSatietyRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_satiety_restore"); break;
-		case eBoostThirstRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_thirst_restore"); break;
-		case eBoostPsyHealthRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_psy_health_restore"); break;
-		case eBoostIntoxicationRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_intoxication_restore"); break;
-		case eBoostSleepenessRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_sleepeness_restore"); break;
-		case eBoostAlcoholRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_alcohol_restore"); break;
-		case eBoostAlcoholismRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_alcoholism_restore"); break;
-		case eBoostHangoverRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_hangover_restore"); break;
-		case eBoostDrugsRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_drugs_restore"); break;
-		case eBoostNarcotismRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_narcotism_restore"); break;
-		case eBoostWithdrawalRestore: fBoostValue = pSettings->r_float(sect.c_str(), "boost_withdrawal_restore"); break;
-		case eBoostTimeFactor: fBoostValue = pSettings->r_float(sect.c_str(), "boost_time_factor"); break;
-		default: NODEFAULT;	
+	case eBoostHpRestore: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_health_restore"); 
+		break;
+	}
+	case eBoostPowerRestore: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_power_restore"); 
+		break;
+	}
+	case eBoostRadiationRestore: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_radiation_restore"); 
+		break;
+	}
+	case eBoostBleedingRestore: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_bleeding_restore"); 
+		break;
+	}
+	case eBoostMaxWeight: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_max_weight"); 
+		break;
+	}
+	case eBoostBurnImmunity: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_burn_immunity");
+		break;
+	}
+	case eBoostShockImmunity: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_shock_immunity");
+		break;
+	}
+	case eBoostRadiationImmunity: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_radiation_immunity"); 
+		break;
+	}
+	case eBoostTelepaticImmunity: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_telepat_immunity"); 
+		break;
+	}
+	case eBoostChemicalBurnImmunity: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_chemburn_immunity"); 
+		break;
+	}
+	case eBoostExplImmunity: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_explosion_immunity"); 
+		break;
+	}
+	case eBoostStrikeImmunity: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_strike_immunity"); 
+		break;
+	}
+	case eBoostFireWoundImmunity: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_fire_wound_immunity"); 
+		break;
+	}
+	case eBoostWoundImmunity: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_wound_immunity"); 
+		break;
+	}
+	case eBoostRadiationProtection: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_radiation_protection"); 
+		break;
+	}
+	case eBoostTelepaticProtection: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_telepat_protection"); 
+		break;
+	}
+	case eBoostChemicalBurnProtection: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_chemburn_protection"); 
+		break;
+	}
+	case eBoostSatietyRestore: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_satiety_restore"); 
+		break;
+	}
+	case eBoostThirstRestore: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_thirst_restore"); 
+		break;
+	}
+	case eBoostPsyHealthRestore: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_psy_health_restore"); 
+		break;
+	}
+	case eBoostIntoxicationRestore: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_intoxication_restore"); 
+		break;
+	}
+	case eBoostSleepenessRestore: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_sleepeness_restore"); 
+		break;
+	}
+	case eBoostAlcoholRestore: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_alcohol_restore"); 
+		break;
+	}
+	case eBoostAlcoholismRestore: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_alcoholism_restore"); 
+		break;
+	}
+	case eBoostHangoverRestore: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_hangover_restore"); 
+		break;
+	}
+	case eBoostDrugsRestore: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_drugs_restore"); 
+		break;
+	}
+	case eBoostNarcotismRestore: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_narcotism_restore"); 
+		break;
+	}
+	case eBoostWithdrawalRestore: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_withdrawal_restore"); 
+		break;
+	}
+	case eBoostTimeFactor: {
+		fBoostValue = pSettings->r_float(sect.c_str(), "boost_time_factor"); 
+		break;
+	}
+	default: NODEFAULT;	
 	}
 }
 

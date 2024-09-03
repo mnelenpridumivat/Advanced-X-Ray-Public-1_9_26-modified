@@ -4347,9 +4347,6 @@
     <ClInclude Include="ai\Monsters\Zombie\zombie_state_attack_run.h">
       <Filter>AI\AMonsters\monsters\Zombie\States</Filter>
     </ClInclude>
-    <ClInclude Include="ai\Monsters\Zombie\zombie_state_attack_run_inline.h">
-      <Filter>AI\AMonsters\monsters\Zombie\States</Filter>
-    </ClInclude>
     <ClInclude Include="ai\Monsters\Fracture\fracture.h">
       <Filter>AI\AMonsters\monsters\Fracture</Filter>
     </ClInclude>
@@ -7619,6 +7616,12 @@
     </ClInclude>
     <ClInclude Include="ArtContainer.h">
       <Filter>Core\Client\Objects\ArtContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\monsters\zombie\zombie_state_fake_death.h">
+      <Filter>AI\AMonsters\monsters\Zombie\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\monsters\zombie\zombie_state_attack.h">
+      <Filter>AI\AMonsters\monsters\Zombie\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

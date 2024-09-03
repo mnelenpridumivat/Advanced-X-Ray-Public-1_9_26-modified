@@ -20,7 +20,7 @@ public:
 
 	virtual	bool CanStoreArt(CArtefact* art) override;
 
-	virtual bool				CheckInventoryIconItemSimilarity(CInventoryItem* other) override;
+	virtual bool CheckInventoryIconItemSimilarity(CInventoryItem* other) override;
 
 	virtual float GetHealthPower() const override;
 	virtual float GetRadiationPower() const override;

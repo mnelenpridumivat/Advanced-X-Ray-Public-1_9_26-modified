@@ -41,6 +41,6 @@ void CArtefact::script_register(lua_State *L)
 		class_<CRustyHairArtefact	,CArtefact>("CRustyHairArtefact").def	(constructor<>()),
 		class_<CGalantineArtefact	,CArtefact>("CGalantineArtefact").def	(constructor<>()),
 		class_<CGraviArtefact		,CArtefact>("CGraviArtefact").def		(constructor<>()),
-		class_<CArtCombiner, CArtefact>("CArtCombiner").def(constructor<>())
+		class_<CArtCombiner			,CArtefact>("CArtCombiner").def(constructor<>())
 	];
 }
