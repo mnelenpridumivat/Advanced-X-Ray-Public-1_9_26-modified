@@ -111,3 +111,4 @@ packages/
 .vs/ProjectSettings.json
 .vs/VSWorkspaceState.json
 /SourcesAXR/External/RedImage/libraries/x64
+/SourcesAXR/xrScripts/BuildVm/x64/Debug/microsoft/STL
