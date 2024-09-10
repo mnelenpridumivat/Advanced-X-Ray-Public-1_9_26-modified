@@ -228,8 +228,11 @@ bool CALifeUpdateManager::change_level	(NET_Packet &net_packet)
 }
 
 #include "../xrEngine/igame_persistent.h"
+#include <PlayerMetadata.h>
 void CALifeUpdateManager::new_game			(LPCSTR save_name)
 {
+	CPlayerMetadata::GetInstance().IncStartNewGame();
+	CPlayerMetadata::GetInstance().ProcessSave();
 	g_pGamePersistent->SetLoadStageTitle("st_creating_new_game");
 	g_pGamePersistent->LoadTitle		();
 	Msg									("* Creating new game...");

@@ -22,6 +22,7 @@
 #include "string_table.h"
 #include "../xrEngine/igame_persistent.h"
 #include "autosave_manager.h"
+#include "PlayerMetadata.h"
 
 XRCORE_API string_path g_bug_report_file;
 
@@ -35,6 +36,8 @@ CALifeStorageManager::~CALifeStorageManager	()
 
 void CALifeStorageManager::save	(LPCSTR save_name_no_check, bool update_name)
 {
+	CPlayerMetadata::GetInstance().IncSaveGame();
+	CPlayerMetadata::GetInstance().ProcessSave();
 	LPCSTR game_saves_path		= FS.get_path("$game_saves$")->m_Path;
 
 	string_path					save_name;
@@ -95,6 +98,8 @@ void CALifeStorageManager::save	(LPCSTR save_name_no_check, bool update_name)
 
 void CALifeStorageManager::load	(void *buffer, const u32 &buffer_size, LPCSTR file_name)
 {
+	CPlayerMetadata::GetInstance().IncLoadGame();
+	CPlayerMetadata::GetInstance().ProcessSave();
 	IReader						source(buffer,buffer_size);
 	header().load				(source);
 	time_manager().load			(source);

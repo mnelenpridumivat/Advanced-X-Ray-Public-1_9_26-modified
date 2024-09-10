@@ -1309,6 +1309,8 @@
     <ClInclude Include="BreakableObject.h" />
     <ClInclude Include="builder_allocator_constructor.h" />
     <ClInclude Include="builder_allocator_constructor_inline.h" />
+    <ClInclude Include="AlifePlayerData.h" />
+    <ClInclude Include="PlayerMetadata.h" />
     <ClInclude Include="callback_info.h" />
     <ClInclude Include="CameraEffector.h" />
     <ClInclude Include="CameraFirstEye.h" />
@@ -4516,6 +4518,8 @@
     <ClCompile Include="bone_groups.cpp" />
     <ClCompile Include="BottleItem.cpp" />
     <ClCompile Include="BreakableObject.cpp" />
+    <ClCompile Include="AlifePlayerData.cpp" />
+    <ClCompile Include="PlayerMetadata.cpp" />
     <ClCompile Include="CameraEffector.cpp" />
     <ClCompile Include="CameraFirstEye.cpp" />
     <ClCompile Include="cameralook.cpp" />

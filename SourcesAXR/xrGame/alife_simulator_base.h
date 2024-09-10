@@ -24,6 +24,7 @@ class CALifeStoryRegistry;
 class CALifeSmartTerrainRegistry;
 class CALifeGroupRegistry;
 class CALifeRegistryContainer;
+class CAlifePlayerData;
 
 class CSE_Abstract;
 class CSE_ALifeObject;
@@ -48,6 +49,9 @@ protected:
 	CALifeSmartTerrainRegistry					*m_smart_terrains;
 	CALifeGroupRegistry							*m_groups;
 	CALifeRegistryContainer						*m_registry_container;
+
+	CAlifePlayerData							*m_player_data;
+
 	inventory::upgrade::Manager					*m_upgrade_manager;
 	CRandom32									m_random;
 	bool										m_initialized;
@@ -73,6 +77,8 @@ public:
 	IC		CALifeTimeManager					&time_manager				();
 	IC		CALifeRegistryContainer				&registry					() const;
 	IC		inventory::upgrade::Manager			&inventory_upgrade_manager	() const;
+
+	IC		CAlifePlayerData					&player_data();
 
 public:
 												CALifeSimulatorBase			(xrServer *server, LPCSTR section);

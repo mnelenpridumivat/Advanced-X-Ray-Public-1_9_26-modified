@@ -2557,6 +2557,9 @@
     <Filter Include="Core\Client\Objects\zones\SamZone">
       <UniqueIdentifier>{64df7eb5-c606-43c3-abd1-f4d1b1fd20b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\ALife\simulator_base\player_data">
+      <UniqueIdentifier>{f6344987-dce6-474f-ae21-a8f921e5ad59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">
@@ -7623,6 +7626,12 @@
     <ClInclude Include="ai\monsters\zombie\zombie_state_attack.h">
       <Filter>AI\AMonsters\monsters\Zombie\States</Filter>
     </ClInclude>
+    <ClInclude Include="AlifePlayerData.h">
+      <Filter>AI\ALife\simulator_base\player_data</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerMetadata.h">
+      <Filter>AI\ALife\simulator_base\player_data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -11424,6 +11433,12 @@
     </ClCompile>
     <ClCompile Include="ArtContainer.cpp">
       <Filter>Core\Client\Objects\ArtContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="AlifePlayerData.cpp">
+      <Filter>AI\ALife\simulator_base\player_data</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerMetadata.cpp">
+      <Filter>AI\ALife\simulator_base\player_data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

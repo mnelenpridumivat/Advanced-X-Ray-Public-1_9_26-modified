@@ -22,6 +22,7 @@
 #include "level_graph.h"
 #include "inventory_upgrade_manager.h"
 #include "level.h"
+#include "AlifePlayerData.h"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -45,6 +46,8 @@ CALifeSimulatorBase::CALifeSimulatorBase	(xrServer *server, LPCSTR section)
 	m_groups					= nullptr;
 	m_registry_container		= nullptr;
 	m_upgrade_manager			= nullptr;
+
+	m_player_data				= nullptr;
 
 	random().seed				(static_cast<u32>(CPU::QPC() & 0xffffffff));
 	m_can_register_objects		= true;
@@ -73,6 +76,9 @@ void CALifeSimulatorBase::unload			()
 	xr_delete					(m_groups);
 	xr_delete					(m_registry_container);
 	xr_delete					(m_upgrade_manager);
+	xr_delete					(m_registry_container);
+	xr_delete					(m_upgrade_manager);
+	xr_delete					(m_player_data);
 	m_initialized				= false;
 
 	if(g_pGameLevel)
@@ -92,6 +98,7 @@ void CALifeSimulatorBase::reload			(LPCSTR section)
 	m_groups					= xr_new<CALifeGroupRegistry>		();
 	m_registry_container		= xr_new<CALifeRegistryContainer>	();
 	m_upgrade_manager			= xr_new<inventory::upgrade::Manager>();
+	m_player_data				= xr_new<CAlifePlayerData>();
 	m_initialized				= true;
 }
 

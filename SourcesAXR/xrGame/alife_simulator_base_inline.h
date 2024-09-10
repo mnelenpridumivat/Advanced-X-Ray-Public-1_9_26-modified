@@ -1,3 +1,4 @@
+#include "alife_simulator_base.h"
 ////////////////////////////////////////////////////////////////////////////
 //	Module 		: alife_simulator_base_inline.h
 //	Created 	: 25.12.2002
@@ -151,6 +152,12 @@ IC	inventory::upgrade::Manager	&CALifeSimulatorBase::inventory_upgrade_manager		
 	VERIFY						(initialized());
 	VERIFY						(m_upgrade_manager);
 	return						(*m_upgrade_manager);
+}
+
+inline IC CAlifePlayerData& CALifeSimulatorBase::player_data()
+{
+	// TODO: insert return statement here
+	return *m_player_data;
 }
 
 IC	CRandom32							&CALifeSimulatorBase::random				()
