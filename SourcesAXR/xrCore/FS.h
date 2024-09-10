@@ -179,6 +179,7 @@ public:
 	IC s32			r_s32		()			{	s32 tmp;	r(&tmp,sizeof(tmp)); return tmp;	};
 	IC s16			r_s16		()			{	s16 tmp;	r(&tmp,sizeof(tmp)); return tmp;	};
 	IC s8			r_s8		()			{	s8 tmp;		r(&tmp,sizeof(tmp)); return tmp;	};
+	IC double		r_double	()			{	double tmp;	r(&tmp, sizeof(tmp)); return tmp; };
 	IC float		r_float		()			{	float tmp;	r(&tmp,sizeof(tmp)); return tmp;	};
 	IC void			r_fvector4	(Fvector4 &v){	r(&v,sizeof(Fvector4));	}
 	IC void			r_fvector3	(Fvector3 &v){	r(&v,sizeof(Fvector3));	}

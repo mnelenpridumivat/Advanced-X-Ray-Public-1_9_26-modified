@@ -1152,7 +1152,7 @@ void create_custom_timer(LPCSTR name, int start_value, int mode = 0)
 	Actor()->TimerManager->CreateTimer(name, start_value, mode);
 }
 
-void bind_timer(LPCSTR function, int start_value, int mode = 0)
+void bind_timer(LPCSTR function, const CBinderParams& params, int start_value, int mode = 0)
 {
 	auto TimeManager = Actor()->BinderManager;
 	if (!TimeManager)
@@ -1161,10 +1161,10 @@ void bind_timer(LPCSTR function, int start_value, int mode = 0)
 		return;
 	}
 
-	TimeManager->CreateBinder(function, {}, start_value, mode);
+	TimeManager->CreateBinder(function, params, start_value, mode);
 }
 
-void bind_timer_one_param(LPCSTR function, LPCSTR param1, int start_value, int mode = 0)
+/*void bind_timer_one_param(LPCSTR function, LPCSTR param1, int start_value, int mode = 0)
 {
 	auto TimeManager = Actor()->BinderManager;
 	if (!TimeManager)
@@ -1199,6 +1199,30 @@ void bind_timer_three_params(LPCSTR function, LPCSTR param1, LPCSTR param2, LPCS
 
 	TimeManager->CreateBinder(function, { param1, param2, param3 }, start_value, mode);
 }
+
+void bind_timer_four_params(LPCSTR function, LPCSTR param1, LPCSTR param2, LPCSTR param3, LPCSTR param4, int start_value, int mode = 0)
+{
+	auto TimeManager = Actor()->BinderManager;
+	if (!TimeManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : BinderManager is NULL!");
+		return;
+	}
+
+	TimeManager->CreateBinder(function, { param1, param2, param3, param4 }, start_value, mode);
+}
+
+void bind_timer_five_params(LPCSTR function, LPCSTR param1, LPCSTR param2, LPCSTR param3, LPCSTR param4, LPCSTR param5, int start_value, int mode = 0)
+{
+	auto TimeManager = Actor()->BinderManager;
+	if (!TimeManager)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : BinderManager is NULL!");
+		return;
+	}
+
+	TimeManager->CreateBinder(function, { param1, param2, param3, param4, param5 }, start_value, mode);
+}*/
 
 void start_custom_timer(LPCSTR name)
 {
@@ -1293,6 +1317,42 @@ void CLevel::script_register(lua_State *L)
 
 	class_<CEnvironment>("CEnvironment")
 		.def("current",							current_environment);
+
+	module(L)
+	[
+		class_<CBinderParam>("CBinderParam")
+			.def(constructor<>())
+			.def(constructor<const CBinderParam&>())
+			.def(constructor<LPCSTR>())
+			.def(constructor<double>())
+			.enum_("type")
+			[
+				value("string", static_cast<int>(EBinderParamType::eBinderParamString)),
+				value("u64", static_cast<int>(EBinderParamType::eBinderParamU64)),
+				value("s64", static_cast<int>(EBinderParamType::eBinderParamS64)),
+				value("double", static_cast<int>(EBinderParamType::eBinderParamDouble))
+			]
+			.def("get_type", &CBinderParam::GetType)
+			.def("get_string", &CBinderParam::GetString)
+			.def("get_u64", &CBinderParam::GetU64)
+			.def("get_s64", &CBinderParam::GetS64)
+			.def("get_double", &CBinderParam::GetDouble)
+			.def("set_string", &CBinderParam::SetString)
+			.def("set_u64", &CBinderParam::SetU64)
+			.def("set_s64", &CBinderParam::SetS64)
+			.def("set_double", &CBinderParam::SetDouble)
+	];
+
+	module(L)
+	[
+		class_<CBinderParams>("CBinderParams")
+			.def(constructor<>())
+			.def("add", &CBinderParams::Add)
+			.def("insert", &CBinderParams::Insert)
+			.def("remove", &CBinderParams::Remove)
+			.def("get", &CBinderParams::Get)
+			.def("size", &CBinderParams::Size)
+	];
 
 	module(L,"level")
 	[
@@ -1431,9 +1491,11 @@ void CLevel::script_register(lua_State *L)
 		def("get_custom_timer",					&get_custom_timer),
 
 		def("bind_timer",						&bind_timer),
-		def("bind_timer_one_param",				&bind_timer_one_param),
+		/*def("bind_timer_one_param", &bind_timer_one_param),
 		def("bind_timer_two_params",			&bind_timer_two_params),
 		def("bind_timer_three_params",			&bind_timer_three_params),
+		def("bind_timer_four_params",			&bind_timer_four_params),
+		def("bind_timer_five_params",			&bind_timer_five_params),*/
 
 		def("get_user_name",					&get_user_name),
 

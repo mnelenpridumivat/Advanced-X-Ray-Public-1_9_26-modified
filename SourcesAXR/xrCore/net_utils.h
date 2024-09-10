@@ -12,6 +12,7 @@ struct XRCORE_API IIniFileStream
 {
 	virtual void	 __stdcall 	move_begin		()							= 0;
 
+	virtual void	 __stdcall 	w_double		( double a) = 0;
 	virtual void	 __stdcall 	w_float			( float a)					= 0;
 	virtual void 	 __stdcall 	w_vec3			( const Fvector& a)			= 0;
 	virtual void 	 __stdcall 	w_vec4			( const Fvector4& a)		= 0;
@@ -27,6 +28,7 @@ struct XRCORE_API IIniFileStream
 					
 	virtual void	__stdcall	r_vec3			(Fvector&)					= 0;
 	virtual void	__stdcall	r_vec4			(Fvector4&)					= 0;
+	virtual void	__stdcall	r_double		(double&) = 0;
 	virtual void	__stdcall	r_float			(float&)					= 0;
 	virtual void	__stdcall	r_u8			(u8&)						= 0;
 	virtual void	__stdcall	r_u16			(u16&)						= 0;
@@ -101,17 +103,18 @@ public:
 	IC u32	w_tell	()						{ return B.count; }
 
 	// writing - utilities
-	IC void	w_float		( float a       )	{ W_guard g(&w_allow); w(&a,4);				INI_W(w_float(a));		}			// float
+	IC void	w_double	(double a)			{ W_guard g(&w_allow); w(&a, sizeof(double));				INI_W(w_double(a)); }			// float
+	IC void	w_float		( float a       )	{ W_guard g(&w_allow); w(&a, sizeof(float));				INI_W(w_float(a));		}			// float
 	IC void w_vec3		( const Fvector& a) { W_guard g(&w_allow);  w(&a,3*sizeof(float));INI_W(w_vec3(a));		}			// vec3
 	IC void w_vec4		( const Fvector4& a){ W_guard g(&w_allow);  w(&a,4*sizeof(float));INI_W(w_vec4(a));		}			// vec4
-	IC void w_u64		( u64 a			)	{ W_guard g(&w_allow);  w(&a,8);				INI_W(w_u64(a));		}			// qword (8b)
-	IC void w_s64		( s64 a			)	{ W_guard g(&w_allow);  w(&a,8);				INI_W(w_s64(a));		}			// qword (8b)
-	IC void w_u32		( u32 a			)	{ W_guard g(&w_allow);  w(&a,4);				INI_W(w_u32(a));		}			// dword (4b)
-	IC void w_s32		( s32 a			)	{ W_guard g(&w_allow);  w(&a,4);				INI_W(w_s32(a));		}			// dword (4b)
-	IC void w_u16		( u16 a			)	{ W_guard g(&w_allow);  w(&a,2);				INI_W(w_u16(a));		}			// word (2b)
-	IC void w_s16		( s16 a			)	{ W_guard g(&w_allow);  w(&a,2);				INI_W(w_s16(a));		}			// word (2b)
-	IC void	w_u8		( u8 a			)	{ W_guard g(&w_allow);  w(&a,1);				INI_W(w_u8(a));			}			// byte (1b)
-	IC void	w_s8		( s8 a			)	{ W_guard g(&w_allow);  w(&a,1);				INI_W(w_s8(a));			}			// byte (1b)
+	IC void w_u64		( u64 a			)	{ W_guard g(&w_allow);  w(&a, sizeof(u64));				INI_W(w_u64(a));		}			// qword (8b)
+	IC void w_s64		( s64 a			)	{ W_guard g(&w_allow);  w(&a, sizeof(s64));				INI_W(w_s64(a));		}			// qword (8b)
+	IC void w_u32		( u32 a			)	{ W_guard g(&w_allow);  w(&a, sizeof(u32));				INI_W(w_u32(a));		}			// dword (4b)
+	IC void w_s32		( s32 a			)	{ W_guard g(&w_allow);  w(&a, sizeof(s32));				INI_W(w_s32(a));		}			// dword (4b)
+	IC void w_u16		( u16 a			)	{ W_guard g(&w_allow);  w(&a, sizeof(u16));				INI_W(w_u16(a));		}			// word (2b)
+	IC void w_s16		( s16 a			)	{ W_guard g(&w_allow);  w(&a, sizeof(s16));				INI_W(w_s16(a));		}			// word (2b)
+	IC void	w_u8		( u8 a			)	{ W_guard g(&w_allow);  w(&a, sizeof(u8));				INI_W(w_u8(a));			}			// byte (1b)
+	IC void	w_s8		( s8 a			)	{ W_guard g(&w_allow);  w(&a, sizeof(s8));				INI_W(w_s8(a));			}			// byte (1b)
 
 	IC void w_float_q16	( float a, float min, float max)
 	{
@@ -220,6 +223,7 @@ public:
 	// reading - utilities
 	void		r_vec3			(Fvector& A);
 	void		r_vec4			(Fvector4& A);
+	void		r_double		(double& A);
 	void		r_float			(float& A );
 	void 		r_u64			(u64& A);
 	void 		r_s64			(s64& A);
@@ -235,6 +239,7 @@ public:
 	Fvector4	r_vec4			();
 	float		r_float_q8		(float min,float max);
 	float		r_float_q16		(float min, float max);
+	double		r_double			();
 	float		r_float			();
 	u64 		r_u64			();
 	s64 		r_s64			();

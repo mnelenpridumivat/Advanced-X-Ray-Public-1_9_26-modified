@@ -74,6 +74,14 @@ void NET_Packet::r_vec4(Fvector4& A)
 		inistream->r_vec4(A);
 } // vec4
 
+void NET_Packet::r_double(double& A)
+{
+	if (!inistream)
+		r(&A, sizeof(double));
+	else
+		inistream->r_double(A);
+} // double
+
 void NET_Packet::r_float(float& A )		
 { 
 	if(!inistream)
@@ -175,11 +183,18 @@ float NET_Packet::r_float_q16(float min, float max)
 	return		A;
 }
 
-float NET_Packet::r_float()		
+double NET_Packet::r_double()		
 { 
-	float		A; 
-	r_float		(A);					
+	double		A; 
+	r_double	(A);					
 	return		(A);		
+} // float
+
+float NET_Packet::r_float()
+{
+	float		A;
+	r_float(A);
+	return		(A);
 } // float
 
 u64 NET_Packet::r_u64()		

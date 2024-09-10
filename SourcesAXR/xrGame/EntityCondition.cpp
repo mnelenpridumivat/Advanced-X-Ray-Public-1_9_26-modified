@@ -711,10 +711,12 @@ void SBooster::Load(const shared_str& sect, EBoostParams type)
 		TypesByName["Syringe"] = eBoostTypeSyringe;
 		TypesByName["Pills"] = eBoostTypePills;
 		TypesByName["Liquid"] = eBoostTypeLiquid;
+		TypesByName["Eatable"] = eBoostTypeEatable;
 		TypesByName["Physical"] = eBoostTypePhysical;
 		return TypesByName;
 		};
 	static xr_map<shared_str, EBoostType> TypesByName = fill_map();
+	VERIFY(TypesByName.size() == EBoostType::eBoostTypeMaxCount);
 	fBoostTime = pSettings->r_float(sect.c_str(), "boost_time");
 	auto booster_type = TypesByName.find(pSettings->r_string(sect.c_str(), "booster_type"));
 	VERIFY(booster_type != TypesByName.end(), "Booster [%s] has invalid booster_type!", *sect);

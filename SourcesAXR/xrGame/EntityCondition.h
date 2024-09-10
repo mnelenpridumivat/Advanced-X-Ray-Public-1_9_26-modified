@@ -49,6 +49,7 @@ enum EBoostType {
 	eBoostTypePills,
 	eBoostTypeLiquid,
 	eBoostTypePhysical,
+	eBoostTypeEatable,
 	eBoostTypeMaxCount
 };
 

@@ -90,26 +90,40 @@ void CMovementManager::apply_collision_hit	(CPHMovementControl *movement_control
 
 bool CMovementManager::move_along_path		() const
 {
-	if (!enabled())
-		return			(false);
+	//Msg("Is object [%s] moving?", m_object->Name());
 
-	if (!actual())
+	if (!enabled()) {
+		//Msg("No: not enabled");
 		return			(false);
+	}
+
+	if (!actual()) {
+		//Msg("No: not actual");
+		return			(false);
+	}
 
 //	if (path_completed())
 //		return			(true);
 
-	if (detail().path().empty())
+	if (detail().path().empty()) {
+		//Msg("No: path empty");
 		return			(false);
+	}
 
-	if (detail().completed(object().Position(),true))
+	if (detail().completed(object().Position(),true)) {
+		//Msg("No: completed");
 		return			(false);
+	}
 
-	if (detail().curr_travel_point_index() >= detail().path().size() - 1)
+	if (detail().curr_travel_point_index() >= detail().path().size() - 1) {
+		//Msg("No: invalid point index");
 		return			(false);
+	}
 
-	if (fis_zero(old_desirable_speed()))
+	if (fis_zero(old_desirable_speed())) {
+		//Msg("No: old desirable speed is 0");
 		return			(false);
+	}
 
 	return				(true);
 }

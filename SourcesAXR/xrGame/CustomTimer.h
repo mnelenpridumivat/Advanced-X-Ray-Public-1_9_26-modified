@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <variant>
 
 class CCustomTimerBase
 {
@@ -71,10 +72,82 @@ public:
     }
 };
 
+enum EBinderParamType {
+    eBinderParamString = 0,
+    eBinderParamU64,
+    eBinderParamS64,
+    eBinderParamDouble,
+    eBinderParamInvalid
+};
+
+class CBinderParam {
+    EBinderParamType type = eBinderParamInvalid;
+    using types = std::variant<xr_string, u64, s64, double>;
+    /*union types {
+        shared_str TypeString;
+        u64 TypeU64;
+        s64 TypeS64;
+        double TypeDouble;
+
+        types(){}
+        ~types(){}
+    };*/
+    types value;
+
+    void DestroyValue();
+
+public:
+    CBinderParam(){}
+    CBinderParam(const CBinderParam& other);
+    CBinderParam(LPCSTR TypeString);
+    CBinderParam(u64 TypeU64);
+    CBinderParam(s64 TypeS64);
+    CBinderParam(double TypeDouble);
+
+    ~CBinderParam(){
+        DestroyValue();
+    }
+
+    CBinderParam& operator=(const CBinderParam& other);
+
+    EBinderParamType GetType() const;
+    void SetString(LPCSTR value);
+    void SetU64(u64 value);
+    void SetS64(s64 value);
+    void SetDouble(double value);
+    LPCSTR GetString() const;
+    u64 GetU64() const;
+    s64 GetS64() const;
+    double GetDouble() const;
+
+    void save(NET_Packet& output_packet) const;
+    void load(IReader& input_packet);
+};
+
+class CBinderParams {
+    xr_vector<CBinderParam> params = {};
+
+public:
+    CBinderParams();
+    CBinderParams(const CBinderParams& other);
+    CBinderParams(CBinderParams&& other);
+
+    CBinderParams& operator=(const CBinderParams& other);
+
+    void Add(const CBinderParam& other);
+    void Insert(int Index, const CBinderParam& other);
+    void Remove(int Index);
+    const CBinderParam& Get(int Index);
+    int Size();
+
+    void save(NET_Packet& output_packet) const;
+    void load(IReader& input_packet);
+};
+
 class CBinder : public CCustomTimerBase
 {
     std::string     m_sFuncName;
-    std::vector<std::string> m_params;
+    CBinderParams m_params;
     bool m_expired = false;
 
 protected:
@@ -82,8 +155,9 @@ protected:
 
 public:
     CBinder() { m_sFuncName = ""; }
-    CBinder(std::string name, const std::vector<std::string>& params, int value, int mode = 0) : m_sFuncName(name), m_params(params), CCustomTimerBase(value, mode)
+    CBinder(std::string name, const CBinderParams& params, int value, int mode = 0) : m_sFuncName(name), CCustomTimerBase(value, mode)
     {
+        m_params = params;
         StartCustomTimer();
     }
 
@@ -124,7 +198,7 @@ class CBinderManager
     std::vector<std::unique_ptr<CBinder>> Binders;
 
 public:
-    void CreateBinder(std::string name, const std::vector<std::string>& params, int value, int mode = 0);
+    void CreateBinder(std::string name, const CBinderParams& params, int value, int mode = 0);
 
     void save(NET_Packet& output_packet);
     void load(IReader& input_packet);

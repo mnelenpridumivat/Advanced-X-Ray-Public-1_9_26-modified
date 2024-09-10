@@ -23,6 +23,7 @@
 #include "detail_path_builder.h"
 #include "profiler.h"
 #include "mt_config.h"
+#include "ai/stalker/ai_stalker.h"
 //#include "custommonster.h"
 
 // Lain: added 
@@ -342,7 +343,10 @@ void CMovementManager::on_restrictions_change	()
 
 bool CMovementManager::can_use_distributed_computations(u32 option) const
 {
-	return							(!m_build_at_once && g_mt_config.test(option) && !object().getDestroy());
+	if (smart_cast<CAI_Stalker*>(&object())) {
+		return							(!m_build_at_once && g_mt_config.test(option) && !object().getDestroy());
+	}
+	return false;
 }
 
 void CMovementManager::on_frame					(CPHMovementControl *movement_control, Fvector &dest_position)
