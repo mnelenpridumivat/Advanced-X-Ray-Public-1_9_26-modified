@@ -104,7 +104,6 @@ private:
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };//class mixed_delegate
 
-
 #define DEFINE_MIXED_DELEGATE_SCRIPT(type, name_str) \
 	void type::script_register(lua_State *L)\
 	{\
@@ -116,6 +115,22 @@ private:
 				.def("bind",				&type::bind)\
 				.def("clear",				&type::clear)\
 		];\
-	};
+	}; \
+SCRIPT_EXPORT(type);
+
+
+#define DEFINE_MIXED_DELEGATE_SCRIPT_NAME(type, name_str, name) \
+	void type::script_register(lua_State *L)\
+	{\
+		module(L)\
+		[\
+			class_<type>(name_str)\
+				.def(						constructor<>())\
+				.def(						constructor<type::lua_object_type, type::lua_function_type>())\
+				.def("bind",				&type::bind)\
+				.def("clear",				&type::clear)\
+		];\
+	}; \
+SCRIPT_EXPORT_NAME(type, name);
 
 #endif //#ifndef MIXED_DELEGATE_INCLUDED

@@ -38,3 +38,5 @@ void CScriptParticles::script_register(lua_State* L)
 		.def("pause_path", &CScriptParticles::PausePath)
 	];
 }
+
+SCRIPT_EXPORT(CScriptParticles);

@@ -13,3 +13,5 @@ void CAI_Bloodsucker::script_register(lua_State *L)
 			.def("force_visibility_state", &CAI_Bloodsucker::force_visibility_state)
 	];
 }
+
+SCRIPT_EXPORT(CAI_Bloodsucker);

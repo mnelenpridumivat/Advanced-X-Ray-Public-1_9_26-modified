@@ -55,3 +55,5 @@ void CPatrolPathParams::script_register(lua_State *L)
 			.def("terminal",					&CPatrolPathParams::terminal)
 	];
 }
+
+SCRIPT_EXPORT(CPatrolPathParams);

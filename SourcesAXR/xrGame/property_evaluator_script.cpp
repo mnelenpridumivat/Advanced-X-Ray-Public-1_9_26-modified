@@ -32,3 +32,5 @@ void CPropertyEvaluator<CScriptGameObject>::script_register(lua_State *L)
 			.def(								constructor<CPropertyEvaluatorConst<CScriptGameObject>::_value_type>())
 	];
 }
+
+SCRIPT_EXPORT_NAME(CPropertyEvaluator<CScriptGameObject>, CPropertyEvaluator_CScriptGameObject);

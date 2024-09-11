@@ -24,6 +24,8 @@ void CSE_ALifeObjectProjector::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeObjectProjector);
+
 void CSE_ALifeHelicopter::script_register(lua_State *L)
 {
 	module(L)[
@@ -37,6 +39,8 @@ void CSE_ALifeHelicopter::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeHelicopter);
+
 void CSE_ALifeCar::script_register(lua_State *L)
 {
 	module(L)[
@@ -49,6 +53,8 @@ void CSE_ALifeCar::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeCar);
+
 void CSE_ALifeObjectBreakable::script_register(lua_State *L)
 {
 	module(L)[
@@ -59,6 +65,8 @@ void CSE_ALifeObjectBreakable::script_register(lua_State *L)
 		)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeObjectBreakable);
 
 void CSE_ALifeObjectClimable::script_register(lua_State *L)
 {
@@ -72,6 +80,8 @@ void CSE_ALifeObjectClimable::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeObjectClimable);
+
 void CSE_ALifeMountedWeapon::script_register(lua_State *L)
 {
 	module(L)[
@@ -83,6 +93,8 @@ void CSE_ALifeMountedWeapon::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeMountedWeapon);
+
 void CSE_ALifeTeamBaseZone::script_register(lua_State *L)
 {
 	module(L)[
@@ -93,4 +105,6 @@ void CSE_ALifeTeamBaseZone::script_register(lua_State *L)
 		)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeTeamBaseZone);
 

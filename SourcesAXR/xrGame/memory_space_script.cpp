@@ -154,3 +154,5 @@ void CMemoryInfo::script_register(lua_State *L)
 			.def("dependent_object",		&CDangerObject_dependent_object)
 	];
 }
+
+SCRIPT_EXPORT(CMemoryInfo);

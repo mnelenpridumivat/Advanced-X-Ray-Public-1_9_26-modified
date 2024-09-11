@@ -116,3 +116,5 @@ void CHelicopter::script_register(lua_State *L)
 
 		];
 }
+
+SCRIPT_EXPORT(CHelicopter);

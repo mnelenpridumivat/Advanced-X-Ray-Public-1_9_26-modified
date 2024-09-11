@@ -82,3 +82,5 @@ void console_registrator::script_register(lua_State *L)
 			.def("execute_deferred",		&execute_console_command_deferred)
 	];
 }
+
+SCRIPT_EXPORT(console_registrator);

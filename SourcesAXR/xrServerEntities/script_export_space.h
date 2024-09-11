@@ -38,6 +38,9 @@ struct script_exporter_base {
 
 extern xr_vector<script_exporter_base*> script_exporter_container;
 
+#define SCRIPT_EXPORT(x) script_exporter<x> x##_exporter;
+#define SCRIPT_EXPORT_NAME(x, name) script_exporter<x> name##_exporter;
+
 //xr_vector<script_exporter_base*> script_exporter_container::container = {};
 
 template<typename T>

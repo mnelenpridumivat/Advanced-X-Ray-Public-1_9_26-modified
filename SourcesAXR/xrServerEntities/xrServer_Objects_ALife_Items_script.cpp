@@ -22,6 +22,8 @@ void CSE_ALifeInventoryItem::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeInventoryItem);
+
 void CSE_ALifeItem::script_register(lua_State *L)
 {
 	module(L)[
@@ -35,6 +37,8 @@ void CSE_ALifeItem::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeItem);
+
 void CSE_ALifeItemTorch::script_register(lua_State *L)
 {
 	module(L)[
@@ -45,6 +49,8 @@ void CSE_ALifeItemTorch::script_register(lua_State *L)
 		)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeItemTorch);
 
 void CSE_ALifeItemAmmo::script_register(lua_State *L)
 {
@@ -57,6 +63,8 @@ void CSE_ALifeItemAmmo::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeItemAmmo);
+
 void CSE_ALifeItemFuel::script_register(lua_State* L)
 {
 	module(L)[
@@ -67,6 +75,8 @@ void CSE_ALifeItemFuel::script_register(lua_State* L)
 		)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeItemFuel);
 
 void CSE_ALifeItemWeapon::script_register(lua_State *L)
 {
@@ -91,6 +101,8 @@ void CSE_ALifeItemWeapon::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeItemWeapon);
+
 void CSE_ALifeItemWeaponShotGun::script_register(lua_State *L)
 {
 	module(L)[
@@ -101,6 +113,8 @@ void CSE_ALifeItemWeaponShotGun::script_register(lua_State *L)
 			)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeItemWeaponShotGun);
 
 void CSE_ALifeItemWeaponAutoShotGun::script_register(lua_State *L)
 {
@@ -113,6 +127,8 @@ void CSE_ALifeItemWeaponAutoShotGun::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeItemWeaponAutoShotGun);
+
 void CSE_ALifeItemDetector::script_register(lua_State *L)
 {
 	module(L)[
@@ -124,6 +140,8 @@ void CSE_ALifeItemDetector::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeItemDetector);
+
 void CSE_ALifeItemArtefact::script_register(lua_State *L)
 {
 	module(L)[
@@ -134,3 +152,5 @@ void CSE_ALifeItemArtefact::script_register(lua_State *L)
 		)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeItemArtefact);

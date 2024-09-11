@@ -27,6 +27,8 @@ void CSE_ALifeSchedulable::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeSchedulable);
+
 void CSE_ALifeGraphPoint::script_register(lua_State *L)
 {
 	module(L)[
@@ -37,6 +39,8 @@ void CSE_ALifeGraphPoint::script_register(lua_State *L)
 		)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeGraphPoint);
 
 template <typename T>
 T* cse_object_cast(CSE_ALifeDynamicObject *se_obj) {
@@ -66,6 +70,8 @@ void CSE_ALifeObject::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeObject);
+
 void CSE_ALifeGroupAbstract::script_register(lua_State *L)
 {
 	module(L)[
@@ -74,6 +80,8 @@ void CSE_ALifeGroupAbstract::script_register(lua_State *L)
 //			.def(		constructor<LPCSTR>())
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeGroupAbstract);
 
 void CSE_ALifeDynamicObject::script_register(lua_State *L)
 {
@@ -85,6 +93,8 @@ void CSE_ALifeDynamicObject::script_register(lua_State *L)
 		)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeDynamicObject);
 
 void CSE_ALifeDynamicObjectVisual::script_register(lua_State *L)
 {
@@ -98,6 +108,8 @@ void CSE_ALifeDynamicObjectVisual::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeDynamicObjectVisual);
+
 void CSE_ALifePHSkeletonObject::script_register(lua_State *L)
 {
 	module(L)[
@@ -109,6 +121,8 @@ void CSE_ALifePHSkeletonObject::script_register(lua_State *L)
 		)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifePHSkeletonObject);
 
 void CSE_ALifeSpaceRestrictor::script_register(lua_State *L)
 {
@@ -122,6 +136,8 @@ void CSE_ALifeSpaceRestrictor::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeSpaceRestrictor);
+
 void CSE_ALifeLevelChanger::script_register(lua_State *L)
 {
 	module(L)[
@@ -133,6 +149,8 @@ void CSE_ALifeLevelChanger::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeLevelChanger);
+
 void CSE_ALifeInventoryBox::script_register(lua_State *L)
 {
 	module(L)[
@@ -143,3 +161,5 @@ void CSE_ALifeInventoryBox::script_register(lua_State *L)
 			)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeInventoryBox);

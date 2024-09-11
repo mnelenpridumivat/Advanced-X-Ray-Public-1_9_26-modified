@@ -69,6 +69,8 @@ void CEntityCondition::script_register(lua_State* L)
     ];
 };
 
+SCRIPT_EXPORT(CEntityCondition);
+
 void CActorCondition::script_register(lua_State* L)
 {
     using namespace luabind;
@@ -145,3 +147,5 @@ void CActorCondition::script_register(lua_State* L)
             .def_readwrite("m_MaxWalkWeight",   &CActorCondition::m_MaxWalkWeight)
     ];
 };
+
+SCRIPT_EXPORT(CActorCondition);

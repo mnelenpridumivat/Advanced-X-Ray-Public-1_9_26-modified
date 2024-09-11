@@ -149,3 +149,5 @@ void CScriptGameObject::script_register(lua_State *L)
 		def("show_condition",				&::show_condition)
 	];
 }
+
+SCRIPT_EXPORT(CScriptGameObject);

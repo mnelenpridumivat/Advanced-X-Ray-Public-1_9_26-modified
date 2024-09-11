@@ -170,3 +170,5 @@ void CAI_Stalker::script_register(lua_State *L)
 			.def(constructor<>())
 	];
 }
+
+SCRIPT_EXPORT(CAI_Stalker);

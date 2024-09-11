@@ -114,3 +114,5 @@ void CUIListWnd::script_register(lua_State *L)
 		
 	];
 }
+
+SCRIPT_EXPORT(CUIListWnd);

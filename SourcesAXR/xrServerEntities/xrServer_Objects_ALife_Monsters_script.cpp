@@ -58,6 +58,8 @@ void CSE_ALifeTraderAbstract::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeTraderAbstract);
+
 void CSE_ALifeTrader::script_register(lua_State *L)
 {
 	module(L)[
@@ -70,6 +72,8 @@ void CSE_ALifeTrader::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeTrader);
+
 void CSE_ALifeCustomZone::script_register(lua_State *L)
 {
 	module(L)[
@@ -81,6 +85,8 @@ void CSE_ALifeCustomZone::script_register(lua_State *L)
 		)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeCustomZone);
 
 void CSE_ALifeAnomalousZone::script_register(lua_State *L)
 {
@@ -96,6 +102,8 @@ void CSE_ALifeAnomalousZone::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeAnomalousZone);
+
 void CSE_ALifeMonsterRat::script_register(lua_State *L)
 {
 	module(L)[
@@ -107,3 +115,5 @@ void CSE_ALifeMonsterRat::script_register(lua_State *L)
 		)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeMonsterRat);

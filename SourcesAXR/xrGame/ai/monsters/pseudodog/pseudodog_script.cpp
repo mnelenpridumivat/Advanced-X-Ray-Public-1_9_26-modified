@@ -14,6 +14,8 @@ void CAI_PseudoDog::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CAI_PseudoDog);
+
 void CPsyDog::script_register(lua_State *L)
 {
 	module(L)
@@ -23,6 +25,8 @@ void CPsyDog::script_register(lua_State *L)
 		];
 }
 
+SCRIPT_EXPORT(CPsyDog);
+
 void CPsyDogPhantom::script_register(lua_State *L)
 {
 	module(L)
@@ -31,3 +35,5 @@ void CPsyDogPhantom::script_register(lua_State *L)
 			.def(constructor<>())
 		];
 }
+
+SCRIPT_EXPORT(CPsyDogPhantom);

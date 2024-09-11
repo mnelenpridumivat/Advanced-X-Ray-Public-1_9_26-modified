@@ -25,3 +25,5 @@ void CScriptWorldPropertyWrapper::script_register(lua_State *L)
 			.def(const_self == other<CScriptWorldProperty>())
 	];
 }
+
+SCRIPT_EXPORT(CScriptWorldPropertyWrapper);

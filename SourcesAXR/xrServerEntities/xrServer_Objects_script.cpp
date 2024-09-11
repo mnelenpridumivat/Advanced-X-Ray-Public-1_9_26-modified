@@ -96,6 +96,8 @@ void CPureServerObject::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CPureServerObject);
+
 void CSE_Abstract::script_register(lua_State *L)
 {
 	typedef CWrapperBase<CSE_Abstract> WrapType;
@@ -119,6 +121,8 @@ void CSE_Abstract::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_Abstract);
+
 void CSE_Shape::script_register(lua_State *L)
 {
 	module(L)[
@@ -127,6 +131,8 @@ void CSE_Shape::script_register(lua_State *L)
 //			.def(		constructor<>())
 	];
 }
+
+SCRIPT_EXPORT(CSE_Shape);
 
 void CSE_Visual::script_register(lua_State *L)
 {
@@ -138,6 +144,8 @@ void CSE_Visual::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_Visual);
+
 void CSE_Motion::script_register(lua_State *L)
 {
 	module(L)[
@@ -147,6 +155,8 @@ void CSE_Motion::script_register(lua_State *L)
 //			.def(		constructor<LPCSTR>())
 	];
 }
+
+SCRIPT_EXPORT(CSE_Motion);
 
 void CSE_Spectator::script_register(lua_State *L)
 {
@@ -159,6 +169,8 @@ void CSE_Spectator::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_Spectator);
+
 void CSE_Temporary::script_register(lua_State *L)
 {
 	module(L)[
@@ -169,3 +181,5 @@ void CSE_Temporary::script_register(lua_State *L)
 		)
 	];
 }
+
+SCRIPT_EXPORT(CSE_Temporary);

@@ -82,8 +82,8 @@ public:
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 typedef CActionBase<CScriptGameObject> CScriptActionBase;
-add_to_type_list(CScriptActionBase)
-#undef script_type_list
-#define script_type_list save_type_list(CScriptActionBase)
+//add_to_type_list(CScriptActionBase)
+//#undef script_type_list
+//#define script_type_list save_type_list(CScriptActionBase)
 
 #include "action_base_inline.h"

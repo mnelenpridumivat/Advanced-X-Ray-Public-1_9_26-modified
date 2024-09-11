@@ -420,3 +420,5 @@ void CHangingLamp::script_register(lua_State *L)
 			.def("toggle",      &CHangingLamp::Toggle)
 	];
 }
+
+SCRIPT_EXPORT(CHangingLamp);

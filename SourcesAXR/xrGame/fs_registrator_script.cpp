@@ -242,3 +242,5 @@ void fs_registrator::script_register(lua_State *L)
 		def("getFS",									getFS)
 	];
 }
+
+SCRIPT_EXPORT(fs_registrator);

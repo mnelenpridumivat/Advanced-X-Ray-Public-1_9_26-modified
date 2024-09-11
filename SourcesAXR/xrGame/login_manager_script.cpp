@@ -43,6 +43,8 @@ void profile::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(profile);
+
 } //namespace gamespy_gp
 
-DEFINE_MIXED_DELEGATE_SCRIPT(gamespy_gp::login_operation_cb, "login_operation_cb");
+DEFINE_MIXED_DELEGATE_SCRIPT_NAME(gamespy_gp::login_operation_cb, "login_operation_cb", login_operation_cb);

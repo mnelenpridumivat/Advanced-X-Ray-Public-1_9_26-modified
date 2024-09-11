@@ -107,3 +107,5 @@ void CScriptMovementAction::script_register(lua_State *L)
 			.def("completed",					static_cast<bool (CScriptMovementAction::*)()>(&CScriptMovementAction::completed))
 	];
 }
+
+SCRIPT_EXPORT(CScriptMovementAction);

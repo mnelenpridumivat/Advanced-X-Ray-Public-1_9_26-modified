@@ -226,6 +226,8 @@ void CPatrolPointScript::script_register( lua_State *L ) {
   ];
 }
 
+SCRIPT_EXPORT(CPatrolPointScript);
+
 
 void CPatrolPathScript::script_register( lua_State *L ) {
   module( L ) [
@@ -236,3 +238,5 @@ void CPatrolPathScript::script_register( lua_State *L ) {
     .def( "add_vertex", &CPatrolPath::add_vertex )
   ];
 }
+
+SCRIPT_EXPORT(CPatrolPathScript);

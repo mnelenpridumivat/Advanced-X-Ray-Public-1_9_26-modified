@@ -108,7 +108,7 @@ template <typename TFullList> struct DynamicCast
 void export_classes	(lua_State *L)
 {
 
-	Register<script_type_list>::_Register(L);
+	//Register<script_type_list>::_Register(L);
 
 	for (auto& elem : script_exporter_container) {
 		elem->script_register(L);

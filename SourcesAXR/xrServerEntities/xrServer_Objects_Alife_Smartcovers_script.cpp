@@ -31,3 +31,5 @@ void CSE_SmartCover::script_register(lua_State *L)
 #endif // #ifdef XRSE_FACTORY_EXPORTS
 	];
 }
+
+SCRIPT_EXPORT(CSE_SmartCover);

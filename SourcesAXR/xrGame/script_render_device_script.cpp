@@ -67,3 +67,5 @@ void CScriptRenderDevice::script_register(lua_State *L)
 			def("app_ready",						&is_app_ready)
 	];
 }
+
+SCRIPT_EXPORT(CScriptRenderDevice);

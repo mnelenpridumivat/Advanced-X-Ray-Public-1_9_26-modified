@@ -27,3 +27,5 @@ void cphysics_world_scripted::script_register(lua_State *L)
 			.def("add_call",					&cphysics_world_scripted::AddCall)
 		];
 }
+
+SCRIPT_EXPORT(cphysics_world_scripted);

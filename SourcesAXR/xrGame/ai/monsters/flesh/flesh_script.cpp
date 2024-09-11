@@ -12,3 +12,5 @@ void CAI_Flesh::script_register(lua_State *L)
 			.def(constructor<>())
 	];
 }
+
+SCRIPT_EXPORT(CAI_Flesh);

@@ -31,3 +31,5 @@ void CScriptParticleAction::script_register(lua_State *L)
 			.def("completed",		static_cast<bool (CScriptParticleAction::*)()>(&CScriptParticleAction::completed))
 	];
 }
+
+SCRIPT_EXPORT(CScriptParticleAction);

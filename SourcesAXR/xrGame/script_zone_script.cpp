@@ -24,6 +24,8 @@ void CScriptZone::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CScriptZone);
+
 void CSmartZone::script_register(lua_State *L)
 {
 	module(L)
@@ -34,3 +36,5 @@ void CSmartZone::script_register(lua_State *L)
 			.def(constructor<>())
 	];
 }
+
+SCRIPT_EXPORT(CSmartZone);

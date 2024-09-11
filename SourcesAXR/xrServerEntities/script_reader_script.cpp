@@ -73,3 +73,5 @@ void CScriptReader::script_register(lua_State *L)
 			.def("r_eof",			&r_eof					)
 	];
 }
+
+SCRIPT_EXPORT(CScriptReader);

@@ -44,3 +44,5 @@ void CArtefact::script_register(lua_State *L)
 		class_<CArtCombiner			,CArtefact>("CArtCombiner").def(constructor<>())
 	];
 }
+
+SCRIPT_EXPORT(CArtefact);

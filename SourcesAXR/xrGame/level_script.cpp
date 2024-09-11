@@ -1574,3 +1574,5 @@ void CLevel::script_register(lua_State *L)
 		def("get_saves_lock_status", get_saves_lock_status)
 	];
 }
+
+SCRIPT_EXPORT(CLevel);

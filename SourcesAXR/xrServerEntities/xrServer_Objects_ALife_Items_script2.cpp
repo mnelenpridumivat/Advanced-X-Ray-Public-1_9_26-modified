@@ -24,6 +24,8 @@ void CSE_ALifeItemPDA::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeItemPDA);
+
 void CSE_ALifeItemDocument::script_register(lua_State *L)
 {
 	module(L)[
@@ -34,6 +36,8 @@ void CSE_ALifeItemDocument::script_register(lua_State *L)
 		)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeItemDocument);
 
 void CSE_ALifeItemGrenade::script_register(lua_State *L)
 {
@@ -46,6 +50,8 @@ void CSE_ALifeItemGrenade::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeItemGrenade);
+
 void CSE_ALifeItemExplosive::script_register(lua_State *L)
 {
 	module(L)[
@@ -56,6 +62,8 @@ void CSE_ALifeItemExplosive::script_register(lua_State *L)
 		)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeItemExplosive);
 
 void CSE_ALifeItemBolt::script_register(lua_State *L)
 {
@@ -68,6 +76,8 @@ void CSE_ALifeItemBolt::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeItemBolt);
+
 void CSE_ALifeItemCustomOutfit::script_register(lua_State *L)
 {
 	module(L)[
@@ -78,6 +88,8 @@ void CSE_ALifeItemCustomOutfit::script_register(lua_State *L)
 		)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeItemCustomOutfit);
 
 void CSE_ALifeItemHelmet::script_register(lua_State *L)
 {
@@ -90,6 +102,8 @@ void CSE_ALifeItemHelmet::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeItemHelmet);
+
 void CSE_ALifeItemWeaponMagazined::script_register(lua_State *L)
 {
 	module(L)[
@@ -101,6 +115,8 @@ void CSE_ALifeItemWeaponMagazined::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeItemWeaponMagazined);
+
 void CSE_ALifeItemFlamethrower::script_register(lua_State* L)
 {
 	module(L)[
@@ -111,3 +127,5 @@ void CSE_ALifeItemFlamethrower::script_register(lua_State* L)
 		)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeItemFlamethrower);

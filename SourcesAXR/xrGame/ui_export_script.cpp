@@ -80,3 +80,5 @@ void UIRegistrator::script_register(lua_State *L)
 		def("get_main_menu",				&MainMenu)
 	];
 }
+
+SCRIPT_EXPORT(UIRegistrator);

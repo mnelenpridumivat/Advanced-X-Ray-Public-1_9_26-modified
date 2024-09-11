@@ -15,3 +15,5 @@ void CHolderCustom::script_register(lua_State *L)
 			.def("SetParam",		static_cast<void (CHolderCustom::*)(int, Fvector)>(&CHolderCustom::SetParam))
 		];
 }
+
+SCRIPT_EXPORT(CHolderCustom);

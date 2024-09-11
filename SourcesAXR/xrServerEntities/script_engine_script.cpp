@@ -253,3 +253,5 @@ void CScriptEngine::script_register(lua_State *L)
 	function	(L,	"is_enough_address_space_available",is_enough_address_space_available_impl);
 #endif // #ifdef XRGAME_EXPORTS
 }
+
+SCRIPT_EXPORT(CScriptEngine);

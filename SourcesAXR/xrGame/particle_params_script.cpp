@@ -23,3 +23,5 @@ void CParticleParams::script_register(lua_State *L)
 			.def(								constructor<const Fvector &,const Fvector &,const Fvector &>())
 	];
 }
+
+SCRIPT_EXPORT(CParticleParams);

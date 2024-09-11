@@ -18,3 +18,5 @@ void CAnomalPseudoGigant::script_register(lua_State *L)
 			.def("on_jump", &CAnomalPseudoGigant::on_jump, &CAnomalPseudoGigantWrapper::on_jump)*/
 	];
 }
+
+SCRIPT_EXPORT(CAnomalPseudoGigant);

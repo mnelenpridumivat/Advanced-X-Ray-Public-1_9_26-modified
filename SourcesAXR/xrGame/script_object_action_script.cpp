@@ -53,3 +53,5 @@ void CScriptObjectAction::script_register(lua_State *L)
 			.def("completed",					static_cast<bool (CScriptObjectAction::*)()>(&CScriptObjectAction::completed))
 	];
 }
+
+SCRIPT_EXPORT(CScriptObjectAction);

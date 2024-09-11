@@ -26,6 +26,8 @@ void CSE_ALifeCreatureActor::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeCreatureActor);
+
 void CSE_ALifeTorridZone::script_register(lua_State *L)
 {
 	module(L)[
@@ -37,6 +39,8 @@ void CSE_ALifeTorridZone::script_register(lua_State *L)
 			)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeTorridZone);
 
 void CSE_ALifeZoneVisual::script_register(lua_State *L)
 {
@@ -50,6 +54,8 @@ void CSE_ALifeZoneVisual::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeZoneVisual);
+
 void CSE_ALifeCreaturePhantom::script_register(lua_State *L)
 {
 	module(L)[
@@ -60,6 +66,8 @@ void CSE_ALifeCreaturePhantom::script_register(lua_State *L)
 			)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeCreaturePhantom);
 
 static SRotation* CSE_ALifeCreatureAbstract__o_torso	(CSE_ALifeCreatureAbstract* self)
 {
@@ -82,6 +90,8 @@ void CSE_ALifeCreatureAbstract::script_register(lua_State *L)
 		.def("o_torso",&CSE_ALifeCreatureAbstract__o_torso)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeCreatureAbstract);
 
 void CSE_ALifeOnlineOfflineGroup::script_register(lua_State *L)
 {
@@ -108,3 +118,5 @@ void CSE_ALifeOnlineOfflineGroup::script_register(lua_State *L)
 #endif //#ifdef XRGAME_EXPORTS
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifeOnlineOfflineGroup);

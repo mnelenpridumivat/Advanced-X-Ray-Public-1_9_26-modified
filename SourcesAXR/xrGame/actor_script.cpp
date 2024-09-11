@@ -28,3 +28,5 @@ void CActor::script_register(lua_State *L)
 #endif	//	BENCHMARK_BUILD
 	];
 }
+
+SCRIPT_EXPORT(CActor);

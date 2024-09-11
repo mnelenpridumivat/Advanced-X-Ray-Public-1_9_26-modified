@@ -17,3 +17,5 @@ void CScriptSoundInfo::script_register(lua_State *L)
 			.def_readwrite("time",				&CScriptSoundInfo::time)
 	];
 }
+
+SCRIPT_EXPORT(CScriptSoundInfo);

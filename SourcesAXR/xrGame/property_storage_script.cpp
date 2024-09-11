@@ -22,3 +22,5 @@ void CPropertyStorage::script_register(lua_State *L)
 			.def("property",					&CPropertyStorage::property)
 	];
 }
+
+SCRIPT_EXPORT(CPropertyStorage);

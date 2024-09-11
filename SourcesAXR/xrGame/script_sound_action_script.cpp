@@ -59,3 +59,5 @@ void CScriptSoundAction::script_register(lua_State *L)
 			.def("completed",					static_cast<bool (CScriptSoundAction::*)()>(&CScriptSoundAction::completed))
 	];
 }
+
+SCRIPT_EXPORT(CScriptSoundAction);

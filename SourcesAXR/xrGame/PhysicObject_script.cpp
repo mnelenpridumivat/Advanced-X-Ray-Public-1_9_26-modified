@@ -32,3 +32,5 @@ void CPhysicObject::script_register(lua_State *L)
 
 	];
 }
+
+SCRIPT_EXPORT(CPhysicObject);

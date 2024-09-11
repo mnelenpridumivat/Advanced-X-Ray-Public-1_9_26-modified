@@ -112,6 +112,8 @@ void CSE_ALifeMonsterAbstract::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeMonsterAbstract);
+
 void CSE_ALifeHumanAbstract::script_register(lua_State *L)
 {
 	module(L)[
@@ -130,6 +132,8 @@ void CSE_ALifeHumanAbstract::script_register(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT(CSE_ALifeHumanAbstract);
+
 void CSE_ALifePsyDogPhantom::script_register(lua_State *L)
 {
 	module(L)[
@@ -140,3 +144,5 @@ void CSE_ALifePsyDogPhantom::script_register(lua_State *L)
 			)
 	];
 }
+
+SCRIPT_EXPORT(CSE_ALifePsyDogPhantom);

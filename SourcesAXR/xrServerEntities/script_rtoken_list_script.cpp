@@ -25,3 +25,5 @@ void CScriptRTokenList::script_register(lua_State *L)
 			.def("get",				&CScriptRTokenList::get)
 	];
 }
+
+SCRIPT_EXPORT(CScriptRTokenList);

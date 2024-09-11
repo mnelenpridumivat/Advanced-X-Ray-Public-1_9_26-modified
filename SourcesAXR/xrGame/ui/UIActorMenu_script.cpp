@@ -208,6 +208,8 @@ void CUIActorMenu::script_register(lua_State* L)
 		];
 };
 
+SCRIPT_EXPORT(CUIActorMenu);
+
 void CUIPdaWnd::script_register(lua_State* L)
 {
 		using namespace luabind;
@@ -224,3 +226,5 @@ void CUIPdaWnd::script_register(lua_State* L)
 				.def("GetTabControl",				&CUIPdaWnd::GetTabControl)
 		];
 };
+
+SCRIPT_EXPORT(CUIPdaWnd);

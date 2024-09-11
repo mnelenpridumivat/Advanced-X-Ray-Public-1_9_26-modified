@@ -23,6 +23,8 @@ void CPHCallOnStepCondition::script_register(lua_State *L)
 		];
 }
 
+SCRIPT_EXPORT(CPHCallOnStepCondition);
+
 void CPHExpireOnStepCondition::script_register(lua_State *L)
 {
 	module(L)
@@ -32,6 +34,8 @@ void CPHExpireOnStepCondition::script_register(lua_State *L)
 		];
 }
 
+SCRIPT_EXPORT(CPHExpireOnStepCondition);
+
 void CPHConstForceAction::script_register(lua_State *L)
 {
 	module(L)
@@ -40,6 +44,9 @@ void CPHConstForceAction::script_register(lua_State *L)
 			.def(constructor<CPhysicsShell*,const Fvector&>())
 		];
 }
+
+SCRIPT_EXPORT(CPHConstForceAction);
+
 //(CPhysicsJoint*(CPhysicsShell::*)(u16))(&CPhysicsShell::get_Joint))
 //.def("set_gravity",					&CPHWorld::SetGravity),
 //.def("add_call",					&CPHWorld::AddCall)
