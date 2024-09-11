@@ -10,6 +10,7 @@ void CReaderScriptWrapper::script_register(lua_State* L)
 	module(L)
 		[
 			class_<CReaderScriptWrapper>("CReader")
+				.def("r_bool", &CReaderScriptWrapper::r_bool)
 				.def("r_vec3", &CReaderScriptWrapper::r_vec3)
 				.def("r_u64", &CReaderScriptWrapper::r_u64)
 				.def("r_u32", &CReaderScriptWrapper::r_u32)
@@ -27,10 +28,19 @@ void CReaderScriptWrapper::script_register(lua_State* L)
 				.def("r_angle8", &CReaderScriptWrapper::r_angle8)
 				.def("r_dir", &CReaderScriptWrapper::r_dir)
 				.def("r_sdir", &CReaderScriptWrapper::r_sdir)
-				.def("r_string", &CReaderScriptWrapper::r_string)
+				.def("r_stringZ", &CReaderScriptWrapper::r_stringZ)
+				.def("r_seek", &CReaderScriptWrapper::r_seek)
+				.def("r_tell", &CReaderScriptWrapper::r_tell)
+				.def("r_matrix", &CReaderScriptWrapper::r_matrix)
+				.def("r_clientID", &CReaderScriptWrapper::r_clientID)
+				.def("r_elapsed", &CReaderScriptWrapper::r_elapsed)
+				.def("r_advance", &CReaderScriptWrapper::r_advance)
+				.def("r_eof", &CReaderScriptWrapper::r_eof)
 
 		];
 }
+
+script_exporter<CReaderScriptWrapper> CReaderScriptWrapper_exporter;
 
 #pragma optimize("s",on)
 void CWriterScriptWrapper::script_register(lua_State* L)
@@ -38,6 +48,7 @@ void CWriterScriptWrapper::script_register(lua_State* L)
 	module(L)
 		[
 			class_<CWriterScriptWrapper>("CWriter")
+				.def("w_bool", &CWriterScriptWrapper::w_bool)
 				.def("w_vec3", &CWriterScriptWrapper::w_vec3)
 				.def("w_u64", &CWriterScriptWrapper::w_u64)
 				.def("w_u32", &CWriterScriptWrapper::w_u32)
@@ -55,7 +66,17 @@ void CWriterScriptWrapper::script_register(lua_State* L)
 				.def("w_angle8", &CWriterScriptWrapper::w_angle8)
 				.def("w_dir", &CWriterScriptWrapper::w_dir)
 				.def("w_sdir", &CWriterScriptWrapper::w_sdir)
-				.def("w_string", &CWriterScriptWrapper::w_string)
+				.def("w_stringZ", &CWriterScriptWrapper::w_stringZ)
+				.def("w_begin", &CWriterScriptWrapper::w_begin)
+				.def("w_tell", &CWriterScriptWrapper::w_tell)
+				.def("w_matrix", &CWriterScriptWrapper::w_matrix)
+				.def("w_clientID", &CWriterScriptWrapper::w_clientID)
+				.def("w_chunk_open8", &CWriterScriptWrapper::w_chunk_open8)
+				.def("w_chunk_close8", &CWriterScriptWrapper::w_chunk_close8)
+				.def("w_chunk_open16", &CWriterScriptWrapper::w_chunk_open16)
+				.def("w_chunk_close16", &CWriterScriptWrapper::w_chunk_close16)
 
 		];
 }
+
+script_exporter<CWriterScriptWrapper> CWriterScriptWrapper_exporter;

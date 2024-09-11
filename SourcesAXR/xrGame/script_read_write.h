@@ -20,6 +20,7 @@ public:
 	CReaderScriptWrapper(IReader* reader);
 
 
+	bool		r_bool();
 	Fvector		r_vec3();
 	u64			r_u64();
 	u32			r_u32();
@@ -37,14 +38,26 @@ public:
 	float		r_angle8();
 	Fvector		r_dir();
 	Fvector		r_sdir();
-	LPCSTR		r_string();
+	LPCSTR		r_stringZ();
+
+	void		r_seek(u32 pos);
+	u32			r_tell();
+
+	void		r_matrix(Fmatrix& M);
+	void		r_clientID(ClientID& C);
+
+	BOOL		r_eof();
+	u32			r_elapsed();
+	void		r_advance(u32 size);
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION;
+
+	static script_exporter<CReaderScriptWrapper> exporter;
 };
 
-add_to_type_list(CReaderScriptWrapper)
-#undef script_type_list
-#define script_type_list save_type_list(CReaderScriptWrapper)
+//add_to_type_list(CReaderScriptWrapper)
+//#undef script_type_list
+//#define script_type_list save_type_list(CReaderScriptWrapper)
 
 class CWriterScriptWrapper : public CReadWriteScriptWrapperBase {
 
@@ -53,6 +66,7 @@ class CWriterScriptWrapper : public CReadWriteScriptWrapperBase {
 public:
 	CWriterScriptWrapper(IWriter* writer);
 
+	void		w_bool(bool d);
 	void		w_u64(u64 d);
 	void		w_u32(u32 d);
 	void		w_u16(u16 d);
@@ -63,7 +77,7 @@ public:
 	void		w_s8(s8 d);
 	void		w_float(float d);
 	void		w_double(double d);
-	void		w_string(LPCSTR p);
+	void		w_stringZ(LPCSTR p);
 	void		w_vec3(const Fvector3& v);
 	void 		w_float_q16(float a, float min, float max);
 	void 		w_float_q8(float a, float min, float max);
@@ -72,9 +86,21 @@ public:
 	void 		w_dir(const Fvector& D);
 	void 		w_sdir(const Fvector& D);
 
+	void	w_begin(u16 type);
+	u32	w_tell();
+	void w_seek(u32 pos, const void* p, u32 count);
+	void w_matrix(Fmatrix& M);
+	void w_clientID(ClientID& C);
+	void w_chunk_open8(u32& position);
+	void w_chunk_close8(u32 position);
+	void w_chunk_open16(u32& position);
+	void w_chunk_close16(u32 position);
+
 	DECLARE_SCRIPT_REGISTER_FUNCTION;
+
+	static script_exporter<CWriterScriptWrapper> exporter;
 };
 
-add_to_type_list(CWriterScriptWrapper)
-#undef script_type_list
-#define script_type_list save_type_list(CWriterScriptWrapper)
+//add_to_type_list(CWriterScriptWrapper)
+//#undef script_type_list
+//#define script_type_list save_type_list(CWriterScriptWrapper)

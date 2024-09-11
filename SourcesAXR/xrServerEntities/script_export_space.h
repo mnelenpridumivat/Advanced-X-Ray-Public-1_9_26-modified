@@ -10,6 +10,7 @@
 #define script_export_spaceH
 
 #pragma once
+#include "../xrCore/vector.h"
 
 struct lua_State;
 
@@ -30,5 +31,24 @@ struct lua_State;
 
 template <typename T> struct enum_exporter{DECLARE_SCRIPT_REGISTER_FUNCTION};
 template <typename T> struct class_exporter{DECLARE_SCRIPT_REGISTER_FUNCTION};
+
+struct script_exporter_base {
+	virtual void script_register(lua_State* L) = 0;
+};
+
+extern xr_vector<script_exporter_base*> script_exporter_container;
+
+//xr_vector<script_exporter_base*> script_exporter_container::container = {};
+
+template<typename T>
+struct script_exporter: public script_exporter_base {
+	script_exporter() {
+		script_exporter_container.push_back(this);
+	}
+
+	virtual void script_register(lua_State* L) override {
+		T::script_register(L);
+	}
+};
 
 #endif

@@ -110,6 +110,10 @@ void export_classes	(lua_State *L)
 
 	Register<script_type_list>::_Register(L);
 
+	for (auto& elem : script_exporter_container) {
+		elem->script_register(L);
+	}
+
 //	DynamicCast<script_type_list>::Register(L);
 //	Register<Loki::TL::DerivedToFrontAll<script_type_list>::Result>::_Register(L);
 }
