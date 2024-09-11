@@ -78,7 +78,7 @@ public:
 	IC		CALifeRegistryContainer				&registry					() const;
 	IC		inventory::upgrade::Manager			&inventory_upgrade_manager	() const;
 
-	IC		CAlifePlayerData					&player_data();
+	IC		CAlifePlayerData					&player_data() const;
 
 public:
 												CALifeSimulatorBase			(xrServer *server, LPCSTR section);

@@ -54,6 +54,7 @@ public:
 	IC void			w_s16	(s16 d)					{	w(&d,sizeof(s16));	}
 	IC void			w_s8	(s8 d)					{	w(&d,sizeof(s8));	}
 	IC void			w_float	(float d)				{	w(&d,sizeof(float));}
+	IC void			w_double(double d) { w(&d, sizeof(double)); }
 	IC void			w_string(const char *p)			{	w(p,(u32)xr_strlen(p));w_u8(13);w_u8(10);	}
 	IC void			w_stringZ(const char *p)		{	w(p,(u32)xr_strlen(p)+1);					}
 	IC void			w_stringZ(const shared_str& p) 	{	w(*p?*p:"",p.size());w_u8(0);		}
@@ -128,6 +129,9 @@ public:
 #pragma warning(pop)
 	bool			save_to		(LPCSTR fn);
 	virtual	void	flush		()			{ };
+
+	void CopyTo(xr_vector<u8>& to_array);
+
 };
 
 //------------------------------------------------------------------------------------

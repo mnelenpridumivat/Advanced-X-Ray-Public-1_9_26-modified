@@ -48,6 +48,7 @@
 #include "characterphysicssupport.h"
 #include "game_cl_base_weapon_usage_statistic.h"
 #include "Artefact.h"
+#include "AlifePlayerData.h"
 
 #include "../xrengine/xr_collide_form.h"
 #ifdef DEBUG
@@ -1364,16 +1365,10 @@ void CActor::save(NET_Packet &output_packet)
 	inherited::save(output_packet);
 	CInventoryOwner::save(output_packet);
 
+	ai().get_alife()->player_data().save();
+
 	if (ActorSkills) {
 		ActorSkills->save(output_packet);
-	}
-
-	if (TimerManager) {
-		TimerManager->save(output_packet);
-	}
-
-	if (BinderManager) {
-		BinderManager->save(output_packet);
 	}
 
 	cam_Active()->save(output_packet);
@@ -1398,16 +1393,10 @@ void CActor::load(IReader& input_packet)
 	inherited::load(input_packet);
 	CInventoryOwner::load(input_packet);
 
+	ai().get_alife()->player_data().load();
+
 	if (ActorSkills) {
 		ActorSkills->load(input_packet);
-	}
-
-	if (TimerManager) {
-		TimerManager->load(input_packet);
-	}
-
-	if (BinderManager) {
-		BinderManager->load(input_packet);
 	}
 
 	cam_Active()->load(input_packet);

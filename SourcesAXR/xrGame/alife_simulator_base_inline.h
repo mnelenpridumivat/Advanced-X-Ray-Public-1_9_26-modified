@@ -154,7 +154,7 @@ IC	inventory::upgrade::Manager	&CALifeSimulatorBase::inventory_upgrade_manager		
 	return						(*m_upgrade_manager);
 }
 
-inline IC CAlifePlayerData& CALifeSimulatorBase::player_data()
+IC CAlifePlayerData& CALifeSimulatorBase::player_data() const
 {
 	// TODO: insert return statement here
 	return *m_player_data;

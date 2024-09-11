@@ -79,7 +79,7 @@ void CCustomTimer::ResetCustomTimer()
     CCustomTimerBase::ResetCustomTimer();
 }
 
-void CCustomTimerBase::save(NET_Packet& packet)
+void CCustomTimerBase::save(IWriter& packet)
 {
     save_data(m_iTimerStartValue, packet);
     save_data(m_iTimerCurValue, packet);
@@ -88,13 +88,13 @@ void CCustomTimerBase::save(NET_Packet& packet)
     save_data(m_bIsActive, packet);
 }
 
-void CCustomTimer::save(NET_Packet& packet)
+void CCustomTimer::save(IWriter& packet)
 {
     save_data(m_sTimerName, packet);
     CCustomTimerBase::save(packet);
 }
 
-void CBinder::save(NET_Packet& packet)
+void CBinder::save(IWriter& packet)
 {
     CCustomTimerBase::save(packet);
     save_data(m_sFuncName, packet);
@@ -238,6 +238,12 @@ void CBinder::OnTimerEnd()
     Msg("! Unable to process binder with name [%s]!", m_sFuncName.c_str());
 }
 
+CTimerManager& CTimerManager::GetInstance()
+{
+    static CTimerManager manager;
+    return manager;
+}
+
 void CTimerManager::CreateTimer(std::string name, int value, int mode)
 {
     for (auto& timer : Timers)
@@ -330,7 +336,7 @@ bool CTimerManager::StopTimer(std::string name)
     return false;
 }
 
-void CTimerManager::save(NET_Packet& packet)
+void CTimerManager::save(IWriter& packet)
 {
     u32 timer_count = static_cast<u32>(Timers.size());
     save_data(timer_count, packet);
@@ -377,12 +383,18 @@ void CTimerManager::Update()
     }
 }
 
+CBinderManager& CBinderManager::GetInstance()
+{
+    static CBinderManager manager;
+    return manager;
+}
+
 void CBinderManager::CreateBinder(std::string name, const CBinderParams& params, int value, int mode)
 {
     Binders.push_back(std::make_unique<CBinder>(name, params, value, mode));
 }
 
-void CBinderManager::save(NET_Packet& packet)
+void CBinderManager::save(IWriter& packet)
 {
     u32 timer_count = static_cast<u32>(Binders.size());
     save_data(timer_count, packet);
@@ -605,7 +617,7 @@ double CBinderParam::GetDouble() const
     return std::get<double>(value);
 }
 
-void CBinderParam::save(NET_Packet& output_packet) const
+void CBinderParam::save(IWriter& output_packet) const
 {
     output_packet.w_u8(type);
     switch (type) {
@@ -715,7 +727,7 @@ int CBinderParams::Size()
     return params.size();
 }
 
-void CBinderParams::save(NET_Packet& output_packet) const
+void CBinderParams::save(IWriter& output_packet) const
 {
     output_packet.w_u8(params.size());
     for (const auto& elem : params) {

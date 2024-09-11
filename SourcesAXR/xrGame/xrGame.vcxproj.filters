@@ -2560,6 +2560,9 @@
     <Filter Include="AI\ALife\simulator_base\player_data">
       <UniqueIdentifier>{f6344987-dce6-474f-ae21-a8f921e5ad59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\AScript\ScriptClasses\ScriptReadWrite">
+      <UniqueIdentifier>{71ba1a5f-39ff-4063-8904-ff0233a81f92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">
@@ -7632,6 +7635,9 @@
     <ClInclude Include="PlayerMetadata.h">
       <Filter>AI\ALife\simulator_base\player_data</Filter>
     </ClInclude>
+    <ClInclude Include="script_read_write.h">
+      <Filter>AI\AScript\ScriptClasses\ScriptReadWrite</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -11439,6 +11445,12 @@
     </ClCompile>
     <ClCompile Include="PlayerMetadata.cpp">
       <Filter>AI\ALife\simulator_base\player_data</Filter>
+    </ClCompile>
+    <ClCompile Include="script_read_write_script.cpp">
+      <Filter>AI\AScript\ScriptClasses\ScriptReadWrite</Filter>
+    </ClCompile>
+    <ClCompile Include="script_read_write.cpp">
+      <Filter>AI\AScript\ScriptClasses\ScriptReadWrite</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

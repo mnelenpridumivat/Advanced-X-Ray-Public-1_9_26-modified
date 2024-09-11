@@ -1143,25 +1143,12 @@ void g_send(NET_Packet& P, bool bReliable = false, bool bSequential = true, bool
 
 void create_custom_timer(LPCSTR name, int start_value, int mode = 0)
 {
-	if (!Actor()->TimerManager)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
-		return;
-	}
-
-	Actor()->TimerManager->CreateTimer(name, start_value, mode);
+	CTimerManager::GetInstance().CreateTimer(name, start_value, mode);
 }
 
 void bind_timer(LPCSTR function, const CBinderParams& params, int start_value, int mode = 0)
 {
-	auto TimeManager = Actor()->BinderManager;
-	if (!TimeManager)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : BinderManager is NULL!");
-		return;
-	}
-
-	TimeManager->CreateBinder(function, params, start_value, mode);
+	CBinderManager::GetInstance().CreateBinder(function, params, start_value, mode);
 }
 
 /*void bind_timer_one_param(LPCSTR function, LPCSTR param1, int start_value, int mode = 0)
@@ -1226,57 +1213,27 @@ void bind_timer_five_params(LPCSTR function, LPCSTR param1, LPCSTR param2, LPCST
 
 void start_custom_timer(LPCSTR name)
 {
-	if (!Actor()->TimerManager)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
-		return;
-	}
-
-	Actor()->TimerManager->StartTimer(name);
+	CTimerManager::GetInstance().StartTimer(name);
 }
 
 void stop_custom_timer(LPCSTR name)
 {
-	if (!Actor()->TimerManager)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
-		return;
-	}
-
-	Actor()->TimerManager->StopTimer(name);
+	CTimerManager::GetInstance().StopTimer(name);
 }
 
 void reset_custom_timer(LPCSTR name)
 {
-	if (!Actor()->TimerManager)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
-		return;
-	}
-
-	Actor()->TimerManager->ResetTimer(name);
+	CTimerManager::GetInstance().ResetTimer(name);
 }
 
 void delete_custom_timer(LPCSTR name)
 {
-	if (!Actor()->TimerManager)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
-		return;
-	}
-
-	Actor()->TimerManager->DeleteTimer(name);
+	CTimerManager::GetInstance().DeleteTimer(name);
 }
 
 int get_custom_timer(LPCSTR name)
 {
-	if (!Actor()->TimerManager)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : TimerManager is NULL!");
-		return 0;
-	}
-
-	return Actor()->TimerManager->GetTimerValue(name);
+	return CTimerManager::GetInstance().GetTimerValue(name);
 }
 
 void launch_sam(CScriptGameObject* launch_object, CScriptGameObject* target)

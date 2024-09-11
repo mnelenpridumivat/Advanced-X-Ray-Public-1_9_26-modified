@@ -23,6 +23,7 @@
 #include "../xrEngine/igame_persistent.h"
 #include "autosave_manager.h"
 #include "PlayerMetadata.h"
+#include "AlifePlayerData.h"
 
 XRCORE_API string_path g_bug_report_file;
 
@@ -68,6 +69,8 @@ void CALifeStorageManager::save	(LPCSTR save_name_no_check, bool update_name)
 		spawns().save			(stream);
 		objects().save			(stream);
 		registry().save			(stream);
+
+		player_data().write(stream);
 
 		source_count			= stream.tell();
 		void					*source_data = stream.pointer();
@@ -120,6 +123,8 @@ void CALifeStorageManager::load	(void *buffer, const u32 &buffer_size, LPCSTR fi
 	}
 
 	registry().load				(source);
+
+	player_data().read(source);
 
 	can_register_objects		(true);
 

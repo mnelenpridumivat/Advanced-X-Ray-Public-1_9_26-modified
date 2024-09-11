@@ -247,6 +247,10 @@ bool CMemoryWriter::save_to	(LPCSTR fn)
     return false;
 }
 
+void CMemoryWriter::CopyTo(xr_vector<u8>& to_array) {
+	to_array.resize(mem_size);
+	std::copy(data, data + mem_size, to_array.begin());
+}
 
 void	IWriter::open_chunk	(u32 type)
 {
