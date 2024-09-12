@@ -155,4 +155,4 @@ void CMemoryInfo::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CMemoryInfo);
+SCRIPT_EXPORT1(CMemoryInfo);

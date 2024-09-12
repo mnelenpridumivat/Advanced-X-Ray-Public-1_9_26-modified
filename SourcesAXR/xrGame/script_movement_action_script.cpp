@@ -108,4 +108,4 @@ void CScriptMovementAction::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptMovementAction);
+SCRIPT_EXPORT1(CScriptMovementAction);

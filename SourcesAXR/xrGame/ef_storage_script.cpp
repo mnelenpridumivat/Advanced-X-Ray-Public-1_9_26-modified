@@ -129,4 +129,4 @@ void CEF_Storage::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CEF_Storage);
+SCRIPT_EXPORT1(CEF_Storage);

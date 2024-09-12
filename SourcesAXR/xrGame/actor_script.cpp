@@ -10,6 +10,7 @@
 #include "actor.h"
 #include "level_changer.h"
 #include "ActorCondition.h"
+#include "base_client_classes.h"
 
 #pragma optimize("s",on)
 void CActor::script_register(lua_State *L)
@@ -29,4 +30,4 @@ void CActor::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CActor);
+SCRIPT_EXPORT2(CActor, CObjectScript);

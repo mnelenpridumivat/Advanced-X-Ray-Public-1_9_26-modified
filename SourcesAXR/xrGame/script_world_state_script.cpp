@@ -31,4 +31,4 @@ void CScriptWorldStateWrapper::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptWorldStateWrapper);
+SCRIPT_EXPORT1(CScriptWorldStateWrapper);

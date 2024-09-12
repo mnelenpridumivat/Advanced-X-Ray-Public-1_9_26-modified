@@ -18,3 +18,5 @@ void CUIProgressBar::script_register(lua_State *L)
 
 	];
 }
+
+SCRIPT_EXPORT2(CUIProgressBar, CUIWindow);

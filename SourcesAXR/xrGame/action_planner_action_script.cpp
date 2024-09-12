@@ -32,4 +32,4 @@ void CActionPlannerAction<CScriptGameObject>::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT_NAME(CActionPlannerAction<CScriptGameObject>, CActionPlannerAction_CScriptGameObject);
+SCRIPT_EXPORT3(CScriptActionPlannerAction, CScriptActionPlanner, CScriptActionBase);

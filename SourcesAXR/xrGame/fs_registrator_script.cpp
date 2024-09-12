@@ -243,4 +243,4 @@ void fs_registrator::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(fs_registrator);
+SCRIPT_EXPORT1(fs_registrator);

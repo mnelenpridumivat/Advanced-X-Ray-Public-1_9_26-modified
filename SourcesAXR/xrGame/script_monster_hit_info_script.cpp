@@ -34,4 +34,4 @@ void CScriptMonsterHitInfo::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptMonsterHitInfo);
+SCRIPT_EXPORT1(CScriptMonsterHitInfo);

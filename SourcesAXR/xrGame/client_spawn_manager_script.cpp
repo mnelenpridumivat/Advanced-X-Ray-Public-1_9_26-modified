@@ -25,4 +25,4 @@ void CClientSpawnManager::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CClientSpawnManager);
+SCRIPT_EXPORT1(CClientSpawnManager);

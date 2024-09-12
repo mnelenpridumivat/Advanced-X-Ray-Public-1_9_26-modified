@@ -1,5 +1,6 @@
 #include "pch_script.h"
 #include "cat.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -13,4 +14,4 @@ void CCat::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CCat);
+SCRIPT_EXPORT2(CCat, CObjectScript);

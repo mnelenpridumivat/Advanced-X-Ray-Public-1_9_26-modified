@@ -135,4 +135,4 @@ void CScriptIniFile::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptIniFile);
+SCRIPT_EXPORT1(CScriptIniFile);

@@ -47,4 +47,4 @@ void CScriptWatchAction::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptWatchAction);
+SCRIPT_EXPORT1(CScriptWatchAction);

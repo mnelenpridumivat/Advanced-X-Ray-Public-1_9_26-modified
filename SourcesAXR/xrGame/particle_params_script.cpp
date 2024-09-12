@@ -24,4 +24,4 @@ void CParticleParams::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CParticleParams);
+SCRIPT_EXPORT1(CParticleParams);

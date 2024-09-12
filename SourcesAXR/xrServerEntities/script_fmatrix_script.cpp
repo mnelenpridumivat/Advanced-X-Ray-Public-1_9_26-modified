@@ -105,4 +105,4 @@ void CScriptFmatrix::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptFmatrix);
+SCRIPT_EXPORT1(CScriptFmatrix);

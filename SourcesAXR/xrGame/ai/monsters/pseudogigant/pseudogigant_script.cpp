@@ -1,5 +1,6 @@
 #include "pch_script.h"
 #include "pseudo_gigant_orig.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -13,4 +14,4 @@ void CPseudoGigant::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CPseudoGigant);
+SCRIPT_EXPORT2(CPseudoGigant, CObjectScript);

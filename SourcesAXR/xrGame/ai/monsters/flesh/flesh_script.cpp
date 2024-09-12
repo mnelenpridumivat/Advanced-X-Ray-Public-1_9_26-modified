@@ -1,5 +1,6 @@
 #include "pch_script.h"
 #include "flesh.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -13,4 +14,4 @@ void CAI_Flesh::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CAI_Flesh);
+SCRIPT_EXPORT2(CAI_Flesh, CObjectScript);

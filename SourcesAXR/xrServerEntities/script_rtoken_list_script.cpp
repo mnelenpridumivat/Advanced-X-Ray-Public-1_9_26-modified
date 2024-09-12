@@ -26,4 +26,4 @@ void CScriptRTokenList::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptRTokenList);
+SCRIPT_EXPORT1(CScriptRTokenList);

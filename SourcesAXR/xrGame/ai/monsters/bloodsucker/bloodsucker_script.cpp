@@ -1,5 +1,6 @@
 #include "pch_script.h"
 #include "bloodsucker.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -14,4 +15,4 @@ void CAI_Bloodsucker::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CAI_Bloodsucker);
+SCRIPT_EXPORT2(CAI_Bloodsucker, CObjectScript);

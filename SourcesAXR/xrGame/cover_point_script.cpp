@@ -28,4 +28,4 @@ void CCoverPoint::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CCoverPoint);
+SCRIPT_EXPORT1(CCoverPoint);

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "pch_script.h"
 #include "EmiZone.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -14,4 +15,4 @@ void CEmiZone::script_register(lua_State* L)
 		];
 }
 
-SCRIPT_EXPORT(CEmiZone);
+SCRIPT_EXPORT2(CEmiZone, CObjectScript);

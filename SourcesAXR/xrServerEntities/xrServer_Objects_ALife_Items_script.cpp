@@ -22,7 +22,7 @@ void CSE_ALifeInventoryItem::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeInventoryItem);
+SCRIPT_EXPORT1(CSE_ALifeInventoryItem);
 
 void CSE_ALifeItem::script_register(lua_State *L)
 {
@@ -37,7 +37,7 @@ void CSE_ALifeItem::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItem);
+SCRIPT_EXPORT3(CSE_ALifeItem, CSE_ALifeDynamicObjectVisual, CSE_ALifeInventoryItem);
 
 void CSE_ALifeItemTorch::script_register(lua_State *L)
 {
@@ -50,7 +50,7 @@ void CSE_ALifeItemTorch::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemTorch);
+SCRIPT_EXPORT2(CSE_ALifeItemTorch, CSE_ALifeItem);
 
 void CSE_ALifeItemAmmo::script_register(lua_State *L)
 {
@@ -63,7 +63,7 @@ void CSE_ALifeItemAmmo::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemAmmo);
+SCRIPT_EXPORT2(CSE_ALifeItemAmmo, CSE_ALifeItem);
 
 void CSE_ALifeItemFuel::script_register(lua_State* L)
 {
@@ -76,7 +76,7 @@ void CSE_ALifeItemFuel::script_register(lua_State* L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemFuel);
+SCRIPT_EXPORT2(CSE_ALifeItemFuel, CSE_ALifeItem);
 
 void CSE_ALifeItemWeapon::script_register(lua_State *L)
 {
@@ -101,7 +101,7 @@ void CSE_ALifeItemWeapon::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemWeapon);
+SCRIPT_EXPORT2(CSE_ALifeItemWeapon, CSE_ALifeItem);
 
 void CSE_ALifeItemWeaponShotGun::script_register(lua_State *L)
 {
@@ -114,7 +114,7 @@ void CSE_ALifeItemWeaponShotGun::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemWeaponShotGun);
+SCRIPT_EXPORT2(CSE_ALifeItemWeaponShotGun, CSE_ALifeItemWeapon);
 
 void CSE_ALifeItemWeaponAutoShotGun::script_register(lua_State *L)
 {
@@ -127,7 +127,7 @@ void CSE_ALifeItemWeaponAutoShotGun::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemWeaponAutoShotGun);
+SCRIPT_EXPORT2(CSE_ALifeItemWeaponAutoShotGun, CSE_ALifeItemWeapon);
 
 void CSE_ALifeItemDetector::script_register(lua_State *L)
 {
@@ -140,7 +140,7 @@ void CSE_ALifeItemDetector::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemDetector);
+SCRIPT_EXPORT2(CSE_ALifeItemDetector, CSE_ALifeItem);
 
 void CSE_ALifeItemArtefact::script_register(lua_State *L)
 {
@@ -153,4 +153,4 @@ void CSE_ALifeItemArtefact::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemArtefact);
+SCRIPT_EXPORT2(CSE_ALifeItemArtefact, CSE_ALifeItem);

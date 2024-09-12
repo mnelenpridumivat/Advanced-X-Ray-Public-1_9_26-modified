@@ -14,3 +14,5 @@ void CUIMapInfo::script_register(lua_State *L){
 	];
 
 }
+
+SCRIPT_EXPORT2(CUIMapInfo, CUIWindow);

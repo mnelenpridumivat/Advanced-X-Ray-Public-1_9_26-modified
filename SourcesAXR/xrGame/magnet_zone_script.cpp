@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "pch_script.h"
 #include "MagnetZone.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -14,4 +15,4 @@ void CMagnetZone::script_register(lua_State* L)
 		];
 }
 
-SCRIPT_EXPORT(CMagnetZone);
+SCRIPT_EXPORT2(CMagnetZone, CObjectScript);

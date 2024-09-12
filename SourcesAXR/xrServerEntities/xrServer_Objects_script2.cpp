@@ -13,7 +13,7 @@ void CSE_PHSkeleton::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_PHSkeleton);
+SCRIPT_EXPORT1(CSE_PHSkeleton);
 
 void CSE_AbstractVisual::script_register(lua_State *L)
 {
@@ -28,7 +28,7 @@ void CSE_AbstractVisual::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_AbstractVisual);
+SCRIPT_EXPORT3(CSE_AbstractVisual, CSE_Visual, CSE_Abstract);
 
 /**
 void CSE_SpawnGroup::script_register(lua_State *L)

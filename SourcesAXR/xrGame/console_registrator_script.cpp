@@ -83,4 +83,4 @@ void console_registrator::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(console_registrator);
+SCRIPT_EXPORT1(console_registrator);

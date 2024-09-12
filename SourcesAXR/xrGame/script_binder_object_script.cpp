@@ -36,4 +36,4 @@ void CScriptBinderObject::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptBinderObject);
+SCRIPT_EXPORT1(CScriptBinderObject);

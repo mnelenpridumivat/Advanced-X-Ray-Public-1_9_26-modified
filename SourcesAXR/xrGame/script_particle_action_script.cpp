@@ -32,4 +32,4 @@ void CScriptParticleAction::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptParticleAction);
+SCRIPT_EXPORT1(CScriptParticleAction);

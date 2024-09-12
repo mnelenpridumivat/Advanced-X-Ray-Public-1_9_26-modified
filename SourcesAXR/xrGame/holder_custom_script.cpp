@@ -16,4 +16,4 @@ void CHolderCustom::script_register(lua_State *L)
 		];
 }
 
-SCRIPT_EXPORT(CHolderCustom);
+SCRIPT_EXPORT1(CHolderCustom);

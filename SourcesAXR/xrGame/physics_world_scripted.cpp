@@ -28,4 +28,4 @@ void cphysics_world_scripted::script_register(lua_State *L)
 		];
 }
 
-SCRIPT_EXPORT(cphysics_world_scripted);
+SCRIPT_EXPORT1(cphysics_world_scripted);

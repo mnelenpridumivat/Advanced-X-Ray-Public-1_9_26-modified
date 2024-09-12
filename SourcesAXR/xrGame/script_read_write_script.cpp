@@ -40,7 +40,7 @@ void CReaderScriptWrapper::script_register(lua_State* L)
 		];
 }
 
-SCRIPT_EXPORT(CReaderScriptWrapper);
+SCRIPT_EXPORT1(CReaderScriptWrapper);
 
 #pragma optimize("s",on)
 void CWriterScriptWrapper::script_register(lua_State* L)
@@ -79,4 +79,4 @@ void CWriterScriptWrapper::script_register(lua_State* L)
 		];
 }
 
-SCRIPT_EXPORT(CWriterScriptWrapper);
+SCRIPT_EXPORT1(CWriterScriptWrapper);

@@ -254,4 +254,4 @@ void CScriptEngine::script_register(lua_State *L)
 #endif // #ifdef XRGAME_EXPORTS
 }
 
-SCRIPT_EXPORT(CScriptEngine);
+SCRIPT_EXPORT1(CScriptEngine);

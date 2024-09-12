@@ -56,4 +56,4 @@ void CPatrolPathParams::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CPatrolPathParams);
+SCRIPT_EXPORT1(CPatrolPathParams);

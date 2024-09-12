@@ -1,5 +1,6 @@
 #include "pch_script.h"
 #include "snork.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -13,4 +14,4 @@ void CSnork::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSnork);
+SCRIPT_EXPORT2(CSnork, CObjectScript);

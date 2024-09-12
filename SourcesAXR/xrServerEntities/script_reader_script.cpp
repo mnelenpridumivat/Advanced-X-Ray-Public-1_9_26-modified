@@ -74,4 +74,4 @@ void CScriptReader::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptReader);
+SCRIPT_EXPORT1(CScriptReader);

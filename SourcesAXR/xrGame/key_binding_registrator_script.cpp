@@ -199,4 +199,4 @@ void key_binding_registrator::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(key_binding_registrator);
+SCRIPT_EXPORT1(key_binding_registrator);

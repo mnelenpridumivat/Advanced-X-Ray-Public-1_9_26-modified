@@ -33,4 +33,4 @@ void CScriptActionCondition::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptActionCondition);
+SCRIPT_EXPORT1(CScriptActionCondition);

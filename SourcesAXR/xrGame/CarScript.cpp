@@ -3,6 +3,7 @@
 #include "Car.h"
 #include "CarWeapon.h"
 #include "script_game_object.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -53,4 +54,4 @@ void CCar::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CCar);
+SCRIPT_EXPORT3(CCar, CObjectScript, CHolderCustom);

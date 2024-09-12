@@ -5,6 +5,7 @@
 #include "hit_immunity.h"
 #include "damage_manager.h"
 #include "DestroyablePhysicsObject.h"
+#include "base_client_classes.h"
 
 
 
@@ -33,4 +34,4 @@ void CPhysicObject::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CPhysicObject);
+SCRIPT_EXPORT2(CPhysicObject, CObjectScript);

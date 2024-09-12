@@ -68,4 +68,4 @@ void CScriptRenderDevice::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptRenderDevice);
+SCRIPT_EXPORT1(CScriptRenderDevice);

@@ -26,4 +26,4 @@ void CScriptWorldPropertyWrapper::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptWorldPropertyWrapper);
+SCRIPT_EXPORT1(CScriptWorldPropertyWrapper);

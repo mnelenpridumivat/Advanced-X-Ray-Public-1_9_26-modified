@@ -52,7 +52,7 @@ public:
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION;
 
-	static script_exporter<CReaderScriptWrapper> exporter;
+	//static script_exporter<CReaderScriptWrapper> exporter;
 };
 
 //add_to_type_list(CReaderScriptWrapper)
@@ -98,7 +98,7 @@ public:
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION;
 
-	static script_exporter<CWriterScriptWrapper> exporter;
+	//static script_exporter<CWriterScriptWrapper> exporter;
 };
 
 //add_to_type_list(CWriterScriptWrapper)

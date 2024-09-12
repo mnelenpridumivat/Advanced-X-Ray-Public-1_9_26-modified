@@ -70,4 +70,4 @@ void CScriptSoundType::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptSoundType);
+SCRIPT_EXPORT1(CScriptSoundType);

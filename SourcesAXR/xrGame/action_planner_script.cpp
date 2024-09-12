@@ -59,4 +59,4 @@ void CScriptActionPlanner::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptActionPlanner);
+SCRIPT_EXPORT1(CScriptActionPlanner);

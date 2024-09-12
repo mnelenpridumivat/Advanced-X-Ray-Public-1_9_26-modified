@@ -52,4 +52,4 @@ void CPhraseDialogExporter::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CPhraseDialogExporter);
+SCRIPT_EXPORT1(CPhraseDialogExporter);

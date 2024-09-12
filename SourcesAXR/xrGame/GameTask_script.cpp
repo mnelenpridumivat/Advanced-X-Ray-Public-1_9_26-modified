@@ -57,4 +57,4 @@ void CGameTask::script_register(lua_State *L)
 		];
 }
 
-SCRIPT_EXPORT(CGameTask);
+SCRIPT_EXPORT1(CGameTask);

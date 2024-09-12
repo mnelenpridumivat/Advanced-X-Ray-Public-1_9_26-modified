@@ -77,7 +77,7 @@ void cphysics_shell_scripted::script_register( lua_State *L )
 		];
 }
 
-SCRIPT_EXPORT(cphysics_shell_scripted);
+SCRIPT_EXPORT1(cphysics_shell_scripted);
 
 
 /*

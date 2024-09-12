@@ -1,5 +1,6 @@
 #include "pch_script.h"
 #include "controller.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -13,4 +14,4 @@ void CController::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CController);
+SCRIPT_EXPORT2(CController, CObjectScript);

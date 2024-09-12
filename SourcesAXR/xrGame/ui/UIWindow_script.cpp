@@ -195,3 +195,5 @@ void CUIWindow::script_register(lua_State *L)
 			]
 	];
 }
+
+SCRIPT_EXPORT1(CUIWindow);

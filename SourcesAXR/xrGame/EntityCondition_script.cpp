@@ -69,7 +69,7 @@ void CEntityCondition::script_register(lua_State* L)
     ];
 };
 
-SCRIPT_EXPORT(CEntityCondition);
+SCRIPT_EXPORT1(CEntityCondition);
 
 void CActorCondition::script_register(lua_State* L)
 {
@@ -148,4 +148,4 @@ void CActorCondition::script_register(lua_State* L)
     ];
 };
 
-SCRIPT_EXPORT(CActorCondition);
+SCRIPT_EXPORT2(CActorCondition, CEntityCondition);

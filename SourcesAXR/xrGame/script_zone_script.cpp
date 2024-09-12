@@ -11,6 +11,7 @@
 #include "SamZone.h"
 #include "script_zone.h"
 #include "smart_zone.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -24,7 +25,7 @@ void CScriptZone::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptZone);
+SCRIPT_EXPORT2(CScriptZone, DLL_PureScript);
 
 void CSmartZone::script_register(lua_State *L)
 {
@@ -37,4 +38,4 @@ void CSmartZone::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSmartZone);
+SCRIPT_EXPORT2(CSmartZone, DLL_PureScript);

@@ -1,6 +1,7 @@
 #include "pch_script.h"
 #include "helicopter.h"
 #include "script_game_object.h"
+#include "base_client_classes.h"
 
 int CHelicopter::GetMovementState()
 {
@@ -117,4 +118,4 @@ void CHelicopter::script_register(lua_State *L)
 		];
 }
 
-SCRIPT_EXPORT(CHelicopter);
+SCRIPT_EXPORT2(CHelicopter, CObjectScript);

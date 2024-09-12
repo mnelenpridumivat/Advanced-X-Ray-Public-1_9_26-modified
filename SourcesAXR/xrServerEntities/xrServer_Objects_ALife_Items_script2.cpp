@@ -24,7 +24,7 @@ void CSE_ALifeItemPDA::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemPDA);
+SCRIPT_EXPORT2(CSE_ALifeItemPDA, CSE_ALifeItem);
 
 void CSE_ALifeItemDocument::script_register(lua_State *L)
 {
@@ -37,7 +37,7 @@ void CSE_ALifeItemDocument::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemDocument);
+SCRIPT_EXPORT2(CSE_ALifeItemDocument, CSE_ALifeItem);
 
 void CSE_ALifeItemGrenade::script_register(lua_State *L)
 {
@@ -50,7 +50,7 @@ void CSE_ALifeItemGrenade::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemGrenade);
+SCRIPT_EXPORT2(CSE_ALifeItemGrenade, CSE_ALifeItem);
 
 void CSE_ALifeItemExplosive::script_register(lua_State *L)
 {
@@ -63,7 +63,7 @@ void CSE_ALifeItemExplosive::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemExplosive);
+SCRIPT_EXPORT2(CSE_ALifeItemExplosive, CSE_ALifeItem);
 
 void CSE_ALifeItemBolt::script_register(lua_State *L)
 {
@@ -76,7 +76,7 @@ void CSE_ALifeItemBolt::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemBolt);
+SCRIPT_EXPORT2(CSE_ALifeItemBolt, CSE_ALifeItem);
 
 void CSE_ALifeItemCustomOutfit::script_register(lua_State *L)
 {
@@ -89,7 +89,7 @@ void CSE_ALifeItemCustomOutfit::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemCustomOutfit);
+SCRIPT_EXPORT2(CSE_ALifeItemCustomOutfit, CSE_ALifeItem);
 
 void CSE_ALifeItemHelmet::script_register(lua_State *L)
 {
@@ -102,7 +102,7 @@ void CSE_ALifeItemHelmet::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemHelmet);
+SCRIPT_EXPORT2(CSE_ALifeItemHelmet, CSE_ALifeItem);
 
 void CSE_ALifeItemWeaponMagazined::script_register(lua_State *L)
 {
@@ -115,7 +115,7 @@ void CSE_ALifeItemWeaponMagazined::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemWeaponMagazined);
+SCRIPT_EXPORT2(CSE_ALifeItemWeaponMagazined, CSE_ALifeItemWeapon);
 
 void CSE_ALifeItemFlamethrower::script_register(lua_State* L)
 {
@@ -128,4 +128,4 @@ void CSE_ALifeItemFlamethrower::script_register(lua_State* L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeItemFlamethrower);
+SCRIPT_EXPORT2(CSE_ALifeItemFlamethrower, CSE_ALifeItemWeapon);

@@ -131,6 +131,6 @@ SCRIPT_EXPORT(type);
 				.def("clear",				&type::clear)\
 		];\
 	}; \
-SCRIPT_EXPORT_NAME(type, name);
+SCRIPT_EXPORT_NAME1(type, name);
 
 #endif //#ifndef MIXED_DELEGATE_INCLUDED

@@ -43,7 +43,7 @@ void profile::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(profile);
+SCRIPT_EXPORT1(profile);
 
 } //namespace gamespy_gp
 

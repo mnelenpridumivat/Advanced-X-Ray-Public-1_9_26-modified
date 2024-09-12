@@ -2,6 +2,7 @@
 
 #include "SamZone.h"
 #include "space_restrictor.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -15,4 +16,4 @@ void CSpaceRestrictor::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSpaceRestrictor);
+SCRIPT_EXPORT2(CSpaceRestrictor, CObjectScript);

@@ -43,4 +43,4 @@ void CScriptHit::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptHit);
+SCRIPT_EXPORT1(CScriptHit);

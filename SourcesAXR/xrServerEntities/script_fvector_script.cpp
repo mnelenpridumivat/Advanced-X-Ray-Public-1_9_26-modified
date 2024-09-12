@@ -117,4 +117,4 @@ void CScriptFvector::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptFvector);
+SCRIPT_EXPORT1(CScriptFvector);

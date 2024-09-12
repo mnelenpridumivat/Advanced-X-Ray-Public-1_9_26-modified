@@ -1,5 +1,6 @@
 #include "pch_script.h"
 #include "zombie.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -13,4 +14,4 @@ void CZombie::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CZombie);
+SCRIPT_EXPORT2(CZombie, CObjectScript);

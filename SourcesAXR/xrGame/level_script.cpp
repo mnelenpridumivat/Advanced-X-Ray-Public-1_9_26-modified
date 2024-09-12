@@ -1575,4 +1575,4 @@ void CLevel::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CLevel);
+SCRIPT_EXPORT1(CLevel);

@@ -26,4 +26,4 @@ void CALifeSmartTerrainTask::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CALifeSmartTerrainTask);
+SCRIPT_EXPORT1(CALifeSmartTerrainTask);

@@ -12,6 +12,7 @@
 #include "ai_stalker_space.h"
 #include "../../script_game_object.h"
 #include "../../stalker_planner.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -171,4 +172,4 @@ void CAI_Stalker::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CAI_Stalker);
+SCRIPT_EXPORT2(CAI_Stalker, CObjectScript);

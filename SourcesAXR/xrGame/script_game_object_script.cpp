@@ -150,4 +150,4 @@ void CScriptGameObject::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptGameObject);
+SCRIPT_EXPORT1(CScriptGameObject);

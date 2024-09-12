@@ -1,5 +1,6 @@
 #include "pch_script.h"
 #include "dog.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -13,4 +14,4 @@ void CAI_Dog::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CAI_Dog);
+SCRIPT_EXPORT2(CAI_Dog, CObjectScript);

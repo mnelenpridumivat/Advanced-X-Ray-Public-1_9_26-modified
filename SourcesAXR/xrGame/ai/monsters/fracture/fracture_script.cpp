@@ -1,5 +1,6 @@
 #include "pch_script.h"
 #include "fracture.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -13,4 +14,4 @@ void CFracture::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CFracture);
+SCRIPT_EXPORT2(CFracture, CObjectScript);

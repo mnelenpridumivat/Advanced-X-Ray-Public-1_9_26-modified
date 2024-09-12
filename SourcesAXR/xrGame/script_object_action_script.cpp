@@ -54,4 +54,4 @@ void CScriptObjectAction::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptObjectAction);
+SCRIPT_EXPORT1(CScriptObjectAction);

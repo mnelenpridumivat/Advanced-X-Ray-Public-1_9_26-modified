@@ -1,5 +1,5 @@
 #include "pch_script.h"
-
+#include "../base_client_classes.h"
 //UI-controls
 #include "UIScriptWnd.h"
 #include "UIButton.h"
@@ -36,6 +36,8 @@ void CUIDialogWndEx::script_register(lua_State *L)
 		.def("Load",			&BaseType::Load)
 	];
 }
+
+SCRIPT_EXPORT3(CUIDialogWndEx, DLL_PureScript, CUIWindow);
 
 export_class script_register_ui_window1(export_class &&instance)
 {

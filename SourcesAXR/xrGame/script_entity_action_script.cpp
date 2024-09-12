@@ -39,4 +39,4 @@ void CScriptEntityAction::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptEntityAction);
+SCRIPT_EXPORT1(CScriptEntityAction);

@@ -96,7 +96,7 @@ void CPureServerObject::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CPureServerObject);
+SCRIPT_EXPORT1(CPureServerObject);
 
 void CSE_Abstract::script_register(lua_State *L)
 {
@@ -121,7 +121,7 @@ void CSE_Abstract::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_Abstract);
+SCRIPT_EXPORT2(CSE_Abstract, CPureServerObject);
 
 void CSE_Shape::script_register(lua_State *L)
 {
@@ -132,7 +132,7 @@ void CSE_Shape::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_Shape);
+SCRIPT_EXPORT1(CSE_Shape);
 
 void CSE_Visual::script_register(lua_State *L)
 {
@@ -144,7 +144,7 @@ void CSE_Visual::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_Visual);
+SCRIPT_EXPORT1(CSE_Visual);
 
 void CSE_Motion::script_register(lua_State *L)
 {
@@ -156,7 +156,7 @@ void CSE_Motion::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_Motion);
+SCRIPT_EXPORT1(CSE_Motion);
 
 void CSE_Spectator::script_register(lua_State *L)
 {
@@ -169,7 +169,7 @@ void CSE_Spectator::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_Spectator);
+SCRIPT_EXPORT2(CSE_Spectator, CSE_Abstract);
 
 void CSE_Temporary::script_register(lua_State *L)
 {
@@ -182,4 +182,4 @@ void CSE_Temporary::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_Temporary);
+SCRIPT_EXPORT2(CSE_Temporary, CSE_Abstract);

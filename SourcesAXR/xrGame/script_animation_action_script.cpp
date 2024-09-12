@@ -51,4 +51,4 @@ void CScriptAnimationAction::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptAnimationAction);
+SCRIPT_EXPORT1(CScriptAnimationAction);

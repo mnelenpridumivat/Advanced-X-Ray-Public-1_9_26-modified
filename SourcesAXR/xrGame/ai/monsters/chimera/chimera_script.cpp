@@ -1,5 +1,6 @@
 #include "pch_script.h"
 #include "chimera.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -13,4 +14,4 @@ void CChimera::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CChimera);
+SCRIPT_EXPORT2(CChimera, CObjectScript);

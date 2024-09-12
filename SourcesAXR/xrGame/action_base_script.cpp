@@ -42,4 +42,4 @@ void CActionBase<CScriptGameObject>::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT_NAME(CActionBase<CScriptGameObject>, CActionBase_CScriptGameObject);
+SCRIPT_EXPORT1(CScriptActionBase);

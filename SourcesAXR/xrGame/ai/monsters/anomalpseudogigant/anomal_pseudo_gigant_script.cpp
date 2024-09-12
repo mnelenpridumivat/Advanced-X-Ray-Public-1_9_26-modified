@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "pch_script.h"
 #include "anomal_pseudo_gigant.h"
+#include "base_client_classes.h"
 //#include "anomal_pseudo_gigant_wrapper.h"
 
 using namespace luabind;
@@ -19,4 +20,4 @@ void CAnomalPseudoGigant::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CAnomalPseudoGigant);
+SCRIPT_EXPORT2(CAnomalPseudoGigant, CObjectScript);

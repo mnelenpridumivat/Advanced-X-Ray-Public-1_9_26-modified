@@ -21,3 +21,5 @@ void CUIPropertiesBox::script_register(lua_State *L)
 //		.def("",					&CUIPropertiesBox::)
 	];
 }
+
+SCRIPT_EXPORT2(CUIPropertiesBox, CUIWindow);

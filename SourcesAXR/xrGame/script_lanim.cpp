@@ -49,4 +49,4 @@ void lanim_registrator::script_register(lua_State *L)
 		];
 }
 
-SCRIPT_EXPORT(lanim_registrator);
+SCRIPT_EXPORT1(lanim_registrator);

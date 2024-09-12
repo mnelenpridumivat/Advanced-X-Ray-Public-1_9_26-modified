@@ -33,4 +33,4 @@ void CPropertyEvaluator<CScriptGameObject>::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT_NAME(CPropertyEvaluator<CScriptGameObject>, CPropertyEvaluator_CScriptGameObject);
+SCRIPT_EXPORT1(CScriptPropertyEvaluator);

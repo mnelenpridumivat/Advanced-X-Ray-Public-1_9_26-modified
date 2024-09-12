@@ -32,4 +32,4 @@ void CScriptMonsterAction::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptMonsterAction);
+SCRIPT_EXPORT1(CScriptMonsterAction);

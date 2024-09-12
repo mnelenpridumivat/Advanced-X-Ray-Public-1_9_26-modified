@@ -1,6 +1,7 @@
 #include "pch_script.h"
 #include "pseudodog.h"
 #include "psy_dog.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -14,7 +15,7 @@ void CAI_PseudoDog::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CAI_PseudoDog);
+SCRIPT_EXPORT2(CAI_PseudoDog, CObjectScript);
 
 void CPsyDog::script_register(lua_State *L)
 {
@@ -25,7 +26,7 @@ void CPsyDog::script_register(lua_State *L)
 		];
 }
 
-SCRIPT_EXPORT(CPsyDog);
+SCRIPT_EXPORT2(CPsyDog, CObjectScript);
 
 void CPsyDogPhantom::script_register(lua_State *L)
 {
@@ -36,4 +37,4 @@ void CPsyDogPhantom::script_register(lua_State *L)
 		];
 }
 
-SCRIPT_EXPORT(CPsyDogPhantom);
+SCRIPT_EXPORT2(CPsyDogPhantom, CObjectScript);

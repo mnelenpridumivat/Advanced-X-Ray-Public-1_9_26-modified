@@ -4,6 +4,7 @@
 #include "pch_script.h"
 
 #include "Battery.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -17,4 +18,4 @@ void CEatableItemObject::script_register(lua_State* L)
 		];
 }
 
-SCRIPT_EXPORT(CEatableItemObject);
+SCRIPT_EXPORT2(CEatableItemObject, CObjectScript);

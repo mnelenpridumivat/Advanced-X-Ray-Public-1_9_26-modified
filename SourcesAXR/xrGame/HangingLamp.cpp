@@ -12,6 +12,7 @@
 #include "game_object_space.h"
 #include "script_callback_ex.h"
 #include "script_game_object.h"
+#include "base_client_classes.h"
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -421,4 +422,4 @@ void CHangingLamp::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CHangingLamp);
+SCRIPT_EXPORT2(CHangingLamp, CObjectScript);

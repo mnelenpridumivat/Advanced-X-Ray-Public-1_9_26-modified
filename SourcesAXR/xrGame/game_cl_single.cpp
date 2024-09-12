@@ -120,4 +120,4 @@ void CScriptGameDifficulty::script_register(lua_State *L)
 		];
 }
 
-SCRIPT_EXPORT(CScriptGameDifficulty);
+SCRIPT_EXPORT1(CScriptGameDifficulty);

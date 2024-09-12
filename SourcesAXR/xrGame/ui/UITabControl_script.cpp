@@ -24,3 +24,5 @@ void CUITabControl::script_register(lua_State *L)
 	];
 
 }
+
+SCRIPT_EXPORT3(CUITabControl, CUIWindow, CUIButton);

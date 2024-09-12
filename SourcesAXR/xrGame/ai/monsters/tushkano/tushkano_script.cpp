@@ -1,5 +1,6 @@
 #include "pch_script.h"
 #include "tushkano.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -13,4 +14,4 @@ void CTushkano::script_register(lua_State *L)
 		];
 }
 
-SCRIPT_EXPORT(CTushkano);
+SCRIPT_EXPORT2(CTushkano, CObjectScript);

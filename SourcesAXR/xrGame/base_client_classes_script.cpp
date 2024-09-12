@@ -30,6 +30,8 @@ void DLL_PureScript::script_register	(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT1(DLL_PureScript);
+
 /*
 void ISpatialScript::script_register	(lua_State *L)
 {
@@ -60,6 +62,8 @@ void ISheduledScript::script_register	(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT1(ISheduledScript);
+
 void IRenderableScript::script_register	(lua_State *L)
 {
 	module(L)
@@ -72,6 +76,8 @@ void IRenderableScript::script_register	(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT1(IRenderableScript);
+
 void ICollidableScript::script_register	(lua_State *L)
 {
 	module(L)
@@ -80,6 +86,8 @@ void ICollidableScript::script_register	(lua_State *L)
 			.def(constructor<>())
 	];
 }
+
+SCRIPT_EXPORT1(ICollidableScript);
 
 void CObjectScript::script_register		(lua_State *L)
 {
@@ -152,6 +160,8 @@ void CObjectScript::script_register		(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT5(CObjectScript, DLL_PureScript, ISheduledScript, ICollidableScript, IRenderableScript);
+
 void IRender_VisualScript::script_register		(lua_State *L)
 {
 	module(L)
@@ -161,6 +171,8 @@ void IRender_VisualScript::script_register		(lua_State *L)
 			.def("dcast_PKinematicsAnimated",&IRenderVisual::dcast_PKinematicsAnimated)
 	];
 }
+
+SCRIPT_EXPORT1(IRender_VisualScript);
 
 void IKinematicsAnimated_PlayCycle(IKinematicsAnimated* sa, LPCSTR anim)
 {
@@ -176,6 +188,8 @@ void IKinematicsAnimatedScript::script_register		(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT1(IKinematicsAnimatedScript);
+
 void CBlendScript::script_register		(lua_State *L)
 {
 	module(L)
@@ -184,6 +198,8 @@ void CBlendScript::script_register		(lua_State *L)
 			//			.def(constructor<>())
 		];
 }
+
+SCRIPT_EXPORT1(CBlendScript);
 
 /*
 void IKinematicsScript::script_register		(lua_State *L)
@@ -226,7 +242,7 @@ void CPatrolPointScript::script_register( lua_State *L ) {
   ];
 }
 
-SCRIPT_EXPORT(CPatrolPointScript);
+SCRIPT_EXPORT1(CPatrolPointScript);
 
 
 void CPatrolPathScript::script_register( lua_State *L ) {
@@ -239,4 +255,4 @@ void CPatrolPathScript::script_register( lua_State *L ) {
   ];
 }
 
-SCRIPT_EXPORT(CPatrolPathScript);
+SCRIPT_EXPORT1(CPatrolPathScript);

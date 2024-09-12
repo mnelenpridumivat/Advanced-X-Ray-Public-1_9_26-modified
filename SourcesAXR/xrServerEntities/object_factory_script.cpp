@@ -104,6 +104,6 @@ void CObjectFactory::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CObjectFactory);
+SCRIPT_EXPORT1(CObjectFactory);
 
 #endif // #ifndef DEDICATED_SERVER_ONLY

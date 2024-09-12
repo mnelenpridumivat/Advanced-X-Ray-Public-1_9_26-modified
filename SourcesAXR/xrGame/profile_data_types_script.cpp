@@ -24,6 +24,6 @@ void profile_data_script_registrator::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(profile_data_script_registrator);
+SCRIPT_EXPORT1(profile_data_script_registrator);
 
 DEFINE_MIXED_DELEGATE_SCRIPT_NAME(gamespy_profile::store_operation_cb,	"store_operation_cb", store_operation_cb);

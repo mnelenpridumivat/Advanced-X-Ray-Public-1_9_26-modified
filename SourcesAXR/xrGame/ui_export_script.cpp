@@ -27,21 +27,21 @@ CMainMenu*	MainMenu();
 #pragma optimize("s",on)
 void UIRegistrator::script_register(lua_State *L)
 {
-	CUIWindow::script_register(L);
-	CUIStatic::script_register(L);
-	CUIButton::script_register(L);
-	CUIProgressBar::script_register(L);
-	CUIComboBox::script_register(L);
-	CUIEditBox::script_register(L);
-	CUITabControl::script_register(L);
-	CUIMessageBox::script_register(L);
-	CUIListBox::script_register(L);
-	CUIDialogWndEx::script_register(L);
-	CUIPropertiesBox::script_register(L);
-	CUIOptionsManagerScript::script_register(L);
-	CUIMapInfo::script_register(L);
-	CScriptXmlInit::script_register(L);
-	CUIGameCustom::script_register(L);
+	//CUIWindow::script_register(L);
+	//CUIStatic::script_register(L);
+	//CUIButton::script_register(L);
+	//CUIProgressBar::script_register(L);
+	//CUIComboBox::script_register(L);
+	//CUIEditBox::script_register(L);
+	//CUITabControl::script_register(L);
+	//CUIMessageBox::script_register(L);
+	//CUIListBox::script_register(L);
+	//CUIDialogWndEx::script_register(L);
+	//CUIPropertiesBox::script_register(L);
+	//CUIOptionsManagerScript::script_register(L);
+	//CUIMapInfo::script_register(L);
+	//CScriptXmlInit::script_register(L);
+	//CUIGameCustom::script_register(L);
 
 	module(L)
 	[
@@ -81,4 +81,4 @@ void UIRegistrator::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(UIRegistrator);
+SCRIPT_EXPORT1(UIRegistrator);

@@ -208,7 +208,7 @@ void CUIActorMenu::script_register(lua_State* L)
 		];
 };
 
-SCRIPT_EXPORT(CUIActorMenu);
+SCRIPT_EXPORT2(CUIActorMenu, CUIWindow);
 
 void CUIPdaWnd::script_register(lua_State* L)
 {
@@ -227,4 +227,4 @@ void CUIPdaWnd::script_register(lua_State* L)
 		];
 };
 
-SCRIPT_EXPORT(CUIPdaWnd);
+SCRIPT_EXPORT2(CUIPdaWnd, CUIWindow);

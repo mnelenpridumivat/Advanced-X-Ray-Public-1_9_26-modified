@@ -15,6 +15,7 @@
 #include "RustyHairArtifact.h"
 #include "GalantineArtifact.h"
 #include "cta_game_artefact.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -45,4 +46,4 @@ void CArtefact::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CArtefact);
+SCRIPT_EXPORT2(CArtefact, CObjectScript);

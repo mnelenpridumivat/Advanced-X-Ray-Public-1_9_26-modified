@@ -30,4 +30,4 @@ void cphysics_element_scripted::script_register(lua_State *L)
 		];
 }
 
-SCRIPT_EXPORT(cphysics_element_scripted);
+SCRIPT_EXPORT1(cphysics_element_scripted);

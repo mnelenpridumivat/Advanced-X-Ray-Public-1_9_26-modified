@@ -204,7 +204,7 @@ void demo_player_info::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(demo_player_info);
+SCRIPT_EXPORT1(demo_player_info);
 
 void demo_info::script_register(lua_State *L)
 {
@@ -221,4 +221,4 @@ void demo_info::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(demo_info);
+SCRIPT_EXPORT1(demo_info);

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CustomOutfit.h"
 #include "ActorHelmet.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -14,4 +15,4 @@ void CCustomOutfit::script_register(lua_State* L)
     ];
 };
 
-SCRIPT_EXPORT(CCustomOutfit);
+SCRIPT_EXPORT2(CCustomOutfit, CObjectScript);

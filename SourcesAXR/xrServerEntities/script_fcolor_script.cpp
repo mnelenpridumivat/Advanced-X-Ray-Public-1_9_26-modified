@@ -28,4 +28,4 @@ void CScriptFcolor::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CScriptFcolor);
+SCRIPT_EXPORT1(CScriptFcolor);

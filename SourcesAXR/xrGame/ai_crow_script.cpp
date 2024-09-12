@@ -8,6 +8,7 @@
 
 #include "pch_script.h"
 #include "ai/crow/ai_crow.h"
+#include "base_client_classes.h"
 
 using namespace luabind;
 
@@ -21,4 +22,4 @@ void CAI_Crow::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CAI_Crow);
+SCRIPT_EXPORT2(CAI_Crow, CObjectScript);

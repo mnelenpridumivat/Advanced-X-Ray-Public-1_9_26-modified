@@ -24,7 +24,7 @@ void CSE_ALifeCreatureCrow::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeCreatureCrow);
+SCRIPT_EXPORT2(CSE_ALifeCreatureCrow, CSE_ALifeCreatureAbstract);
 
 void CSE_ALifeMonsterZombie::script_register(lua_State *L)
 {
@@ -37,7 +37,7 @@ void CSE_ALifeMonsterZombie::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeMonsterZombie);
+SCRIPT_EXPORT2(CSE_ALifeMonsterZombie, CSE_ALifeMonsterAbstract);
 
 void CSE_ALifeMonsterBase::script_register(lua_State *L)
 {
@@ -51,7 +51,7 @@ void CSE_ALifeMonsterBase::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeMonsterBase);
+SCRIPT_EXPORT3(CSE_ALifeMonsterBase, CSE_ALifeMonsterAbstract, CSE_PHSkeleton);
 
 void CSE_ALifeHumanStalker::script_register(lua_State *L)
 {
@@ -65,4 +65,4 @@ void CSE_ALifeHumanStalker::script_register(lua_State *L)
 	];
 }
 
-SCRIPT_EXPORT(CSE_ALifeHumanStalker);
+SCRIPT_EXPORT3(CSE_ALifeHumanStalker, CSE_ALifeHumanAbstract, CSE_PHSkeleton);
