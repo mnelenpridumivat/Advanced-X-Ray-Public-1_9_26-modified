@@ -278,7 +278,7 @@ void CLevelChanger::save(NET_Packet &output_packet)
 	output_packet.w_u8		(m_b_enabled?1:0);
 }
 
-void CLevelChanger::load(IReader &input_packet)
+void CLevelChanger::load(NET_Packet&input_packet)
 {
 	inherited::load			(input_packet);
 	input_packet.r_stringZ	(m_invite_str);

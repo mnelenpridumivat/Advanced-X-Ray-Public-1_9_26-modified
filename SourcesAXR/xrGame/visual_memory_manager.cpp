@@ -842,7 +842,7 @@ void CVisualMemoryManager::save	(NET_Packet &packet) const
 //	Msg("after saving object %s[%d]", m_object->cName().c_str(), packet.w_tell() );
 }
 
-void CVisualMemoryManager::load	(IReader &packet)
+void CVisualMemoryManager::load	(NET_Packet &packet)
 {
 	if (m_client)
 		return;
@@ -863,7 +863,7 @@ void CVisualMemoryManager::load	(IReader &packet)
 		object.m_object				= smart_cast<CGameObject*>(Level().Objects.net_Find(delayed_object.m_object_id));
 		// object params
 		object.m_object_params.m_level_vertex_id	= packet.r_u32();
-		packet.r_fvector3			(object.m_object_params.m_position);
+		packet.r_vec3			(object.m_object_params.m_position);
 #ifdef USE_ORIENTATION
 		packet.r_float				(object.m_object_params.m_orientation.yaw);
 		packet.r_float				(object.m_object_params.m_orientation.pitch);
@@ -871,7 +871,7 @@ void CVisualMemoryManager::load	(IReader &packet)
 #endif
 		// self params
 		object.m_self_params.m_level_vertex_id	= packet.r_u32();
-		packet.r_fvector3			(object.m_self_params.m_position);
+		packet.r_vec3			(object.m_self_params.m_position);
 #ifdef USE_ORIENTATION
 		packet.r_float				(object.m_self_params.m_orientation.yaw);
 		packet.r_float				(object.m_self_params.m_orientation.pitch);

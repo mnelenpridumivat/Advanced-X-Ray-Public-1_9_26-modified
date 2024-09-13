@@ -30,7 +30,7 @@ public:
 	virtual void		net_Export			(NET_Packet *net_packet);
 	virtual void		shedule_Update		(u32 time_delta);
 	virtual void		save				(NET_Packet *output_packet);
-	virtual void		load				(IReader	*input_packet);
+	virtual void		load				(NET_Packet *input_packet);
 	virtual bool		net_SaveRelevant	();
 	virtual void		net_Relcase			(CScriptGameObject *object);
 

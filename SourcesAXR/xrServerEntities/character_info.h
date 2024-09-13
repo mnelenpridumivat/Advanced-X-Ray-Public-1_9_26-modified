@@ -66,7 +66,7 @@ public:
 	virtual void Load	(shared_str id);
 
 #ifdef XRGAME_EXPORTS
-	void 						load				(IReader&);
+	void 						load				(NET_Packet&);
 	void 						save				(NET_Packet&);
 
 	//инициализация профиля подразумевает

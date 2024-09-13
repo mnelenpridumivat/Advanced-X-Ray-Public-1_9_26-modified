@@ -77,7 +77,7 @@ public:
 	IC		bool				first_time			() const;
 
 	virtual	void				save				(NET_Packet &packet) {}
-	virtual	void				load				(IReader &packet) {}
+	virtual	void				load				(NET_Packet&packet) {}
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

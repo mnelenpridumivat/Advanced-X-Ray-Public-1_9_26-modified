@@ -154,7 +154,7 @@ public:
 	}
 
 	void			save					(NET_Packet &output_packet) override;
-	void			load					(IReader &input_packet) override;
+	void			load					(NET_Packet &input_packet) override;
 	IC		float const&	V_Satiety				()	{ return m_fV_Satiety; }
 	IC		float const&	V_SatietyPower			()	{ return m_fV_SatietyPower; }
 	IC		float const&	V_SatietyHealth			()	{ return m_fV_SatietyHealth; }

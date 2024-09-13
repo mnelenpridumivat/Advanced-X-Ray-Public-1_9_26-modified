@@ -51,7 +51,7 @@ public:
 	void		save					(NET_Packet &packet) override
 	{inherited_planner::save(packet); inherited_action::save(packet);}
 
-	void		load					(IReader &packet) override
+	void		load					(NET_Packet&packet) override
 	{inherited_planner::load(packet); inherited_action::load(packet);}
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION

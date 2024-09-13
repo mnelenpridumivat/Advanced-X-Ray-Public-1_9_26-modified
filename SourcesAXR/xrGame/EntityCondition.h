@@ -158,7 +158,7 @@ public:
 	virtual void			remove_links			(const CObject *object);
 
 	virtual void			save					(NET_Packet &output_packet);
-	virtual void			load					(IReader &input_packet);
+	virtual void			load					(NET_Packet &input_packet);
 
 	IC float				GetPower				() const			{return m_fPower;}	
 	IC void					SetPower				(float value)		{m_fPower = value; clamp(m_fPower, 0.f, m_fPowerMax);}

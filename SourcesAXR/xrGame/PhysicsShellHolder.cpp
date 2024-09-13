@@ -375,7 +375,7 @@ void		CPhysicsShellHolder::	save				(NET_Packet &output_packet)
 	output_packet.w_u8(enable_state);
 }
 
-void		CPhysicsShellHolder::	load				(IReader &input_packet)
+void		CPhysicsShellHolder::	load				(NET_Packet&input_packet)
 {
 	inherited::load(input_packet);
 	st_enable_state=input_packet.r_u8();
@@ -440,7 +440,7 @@ void CPhysicsShellHolder::PHSaveState(NET_Packet &P)
 	}
 }
 void
-CPhysicsShellHolder::PHLoadState(IReader &P)
+CPhysicsShellHolder::PHLoadState(NET_Packet &P)
 {
 	
 //	Flags8 lflags;

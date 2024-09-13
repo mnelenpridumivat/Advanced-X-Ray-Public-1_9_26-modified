@@ -71,7 +71,7 @@ public:
 
 	//object serialization
 	void			save					(NET_Packet &output_packet) override;
-	void			load					(IReader &input_packet) override;
+	void			load					(NET_Packet&input_packet) override;
 
 
 	BOOL			net_Spawn				(CSE_Abstract* DC) override;

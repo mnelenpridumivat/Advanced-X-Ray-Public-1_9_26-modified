@@ -46,7 +46,7 @@ public:
 	//serialization
 	BOOL	net_SaveRelevant		() override;
 	void	save					(NET_Packet &output_packet) override;
-	void	load					(IReader &input_packet) override;
+	void	load					(NET_Packet&input_packet) override;
 
 #ifdef DEBUG
 	void				OnRender() override;

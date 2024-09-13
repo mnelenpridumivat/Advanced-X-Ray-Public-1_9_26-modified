@@ -32,7 +32,7 @@ public:
 	void			OnH_B_Independent			(bool just_before_destroy) override;
 	void			OnH_A_Independent			() override;
 	void			save						(NET_Packet &output_packet) override;
-	void			load						(IReader &input_packet) override;
+	void			load						(NET_Packet &input_packet) override;
 			void			UpdateInRuck				(CActor* actor);
 			void			UpdateUseAnim				(CActor* actor);
 			void			HideWeapon					();

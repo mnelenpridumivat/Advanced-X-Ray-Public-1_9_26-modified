@@ -24,7 +24,7 @@ public:
 	void	OnH_B_Independent	(bool just_before_destroy) override;
 
 	void	save				(NET_Packet &output_packet) override;
-	void	load				(IReader &input_packet) override;
+	void	load				(NET_Packet&input_packet) override;
 
 	// Mortan: Новые параметры здеся
 	bool    bMarkCanShow		() override { return IsZoomed() && !m_bGrenadeMode; }

@@ -30,7 +30,7 @@ public:
 	BOOL	net_Spawn			(CSE_Abstract* DC) override;
 	bool			can_kill			() const override;
 	void	save				(NET_Packet &output_packet) override;
-	void	load				(IReader &input_packet) override;
+	void	load				(NET_Packet&input_packet) override;
 
 	bool	Action				(u16 cmd, u32 flags) override;
 	void	UpdateCL			() override;

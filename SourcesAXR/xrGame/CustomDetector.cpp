@@ -572,7 +572,7 @@ void CCustomDetector::save(NET_Packet &output_packet)
 	inherited::save(output_packet);
 }
 
-void CCustomDetector::load(IReader &input_packet)
+void CCustomDetector::load(NET_Packet&input_packet)
 {
 	inherited::load(input_packet);
 }

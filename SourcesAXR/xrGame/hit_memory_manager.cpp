@@ -312,7 +312,7 @@ void CHitMemoryManager::save	(NET_Packet &packet) const
 	}
 }
 
-void CHitMemoryManager::load	(IReader &packet)
+void CHitMemoryManager::load	(NET_Packet &packet)
 {
 	if (!m_object->g_Alive())
 		return;
@@ -330,7 +330,7 @@ void CHitMemoryManager::load	(IReader &packet)
 		object.m_object				= smart_cast<CEntityAlive*>(Level().Objects.net_Find(delayed_object.m_object_id));
 		// object params
 		object.m_object_params.m_level_vertex_id	= packet.r_u32();
-		packet.r_fvector3			(object.m_object_params.m_position);
+		packet.r_vec3			(object.m_object_params.m_position);
 #ifdef USE_ORIENTATION
 		packet.r_float				(object.m_object_params.m_orientation.yaw);
 		packet.r_float				(object.m_object_params.m_orientation.pitch);
@@ -338,7 +338,7 @@ void CHitMemoryManager::load	(IReader &packet)
 #endif
 		// self params
 		object.m_self_params.m_level_vertex_id	= packet.r_u32();
-		packet.r_fvector3			(object.m_self_params.m_position);
+		packet.r_vec3			(object.m_self_params.m_position);
 #ifdef USE_ORIENTATION
 		packet.r_float				(object.m_self_params.m_orientation.yaw);
 		packet.r_float				(object.m_self_params.m_orientation.pitch);
@@ -359,7 +359,7 @@ void CHitMemoryManager::load	(IReader &packet)
 		object.m_first_level_time	= packet.r_u32();
 		object.m_first_level_time	+= Device.dwTimeGlobal;
 #endif // USE_FIRST_LEVEL_TIME
-		packet.r_fvector3			(object.m_direction);
+		packet.r_vec3			(object.m_direction);
 		object.m_bone_index			= packet.r_u16();
 		object.m_amount				= packet.r_float();
 

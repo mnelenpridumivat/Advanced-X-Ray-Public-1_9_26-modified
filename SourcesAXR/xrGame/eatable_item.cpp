@@ -140,7 +140,7 @@ void CEatableItem::save(NET_Packet &packet)
 	save_data(m_fSpoliage, packet);
 }
 
-void CEatableItem::load(IReader &packet)
+void CEatableItem::load(NET_Packet &packet)
 {
 	inherited::load(packet);
 	load_data(m_iRemainingUses, packet);

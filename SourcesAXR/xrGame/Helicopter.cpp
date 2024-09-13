@@ -546,12 +546,12 @@ void CHelicopter::save(NET_Packet &output_packet)
 	save_data(InactiveFlares.size(), output_packet);*/
 }
 
-void CHelicopter::load(IReader &input_packet)
+void CHelicopter::load(NET_Packet &input_packet)
 {
 	m_movement.load				(input_packet);
 	m_body.load					(input_packet);
 	m_enemy.load				(input_packet);
-	input_packet.r_fvector3		(XFORM().c);
+	input_packet.r_vec3		(XFORM().c);
 	m_barrel_dir_tolerance		= input_packet.r_float();
 	UseFireTrail				(m_enemy.bUseFireTrail);//force reloar disp params
 

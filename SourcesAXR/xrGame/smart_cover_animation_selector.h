@@ -49,7 +49,7 @@ public:
 		void	 xr_stdcall	on_animation_end	();
 		void	 xr_stdcall	modify_animation	(CBlend* blend);
 		void				save				(NET_Packet &packet);
-		void				load				(IReader &packet);
+		void				load				(NET_Packet&packet);
 		void				setup				(CAI_Stalker *object, CPropertyStorage *storage);
 	IC	CPropertyStorage	*property_storage	();
 	IC	animation_planner	&planner			();

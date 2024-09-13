@@ -1379,7 +1379,7 @@ void CWeapon::save(NET_Packet &output_packet)
 	save_data		(bNVsecondVPstatus,				output_packet);
 }
 
-void CWeapon::load(IReader &input_packet)
+void CWeapon::load(NET_Packet&input_packet)
 {
 	inherited::load	(input_packet);
 	load_data		(iAmmoElapsed,					input_packet);

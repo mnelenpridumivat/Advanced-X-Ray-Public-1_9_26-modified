@@ -74,7 +74,7 @@ void CCustomOutfit::save(NET_Packet& output_packet)
 
 }
 
-void CCustomOutfit::load(IReader& input_packet)
+void CCustomOutfit::load(NET_Packet& input_packet)
 {
 	inherited::load(input_packet);
 	load_data(m_fFilterCondition, input_packet);

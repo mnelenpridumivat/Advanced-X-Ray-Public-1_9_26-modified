@@ -67,7 +67,7 @@ public:
 	virtual float	CheckLimRoll	( );
 
 	virtual void	save			(NET_Packet& output_packet) {};
-	virtual void	load			(IReader& input_packet)		{};
+	virtual void	load			(NET_Packet& input_packet)		{};
 };
 
 

@@ -29,7 +29,7 @@ void CCameraFirstEye::save(NET_Packet& packet)
 	save_data(pitch, packet);
 }
 
-void CCameraFirstEye::load(IReader& packet)
+void CCameraFirstEye::load(NET_Packet& packet)
 {
 	load_data(pitch, packet);
 }

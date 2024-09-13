@@ -36,7 +36,7 @@ void  CWound::save	(NET_Packet &output_packet)
 	for(int i=0; i<ALife::eHitTypeMax; i++)
 		output_packet.w_float_q8 (m_Wounds[static_cast<ALife::EHitType>(i)],0.f, WOUND_MAX);
 }
-void  CWound::load	(IReader &input_packet)
+void  CWound::load	(NET_Packet &input_packet)
 {
 	m_iBoneNum = (u8)input_packet.r_u8();
 	for(int i=0; i<ALife::eHitTypeMax; i++){

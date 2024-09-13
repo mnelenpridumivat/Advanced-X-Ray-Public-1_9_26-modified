@@ -1630,7 +1630,7 @@ void CCustomZone::save							(NET_Packet &output_packet)
 	output_packet.w_u8		(static_cast<u8>(m_eZoneState));
 }
 
-void CCustomZone::load							(IReader &input_packet)
+void CCustomZone::load							(NET_Packet&input_packet)
 {
 	inherited::load			(input_packet);	
 

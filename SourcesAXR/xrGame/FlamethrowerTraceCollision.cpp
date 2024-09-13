@@ -642,7 +642,7 @@ void FlamethrowerTrace::CManager::save(NET_Packet& output_packet)
 {
 }
 
-void FlamethrowerTrace::CManager::load(IReader& input_packet)
+void FlamethrowerTrace::CManager::load(NET_Packet& input_packet)
 {
 }
 

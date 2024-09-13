@@ -196,7 +196,7 @@ void	CHangingLamp::	save			(NET_Packet &output_packet)
 	output_packet.w_u8(static_cast<u8>(m_bState));
 
 }
-void	CHangingLamp::load				(IReader &input_packet)
+void	CHangingLamp::load				(NET_Packet&input_packet)
 {
 	inherited::load(input_packet);
 	m_bState	= (u8)input_packet.r_u8();

@@ -1600,7 +1600,7 @@ void CFlamethrower::save(NET_Packet& output_packet)
 	TraceManager->save(output_packet);
 }
 
-void CFlamethrower::load(IReader& input_packet)
+void CFlamethrower::load(NET_Packet& input_packet)
 {
 	inherited::load(input_packet);
 	load_data(m_is_overheated, input_packet);

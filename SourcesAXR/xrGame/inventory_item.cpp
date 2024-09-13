@@ -862,7 +862,7 @@ void CInventoryItem::net_Export			(NET_Packet& P)
 	}*/
 };
 
-void CInventoryItem::load(IReader &packet)
+void CInventoryItem::load(NET_Packet&packet)
 {
 	m_ItemCurrPlace.value	= packet.r_u16();
 	m_fCondition			= packet.r_float();

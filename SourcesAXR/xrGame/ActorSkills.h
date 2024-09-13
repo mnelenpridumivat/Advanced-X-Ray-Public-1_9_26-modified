@@ -23,7 +23,7 @@ public:
 	int enduranceSkillLevel;
 
 	void save(NET_Packet& output_packet);
-	void load(IReader& input_packet);
+	void load(NET_Packet& input_packet);
 
 	void set_skills_points(int num);
 	void inc_skills_points(int num);

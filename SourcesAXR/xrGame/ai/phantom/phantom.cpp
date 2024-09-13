@@ -323,7 +323,7 @@ void CPhantom::save(NET_Packet &output_packet)
 {
 	output_packet.w_s32	(static_cast<s32>(m_CurState));
 }
-void CPhantom::load(IReader &input_packet)
+void CPhantom::load(NET_Packet&input_packet)
 {
 	SwitchToState	(static_cast<EState>(input_packet.r_s32()));
 }

@@ -68,7 +68,7 @@ public:
 
 public:
 			void		save				(NET_Packet &packet) const;
-			void		load				(IReader &packet);
+			void		load				(NET_Packet &packet);
 };
 
 #include "danger_manager_inline.h"

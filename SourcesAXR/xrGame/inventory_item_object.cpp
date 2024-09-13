@@ -121,7 +121,7 @@ void CInventoryItemObject::save				(NET_Packet &packet)
 	CInventoryItem::save				(packet);
 }
 
-void CInventoryItemObject::load				(IReader &packet)
+void CInventoryItemObject::load				(NET_Packet&packet)
 {
 	CPhysicItem::load					(packet);
 	CInventoryItem::load				(packet);

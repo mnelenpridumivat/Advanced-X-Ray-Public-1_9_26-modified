@@ -42,7 +42,7 @@ void CArtefactContainer::save(NET_Packet& packet)
     CArtContainer::save(packet);
 }
 
-void CArtefactContainer::load(IReader& packet)
+void CArtefactContainer::load(NET_Packet& packet)
 {
 	inherited::load(packet);
     CArtContainer::load(packet);

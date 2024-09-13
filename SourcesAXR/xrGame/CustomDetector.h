@@ -160,7 +160,7 @@ public:
 
 			void	UpdateChargeLevel	(void);
 	void	save				(NET_Packet &output_packet) override;
-	void	load				(IReader &input_packet) override;
+	void	load				(NET_Packet&input_packet) override;
 			float	GetCurrentChargeLevel(void) const;
 			void	SetCurrentChargeLevel(float val);
 			float	GetAfDetectRadius	() { return m_fAfDetectRadius;};

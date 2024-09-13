@@ -370,10 +370,10 @@ void SHeliEnemy::save(NET_Packet &output_packet)
 	output_packet.w_u8		(bUseFireTrail ? 1 : 0);
 }
 
-void SHeliEnemy::load(IReader &input_packet)
+void SHeliEnemy::load(NET_Packet &input_packet)
 {
 	type				= static_cast<EHeliHuntState>(input_packet.r_s16());
-	input_packet.r_fvector3	(destEnemyPos);
+	input_packet.r_vec3	(destEnemyPos);
 	destEnemyID			= input_packet.r_u16();
 
 	fire_trail_length_des	= input_packet.r_float();
@@ -435,7 +435,7 @@ void SHeliBodyState::save(NET_Packet &output_packet)
 	output_packet.w_float(currBodyHPB.z);
 }
 
-void SHeliBodyState::load(IReader &input_packet)
+void SHeliBodyState::load(NET_Packet&input_packet)
 {
 	type				= static_cast<EHeliBodyState>(input_packet.r_s16());
 	b_looking_at_point	= !!input_packet.r_u8();

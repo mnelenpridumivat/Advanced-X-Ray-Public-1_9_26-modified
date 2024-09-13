@@ -118,7 +118,7 @@ public:
 
 	IC void	w_begin(u16 type) { 
 		B.count = 0;	
-		w_u16(type); 
+		w_u16(type, false); 
 	}
 
 	struct W_guard {

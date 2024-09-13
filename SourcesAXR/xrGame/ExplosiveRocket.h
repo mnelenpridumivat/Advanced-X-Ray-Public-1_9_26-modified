@@ -51,7 +51,7 @@ public:
 	void			net_Export			(NET_Packet& P) override {inherited::net_Export(P);}
 
 	void			save				(NET_Packet &output_packet) override {inherited::save(output_packet);}
-	void			load				(IReader &input_packet) override {inherited::load(input_packet);}
+	void			load				(NET_Packet &input_packet) override {inherited::load(input_packet);}
 	BOOL			net_SaveRelevant	() override {return inherited::net_SaveRelevant();}
 
 	void			OnH_A_Chield		() override {inherited::OnH_A_Chield();}

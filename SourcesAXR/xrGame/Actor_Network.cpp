@@ -1388,7 +1388,7 @@ void CActor::save(NET_Packet &output_packet)
 	output_packet.w_stringZ(g_quick_use_slots[3]);
 }
 
-void CActor::load(IReader& input_packet)
+void CActor::load(NET_Packet& input_packet)
 {
 	inherited::load(input_packet);
 	CInventoryOwner::load(input_packet);

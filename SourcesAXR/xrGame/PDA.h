@@ -63,7 +63,7 @@ public:
 
 
 	void save(NET_Packet& output_packet) override;
-	void load(IReader& input_packet) override;
+	void load(NET_Packet& input_packet) override;
 
 protected:
 	void UpdateActiveContacts();

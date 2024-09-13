@@ -347,7 +347,7 @@ void CMemoryManager::save							(NET_Packet &packet) const
 	danger().save				(packet);
 }
 
-void CMemoryManager::load							(IReader &packet)
+void CMemoryManager::load							(NET_Packet&packet)
 {
 	visual().load				(packet);
 	sound().load				(packet);

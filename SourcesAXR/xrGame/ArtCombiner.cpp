@@ -18,7 +18,7 @@ void CArtCombiner::save(NET_Packet& output_packet)
 	CArtContainer::save(output_packet);
 }
 
-void CArtCombiner::load(IReader& input_packet)
+void CArtCombiner::load(NET_Packet& input_packet)
 {
 	CArtefact::load(input_packet);
 	CArtContainer::load(input_packet);

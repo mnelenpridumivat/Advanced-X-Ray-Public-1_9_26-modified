@@ -134,7 +134,7 @@ void CEatableItemObject::save				(NET_Packet &packet)
 	CEatableItem::save				(packet);
 }
 
-void CEatableItemObject::load				(IReader &packet)
+void CEatableItemObject::load				(NET_Packet &packet)
 {
 	CPhysicItem::load					(packet);
 	CEatableItem::load				(packet);

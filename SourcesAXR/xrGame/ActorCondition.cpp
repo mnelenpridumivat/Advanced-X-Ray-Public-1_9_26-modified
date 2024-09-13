@@ -956,7 +956,7 @@ void CActorCondition::save(NET_Packet &output_packet)
 	}*/
 }
 
-void CActorCondition::load(IReader &input_packet)
+void CActorCondition::load(NET_Packet &input_packet)
 {
 	inherited::load		(input_packet);
 	load_data			(m_fAlcohol, input_packet);

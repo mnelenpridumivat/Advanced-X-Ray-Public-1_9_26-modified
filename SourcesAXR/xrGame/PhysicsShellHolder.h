@@ -75,7 +75,7 @@ public:
 	virtual void			PHSetMaterial		(LPCSTR m);
 	virtual void			PHSetMaterial		(u16 m);
 			void			PHSaveState			(NET_Packet &P);
-			void			PHLoadState			(IReader &P);
+			void			PHLoadState			(NET_Packet &P);
 	virtual f32				GetMass				();
 	virtual	void			PHHit				(SHit &H);
 	void			Hit					(SHit* pHDS) override;
@@ -94,7 +94,7 @@ public:
 	void			net_Destroy			() override;
 	BOOL			net_Spawn			(CSE_Abstract*	DC) override;
 	void			save				(NET_Packet &output_packet) override;
-	void			load				(IReader &input_packet) override;
+	void			load				(NET_Packet&input_packet) override;
 			void			init				();
 
 	void			OnChangeVisual		() override;

@@ -1254,7 +1254,7 @@ void CAI_Stalker::save (NET_Packet &packet)
 	brain().save			(packet);
 }
 
-void CAI_Stalker::load (IReader &packet)		
+void CAI_Stalker::load (NET_Packet&packet)
 {
 	inherited::load			(packet);
 	CInventoryOwner::load	(packet);

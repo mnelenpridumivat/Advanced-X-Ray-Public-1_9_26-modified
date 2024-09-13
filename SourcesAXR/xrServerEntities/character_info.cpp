@@ -174,7 +174,7 @@ const DIALOG_ID_VECTOR&	CCharacterInfo::ActorDialogs	()	const
 	return m_SpecificCharacter.data()->m_ActorDialogs;
 }
 
-void CCharacterInfo::load	(IReader& stream)
+void CCharacterInfo::load	(NET_Packet& stream)
 {
 	stream.r_stringZ	(m_StartDialog);
 }

@@ -626,7 +626,7 @@ void CTorch::save(NET_Packet &output_packet)
 	inherited::save(output_packet);
 }
 
-void CTorch::load(IReader &input_packet)
+void CTorch::load(NET_Packet&input_packet)
 {
 	inherited::load(input_packet);
 }

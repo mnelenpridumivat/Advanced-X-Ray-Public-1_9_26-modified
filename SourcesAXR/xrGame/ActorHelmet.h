@@ -30,7 +30,7 @@ public:
     void			net_Import				(NET_Packet& P) override;
     void			OnH_A_Chield			() override;
     void			save					(NET_Packet& output_packet) override;
-    void			load					(IReader& input_packet) override;
+    void			load					(NET_Packet& input_packet) override;
 			void			UpdateFilterCondition	(void);
 			float			GetFilterCondition		(void) const;
 			void			SetFilterCondition		(float val);

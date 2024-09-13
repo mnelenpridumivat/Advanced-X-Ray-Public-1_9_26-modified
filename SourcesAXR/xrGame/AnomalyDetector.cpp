@@ -271,7 +271,7 @@ void CDetectorAnomaly::save(NET_Packet &output_packet)
 	inherited::save(output_packet);
 }
 
-void CDetectorAnomaly::load(IReader &input_packet)
+void CDetectorAnomaly::load(NET_Packet&input_packet)
 {
 	inherited::load(input_packet);
 }

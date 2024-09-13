@@ -111,10 +111,10 @@ public:
 	void			OnChangeVisual		( ) override;
 	//object serialization
 	virtual void			net_Save			(NET_Packet &net_packet);
-	virtual void			net_Load			(IReader	&ireader);
+	virtual void			net_Load			(NET_Packet &ireader);
 	BOOL			net_SaveRelevant	() override;
 	void			save				(NET_Packet &output_packet) override;
-	void			load				(IReader &input_packet) override;
+	void			load				(NET_Packet &input_packet) override;
 
 	BOOL			net_Relevant		() override { return getLocal();	}	// send messages only if active and local
 	void			spatial_move		() override;

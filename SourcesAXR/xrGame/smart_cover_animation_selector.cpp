@@ -199,7 +199,7 @@ void animation_selector::save						(NET_Packet &packet)
 	m_planner->save		(packet);
 }
 
-void animation_selector::load						(IReader &packet)
+void animation_selector::load						(NET_Packet&packet)
 {
 	m_planner->load		(packet);
 }

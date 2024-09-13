@@ -103,7 +103,7 @@ public:
 
 	//save/load server serialization
 	void			save							(NET_Packet &output_packet) override {inherited::save(output_packet);}
-	void			load							(IReader &input_packet) override {inherited::load(input_packet);}
+	void			load							(NET_Packet &input_packet) override {inherited::load(input_packet);}
 
 
 	void			UpdateCL						() override;

@@ -1027,7 +1027,7 @@ void CCustomMonster::save (NET_Packet &packet)
 		memory().save		(packet);
 }
 
-void CCustomMonster::load (IReader &packet)		
+void CCustomMonster::load (NET_Packet &packet)
 {
 	inherited::load			(packet);
 	if (g_Alive())

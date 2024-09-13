@@ -109,7 +109,7 @@ public:
 	IC void		remove_evaluator		(const _condition_type &condition_id) override;
 	IC		_object_type		&object					() const;
 	virtual	void				save					(NET_Packet &packet);
-	virtual	void				load					(IReader &packet);
+	virtual	void				load					(NET_Packet&packet);
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

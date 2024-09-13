@@ -59,7 +59,7 @@ public:
 	void	net_Save			(NET_Packet& P) override;
 	BOOL	net_SaveRelevant	() override;
 	void	save				(NET_Packet &output_packet) override;
-	void	load				(IReader &input_packet) override;
+	void	load				(NET_Packet&input_packet) override;
 
 	BOOL	renderable_ShadowGenerate	( ) override { return TRUE;	}
 	BOOL	renderable_ShadowReceive	( ) override { return TRUE;	}

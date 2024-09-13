@@ -56,7 +56,7 @@ void CScriptBinderObject::save				(NET_Packet *output_packet)
 {
 }
 
-void CScriptBinderObject::load				(IReader	*input_packet)
+void CScriptBinderObject::load				(NET_Packet *input_packet)
 {
 }
 

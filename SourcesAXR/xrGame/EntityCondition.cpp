@@ -601,7 +601,7 @@ void CEntityCondition::save	(NET_Packet &output_packet)
 	}
 }
 
-void CEntityCondition::load	(IReader &input_packet)
+void CEntityCondition::load	(NET_Packet &input_packet)
 {
 	m_bTimeValid = false;
 

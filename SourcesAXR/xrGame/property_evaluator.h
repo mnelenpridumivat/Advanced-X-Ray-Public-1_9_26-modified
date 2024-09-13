@@ -37,7 +37,7 @@ public:
 	IC		const _value_type	&property			(const _condition_type &condition_id) const;
 
 	virtual	void				save				(NET_Packet &packet) {}
-	virtual	void				load				(IReader &packet) {}
+	virtual	void				load				(NET_Packet&packet) {}
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

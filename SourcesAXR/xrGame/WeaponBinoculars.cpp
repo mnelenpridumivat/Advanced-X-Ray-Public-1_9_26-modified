@@ -161,7 +161,7 @@ void CWeaponBinoculars::save(NET_Packet &output_packet)
 	save_data		(m_fRTZoomFactor,output_packet);
 }
 
-void CWeaponBinoculars::load(IReader &input_packet)
+void CWeaponBinoculars::load(NET_Packet&input_packet)
 {
 	inherited::load(input_packet);
 	load_data		(m_fRTZoomFactor,input_packet);

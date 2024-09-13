@@ -374,7 +374,7 @@ IC	void CPlanner::save	(NET_Packet &packet)
 }
 
 TEMPLATE_SPECIALIZATION
-IC	void CPlanner::load	(IReader &packet)
+IC	void CPlanner::load	(NET_Packet&packet)
 {
 	{
 		EVALUATORS::iterator		I = m_evaluators.begin();

@@ -537,7 +537,7 @@ public:
 	virtual void xr_stdcall				on_requested_spawn(CObject* object);
 	//object serialization
 	void						save(NET_Packet& output_packet) override;
-	void						load(IReader& input_packet) override;
+	void						load(NET_Packet& input_packet) override;
 	void						net_Save(NET_Packet& P) override;
 	BOOL						net_SaveRelevant() override;
 protected:

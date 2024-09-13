@@ -2076,7 +2076,7 @@ void CWeaponMagazined::save(NET_Packet &output_packet)
 	save_data		(m_iCurFireMode, output_packet);
 }
 
-void CWeaponMagazined::load(IReader &input_packet)
+void CWeaponMagazined::load(NET_Packet&input_packet)
 {
 	inherited::load	(input_packet);
 	load_data		(m_iQueueSize, input_packet);SetQueueSize(m_iQueueSize);

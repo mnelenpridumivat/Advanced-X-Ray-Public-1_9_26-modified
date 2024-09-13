@@ -31,7 +31,7 @@ struct SHeliEnemy{
 	void reinit						();
 	void Update						();
 	void save						(NET_Packet &output_packet);
-	void load						(IReader &input_packet);
+	void load						(NET_Packet &input_packet);
 	void Load						(LPCSTR section);
 };
 
@@ -54,7 +54,7 @@ struct SHeliBodyState{
 	void		LookAtPoint			(Fvector point, bool do_it);
 
 	void save						(NET_Packet &output_packet);
-	void load						(IReader &input_packet);
+	void load						(NET_Packet &input_packet);
 	void Load						(LPCSTR section);
 
 };
@@ -123,7 +123,7 @@ public:
 	void	goPatrolByPatrolPath		(LPCSTR path_name,int start_idx);
 	void	CreateRoundPoints			(Fvector center, float radius, float start_h, float end_h, xr_vector<STmpPt>& round_points);
 	void	save						(NET_Packet &output_packet);
-	void	load						(IReader &input_packet);
+	void	load						(NET_Packet &input_packet);
 	void	Load						(LPCSTR section);
 	void	net_Destroy					();
 };
@@ -323,7 +323,7 @@ public:
 	void					net_Import			(NET_Packet &P) override {};
 	void					net_Relcase			(CObject* O ) override;
 	void					save				(NET_Packet &output_packet) override;
-	void					load				(IReader &input_packet) override;
+	void					load				(NET_Packet &input_packet) override;
 
 	void					SpawnInitPhysics	(CSE_Abstract	*D) override;
 	CPhysicsShellHolder*	PPhysicsShellHolder	() override {return PhysicsShellHolder();}

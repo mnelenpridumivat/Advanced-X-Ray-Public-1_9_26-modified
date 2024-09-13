@@ -339,7 +339,7 @@ void CDangerManager::save			(NET_Packet &packet) const
 	save_data				(m_ignored,packet);
 }
 
-void CDangerManager::load			(IReader &packet)
+void CDangerManager::load			(NET_Packet &packet)
 {
 	load_data				(m_ignored,packet);
 }

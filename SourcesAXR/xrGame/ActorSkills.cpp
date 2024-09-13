@@ -23,7 +23,7 @@ void CActorSkills::save(NET_Packet& packet)
 	save_data(enduranceSkillLevel, packet);
 }
 
-void CActorSkills::load(IReader& packet)
+void CActorSkills::load(NET_Packet& packet)
 {
 	load_data(skills_points, packet);
 	load_data(survivalSkillLevel, packet);

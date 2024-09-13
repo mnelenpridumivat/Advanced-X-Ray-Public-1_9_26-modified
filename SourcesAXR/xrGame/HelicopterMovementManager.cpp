@@ -262,7 +262,7 @@ void SHeliMovementState::save(NET_Packet &output_packet)
 	}
 }
 
-void SHeliMovementState::load(IReader &input_packet)
+void SHeliMovementState::load(NET_Packet&input_packet)
 {
 	type				=		static_cast<EHeilMovementState>(input_packet.r_s16());
 	patrol_begin_idx	=		input_packet.r_u32();
@@ -274,18 +274,18 @@ void SHeliMovementState::load(IReader &input_packet)
 
 	speedInDestPoint	=		input_packet.r_float();
 
-	input_packet.r_fvector3		(desiredPoint);
+	input_packet.r_vec3		(desiredPoint);
 
 	curLinearSpeed		=		input_packet.r_float();
 	curLinearAcc		=		input_packet.r_float();
 
-	input_packet.r_fvector3		(currP);
+	input_packet.r_vec3		(currP);
 
 
 	currPathH			=		input_packet.r_float();
 	currPathP			=		input_packet.r_float();
 
-	input_packet.r_fvector3		(round_center);
+	input_packet.r_vec3		(round_center);
 
 	round_radius		=		input_packet.r_float();
 

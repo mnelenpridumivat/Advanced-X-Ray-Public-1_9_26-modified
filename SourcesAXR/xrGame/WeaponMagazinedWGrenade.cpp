@@ -1224,7 +1224,7 @@ void CWeaponMagazinedWGrenade::save(NET_Packet &output_packet)
 
 }
 
-void CWeaponMagazinedWGrenade::load(IReader &input_packet)
+void CWeaponMagazinedWGrenade::load(NET_Packet&input_packet)
 {
 	inherited::load				(input_packet);
 	bool b;

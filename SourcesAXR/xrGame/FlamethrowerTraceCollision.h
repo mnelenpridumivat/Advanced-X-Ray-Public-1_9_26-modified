@@ -262,7 +262,7 @@ namespace FlamethrowerTrace
 		void Load(LPCSTR section);
 
 		void save(NET_Packet& output_packet);
-		void load(IReader& input_packet);
+		void load(NET_Packet& input_packet);
 	
 		void UpdateOverlaps(float DeltaTime);
 		void UpdatePoints(float DeltaTime);

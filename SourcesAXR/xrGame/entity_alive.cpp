@@ -595,7 +595,7 @@ void CEntityAlive::save	(NET_Packet &output_packet)
 	save_data(IgnoreOnPDA, output_packet);
 }
 
-void CEntityAlive::load	(IReader &input_packet)
+void CEntityAlive::load	(NET_Packet &input_packet)
 {
 	inherited::load(input_packet);
 	conditions().load(input_packet);

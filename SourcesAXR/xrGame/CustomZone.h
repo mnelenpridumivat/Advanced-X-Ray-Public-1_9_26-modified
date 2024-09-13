@@ -50,7 +50,7 @@ public:
     void	net_Destroy						() override;
 
     void	save							(NET_Packet &output_packet) override;
-    void	load							(IReader &input_packet) override;
+    void	load							(NET_Packet &input_packet) override;
 
     void	UpdateCL						() override;
 	virtual		void	UpdateWorkload					(u32 dt);

@@ -273,7 +273,7 @@ void CArtefact::save(NET_Packet &packet)
 	save_data(m_iAfRank, packet);
 }
 
-void CArtefact::load(IReader &packet)
+void CArtefact::load(NET_Packet&packet)
 {
 	inherited::load(packet);
 	load_data(m_fChargeLevel, packet);

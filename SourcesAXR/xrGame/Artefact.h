@@ -25,7 +25,7 @@ public:
 	void					OnH_A_Chield					() override;
 	void					OnH_B_Independent				(bool just_before_destroy) override;
 	void					save							(NET_Packet &output_packet) override;
-	void					load							(IReader &input_packet) override;
+	void					load							(NET_Packet&input_packet) override;
 	void					OnActiveItem					() override;
 	void					OnHiddenItem					() override;
 

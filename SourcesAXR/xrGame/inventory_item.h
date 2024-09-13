@@ -126,7 +126,7 @@ public:
 	void				OnH_A_Independent	() override;
 
 	virtual void				save				(NET_Packet &output_packet);
-	virtual void				load				(IReader &input_packet);
+	virtual void				load				(NET_Packet &input_packet);
 	virtual BOOL				net_SaveRelevant	()								{return TRUE;}
 
 	virtual void				render_item_ui		()								{}; //when in slot & query return TRUE

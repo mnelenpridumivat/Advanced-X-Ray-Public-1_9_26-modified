@@ -30,7 +30,7 @@ void CCameraLook::save(NET_Packet& packet)
 	save_data(pitch, packet);
 }
 
-void CCameraLook::load(IReader& packet)
+void CCameraLook::load(NET_Packet& packet)
 {
 	load_data(pitch, packet);
 }

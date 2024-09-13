@@ -49,7 +49,7 @@ public:
 							void	net_Import				(NET_Packet& P) override;					// import from server
 							void	net_Export				(NET_Packet& P) override;					// export to server
 							void	save					(NET_Packet &output_packet) override;
-							void	load					(IReader &input_packet) override;
+							void	load					(NET_Packet&input_packet) override;
 							BOOL	net_SaveRelevant		() override {return TRUE;}
 							void	renderable_Render		() override;
 							void	reload					(LPCSTR section) override;

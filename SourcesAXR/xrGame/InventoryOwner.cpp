@@ -190,7 +190,7 @@ void	CInventoryOwner::save	(NET_Packet &output_packet)
 	save_data	(m_character_icon, output_packet);
 	save_data	(m_money,	output_packet);
 }
-void	CInventoryOwner::load	(IReader &input_packet)
+void	CInventoryOwner::load	(NET_Packet&input_packet)
 {
 	u8 active_slot = input_packet.r_u8();
 	if(active_slot == NO_ACTIVE_SLOT)

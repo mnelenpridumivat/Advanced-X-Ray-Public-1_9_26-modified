@@ -33,8 +33,8 @@ public:
 	static  void		shedule_Update_static		(CScriptBinderObject *script_binder_object, u32 time_delta);
 						void		save						(NET_Packet *output_packet) override;
 	static	void		save_static					(CScriptBinderObject *script_binder_object, NET_Packet *output_packet);
-						void		load						(IReader *input_packet) override;
-	static	void		load_static					(CScriptBinderObject *script_binder_object, IReader *input_packet);
+						void		load						(NET_Packet*input_packet) override;
+	static	void		load_static					(CScriptBinderObject *script_binder_object, NET_Packet*input_packet);
 						bool		net_SaveRelevant			() override;
 	static  bool		net_SaveRelevant_static		(CScriptBinderObject *script_binder_object);
 						void		net_Relcase					(CScriptGameObject *object) override;

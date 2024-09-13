@@ -164,7 +164,7 @@ public:
 	virtual BOOL					IsEmptyMagazine() const override;
 
 	void	save				(NET_Packet &output_packet) override;
-	void	load				(IReader &input_packet) override;
+	void	load				(NET_Packet&input_packet) override;
 
 protected:
 	bool	install_upgrade_impl( LPCSTR section, bool test ) override;

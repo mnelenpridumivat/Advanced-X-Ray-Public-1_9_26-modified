@@ -848,7 +848,7 @@ void CPda::save(NET_Packet& output_packet)
 	save_data(m_sFullName, output_packet);
 }
 
-void CPda::load(IReader& input_packet)
+void CPda::load(NET_Packet& input_packet)
 {
 	inherited::load(input_packet);
 	load_data(m_sFullName, input_packet);

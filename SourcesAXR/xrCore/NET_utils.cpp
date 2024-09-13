@@ -11,7 +11,7 @@ u32 NET_Packet::r_begin			( u16& type	)	// returns time of receiving
 {
 	r_pos		= 0;
 	if(!inistream)
-		r_u16		(type);
+		r_u16		(type, false);
 	else
 		inistream->r_u16(type);
 

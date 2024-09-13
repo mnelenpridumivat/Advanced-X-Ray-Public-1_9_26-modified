@@ -37,7 +37,7 @@ void CArtContainer::save(NET_Packet& packet)
     }
 }
 
-void CArtContainer::load(IReader& packet)
+void CArtContainer::load(NET_Packet& packet)
 {
     u32 numArtefacts;
     load_data(numArtefacts, packet);

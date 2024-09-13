@@ -370,8 +370,13 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 	if(!E->client_data.empty())
 	{	
 //		Msg				("client data is present for object [%d][%s], load is processed",ID(),*cName());
-		IReader			ireader = IReader(&*E->client_data.begin(), E->client_data.size());
-		net_Load		(ireader);
+		auto packet = NET_Packet();
+		packet.w_begin(M_LOAD_GAME);
+		packet.w(&*E->client_data.begin(), E->client_data.size());
+		u16 dummy_type;
+		packet.r_begin(dummy_type);
+		//IReader			ireader = IReader(&*E->client_data.begin(), E->client_data.size());
+		net_Load		(packet);
 	}
 	else {
 //		Msg				("no client data for object [%d][%s], load is skipped",ID(),*cName());
@@ -481,7 +486,7 @@ void CGameObject::net_Save		(NET_Packet &net_packet)
 	net_packet.w_chunk_close16	(position);
 }
 
-void CGameObject::net_Load		(IReader &ireader)
+void CGameObject::net_Load		(NET_Packet &ireader)
 {
 	load					(ireader);
 
@@ -489,7 +494,7 @@ void CGameObject::net_Load		(IReader &ireader)
 #ifdef DEBUG	
 	if (psAI_Flags.test(aiSerialize))	{
 		Msg(">> **** Load script object [%s] *****", *cName());
-		Msg(">> Before load :: reader position = [%i]", ireader.tell());
+		Msg(">> Before load :: reader position = [%i]", ireader.r_tell());
 	}
 
 #endif
@@ -500,7 +505,7 @@ void CGameObject::net_Load		(IReader &ireader)
 #ifdef DEBUG	
 
 	if (psAI_Flags.test(aiSerialize))	{
-		Msg(">> After load :: reader position = [%i]", ireader.tell());
+		Msg(">> After load :: reader position = [%i]", ireader.r_tell());
 	}
 #endif
 	// ----------------------------------------------------------
@@ -518,7 +523,7 @@ void CGameObject::save			(NET_Packet &output_packet)
 {
 }
 
-void CGameObject::load			(IReader &input_packet)
+void CGameObject::load			(NET_Packet &input_packet)
 {
 }
 

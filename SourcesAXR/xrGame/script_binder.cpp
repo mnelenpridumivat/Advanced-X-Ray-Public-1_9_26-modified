@@ -201,7 +201,7 @@ void CScriptBinder::save			(NET_Packet &output_packet)
 	}
 }
 
-void CScriptBinder::load			(IReader &input_packet)
+void CScriptBinder::load			(NET_Packet &input_packet)
 {
 	if (m_object) {
 		try {

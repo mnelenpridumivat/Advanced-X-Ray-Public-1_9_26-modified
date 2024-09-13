@@ -544,7 +544,7 @@ void CStalkerCombatPlanner::save(NET_Packet &packet)
 	inherited::save			(packet);
 }
 
-void CStalkerCombatPlanner::load(IReader &packet)
+void CStalkerCombatPlanner::load(NET_Packet&packet)
 {
 	inherited::load			(packet);
 }

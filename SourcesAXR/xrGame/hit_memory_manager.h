@@ -79,7 +79,7 @@ public:
 
 public:
 			void				save				(NET_Packet &packet) const;
-			void				load				(IReader &packet);
+			void				load				(NET_Packet &packet);
 			void				on_requested_spawn	(CObject *object);
 
 private:

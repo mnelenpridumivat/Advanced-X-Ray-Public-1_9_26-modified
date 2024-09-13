@@ -42,5 +42,5 @@ public:
 	void		execute						() override;
 	void		finalize					() override;
 	void		save						(NET_Packet &packet) override;
-	void		load						(IReader &packet) override;
+	void		load						(NET_Packet&packet) override;
 };

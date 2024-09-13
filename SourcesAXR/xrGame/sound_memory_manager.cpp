@@ -425,7 +425,7 @@ void CSoundMemoryManager::save	(NET_Packet &packet) const
 	}
 }
 
-void CSoundMemoryManager::load	(IReader &packet)
+void CSoundMemoryManager::load	(NET_Packet &packet)
 {
 	if (!m_object->g_Alive())
 		return;
@@ -447,7 +447,7 @@ void CSoundMemoryManager::load	(IReader &packet)
 
 		// object params
 		object.m_object_params.m_level_vertex_id	= packet.r_u32();
-		packet.r_fvector3			(object.m_object_params.m_position);
+		packet.r_vec3			(object.m_object_params.m_position);
 #ifdef USE_ORIENTATION
 		packet.r_float				(object.m_object_params.m_orientation.yaw);
 		packet.r_float				(object.m_object_params.m_orientation.pitch);
@@ -455,7 +455,7 @@ void CSoundMemoryManager::load	(IReader &packet)
 #endif
 		// self params
 		object.m_self_params.m_level_vertex_id	= packet.r_u32();
-		packet.r_fvector3			(object.m_self_params.m_position);
+		packet.r_vec3			(object.m_self_params.m_position);
 #ifdef USE_ORIENTATION
 		packet.r_float				(object.m_self_params.m_orientation.yaw);
 		packet.r_float				(object.m_self_params.m_orientation.pitch);

@@ -429,7 +429,7 @@ public:
 
 	//serialization
 	void				save					(NET_Packet &output_packet) override {inherited::save(output_packet);}
-	void				load					(IReader &input_packet) override {inherited::load(input_packet);}
+	void				load					(NET_Packet&input_packet) override {inherited::load(input_packet);}
 	BOOL				net_SaveRelevant		() override {return inherited::net_SaveRelevant();}
 			bool				can_stand_here			();
 			bool				can_stand_in_position	();
