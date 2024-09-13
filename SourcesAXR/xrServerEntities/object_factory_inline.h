@@ -60,8 +60,9 @@ IC	const CObjectItemAbstract &CObjectFactory::item	(const CLASS_ID &clsid) const
 {
 	actualize			();
 	const_iterator		I = std::lower_bound(clsids().begin(),clsids().end(),clsid,CObjectItemPredicate());
-#ifdef FS_DEBUG
-	VERIFY				((I != clsids().end()) && ((*I)->clsid() == clsid));
+#ifdef DEBUG
+	VERIFY				(I != clsids().end());
+	VERIFY				((*I)->clsid() == clsid);
 #endif
 	return				(**I);
 }

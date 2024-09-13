@@ -63,6 +63,7 @@ xr_unordered_map<script_exporter_key_base*, script_exporter_data>& get_script_ex
 #define SCRIPT_EXPORT4(x, x1, x2, x3) script_exporter4<x, x1, x2, x3> x##_exporter = script_exporter4<x, x1, x2, x3>::GetInstance();
 #define SCRIPT_EXPORT5(x, x1, x2, x3, x4) script_exporter5<x, x1, x2, x3, x4> x##_exporter = script_exporter5<x, x1, x2, x3, x4>::GetInstance();
 #define SCRIPT_EXPORT_NAME1(x, name) script_exporter1<x> name##_exporter = script_exporter1<x>::GetInstance();
+#define SCRIPT_EXPORT_NAME2(x, name, x1) script_exporter2<x, x1> name##_exporter = script_exporter2<x, x1>::GetInstance();
 
 //xr_vector<script_exporter_base*> script_exporter_container::container = {};
 

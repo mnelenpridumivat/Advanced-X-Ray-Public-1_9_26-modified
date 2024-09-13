@@ -15,10 +15,12 @@ void CMincer::script_register	(lua_State *L)
 		class_<CMincer,CGameObject>("CMincer")
 			.def(constructor<>()),
 		class_<CRadioactiveZone,CGameObject>("CRadioactiveZone")
-			.def(constructor<>()),
-		class_<CMagnetZone, CGameObject>("CMagnetZone")
-			.def(constructor<>()),
-		class_<CEmiZone, CGameObject>("CEmiZone")
 			.def(constructor<>())
+		//class_<CMagnetZone, CGameObject>("CMagnetZone")
+		//	.def(constructor<>()),
+		//class_<CEmiZone, CGameObject>("CEmiZone")
+		//	.def(constructor<>())
 	];
 }
+
+SCRIPT_EXPORT2(CMincer, CObjectScript);

@@ -27,3 +27,5 @@ void CScientificOutfit::script_register	(lua_State *L)
 			.def(constructor<>())
 	];
 }
+
+SCRIPT_EXPORT2(CScientificOutfit, CObjectScript);

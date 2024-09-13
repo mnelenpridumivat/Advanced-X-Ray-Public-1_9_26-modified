@@ -18,3 +18,5 @@ void CWeaponShotgun::script_register	(lua_State *L)
 			.def(constructor<>())
 	];
 }
+
+SCRIPT_EXPORT2(CWeaponShotgun, CObjectScript);

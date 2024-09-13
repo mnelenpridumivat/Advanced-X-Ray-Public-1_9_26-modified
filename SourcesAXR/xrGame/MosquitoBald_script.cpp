@@ -21,3 +21,5 @@ void CMosquitoBald::script_register	(lua_State *L)
 			.def("is_on",				&CZoneCampfire::is_on)
 	];
 }
+
+SCRIPT_EXPORT2(CMosquitoBald, CObjectScript);

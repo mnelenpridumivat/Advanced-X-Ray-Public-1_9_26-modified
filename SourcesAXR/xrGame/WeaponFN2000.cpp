@@ -20,3 +20,5 @@ void CWeaponFN2000::script_register	(lua_State *L)
 			.def(constructor<>())
 	];
 }
+
+SCRIPT_EXPORT2(CWeaponFN2000, CObjectScript);

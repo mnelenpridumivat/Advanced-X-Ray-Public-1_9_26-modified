@@ -125,6 +125,10 @@ void export_classes	(lua_State *L)
 	
 
 	for (auto& elem : get_script_export_container()) {
+		elem.second.inited = false;
+		//elem->script_register(L);
+	}
+	for (auto& elem : get_script_export_container()) {
 		register_script_class_rec(elem.first, L);
 		//elem->script_register(L);
 	}

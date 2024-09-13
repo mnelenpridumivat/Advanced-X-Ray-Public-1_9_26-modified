@@ -95,3 +95,5 @@ void CGameGraph::script_register		(lua_State *L)
 			.def("game_vertex_id",	&CGameLevelCrossTable::CCell::game_vertex_id)
 	];
 }
+
+SCRIPT_EXPORT2(CGameGraph, CObjectScript);

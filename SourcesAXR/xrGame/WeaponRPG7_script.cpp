@@ -12,3 +12,5 @@ void CWeaponRPG7::script_register	(lua_State *L)
 			.def(constructor<>())
 	];
 }
+
+SCRIPT_EXPORT2(CWeaponRPG7, CObjectScript);

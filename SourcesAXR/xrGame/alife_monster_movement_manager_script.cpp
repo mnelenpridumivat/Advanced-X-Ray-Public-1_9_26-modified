@@ -39,3 +39,5 @@ void CALifeMonsterMovementManager::script_register	(lua_State *L)
 			.def("completed",	&CALifeMonsterMovementManager::completed)
 	];
 }
+
+SCRIPT_EXPORT1(CALifeMonsterMovementManager);

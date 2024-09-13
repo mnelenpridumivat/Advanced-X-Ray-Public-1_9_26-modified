@@ -25,3 +25,4 @@
 #include "../xrEngine/bone.h"
 #include "smart_cast.h"
 #include "script_export_space.h"
+#include "base_client_classes.h"

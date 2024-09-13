@@ -11,3 +11,5 @@ void CWeaponBinoculars::script_register	(lua_State *L)
 			.def(constructor<>())
 	];
 }
+
+SCRIPT_EXPORT2(CWeaponBinoculars, CObjectScript);

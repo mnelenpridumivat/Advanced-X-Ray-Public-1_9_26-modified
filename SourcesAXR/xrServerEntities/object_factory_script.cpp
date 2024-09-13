@@ -17,6 +17,7 @@
 
 // debug only - delete after
 #include "script_storage.h"
+#include "script_export_space.h"
 
 void CObjectFactory::register_script_class	(LPCSTR client_class, LPCSTR server_class, LPCSTR clsid, LPCSTR script_clsid)
 {

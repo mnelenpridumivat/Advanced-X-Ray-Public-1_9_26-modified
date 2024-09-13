@@ -43,3 +43,5 @@ void CALifeMonsterPatrolPathManager::script_register	(lua_State *L)
 			.def("target_position",			&CALifeMonsterPatrolPathManager__target_position)
 	];
 }
+
+SCRIPT_EXPORT1(CALifeMonsterPatrolPathManager);

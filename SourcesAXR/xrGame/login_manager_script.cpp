@@ -33,6 +33,8 @@ void login_manager::script_register	(lua_State *L)
 	];
 }
 
+SCRIPT_EXPORT1(login_manager);
+
 void profile::script_register(lua_State *L)
 {
 	module(L)
