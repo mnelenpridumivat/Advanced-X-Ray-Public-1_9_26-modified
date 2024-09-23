@@ -112,3 +112,9 @@ packages/
 .vs/VSWorkspaceState.json
 /SourcesAXR/External/RedImage/libraries/x64
 /SourcesAXR/xrScripts/BuildVm/x64/Debug/microsoft/STL
+/SourcesAXR/xrScripts/BuildVm/x64/Debug/microsoft/STL/std.compat.ixx.ifc.dt.d.json
+/SourcesAXR/xrScripts/BuildVm/x64/Debug/microsoft/STL/std.compat.ixx.ifc.dt.module.json
+/SourcesAXR/xrScripts/BuildVm/x64/Debug/microsoft/STL/std.compat.ixx.ifc.dt.module.json.command
+/SourcesAXR/xrScripts/BuildVm/x64/Debug/microsoft/STL/std.ixx.ifc.dt.d.json
+/SourcesAXR/xrScripts/BuildVm/x64/Debug/microsoft/STL/std.ixx.ifc.dt.module.json
+/SourcesAXR/xrScripts/BuildVm/x64/Debug/microsoft/STL/std.ixx.ifc.dt.module.json.command
