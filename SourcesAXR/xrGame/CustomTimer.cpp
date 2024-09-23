@@ -424,6 +424,9 @@ void CBinderManager::load(IReader& packet)
 
 void CBinderManager::Update()
 {
+    if (g_pauseMngr.Paused()) {
+        return;
+    }
     int expired_num = 0;
     auto OrigBindersNum = Binders.size();
     for (size_t i = 0; i < OrigBindersNum; ++i)

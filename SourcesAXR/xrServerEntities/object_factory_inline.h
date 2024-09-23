@@ -105,6 +105,7 @@ IC	int	CObjectFactory::script_clsid	(const CLASS_ID &clsid) const
 	actualize			();
 	const_iterator		I = std::lower_bound(clsids().begin(),clsids().end(),clsid,CObjectItemPredicate());
  	VERIFY				((I != clsids().end()) && ((*I)->clsid() == clsid));
+	//Msg("(search fo class_id [%llu]) script class id of [%s] is [%d] (class_id = [%llu])", clsid, (*I)->script_clsid().c_str(), static_cast<int>(I - clsids().begin()), (*I)->clsid());
 	return				static_cast<int>(I - clsids().begin());
 }
 

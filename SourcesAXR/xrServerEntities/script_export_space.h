@@ -89,7 +89,7 @@ struct script_exporter1: public script_exporter_base {
 		auto& value = get_script_export_container()[script_exporter_key<T>::GetKey()];
 		value.inited = false;
 		value.exporter = this;
-		Msg("call exporter");
+		//Msg("call exporter");
 	}
 
 	virtual void script_register(lua_State* L) override {

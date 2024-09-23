@@ -88,8 +88,10 @@ void CObjectFactory::register_script	() const
 	luabind::class_<CInternal>	instance("clsid");
 
 	const_iterator				B = clsids().begin();
-	for (auto const_it = B; const_it != clsids().end(); ++const_it)
+	for (auto const_it = B; const_it != clsids().end(); ++const_it) {
+		Msg("script class id of [%s] is [%d] (class_id = [%llu])", (*const_it)->script_clsid().c_str(), static_cast<int>(const_it - B), (*const_it)->clsid());
 		instance = std::move(instance).enum_("_clsid")[luabind::value(*(*const_it)->script_clsid(), static_cast<int>(const_it - B))];
+	}
 
 	luabind::module(ai().script_engine().lua())[std::move(instance)];
 }
