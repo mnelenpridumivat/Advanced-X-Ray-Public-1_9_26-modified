@@ -97,7 +97,7 @@ void NET_Packet::r_check_token(NET_Packet_token_type token)
 // reading - utilities
 void NET_Packet::r_vec3(Fvector& A, bool read_token)
 { 
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_vec3);
 	}
 	if (!inistream) {
@@ -110,7 +110,7 @@ void NET_Packet::r_vec3(Fvector& A, bool read_token)
 
 void NET_Packet::r_vec4(Fvector4& A, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_vec4);
 	}
 	if (!inistream) {
@@ -123,7 +123,7 @@ void NET_Packet::r_vec4(Fvector4& A, bool read_token)
 
 void NET_Packet::r_double(double& A, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_double);
 	}
 	if (!inistream) {
@@ -136,7 +136,7 @@ void NET_Packet::r_double(double& A, bool read_token)
 
 void NET_Packet::r_float(float& A, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_float);
 	}
 	if (!inistream) {
@@ -149,7 +149,7 @@ void NET_Packet::r_float(float& A, bool read_token)
 
 void NET_Packet::r_u64(u64& A, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_u64);
 	}
 	if (!inistream) {
@@ -162,7 +162,7 @@ void NET_Packet::r_u64(u64& A, bool read_token)
 
 void NET_Packet::r_s64(s64& A, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_s64);
 	}
 	if (!inistream) {
@@ -175,7 +175,7 @@ void NET_Packet::r_s64(s64& A, bool read_token)
 
 void NET_Packet::r_u32(u32& A, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_u32);
 	}
 	if (!inistream) {
@@ -188,7 +188,7 @@ void NET_Packet::r_u32(u32& A, bool read_token)
 
 void NET_Packet::r_s32(s32& A, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_s32);
 	}
 	if (!inistream) {
@@ -201,7 +201,7 @@ void NET_Packet::r_s32(s32& A, bool read_token)
 
 void NET_Packet::r_u16(u16& A, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_u16);
 	}
 	if (!inistream) {
@@ -214,7 +214,7 @@ void NET_Packet::r_u16(u16& A, bool read_token)
 
 void NET_Packet::r_s16(s16& A, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_s16);
 	}
 	if (!inistream) {
@@ -227,7 +227,7 @@ void NET_Packet::r_s16(s16& A, bool read_token)
 
 void NET_Packet::r_u8(u8&  A, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_u8);
 	}
 	if (!inistream) {
@@ -240,7 +240,7 @@ void NET_Packet::r_u8(u8&  A, bool read_token)
 
 void NET_Packet::r_s8(s8&  A, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_s8);
 	}
 	if (!inistream) {
@@ -285,7 +285,7 @@ double NET_Packet::r_double()
 	double		A; 
 	r_double	(A);					
 	return		(A);		
-} // float
+} // double
 
 float NET_Packet::r_float()
 {
@@ -352,7 +352,7 @@ s8 NET_Packet::r_s8()
 
 void NET_Packet::r_float_q16(float& A, float min, float max, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_float_q16);
 	}
 	u16			val;
@@ -363,7 +363,7 @@ void NET_Packet::r_float_q16(float& A, float min, float max, bool read_token)
 
 void NET_Packet::r_float_q8(float& A, float min, float max, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_float_q8);
 	}
 	u8			val;
@@ -374,7 +374,7 @@ void NET_Packet::r_float_q8(float& A, float min, float max, bool read_token)
 
 void NET_Packet::r_angle16(float& A, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_angle16);
 	}
 	r_float_q16	(A,0,PI_MUL_2, false);	
@@ -382,7 +382,7 @@ void NET_Packet::r_angle16(float& A, bool read_token)
 
 void NET_Packet::r_angle8(float& A, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_angle8);
 	}
 	r_float_q8	(A,0,PI_MUL_2, false);	
@@ -390,7 +390,7 @@ void NET_Packet::r_angle8(float& A, bool read_token)
 
 void NET_Packet::r_dir(Fvector& A, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_dir);
 	}
 	u16			t; 
@@ -400,7 +400,7 @@ void NET_Packet::r_dir(Fvector& A, bool read_token)
 
 void NET_Packet::r_sdir(Fvector& A, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_sdir);
 	}
 	u16				t;	
@@ -413,7 +413,7 @@ void NET_Packet::r_sdir(Fvector& A, bool read_token)
 
 void NET_Packet::r_stringZ( LPSTR S, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_stringZ);
 	}
  	if(!inistream)
@@ -428,7 +428,7 @@ void NET_Packet::r_stringZ( LPSTR S, bool read_token)
 
 void NET_Packet::r_stringZ( xr_string& dest, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_stringZ);
 	}
  	if(!inistream)
@@ -444,7 +444,7 @@ void NET_Packet::r_stringZ( xr_string& dest, bool read_token)
 
 void NET_Packet::r_stringZ(shared_str& dest, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_stringZ);
 	}
  	if(!inistream)
@@ -458,9 +458,11 @@ void NET_Packet::r_stringZ(shared_str& dest, bool read_token)
 	}
 }
 
-void NET_Packet::skip_stringZ()
+void NET_Packet::skip_stringZ(bool read_token)
 {
-	r_check_token(NET_Packet_token_type::token_stringZ);
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
+		r_check_token(NET_Packet_token_type::token_stringZ);
+	}
 	if (!inistream)
 	{
 		LPCSTR	data	= LPCSTR(&B.data[r_pos]);
@@ -473,7 +475,7 @@ void NET_Packet::skip_stringZ()
 
 void NET_Packet::r_matrix(Fmatrix& M, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_matrix);
 	}
 	r_vec3	(M.i, false);	M._14_	= 0;
@@ -484,7 +486,7 @@ void NET_Packet::r_matrix(Fmatrix& M, bool read_token)
 
 void NET_Packet::r_clientID(ClientID& C, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_clientID);
 	}
 	u32				tmp;
@@ -494,7 +496,7 @@ void NET_Packet::r_clientID(ClientID& C, bool read_token)
 
 void NET_Packet::r_stringZ_s	(LPSTR string, u32 const size, bool read_token)
 {
-	if (read_token) {
+	if (!inistream && packet_type == NET_Packet_type::type_with_tokens && read_token) {
 		r_check_token(NET_Packet_token_type::token_stringZ);
 	}
 	if ( inistream ) {

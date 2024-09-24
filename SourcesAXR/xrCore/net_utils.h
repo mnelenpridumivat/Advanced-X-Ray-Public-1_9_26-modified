@@ -8,6 +8,11 @@
 
 const	u32			NET_PacketSizeLimit = 16 * 1024;
 
+enum class NET_Packet_type : u8 {
+	type_original = 0,
+	type_with_tokens,
+};
+
 enum class NET_Packet_token_type : u8 {
 	token_double = 0,
 	token_float,
@@ -107,6 +112,8 @@ public:
 	u32				r_pos;
 	u32				timeReceive;
 	bool			w_allow;
+	NET_Packet_type packet_type = NET_Packet_type::type_original;
+
 public:
 	NET_Packet() :inistream(NULL), w_allow(true) {}
 
@@ -150,16 +157,16 @@ public:
 	// writing - utilities
 	IC void	w_double(double a, bool write_token = true) {
 		W_guard g(&w_allow);
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_double);
 		}
 		w(&a, sizeof(double));
 		INI_W(w_double(a));
-	}			// float
+	}			// double
 
 	IC void	w_float(float a, bool write_token = true) {
 		W_guard g(&w_allow);
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_float);
 		}
 		w(&a, sizeof(float));
@@ -168,7 +175,7 @@ public:
 
 	IC void w_vec3(const Fvector& a, bool write_token = true) {
 		W_guard g(&w_allow);
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_vec3);
 		}
 		w(&a, 3 * sizeof(float));
@@ -177,7 +184,7 @@ public:
 
 	IC void w_vec4(const Fvector4& a, bool write_token = true) {
 		W_guard g(&w_allow);
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_vec4);
 		}
 		w(&a, 4 * sizeof(float));
@@ -186,7 +193,7 @@ public:
 
 	IC void w_u64(u64 a, bool write_token = true) {
 		W_guard g(&w_allow);
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_u64);
 		}
 		w(&a, sizeof(u64));
@@ -195,7 +202,7 @@ public:
 
 	IC void w_s64(s64 a, bool write_token = true) {
 		W_guard g(&w_allow);
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_s64);
 		}
 		w(&a, sizeof(s64));
@@ -204,7 +211,7 @@ public:
 
 	IC void w_u32(u32 a, bool write_token = true) {
 		W_guard g(&w_allow);
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_u32);
 		}
 		w(&a, sizeof(u32));
@@ -213,7 +220,7 @@ public:
 
 	IC void w_s32(s32 a, bool write_token = true) {
 		W_guard g(&w_allow);
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_s32);
 		}
 		w(&a, sizeof(s32));
@@ -222,7 +229,7 @@ public:
 
 	IC void w_u16(u16 a, bool write_token = true) {
 		W_guard g(&w_allow);
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_u16);
 		}
 		w(&a, sizeof(u16));
@@ -231,7 +238,7 @@ public:
 
 	IC void w_s16(s16 a, bool write_token = true) {
 		W_guard g(&w_allow);
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_s16);
 		}
 		w(&a, sizeof(s16));
@@ -240,7 +247,7 @@ public:
 
 	IC void	w_u8(u8 a, bool write_token = true) {
 		W_guard g(&w_allow);
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_u8);
 		}
 		w(&a, sizeof(u8));
@@ -249,7 +256,7 @@ public:
 
 	IC void	w_s8(s8 a, bool write_token = true) {
 		W_guard g(&w_allow);
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_s8);
 		}
 		w(&a, sizeof(s8));
@@ -258,7 +265,7 @@ public:
 
 	IC void w_float_q16(float a, float min, float max, bool write_token = true)
 	{
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_float_q16);
 		}
 		VERIFY(a >= min && a <= max);
@@ -267,7 +274,7 @@ public:
 	}
 	IC void w_float_q8(float a, float min, float max, bool write_token = true)
 	{
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_float_q8);
 		}
 		VERIFY(a >= min && a <= max);
@@ -276,28 +283,28 @@ public:
 	}
 
 	IC void w_angle16(float a, bool write_token = true) {
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_angle16);
 		}
 		w_float_q16(angle_normalize(a), 0, PI_MUL_2, false); 
 	}
 
 	IC void w_angle8(float a, bool write_token = true) {
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_angle8);
 		}
 		w_float_q8(angle_normalize(a), 0, PI_MUL_2, false); 
 	}
 
 	IC void w_dir(const Fvector& D, bool write_token = true) {
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_dir);
 		}
 		w_u16(pvCompress(D), false); 
 	}
 
 	IC void w_sdir(const Fvector& D, bool write_token = true) {
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_sdir);
 		}
 		Fvector C;
@@ -314,7 +321,7 @@ public:
 	}
 
 	IC void w_stringZ(LPCSTR S, bool write_token = true) {
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_stringZ);
 		}
 		W_guard g(&w_allow); 
@@ -324,7 +331,7 @@ public:
 
 	IC void w_stringZ(const shared_str& p, bool write_token = true)
 	{
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_stringZ);
 		}
 		W_guard g(&w_allow);
@@ -341,7 +348,7 @@ public:
 	}
 	IC void w_matrix(Fmatrix& M, bool write_token = true)
 	{
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_matrix);
 		}
 		w_vec3(M.i, false);
@@ -351,7 +358,7 @@ public:
 	}
 
 	IC void w_clientID(ClientID& C, bool write_token = true) {
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_clientID);
 		}
 		w_u32(C.value(), false); 
@@ -359,7 +366,7 @@ public:
 
 	IC void	w_chunk_open8(u32& position, bool write_token = true)
 	{
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_chunk8);
 		}
 		position = w_tell();
@@ -378,7 +385,7 @@ public:
 
 	IC void	w_chunk_open16(u32& position, bool write_token = true)
 	{
-		if (write_token) {
+		if (packet_type == NET_Packet_type::type_with_tokens && write_token) {
 			w_token(NET_Packet_token_type::token_chunk16);
 		}
 		position = w_tell();
@@ -458,7 +465,7 @@ public:
 	void		r_stringZ(xr_string& dest, bool read_token = true);
 	void 		r_stringZ(shared_str& dest, bool read_token = true);
 
-	void		skip_stringZ();
+	void		skip_stringZ(bool read_token = true);
 
 	void		r_stringZ_s(LPSTR string, u32 size, bool read_token = true);
 
