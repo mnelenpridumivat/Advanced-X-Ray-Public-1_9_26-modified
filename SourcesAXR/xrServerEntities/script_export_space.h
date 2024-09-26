@@ -6,11 +6,9 @@
 //	Description : XRay Script export space 
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef script_export_spaceH
-#define script_export_spaceH
-
 #pragma once
 #include "../xrCore/vector.h"
+#include "../xrCore/xr_hash_map.h"
 
 struct lua_State;
 
@@ -216,4 +214,3 @@ struct script_exporter5 : public script_exporter_base {
 	}
 };
 
-#endif

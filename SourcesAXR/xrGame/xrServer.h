@@ -4,6 +4,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "../xrCore/xr_deque.h"
+#include "../xrCore/xr_multiset.h"
 #include "../xrNetServer/net_server.h"
 #include "game_sv_base.h"
 #include "id_generator.h"

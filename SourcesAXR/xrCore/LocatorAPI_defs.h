@@ -1,5 +1,6 @@
 #pragma once
 
+#include "xr_set.h"
 #include "xr_defines.h"
 #include "xr_string.h"
 

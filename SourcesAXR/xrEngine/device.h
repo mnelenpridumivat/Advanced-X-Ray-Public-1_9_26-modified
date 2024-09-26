@@ -1,6 +1,6 @@
-#ifndef xr_device
-#define xr_device
 #pragma once
+
+#include "../xrCore/xr_list.h"
 
 // Note:
 // ZNear - always 0.0f
@@ -366,5 +366,3 @@ public:
 };
 extern ENGINE_API CLoadScreenRenderer load_screen_renderer;
 extern ENGINE_API float fps_limit;
-
-#endif

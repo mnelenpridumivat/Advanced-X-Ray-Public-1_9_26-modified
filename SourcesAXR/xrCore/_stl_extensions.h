@@ -68,16 +68,6 @@ namespace std
 	//using binary_function = function<ret(left, right)>;
 };
 
-template	<typename T, typename allocator = xalloc<T> >									class	xr_list 		: public std::list<T,allocator>			{ public: u32 size() const {return (u32)__super::size(); } };
-template	<typename K, class P=std::less<K>, typename allocator = xalloc<K> >				class	xr_set			: public std::set<K,P,allocator>		{ public: u32 size() const {return (u32)__super::size(); } };
-template	<typename K, class P=std::less<K>, typename allocator = xalloc<K> >				class	xr_multiset		: public std::multiset<K,P,allocator>	{ public: u32 size() const {return (u32)__super::size(); } };
-template	<typename K, class V, class P=std::less<K>, typename allocator = xalloc<std::pair<const K,V> > >	class	xr_map 			: public std::map<K,V,P,allocator>		{ public: u32 size() const {return (u32)__super::size(); } };
-template	<typename K, class V, class P=std::less<K>, typename allocator = xalloc<std::pair<const K,V> > >	class	xr_multimap		: public std::multimap<K,V,P,allocator>	{ public: u32 size() const {return (u32)__super::size(); } };
-
-template	<typename K, class V, class _Traits = std::equal_to<K>, typename allocator = xalloc<std::pair<const K,V> > >	class	xr_hash_map		: public std::unordered_map<K,V,std::hash<K>, _Traits,allocator>	{ public: u32 size() const {return (u32)__super::size(); } };
-template	<typename K, class _Traits = std::equal_to<K>, typename allocator = xalloc<K> >	class	xr_hash_set : public std::unordered_set<K, std::hash<K>, _Traits, allocator> { public: u32 size() const { return (u32)__super::size(); } };
-
-
 #endif
 
 template	<class _Ty1, class _Ty2> inline	std::pair<_Ty1, _Ty2>		mk_pair(_Ty1 _Val1, _Ty2 _Val2)	{	return (std::pair<_Ty1, _Ty2>(_Val1, _Val2));	}
@@ -90,10 +80,6 @@ struct pred_stri
 {	
 	IC bool operator()(const char* x, const char* y) const				{	return stricmp(x,y)<0;	}
 };
-
-template <typename K, class V, class Hasher = std::hash<K>, class Traits = std::equal_to<K>,
-	typename allocator = xalloc<std::pair<const K, V>>>
-	using xr_unordered_map = std::unordered_map<K, V, Hasher, Traits, allocator>;
 
 #include "FixedVector.h"
 #include "buffer_vector.h"

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../xrCore/xr_hash_map.h"
 #include "../xrRender/ColorMapManager.h"
 
 class light;

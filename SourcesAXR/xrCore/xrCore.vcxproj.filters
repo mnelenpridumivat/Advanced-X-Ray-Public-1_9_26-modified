@@ -597,9 +597,6 @@
     <ClInclude Include="xalloc.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="xr_map.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="Threading\Event.hpp">
       <Filter>Threading</Filter>
     </ClInclude>
@@ -619,6 +616,24 @@
       <Filter>Math\Extensions</Filter>
     </ClInclude>
     <ClInclude Include="xr_deque.h">
+      <Filter>Math\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="xr_list.h">
+      <Filter>Math\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="xr_set.h">
+      <Filter>Math\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="xr_multiset.h">
+      <Filter>Math\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="xr_map.h">
+      <Filter>Math\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="xr_hash_map.h">
+      <Filter>Math\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="xr_hash_set.h">
       <Filter>Math\Extensions</Filter>
     </ClInclude>
   </ItemGroup>

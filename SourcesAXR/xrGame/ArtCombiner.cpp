@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ArtCombiner.h"
+#include "../xrCore/xr_hash_set.h"
 
 void CArtCombiner::Load(LPCSTR section)
 {

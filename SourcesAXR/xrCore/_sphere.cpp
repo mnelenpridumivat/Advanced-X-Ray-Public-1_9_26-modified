@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #pragma hdrstop
 
+#include "../xrCore/xr_list.h"
+
 class Miniball;
 class Basis;
 

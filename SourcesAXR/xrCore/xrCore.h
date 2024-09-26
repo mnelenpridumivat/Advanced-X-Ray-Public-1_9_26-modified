@@ -1,5 +1,3 @@
-#ifndef xrCoreH
-#define xrCoreH
 #pragma once
 
 #ifndef DEBUG
@@ -215,6 +213,7 @@
 
 #include "_stl_extensions.h"
 #include "xr_vector.h"
+#include "xr_set.h"
 #include "xr_defines.h"
 #include "xrsharedmem.h"
 #include "xrstring.h"
@@ -313,5 +312,4 @@ public:
 
 extern XRCORE_API xrCore Core;
 
-#endif
 
