@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "../xrCore/xr_deque.h"
 #include "script_entity_space.h"
 //#include "../Include/xrRender/Kinematics.h"
 #include "../Include/xrRender/KinematicsAnimated.h"

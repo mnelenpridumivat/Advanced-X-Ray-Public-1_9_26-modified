@@ -1,6 +1,7 @@
 #ifndef ATLAS_SUBMIT_QUEUE_INCLUDED
 #define ATLAS_SUBMIT_QUEUE_INCLUDED
 
+#include "../xrCore/xr_deque.h"
 #include <boost/noncopyable.hpp>
 #include "../xrCore/fastdelegate.h"
 #include "profile_data_types.h"

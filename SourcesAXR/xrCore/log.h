@@ -1,5 +1,6 @@
-#ifndef logH
-#define logH
+#pragma once
+
+#include "xr_vector.h"
 
 #define VPUSH(a)	((a).x), ((a).y), ((a).z)
 
@@ -25,5 +26,4 @@ extern 	XRCORE_API	xr_vector<shared_str>*		LogFile;
 extern 	XRCORE_API	BOOL						LogExecCB;
 		XRCORE_API	LPCSTR						logFullName();
 
-#endif
 

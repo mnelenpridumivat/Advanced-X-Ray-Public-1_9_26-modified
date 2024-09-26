@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "../xrCore/xr_deque.h"
 #include "stalker_animation_pair.h"
 #include "stalker_animation_script.h"
 #include "ai_monster_space.h"

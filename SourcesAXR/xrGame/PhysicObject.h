@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../xrCore/xr_deque.h"
 #include "gameobject.h"
 #include "physicsshellholder.h"
 #include "physicsskeletonobject.h"

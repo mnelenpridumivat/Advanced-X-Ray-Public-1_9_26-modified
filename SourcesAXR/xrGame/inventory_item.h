@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "../xrCore/xr_deque.h"
 #include "inventory_space.h"
 #include "hit_immunity.h"
 #include "attachable_item.h"

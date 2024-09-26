@@ -6,6 +6,8 @@
 #define LocatorAPIH
 #pragma once
 
+#include "xr_defines.h"
+
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <io.h>

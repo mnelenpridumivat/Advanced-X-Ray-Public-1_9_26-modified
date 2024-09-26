@@ -1,6 +1,7 @@
 #ifndef FILETRANSFER_NODE
 #define FILETRANSFER_NODE
 
+#include "../xrCore/xr_deque.h"
 #include "filetransfer_common.h"
 #include <boost/noncopyable.hpp>
 

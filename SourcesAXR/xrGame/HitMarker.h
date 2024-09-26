@@ -1,7 +1,6 @@
-#ifndef __XR_HITMARKER_H__
-#define __XR_HITMARKER_H__
 #pragma once
 
+#include "../xrCore/xr_deque.h"
 #include "../Include/xrRender/FactoryPtr.h"
 class IUIShader;
 #include "ui_defs.h"
@@ -70,4 +69,3 @@ public:
 	void					net_Relcase( CObject* obj );
 };
 
-#endif // __XR_HITMARKER_H__

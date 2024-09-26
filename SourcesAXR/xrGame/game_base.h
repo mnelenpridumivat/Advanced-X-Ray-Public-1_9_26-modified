@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../xrCore/xr_deque.h"
+#include "../xrCore/xr_defines.h"
 #include "game_base_space.h"
 #include "alife_space.h"
 #include "gametype_chooser.h"

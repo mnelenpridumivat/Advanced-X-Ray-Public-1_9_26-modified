@@ -3,10 +3,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_XRSERVER_H__65728A25_16FC_4A7B_8CCE_D798CA5EC64E__INCLUDED_)
-#define AFX_XRSERVER_H__65728A25_16FC_4A7B_8CCE_D798CA5EC64E__INCLUDED_
-#pragma once
-
+#include "../xrCore/xr_deque.h"
 #include "../xrNetServer/net_server.h"
 #include "game_sv_base.h"
 #include "id_generator.h"
@@ -306,5 +303,3 @@ public:
 		};
 extern	Flags32	dbg_net_Draw_Flags;
 #endif
-
-#endif // !defined(AFX_XRSERVER_H__65728A25_16FC_4A7B_8CCE_D798CA5EC64E__INCLUDED_)

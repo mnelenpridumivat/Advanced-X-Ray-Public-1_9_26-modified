@@ -214,6 +214,8 @@
 #include "xrDebug.h"
 
 #include "_stl_extensions.h"
+#include "xr_vector.h"
+#include "xr_defines.h"
 #include "xrsharedmem.h"
 #include "xrstring.h"
 #include "xr_resource.h"

@@ -2,8 +2,9 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifndef fsH
-#define fsH
+#pragma once
+
+#include "xr_stack.h"
 
 #define CFS_CompressMark	(1ul << 31ul)
 #define CFS_HeaderChunkID	(666)
@@ -328,5 +329,3 @@ public:
 			CVirtualFileRW		(const char *cFileName);
 	virtual ~CVirtualFileRW		();
 };
-
-#endif // fsH

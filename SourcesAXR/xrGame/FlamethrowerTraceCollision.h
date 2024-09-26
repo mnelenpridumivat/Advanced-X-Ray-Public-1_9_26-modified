@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../xrCore/xr_deque.h"
+#include "../xrCore/xr_defines.h"
 #include "../xrEngine/feel_touch.h"
 #include "../xrCore/_types.h"
 #include "../../xrParticles/particle_param_handle.h"

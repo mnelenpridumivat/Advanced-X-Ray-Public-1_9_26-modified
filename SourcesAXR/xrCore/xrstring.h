@@ -1,5 +1,7 @@
 #pragma once
 
+#include "xr_string.h"
+
 #pragma pack(push,4)
 //////////////////////////////////////////////////////////////////////////
 typedef const char*		str_c;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "xrMessages.h"
+#include "../xrCore/xr_deque.h"
 
 extern BOOL		g_bCheckTime;
 extern int		g_dwEventDelay;

@@ -1,4 +1,6 @@
 #pragma once
+
+#include "../xrCore/xr_deque.h"
 #include "xr_level_controller.h"
 
 class CUIWindow;

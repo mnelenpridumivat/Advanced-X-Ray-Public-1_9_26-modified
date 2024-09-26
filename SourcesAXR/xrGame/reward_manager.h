@@ -1,6 +1,6 @@
-#ifndef REWARD_MANAGER_INCLUDED
-#define REWARD_MANAGER_INCLUDED
+#pragma once
 
+#include "../xrCore/xr_deque.h"
 #include "associative_vector.h"
 
 class game_cl_mp;
@@ -44,5 +44,3 @@ private:
 };//class reward_manager
 
 } //namespace award_system
-
-#endif //#ifndef REWARD_MANAGER_INCLUDED

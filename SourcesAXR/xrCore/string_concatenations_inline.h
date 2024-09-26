@@ -1,3 +1,6 @@
+#pragma once
+
+#include "xr_string.h"
 
 namespace xray {
 

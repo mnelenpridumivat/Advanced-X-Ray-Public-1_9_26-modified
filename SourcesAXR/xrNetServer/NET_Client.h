@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../xrCore/xr_deque.h"
 #include "net_shared.h"
 #include "NET_Common.h"
 

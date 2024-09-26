@@ -1,6 +1,6 @@
-#ifndef xrsharedmemH	
-#define xrsharedmemH
 #pragma once
+
+#include "xr_vector.h"
 
 #pragma pack(push,4)
 //////////////////////////////////////////////////////////////////////////
@@ -117,4 +117,3 @@ IC void swap			(ref_smem<T> & lhs, ref_smem<T> & rhs)			{ lhs.swap(rhs);				}
 
 #pragma pack(pop)
 
-#endif

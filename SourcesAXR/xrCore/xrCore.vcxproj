@@ -790,12 +790,17 @@
     <ClInclude Include="xrsharedmem.h" />
     <ClInclude Include="xrstring.h" />
     <ClInclude Include="xrSyncronize.h" />
+    <ClInclude Include="xr_deque.h" />
     <ClInclude Include="xr_ini.h" />
     <ClInclude Include="xr_map.h" />
     <ClInclude Include="xr_resource.h" />
     <ClInclude Include="xr_shared.h" />
     <ClInclude Include="xr_smart_pointers.h" />
+    <ClInclude Include="xr_stack.h" />
+    <ClInclude Include="xr_string.h" />
     <ClInclude Include="xr_trims.h" />
+    <ClInclude Include="xr_vector.h" />
+    <ClInclude Include="xr_defines.h" />
     <ClInclude Include="_bitwise.h" />
     <ClInclude Include="_color.h" />
     <ClInclude Include="_compressed_normal.h" />

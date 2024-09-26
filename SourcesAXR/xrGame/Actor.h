@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "../xrCore/xr_deque.h"
 #include "../Include/xrRender/KinematicsAnimated.h"
 #include "../xrEngine/feel_sound.h"
 #include "../xrEngine/feel_touch.h"

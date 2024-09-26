@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../xrCore/xr_deque.h"
+
 struct GameEvent
 {
 	u16			type;

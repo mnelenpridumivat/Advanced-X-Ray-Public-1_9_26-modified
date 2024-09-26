@@ -1,5 +1,7 @@
-#ifndef xr_trimsH
-#define xr_trimsH
+#pragma once
+
+#include "xr_defines.h"
+#include "xr_string.h"
 
 // refs
 struct xr_token;
@@ -50,5 +52,3 @@ XRCORE_API LPCSTR		 	_CopyVal 				( LPCSTR src, xr_string& dst, char separator='
 XRCORE_API LPCSTR			_GetItem				( LPCSTR src, int, xr_string& p, char separator=',', LPCSTR ="", bool trim=true );
 XRCORE_API xr_string		_ListToSequence			( const SStringVec& lst );
 XRCORE_API shared_str		_ListToSequence			( const RStringVec& lst );
-
-#endif
