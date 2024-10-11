@@ -114,7 +114,7 @@ struct script_exporter2 : public script_exporter_base {
 		//get_script_export_container()[script_exporter_key<T>::GetKey()] = { false, { script_exporter_key<A1>::GetKey() } };
 		//auto& value = get_script_export_container()[script_exporter_key<T>::GetKey()];
 		//value.
-		Msg("call exporter");
+		//Msg("call exporter");
 	}
 
 	virtual void script_register(lua_State* L) override {
@@ -141,7 +141,7 @@ struct script_exporter3 : public script_exporter_base {
 		value.exporter = this;
 		//get_script_export_container()[script_exporter_key<T>::GetKey()] = { false, { script_exporter_key<A1>::GetKey(), script_exporter_key<A2>::GetKey() } };
 		//get_script_export_container().insert({ script_exporter_key<T>::GetKey(), { false, { script_exporter_key<A1>::GetKey(), script_exporter_key<A2>::GetKey() }} })
-		Msg("call exporter");
+		//Msg("call exporter");
 	}
 
 	virtual void script_register(lua_State* L) override {
@@ -170,7 +170,7 @@ struct script_exporter4 : public script_exporter_base {
 		value.exporter = this;
 		//get_script_export_container()[script_exporter_key<T>::GetKey()] = { false, { script_exporter_key<A1>::GetKey(), script_exporter_key<A2>::GetKey() } };
 		//get_script_export_container().insert({ script_exporter_key<T>::GetKey(), { false, { script_exporter_key<A1>::GetKey(), script_exporter_key<A2>::GetKey() }} })
-		Msg("call exporter");
+		//Msg("call exporter");
 	}
 
 	virtual void script_register(lua_State* L) override {
@@ -201,7 +201,7 @@ struct script_exporter5 : public script_exporter_base {
 		value.exporter = this;
 		//get_script_export_container()[script_exporter_key<T>::GetKey()] = { false, { script_exporter_key<A1>::GetKey(), script_exporter_key<A2>::GetKey() } };
 		//get_script_export_container().insert({ script_exporter_key<T>::GetKey(), { false, { script_exporter_key<A1>::GetKey(), script_exporter_key<A2>::GetKey() }} })
-		Msg("call exporter");
+		//Msg("call exporter");
 	}
 
 	virtual void script_register(lua_State* L) override {

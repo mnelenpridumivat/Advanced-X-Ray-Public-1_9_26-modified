@@ -128,7 +128,7 @@ public:
     };
 	IC	u32			AppendSubGraph	(EStyle S)
 	{
-		subgraphs.push_back(SSubGraph(S));
+		subgraphs.emplace_back(SSubGraph(S));
 		return subgraphs.size()-1;
 	};
 

@@ -26,7 +26,7 @@
 
 		public:
 		//! Empty constructor.
-		inline_						Matrix4x4()									{}
+		inline_						Matrix4x4() = default;
 		//! Constructor from 16 values
 		inline_						Matrix4x4(	float m00, float m01, float m02, float m03,
 												float m10, float m11, float m12, float m13,
@@ -41,7 +41,7 @@
 		//! Copy constructor
 		inline_						Matrix4x4(const Matrix4x4& mat)				{ CopyMemory(m, &mat.m, 16*sizeof(float));	}
 		//! Destructor.
-		inline_						~Matrix4x4()								{}
+		inline_						~Matrix4x4() = default;
 
 		//! Assign values (rotation only)
 		inline_	Matrix4x4&			Set(	float m00, float m01, float m02,

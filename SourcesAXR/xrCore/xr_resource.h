@@ -29,7 +29,7 @@ public:
 		return		*cName;
 	}
 	xr_resource_named()	: cName(0)		{ }
-	~xr_resource_named()				{ }
+	~xr_resource_named() = default;
 };
 
 // resptr_BASE

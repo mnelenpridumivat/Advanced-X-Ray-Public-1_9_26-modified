@@ -83,9 +83,9 @@
 	{
 		public:
 		//! Constructor
-		inline_				QuantizedAABB()			{}
+		inline_				QuantizedAABB() = default;
 		//! Destructor
-		inline_				~QuantizedAABB()		{}
+		inline_				~QuantizedAABB() = default;
 
 				sword		mCenter[3];				//!< Quantized center
 				uword		mExtents[3];			//!< Quantized extents
@@ -95,9 +95,9 @@
 	{
 		public:
 		//! Constructor
-		inline_				CollisionFace()			{}
+		inline_				CollisionFace() = default;
 		//! Destructor
-		inline_				~CollisionFace()		{}
+		inline_				~CollisionFace() = default;
 
 				udword		mFaceID;				//!< Index of touched face
 				float		mDistance;				//!< Distance from collider to hitpoint
@@ -108,9 +108,9 @@
 	{
 		public:
 		//! Constructor
-		inline_							CollisionFaces()						{}
+		inline_							CollisionFaces() = default;
 		//! Destructor
-		inline_							~CollisionFaces()						{}
+		inline_							~CollisionFaces() = default;
 
 		inline_	udword					GetNbFaces()					const	{ return GetNbEntries()>>2;						}
 		inline_	const CollisionFace*	GetFaces()						const	{ return (const CollisionFace*)GetEntries();	}

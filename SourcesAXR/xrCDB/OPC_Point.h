@@ -39,7 +39,7 @@
 		public:
 
 		//! Empty constructor
-		inline_					Point()														{}
+		inline_					Point() = default;
 		//! Constructor from a single float
 		inline_					Point(float val) : x(val), y(val), z(val)					{}
 		//! Constructor from floats
@@ -49,7 +49,7 @@
 		//! Copy constructor
 		inline_					Point(const Point& p) : x(p.x), y(p.y), z(p.z)				{}
 		//! Destructor
-		inline_					~Point()													{}
+		inline_					~Point() = default;
 
 		//! Clears the vector3
 		inline_	Point&			Zero()									{ x =			y =			z = 0.0f;			return *this;	}

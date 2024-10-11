@@ -87,7 +87,7 @@ u32					smem_container::stat_economy	()
 	counter			-= sizeof(*this);
 	counter			-= sizeof(cdb::allocator_type);
 	const int		node_size = 20;
-	for (; it!=end; it++)	{
+	for (; it!=end; ++it)	{
 		counter		-= 16;
 		counter		-= node_size;
 		counter		+= s64((s64((*it)->dwReference) - 1)*s64((*it)->dwLength));

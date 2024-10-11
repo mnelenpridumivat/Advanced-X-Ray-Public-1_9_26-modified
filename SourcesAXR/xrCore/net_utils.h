@@ -105,8 +105,8 @@ public:
 	// writing - utilities
 	IC void	w_double	(double a)			{ W_guard g(&w_allow); w(&a, sizeof(double));				INI_W(w_double(a)); }			// float
 	IC void	w_float		( float a       )	{ W_guard g(&w_allow); w(&a, sizeof(float));				INI_W(w_float(a));		}			// float
-	IC void w_vec3		( const Fvector& a) { W_guard g(&w_allow);  w(&a,3*sizeof(float));INI_W(w_vec3(a));		}			// vec3
-	IC void w_vec4		( const Fvector4& a){ W_guard g(&w_allow);  w(&a,4*sizeof(float));INI_W(w_vec4(a));		}			// vec4
+	IC void w_vec3		( Fvector a) { W_guard g(&w_allow);  w(&a,3*sizeof(float));INI_W(w_vec3(a));		}			// vec3
+	IC void w_vec4		( Fvector4 a){ W_guard g(&w_allow);  w(&a,4*sizeof(float));INI_W(w_vec4(a));		}			// vec4
 	IC void w_u64		( u64 a			)	{ W_guard g(&w_allow);  w(&a, sizeof(u64));				INI_W(w_u64(a));		}			// qword (8b)
 	IC void w_s64		( s64 a			)	{ W_guard g(&w_allow);  w(&a, sizeof(s64));				INI_W(w_s64(a));		}			// qword (8b)
 	IC void w_u32		( u32 a			)	{ W_guard g(&w_allow);  w(&a, sizeof(u32));				INI_W(w_u32(a));		}			// dword (4b)
@@ -130,8 +130,8 @@ public:
 	}
 	IC void w_angle16	( float a		)	{	w_float_q16	(angle_normalize(a),0,PI_MUL_2);}
 	IC void w_angle8	( float a		)	{w_float_q8	(angle_normalize(a),0,PI_MUL_2);	}
-	IC void w_dir		( const Fvector& D) {w_u16(pvCompress(D));							}
-	IC void w_sdir		( const Fvector& D) {
+	IC void w_dir		( Fvector D) {w_u16(pvCompress(D));							}
+	IC void w_sdir		( Fvector D) {
 		Fvector C;
 		float mag		= D.magnitude();
 		if (mag>EPS_S)	{

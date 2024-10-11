@@ -21,7 +21,9 @@ void CPropertyEvaluator<CScriptGameObject>::script_register(lua_State *L)
 		class_<CScriptPropertyEvaluator,CScriptPropertyEvaluatorWrapper>("property_evaluator")
 			.def_readonly("object",				&CScriptPropertyEvaluator::m_object)
 			.def_readonly("storage",			&CScriptPropertyEvaluator::m_storage)
+#ifdef LOG_ACTION
 			.def_readonly("name",				&CScriptPropertyEvaluator::m_evaluator_name)
+#endif
 			.def(								constructor<>())
 			.def(								constructor<CScriptGameObject*>())
 			.def(								constructor<CScriptGameObject*,LPCSTR>())

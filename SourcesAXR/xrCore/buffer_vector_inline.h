@@ -13,7 +13,7 @@
 #define buffer_vector_specialized				buffer_vector<T>
 
 TEMPLATE_SPECIALIZATION
-inline buffer_vector_specialized::buffer_vector	(void *buffer, size_type const &max_count) :
+inline buffer_vector_specialized::buffer_vector	(void *buffer, const size_type max_count) :
 	m_begin			((T*)buffer),
 	m_end			((T*)buffer),
 	m_max_end		((T*)buffer + max_count)
@@ -21,7 +21,7 @@ inline buffer_vector_specialized::buffer_vector	(void *buffer, size_type const &
 }
 
 TEMPLATE_SPECIALIZATION
-inline buffer_vector_specialized::buffer_vector	(void *buffer, size_type const &max_count, size_type const &count, value_type const &value) :
+inline buffer_vector_specialized::buffer_vector	(void *buffer, const size_type max_count, const size_type count, value_type const& value) :
 	m_begin			((T*)buffer),
 	m_end			((T*)buffer),
 	m_max_end		((T*)buffer + max_count)
@@ -30,7 +30,7 @@ inline buffer_vector_specialized::buffer_vector	(void *buffer, size_type const &
 }
 
 TEMPLATE_SPECIALIZATION
-inline buffer_vector_specialized::buffer_vector	(void *buffer, size_type const &max_count, self_type const &other) :
+inline buffer_vector_specialized::buffer_vector	(void *buffer, const size_type max_count, self_type const& other) :
 	m_begin			((T*)buffer),
 	m_end			((T*)buffer),
 	m_max_end		((T*)buffer + max_count)
@@ -40,7 +40,7 @@ inline buffer_vector_specialized::buffer_vector	(void *buffer, size_type const &
 
 TEMPLATE_SPECIALIZATION
 template <typename input_iterator>
-inline buffer_vector_specialized::buffer_vector	(void *buffer, size_type const &max_count, input_iterator const &begin, input_iterator const &end) :
+inline buffer_vector_specialized::buffer_vector	(void *buffer, const size_type max_count, const input_iterator begin, const input_iterator end) :
 	m_begin			((T*)buffer),
 	m_end			((T*)buffer),
 	m_max_end		((T*)buffer + max_count)
@@ -62,7 +62,7 @@ inline typename buffer_vector_specialized::self_type &buffer_vector_specialized:
 
 TEMPLATE_SPECIALIZATION
 template <typename input_iterator>
-inline void buffer_vector_specialized::assign	(input_iterator begin, input_iterator const &end)
+inline void buffer_vector_specialized::assign	(input_iterator begin, const input_iterator end)
 {
 	destroy			(m_begin, m_end);
 
@@ -74,7 +74,7 @@ inline void buffer_vector_specialized::assign	(input_iterator begin, input_itera
 }
 
 TEMPLATE_SPECIALIZATION
-inline void buffer_vector_specialized::assign	(size_type const &count, const_reference value)
+inline void buffer_vector_specialized::assign	(const size_type count, const_reference value)
 {
 	destroy			(m_begin, m_end);
 
@@ -101,7 +101,7 @@ inline void buffer_vector_specialized::clear	()
 }
 
 TEMPLATE_SPECIALIZATION
-inline void buffer_vector_specialized::resize	(size_type const &size)
+inline void buffer_vector_specialized::resize	(const size_type size)
 {
 	size_type			current_size = this->size();
 	if (size == current_size)
@@ -121,14 +121,14 @@ inline void buffer_vector_specialized::resize	(size_type const &size)
 }
 
 TEMPLATE_SPECIALIZATION
-inline void buffer_vector_specialized::reserve	(size_type const &size)
+inline void buffer_vector_specialized::reserve	(const size_type size)
 {
 	// nothing to do here
 }
 
 TEMPLATE_SPECIALIZATION
 template <typename input_iterator>
-inline void buffer_vector_specialized::insert	(iterator const &where, input_iterator begin, input_iterator const &end)
+inline void buffer_vector_specialized::insert	(const iterator where, input_iterator begin, const input_iterator end)
 {
 	VERIFY			(where >= m_begin);
 
@@ -150,7 +150,7 @@ inline void buffer_vector_specialized::insert	(iterator const &where, input_iter
 }
 
 TEMPLATE_SPECIALIZATION
-inline void buffer_vector_specialized::insert	(iterator const &where, size_type const &count, const_reference value)
+inline void buffer_vector_specialized::insert	(const iterator where, const size_type count, const_reference value)
 {
 	VERIFY			(where >= m_begin);
 	VERIFY			(m_end + count <= m_max_end);
@@ -170,13 +170,13 @@ inline void buffer_vector_specialized::insert	(iterator const &where, size_type 
 }
 
 TEMPLATE_SPECIALIZATION
-inline void buffer_vector_specialized::insert	(iterator const &where, const_reference value)
+inline void buffer_vector_specialized::insert	(const iterator where, const_reference value)
 {
 	insert			(where, 1, value);
 }
 
 TEMPLATE_SPECIALIZATION
-inline void buffer_vector_specialized::erase	(iterator const &begin, iterator const &end)
+inline void buffer_vector_specialized::erase	(const iterator begin, const iterator end)
 {
 	VERIFY			(m_begin <= begin);
 	VERIFY			(m_end >= begin);
@@ -203,7 +203,7 @@ inline void buffer_vector_specialized::erase	(iterator const &begin, iterator co
 }
 
 TEMPLATE_SPECIALIZATION
-inline void buffer_vector_specialized::erase	(iterator const &where)
+inline void buffer_vector_specialized::erase	(const iterator where)
 {
 	erase			(where, where + 1);
 }
@@ -225,28 +225,28 @@ inline void buffer_vector_specialized::push_back(const_reference value)
 }
 
 TEMPLATE_SPECIALIZATION
-inline typename buffer_vector_specialized::reference buffer_vector_specialized::at					(size_type const &index)
+inline typename buffer_vector_specialized::reference buffer_vector_specialized::at					(const size_type index)
 {
 	VERIFY			(index < size());
 	return			(m_begin[index]);
 }
 
 TEMPLATE_SPECIALIZATION
-inline typename buffer_vector_specialized::const_reference buffer_vector_specialized::at				(size_type const &index) const
+inline typename buffer_vector_specialized::const_reference buffer_vector_specialized::at				(const size_type index) const
 {
 	VERIFY			(index < size());
 	return			(m_begin[index]);
 }
 
 TEMPLATE_SPECIALIZATION
-inline typename buffer_vector_specialized::reference buffer_vector_specialized::operator[]			(size_type const &index)
+inline typename buffer_vector_specialized::reference buffer_vector_specialized::operator[]			(const size_type index)
 {
 	VERIFY			(index < size());
 	return			(m_begin[index]);
 }
 
 TEMPLATE_SPECIALIZATION
-inline typename buffer_vector_specialized::const_reference buffer_vector_specialized::operator[]		(size_type const &index) const
+inline typename buffer_vector_specialized::const_reference buffer_vector_specialized::operator[]		(const size_type index) const
 {
 	VERIFY			(index < size());
 	return			(m_begin[index]);
@@ -365,7 +365,7 @@ inline void buffer_vector_specialized::construct(pointer p, const_reference valu
 }
 
 TEMPLATE_SPECIALIZATION
-inline void buffer_vector_specialized::construct(iterator begin, iterator const &end)
+inline void buffer_vector_specialized::construct(iterator begin, const iterator end)
 {
 	for ( ; begin != end; ++begin)
 		construct	(begin);
@@ -378,7 +378,7 @@ inline void buffer_vector_specialized::destroy	(pointer p)
 }
 
 TEMPLATE_SPECIALIZATION
-inline void buffer_vector_specialized::destroy	(iterator begin, iterator const &end)
+inline void buffer_vector_specialized::destroy	(iterator begin, const iterator end)
 {
 	for ( ; begin != end; ++begin)
 		destroy		(begin);

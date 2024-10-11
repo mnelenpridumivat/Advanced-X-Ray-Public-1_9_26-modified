@@ -47,8 +47,6 @@ BOOL CLevel::Load_GameSpecific_After()
 		u32				chunk = 0;
 		string256		ref_name;
 		Fmatrix			transform;
-		xr_map<xr_string, float> FloatHandles;
-		xr_map<xr_string, Fvector> VectorHandles;
 		Fvector			zero_vel={0.f,0.f,0.f};
 		u32 ver			= 0;
 		for (IReader *OBJ = F->open_chunk_iterator(chunk); OBJ; OBJ = F->open_chunk_iterator(chunk,OBJ)) 
@@ -71,25 +69,6 @@ BOOL CLevel::Load_GameSpecific_After()
 			}
 			OBJ->r_stringZ					(ref_name,sizeof(ref_name));
 			OBJ->r							(&transform,sizeof(Fmatrix));transform.c.y+=0.01f;
-
-			{
-				u32 Num = OBJ->r_u32();
-				for (u32 i = 0; i < Num; ++i) {
-					xr_string Name;
-					OBJ->r_stringZ(Name);
-					FloatHandles[Name] = OBJ->r_float();
-				}
-			}
-
-			{
-				u32 Num = OBJ->r_u32();
-				for (u32 i = 0; i < Num; ++i) {
-					xr_string Name;
-					OBJ->r_stringZ(Name);
-					VectorHandles[Name] = {};
-					OBJ->r_fvector3(VectorHandles[Name]);
-				}
-			}
 						
 			if ((g_pGamePersistent->m_game_params.m_e_game_type & static_cast<EGameIDs>(gametype_usage)) || (ver == 0))
 			{

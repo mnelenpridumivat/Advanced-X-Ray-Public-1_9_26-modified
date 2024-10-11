@@ -46,7 +46,7 @@ private:
 	u64					m_ticks;
 
 private:
-	IC	u64				GetElapsed_ticks(const u64 &current_ticks) const
+	IC	u64				GetElapsed_ticks(u64 current_ticks) const
 	{
 		u64				delta = current_ticks - m_real_ticks;
 		double			delta_d = (double)delta;
@@ -75,7 +75,7 @@ public:
 		return			(m_time_factor);
 	}
 
-	IC	void			time_factor		(const float &time_factor)
+	IC	void			time_factor		(float time_factor)
 	{
 		u64				current = inherited::GetElapsed_ticks();
 		m_ticks			= GetElapsed_ticks(current);

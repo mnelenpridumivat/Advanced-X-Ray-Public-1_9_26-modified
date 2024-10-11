@@ -17,7 +17,7 @@
 	{
 		public:
 		//! Constructor
-		inline_					IndexedTriangle()									{}
+		inline_					IndexedTriangle() = default;
 		//! Constructor
 		inline_					IndexedTriangle(udword r0, udword r1, udword r2)	{ mVRef[0]=r0; mVRef[1]=r1; mVRef[2]=r2; }
 		//! Copy constructor
@@ -28,7 +28,7 @@
 									mVRef[2] = triangle.mVRef[2];
 								}
 		//! Destructor
-		inline_					~IndexedTriangle()									{}
+		inline_					~IndexedTriangle() = default;
 		//! Vertex-references
 				udword			mVRef[3];
 

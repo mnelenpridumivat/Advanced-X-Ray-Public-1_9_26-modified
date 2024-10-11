@@ -204,8 +204,8 @@
 	{
 		public:
 		// Constructor / Destructor
-		inline_				Pairs()						{}
-		inline_				~Pairs()					{}
+		inline_				Pairs() = default;
+		inline_				~Pairs() = default;
 
 		inline_	udword		GetNbPairs()	const		{ return GetNbEntries()>>1;					}
 		inline_	Pair*		GetPairs()		const		{ return (Pair*)GetEntries();				}

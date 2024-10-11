@@ -22,7 +22,7 @@
 	{
 		public:
 		//! Empty constructor
-		inline_					Matrix3x3()									{}
+		inline_					Matrix3x3() = default;
 		//! Constructor from 9 values
 		inline_					Matrix3x3(float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22)
 								{
@@ -33,7 +33,7 @@
 		//! Copy constructor
 		inline_					Matrix3x3(const Matrix3x3& mat)				{ CopyMemory(m, &mat.m, 9*sizeof(float));	}
 		//! Destructor
-		inline_					~Matrix3x3()								{}
+		inline_					~Matrix3x3() = default;
 
 		//! Assign values
 		inline_	void			Set(float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22)

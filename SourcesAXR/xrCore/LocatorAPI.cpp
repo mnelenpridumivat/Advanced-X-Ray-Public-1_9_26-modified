@@ -427,7 +427,7 @@ void CLocatorAPI::ProcessArchive(LPCSTR _path)
 		if (it->path==path)	
 				return;
 
-	m_archives.push_back		(archive());
+	m_archives.emplace_back		(archive());
 	archive& A					= m_archives.back();
 	A.vfs_idx					= m_archives.size()-1;
 	A.path						= path;
@@ -934,7 +934,8 @@ xr_vector<char*>* CLocatorAPI::file_list_open			(const char* _path, u32 flags)
 			if ((flags&FS_ListFiles) == 0)	continue;
 
 			const char* entry_begin = entry.name+base_len;
-			if ((flags&FS_RootOnly)&&strstr(entry_begin,"\\"))	continue;	// folder in folder
+			if ((flags & FS_RootOnly) && strchr(entry_begin, '\\'))	continue;	// folder in folder
+			//if ((flags&FS_RootOnly)&&strstr(entry_begin,"\\"))	continue;	// folder in folder
 			dest->push_back			(xr_strdup(entry_begin));
             LPSTR fname 			= dest->back();
             if (flags&FS_ClampExt)	if (0!=strext(fname)) *strext(fname)=0;
@@ -943,7 +944,8 @@ xr_vector<char*>* CLocatorAPI::file_list_open			(const char* _path, u32 flags)
 			if ((flags&FS_ListFolders) == 0)continue;
 			const char* entry_begin = entry.name+base_len;
 			
-			if ((flags&FS_RootOnly)&&(strstr(entry_begin,"\\")!=end_symbol))	continue;	// folder in folder
+			//if ((flags & FS_RootOnly) && (strstr(entry_begin, "\\") != end_symbol))	continue;	// folder in folder
+			if ((flags&FS_RootOnly)&&(strchr(entry_begin, '\\') !=end_symbol))	continue;	// folder in folder
 			
 			dest->push_back	(xr_strdup(entry_begin));
 		}
@@ -994,7 +996,8 @@ int CLocatorAPI::file_list(FS_FileSet& dest, LPCSTR path, u32 flags, LPCSTR mask
 			// file
 			if ((flags&FS_ListFiles) == 0)	continue;
 			LPCSTR entry_begin 		= entry.name+base_len;
-			if ((flags&FS_RootOnly)&&strstr(entry_begin,"\\"))	continue;	// folder in folder
+			//if ((flags & FS_RootOnly) && strstr(entry_begin, "\\"))	continue;	// folder in folder
+			if ((flags&FS_RootOnly)&& strchr(entry_begin, '\\'))	continue;	// folder in folder
 			// check extension
 			if (b_mask){
 				bool bOK			= false;
@@ -1015,15 +1018,16 @@ int CLocatorAPI::file_list(FS_FileSet& dest, LPCSTR path, u32 flags, LPCSTR mask
 			else
 				fn = entry_begin;
 			u32 fl = (entry.vfs != 0xffffffff ? FS_File::flVFS : 0);
-			dest.insert(FS_File(fn, entry.size_real, entry.modif, fl));
+			dest.emplace(FS_File(fn, entry.size_real, entry.modif, fl));
 		} else {
 			// folder
 			if ((flags&FS_ListFolders) == 0)	continue;
 			LPCSTR entry_begin 		= entry.name+base_len;
 
-			if ((flags&FS_RootOnly)&&(strstr(entry_begin,"\\")!=end_symbol))	continue;	// folder in folder
+			//if ((flags & FS_RootOnly) && (strstr(entry_begin, "\\") != end_symbol))	continue;	// folder in folder
+			if ((flags&FS_RootOnly)&&(strchr(entry_begin, '\\') !=end_symbol))	continue;	// folder in folder
 			u32 fl = FS_File::flSubDir|(entry.vfs?FS_File::flVFS:0);
-			dest.insert(FS_File(entry_begin,entry.size_real,entry.modif,fl));
+			dest.emplace(FS_File(entry_begin,entry.size_real,entry.modif,fl));
 		}
 	}
 	return dest.size();
@@ -1589,7 +1593,8 @@ void CLocatorAPI::rescan_path(LPCSTR full_path, BOOL bRecurse)
 		if (0!=strncmp(entry.name,full_path,base_len))	break;	// end of list
 		if (entry.vfs!=0xFFFFFFFF)						continue;
 		const char* entry_begin = entry.name+base_len;
-        if (!bRecurse&&strstr(entry_begin,"\\"))		continue;
+		//if (!bRecurse && strstr(entry_begin, "\\"))		continue;
+		if (!bRecurse&& strchr(entry_begin, '\\'))		continue;
         // erase item
 		char* str		= LPSTR(cur_item->name);
 		xr_free			(str);

@@ -95,7 +95,7 @@ struct SBooster: public SBoosterAction
 {
 	EBoostParams m_type;
 	EBoostType m_booster_type;
-	SBooster(){};
+	SBooster() = default;
 	SBooster(const SBoosterAction& other, EBoostParams m_type): m_type(m_type) {
 		fBoostValue = other.fBoostValue;
 	}

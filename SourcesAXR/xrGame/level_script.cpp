@@ -1151,65 +1151,10 @@ void bind_timer(LPCSTR function, const CBinderParams& params, int start_value, i
 	CBinderManager::GetInstance().CreateBinder(function, params, start_value, mode);
 }
 
-/*void bind_timer_one_param(LPCSTR function, LPCSTR param1, int start_value, int mode = 0)
+void bind_timer_no_params(LPCSTR function, int start_value, int mode = 0)
 {
-	auto TimeManager = Actor()->BinderManager;
-	if (!TimeManager)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : BinderManager is NULL!");
-		return;
-	}
-
-	TimeManager->CreateBinder(function, { param1 }, start_value, mode);
+	CBinderManager::GetInstance().CreateBinder(function, CBinderParams(), start_value, mode);
 }
-
-void bind_timer_two_params(LPCSTR function, LPCSTR param1, LPCSTR param2, int start_value, int mode = 0)
-{
-	auto TimeManager = Actor()->BinderManager;
-	if (!TimeManager)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : BinderManager is NULL!");
-		return;
-	}
-
-	TimeManager->CreateBinder(function, { param1, param2 }, start_value, mode);
-}
-
-void bind_timer_three_params(LPCSTR function, LPCSTR param1, LPCSTR param2, LPCSTR param3, int start_value, int mode = 0)
-{
-	auto TimeManager = Actor()->BinderManager;
-	if (!TimeManager)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : BinderManager is NULL!");
-		return;
-	}
-
-	TimeManager->CreateBinder(function, { param1, param2, param3 }, start_value, mode);
-}
-
-void bind_timer_four_params(LPCSTR function, LPCSTR param1, LPCSTR param2, LPCSTR param3, LPCSTR param4, int start_value, int mode = 0)
-{
-	auto TimeManager = Actor()->BinderManager;
-	if (!TimeManager)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : BinderManager is NULL!");
-		return;
-	}
-
-	TimeManager->CreateBinder(function, { param1, param2, param3, param4 }, start_value, mode);
-}
-
-void bind_timer_five_params(LPCSTR function, LPCSTR param1, LPCSTR param2, LPCSTR param3, LPCSTR param4, LPCSTR param5, int start_value, int mode = 0)
-{
-	auto TimeManager = Actor()->BinderManager;
-	if (!TimeManager)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CUSTOM TIMER : BinderManager is NULL!");
-		return;
-	}
-
-	TimeManager->CreateBinder(function, { param1, param2, param3, param4, param5 }, start_value, mode);
-}*/
 
 void start_custom_timer(LPCSTR name)
 {
@@ -1448,11 +1393,7 @@ void CLevel::script_register(lua_State *L)
 		def("get_custom_timer",					&get_custom_timer),
 
 		def("bind_timer",						&bind_timer),
-		/*def("bind_timer_one_param", &bind_timer_one_param),
-		def("bind_timer_two_params",			&bind_timer_two_params),
-		def("bind_timer_three_params",			&bind_timer_three_params),
-		def("bind_timer_four_params",			&bind_timer_four_params),
-		def("bind_timer_five_params",			&bind_timer_five_params),*/
+		//def("bind_timer",						&bind_timer_no_params),
 
 		def("get_user_name",					&get_user_name),
 

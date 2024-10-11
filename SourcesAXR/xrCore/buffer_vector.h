@@ -30,40 +30,40 @@ private:
 	typedef buffer_vector<T>						self_type;
 
 public:
-	inline							buffer_vector	(void *buffer, size_type const &max_count);
-	inline							buffer_vector	(void *buffer, size_type const &max_count, size_type const &count, value_type const &value);
-	inline							buffer_vector	(void *buffer, size_type const &max_count, self_type const &other);
+	inline							buffer_vector	(void *buffer, const size_type max_count);
+	inline							buffer_vector	(void *buffer, const size_type max_count, const size_type count, value_type const &value);
+	inline							buffer_vector	(void *buffer, const size_type max_count, self_type const &other);
 	template <typename input_iterator>
-	inline							buffer_vector	(void *buffer, size_type const &max_count, input_iterator const &begin, input_iterator const &last);
+	inline							buffer_vector	(void *buffer, const size_type max_count, const input_iterator begin, const input_iterator last);
 	inline							~buffer_vector	();
 
 	inline	self_type				&operator=		(self_type const &other);
 
 	template <typename input_iterator>
-	inline	void					assign			(input_iterator begin, input_iterator const &end);
-	inline	void					assign			(size_type const &count, const_reference value);
+	inline	void					assign			(input_iterator begin, const input_iterator end);
+	inline	void					assign			(const size_type count, const_reference value);
 
 	inline	void					swap			(self_type &other);
 	inline	void					clear			();
-	inline	void					resize			(size_type const &size);
-	inline	void					reserve			(size_type const &size);
+	inline	void					resize			(const size_type size);
+	inline	void					reserve			(const size_type size);
 
 	template <typename input_iterator>
-	inline	void					insert			(iterator const &where, input_iterator begin, input_iterator const &last);
-	inline	void					insert			(iterator const &where, size_type const &count, const_reference value);
-	inline	void					insert			(iterator const &where, const_reference value);
+	inline	void					insert			(const iterator where, input_iterator begin, const input_iterator last);
+	inline	void					insert			(const iterator where, const size_type count, const_reference value);
+	inline	void					insert			(const iterator where, const_reference value);
 
-	inline	void					erase			(iterator const &begin, iterator const &end);
-	inline	void					erase			(iterator const &where);
+	inline	void					erase			(const iterator begin, const iterator end);
+	inline	void					erase			(const iterator where);
 
 	inline	void					pop_back		();
 	inline	void					push_back		(const_reference value);
 
-	inline	reference				at				(size_type const &index);
-	inline	const_reference			at				(size_type const &index) const;
+	inline	reference				at				(const size_type index);
+	inline	const_reference			at				(const size_type index) const;
 
-	inline	reference				operator[]		(size_type const &index);
-	inline	const_reference			operator[]		(size_type const &index) const;
+	inline	reference				operator[]		(const size_type index);
+	inline	const_reference			operator[]		(const size_type index) const;
 
 	inline	reference				back			();
 	inline	const_reference			back			() const;
@@ -92,12 +92,12 @@ public:
 private:
 	static inline void				construct		(pointer p);
 	static inline void				construct		(pointer p, const_reference value);
-	static inline void				construct		(iterator begin, iterator const &end);
-	static inline void				construct		(iterator begin, iterator const &end, const_reference value);
+	static inline void				construct		(iterator begin, const iterator end);
+	static inline void				construct		(iterator begin, const iterator end, const_reference value);
 
 private:
 	static inline void				destroy			(pointer p);
-	static inline void				destroy			(iterator begin, iterator const &end);
+	static inline void				destroy			(iterator begin, const iterator end);
 
 private:
 	pointer							m_begin;

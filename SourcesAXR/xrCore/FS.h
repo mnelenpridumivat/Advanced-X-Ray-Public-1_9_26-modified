@@ -61,13 +61,13 @@ public:
 	IC void			w_stringZ(const shared_str& p) 	{	w(*p?*p:"",p.size());w_u8(0);		}
 	IC void			w_stringZ(shared_str& p)		{	w(*p?*p:"",p.size());w_u8(0);		}
 	IC void			w_stringZ(const xr_string& p)	{	w(p.c_str()?p.c_str():"",(u32)p.size());w_u8(0);	}
-	IC void			w_fcolor(const Fcolor &v)		{	w(&v,sizeof(Fcolor));	}
-	IC void			w_fvector4(const Fvector4 &v)	{	w(&v,sizeof(Fvector4));	}
-	IC void			w_fvector3(const Fvector3 &v)	{	w(&v,sizeof(Fvector3));	}
-	IC void			w_fvector2(const Fvector2 &v)	{	w(&v,sizeof(Fvector2));	}
-	IC void			w_ivector4(const Ivector4 &v)	{	w(&v,sizeof(Ivector4));	}
-	IC void			w_ivector3(const Ivector3 &v)	{	w(&v,sizeof(Ivector3));	}
-	IC void			w_ivector2(const Ivector2 &v)	{	w(&v,sizeof(Ivector2));	}
+	IC void			w_fcolor(Fcolor v)		{	w(&v,sizeof(Fcolor));	}
+	IC void			w_fvector4(Fvector4 v)	{	w(&v,sizeof(Fvector4));	}
+	IC void			w_fvector3(Fvector3 v)	{	w(&v,sizeof(Fvector3));	}
+	IC void			w_fvector2(Fvector2 v)	{	w(&v,sizeof(Fvector2));	}
+	IC void			w_ivector4(Ivector4 v)	{	w(&v,sizeof(Ivector4));	}
+	IC void			w_ivector3(Ivector3 v)	{	w(&v,sizeof(Ivector3));	}
+	IC void			w_ivector2(Ivector2 v)	{	w(&v,sizeof(Ivector2));	}
 
     // quant writing functions
 	IC void 		w_float_q16	(float a, float min, float max)
@@ -84,7 +84,7 @@ public:
 	}
 	IC void 		w_angle16	(float a)		    {	w_float_q16	(angle_normalize(a),0,PI_MUL_2);}
 	IC void 		w_angle8	(float a)		    {	w_float_q8	(angle_normalize(a),0,PI_MUL_2);}
-	IC void 		w_dir		(const Fvector& D) 	{	w_u16(pvCompress(D));	}
+	IC void 		w_dir		(Fvector D) 	{	w_u16(pvCompress(D));	}
 	void 			w_sdir		(const Fvector& D);
 	void	__cdecl	w_printf	(const char* format, ...);
 
@@ -163,7 +163,7 @@ class IReaderBase
 {
 public:
 	IC				IReaderBase() : m_last_pos(0), m_file_age(0) {}
-	virtual			~IReaderBase()			{}
+	virtual			~IReaderBase() = default;
 
 	IC implementation_type&impl	()				{return *(implementation_type*)this;}
 	IC const implementation_type&impl() const	{return *(implementation_type*)this;}

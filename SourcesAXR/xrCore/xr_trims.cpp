@@ -342,7 +342,7 @@ void _SequenceToList(SStringVec& lst, LPCSTR in, char separator)
 	for (int i=0; i<t_cnt; i++){
 		_GetItem(in,i,T,separator,0);
 		_Trim	(T);
-		if (T.size()) lst.push_back(T.c_str());
+		if (T.size()) lst.push_back(T);
 	}
 }
 
